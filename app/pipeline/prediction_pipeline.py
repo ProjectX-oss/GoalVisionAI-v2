@@ -1,14 +1,20 @@
+from app.league_strength import LeagueStrengthEngine
 from app.pipeline.team_builder import TeamBuilder
 from app.prediction import PredictionEngine
 
 
 class PredictionPipeline:
 
-    def __init__(self):
+    def __init__(
+        self,
+        league_strength: LeagueStrengthEngine,
+    ) -> None:
 
         self.builder = TeamBuilder()
 
         self.engine = PredictionEngine()
+
+        self.league_strength = league_strength
 
     def build_team(
         self,

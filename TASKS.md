@@ -294,6 +294,13 @@ Only append.
 - Verified the prediction pipeline, Telegram service boundary, database initialization, and team repository with automated tests.
 - Verified `python -m app.main` starts and exits without an unhandled exception when no match data is available.
 
+## 2026-07-12 - League Strength Engine
+
+- Added a centralized, normalized league-rating table.
+- Added a validated League Strength Engine with injected ratings and unknown-league fallback.
+- Injected the engine into the prediction pipeline without changing prediction outcomes.
+- Added unit coverage for lookup, validation, fallback, dependency injection, and outcome isolation.
+
 ---
 
 # DISCOVERED TASKS

@@ -2,6 +2,11 @@ import asyncio
 
 from app.core.settings import settings
 from app.football.service import FootballService
+from app.league_strength import (
+    LEAGUE_STRENGTH_RATINGS,
+    UNKNOWN_LEAGUE_STRENGTH,
+    LeagueStrengthEngine,
+)
 from app.logger import logger
 from app.pipeline import (
     PredictionPipeline,
@@ -21,7 +26,14 @@ class GoalVisionApp:
 
         self.football = FootballService()
 
-        self.pipeline = PredictionPipeline()
+        self.league_strength = LeagueStrengthEngine(
+            ratings=LEAGUE_STRENGTH_RATINGS,
+            default_strength=UNKNOWN_LEAGUE_STRENGTH,
+        )
+
+        self.pipeline = PredictionPipeline(
+            league_strength=self.league_strength,
+        )
 
         self.repository = TeamRepository()
 
