@@ -14,6 +14,7 @@ from app.pipeline import (
     StandingsService,
 )
 from app.repositories import TeamRepository
+from app.rest_days import RestDaysEngine
 from app.services.telegram_service import TelegramService
 
 
@@ -34,9 +35,12 @@ class GoalVisionApp:
 
         self.h2h = H2HEngine()
 
+        self.rest_days = RestDaysEngine()
+
         self.pipeline = PredictionPipeline(
             league_strength=self.league_strength,
             h2h=self.h2h,
+            rest_days=self.rest_days,
         )
 
         self.repository = TeamRepository()

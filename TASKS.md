@@ -309,6 +309,13 @@ Only append.
 - Injected the engine into the prediction pipeline without changing prediction outcomes.
 - Added unit coverage for empty, single, multiple, recent, duplicate, and normalized histories.
 
+## 2026-07-12 - Rest Days Engine
+
+- Added a typed Rest Days Engine using only finished-fixture timestamps.
+- Added configurable rest capping and normalized home-versus-away comparison.
+- Injected the engine into the prediction pipeline without changing prediction outcomes.
+- Added unit coverage for missing, equal, advantaged, capped, unfinished, and normalized histories.
+
 ---
 
 # DISCOVERED TASKS

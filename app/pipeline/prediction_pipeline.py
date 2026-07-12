@@ -2,6 +2,7 @@ from app.h2h import H2HEngine
 from app.league_strength import LeagueStrengthEngine
 from app.pipeline.team_builder import TeamBuilder
 from app.prediction import PredictionEngine
+from app.rest_days import RestDaysEngine
 
 
 class PredictionPipeline:
@@ -10,6 +11,7 @@ class PredictionPipeline:
         self,
         league_strength: LeagueStrengthEngine,
         h2h: H2HEngine,
+        rest_days: RestDaysEngine,
     ) -> None:
 
         self.builder = TeamBuilder()
@@ -19,6 +21,8 @@ class PredictionPipeline:
         self.league_strength = league_strength
 
         self.h2h = h2h
+
+        self.rest_days = rest_days
 
     def build_team(
         self,

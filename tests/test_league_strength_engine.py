@@ -5,6 +5,7 @@ from app.h2h import H2HEngine
 from app.league_strength import LeagueStrengthEngine
 from app.models import TeamRating
 from app.pipeline import PredictionPipeline
+from app.rest_days import RestDaysEngine
 
 
 class LeagueStrengthEngineTests(unittest.TestCase):
@@ -48,8 +49,16 @@ class LeagueStrengthEngineTests(unittest.TestCase):
             ratings={39: 1.0},
             default_strength=0.5,
         )
-        low_pipeline = PredictionPipeline(low_strength, H2HEngine())
-        high_pipeline = PredictionPipeline(high_strength, H2HEngine())
+        low_pipeline = PredictionPipeline(
+            low_strength,
+            H2HEngine(),
+            RestDaysEngine(),
+        )
+        high_pipeline = PredictionPipeline(
+            high_strength,
+            H2HEngine(),
+            RestDaysEngine(),
+        )
         match = SimpleNamespace(
             home_team_name="Home",
             away_team_name="Away",
