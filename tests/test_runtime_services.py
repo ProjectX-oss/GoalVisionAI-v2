@@ -1,9 +1,12 @@
 import asyncio
 import unittest
+from datetime import datetime, timezone
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
+from app.core.application import GoalVisionApp
 from app.database import Database
+from app.models import Match
 from app.repositories import TeamRepository
 from app.services.telegram_service import TelegramService
 
@@ -39,6 +42,45 @@ class RuntimeServiceTests(unittest.TestCase):
             chat_id="@test",
             text="message",
         )
+
+    def test_incomplete_predictions_are_not_published(self):
+        application = GoalVisionApp.__new__(GoalVisionApp)
+        match = Match(
+            fixture_id=1,
+            league_id=1,
+            league_name="Test League",
+            season=2026,
+            home_team_id=10,
+            home_team_name="Home",
+            away_team_id=20,
+            away_team_name="Away",
+            kickoff=datetime.now(timezone.utc),
+            status="NS",
+        )
+        application.football = SimpleNamespace(
+            get_today_matches=AsyncMock(return_value=[match]),
+        )
+        application.standings = SimpleNamespace(load=AsyncMock())
+        application.repository = TeamRepository()
+        application.pipeline = SimpleNamespace(
+            predict=lambda match, home, away: SimpleNamespace(
+                winner="Home",
+                home_probability=60.0,
+                away_probability=40.0,
+                confidence="HIGH",
+                rating_difference=20.0,
+            )
+        )
+        application.telegram = SimpleNamespace(send_message=AsyncMock())
+
+        async def build_team(match, team_id, is_home):
+            application.repository.save(SimpleNamespace(team_id=team_id))
+
+        application.build_team = build_team
+
+        asyncio.run(application._run())
+
+        application.telegram.send_message.assert_not_awaited()
 
 
 if __name__ == "__main__":

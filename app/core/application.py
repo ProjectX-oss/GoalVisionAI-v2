@@ -148,38 +148,8 @@ class GoalVisionApp:
             reverse=True,
         )
 
-        for match, prediction in predictions:
-
-            if prediction.confidence == "LOW":
-                continue
-
-            await self.telegram.send_message(
-
-                settings.channel,
-
-                f"""🟢 GoalVision AI
-
-🏆 {match.league_name}
-
-⚽ {match.home_team_name}
-vs
-{match.away_team_name}
-
-🏅 Winner
-{prediction.winner}
-
-📈 Home
-{prediction.home_probability:.1f}%
-
-📉 Away
-{prediction.away_probability:.1f}%
-
-🔥 Confidence
-{prediction.confidence}
-"""
-            )
-
-        logger.info(
-            "%d predictions published.",
+        logger.warning(
+            "%d predictions generated but not published because required "
+            "odds and reasoning are unavailable.",
             len(predictions),
         )
