@@ -301,6 +301,14 @@ Only append.
 - Injected the engine into the prediction pipeline without changing prediction outcomes.
 - Added unit coverage for lookup, validation, fallback, dependency injection, and outcome isolation.
 
+## 2026-07-12 - H2H Engine
+
+- Added a typed H2H Engine with injected historical fixture data.
+- Added finished-match, team-pair, duplicate, and maximum-history filtering.
+- Added recency weighting and configurable insufficient-history confidence handling.
+- Injected the engine into the prediction pipeline without changing prediction outcomes.
+- Added unit coverage for empty, single, multiple, recent, duplicate, and normalized histories.
+
 ---
 
 # DISCOVERED TASKS

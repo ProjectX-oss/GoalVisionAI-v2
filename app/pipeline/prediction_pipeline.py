@@ -1,3 +1,4 @@
+from app.h2h import H2HEngine
 from app.league_strength import LeagueStrengthEngine
 from app.pipeline.team_builder import TeamBuilder
 from app.prediction import PredictionEngine
@@ -8,6 +9,7 @@ class PredictionPipeline:
     def __init__(
         self,
         league_strength: LeagueStrengthEngine,
+        h2h: H2HEngine,
     ) -> None:
 
         self.builder = TeamBuilder()
@@ -15,6 +17,8 @@ class PredictionPipeline:
         self.engine = PredictionEngine()
 
         self.league_strength = league_strength
+
+        self.h2h = h2h
 
     def build_team(
         self,
