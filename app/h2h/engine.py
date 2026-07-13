@@ -63,6 +63,20 @@ class H2HEngine:
 
         return round(max(0.0, min(strength, 1.0)), 6)
 
+    def sample_quality_for(
+        self,
+        team_id: int,
+        opponent_id: int,
+        fixtures: Iterable[HistoricalMatch],
+    ) -> float:
+        """Return normalized usable H2H sample size."""
+        match_count = len(self._eligible_matches(
+            team_id=team_id,
+            opponent_id=opponent_id,
+            fixtures=fixtures,
+        ))
+        return round(min(match_count / self.max_history, 1.0), 6)
+
     def _eligible_matches(
         self,
         team_id: int,

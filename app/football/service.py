@@ -99,3 +99,8 @@ class FootballService:
     def clear_cache(self):
 
         self.cache.clear()
+
+    def cached_team_form(self, team_id: int) -> list[dict]:
+        """Return already-loaded raw team history without making an API call."""
+        fixtures = self.cache.get(team_id)
+        return list(fixtures) if fixtures else []

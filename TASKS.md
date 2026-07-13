@@ -324,6 +324,14 @@ Only append.
 - Injected the framework into the prediction pipeline without changing predictions or publication.
 - Added unit coverage for complete, empty, partial, conflicting, critical-missing, invalid, deterministic, and isolated behavior.
 
+## 2026-07-13 - AI Quality Score Pipeline Integration
+
+- Added typed prediction assessments containing predictions, quality results, team contexts, signals, reason codes, and supporting metadata.
+- Built real quality signals from team form, standings, configured league ratings, cached H2H/rest history, venue history, attack, and defense data.
+- Preserved missing data explicitly and added deterministic component-conflict measurement.
+- Reused the existing prediction method so assessments do not duplicate or alter prediction calculations.
+- Added integration coverage for complete, partial, missing, deterministic, isolated, and Telegram-neutral behavior.
+
 ---
 
 # DISCOVERED TASKS
@@ -336,4 +344,6 @@ Do not interrupt higher priority work.
 
 Review after completing the current priority.
 
-- Backtest and calibrate Quality Score weights before using the score in explanations, reporting, or publication decisions.
+- Calibrate Quality Score weights through backtesting.
+- Integrate Quality Score into Telegram display only after calibration and product review.
+- Consider publication-threshold integration only after calibration proves an explicit threshold improves quality.

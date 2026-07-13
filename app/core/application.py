@@ -1,5 +1,6 @@
 import asyncio
 
+from app.collector import HistoryCollector
 from app.core.settings import settings
 from app.football.service import FootballService
 from app.h2h import H2HEngine
@@ -9,7 +10,9 @@ from app.league_strength import (
     LeagueStrengthEngine,
 )
 from app.logger import logger
+from app.models import Match
 from app.pipeline import (
+    PredictionSupportingData,
     PredictionPipeline,
     StandingsService,
 )
@@ -31,6 +34,8 @@ class GoalVisionApp:
         )
 
         self.football = FootballService()
+
+        self.history_collector = HistoryCollector()
 
         self.league_strength = LeagueStrengthEngine(
             ratings=LEAGUE_STRENGTH_RATINGS,
@@ -154,24 +159,25 @@ class GoalVisionApp:
                 match.away_team_id
             )
 
-            prediction = self.pipeline.predict(
+            assessment = self.pipeline.assess(
                 match,
                 home,
                 away,
+                supporting_data=self._supporting_data(match),
             )
 
             predictions.append(
                 (
                     match,
-                    prediction,
+                    assessment,
                 )
             )
 
         predictions.sort(
 
             key=lambda item: (
-                item[1].confidence,
-                item[1].rating_difference,
+                item[1].prediction.confidence,
+                item[1].prediction.rating_difference,
             ),
 
             reverse=True,
@@ -181,4 +187,20 @@ class GoalVisionApp:
             "%d predictions generated but not published because required "
             "odds and reasoning are unavailable.",
             len(predictions),
+        )
+
+    def _supporting_data(self, match: Match) -> PredictionSupportingData:
+        raw_history = (
+            self.football.cached_team_form(match.home_team_id)
+            + self.football.cached_team_form(match.away_team_id)
+        )
+
+        if not raw_history:
+            return PredictionSupportingData()
+
+        history = tuple(self.history_collector.collect(raw_history))
+        return PredictionSupportingData(
+            h2h_history=history,
+            rest_history=history,
+            metadata=(("history_source", "cached_recent_team_fixtures"),),
         )

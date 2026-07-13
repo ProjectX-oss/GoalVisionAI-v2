@@ -29,6 +29,10 @@ class LeagueStrengthEngine:
         """Return the normalized strength for a league ID."""
         return self._ratings.get(league_id, self._default_strength)
 
+    def has_rating(self, league_id: int) -> bool:
+        """Return whether a league has an explicit configured rating."""
+        return league_id in self._ratings
+
     @staticmethod
     def _validate_strength(strength: float) -> None:
         if not isinstance(strength, (int, float)):

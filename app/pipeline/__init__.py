@@ -6,4 +6,7 @@ __all__ = [
     "PredictionPipeline",
     "StandingsService",
     "TeamBuilder",
+    "PredictionAssessment",
+    "PredictionSupportingData",
 ]
+from .models import PredictionAssessment, PredictionSupportingData

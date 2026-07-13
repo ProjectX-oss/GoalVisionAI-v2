@@ -45,6 +45,28 @@ class RestDaysEngine:
 
         return round(max(0.0, min(advantage, 1.0)), 6)
 
+    def has_history_for(
+        self,
+        home_team_id: int,
+        away_team_id: int,
+        fixture_date: datetime,
+        fixtures: Iterable[HistoricalMatch],
+    ) -> bool:
+        """Return whether both teams have usable previous-match dates."""
+        history = tuple(fixtures)
+        return all((
+            self._previous_match_date(
+                team_id=home_team_id,
+                fixture_date=fixture_date,
+                fixtures=history,
+            ) is not None,
+            self._previous_match_date(
+                team_id=away_team_id,
+                fixture_date=fixture_date,
+                fixtures=history,
+            ) is not None,
+        ))
+
     def _previous_match_date(
         self,
         team_id: int,

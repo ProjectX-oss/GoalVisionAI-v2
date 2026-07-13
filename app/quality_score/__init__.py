@@ -7,6 +7,8 @@ __all__ = [
     "QualityScoreConfig",
     "QualityScoreEngine",
     "QualityScoreResult",
+    "QualitySignalsBuilder",
     "QualitySignal",
     "QualitySignals",
 ]
+from .builder import QualitySignalsBuilder

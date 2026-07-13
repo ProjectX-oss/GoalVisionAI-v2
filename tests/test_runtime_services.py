@@ -59,16 +59,20 @@ class RuntimeServiceTests(unittest.TestCase):
         )
         application.football = SimpleNamespace(
             get_today_matches=AsyncMock(return_value=[match]),
+            cached_team_form=lambda team_id: [],
         )
+        application.history_collector = SimpleNamespace(collect=lambda data: [])
         application.standings = SimpleNamespace(load=AsyncMock())
         application.repository = TeamRepository()
         application.pipeline = SimpleNamespace(
-            predict=lambda match, home, away: SimpleNamespace(
-                winner="Home",
-                home_probability=60.0,
-                away_probability=40.0,
-                confidence="HIGH",
-                rating_difference=20.0,
+            assess=lambda match, home, away, supporting_data: SimpleNamespace(
+                prediction=SimpleNamespace(
+                    winner="Home",
+                    home_probability=60.0,
+                    away_probability=40.0,
+                    confidence="HIGH",
+                    rating_difference=20.0,
+                ),
             )
         )
         application.telegram = SimpleNamespace(send_message=AsyncMock())
