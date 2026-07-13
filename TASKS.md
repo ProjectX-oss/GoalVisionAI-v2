@@ -340,6 +340,14 @@ Only append.
 - Preserved a single prediction and quality-score calculation per assessment.
 - Added coverage for home/away advantages, conflicts, missing and neutral data, determinism, factual isolation, and prediction isolation.
 
+## 2026-07-13 - Telegram Prediction Presentation Framework
+
+- Added typed compact prediction, detailed explanation, result, and inline-action presentation models.
+- Added deterministic Telegram-safe HTML formatters with complete text escaping.
+- Kept compact posts separate from concise “Why this pick?” analysis.
+- Kept AI Quality Score display configurable and disabled by default pending calibration.
+- Added unit coverage for home/away picks, optional odds and quality, details, risks, escaping, determinism, and network isolation.
+
 ---
 
 # DISCOVERED TASKS
@@ -357,3 +365,6 @@ Review after completing the current priority.
 - Consider publication-threshold integration only after calibration proves an explicit threshold improves quality.
 - Add expandable deterministic analysis to Telegram only after product review.
 - Consider an optional LLM wording layer only after deterministic explanations are proven reliable; it must never alter prediction facts.
+- Integrate presentation actions with Telegram interactions only after product review.
+- Keep AI Quality Score display blocked until backtest calibration is complete.
+- Integrate WON/LOST/VOID result presentation with result publishing in a future task.
