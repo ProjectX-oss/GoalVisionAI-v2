@@ -364,6 +364,14 @@ Only append.
 - Added a dependency-injected repository boundary with terminal-result idempotency and immutable prior settlements.
 - Kept result publishing, bankroll settlement, live API access, and database schemas unchanged.
 
+## 2026-07-13 - Persistent Prediction Result Storage
+
+- Added an additive, versioned SQLite migration for published predictions and terminal settlement audit data.
+- Added persistent pending-prediction loading, idempotent publication writes, immutable result settlement, and result-history retrieval.
+- Stored prediction identity, fixture, market, pick, optional odds and stake, timestamps, final score, status, reason codes, and settlement rule version.
+- Preserved existing database tables and data while reusing the project Database abstraction.
+- Kept Telegram result publishing, bankroll settlement, prediction policy, and application startup behavior unchanged.
+
 ---
 
 # DISCOVERED TASKS
@@ -390,3 +398,6 @@ Review after completing the current priority.
 - Integrate result-resolution persistence with the production database in a future task.
 - Integrate WON/LOST/VOID presentation with Telegram publishing in a future task.
 - Integrate resolved results with the correct product bankroll only in a future reviewed task.
+- Wire persistent WON/LOST/VOID history into Telegram result publication in a future task.
+- Apply resolved outcomes to the correct product bankroll only in a future reviewed task.
+- Build weekly statistics from persistent result history in a future task.

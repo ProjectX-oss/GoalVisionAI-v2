@@ -32,6 +32,8 @@ class PublishedPredictionReference:
     market: str
     selection: str
     published_at: datetime
+    odds: float | None = None
+    stake: float | None = None
 
     def __post_init__(self) -> None:
         if not self.prediction_id.strip():
@@ -40,6 +42,10 @@ class PublishedPredictionReference:
             raise ValueError("Fixture ID must be positive.")
         if self.published_at.tzinfo is None:
             raise ValueError("Published timestamp must be timezone-aware.")
+        if self.odds is not None and self.odds <= 0.0:
+            raise ValueError("Odds must be positive when provided.")
+        if self.stake is not None and self.stake < 0.0:
+            raise ValueError("Stake must not be negative when provided.")
 
 
 @dataclass(frozen=True, slots=True)
