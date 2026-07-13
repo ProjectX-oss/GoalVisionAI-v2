@@ -356,6 +356,14 @@ Only append.
 - Added idempotent duplicate handling that reuses the first formatted explanation response.
 - Kept production Telegram sending unchanged and added isolated callback coverage without network access.
 
+## 2026-07-13 - Prediction Result Resolution Framework
+
+- Added typed published-prediction, fixture-result, resolution, status, reason-code, and audit models.
+- Added deterministic Match Winner settlement for home, away, and draw picks through a centralized extensible rule registry.
+- Added configurable handling for pending, cancelled, postponed, abandoned, finished, and unsupported fixture statuses.
+- Added a dependency-injected repository boundary with terminal-result idempotency and immutable prior settlements.
+- Kept result publishing, bankroll settlement, live API access, and database schemas unchanged.
+
 ---
 
 # DISCOVERED TASKS
@@ -379,3 +387,6 @@ Review after completing the current priority.
 - Wire the prediction interaction handler into production Telegram callbacks after product review.
 - Implement the future statistics button data lookup and presentation.
 - Implement the future bankroll button data lookup and presentation.
+- Integrate result-resolution persistence with the production database in a future task.
+- Integrate WON/LOST/VOID presentation with Telegram publishing in a future task.
+- Integrate resolved results with the correct product bankroll only in a future reviewed task.
