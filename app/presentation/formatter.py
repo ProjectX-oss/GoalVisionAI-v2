@@ -1,5 +1,7 @@
 from html import escape
 
+from app.explanations import PredictionExplanation
+
 from .config import PresentationConfig
 from .models import (
     CompactPredictionMessage,
@@ -51,7 +53,13 @@ class TelegramPredictionPresenter:
         self,
         data: PredictionPresentationData,
     ) -> DetailedExplanationMessage:
-        explanation = data.explanation
+        return self.detailed_explanation(data.explanation)
+
+    def detailed_explanation(
+        self,
+        explanation: PredictionExplanation,
+    ) -> DetailedExplanationMessage:
+        """Format an already-generated deterministic explanation."""
         lines = [
             "<b>Why this pick?</b>",
             escape(explanation.short_summary),

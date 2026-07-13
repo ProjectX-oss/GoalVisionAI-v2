@@ -348,6 +348,14 @@ Only append.
 - Kept AI Quality Score display configurable and disabled by default pending calibration.
 - Added unit coverage for home/away picks, optional odds and quality, details, risks, escaping, determinism, and network isolation.
 
+## 2026-07-13 - Telegram Prediction Interaction Framework
+
+- Added typed interaction actions for deterministic explanation retrieval plus future statistics and bankroll placeholders.
+- Added versioned, validated callback identifiers with no secrets or raw explanation data and an enforced Telegram size limit.
+- Added a dependency-injected assessment/explanation lookup boundary with expiry and missing-data handling.
+- Added idempotent duplicate handling that reuses the first formatted explanation response.
+- Kept production Telegram sending unchanged and added isolated callback coverage without network access.
+
 ---
 
 # DISCOVERED TASKS
@@ -368,3 +376,6 @@ Review after completing the current priority.
 - Integrate presentation actions with Telegram interactions only after product review.
 - Keep AI Quality Score display blocked until backtest calibration is complete.
 - Integrate WON/LOST/VOID result presentation with result publishing in a future task.
+- Wire the prediction interaction handler into production Telegram callbacks after product review.
+- Implement the future statistics button data lookup and presentation.
+- Implement the future bankroll button data lookup and presentation.
