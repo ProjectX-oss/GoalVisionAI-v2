@@ -1,3 +1,4 @@
+from app.explanations import PredictionExplanationEngine
 from app.h2h import H2HEngine
 from app.league_strength import LeagueStrengthEngine
 from app.models import Match, Prediction, TeamContext
@@ -17,6 +18,7 @@ class PredictionPipeline:
         h2h: H2HEngine,
         rest_days: RestDaysEngine,
         quality_score: QualityScoreEngine,
+        explanations: PredictionExplanationEngine,
     ) -> None:
 
         self.builder = TeamBuilder()
@@ -30,6 +32,8 @@ class PredictionPipeline:
         self.rest_days = rest_days
 
         self.quality_score = quality_score
+
+        self.explanations = explanations
 
         self.quality_signals = QualitySignalsBuilder(
             league_strength=league_strength,
@@ -89,10 +93,21 @@ class PredictionPipeline:
             rest_history=support.rest_history,
         )
         quality_score = self.quality_score.evaluate(signals)
+        explanation = self.explanations.explain(
+            match=match,
+            prediction=prediction,
+            quality_score=quality_score,
+            quality_signals=signals,
+            home=home,
+            away=away,
+            h2h_history=support.h2h_history,
+            rest_history=support.rest_history,
+        )
 
         return PredictionAssessment(
             prediction=prediction,
             quality_score=quality_score,
+            explanation=explanation,
             home_context=home,
             away_context=away,
             quality_signals=signals,

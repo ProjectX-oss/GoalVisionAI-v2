@@ -1,9 +1,14 @@
 import unittest
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 from app.collector import HistoryCollector
 from app.core.application import GoalVisionApp
+from app.explanations import (
+    DEFAULT_EXPLANATION_CONFIG,
+    PredictionExplanationEngine,
+)
 from app.h2h import H2HEngine
 from app.league_strength import LeagueStrengthEngine
 from app.models import HistoricalMatch, LeagueTable, Match
@@ -24,14 +29,23 @@ class PredictionAssessmentTests(unittest.TestCase):
 
     def setUp(self) -> None:
         self.kickoff = datetime.now(timezone.utc)
+        league_strength = LeagueStrengthEngine(
+            ratings={39: 1.0},
+            default_strength=0.5,
+        )
+        h2h = H2HEngine()
+        rest_days = RestDaysEngine()
         self.pipeline = PredictionPipeline(
-            league_strength=LeagueStrengthEngine(
-                ratings={39: 1.0},
-                default_strength=0.5,
-            ),
-            h2h=H2HEngine(),
-            rest_days=RestDaysEngine(),
+            league_strength=league_strength,
+            h2h=h2h,
+            rest_days=rest_days,
             quality_score=QualityScoreEngine(DEFAULT_QUALITY_SCORE_CONFIG),
+            explanations=PredictionExplanationEngine(
+                config=DEFAULT_EXPLANATION_CONFIG,
+                league_strength=league_strength,
+                h2h=h2h,
+                rest_days=rest_days,
+            ),
         )
         self.match = Match(
             fixture_id=500,
@@ -206,6 +220,21 @@ class PredictionAssessmentTests(unittest.TestCase):
         )
 
         self.assertEqual(assessment.prediction, prediction)
+
+    def test_assessment_calculates_prediction_once(self):
+        home, away = self.contexts()
+        original_predict = self.pipeline.engine.predict
+        self.pipeline.engine.predict = Mock(side_effect=original_predict)
+
+        assessment = self.pipeline.assess(
+            self.match,
+            home,
+            away,
+            self.complete_support(),
+        )
+
+        self.assertEqual(assessment.prediction.winner, "Home")
+        self.pipeline.engine.predict.assert_called_once()
 
     def test_cached_raw_history_is_converted_to_typed_support(self):
         raw_fixture = {

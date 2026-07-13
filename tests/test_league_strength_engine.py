@@ -1,5 +1,6 @@
 import unittest
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 from app.h2h import H2HEngine
 from app.league_strength import LeagueStrengthEngine
@@ -58,12 +59,14 @@ class LeagueStrengthEngineTests(unittest.TestCase):
             H2HEngine(),
             RestDaysEngine(),
             QualityScoreEngine(DEFAULT_QUALITY_SCORE_CONFIG),
+            Mock(),
         )
         high_pipeline = PredictionPipeline(
             high_strength,
             H2HEngine(),
             RestDaysEngine(),
             QualityScoreEngine(DEFAULT_QUALITY_SCORE_CONFIG),
+            Mock(),
         )
         match = SimpleNamespace(
             home_team_name="Home",

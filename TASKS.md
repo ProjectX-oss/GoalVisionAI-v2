@@ -332,6 +332,14 @@ Only append.
 - Reused the existing prediction method so assessments do not duplicate or alter prediction calculations.
 - Added integration coverage for complete, partial, missing, deterministic, isolated, and Telegram-neutral behavior.
 
+## 2026-07-13 - Deterministic Prediction Explanations
+
+- Added typed deterministic explanations to every prediction assessment.
+- Added concise positive factors, risks, missing-data labels, reason codes, and supporting metrics.
+- Derived explanations only from predictions, quality results, team contexts, league configuration, and typed H2H/rest history.
+- Preserved a single prediction and quality-score calculation per assessment.
+- Added coverage for home/away advantages, conflicts, missing and neutral data, determinism, factual isolation, and prediction isolation.
+
 ---
 
 # DISCOVERED TASKS
@@ -347,3 +355,5 @@ Review after completing the current priority.
 - Calibrate Quality Score weights through backtesting.
 - Integrate Quality Score into Telegram display only after calibration and product review.
 - Consider publication-threshold integration only after calibration proves an explicit threshold improves quality.
+- Add expandable deterministic analysis to Telegram only after product review.
+- Consider an optional LLM wording layer only after deterministic explanations are proven reliable; it must never alter prediction facts.

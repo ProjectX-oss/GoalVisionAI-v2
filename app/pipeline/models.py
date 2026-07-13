@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from app.explanations import PredictionExplanation
 from app.models import HistoricalMatch, Prediction, TeamContext
 from app.quality_score import QualityScoreResult, QualitySignals
 
@@ -15,6 +16,7 @@ class PredictionSupportingData:
 class PredictionAssessment:
     prediction: Prediction
     quality_score: QualityScoreResult
+    explanation: PredictionExplanation
     home_context: TeamContext
     away_context: TeamContext
     quality_signals: QualitySignals

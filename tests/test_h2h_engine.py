@@ -113,6 +113,7 @@ class H2HEngineTests(unittest.TestCase):
             h2h,
             RestDaysEngine(),
             QualityScoreEngine(DEFAULT_QUALITY_SCORE_CONFIG),
+            Mock(),
         )
         match = SimpleNamespace(
             home_team_name="Home",

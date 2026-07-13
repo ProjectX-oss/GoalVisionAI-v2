@@ -3,6 +3,10 @@ import asyncio
 from app.collector import HistoryCollector
 from app.core.settings import settings
 from app.football.service import FootballService
+from app.explanations import (
+    DEFAULT_EXPLANATION_CONFIG,
+    PredictionExplanationEngine,
+)
 from app.h2h import H2HEngine
 from app.league_strength import (
     LEAGUE_STRENGTH_RATINGS,
@@ -50,11 +54,19 @@ class GoalVisionApp:
             DEFAULT_QUALITY_SCORE_CONFIG
         )
 
+        self.explanations = PredictionExplanationEngine(
+            config=DEFAULT_EXPLANATION_CONFIG,
+            league_strength=self.league_strength,
+            h2h=self.h2h,
+            rest_days=self.rest_days,
+        )
+
         self.pipeline = PredictionPipeline(
             league_strength=self.league_strength,
             h2h=self.h2h,
             rest_days=self.rest_days,
             quality_score=self.quality_score,
+            explanations=self.explanations,
         )
 
         self.repository = TeamRepository()
