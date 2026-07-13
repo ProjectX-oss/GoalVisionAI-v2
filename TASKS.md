@@ -316,6 +316,14 @@ Only append.
 - Injected the engine into the prediction pipeline without changing prediction outcomes.
 - Added unit coverage for missing, equal, advantaged, capped, unfinished, and normalized histories.
 
+## 2026-07-13 - AI Quality Score Framework
+
+- Added deterministic, typed supporting-data quality scoring from 0 to 100.
+- Centralized and validated signal weights, critical signals, and penalties.
+- Added completeness, consistency, warnings, and explanation-ready reason codes.
+- Injected the framework into the prediction pipeline without changing predictions or publication.
+- Added unit coverage for complete, empty, partial, conflicting, critical-missing, invalid, deterministic, and isolated behavior.
+
 ---
 
 # DISCOVERED TASKS
@@ -327,3 +335,5 @@ add it here.
 Do not interrupt higher priority work.
 
 Review after completing the current priority.
+
+- Backtest and calibrate Quality Score weights before using the score in explanations, reporting, or publication decisions.

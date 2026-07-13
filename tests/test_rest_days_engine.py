@@ -7,6 +7,10 @@ from app.h2h import H2HEngine
 from app.league_strength import LeagueStrengthEngine
 from app.models import HistoricalMatch, TeamRating
 from app.pipeline import PredictionPipeline
+from app.quality_score import (
+    DEFAULT_QUALITY_SCORE_CONFIG,
+    QualityScoreEngine,
+)
 from app.rest_days import RestDaysEngine
 
 
@@ -101,6 +105,7 @@ class RestDaysEngineTests(unittest.TestCase):
             LeagueStrengthEngine({}, default_strength=0.5),
             H2HEngine(),
             rest_days,
+            QualityScoreEngine(DEFAULT_QUALITY_SCORE_CONFIG),
         )
         match = SimpleNamespace(
             home_team_name="Home",

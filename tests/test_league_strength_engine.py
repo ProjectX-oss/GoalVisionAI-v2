@@ -5,6 +5,10 @@ from app.h2h import H2HEngine
 from app.league_strength import LeagueStrengthEngine
 from app.models import TeamRating
 from app.pipeline import PredictionPipeline
+from app.quality_score import (
+    DEFAULT_QUALITY_SCORE_CONFIG,
+    QualityScoreEngine,
+)
 from app.rest_days import RestDaysEngine
 
 
@@ -53,11 +57,13 @@ class LeagueStrengthEngineTests(unittest.TestCase):
             low_strength,
             H2HEngine(),
             RestDaysEngine(),
+            QualityScoreEngine(DEFAULT_QUALITY_SCORE_CONFIG),
         )
         high_pipeline = PredictionPipeline(
             high_strength,
             H2HEngine(),
             RestDaysEngine(),
+            QualityScoreEngine(DEFAULT_QUALITY_SCORE_CONFIG),
         )
         match = SimpleNamespace(
             home_team_name="Home",

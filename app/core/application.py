@@ -14,6 +14,10 @@ from app.pipeline import (
     StandingsService,
 )
 from app.repositories import TeamRepository
+from app.quality_score import (
+    DEFAULT_QUALITY_SCORE_CONFIG,
+    QualityScoreEngine,
+)
 from app.rest_days import RestDaysEngine
 from app.services.telegram_service import TelegramService
 
@@ -37,10 +41,15 @@ class GoalVisionApp:
 
         self.rest_days = RestDaysEngine()
 
+        self.quality_score = QualityScoreEngine(
+            DEFAULT_QUALITY_SCORE_CONFIG
+        )
+
         self.pipeline = PredictionPipeline(
             league_strength=self.league_strength,
             h2h=self.h2h,
             rest_days=self.rest_days,
+            quality_score=self.quality_score,
         )
 
         self.repository = TeamRepository()
