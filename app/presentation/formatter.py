@@ -96,13 +96,36 @@ class TelegramPredictionPresenter:
         self._validate_odds(data.odds)
         lines = [
             "<b>GoalVision AI Result</b>",
-            f"🏆 {escape(data.league)}",
-            f"⚽ {escape(data.home_team)} vs {escape(data.away_team)}",
-            f"🎯 {escape(data.market)}: {escape(data.pick)}",
             f"📋 <b>{data.status.value}</b>",
         ]
+        if data.league is not None:
+            lines.append(f"🏆 {escape(data.league)}")
+        if data.home_team is not None and data.away_team is not None:
+            lines.append(
+                f"⚽ {escape(data.home_team)} vs {escape(data.away_team)}"
+            )
+        lines.append(f"🎯 {escape(data.market)}: {escape(data.pick)}")
         if data.odds is not None:
             lines.append(f"💰 Odds: {data.odds:.2f}")
+        if data.home_score is not None and data.away_score is not None:
+            lines.append(f"Final score: {data.home_score}-{data.away_score}")
+        if data.stake_stars is not None and data.stake_amount is not None:
+            currency = escape(data.currency or "EUR")
+            lines.append(
+                f"Stake: {'★' * data.stake_stars} · "
+                f"{currency} {data.stake_amount:.2f}"
+            )
+        if data.profit_loss is not None:
+            currency = escape(data.currency or "EUR")
+            sign = "+" if data.profit_loss > 0 else "-" if data.profit_loss < 0 else ""
+            lines.append(
+                f"Profit/Loss: {sign}{currency} {abs(data.profit_loss):.2f}"
+            )
+        if data.bankroll_balance is not None:
+            currency = escape(data.currency or "EUR")
+            lines.append(
+                f"Official bankroll: {currency} {data.bankroll_balance:.2f}"
+            )
         return ResultMessage(text="\n".join(lines))
 
     @staticmethod

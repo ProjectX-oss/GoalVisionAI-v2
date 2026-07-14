@@ -122,6 +122,59 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=3,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS result_publications (
+                prediction_id TEXT NOT NULL,
+                product_id TEXT NOT NULL,
+                telegram_destination TEXT NOT NULL,
+                publication_status TEXT NOT NULL,
+                telegram_message_id INTEGER,
+                attempted_at TEXT NOT NULL,
+                published_at TEXT,
+                failure_reason TEXT,
+                format_version TEXT NOT NULL,
+                attempt_count INTEGER NOT NULL DEFAULT 1,
+                PRIMARY KEY (
+                    prediction_id,
+                    product_id,
+                    telegram_destination
+                ),
+                FOREIGN KEY (prediction_id)
+                    REFERENCES published_predictions(prediction_id),
+                CHECK (product_id = 'OFFICIAL'),
+                CHECK (
+                    publication_status IN ('ATTEMPTING', 'PUBLISHED', 'FAILED')
+                ),
+                CHECK (attempt_count > 0),
+                CHECK (
+                    (publication_status = 'PUBLISHED'
+                        AND published_at IS NOT NULL
+                        AND failure_reason IS NULL)
+                    OR
+                    (publication_status = 'FAILED'
+                        AND published_at IS NULL
+                        AND failure_reason IS NOT NULL)
+                    OR
+                    (publication_status = 'ATTEMPTING'
+                        AND published_at IS NULL
+                        AND failure_reason IS NULL)
+                )
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_result_publications_status
+            ON result_publications (
+                product_id,
+                telegram_destination,
+                publication_status,
+                attempted_at
+            )
+            """,
+        ),
+    ),
 )
 
 

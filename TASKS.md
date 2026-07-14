@@ -396,6 +396,14 @@ Only append.
 - Added per-fixture failure isolation, duplicate handling, aggregate audit counts, timestamps, and rule versions.
 - Kept scheduling, Telegram publishing, live API coupling, prediction policy, and non-Official bankrolls disabled.
 
+## 2026-07-14 - Official Telegram Result Publication Framework
+
+- Added deterministic WON, LOST, and VOID Official result messages using the existing presentation layer.
+- Added persistent, restart-safe publication audit state with atomic delivery claims, retryable confirmed failures, and duplicate prevention.
+- Included optional league/team context, final score, odds, public stake stars, Decimal stake and profit/loss values, and updated Official bankroll.
+- Kept internal stake percentages, AI Quality Score, other product channels, recurring scheduling, and live Telegram wiring disabled.
+- Added isolated SQLite and fake-Telegram coverage for formatting, escaping, retries, database failures, idempotency, and mixed batches.
+
 ---
 
 # DISCOVERED TASKS
@@ -438,3 +446,6 @@ Review after completing the current priority.
 - Publish coordinated Telegram WON/LOST and bankroll messages in a future task.
 - Generate weekly Official statistics from settlement reports and persistent histories.
 - Add operational settlement monitoring, retry metrics, and alerts.
+- Coordinate scheduled settlement and result publication only after operational review.
+- Generate weekly Official reports from immutable result and bankroll histories.
+- Send publication failures and stuck-delivery claims to the Admin channel in a future task.
