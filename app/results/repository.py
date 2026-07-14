@@ -13,6 +13,12 @@ class PredictionResultRepository(Protocol):
     def load_pending(self) -> tuple[PublishedPredictionReference, ...]:
         ...
 
+    def get_published(
+        self,
+        prediction_id: str,
+    ) -> PublishedPredictionReference | None:
+        ...
+
     def get_resolved(
         self,
         prediction_id: str,
@@ -59,6 +65,12 @@ class InMemoryPredictionResultRepository:
             for prediction_id, prediction in self._predictions.items()
             if prediction_id not in self._results
         )
+
+    def get_published(
+        self,
+        prediction_id: str,
+    ) -> PublishedPredictionReference | None:
+        return self._predictions.get(prediction_id)
 
     def get_resolved(
         self,

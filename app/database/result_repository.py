@@ -62,7 +62,9 @@ class SQLitePredictionResultRepository:
         except sqlite3.DatabaseError as error:
             raise ValueError("Published prediction could not be stored.") from error
 
-        stored = self._load_prediction(prediction.prediction_id)
+        stored = self.get_published(prediction.prediction_id)
+        if stored is None:
+            raise ValueError("Published prediction was not stored.")
         if stored != prediction:
             raise ValueError("Prediction ID already has different published data.")
         return stored
@@ -78,6 +80,21 @@ class SQLitePredictionResultRepository:
             """
         ).fetchall()
         return tuple(self._prediction_from_row(row) for row in rows)
+
+    def get_published(
+        self,
+        prediction_id: str,
+    ) -> PublishedPredictionReference | None:
+        row = self._connection.execute(
+            """
+            SELECT prediction_id, fixture_id, market, pick, odds, stake,
+                   published_at
+            FROM published_predictions
+            WHERE prediction_id = ?
+            """,
+            (prediction_id,),
+        ).fetchone()
+        return self._prediction_from_row(row) if row is not None else None
 
     def get_resolved(
         self,
@@ -152,23 +169,6 @@ class SQLitePredictionResultRepository:
             self._TERMINAL_STATUSES,
         ).fetchall()
         return tuple(self._result_from_row(row) for row in rows)
-
-    def _load_prediction(
-        self,
-        prediction_id: str,
-    ) -> PublishedPredictionReference:
-        row = self._connection.execute(
-            """
-            SELECT prediction_id, fixture_id, market, pick, odds, stake,
-                   published_at
-            FROM published_predictions
-            WHERE prediction_id = ?
-            """,
-            (prediction_id,),
-        ).fetchone()
-        if row is None:
-            raise ValueError("Published prediction was not stored.")
-        return self._prediction_from_row(row)
 
     @staticmethod
     def _prediction_from_row(row: sqlite3.Row) -> PublishedPredictionReference:

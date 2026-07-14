@@ -388,6 +388,14 @@ Only append.
 - Integrated explicit-tier bankroll settlement with existing typed prediction resolution results.
 - Kept Telegram, automatic jobs, prediction policy, other product bankrolls, and automatic tier selection disabled.
 
+## 2026-07-14 - Automatic Prediction Settlement Orchestration
+
+- Added one deterministic application service for pending prediction loading, deduplicated fixture retrieval, result persistence, and Official bankroll settlement.
+- Added typed settlement candidates, batch requests, per-prediction outcomes, reports, and failure reason codes.
+- Enforced result-first persistence boundaries and restart-safe bankroll recovery for partial failures.
+- Added per-fixture failure isolation, duplicate handling, aggregate audit counts, timestamps, and rule versions.
+- Kept scheduling, Telegram publishing, live API coupling, prediction policy, and non-Official bankrolls disabled.
+
 ---
 
 # DISCOVERED TASKS
@@ -426,3 +434,7 @@ Review after completing the current priority.
 - Add coordinated Telegram result and Official bankroll messages in a future task.
 - Build weekly Official statistics from persistent bankroll and result history.
 - Calibrate automatic stake-tier selection through backtesting before enabling it.
+- Schedule recurring settlement execution only after operational review.
+- Publish coordinated Telegram WON/LOST and bankroll messages in a future task.
+- Generate weekly Official statistics from settlement reports and persistent histories.
+- Add operational settlement monitoring, retry metrics, and alerts.
