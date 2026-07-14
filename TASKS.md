@@ -372,6 +372,14 @@ Only append.
 - Preserved existing database tables and data while reusing the project Database abstraction.
 - Kept Telegram result publishing, bankroll settlement, prediction policy, and application startup behavior unchanged.
 
+## 2026-07-14 - Official Bankroll Settlement Framework
+
+- Added a Decimal-based Official bankroll account starting at EUR 10,000.
+- Added explicit STANDARD, STRONG, and ELITE stake tiers at 1%, 2%, and 3%, with separate 3-, 4-, and 5-star public metadata.
+- Added deterministic WON, LOST, VOID, PENDING, and UNRESOLVED settlement handling with immutable audit transactions.
+- Added dependency-injected bankroll repositories, atomic idempotency, snapshots, and strict product separation.
+- Kept Telegram, prediction policy, database schemas, and automatic tier selection unchanged.
+
 ---
 
 # DISCOVERED TASKS
@@ -401,3 +409,8 @@ Review after completing the current priority.
 - Wire persistent WON/LOST/VOID history into Telegram result publication in a future task.
 - Apply resolved outcomes to the correct product bankroll only in a future reviewed task.
 - Build weekly statistics from persistent result history in a future task.
+- Add persistent database storage for Official bankroll accounts and transactions.
+- Add Telegram presentation for Official bankroll snapshots and stake-star ratings.
+- Build weekly Official statistics from immutable bankroll transaction history.
+- Backtest automatic stake-tier selection before connecting tiers to prediction confidence or AI Quality Score.
+- Build separate reviewed bankroll systems for High Risk and Combo without mixing Official history.
