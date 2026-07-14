@@ -62,6 +62,66 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=2,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS bankroll_accounts (
+                product_id TEXT PRIMARY KEY,
+                currency TEXT NOT NULL,
+                starting_balance TEXT NOT NULL,
+                current_balance TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                rule_version TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS bankroll_transactions (
+                transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                product_id TEXT NOT NULL,
+                prediction_id TEXT NOT NULL,
+                fixture_id INTEGER NOT NULL,
+                stake_tier TEXT NOT NULL,
+                public_star_rating INTEGER NOT NULL,
+                opening_balance TEXT NOT NULL,
+                stake_amount TEXT NOT NULL,
+                decimal_odds TEXT NOT NULL,
+                gross_return TEXT NOT NULL,
+                profit_loss TEXT NOT NULL,
+                closing_balance TEXT NOT NULL,
+                settlement_status TEXT NOT NULL,
+                settled_at TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                rule_version TEXT NOT NULL,
+                FOREIGN KEY (product_id) REFERENCES bankroll_accounts(product_id),
+                UNIQUE (product_id, prediction_id),
+                CHECK (fixture_id > 0),
+                CHECK (stake_tier IN ('STANDARD', 'STRONG', 'ELITE')),
+                CHECK (public_star_rating IN (3, 4, 5)),
+                CHECK (settlement_status IN ('WON', 'LOST', 'VOID'))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_bankroll_transactions_history
+            ON bankroll_transactions (product_id, settled_at, transaction_id)
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS bankroll_transactions_no_update
+            BEFORE UPDATE ON bankroll_transactions
+            BEGIN
+                SELECT RAISE(ABORT, 'bankroll transactions are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS bankroll_transactions_no_delete
+            BEFORE DELETE ON bankroll_transactions
+            BEGIN
+                SELECT RAISE(ABORT, 'bankroll transactions are immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 

@@ -18,6 +18,7 @@ from .models import (
     StakeTier,
 )
 from .repository import BankrollRepository, InMemoryBankrollRepository
+from .result_integration import OfficialResultBankrollSettlementService
 
 __all__ = [
     "BankrollAccount",
@@ -35,6 +36,7 @@ __all__ = [
     "InsufficientBalanceError",
     "InvalidOddsError",
     "OfficialBankrollSettlementEngine",
+    "OfficialResultBankrollSettlementService",
     "ProductBankrollMismatchError",
     "StakeRecommendation",
     "StakeTier",

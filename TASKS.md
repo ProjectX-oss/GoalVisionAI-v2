@@ -380,6 +380,14 @@ Only append.
 - Added dependency-injected bankroll repositories, atomic idempotency, snapshots, and strict product separation.
 - Kept Telegram, prediction policy, database schemas, and automatic tier selection unchanged.
 
+## 2026-07-14 - Persistent Official Bankroll Storage
+
+- Added additive SQLite account and immutable transaction migrations without altering existing result history.
+- Initialized the Official EUR 10,000 account exactly once and preserved its balance and settled prediction IDs across restarts.
+- Added Decimal-safe persistent account loading, atomic idempotent transaction storage, and chronologically ordered history retrieval.
+- Integrated explicit-tier bankroll settlement with existing typed prediction resolution results.
+- Kept Telegram, automatic jobs, prediction policy, other product bankrolls, and automatic tier selection disabled.
+
 ---
 
 # DISCOVERED TASKS
@@ -414,3 +422,7 @@ Review after completing the current priority.
 - Build weekly Official statistics from immutable bankroll transaction history.
 - Backtest automatic stake-tier selection before connecting tiers to prediction confidence or AI Quality Score.
 - Build separate reviewed bankroll systems for High Risk and Combo without mixing Official history.
+- Orchestrate automatic result-to-bankroll settlement only after the explicit workflow is reviewed.
+- Add coordinated Telegram result and Official bankroll messages in a future task.
+- Build weekly Official statistics from persistent bankroll and result history.
+- Calibrate automatic stake-tier selection through backtesting before enabling it.

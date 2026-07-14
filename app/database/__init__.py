@@ -1,3 +1,4 @@
+from .bankroll_repository import SQLiteOfficialBankrollRepository
 from .database import Database
 from .history_repository import HistoryRepository
 from .migrations import MigrationManager
@@ -7,5 +8,6 @@ __all__ = [
     "Database",
     "HistoryRepository",
     "MigrationManager",
+    "SQLiteOfficialBankrollRepository",
     "SQLitePredictionResultRepository",
 ]
