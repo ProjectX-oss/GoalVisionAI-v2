@@ -175,6 +175,110 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=4,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS quality_gate_shadow_evaluations (
+                shadow_evaluation_id TEXT PRIMARY KEY,
+                prediction_id TEXT NOT NULL,
+                fixture_id INTEGER NOT NULL,
+                product_scope TEXT NOT NULL,
+                evaluation_stage TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                evaluation_timestamp TEXT NOT NULL,
+                candidate_snapshot TEXT NOT NULL,
+                context_snapshot TEXT NOT NULL,
+                gate_status TEXT NOT NULL,
+                check_results TEXT NOT NULL,
+                rejection_reasons TEXT NOT NULL,
+                review_reasons TEXT NOT NULL,
+                evaluated_probability TEXT,
+                probability_source TEXT,
+                calculated_expected_value TEXT,
+                market_disagreement TEXT,
+                actually_published INTEGER NOT NULL,
+                actual_publication_timestamp TEXT,
+                actual_offered_odds TEXT,
+                settlement_outcome TEXT,
+                eventual_profit_loss_units TEXT,
+                settled_at TEXT,
+                created_at TEXT NOT NULL,
+                UNIQUE (prediction_id, policy_version, evaluation_stage),
+                CHECK (fixture_id > 0),
+                CHECK (
+                    evaluation_stage IN (
+                        'INITIAL_CANDIDATE',
+                        'PRE_PUBLICATION',
+                        'FINAL_PRE_KICKOFF'
+                    )
+                ),
+                CHECK (gate_status IN ('APPROVED', 'REJECTED', 'REVIEW_REQUIRED')),
+                CHECK (actually_published IN (0, 1)),
+                CHECK (
+                    (actually_published = 1
+                        AND actual_publication_timestamp IS NOT NULL)
+                    OR
+                    (actually_published = 0
+                        AND actual_publication_timestamp IS NULL)
+                ),
+                CHECK (
+                    settlement_outcome IS NULL
+                    OR settlement_outcome IN ('WON', 'LOST', 'VOID')
+                ),
+                CHECK (
+                    (settlement_outcome IS NULL
+                        AND eventual_profit_loss_units IS NULL
+                        AND settled_at IS NULL)
+                    OR
+                    (settlement_outcome IS NOT NULL
+                        AND eventual_profit_loss_units IS NOT NULL
+                        AND settled_at IS NOT NULL)
+                )
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_quality_gate_shadow_prediction
+            ON quality_gate_shadow_evaluations (prediction_id, evaluation_timestamp)
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_quality_gate_shadow_fixture
+            ON quality_gate_shadow_evaluations (fixture_id, evaluation_timestamp)
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_quality_gate_shadow_reports
+            ON quality_gate_shadow_evaluations (
+                policy_version,
+                evaluation_timestamp,
+                gate_status,
+                actually_published
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS quality_gate_shadow_errors (
+                shadow_evaluation_id TEXT PRIMARY KEY,
+                prediction_id TEXT NOT NULL,
+                evaluation_stage TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                error_type TEXT NOT NULL,
+                safe_message TEXT NOT NULL,
+                occurred_at TEXT NOT NULL,
+                UNIQUE (prediction_id, policy_version, evaluation_stage),
+                CHECK (
+                    evaluation_stage IN (
+                        'INITIAL_CANDIDATE',
+                        'PRE_PUBLICATION',
+                        'FINAL_PRE_KICKOFF'
+                    )
+                )
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_quality_gate_shadow_errors_report
+            ON quality_gate_shadow_errors (policy_version, occurred_at)
+            """,
+        ),
+    ),
 )
 
 

@@ -432,12 +432,27 @@ Only append.
 - Added explicit evidence states, per-category evidence policy, deterministic decision precedence, and normalized Official duplicate identities.
 - Kept prediction generation, Telegram publication, bankroll settlement, scheduling, all product channels, and database schemas unchanged.
 
+## 2026-07-15 - Publication Quality Gate Shadow Evaluation Foundation
+
+- Added immutable shadow requests, snapshots, decisions, safe errors, settlement facts, and deterministic comparison reports.
+- Added migration v4 with isolated shadow evaluation and error audit tables plus prediction, fixture, date, status, publication, policy, and stage lookup support.
+- Added insert-once persistence keyed by prediction, policy version, and evaluation stage while allowing INITIAL_CANDIDATE, PRE_PUBLICATION, and FINAL_PRE_KICKOFF observations.
+- Added disabled-by-default runtime observation immediately after prediction assessment without using the shadow result to alter sorting or publication behaviour.
+- Added explicit missing-data adaptation for currently unavailable odds, calibration, lineup, injury, consensus, exposure, and sample-size facts.
+- Added idempotent authoritative WON, LOST, and VOID settlement enrichment without bankroll or publication side effects.
+- Added descriptive and clearly labelled hypothetical one-unit comparison reports using only evaluation-time offered odds.
+- Kept Quality Gate enforcement, Telegram publication decisions, scheduling, betting, bankroll mutation, settlement polling, and all non-Official products disabled.
+
 ---
 
 # NEXT PRIORITIES
 
 - [x] Probability Calibration Engine foundation.
 - [x] Publication Quality Gate foundation.
+- [x] Quality Gate shadow-mode persistence foundation.
+- [x] Safe disabled-by-default runtime observation.
+- [x] Shadow settlement enrichment foundation.
+- [x] Shadow comparison reporting foundation.
 - CLV ingestion.
 - Lineup Impact Engine.
 - Opponent Adjusted xG.
@@ -454,12 +469,13 @@ Do not interrupt higher priority work.
 
 Review after completing the current priority.
 
-- Integrate the Quality Gate with prediction selection only after shadow-mode review.
+- Collect a sufficient settled Quality Gate shadow sample before threshold or enforcement decisions.
+- Calibrate Quality Gate thresholds from settled shadow observations.
+- Integrate the Quality Gate with prediction selection only after shadow-mode review and explicit production-enforcement approval.
 - Integrate approved Quality Gate decisions with Official Telegram publication only after explicit product review.
 - Add a persistent active-publication duplicate checker adapter.
 - Add model degradation monitoring using calibration and gate audit histories.
 - Integrate exposure inputs with the Official bankroll without allowing the gate to mutate balances.
-- Run the Publication Quality Gate in shadow mode before any enforcement.
 
 - Implement and review full production Platt coefficient fitting.
 - Implement and review full production Isotonic PAV fitting.

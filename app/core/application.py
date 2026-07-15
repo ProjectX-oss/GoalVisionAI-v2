@@ -25,13 +25,20 @@ from app.quality_score import (
     DEFAULT_QUALITY_SCORE_CONFIG,
     QualityScoreEngine,
 )
+from app.quality_gate_shadow import (
+    QualityGateShadowObserver,
+    build_quality_gate_shadow_observer,
+)
 from app.rest_days import RestDaysEngine
 from app.services.telegram_service import TelegramService
 
 
 class GoalVisionApp:
 
-    def __init__(self):
+    def __init__(
+        self,
+        shadow_observer: QualityGateShadowObserver | None = None,
+    ):
 
         self.telegram = TelegramService(
             settings.bot_token
@@ -67,6 +74,12 @@ class GoalVisionApp:
             rest_days=self.rest_days,
             quality_score=self.quality_score,
             explanations=self.explanations,
+        )
+
+        self.shadow_observer = (
+            shadow_observer
+            if shadow_observer is not None
+            else build_quality_gate_shadow_observer()
         )
 
         self.repository = TeamRepository()
@@ -120,6 +133,10 @@ class GoalVisionApp:
             self.standings.clear()
             self.football.clear_cache()
             await self.football.client.close()
+            try:
+                self.shadow_observer.close()
+            except Exception:
+                logger.warning("Quality Gate shadow shutdown failed safely.")
 
     async def _run(self):
 
@@ -177,6 +194,15 @@ class GoalVisionApp:
                 away,
                 supporting_data=self._supporting_data(match),
             )
+
+            observer = getattr(self, "shadow_observer", None)
+            if observer is not None:
+                try:
+                    observer.observe(match, assessment)
+                except Exception:
+                    logger.warning(
+                        "Quality Gate shadow observation failed safely."
+                    )
 
             predictions.append(
                 (
