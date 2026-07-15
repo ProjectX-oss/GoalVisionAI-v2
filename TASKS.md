@@ -413,11 +413,21 @@ Only append.
 - Added pluggable walk-forward window and evaluator interfaces without model training or optimization.
 - Added edge-case and repeatability coverage without changing production prediction, publication, settlement, scheduling, or database behavior.
 
+## 2026-07-15 - Probability Calibration Engine Foundation
+
+- Added isolated immutable calibration observations with explicit binary outcomes and VOID rejection.
+- Added deterministic equal-width and explicit-boundary binning with retained empty bins.
+- Added Decimal Brier Score, Log Loss, ECE, MCE, bin reports, and raw-versus-calibrated comparisons.
+- Added a fully functional Identity calibrator plus honest Platt and Isotonic fitting interfaces that do not fabricate fitted behaviour.
+- Added immutable fit metadata, model/competition/market/odds-band scopes, minimum-sample fallback, and actual-scope reporting.
+- Added strict prediction/outcome cutoff, target-isolation, duplicate-timestamp, scope, and model-version protections.
+- Kept live prediction generation, Telegram publication, scheduling, bankrolls, and database schemas unchanged.
+
 ---
 
 # NEXT PRIORITIES
 
-- Probability Calibration Engine.
+- [x] Probability Calibration Engine foundation.
 - Publication Quality Gate.
 - CLV ingestion.
 - Lineup Impact Engine.
@@ -434,6 +444,15 @@ add it here.
 Do not interrupt higher priority work.
 
 Review after completing the current priority.
+
+- Implement and review full production Platt coefficient fitting.
+- Implement and review full production Isotonic PAV fitting.
+- Add calibration persistence and a fitted-version registry.
+- Add calibration drift and performance monitoring.
+- Build the Publication Quality Gate after calibration is production-proven.
+- Add CLV ingestion without changing prediction selection policy.
+- Build a reviewed Lineup Impact Engine.
+- Build Opponent Adjusted xG as an isolated, backtested feature.
 
 - Calibrate Quality Score weights through backtesting.
 - Integrate Quality Score into Telegram display only after calibration and product review.
