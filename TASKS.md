@@ -173,19 +173,19 @@ Automatic bankroll management.
 
 Status
 
-TODO
+IN PROGRESS
 
 Tasks
 
-Historical predictions.
+- [x] Deterministic historical evaluation foundation.
 
-Accuracy.
+- [x] Accuracy and hit rate.
 
-ROI.
+- [x] ROI and profit/loss metrics.
 
-Win Rate.
+- [x] Win rate.
 
-League reports.
+- [ ] League reports.
 
 Definition of Done
 
@@ -403,6 +403,25 @@ Only append.
 - Included optional league/team context, final score, odds, public stake stars, Decimal stake and profit/loss values, and updated Official bankroll.
 - Kept internal stake percentages, AI Quality Score, other product channels, recurring scheduling, and live Telegram wiring disabled.
 - Added isolated SQLite and fake-Telegram coverage for formatting, escaping, retries, database failures, idempotency, and mixed batches.
+
+## 2026-07-15 - Backtesting Engine Foundation
+
+- Added an isolated, typed `app/backtesting` package for deterministic historical evaluation.
+- Added immutable one-unit evaluation records with Decimal probabilities, odds, profit/loss, results, and WON/LOST/VOID outcomes.
+- Added leakage validation that rejects feature or odds timestamps newer than the prediction timestamp.
+- Added deterministic hit rate, ROI, profit, odds, drawdown, Brier Score, Log Loss, CLV, and probability metrics.
+- Added pluggable walk-forward window and evaluator interfaces without model training or optimization.
+- Added edge-case and repeatability coverage without changing production prediction, publication, settlement, scheduling, or database behavior.
+
+---
+
+# NEXT PRIORITIES
+
+- Probability Calibration Engine.
+- Publication Quality Gate.
+- CLV ingestion.
+- Lineup Impact Engine.
+- Opponent Adjusted xG.
 
 ---
 
