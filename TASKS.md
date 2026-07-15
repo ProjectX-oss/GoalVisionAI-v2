@@ -423,12 +423,21 @@ Only append.
 - Added strict prediction/outcome cutoff, target-isolation, duplicate-timestamp, scope, and model-version protections.
 - Kept live prediction generation, Telegram publication, scheduling, bankrolls, and database schemas unchanged.
 
+## 2026-07-15 - Publication Quality Gate Foundation
+
+- Added an isolated deterministic decision pipeline returning APPROVED, REJECTED, or REVIEW_REQUIRED with ordered audit checks and reason codes.
+- Encoded configurable Official single-bet, minimum-odds, correct-score, timing, evidence, calibration, value, conflict, uncertainty, exposure, and duplicate policies.
+- Represented the reviewed two-selection combo exception without creating or publishing combo bets.
+- Added typed calibration metadata consumption, unrounded Decimal expected-value calculation, minimum-sample enforcement, and raw-probability opt-in controls.
+- Added explicit evidence states, per-category evidence policy, deterministic decision precedence, and normalized Official duplicate identities.
+- Kept prediction generation, Telegram publication, bankroll settlement, scheduling, all product channels, and database schemas unchanged.
+
 ---
 
 # NEXT PRIORITIES
 
 - [x] Probability Calibration Engine foundation.
-- Publication Quality Gate.
+- [x] Publication Quality Gate foundation.
 - CLV ingestion.
 - Lineup Impact Engine.
 - Opponent Adjusted xG.
@@ -444,6 +453,13 @@ add it here.
 Do not interrupt higher priority work.
 
 Review after completing the current priority.
+
+- Integrate the Quality Gate with prediction selection only after shadow-mode review.
+- Integrate approved Quality Gate decisions with Official Telegram publication only after explicit product review.
+- Add a persistent active-publication duplicate checker adapter.
+- Add model degradation monitoring using calibration and gate audit histories.
+- Integrate exposure inputs with the Official bankroll without allowing the gate to mutate balances.
+- Run the Publication Quality Gate in shadow mode before any enforcement.
 
 - Implement and review full production Platt coefficient fitting.
 - Implement and review full production Isotonic PAV fitting.
