@@ -507,6 +507,74 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=7,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS form_feature_sources (
+                source_id TEXT PRIMARY KEY,
+                source_name TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                enabled INTEGER NOT NULL,
+                CHECK (enabled IN (0, 1))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_match_observations (
+                observation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fixture_id TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                kickoff_time TEXT NOT NULL,
+                home_team_id TEXT NOT NULL,
+                away_team_id TEXT NOT NULL,
+                home_goals INTEGER NOT NULL,
+                away_goals INTEGER NOT NULL,
+                match_status TEXT NOT NULL,
+                observed_at TEXT NOT NULL,
+                home_xg TEXT,
+                away_xg TEXT,
+                home_shots INTEGER,
+                away_shots INTEGER,
+                home_red_cards INTEGER,
+                away_red_cards INTEGER,
+                penalties INTEGER,
+                source_name TEXT NOT NULL,
+                source_reference TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (source_name)
+                    REFERENCES form_feature_sources(source_name),
+                UNIQUE (fixture_id, source_name, observed_at),
+                CHECK (fixture_id <> ''),
+                CHECK (home_team_id <> ''),
+                CHECK (away_team_id <> ''),
+                CHECK (home_team_id <> away_team_id),
+                CHECK (home_goals >= 0),
+                CHECK (away_goals >= 0)
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_form_fixture
+            ON historical_match_observations (fixture_id, observed_at)
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_form_home_history
+            ON historical_match_observations (
+                home_team_id, kickoff_time, observed_at
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_form_away_history
+            ON historical_match_observations (
+                away_team_id, kickoff_time, observed_at
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_form_competition_history
+            ON historical_match_observations (
+                competition, match_status, kickoff_time
+            )
+            """,
+        ),
+    ),
 )
 
 

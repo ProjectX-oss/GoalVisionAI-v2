@@ -7,6 +7,7 @@ from app.explanations import (
     DEFAULT_EXPLANATION_CONFIG,
     PredictionExplanationEngine,
 )
+from app.form_features import FormFeatureRuntime, build_form_feature_runtime
 from app.h2h import H2HEngine
 from app.league_strength import (
     LEAGUE_STRENGTH_RATINGS,
@@ -45,6 +46,7 @@ class GoalVisionApp:
         shadow_observer: QualityGateShadowObserver | None = None,
         odds_runtime: OddsIngestionRuntime | None = None,
         availability_runtime: TeamAvailabilityRuntime | None = None,
+        form_feature_runtime: FormFeatureRuntime | None = None,
     ):
 
         self.telegram = TelegramService(
@@ -99,6 +101,12 @@ class GoalVisionApp:
             availability_runtime
             if availability_runtime is not None
             else build_team_availability_runtime()
+        )
+
+        self.form_feature_runtime = (
+            form_feature_runtime
+            if form_feature_runtime is not None
+            else build_form_feature_runtime()
         )
 
         self.repository = TeamRepository()
@@ -172,6 +180,12 @@ class GoalVisionApp:
                     availability_runtime.close()
             except Exception:
                 logger.warning("Team availability shutdown failed safely.")
+            try:
+                form_runtime = getattr(self, "form_feature_runtime", None)
+                if form_runtime is not None:
+                    form_runtime.close()
+            except Exception:
+                logger.warning("Form feature shutdown failed safely.")
 
     async def _run(self):
 
@@ -188,6 +202,13 @@ class GoalVisionApp:
                 availability_runtime.start()
             except Exception:
                 logger.warning("Team availability ingestion failed safely.")
+
+        form_runtime = getattr(self, "form_feature_runtime", None)
+        if form_runtime is not None:
+            try:
+                form_runtime.start()
+            except Exception:
+                logger.warning("Form feature ingestion failed safely.")
 
         matches = await self.football.get_today_matches()
 

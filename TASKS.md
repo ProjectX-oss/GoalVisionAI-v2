@@ -460,6 +460,14 @@ Only append.
 - Added Static, Null, and honest existing-football-API adapters; the current API surface does not expose lineup, injury, suspension, player, coach, or squad evidence and therefore produces no fabricated records.
 - Added disabled-by-default one-shot runtime ingestion without scheduling, network activation, Telegram publication, bankroll mutation, betting, or Quality Gate enforcement.
 
+## 2026-07-16 - Opponent-Adjusted Form and xG Evidence Foundation
+
+- Added an isolated immutable `app/form_features` domain for normalized completed-match observations, raw and venue form, deterministic recency weighting, transparent opponent adjustment, conflicts, evidence status, and safe ingestion reports.
+- Added migration v7 with insert-once historical match observations, lossless Decimal text fields, fixture/team/competition indexes, restart persistence, and no changes to migrations v1-v6.
+- Added deterministic on-demand snapshots for wins/draws/losses, points, goals, clean sheets, failed-to-score counts, goal rates, venue splits, weighted form, opponent-adjusted attack/defense, freshness, completeness, exclusions, and result/goal-rate divergence.
+- Added strict no-fake-xG contracts: the existing finished-fixtures provider supplies goals but no genuine xG, shots, cards, penalties, possession, event timing, or player data, so those fields remain explicitly missing.
+- Added provider, ingestion, Quality Gate context, shadow enrichment, walk-forward backtesting, disabled-by-default runtime, Null-provider, and prediction-isolation foundations without enabling publication, betting, bankroll mutation, scheduling, or non-Official products.
+
 ---
 
 # NEXT PRIORITIES
@@ -482,8 +490,16 @@ Only append.
 - [x] Quality Gate availability adapter.
 - [x] Shadow availability enrichment.
 - [x] Team availability provider adapter contracts.
+- [x] Opponent-adjusted form foundation.
+- [x] Historical match normalization and persistence.
+- [x] Deterministic form snapshots.
+- [x] Venue and recency weighting.
+- [x] Genuine xG evidence contracts and no-fake-xG policy.
+- [x] Quality Gate form adapter.
+- [x] Shadow form enrichment.
+- [x] Backtesting form adapter.
 - Lineup Impact Engine.
-- Opponent Adjusted xG.
+- Richer provider-backed Opponent Adjusted xG.
 
 ---
 
@@ -510,6 +526,8 @@ Review after completing the current priority.
 - Add CLV reporting to Official weekly statistics after publication and closing roles are reliably populated.
 - Add real-time lineup refresh near kickoff only after a genuine provider endpoint and operational schedule are reviewed.
 - Build a calibrated player-strength and lineup-impact model only after reliable minutes, starts, ratings, or internal player-strength inputs exist.
+- Integrate a richer licensed event/xG provider only when genuine xG, shots, cards, penalties, possession, and event timing are available.
+- Add scheduled historical-form ingestion only after operational review.
 
 - Implement and review full production Platt coefficient fitting.
 - Implement and review full production Isotonic PAV fitting.
@@ -519,6 +537,7 @@ Review after completing the current priority.
 - Add CLV reporting to weekly statistics without changing prediction selection policy.
 - Build a reviewed Lineup Impact Engine.
 - Build Opponent Adjusted xG as an isolated, backtested feature.
+- Replace goals-only form inputs with genuine provider xG only after a reviewed richer provider integration.
 
 - Calibrate Quality Score weights through backtesting.
 - Integrate Quality Score into Telegram display only after calibration and product review.
