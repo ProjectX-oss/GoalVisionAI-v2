@@ -15,6 +15,7 @@ from app.league_strength import (
 )
 from app.logger import logger
 from app.models import Match
+from app.odds import OddsIngestionRuntime, build_odds_ingestion_runtime
 from app.pipeline import (
     PredictionSupportingData,
     PredictionPipeline,
@@ -38,6 +39,7 @@ class GoalVisionApp:
     def __init__(
         self,
         shadow_observer: QualityGateShadowObserver | None = None,
+        odds_runtime: OddsIngestionRuntime | None = None,
     ):
 
         self.telegram = TelegramService(
@@ -80,6 +82,12 @@ class GoalVisionApp:
             shadow_observer
             if shadow_observer is not None
             else build_quality_gate_shadow_observer()
+        )
+
+        self.odds_runtime = (
+            odds_runtime
+            if odds_runtime is not None
+            else build_odds_ingestion_runtime()
         )
 
         self.repository = TeamRepository()
@@ -137,8 +145,21 @@ class GoalVisionApp:
                 self.shadow_observer.close()
             except Exception:
                 logger.warning("Quality Gate shadow shutdown failed safely.")
+            try:
+                odds_runtime = getattr(self, "odds_runtime", None)
+                if odds_runtime is not None:
+                    odds_runtime.close()
+            except Exception:
+                logger.warning("Odds ingestion shutdown failed safely.")
 
     async def _run(self):
+
+        odds_runtime = getattr(self, "odds_runtime", None)
+        if odds_runtime is not None:
+            try:
+                odds_runtime.start()
+            except Exception:
+                logger.warning("Odds ingestion failed safely.")
 
         matches = await self.football.get_today_matches()
 

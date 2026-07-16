@@ -443,6 +443,15 @@ Only append.
 - Added descriptive and clearly labelled hypothetical one-unit comparison reports using only evaluation-time offered odds.
 - Kept Quality Gate enforcement, Telegram publication decisions, scheduling, betting, bankroll mutation, settlement polling, and all non-Official products disabled.
 
+## 2026-07-16 - Odds Observation and CLV Tracking Foundation
+
+- Added an isolated immutable `app/odds` domain for typed sources, markets, selections, observations, snapshots, consensus, movement, closing odds, CLV, and safe ingestion errors.
+- Added deterministic normalization and validation for Decimal odds, exchange commission, source/fixture/market/selection identities, timezone-aware cutoffs, source status, and kickoff policy.
+- Added migration v5 with lossless Decimal text storage, insert-once observations, source metadata, separate closing-odds records, deterministic uniqueness constraints, and indexed lookup paths.
+- Added deterministic opening/latest queries, consensus and complete-market no-vig calculations, model-versus-market disagreement, odds movement, closing fallback selection, and the established `publication_odds / closing_odds - 1` CLV formula.
+- Added provider contracts plus Static and Null providers, idempotent batch ingestion, backtesting conversion with leakage checks, and a shadow-only odds enrichment adapter that never uses future observations.
+- Kept live odds network access, Telegram publication, Quality Gate enforcement, betting, bankroll mutation, scheduling, and all non-Official product behavior disabled.
+
 ---
 
 # NEXT PRIORITIES
@@ -453,7 +462,12 @@ Only append.
 - [x] Safe disabled-by-default runtime observation.
 - [x] Shadow settlement enrichment foundation.
 - [x] Shadow comparison reporting foundation.
-- CLV ingestion.
+- [x] Odds domain foundation.
+- [x] Odds persistence foundation.
+- [x] CLV calculation foundation.
+- [x] Consensus and disagreement foundation.
+- [x] Shadow odds-enrichment adapter.
+- [x] Provider adapter contracts.
 - Lineup Impact Engine.
 - Opponent Adjusted xG.
 
@@ -476,13 +490,17 @@ Review after completing the current priority.
 - Add a persistent active-publication duplicate checker adapter.
 - Add model degradation monitoring using calibration and gate audit histories.
 - Integrate exposure inputs with the Official bankroll without allowing the gate to mutate balances.
+- Integrate a reviewed official odds provider only when genuine licensed/provider data is available.
+- Add scheduled odds ingestion only after operational review.
+- Automate opening/reference/publication/pre-kickoff/closing role assignment after the observation foundation is proven.
+- Add CLV reporting to Official weekly statistics after publication and closing roles are reliably populated.
 
 - Implement and review full production Platt coefficient fitting.
 - Implement and review full production Isotonic PAV fitting.
 - Add calibration persistence and a fitted-version registry.
 - Add calibration drift and performance monitoring.
 - Build the Publication Quality Gate after calibration is production-proven.
-- Add CLV ingestion without changing prediction selection policy.
+- Add CLV reporting to weekly statistics without changing prediction selection policy.
 - Build a reviewed Lineup Impact Engine.
 - Build Opponent Adjusted xG as an isolated, backtested feature.
 

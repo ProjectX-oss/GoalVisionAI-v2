@@ -279,6 +279,107 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=5,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS odds_sources (
+                source_id TEXT PRIMARY KEY,
+                source_name TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                source_type TEXT NOT NULL,
+                priority INTEGER NOT NULL,
+                reliability_status TEXT NOT NULL,
+                commission_applies INTEGER NOT NULL,
+                default_commission TEXT,
+                enabled INTEGER NOT NULL,
+                CHECK (priority >= 0),
+                CHECK (source_type IN (
+                    'BOOKMAKER', 'EXCHANGE', 'AGGREGATOR', 'INTERNAL', 'TEST'
+                )),
+                CHECK (reliability_status IN (
+                    'RELIABLE', 'UNVERIFIED', 'DEGRADED'
+                )),
+                CHECK (commission_applies IN (0, 1)),
+                CHECK (enabled IN (0, 1))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS odds_observations (
+                observation_id TEXT PRIMARY KEY,
+                fixture_id TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                kickoff_time TEXT NOT NULL,
+                observed_at TEXT NOT NULL,
+                source_name TEXT NOT NULL,
+                source_type TEXT NOT NULL,
+                bookmaker_or_exchange TEXT NOT NULL,
+                market TEXT NOT NULL,
+                selection_id TEXT NOT NULL,
+                selection_name TEXT NOT NULL,
+                selection_line TEXT,
+                decimal_odds TEXT NOT NULL,
+                available_limit TEXT,
+                currency TEXT,
+                is_exchange INTEGER NOT NULL,
+                commission_rate TEXT,
+                raw_provider_reference TEXT,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (source_name)
+                    REFERENCES odds_sources(source_name),
+                UNIQUE (
+                    fixture_id, source_name, market, selection_id,
+                    observed_at, decimal_odds
+                ),
+                CHECK (fixture_id <> ''),
+                CHECK (market <> ''),
+                CHECK (selection_id <> ''),
+                CHECK (is_exchange IN (0, 1))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_odds_fixture_market_time
+            ON odds_observations (
+                fixture_id, market, selection_id, observed_at
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_odds_source_time
+            ON odds_observations (source_name, observed_at)
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS closing_odds (
+                closing_id TEXT PRIMARY KEY,
+                fixture_id TEXT NOT NULL,
+                market TEXT NOT NULL,
+                selection_id TEXT NOT NULL,
+                selection_name TEXT NOT NULL,
+                selection_line TEXT,
+                kickoff_time TEXT NOT NULL,
+                selected_at TEXT NOT NULL,
+                closing_observed_at TEXT NOT NULL,
+                decimal_odds TEXT NOT NULL,
+                source_name TEXT NOT NULL,
+                source_type TEXT NOT NULL,
+                selection_path TEXT NOT NULL,
+                source_count INTEGER NOT NULL,
+                cutoff TEXT NOT NULL,
+                observation_id TEXT,
+                UNIQUE (fixture_id, market, selection_id),
+                FOREIGN KEY (observation_id)
+                    REFERENCES odds_observations(observation_id),
+                CHECK (source_count > 0),
+                CHECK (selection_path IN (
+                    'PREFERRED_EXCHANGE', 'WEIGHTED_CONSENSUS',
+                    'PRIORITY_BOOKMAKER', 'UNAVAILABLE'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_closing_odds_lookup
+            ON closing_odds (fixture_id, market, selection_id, cutoff)
+            """,
+        ),
+    ),
 )
 
 
