@@ -486,6 +486,16 @@ Only append.
 - Added authoritative Official, settled Quality Gate Shadow, and backtesting monitoring adapters with deterministic Shadow-stage selection and Official-to-Shadow-to-backtesting deduplication priority.
 - Kept calibrator activation, automatic promotion or retirement, live prediction changes, Quality Gate enforcement, Telegram alerts/publication, bankroll mutation, betting, scheduling, and non-Official products disabled.
 
+## 2026-07-16 - Risk, Stake Recommendation, and Exposure Assessment Foundation
+
+- Added an isolated immutable `app/risk_management` domain that consumes supplied bankroll and exposure snapshots and returns structured ELIGIBLE, REDUCED_STAKE, REVIEW_REQUIRED, or INELIGIBLE audit decisions.
+- Added a transparent Official-only default stake policy using unrounded Decimal 1%, 2%, and 3% internal bands, final EUR-cent quantization, configurable EV/evidence requirements, and public 1-to-3-star mapping without Telegram formatting.
+- Added exact drawdown states at 5%, 10%, and 15%, conservative loss-streak caps, explicit no-martingale behaviour, and deterministic reduction-only precedence.
+- Added typed single, daily, competition, fixture, team, market, correlated-group, and unsettled exposure evaluation without reserving or mutating exposure.
+- Added Quality Gate consumption, special combo-exception representation, explicit product-policy separation, and historical Shadow recommendation adapters that reject missing or future bankroll snapshots.
+- Added deterministic flat-unit, fixed-1%, fixed-2%, and recommended-policy backtesting comparison with ROI, drawdown, losing streak, volatility proxy, stake concentration, skips, and stake/drawdown segmentation.
+- Kept automatic staking, bankroll mutation, exposure reservation, Quality Gate enforcement, Telegram changes, scheduling, betting, and all non-Official product activation disabled.
+
 ---
 
 # NEXT PRIORITIES
@@ -527,6 +537,13 @@ Only append.
 - [x] Drift detection foundation.
 - [x] Persisted monitoring runs and alerts.
 - [x] Shadow/backtesting monitoring adapters.
+- [x] Risk assessment domain foundation.
+- [x] Official stake recommendation foundation.
+- [x] Drawdown and loss-streak guards.
+- [x] Exposure limit evaluation.
+- [x] Public stake-star mapping.
+- [x] Shadow risk recommendation adapter.
+- [x] Risk-policy backtesting comparison.
 - Lineup Impact Engine.
 - Richer provider-backed Opponent Adjusted xG.
 
@@ -563,6 +580,11 @@ Review after completing the current priority.
 - Add Telegram/Admin monitoring alert presentation only after product review.
 - Define an automatic artifact promotion policy only after offline and Shadow evidence is sufficient.
 - Activate reviewed calibration artifacts in prediction runtime only after explicit approval.
+- Persist Shadow risk audit records only after a reviewed persistence consumer exists.
+- Integrate authoritative historical bankroll snapshots before historical risk reporting.
+- Statistically validate stake and exposure thresholds on separate evaluation samples.
+- Integrate exposure with bankroll reservations only after explicit operational review.
+- Keep production Quality Gate enforcement disabled pending settled Shadow evidence.
 - Build the Publication Quality Gate after calibration is production-proven.
 - Add CLV reporting to weekly statistics without changing prediction selection policy.
 - Build a reviewed Lineup Impact Engine.
