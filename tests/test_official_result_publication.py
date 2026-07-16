@@ -251,7 +251,7 @@ class OfficialResultPublicationTests(unittest.TestCase):
             "format_version",
             "attempt_count",
         }.issubset(columns))
-        self.assertEqual(versions, (1, 2, 3, 4, 5, 6, 7))
+        self.assertEqual(versions, (1, 2, 3, 4, 5, 6, 7, 8))
 
     def test_lost_message(self):
         self.add_settled("lost", 2, ResolutionStatus.LOST, self.context())

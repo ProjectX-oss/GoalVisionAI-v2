@@ -575,6 +575,228 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=8,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS calibration_artifacts (
+                artifact_id TEXT PRIMARY KEY,
+                method TEXT NOT NULL,
+                method_version TEXT NOT NULL,
+                serialized_calibrator TEXT NOT NULL,
+                serialized_parameters_fingerprint TEXT NOT NULL,
+                configuration_fingerprint TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                fitted_at TEXT NOT NULL,
+                training_window_start TEXT NOT NULL,
+                training_window_end TEXT NOT NULL,
+                training_cutoff TEXT NOT NULL,
+                observation_count INTEGER NOT NULL,
+                positive_count INTEGER NOT NULL,
+                negative_count INTEGER NOT NULL,
+                competition_scope TEXT,
+                market_scope TEXT,
+                odds_band_scope TEXT,
+                model_version_scope TEXT,
+                calibration_scope TEXT NOT NULL,
+                fit_version TEXT NOT NULL,
+                fitting_diagnostics TEXT NOT NULL,
+                training_metrics TEXT NOT NULL,
+                validation_metrics TEXT,
+                status TEXT NOT NULL,
+                status_reason TEXT NOT NULL,
+                parent_artifact_id TEXT,
+                FOREIGN KEY (parent_artifact_id)
+                    REFERENCES calibration_artifacts(artifact_id),
+                UNIQUE (
+                    method, method_version, configuration_fingerprint,
+                    competition_scope, market_scope, odds_band_scope,
+                    model_version_scope, calibration_scope, training_cutoff,
+                    serialized_parameters_fingerprint
+                ),
+                CHECK (observation_count >= 0),
+                CHECK (positive_count >= 0),
+                CHECK (negative_count >= 0),
+                CHECK (positive_count + negative_count = observation_count),
+                CHECK (status IN (
+                    'CANDIDATE', 'VALIDATED', 'SHADOW', 'RETIRED', 'REJECTED'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_calibration_artifacts_scope
+            ON calibration_artifacts (
+                competition_scope, market_scope, odds_band_scope,
+                calibration_scope, training_cutoff, artifact_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_calibration_artifacts_method_model
+            ON calibration_artifacts (
+                method, model_version_scope, fitted_at, artifact_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_calibration_artifacts_status
+            ON calibration_artifacts (status, fitted_at, artifact_id)
+            """,
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS uq_calibration_artifacts_equivalent
+            ON calibration_artifacts (
+                method,
+                method_version,
+                configuration_fingerprint,
+                IFNULL(competition_scope, ''),
+                IFNULL(market_scope, ''),
+                IFNULL(odds_band_scope, ''),
+                IFNULL(model_version_scope, ''),
+                calibration_scope,
+                training_cutoff,
+                serialized_parameters_fingerprint
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS calibration_artifacts_no_update
+            BEFORE UPDATE ON calibration_artifacts
+            BEGIN
+                SELECT RAISE(ABORT, 'calibration artifacts are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS calibration_artifacts_no_delete
+            BEFORE DELETE ON calibration_artifacts
+            BEGIN
+                SELECT RAISE(ABORT, 'calibration artifacts are immutable');
+            END
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS calibration_artifact_status_history (
+                transition_id TEXT PRIMARY KEY,
+                artifact_id TEXT NOT NULL,
+                previous_status TEXT NOT NULL,
+                new_status TEXT NOT NULL,
+                reason TEXT NOT NULL,
+                changed_at TEXT NOT NULL,
+                actor_source TEXT NOT NULL,
+                FOREIGN KEY (artifact_id)
+                    REFERENCES calibration_artifacts(artifact_id),
+                UNIQUE (
+                    artifact_id, previous_status, new_status,
+                    reason, changed_at, actor_source
+                ),
+                CHECK (previous_status IN (
+                    'CANDIDATE', 'VALIDATED', 'SHADOW', 'RETIRED', 'REJECTED'
+                )),
+                CHECK (new_status IN (
+                    'CANDIDATE', 'VALIDATED', 'SHADOW', 'RETIRED', 'REJECTED'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_calibration_status_history
+            ON calibration_artifact_status_history (
+                artifact_id, changed_at, transition_id
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS calibration_status_history_no_update
+            BEFORE UPDATE ON calibration_artifact_status_history
+            BEGIN
+                SELECT RAISE(ABORT, 'calibration status history is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS calibration_status_history_no_delete
+            BEFORE DELETE ON calibration_artifact_status_history
+            BEGIN
+                SELECT RAISE(ABORT, 'calibration status history is immutable');
+            END
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_monitoring_runs (
+                run_id TEXT PRIMARY KEY,
+                policy_version TEXT NOT NULL,
+                baseline_window TEXT NOT NULL,
+                current_window TEXT NOT NULL,
+                scope TEXT NOT NULL,
+                artifact_id TEXT,
+                started_at TEXT NOT NULL,
+                completed_at TEXT NOT NULL,
+                baseline_observation_count INTEGER NOT NULL,
+                current_observation_count INTEGER NOT NULL,
+                report_snapshot TEXT NOT NULL,
+                findings TEXT NOT NULL,
+                run_status TEXT NOT NULL,
+                safe_error_type TEXT,
+                safe_error_message TEXT,
+                FOREIGN KEY (artifact_id)
+                    REFERENCES calibration_artifacts(artifact_id),
+                CHECK (baseline_observation_count >= 0),
+                CHECK (current_observation_count >= 0),
+                CHECK (run_status IN (
+                    'COMPLETED', 'INSUFFICIENT_DATA', 'FAILED'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_model_monitoring_runs_scope
+            ON model_monitoring_runs (
+                scope, artifact_id, completed_at, run_id
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS model_monitoring_runs_no_update
+            BEFORE UPDATE ON model_monitoring_runs
+            BEGIN
+                SELECT RAISE(ABORT, 'model monitoring runs are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS model_monitoring_runs_no_delete
+            BEFORE DELETE ON model_monitoring_runs
+            BEGIN
+                SELECT RAISE(ABORT, 'model monitoring runs are immutable');
+            END
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_monitoring_alerts (
+                alert_id TEXT PRIMARY KEY,
+                run_id TEXT NOT NULL,
+                scope TEXT NOT NULL,
+                finding_type TEXT NOT NULL,
+                metric TEXT NOT NULL,
+                threshold_version TEXT NOT NULL,
+                severity TEXT NOT NULL,
+                reason_code TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                finding_snapshot TEXT NOT NULL,
+                FOREIGN KEY (run_id) REFERENCES model_monitoring_runs(run_id),
+                UNIQUE (
+                    run_id, scope, finding_type, metric, threshold_version
+                ),
+                CHECK (severity IN ('INFO', 'WARNING', 'CRITICAL'))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_model_monitoring_alerts_run
+            ON model_monitoring_alerts (run_id, severity, alert_id)
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS model_monitoring_alerts_no_update
+            BEFORE UPDATE ON model_monitoring_alerts
+            BEGIN
+                SELECT RAISE(ABORT, 'model monitoring alerts are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS model_monitoring_alerts_no_delete
+            BEFORE DELETE ON model_monitoring_alerts
+            BEGIN
+                SELECT RAISE(ABORT, 'model monitoring alerts are immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 

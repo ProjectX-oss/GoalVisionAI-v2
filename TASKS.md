@@ -476,6 +476,16 @@ Only append.
 - Added stable versioned JSON-safe calibrator serialization with lossless Decimal strings, strict malformed/version rejection, and safe positive-infinite Log Loss representation.
 - Kept calibration fitting isolated from live prediction generation, Quality Gate enforcement, Telegram, bankrolls, scheduling, betting, and non-Official products.
 
+## 2026-07-16 - Calibration Registry and Model Monitoring Foundation
+
+- Added an immutable calibration artifact registry using the existing safe versioned calibrator JSON contract, deterministic artifact identity, idempotent equivalent-artifact registration, and audited explicit status transitions.
+- Added migration v8 with isolated calibration artifact, status-history, model-monitoring run, and alert tables using lossless Decimal text, deterministic JSON, insert-once constraints, immutable triggers, and indexed scope/status/time queries.
+- Added deterministic fixed-count, interval, rolling, and explicit monitoring windows driven only by caller-supplied timestamps.
+- Added model performance reports by reusing the existing backtesting and calibration metric services for hit rate, ROI, profit, drawdown, Brier Score, Log Loss, ECE, MCE, and CLV.
+- Added conservative threshold-based drift findings, fixed-bin PSI with explicit epsilon smoothing, existing reliability-bin drift, insufficient-sample protection, persisted one-shot monitoring runs, and idempotent alerts.
+- Added authoritative Official, settled Quality Gate Shadow, and backtesting monitoring adapters with deterministic Shadow-stage selection and Official-to-Shadow-to-backtesting deduplication priority.
+- Kept calibrator activation, automatic promotion or retirement, live prediction changes, Quality Gate enforcement, Telegram alerts/publication, bankroll mutation, betting, scheduling, and non-Official products disabled.
+
 ---
 
 # NEXT PRIORITIES
@@ -511,6 +521,12 @@ Only append.
 - [x] Deterministic calibrator serialization.
 - [x] Walk-forward fitted calibration.
 - [x] Calibration method comparison and conservative selection.
+- [x] Calibration artifact registry foundation.
+- [x] Immutable artifact status history.
+- [x] Deterministic model performance reports.
+- [x] Drift detection foundation.
+- [x] Persisted monitoring runs and alerts.
+- [x] Shadow/backtesting monitoring adapters.
 - Lineup Impact Engine.
 - Richer provider-backed Opponent Adjusted xG.
 
@@ -531,7 +547,6 @@ Review after completing the current priority.
 - Integrate the Quality Gate with prediction selection only after shadow-mode review and explicit production-enforcement approval.
 - Integrate approved Quality Gate decisions with Official Telegram publication only after explicit product review.
 - Add a persistent active-publication duplicate checker adapter.
-- Add model degradation monitoring using calibration and gate audit histories.
 - Integrate exposure inputs with the Official bankroll without allowing the gate to mutate balances.
 - Integrate a reviewed official odds provider only when genuine licensed/provider data is available.
 - Add scheduled odds ingestion only after operational review.
@@ -542,8 +557,12 @@ Review after completing the current priority.
 - Integrate a richer licensed event/xG provider only when genuine xG, shots, cards, penalties, possession, and event timing are available.
 - Add scheduled historical-form ingestion only after operational review.
 
-- Add calibration persistence and a fitted-version registry.
-- Add calibration drift and performance monitoring.
+- Gather a sufficient settled Shadow sample before monitoring threshold decisions.
+- Statistically tune drift thresholds after sufficient historical evidence exists.
+- Add scheduled monitoring execution only after operational review.
+- Add Telegram/Admin monitoring alert presentation only after product review.
+- Define an automatic artifact promotion policy only after offline and Shadow evidence is sufficient.
+- Activate reviewed calibration artifacts in prediction runtime only after explicit approval.
 - Build the Publication Quality Gate after calibration is production-proven.
 - Add CLV reporting to weekly statistics without changing prediction selection policy.
 - Build a reviewed Lineup Impact Engine.
