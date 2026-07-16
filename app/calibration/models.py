@@ -167,6 +167,10 @@ class CalibrationFitMetadata:
     method_name: str
     version: str
     model_version: str | None = None
+    positive_outcome_count: int = 0
+    negative_outcome_count: int = 0
+    minimum_sample_requirement: int = 0
+    configuration_fingerprint: str = "legacy"
 
     def __post_init__(self) -> None:
         validate_aware(self.fitted_at, "Fitted timestamp")
@@ -180,6 +184,21 @@ class CalibrationFitMetadata:
             raise ValueError("Version must not be empty.")
         if self.model_version is not None and not self.model_version.strip():
             raise ValueError("Model version must not be empty when provided.")
+        if self.positive_outcome_count < 0 or self.negative_outcome_count < 0:
+            raise ValueError("Outcome counts must not be negative.")
+        if (
+            self.positive_outcome_count + self.negative_outcome_count
+            not in {0, self.observation_count}
+        ):
+            raise ValueError("Outcome counts must match the observation count.")
+        if self.minimum_sample_requirement < 0:
+            raise ValueError("Minimum sample requirement must not be negative.")
+        if not self.configuration_fingerprint.strip():
+            raise ValueError("Configuration fingerprint must not be empty.")
+
+    @property
+    def training_cutoff(self) -> datetime:
+        return self.training_window.end
 
 
 @dataclass(frozen=True, slots=True)

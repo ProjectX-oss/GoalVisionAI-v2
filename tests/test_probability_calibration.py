@@ -14,6 +14,7 @@ from app.calibration import (
     CalibrationFitMetadata,
     CalibrationFitRequest,
     CalibrationFittingNotImplemented,
+    CalibrationFittingError,
     CalibrationObservation,
     CalibrationReportService,
     CalibrationResolutionRequest,
@@ -467,7 +468,7 @@ class CalibratorContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "model version"):
             IdentityCalibrator.fit((observation(),), request)
 
-    def test_platt_and_isotonic_foundations_do_not_fake_fitting(self):
+    def test_platt_and_isotonic_reject_unsupported_small_sample(self):
         request = CalibrationFitRequest(
             fitted_at=NOW,
             training_window=CalibrationTrainingWindow(NOW, NOW),
@@ -478,7 +479,7 @@ class CalibratorContractTests(unittest.TestCase):
 
         for calibrator in (PlattCalibrator(), IsotonicCalibrator()):
             with self.subTest(method=calibrator.method_name), self.assertRaises(
-                CalibrationFittingNotImplemented
+                CalibrationFittingError
             ):
                 calibrator.fit(values, request)
 

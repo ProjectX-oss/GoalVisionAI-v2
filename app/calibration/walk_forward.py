@@ -24,6 +24,9 @@ class CalibrationWalkForwardFold:
     training_observation_ids: tuple[str, ...]
     target_observation_ids: tuple[str, ...]
     comparison: CalibrationMetricComparison
+    calibrated_targets: tuple[tuple[str, object], ...] = ()
+    scope_used: CalibrationScope | None = None
+    fit_version: str | None = None
 
 
 class CalibrationWalkForwardService:
@@ -114,6 +117,15 @@ class CalibrationWalkForwardService:
                     item.observation_id for item in targets
                 ),
                 comparison=self._comparisons.compare(targets, fitted, scope),
+                calibrated_targets=tuple(
+                    (
+                        item.observation_id,
+                        fitted.calibrate(item.raw_probability),
+                    )
+                    for item in targets
+                ),
+                scope_used=fitted.metadata.scope,
+                fit_version=fitted.metadata.version,
             ))
         return tuple(folds)
 

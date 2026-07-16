@@ -468,6 +468,14 @@ Only append.
 - Added strict no-fake-xG contracts: the existing finished-fixtures provider supplies goals but no genuine xG, shots, cards, penalties, possession, event timing, or player data, so those fields remain explicitly missing.
 - Added provider, ingestion, Quality Gate context, shadow enrichment, walk-forward backtesting, disabled-by-default runtime, Null-provider, and prediction-isolation foundations without enabling publication, betting, bankroll mutation, scheduling, or non-Official products.
 
+## 2026-07-16 - Production Calibration Fitting
+
+- Added deterministic Platt fitting using clipped logit inputs, damped Newton/IRLS optimization, L2 regularization, explicit convergence rules, immutable coefficients, diagnostics, and typed unsupported-fit failures.
+- Added deterministic Isotonic fitting using grouped Pool Adjacent Violators regression with weighted blocks and right-continuous piecewise-constant prediction and extrapolation.
+- Added scope-aware sample and class-balance policies, explicit broader-scope and Identity fallback audit trails, fitted walk-forward target outputs, and conservative validation-window method selection.
+- Added stable versioned JSON-safe calibrator serialization with lossless Decimal strings, strict malformed/version rejection, and safe positive-infinite Log Loss representation.
+- Kept calibration fitting isolated from live prediction generation, Quality Gate enforcement, Telegram, bankrolls, scheduling, betting, and non-Official products.
+
 ---
 
 # NEXT PRIORITIES
@@ -498,6 +506,11 @@ Only append.
 - [x] Quality Gate form adapter.
 - [x] Shadow form enrichment.
 - [x] Backtesting form adapter.
+- [x] Production Platt fitting.
+- [x] Production Isotonic fitting.
+- [x] Deterministic calibrator serialization.
+- [x] Walk-forward fitted calibration.
+- [x] Calibration method comparison and conservative selection.
 - Lineup Impact Engine.
 - Richer provider-backed Opponent Adjusted xG.
 
@@ -529,8 +542,6 @@ Review after completing the current priority.
 - Integrate a richer licensed event/xG provider only when genuine xG, shots, cards, penalties, possession, and event timing are available.
 - Add scheduled historical-form ingestion only after operational review.
 
-- Implement and review full production Platt coefficient fitting.
-- Implement and review full production Isotonic PAV fitting.
 - Add calibration persistence and a fitted-version registry.
 - Add calibration drift and performance monitoring.
 - Build the Publication Quality Gate after calibration is production-proven.

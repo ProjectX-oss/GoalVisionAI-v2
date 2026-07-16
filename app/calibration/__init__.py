@@ -6,11 +6,26 @@ from .binning import (
 from .calibrators import (
     CalibrationFitRequest,
     CalibrationFittingNotImplemented,
+    CalibrationFittingError,
+    CalibrationNonConvergenceError,
+    CalibrationFittingPolicy,
+    CalibrationFitDiagnostics,
     FittedProbabilityCalibrator,
+    FittedIsotonicCalibrator,
+    FittedPlattCalibrator,
     IdentityCalibrator,
+    IsotonicFitData,
+    IsotonicFittingConfig,
     IsotonicCalibrator,
+    PlattFitData,
+    PlattFittingConfig,
     PlattCalibrator,
     ProbabilityCalibratorTrainer,
+)
+from .fitting import (
+    CalibrationFallbackFit,
+    CalibrationFallbackFittingService,
+    CalibrationFitAttempt,
 )
 from .comparison import CalibrationComparisonService, CalibrationMetricComparison
 from .models import (
@@ -23,6 +38,15 @@ from .models import (
     CalibrationTrainingWindow,
 )
 from .report import CalibrationReportService
+from .selection import (
+    CalibrationMethodEvaluation,
+    CalibrationMethodSelection,
+    CalibrationMethodSelectionService,
+    CalibrationSelectionMetric,
+    CalibrationSelectionPolicy,
+    SafeMetricValue,
+)
+from .serialization import CalibratorSerializer, SERIALIZATION_VERSION
 from .resolver import (
     CalibrationResolution,
     CalibrationResolutionRequest,
@@ -38,6 +62,13 @@ __all__ = (
     "CalibrationFitMetadata",
     "CalibrationFitRequest",
     "CalibrationFittingNotImplemented",
+    "CalibrationFittingError",
+    "CalibrationNonConvergenceError",
+    "CalibrationFittingPolicy",
+    "CalibrationFitDiagnostics",
+    "CalibrationFallbackFit",
+    "CalibrationFallbackFittingService",
+    "CalibrationFitAttempt",
     "CalibrationMetricComparison",
     "CalibrationObservation",
     "CalibrationReport",
@@ -54,8 +85,22 @@ __all__ = (
     "EqualWidthBinning",
     "ExplicitBoundaryBinning",
     "FittedProbabilityCalibrator",
+    "FittedIsotonicCalibrator",
+    "FittedPlattCalibrator",
     "IdentityCalibrator",
     "IsotonicCalibrator",
+    "IsotonicFitData",
+    "IsotonicFittingConfig",
     "PlattCalibrator",
+    "PlattFitData",
+    "PlattFittingConfig",
     "ProbabilityCalibratorTrainer",
+    "CalibrationMethodEvaluation",
+    "CalibrationMethodSelection",
+    "CalibrationMethodSelectionService",
+    "CalibrationSelectionMetric",
+    "CalibrationSelectionPolicy",
+    "SafeMetricValue",
+    "CalibratorSerializer",
+    "SERIALIZATION_VERSION",
 )
