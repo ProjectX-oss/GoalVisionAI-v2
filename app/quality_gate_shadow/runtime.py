@@ -89,11 +89,16 @@ class EnabledQualityGateShadowObserver:
     ) -> ShadowEvaluationResult:
         observed_at = self._clock()
         try:
+            supplied_facts = (
+                self._facts.facts_for_at(match, assessment, observed_at)
+                if hasattr(self._facts, "facts_for_at")
+                else self._facts.facts_for(match, assessment)
+            )
             adaptation = self._adapter.adapt(
                 match,
                 assessment,
                 observed_at,
-                self._facts.facts_for(match, assessment),
+                supplied_facts,
                 ShadowEvaluationStage.INITIAL_CANDIDATE,
             )
             if adaptation.request is None:

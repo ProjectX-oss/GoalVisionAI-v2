@@ -380,6 +380,133 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=6,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS availability_sources (
+                source_id TEXT PRIMARY KEY,
+                source_name TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                priority INTEGER NOT NULL,
+                reliability_status TEXT NOT NULL,
+                enabled INTEGER NOT NULL,
+                CHECK (priority >= 0),
+                CHECK (reliability_status IN (
+                    'RELIABLE', 'UNVERIFIED', 'DEGRADED'
+                )),
+                CHECK (enabled IN (0, 1))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS player_availability_observations (
+                observation_id TEXT PRIMARY KEY,
+                fixture_id TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                team_id TEXT NOT NULL,
+                team_name TEXT NOT NULL,
+                player_id TEXT,
+                player_name TEXT NOT NULL,
+                player_identity_key TEXT NOT NULL,
+                fixture_team_side TEXT NOT NULL,
+                availability_status TEXT NOT NULL,
+                reason TEXT NOT NULL,
+                provider_reason_text TEXT,
+                observed_at TEXT NOT NULL,
+                source_name TEXT NOT NULL,
+                source_reference TEXT NOT NULL,
+                expected_return_at TEXT,
+                confidence TEXT,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (source_name)
+                    REFERENCES availability_sources(source_name),
+                UNIQUE (
+                    fixture_id, team_id, player_identity_key,
+                    availability_status, reason, observed_at, source_name
+                ),
+                CHECK (fixture_id <> ''),
+                CHECK (team_id <> ''),
+                CHECK (player_identity_key <> ''),
+                CHECK (fixture_team_side IN ('HOME', 'AWAY')),
+                CHECK (availability_status IN (
+                    'AVAILABLE', 'UNAVAILABLE', 'DOUBTFUL', 'SUSPENDED',
+                    'INJURED', 'ILL', 'RESTED', 'NOT_SELECTED', 'UNKNOWN'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_availability_fixture_team_time
+            ON player_availability_observations (
+                fixture_id, team_id, observed_at, player_identity_key
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_availability_player_time
+            ON player_availability_observations (
+                player_identity_key, observed_at
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS lineup_observations (
+                lineup_observation_id TEXT PRIMARY KEY,
+                fixture_id TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                team_id TEXT NOT NULL,
+                team_name TEXT NOT NULL,
+                fixture_team_side TEXT NOT NULL,
+                lineup_status TEXT NOT NULL,
+                lineup_type TEXT NOT NULL,
+                observed_at TEXT NOT NULL,
+                source_name TEXT NOT NULL,
+                source_reference TEXT NOT NULL,
+                formation TEXT,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (source_name)
+                    REFERENCES availability_sources(source_name),
+                UNIQUE (
+                    fixture_id, team_id, lineup_type, observed_at, source_name
+                ),
+                CHECK (fixture_team_side IN ('HOME', 'AWAY')),
+                CHECK (lineup_status IN (
+                    'NOT_AVAILABLE', 'PREDICTED', 'PARTIAL', 'CONFIRMED'
+                )),
+                CHECK (lineup_type IN ('STARTING', 'SUBSTITUTE', 'SQUAD'))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_lineup_fixture_team_status_time
+            ON lineup_observations (
+                fixture_id, team_id, lineup_status, observed_at
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS lineup_players (
+                lineup_observation_id TEXT NOT NULL,
+                player_identity_key TEXT NOT NULL,
+                player_id TEXT,
+                player_name TEXT NOT NULL,
+                role TEXT NOT NULL,
+                position TEXT NOT NULL,
+                shirt_number INTEGER,
+                is_starting INTEGER NOT NULL,
+                is_captain INTEGER,
+                is_goalkeeper INTEGER NOT NULL,
+                source_order INTEGER NOT NULL,
+                PRIMARY KEY (lineup_observation_id, player_identity_key),
+                FOREIGN KEY (lineup_observation_id)
+                    REFERENCES lineup_observations(lineup_observation_id),
+                CHECK (shirt_number IS NULL OR shirt_number > 0),
+                CHECK (is_starting IN (0, 1)),
+                CHECK (is_captain IS NULL OR is_captain IN (0, 1)),
+                CHECK (is_goalkeeper IN (0, 1)),
+                CHECK (source_order >= 0)
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_lineup_players_identity
+            ON lineup_players (player_identity_key, lineup_observation_id)
+            """,
+        ),
+    ),
 )
 
 

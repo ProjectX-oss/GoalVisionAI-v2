@@ -32,6 +32,10 @@ from app.quality_gate_shadow import (
 )
 from app.rest_days import RestDaysEngine
 from app.services.telegram_service import TelegramService
+from app.team_availability import (
+    TeamAvailabilityRuntime,
+    build_team_availability_runtime,
+)
 
 
 class GoalVisionApp:
@@ -40,6 +44,7 @@ class GoalVisionApp:
         self,
         shadow_observer: QualityGateShadowObserver | None = None,
         odds_runtime: OddsIngestionRuntime | None = None,
+        availability_runtime: TeamAvailabilityRuntime | None = None,
     ):
 
         self.telegram = TelegramService(
@@ -88,6 +93,12 @@ class GoalVisionApp:
             odds_runtime
             if odds_runtime is not None
             else build_odds_ingestion_runtime()
+        )
+
+        self.availability_runtime = (
+            availability_runtime
+            if availability_runtime is not None
+            else build_team_availability_runtime()
         )
 
         self.repository = TeamRepository()
@@ -151,6 +162,16 @@ class GoalVisionApp:
                     odds_runtime.close()
             except Exception:
                 logger.warning("Odds ingestion shutdown failed safely.")
+            try:
+                availability_runtime = getattr(
+                    self,
+                    "availability_runtime",
+                    None,
+                )
+                if availability_runtime is not None:
+                    availability_runtime.close()
+            except Exception:
+                logger.warning("Team availability shutdown failed safely.")
 
     async def _run(self):
 
@@ -160,6 +181,13 @@ class GoalVisionApp:
                 odds_runtime.start()
             except Exception:
                 logger.warning("Odds ingestion failed safely.")
+
+        availability_runtime = getattr(self, "availability_runtime", None)
+        if availability_runtime is not None:
+            try:
+                availability_runtime.start()
+            except Exception:
+                logger.warning("Team availability ingestion failed safely.")
 
         matches = await self.football.get_today_matches()
 

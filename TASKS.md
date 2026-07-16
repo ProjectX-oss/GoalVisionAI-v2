@@ -452,6 +452,14 @@ Only append.
 - Added provider contracts plus Static and Null providers, idempotent batch ingestion, backtesting conversion with leakage checks, and a shadow-only odds enrichment adapter that never uses future observations.
 - Kept live odds network access, Telegram publication, Quality Gate enforcement, betting, bankroll mutation, scheduling, and all non-Official product behavior disabled.
 
+## 2026-07-16 - Team Availability Evidence Foundation
+
+- Added an isolated immutable `app/team_availability` domain for player availability, injuries, suspensions, predicted and confirmed lineups, substitutes, formations, evidence state, conflicts, and safe ingestion audit data.
+- Added migration v6 with separate availability-source, player-observation, lineup-observation, and lineup-player tables using insert-once uniqueness and deterministic fixture/team/player/time lookups.
+- Added deterministic freshness, lineup-confirmation, snapshot, conflict-preservation, Quality Gate mapping, shadow enrichment, backtesting leakage, and no-op player-impact foundations.
+- Added Static, Null, and honest existing-football-API adapters; the current API surface does not expose lineup, injury, suspension, player, coach, or squad evidence and therefore produces no fabricated records.
+- Added disabled-by-default one-shot runtime ingestion without scheduling, network activation, Telegram publication, bankroll mutation, betting, or Quality Gate enforcement.
+
 ---
 
 # NEXT PRIORITIES
@@ -468,6 +476,12 @@ Only append.
 - [x] Consensus and disagreement foundation.
 - [x] Shadow odds-enrichment adapter.
 - [x] Provider adapter contracts.
+- [x] Team availability domain foundation.
+- [x] Lineup and injury persistence.
+- [x] Deterministic availability snapshots.
+- [x] Quality Gate availability adapter.
+- [x] Shadow availability enrichment.
+- [x] Team availability provider adapter contracts.
 - Lineup Impact Engine.
 - Opponent Adjusted xG.
 
@@ -494,6 +508,8 @@ Review after completing the current priority.
 - Add scheduled odds ingestion only after operational review.
 - Automate opening/reference/publication/pre-kickoff/closing role assignment after the observation foundation is proven.
 - Add CLV reporting to Official weekly statistics after publication and closing roles are reliably populated.
+- Add real-time lineup refresh near kickoff only after a genuine provider endpoint and operational schedule are reviewed.
+- Build a calibrated player-strength and lineup-impact model only after reliable minutes, starts, ratings, or internal player-strength inputs exist.
 
 - Implement and review full production Platt coefficient fitting.
 - Implement and review full production Isotonic PAV fitting.
