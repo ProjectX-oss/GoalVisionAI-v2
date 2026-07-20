@@ -16,6 +16,7 @@ from .exceptions import (
 )
 from .fingerprint import OfficialCandidateFingerprint, canonical_items, fingerprint_items
 from .models import (
+    ApprovedOfficialPredictionPublication,
     AssemblyReason,
     OfficialCandidateAssembly,
     OfficialCandidateAssemblyRequest,
@@ -174,7 +175,20 @@ class OfficialPredictionOrchestrationService:
                 None,
             )
 
-        result = await self._publish(assembly)
+        approved = ApprovedOfficialPredictionPublication(
+            orchestration_id=self._approval_id(
+                assembly,
+                candidate_fingerprint,
+                evaluation.evaluation_id,
+            ),
+            assembly=assembly,
+            candidate_fingerprint=candidate_fingerprint,
+            quality_gate_evaluation=evaluation,
+            approval_status=QualityGateStatus.APPROVED,
+            evaluated_at=request.evaluation_timestamp,
+            dry_run=False,
+        )
+        result = await self._publish(approved)
         status, mapped_reasons, mapped_explanations = self._publisher_outcome(result)
         outcome = self._record_outcome(
             request,
@@ -190,10 +204,10 @@ class OfficialPredictionOrchestrationService:
 
     async def _publish(
         self,
-        assembly: OfficialCandidateAssembly,
+        approved: ApprovedOfficialPredictionPublication,
     ) -> OfficialPredictionPublicationResult:
         try:
-            return await self._publisher.publish(assembly.gate_candidate)
+            return await self._publisher.publish(approved)
         except ConfirmedOfficialPublisherError as exc:
             return OfficialPredictionPublicationResult(
                 PublisherResultStatus.RETRYABLE_FAILURE,
@@ -201,6 +215,7 @@ class OfficialPredictionOrchestrationService:
                 (AssemblyReason.PUBLISHER_CONFIRMED_FAILURE.value,),
                 (str(exc),),
             )
+
         except IndeterminateOfficialPublisherError as exc:
             return OfficialPredictionPublicationResult(
                 PublisherResultStatus.INDETERMINATE_FAILURE,
@@ -218,6 +233,23 @@ class OfficialPredictionOrchestrationService:
                     f"is blocked ({type(exc).__name__}).",
                 ),
             )
+
+    @staticmethod
+    def _approval_id(
+        assembly: OfficialCandidateAssembly,
+        candidate_fingerprint: str,
+        gate_evaluation_id: str,
+    ) -> str:
+        seed = "|".join((
+            "official-publication-approval-v1",
+            assembly.prediction_id,
+            assembly.match_id,
+            candidate_fingerprint,
+            gate_evaluation_id,
+        ))
+        return "official-publication-approval-" + hashlib.sha256(
+            seed.encode("utf-8")
+        ).hexdigest()
 
     @staticmethod
     def _publisher_outcome(

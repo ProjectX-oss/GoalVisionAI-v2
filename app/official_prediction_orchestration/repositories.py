@@ -46,6 +46,32 @@ class SQLiteOfficialPublicationStateReader:
                 observed_at=evaluated_at,
                 attempt_reference=None,
             )
+        delivery = self._connection.execute(
+            """
+            SELECT match_id, status, attempt_reference
+            FROM official_prediction_publication_events
+            WHERE prediction_id = ? AND destination_scope = 'OFFICIAL'
+            ORDER BY attempt_number DESC, event_sequence DESC, event_id DESC
+            LIMIT 1
+            """,
+            (prediction_id,),
+        ).fetchone()
+        if delivery is not None:
+            if delivery["match_id"] != match_id:
+                raise ValueError("Publication attempt has a different match identity.")
+            state = {
+                "CLAIMED": PublicationDeliveryState.CLAIMED,
+                "PUBLISHED": PublicationDeliveryState.PUBLISHED,
+                "FAILED": PublicationDeliveryState.CONFIRMED_FAILED_RETRYABLE,
+                "INDETERMINATE": PublicationDeliveryState.INDETERMINATE_FAILURE,
+            }[delivery["status"]]
+            return PublicationStateRecord(
+                prediction_id=prediction_id,
+                match_id=match_id,
+                state=state,
+                observed_at=evaluated_at,
+                attempt_reference=delivery["attempt_reference"],
+            )
         latest = self._connection.execute(
             """
             SELECT final_status, publisher_attempt_reference

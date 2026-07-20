@@ -8,6 +8,7 @@ from .exceptions import (
 )
 from .fingerprint import OfficialCandidateFingerprint
 from .models import (
+    ApprovedOfficialPredictionPublication,
     AssemblyReason,
     BankrollScopeRecord,
     ExposureEvaluationRecord,
@@ -36,6 +37,7 @@ from .repositories import (
 from .service import OfficialPredictionOrchestrationService
 
 __all__ = (
+    "ApprovedOfficialPredictionPublication",
     "AssemblyReason",
     "AtomicOfficialPredictionPublisher",
     "BankrollScopeRecord",

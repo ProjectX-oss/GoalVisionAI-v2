@@ -976,6 +976,78 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=12,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_publication_events (
+                event_id TEXT PRIMARY KEY,
+                attempt_reference TEXT NOT NULL,
+                attempt_number INTEGER NOT NULL,
+                event_sequence INTEGER NOT NULL,
+                prediction_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                orchestration_id TEXT NOT NULL,
+                gate_evaluation_id TEXT NOT NULL,
+                candidate_fingerprint TEXT NOT NULL,
+                message_fingerprint TEXT NOT NULL,
+                destination_scope TEXT NOT NULL,
+                status TEXT NOT NULL,
+                telegram_message_id INTEGER,
+                failure_reason TEXT,
+                payload_snapshot TEXT NOT NULL,
+                occurred_at TEXT NOT NULL,
+                FOREIGN KEY (gate_evaluation_id)
+                    REFERENCES official_quality_gate_evaluations(evaluation_id),
+                UNIQUE (prediction_id, destination_scope, attempt_number, event_sequence),
+                UNIQUE (attempt_reference, status),
+                CHECK (attempt_number > 0),
+                CHECK (event_sequence IN (1, 2)),
+                CHECK (destination_scope = 'OFFICIAL'),
+                CHECK (status IN ('CLAIMED', 'PUBLISHED', 'FAILED', 'INDETERMINATE')),
+                CHECK (
+                    (status = 'CLAIMED' AND event_sequence = 1
+                        AND failure_reason IS NULL
+                        AND telegram_message_id IS NULL)
+                    OR
+                    (status = 'PUBLISHED' AND event_sequence = 2
+                        AND failure_reason IS NULL)
+                    OR
+                    (status IN ('FAILED', 'INDETERMINATE')
+                        AND event_sequence = 2
+                        AND failure_reason IS NOT NULL)
+                )
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_prediction_publication_latest
+            ON official_prediction_publication_events (
+                prediction_id, destination_scope,
+                attempt_number DESC, event_sequence DESC
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_prediction_message_fingerprint
+            ON official_prediction_publication_events (
+                message_fingerprint, status, occurred_at, event_id
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_publication_no_update
+            BEFORE UPDATE ON official_prediction_publication_events
+            BEGIN
+                SELECT RAISE(ABORT, 'Official prediction publication events are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_publication_no_delete
+            BEFORE DELETE ON official_prediction_publication_events
+            BEGIN
+                SELECT RAISE(ABORT, 'Official prediction publication events are immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 

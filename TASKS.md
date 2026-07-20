@@ -523,6 +523,15 @@ Only append.
 - Added migration v11 with append-only immutable Official orchestration history and safe Quality Gate foreign-key linkage.
 - Added a production service factory without scheduling, startup publication, fake production data, direct Telegram calls, bankroll mutation, or non-Official product changes.
 
+## 2026-07-20 - Official Prediction Message Assembly and Atomic Publisher Adapter
+
+- Added the isolated `app/official_prediction_publication` package for deterministic Telegram HTML assembly from approved orchestration and supplied public facts only.
+- Added supported Official match-winner, double-chance, totals, and both-teams-to-score formatting; calibrated-only public probability; strict HTML escaping; approved reasoning limits; responsible-betting language; and fail-closed exact-score, unsafe-language, and unsupported-market rejection.
+- Added exact 1%, 2%, and 3% public stake-star mapping with conservative lower-band mapping for reduced stakes and rejection of zero or ineligible recommendations.
+- Added immutable publication payloads and canonical SHA-256 message fingerprints that exclude raw probability, internal expected value, stake percentage, exposure, calibration metrics, internal audit content, destination identifiers, and credentials.
+- Added migration v12 with append-only immutable Official prediction publication events and atomic claim/send/finalize sequencing that distinguishes confirmed retryable failures from indeterminate delivery outcomes.
+- Added a concrete publisher adapter and production composition path that reuse the existing Telegram sender and settlement-facing published-prediction writer without changing prediction generation, selection, bankroll, risk, exposure, settlement, result publication, scheduling, or non-Official products.
+
 ---
 
 # NEXT PRIORITIES

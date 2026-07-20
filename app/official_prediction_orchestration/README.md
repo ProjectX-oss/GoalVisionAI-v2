@@ -85,11 +85,12 @@ injected publisher behaves the same and is explicitly reason-coded.
 
 `build_official_prediction_orchestration_service(database, publisher)` builds
 the production service using SQLite gate/orchestration history and publication
-state adapters. Construction has no side effects beyond additive migration.
-No scheduler calls it today, and application startup does not create a claim or
-send a message.
+state adapters. Alternatively, supplying the Telegram sender, public-facts
+provider, Official destination, and clock constructs the concrete atomic
+publisher in `app.official_prediction_publication`. Construction has no side
+effects beyond additive migration. No scheduler calls it today, and application
+startup does not create a claim or send a message.
 
-Intentionally deferred: automatic scheduling, a concrete prediction Telegram
-publisher where none currently exists in this repository, provider ingestion,
-active-claim recovery policy, combo creation, live betting, and non-Official
-products.
+Intentionally deferred: automatic scheduling, provider ingestion, explicit
+operator recovery for active or indeterminate claims, combo creation, live
+betting, and non-Official products.

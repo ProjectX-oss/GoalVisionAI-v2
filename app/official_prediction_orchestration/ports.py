@@ -1,9 +1,8 @@
 from datetime import datetime
 from typing import Protocol, runtime_checkable
 
-from app.publication_quality_gate import OfficialPublicationCandidate
-
 from .models import (
+    ApprovedOfficialPredictionPublication,
     OfficialPredictionOrchestrationRecord,
     OfficialPredictionPublicationResult,
     PublicationStateRecord,
@@ -29,7 +28,7 @@ class AtomicOfficialPredictionPublisher(Protocol):
 
     async def publish(
         self,
-        candidate: OfficialPublicationCandidate,
+        approved: ApprovedOfficialPredictionPublication,
     ) -> OfficialPredictionPublicationResult: ...
 
 

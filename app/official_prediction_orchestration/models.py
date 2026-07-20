@@ -12,7 +12,9 @@ from app.publication_quality_gate import (
     MarketAvailability,
     ModelHealthStatus,
     OfficialPublicationCandidate,
+    OfficialQualityGateEvaluation,
 )
+from app.quality_gate import QualityGateStatus
 from app.risk_management import RiskAssessmentDecision, RiskProductScope
 
 
@@ -187,6 +189,19 @@ class OfficialPredictionPublicationResult:
     attempt_reference: str | None
     ordered_reason_codes: tuple[str, ...] = ()
     internal_explanations: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class ApprovedOfficialPredictionPublication:
+    """Persisted approval evidence supplied to the atomic publisher adapter."""
+
+    orchestration_id: str
+    assembly: OfficialCandidateAssembly
+    candidate_fingerprint: str
+    quality_gate_evaluation: OfficialQualityGateEvaluation
+    approval_status: QualityGateStatus
+    evaluated_at: datetime
+    dry_run: bool
 
 
 @dataclass(frozen=True, slots=True)
