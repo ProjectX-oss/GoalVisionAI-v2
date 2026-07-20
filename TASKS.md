@@ -505,6 +505,15 @@ Only append.
 - Added migration v9 with lossless Decimal text storage and database-enforced append-only calibration run history.
 - Kept prediction selection, Telegram publication, bankroll, risk management, scheduling, external APIs, and all product policies unchanged.
 
+## 2026-07-20 - Official Publication Quality Gate
+
+- Added the isolated deterministic `app/publication_quality_gate` package for fully prepared Official candidates immediately before publication eligibility.
+- Added immutable configurable checks for calibrated probability, Official odds, supplied/recomputed EV, confidence, calibration quality, model health, freshness, supported market semantics, optional lineup/injury evidence, risk, exposure, bankroll scope, and duplicate publication state.
+- Added fixed REJECTED, REVIEW_REQUIRED, APPROVED precedence with ordered internal reason codes, explanations, normalized input snapshots, and deterministic SHA-256 fingerprints.
+- Added migration v10 with database-enforced append-only Official Quality Gate evaluation history and idempotent identical-candidate persistence.
+- Added a fail-closed eligibility wrapper that persists evaluations before forwarding only APPROVED candidates to an injected atomic publisher while leaving claim and retry ownership unchanged.
+- Kept prediction generation, market selection, bankroll balances, stake calculation, settlement, result publication, Telegram formatting, scheduling, external APIs, and non-Official products unchanged.
+
 ---
 
 # NEXT PRIORITIES

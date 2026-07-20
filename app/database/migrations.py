@@ -849,6 +849,74 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=10,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS official_quality_gate_evaluations (
+                evaluation_id TEXT PRIMARY KEY,
+                prediction_id TEXT NOT NULL,
+                input_fingerprint TEXT NOT NULL,
+                final_decision TEXT NOT NULL,
+                ordered_reason_codes TEXT NOT NULL,
+                internal_explanations TEXT NOT NULL,
+                findings TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                model_version TEXT NOT NULL,
+                raw_probability TEXT NOT NULL,
+                calibrated_probability TEXT,
+                decimal_odds TEXT NOT NULL,
+                supplied_expected_value TEXT,
+                recomputed_expected_value TEXT,
+                confidence TEXT NOT NULL,
+                prediction_timestamp TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                evaluated_at TEXT NOT NULL,
+                normalized_input TEXT NOT NULL,
+                risk_result TEXT NOT NULL,
+                exposure_result TEXT NOT NULL,
+                UNIQUE (prediction_id, policy_version, input_fingerprint),
+                CHECK (final_decision IN (
+                    'APPROVED', 'REJECTED', 'REVIEW_REQUIRED'
+                )),
+                CHECK (confidence IN ('LOW', 'MEDIUM', 'HIGH', 'ELITE')),
+                CHECK (risk_result IN (
+                    'ELIGIBLE', 'REDUCED_STAKE',
+                    'REVIEW_REQUIRED', 'INELIGIBLE'
+                )),
+                CHECK (exposure_result IN (
+                    'CLEAR', 'WARNING', 'HARD_BREACH'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_quality_gate_prediction
+            ON official_quality_gate_evaluations (
+                prediction_id, evaluated_at, evaluation_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_quality_gate_decision
+            ON official_quality_gate_evaluations (
+                final_decision, evaluated_at, evaluation_id
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_quality_gate_no_update
+            BEFORE UPDATE ON official_quality_gate_evaluations
+            BEGIN
+                SELECT RAISE(ABORT, 'Official Quality Gate history is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_quality_gate_no_delete
+            BEFORE DELETE ON official_quality_gate_evaluations
+            BEGIN
+                SELECT RAISE(ABORT, 'Official Quality Gate history is immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 
