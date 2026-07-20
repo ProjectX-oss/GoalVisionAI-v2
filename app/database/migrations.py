@@ -1048,6 +1048,205 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=13,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_runs (
+                run_event_id TEXT PRIMARY KEY,
+                run_id TEXT NOT NULL,
+                event_sequence INTEGER NOT NULL,
+                run_fingerprint TEXT NOT NULL,
+                idempotency_key TEXT NOT NULL,
+                run_status TEXT,
+                policy_version TEXT NOT NULL,
+                dry_run INTEGER NOT NULL,
+                bankroll_scope TEXT NOT NULL,
+                destination_scope TEXT NOT NULL,
+                started_timestamp TEXT NOT NULL,
+                completed_timestamp TEXT,
+                discovered_count INTEGER,
+                eligible_count INTEGER,
+                processed_count INTEGER,
+                published_count INTEGER,
+                approved_not_published_count INTEGER,
+                rejected_count INTEGER,
+                review_required_count INTEGER,
+                duplicate_blocked_count INTEGER,
+                retryable_failure_count INTEGER,
+                indeterminate_failure_count INTEGER,
+                assembly_failure_count INTEGER,
+                skipped_count INTEGER,
+                internal_failure_count INTEGER,
+                ordered_reasons TEXT NOT NULL,
+                stop_reason TEXT,
+                request_snapshot TEXT NOT NULL,
+                summary_snapshot TEXT,
+                UNIQUE (run_id, event_sequence),
+                CHECK (event_sequence IN (1, 2)),
+                CHECK (dry_run IN (0, 1)),
+                CHECK (bankroll_scope = 'OFFICIAL'),
+                CHECK (destination_scope = 'OFFICIAL'),
+                CHECK (
+                    run_status IS NULL OR run_status IN (
+                        'COMPLETED', 'COMPLETED_WITH_FAILURES',
+                        'DRY_RUN_COMPLETED', 'NO_ELIGIBLE_CANDIDATES',
+                        'ABORTED', 'FAILED_TO_START', 'INDETERMINATE'
+                    )
+                ),
+                CHECK (
+                    (event_sequence = 1
+                        AND run_status IS NULL
+                        AND completed_timestamp IS NULL
+                        AND discovered_count IS NULL
+                        AND summary_snapshot IS NULL)
+                    OR
+                    (event_sequence = 2
+                        AND run_status IS NOT NULL
+                        AND completed_timestamp IS NOT NULL
+                        AND discovered_count IS NOT NULL
+                        AND eligible_count IS NOT NULL
+                        AND processed_count IS NOT NULL
+                        AND published_count IS NOT NULL
+                        AND approved_not_published_count IS NOT NULL
+                        AND rejected_count IS NOT NULL
+                        AND review_required_count IS NOT NULL
+                        AND duplicate_blocked_count IS NOT NULL
+                        AND retryable_failure_count IS NOT NULL
+                        AND indeterminate_failure_count IS NOT NULL
+                        AND assembly_failure_count IS NOT NULL
+                        AND skipped_count IS NOT NULL
+                        AND internal_failure_count IS NOT NULL
+                        AND discovered_count >= 0
+                        AND eligible_count >= 0
+                        AND processed_count >= 0
+                        AND published_count >= 0
+                        AND approved_not_published_count >= 0
+                        AND rejected_count >= 0
+                        AND review_required_count >= 0
+                        AND duplicate_blocked_count >= 0
+                        AND retryable_failure_count >= 0
+                        AND indeterminate_failure_count >= 0
+                        AND assembly_failure_count >= 0
+                        AND skipped_count >= 0
+                        AND internal_failure_count >= 0
+                        AND discovered_count = processed_count + skipped_count
+                        AND eligible_count = processed_count
+                        AND processed_count =
+                            published_count + approved_not_published_count
+                            + rejected_count + review_required_count
+                            + duplicate_blocked_count + retryable_failure_count
+                            + indeterminate_failure_count + assembly_failure_count
+                            + internal_failure_count
+                        AND summary_snapshot IS NOT NULL)
+                )
+            )
+            """,
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_official_prediction_run_fingerprint
+            ON official_prediction_runs (run_fingerprint)
+            WHERE event_sequence = 1
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_run_items (
+                run_item_id TEXT PRIMARY KEY,
+                run_id TEXT NOT NULL,
+                run_event_sequence INTEGER NOT NULL DEFAULT 1,
+                item_index INTEGER NOT NULL,
+                prediction_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                candidate_fingerprint TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                discovery_status TEXT NOT NULL,
+                item_status TEXT NOT NULL,
+                was_eligible INTEGER NOT NULL,
+                orchestration_id TEXT,
+                publication_attempt_reference TEXT,
+                started_timestamp TEXT NOT NULL,
+                completed_timestamp TEXT NOT NULL,
+                ordered_reasons TEXT NOT NULL,
+                result_snapshot TEXT NOT NULL,
+                FOREIGN KEY (run_id, run_event_sequence)
+                    REFERENCES official_prediction_runs(run_id, event_sequence),
+                UNIQUE (run_id, item_index),
+                CHECK (run_event_sequence = 1),
+                CHECK (item_index >= 0),
+                CHECK (was_eligible IN (0, 1)),
+                CHECK (discovery_status IN (
+                    'READY', 'ALREADY_PUBLISHED', 'ACTIVE_DUPLICATE_CLAIM',
+                    'RETRYABLE_CONFIRMED_FAILURE', 'INDETERMINATE',
+                    'REJECTED_IMMUTABLE', 'REVIEW_REQUIRED_IMMUTABLE',
+                    'EXPIRED', 'MALFORMED', 'NOT_YET_ELIGIBLE',
+                    'NON_OFFICIAL'
+                )),
+                CHECK (item_status IN (
+                    'PUBLISHED', 'APPROVED_NOT_PUBLISHED', 'REJECTED',
+                    'REVIEW_REQUIRED', 'DUPLICATE_BLOCKED',
+                    'RETRYABLE_PUBLICATION_FAILURE',
+                    'INDETERMINATE_PUBLICATION_FAILURE', 'ASSEMBLY_FAILED',
+                    'SKIPPED_ALREADY_PUBLISHED', 'SKIPPED_ACTIVE_CLAIM',
+                    'SKIPPED_INDETERMINATE', 'SKIPPED_EXPIRED',
+                    'SKIPPED_NOT_ELIGIBLE', 'SKIPPED_RETRY_LIMIT',
+                    'SKIPPED_RETRY_COOLDOWN', 'INTERNAL_FAILURE'
+                )),
+                CHECK (
+                    (was_eligible = 0 AND item_status IN (
+                        'SKIPPED_ALREADY_PUBLISHED', 'SKIPPED_ACTIVE_CLAIM',
+                        'SKIPPED_INDETERMINATE', 'SKIPPED_EXPIRED',
+                        'SKIPPED_NOT_ELIGIBLE', 'SKIPPED_RETRY_LIMIT',
+                        'SKIPPED_RETRY_COOLDOWN'
+                    ))
+                    OR
+                    (was_eligible = 1 AND item_status NOT IN (
+                        'SKIPPED_ALREADY_PUBLISHED', 'SKIPPED_ACTIVE_CLAIM',
+                        'SKIPPED_INDETERMINATE', 'SKIPPED_EXPIRED',
+                        'SKIPPED_NOT_ELIGIBLE', 'SKIPPED_RETRY_LIMIT',
+                        'SKIPPED_RETRY_COOLDOWN'
+                    ))
+                )
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_prediction_run_items_order
+            ON official_prediction_run_items (run_id, item_index)
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_prediction_run_items_candidate
+            ON official_prediction_run_items (
+                prediction_id, candidate_fingerprint,
+                completed_timestamp, run_item_id
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_runs_no_update
+            BEFORE UPDATE ON official_prediction_runs
+            BEGIN
+                SELECT RAISE(ABORT, 'Official prediction run history is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_runs_no_delete
+            BEFORE DELETE ON official_prediction_runs
+            BEGIN
+                SELECT RAISE(ABORT, 'Official prediction run history is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_run_items_no_update
+            BEFORE UPDATE ON official_prediction_run_items
+            BEGIN
+                SELECT RAISE(ABORT, 'Official prediction run items are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_run_items_no_delete
+            BEFORE DELETE ON official_prediction_run_items
+            BEGIN
+                SELECT RAISE(ABORT, 'Official prediction run items are immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 

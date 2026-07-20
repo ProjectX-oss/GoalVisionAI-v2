@@ -71,3 +71,9 @@ existing published-prediction writer, message builder, facts provider, Telegram
 sender, Official destination, and injected clock. The orchestration factory can
 build this adapter when those dependencies are supplied. Construction performs
 additive migration only; startup and scheduling do not publish anything.
+
+The manual batch coordinator does not send through this adapter directly. It
+calls the single-prediction orchestration boundary, which remains the only
+owner allowed to invoke this adapter after a persisted Quality Gate approval.
+Batch idempotency supplements but never replaces prediction-level atomic
+claims, confirmed-failure retries, or indeterminate resend blocking.

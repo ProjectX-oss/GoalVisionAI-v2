@@ -94,3 +94,12 @@ startup does not create a claim or send a message.
 Intentionally deferred: automatic scheduling, provider ingestion, explicit
 operator recovery for active or indeterminate claims, combo creation, live
 betting, and non-Official products.
+
+## Manual batch caller
+
+`app.official_prediction_run_coordinator` is the application layer immediately
+above this package. It supplies each persisted immutable request with the
+explicit batch evaluation timestamp and dry-run flag, then calls
+`prepare_and_publish_official_prediction(...)` exactly once for every eligible
+reference. It does not enter or modify assembly, Quality Gate, or publisher
+logic. No scheduler or startup hook invokes the coordinator.

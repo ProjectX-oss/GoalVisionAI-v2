@@ -532,6 +532,15 @@ Only append.
 - Added migration v12 with append-only immutable Official prediction publication events and atomic claim/send/finalize sequencing that distinguishes confirmed retryable failures from indeterminate delivery outcomes.
 - Added a concrete publisher adapter and production composition path that reuse the existing Telegram sender and settlement-facing published-prediction writer without changing prediction generation, selection, bankroll, risk, exposure, settlement, result publication, scheduling, or non-Official products.
 
+## 2026-07-20 - Official Prediction Run Coordinator and Manual Batch Boundary
+
+- Added the isolated `app/official_prediction_run_coordinator` application layer over the existing single-prediction orchestration callable.
+- Added injected persisted-candidate discovery, explicit Official-only state classification, deterministic kickoff/creation/prediction ordering, bounded lookahead and batch limits, immutable-fingerprint rejection freshness, and dry-run-only force review without bypassing the Quality Gate.
+- Added centralized confirmed-failure retry limits and cooldowns while permanently blocking automatic published, active-claim, indeterminate, expired, malformed, non-Official, and unchanged rejected/review-required candidates.
+- Added sequential failure-isolated batch execution, exact orchestration outcome mapping, validated immutable counters, safe stop-after-failure policy, structured status-only logging, and no hidden time, randomness, fetching, or startup execution.
+- Added canonical SHA-256 run idempotency, existing-terminal result reuse, incomplete-run replay blocking, and migration v13 with append-only immutable run start/terminal events and ordered item outcomes.
+- Added `build_official_prediction_run_coordinator(...)` and the explicit dry-run-default `run_official_prediction_batch(...)` manual callable without scheduling, provider ingestion, real credential construction, or changes to prediction, bankroll, risk, publication, settlement, or non-Official product logic.
+
 ---
 
 # NEXT PRIORITIES
