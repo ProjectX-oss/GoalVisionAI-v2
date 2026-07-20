@@ -496,6 +496,15 @@ Only append.
 - Added deterministic flat-unit, fixed-1%, fixed-2%, and recommended-policy backtesting comparison with ROI, drawdown, losing streak, volatility proxy, stake concentration, skips, and stake/drawdown segmentation.
 - Kept automatic staking, bankroll mutation, exposure reservation, Quality Gate enforcement, Telegram changes, scheduling, betting, and all non-Official product activation disabled.
 
+## 2026-07-20 - Probability Calibration Post-Prediction Engine
+
+- Added the isolated deterministic `app/probability_calibration` package as a post-prediction transformation boundary without changing prediction generation.
+- Added configuration-selected Identity, Platt Scaling, and Isotonic Regression by composing the existing production calibration fitters.
+- Added strict model-version and historical-cutoff validation, monotonic-order enforcement, and `[0.001, 0.999]` output clamping.
+- Added immutable reports containing raw and calibrated probabilities, delta, method, Brier Score, Log Loss, ECE, MCE, reliability bins, confidence histograms, timestamp, and model version.
+- Added migration v9 with lossless Decimal text storage and database-enforced append-only calibration run history.
+- Kept prediction selection, Telegram publication, bankroll, risk management, scheduling, external APIs, and all product policies unchanged.
+
 ---
 
 # NEXT PRIORITIES

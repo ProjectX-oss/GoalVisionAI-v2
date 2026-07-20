@@ -797,6 +797,58 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=9,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS probability_calibration_history (
+                calibration_run_id TEXT PRIMARY KEY,
+                created_at TEXT NOT NULL,
+                model_version TEXT NOT NULL,
+                calibration_version TEXT NOT NULL,
+                calibration_method TEXT NOT NULL,
+                raw_probability TEXT NOT NULL,
+                calibrated_probability TEXT NOT NULL,
+                delta TEXT NOT NULL,
+                observation_count INTEGER NOT NULL,
+                brier_score TEXT NOT NULL,
+                log_loss TEXT NOT NULL,
+                expected_calibration_error TEXT NOT NULL,
+                maximum_calibration_error TEXT NOT NULL,
+                reliability_bins TEXT NOT NULL,
+                confidence_histogram TEXT NOT NULL,
+                CHECK (calibration_method IN ('identity', 'platt', 'isotonic')),
+                CHECK (observation_count >= 0)
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_probability_calibration_model_history
+            ON probability_calibration_history (
+                model_version, created_at, calibration_run_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_probability_calibration_method_history
+            ON probability_calibration_history (
+                calibration_method, created_at, calibration_run_id
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS probability_calibration_history_no_update
+            BEFORE UPDATE ON probability_calibration_history
+            BEGIN
+                SELECT RAISE(ABORT, 'probability calibration history is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS probability_calibration_history_no_delete
+            BEFORE DELETE ON probability_calibration_history
+            BEGIN
+                SELECT RAISE(ABORT, 'probability calibration history is immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 
