@@ -514,6 +514,15 @@ Only append.
 - Added a fail-closed eligibility wrapper that persists evaluations before forwarding only APPROVED candidates to an injected atomic publisher while leaving claim and retry ownership unchanged.
 - Kept prediction generation, market selection, bankroll balances, stake calculation, settlement, result publication, Telegram formatting, scheduling, external APIs, and non-Official products unchanged.
 
+## 2026-07-20 - Official Prediction Candidate Assembly and Publication Orchestration
+
+- Added the isolated deterministic `app/official_prediction_orchestration` application boundary for complete supplied Official facts.
+- Added strict model, match, market, calibration, health, risk, exposure, bankroll, and publication-state identity validation with deterministic newest-record selection.
+- Added Decimal EV verification that preserves the upstream supplied value and canonical versioned candidate fingerprints over every material selected fact.
+- Added persisted gate-before-publisher sequencing, typed dry-run and disabled-publisher outcomes, safe retryable/indeterminate delivery mapping, and identical-input idempotency.
+- Added migration v11 with append-only immutable Official orchestration history and safe Quality Gate foreign-key linkage.
+- Added a production service factory without scheduling, startup publication, fake production data, direct Telegram calls, bankroll mutation, or non-Official product changes.
+
 ---
 
 # NEXT PRIORITIES

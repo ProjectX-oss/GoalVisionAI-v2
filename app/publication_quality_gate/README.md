@@ -14,8 +14,13 @@ stake-calculation behavior.
    precedence and ordered internal reason codes.
 4. `SQLiteQualityGateEvaluationRepository` stores the evaluation once using the
    policy version and deterministic input fingerprint.
-5. `OfficialPublicationEligibilityBoundary` calls the injected atomic publisher
-   only for a persisted `APPROVED` evaluation.
+5. `app.official_prediction_orchestration` now supplies the complete candidate,
+   persists this evaluation, applies orchestration idempotency and dry-run
+   policy, and calls the injected atomic publisher only for `APPROVED` facts.
+
+`OfficialPublicationEligibilityBoundary` remains available for existing direct
+consumers, but the orchestration service is the complete callable Official
+pre-publication boundary for future scheduling.
 
 The downstream publisher remains solely responsible for Telegram delivery
 claims, confirmed-failure retry state, and marking messages as sent. The gate

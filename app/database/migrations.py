@@ -917,6 +917,65 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=11,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_orchestrations (
+                orchestration_id TEXT PRIMARY KEY,
+                prediction_id TEXT NOT NULL,
+                candidate_fingerprint TEXT,
+                gate_evaluation_id TEXT,
+                final_status TEXT NOT NULL,
+                ordered_reasons TEXT NOT NULL,
+                internal_explanations TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                model_version TEXT NOT NULL,
+                dry_run INTEGER NOT NULL,
+                publisher_attempt_reference TEXT,
+                normalized_input_snapshot TEXT NOT NULL,
+                evaluated_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (gate_evaluation_id)
+                    REFERENCES official_quality_gate_evaluations(evaluation_id),
+                CHECK (dry_run IN (0, 1)),
+                CHECK (final_status IN (
+                    'PUBLISHED', 'APPROVED_NOT_PUBLISHED', 'REJECTED',
+                    'REVIEW_REQUIRED', 'DUPLICATE_BLOCKED',
+                    'RETRYABLE_PUBLICATION_FAILURE',
+                    'INDETERMINATE_PUBLICATION_FAILURE', 'ASSEMBLY_FAILED'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_orchestration_candidate
+            ON official_prediction_orchestrations (
+                prediction_id, candidate_fingerprint, dry_run,
+                created_timestamp, orchestration_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_orchestration_status
+            ON official_prediction_orchestrations (
+                final_status, created_timestamp, orchestration_id
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_orchestration_no_update
+            BEFORE UPDATE ON official_prediction_orchestrations
+            BEGIN
+                SELECT RAISE(ABORT, 'Official prediction orchestration history is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_orchestration_no_delete
+            BEFORE DELETE ON official_prediction_orchestrations
+            BEGIN
+                SELECT RAISE(ABORT, 'Official prediction orchestration history is immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 
