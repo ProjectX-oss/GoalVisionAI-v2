@@ -276,7 +276,7 @@ class ModelInputMigrationTests(unittest.TestCase):
             fresh.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            17,
+            18,
         )
         fresh.close()
 
@@ -300,7 +300,7 @@ class ModelInputMigrationTests(unittest.TestCase):
             upgrade.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            17,
+            18,
         )
         columns = {
             row[1]

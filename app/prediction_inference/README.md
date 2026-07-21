@@ -64,11 +64,14 @@ snapshots, lookup indexes, and update/delete prevention triggers.
 
 `to_calibration_input(result, target)` maps one raw target to a typed downstream
 payload while preserving raw probability, target, inference ID/fingerprint, and
-model provenance. It never invokes calibration. The reviewed future flow is:
+model provenance. `app.calibrated_market_probabilities` is the separate owner of
+explicit calibration-artifact resolution, execution, combined validation, and
+immutable assembly persistence. Raw inference never invokes it automatically.
+The reviewed flow is:
 
 ```text
 match snapshot -> feature set -> model input -> raw inference
-  -> probability calibration -> future market prediction assembly
+  -> calibrated market probabilities -> future market prediction assembly
   -> candidate registry -> Quality Gate -> publication
 ```
 

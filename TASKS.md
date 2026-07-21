@@ -623,6 +623,7 @@ Only append.
 - [x] Versioned deterministic feature-store foundation.
 - [x] Versioned prediction model-input builder.
 - [x] Deterministic prediction inference engine foundation.
+- [x] Calibrated market probability assembly foundation.
 - Lineup Impact Engine.
 - Richer provider-backed Opponent Adjusted xG.
 
@@ -654,6 +655,7 @@ Review after completing the current priority.
 - Add scheduled historical-form ingestion only after operational review.
 - Integrate a reviewed real pre-match model artifact without implicit loading.
 - Build calibrated market prediction assembly after inference and calibration evidence is approved.
+- Add group-aware calibration only under a new reviewed policy/schema version.
 
 - Gather a sufficient settled Shadow sample before monitoring threshold decisions.
 - Statistically tune drift thresholds after sufficient historical evidence exists.

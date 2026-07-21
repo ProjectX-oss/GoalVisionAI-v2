@@ -27,7 +27,11 @@ explicit artifact or explicitly configured active Official model. Its canonical
 11-target order covers match result, over/under 1.5, 2.5 and 3.5, and BTTS. Raw
 Decimal probabilities must satisfy complement sums and monotonic totals rules;
 invalid model output is rejected without normalization. Calibration remains a
-separate downstream operation.
+separate downstream operation. `app/calibrated_market_probabilities` resolves a
+complete explicit calibration set, runs the existing calibration engine per
+target, validates the combined set without normalization, and atomically stores
+the calibrated assembly. It does not perform odds/value, risk, candidate,
+Quality Gate, or publication work.
 
 ## Official prediction publication
 

@@ -1693,6 +1693,108 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=18,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS probability_calibration_sets (
+                calibration_set_id TEXT PRIMARY KEY,
+                set_name TEXT NOT NULL,
+                set_version TEXT NOT NULL,
+                source_model_artifact_id TEXT NOT NULL,
+                source_model_versions TEXT NOT NULL,
+                target_mapping_snapshot TEXT NOT NULL,
+                calibration_set_fingerprint TEXT NOT NULL UNIQUE,
+                policy_version TEXT NOT NULL,
+                active INTEGER NOT NULL,
+                effective_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                CHECK (active IN (0, 1))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS calibrated_market_probability_assemblies (
+                calibrated_assembly_id TEXT PRIMARY KEY,
+                inference_id TEXT NOT NULL,
+                model_input_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                snapshot_id TEXT NOT NULL,
+                feature_set_id TEXT NOT NULL,
+                source_model_artifact_id TEXT NOT NULL,
+                source_model_name TEXT NOT NULL,
+                source_model_version TEXT NOT NULL,
+                raw_inference_fingerprint TEXT NOT NULL,
+                calibration_set_id TEXT,
+                calibration_set_fingerprint TEXT NOT NULL,
+                assembly_policy_version TEXT NOT NULL,
+                calibrated_assembly_fingerprint TEXT NOT NULL UNIQUE,
+                validation_snapshot TEXT NOT NULL,
+                calibration_effective_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (inference_id)
+                    REFERENCES prediction_inference_results(inference_id),
+                FOREIGN KEY (calibration_set_id)
+                    REFERENCES probability_calibration_sets(calibration_set_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS calibrated_market_probability_targets (
+                calibrated_target_result_id TEXT PRIMARY KEY,
+                calibrated_assembly_id TEXT NOT NULL,
+                target_order INTEGER NOT NULL,
+                target TEXT NOT NULL,
+                raw_probability TEXT NOT NULL,
+                calibrated_probability TEXT NOT NULL,
+                calibration_artifact_id TEXT NOT NULL,
+                calibration_method TEXT NOT NULL,
+                calibration_model_version TEXT NOT NULL,
+                calibration_policy_version TEXT NOT NULL,
+                calibration_report_fingerprint TEXT NOT NULL,
+                quality_metadata_reference TEXT,
+                clamping_indicator INTEGER,
+                diagnostics_snapshot TEXT NOT NULL,
+                target_result_fingerprint TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (calibrated_assembly_id)
+                    REFERENCES calibrated_market_probability_assemblies(calibrated_assembly_id),
+                UNIQUE (calibrated_assembly_id, target),
+                UNIQUE (calibrated_assembly_id, target_order),
+                CHECK (target_order >= 0),
+                CHECK (clamping_indicator IS NULL OR clamping_indicator IN (0, 1))
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_calibration_set_model ON probability_calibration_sets (source_model_artifact_id, active, effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_calibrated_assembly_match ON calibrated_market_probability_assemblies (match_id, calibration_effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_calibrated_assembly_inference ON calibrated_market_probability_assemblies (inference_id, calibration_effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_calibrated_assembly_model ON calibrated_market_probability_assemblies (source_model_artifact_id, source_model_version, calibration_effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_calibrated_assembly_set ON calibrated_market_probability_assemblies (calibration_set_id, calibration_effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_calibrated_target_target ON calibrated_market_probability_targets (target, calibration_artifact_id)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS probability_calibration_sets_no_update BEFORE UPDATE ON probability_calibration_sets
+            BEGIN SELECT RAISE(ABORT, 'Probability calibration sets are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS probability_calibration_sets_no_delete BEFORE DELETE ON probability_calibration_sets
+            BEGIN SELECT RAISE(ABORT, 'Probability calibration sets are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS calibrated_market_probability_assemblies_no_update BEFORE UPDATE ON calibrated_market_probability_assemblies
+            BEGIN SELECT RAISE(ABORT, 'Calibrated market probability assemblies are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS calibrated_market_probability_assemblies_no_delete BEFORE DELETE ON calibrated_market_probability_assemblies
+            BEGIN SELECT RAISE(ABORT, 'Calibrated market probability assemblies are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS calibrated_market_probability_targets_no_update BEFORE UPDATE ON calibrated_market_probability_targets
+            BEGIN SELECT RAISE(ABORT, 'Calibrated market probability targets are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS calibrated_market_probability_targets_no_delete BEFORE DELETE ON calibrated_market_probability_targets
+            BEGIN SELECT RAISE(ABORT, 'Calibrated market probability targets are immutable'); END
+            """,
+        ),
+    ),
 )
 
 
