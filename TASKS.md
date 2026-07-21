@@ -47,6 +47,8 @@ Tasks
 
 Improve rating calculation.
 
+- [x] Complete deterministic Official Prediction Selection Engine foundation.
+
 Review feature weights.
 
 Review confidence thresholds.

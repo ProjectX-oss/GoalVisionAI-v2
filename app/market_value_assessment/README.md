@@ -94,10 +94,14 @@ The explicit production boundaries are
 `build_market_value_assessment_service(...)` and `assess_market_value(...)`.
 The factory requires explicit odds repository, assessment repository, mapping
 registry, and policy and performs no work at construction. Only ACTIONABLE
-records map through `to_future_official_selection_input(...)`; that typed,
-read-only payload has no stake, risk, exposure, candidate, gate, or publication
-state.
+records map through `to_future_official_selection_input(...)`. The downstream
+`app.official_prediction_selection` package independently re-verifies persisted
+assessment provenance, applies Official odds/EV/freshness/publication-state
+eligibility, deduplicates logical markets, and selects at most one single per
+match. An assessment being ACTIONABLE is therefore neither selection nor
+publication approval. Both boundaries retain no stake, exposure, candidate,
+gate, or publication side effect.
 
-External odds providers, ingestion and scheduling, bet selection, staking,
-candidate registration, Quality Gate execution, and publication remain
-intentionally deferred.
+External odds providers, ingestion and scheduling, staking, candidate
+registration, Quality Gate execution, publication, and the separate future
+two-leg exception-combo workflow remain intentionally deferred.

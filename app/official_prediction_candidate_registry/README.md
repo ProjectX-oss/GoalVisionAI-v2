@@ -110,10 +110,13 @@ bookmaker APIs, automatic ingestion, scheduling, background workers, correction
 messages, Telegram delivery, live betting, Combo, High Risk, Lab, and AutoTrader
 workflows.
 
-The upstream `app.market_value_assessment` package now exposes a typed read-only
-input for a future Official Prediction Selection Engine. It does not invoke this
-registry. Selection and conversion into complete candidate facts remain a future
-reviewed boundary, preserving registry validation and publication protection.
+The upstream `app.market_value_assessment` package feeds the independent
+`app.official_prediction_selection` boundary. That engine can select at most one
+qualifying Official single for a match and maps only verified value/provenance
+facts into a future risk handoff. Selection is not candidate readiness or
+publication approval and does not invoke this registry. Risk/stake assessment
+and conversion into complete candidate facts remain future reviewed boundaries,
+preserving registry validation, lifecycle, and publication protection.
 
 ## Future upstream data boundary
 

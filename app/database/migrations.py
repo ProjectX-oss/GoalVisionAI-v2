@@ -1929,6 +1929,119 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=20,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_selection_decisions (
+                selection_decision_id TEXT PRIMARY KEY,
+                selection_request_identity TEXT NOT NULL UNIQUE,
+                selection_request_fingerprint TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                selection_timestamp TEXT NOT NULL,
+                final_outcome_status TEXT NOT NULL,
+                selected_value_assessment_id TEXT,
+                selected_assessment_fingerprint TEXT,
+                selected_market_identity TEXT,
+                selected_odds TEXT,
+                selected_fair_probability TEXT,
+                selected_expected_value TEXT,
+                eligible_assessment_count INTEGER NOT NULL,
+                rejected_assessment_count INTEGER NOT NULL,
+                selection_policy_version TEXT NOT NULL,
+                ranking_policy_version TEXT NOT NULL,
+                decision_fingerprint TEXT NOT NULL UNIQUE,
+                final_reason_code_snapshot TEXT NOT NULL,
+                deterministic_decision_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (selected_value_assessment_id)
+                    REFERENCES market_value_assessments(value_assessment_id),
+                UNIQUE (selection_request_identity, selection_request_fingerprint),
+                CHECK (final_outcome_status IN ('SELECTED', 'NO_SELECTION')),
+                CHECK (eligible_assessment_count >= 0),
+                CHECK (rejected_assessment_count >= 0),
+                CHECK (
+                    (final_outcome_status = 'SELECTED'
+                     AND selected_value_assessment_id IS NOT NULL
+                     AND selected_assessment_fingerprint IS NOT NULL
+                     AND selected_market_identity IS NOT NULL
+                     AND selected_odds IS NOT NULL
+                     AND selected_fair_probability IS NOT NULL
+                     AND selected_expected_value IS NOT NULL)
+                    OR
+                    (final_outcome_status = 'NO_SELECTION'
+                     AND selected_value_assessment_id IS NULL
+                     AND selected_assessment_fingerprint IS NULL
+                     AND selected_market_identity IS NULL
+                     AND selected_odds IS NULL
+                     AND selected_fair_probability IS NULL
+                     AND selected_expected_value IS NULL)
+                )
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_selection_evaluations (
+                evaluation_id TEXT PRIMARY KEY,
+                selection_decision_id TEXT NOT NULL,
+                value_assessment_id TEXT NOT NULL,
+                assessment_fingerprint TEXT NOT NULL,
+                deterministic_input_order INTEGER NOT NULL,
+                eligibility_status TEXT NOT NULL,
+                logical_market_identity TEXT NOT NULL,
+                verified_odds TEXT NOT NULL,
+                verified_fair_probability TEXT NOT NULL,
+                verified_expected_value TEXT NOT NULL,
+                freshness_snapshot TEXT NOT NULL,
+                ordered_rejection_reasons TEXT NOT NULL,
+                evaluation_fingerprint TEXT NOT NULL,
+                deterministic_evaluation_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (selection_decision_id)
+                    REFERENCES official_prediction_selection_decisions(selection_decision_id),
+                FOREIGN KEY (value_assessment_id)
+                    REFERENCES market_value_assessments(value_assessment_id),
+                UNIQUE (selection_decision_id, value_assessment_id),
+                UNIQUE (selection_decision_id, deterministic_input_order),
+                UNIQUE (selection_decision_id, evaluation_fingerprint),
+                CHECK (deterministic_input_order >= 0),
+                CHECK (eligibility_status IN ('ELIGIBLE', 'REJECTED', 'DEDUPLICATED'))
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_official_selection_match
+                ON official_prediction_selection_decisions (match_id, selection_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_selection_timestamp
+                ON official_prediction_selection_decisions (selection_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_selection_selected_assessment
+                ON official_prediction_selection_decisions (selected_value_assessment_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_selection_status
+                ON official_prediction_selection_decisions (final_outcome_status, selection_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_selection_market
+                ON official_prediction_selection_decisions (selected_market_identity, selection_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_selection_policy
+                ON official_prediction_selection_decisions (selection_policy_version, ranking_policy_version)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS official_selection_decisions_no_update
+            BEFORE UPDATE ON official_prediction_selection_decisions
+            BEGIN SELECT RAISE(ABORT, 'Official selection decisions are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_selection_decisions_no_delete
+            BEFORE DELETE ON official_prediction_selection_decisions
+            BEGIN SELECT RAISE(ABORT, 'Official selection decisions are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_selection_evaluations_no_update
+            BEFORE UPDATE ON official_prediction_selection_evaluations
+            BEGIN SELECT RAISE(ABORT, 'Official selection evaluations are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_selection_evaluations_no_delete
+            BEFORE DELETE ON official_prediction_selection_evaluations
+            BEGIN SELECT RAISE(ABORT, 'Official selection evaluations are immutable'); END
+            """,
+        ),
+    ),
 )
 
 
