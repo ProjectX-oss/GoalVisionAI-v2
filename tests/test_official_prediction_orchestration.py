@@ -655,7 +655,7 @@ class OrchestrationPersistenceTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 19)))
+        self.assertEqual(versions, tuple(range(1, 20)))
 
         service = build_official_prediction_orchestration_service(
             database,
@@ -696,7 +696,7 @@ class OrchestrationPersistenceTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 19)))
+        self.assertEqual(versions, tuple(range(1, 20)))
         self.assertIsNotNone(
             database.connection.execute(
                 "SELECT name FROM sqlite_master WHERE name='official_prediction_orchestrations'"

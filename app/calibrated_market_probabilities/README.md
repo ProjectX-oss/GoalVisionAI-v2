@@ -39,7 +39,9 @@ The production boundaries are `build_calibrated_market_probability_service(...)`
 and `generate_calibrated_market_probabilities(...)`. Every dependency and the
 effective timestamp are explicit. `to_future_market_probability_input(...)`
 provides read-only calibrated/raw/model/calibration provenance for later market
-assembly, without odds, EV, risk, candidates, Quality Gate, or publication.
+assembly. `app.market_value_assessment` is the separate supplied-odds consumer;
+this package itself remains without odds, EV, risk, candidates, Quality Gate, or
+publication.
 
 Future flow:
 

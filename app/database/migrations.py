@@ -1795,6 +1795,140 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=19,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS market_odds_snapshots (
+                odds_record_id TEXT PRIMARY KEY,
+                supplied_snapshot_id TEXT NOT NULL,
+                odds_fingerprint TEXT NOT NULL UNIQUE,
+                source_provider TEXT NOT NULL,
+                bookmaker_id TEXT NOT NULL,
+                source_event_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                market_type TEXT NOT NULL,
+                selection TEXT NOT NULL,
+                market_line TEXT,
+                original_market TEXT NOT NULL,
+                original_selection TEXT NOT NULL,
+                decimal_odds TEXT NOT NULL,
+                odds_effective_timestamp TEXT NOT NULL,
+                source_updated_timestamp TEXT NOT NULL,
+                registration_timestamp TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                market_status TEXT NOT NULL,
+                suspended INTEGER NOT NULL,
+                available INTEGER NOT NULL,
+                minimum_stake TEXT,
+                maximum_stake TEXT,
+                currency TEXT,
+                source_data_version TEXT NOT NULL,
+                metadata_version TEXT NOT NULL,
+                deterministic_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                CHECK (suspended IN (0, 1)),
+                CHECK (available IN (0, 1))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS market_value_assessments (
+                value_assessment_id TEXT PRIMARY KEY,
+                calibrated_assembly_id TEXT NOT NULL,
+                inference_id TEXT NOT NULL,
+                model_input_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                source_snapshot_id TEXT NOT NULL,
+                feature_set_id TEXT NOT NULL,
+                source_model_artifact_id TEXT NOT NULL,
+                source_model_version TEXT NOT NULL,
+                calibration_set_id TEXT,
+                calibration_set_fingerprint TEXT NOT NULL,
+                odds_record_id TEXT NOT NULL,
+                odds_fingerprint TEXT NOT NULL,
+                source_provider TEXT NOT NULL,
+                bookmaker_id TEXT NOT NULL,
+                market_type TEXT NOT NULL,
+                selection TEXT NOT NULL,
+                market_line TEXT,
+                source_calibrated_targets TEXT NOT NULL,
+                probability_derivation_type TEXT NOT NULL,
+                derivation_version TEXT NOT NULL,
+                fair_probability TEXT NOT NULL,
+                fair_decimal_odds TEXT NOT NULL,
+                bookmaker_decimal_odds TEXT NOT NULL,
+                implied_probability TEXT NOT NULL,
+                break_even_probability TEXT NOT NULL,
+                absolute_probability_edge TEXT NOT NULL,
+                relative_probability_edge TEXT NOT NULL,
+                expected_value TEXT NOT NULL,
+                expected_return TEXT NOT NULL,
+                potential_profit TEXT NOT NULL,
+                odds_age_seconds INTEGER NOT NULL,
+                calibrated_age_seconds INTEGER NOT NULL,
+                time_to_kickoff_seconds INTEGER NOT NULL,
+                value_classification TEXT NOT NULL,
+                odds_freshness TEXT NOT NULL,
+                calibrated_freshness TEXT NOT NULL,
+                overall_freshness TEXT NOT NULL,
+                actionability_status TEXT NOT NULL,
+                assessment_timestamp TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                value_policy_version TEXT NOT NULL,
+                calibrated_assembly_fingerprint TEXT NOT NULL,
+                assessment_fingerprint TEXT NOT NULL UNIQUE,
+                reason_code_snapshot TEXT NOT NULL,
+                validation_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (calibrated_assembly_id)
+                    REFERENCES calibrated_market_probability_assemblies(calibrated_assembly_id),
+                FOREIGN KEY (odds_record_id)
+                    REFERENCES market_odds_snapshots(odds_record_id),
+                CHECK (odds_age_seconds >= 0),
+                CHECK (calibrated_age_seconds >= 0),
+                CHECK (time_to_kickoff_seconds > 0)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_market_odds_match
+                ON market_odds_snapshots (match_id, odds_effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_market_odds_bookmaker
+                ON market_odds_snapshots (bookmaker_id, odds_effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_market_odds_identity
+                ON market_odds_snapshots (market_type, selection, market_line, odds_effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_market_odds_effective
+                ON market_odds_snapshots (odds_effective_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_market_value_match
+                ON market_value_assessments (match_id, assessment_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_market_value_identity
+                ON market_value_assessments (bookmaker_id, market_type, selection, market_line, assessment_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_market_value_assessed_at
+                ON market_value_assessments (assessment_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_market_value_classification
+                ON market_value_assessments (value_classification, assessment_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_market_value_actionability
+                ON market_value_assessments (actionability_status, assessment_timestamp)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS market_odds_snapshots_no_update
+            BEFORE UPDATE ON market_odds_snapshots
+            BEGIN SELECT RAISE(ABORT, 'Market odds snapshots are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS market_odds_snapshots_no_delete
+            BEFORE DELETE ON market_odds_snapshots
+            BEGIN SELECT RAISE(ABORT, 'Market odds snapshots are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS market_value_assessments_no_update
+            BEFORE UPDATE ON market_value_assessments
+            BEGIN SELECT RAISE(ABORT, 'Market value assessments are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS market_value_assessments_no_delete
+            BEFORE DELETE ON market_value_assessments
+            BEGIN SELECT RAISE(ABORT, 'Market value assessments are immutable'); END
+            """,
+        ),
+    ),
 )
 
 

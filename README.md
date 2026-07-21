@@ -33,6 +33,12 @@ target, validates the combined set without normalization, and atomically stores
 the calibrated assembly. It does not perform odds/value, risk, candidate,
 Quality Gate, or publication work.
 
+`app/market_value_assessment` is the next isolated boundary. It combines a
+calibrated assembly with explicitly supplied pre-match odds, maps only canonical
+markets, derives double chance from match-result probabilities, and stores
+Decimal-safe fair-odds/edge/EV assessments. Its actionability classification is
+structural and does not select, stake, register, approve, or publish a bet.
+
 ## Official prediction publication
 
 The future scheduler-facing callable is
