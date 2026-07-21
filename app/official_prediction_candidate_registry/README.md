@@ -109,3 +109,11 @@ Intentionally deferred: prediction generation, external providers, scraping,
 bookmaker APIs, automatic ingestion, scheduling, background workers, correction
 messages, Telegram delivery, live betting, Combo, High Risk, Lab, and AutoTrader
 workflows.
+
+## Future upstream data boundary
+
+The independent `app.match_data_snapshot` and `app.feature_store` packages now own
+supplied pre-match provenance and deterministic model-ready features. They do not
+invoke this registry. A future reviewed prediction engine may consume a feature set
+and then supply its complete prediction facts here; registry identity, validation,
+versioning, and publication protection remain unchanged.

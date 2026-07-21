@@ -551,6 +551,16 @@ Only append.
 - Added a registry-backed coordinator source and injected assembly-context port that preserve registry traceability while leaving calibration, model-health, risk, exposure, bankroll, Quality Gate, atomic publication, and retry selection in the existing orchestration stack.
 - Added `build_official_prediction_candidate_registry(...)`, `build_registry_candidate_source(...)`, and the explicit `register_official_prediction_candidate(...)` callable without automatic ingestion, scheduling, external providers, or startup execution.
 
+## 2026-07-21 - Pre-Match Data Snapshot and Feature Store Foundation
+
+- Added isolated `app/match_data_snapshot` and `app/feature_store` packages for supplied pre-match provenance and deterministic model-ready features without provider, prediction, candidate, or publication coupling.
+- Added strict partial-data-preserving validation and normalization for identity, timing, status, form, venue splits, season aggregates, head-to-head, availability, context, and optional odds using Unicode, UTC, and lossless Decimal contracts.
+- Added logical match identity and complete material-content SHA-256 fingerprints, idempotent identical registration, sequential immutable versions, and append-only ACTIVE, SUPERSEDED, WITHDRAWN, and INVALIDATED history.
+- Added the centralized 78-feature `official_prematch_features_v1` registry, Decimal-only final quantization, explicit zero-denominator/missingness rules, completeness/sample/evidence indicators, and odds/future-data leakage protection.
+- Added deterministic feature fingerprints and append-only feature-set history linked to source snapshots, plus explicit historical replay without enabling inactive snapshots by default.
+- Added migration v15 with immutable `match_data_snapshot_versions`, `match_data_snapshot_lifecycle_events`, and `match_feature_sets` tables, safe indexes, unique identities, foreign keys, and update/delete triggers.
+- Added `build_match_data_snapshot_service(...)`, `register_match_data_snapshot(...)`, `build_feature_store_service(...)`, and `generate_match_feature_set(...)` without external fetching, automatic ingestion, scheduling, prediction generation, training, live processing, or startup execution.
+
 ---
 
 # NEXT PRIORITIES
@@ -599,6 +609,8 @@ Only append.
 - [x] Public stake-star mapping.
 - [x] Shadow risk recommendation adapter.
 - [x] Risk-policy backtesting comparison.
+- [x] Immutable pre-match match-data snapshots.
+- [x] Versioned deterministic feature-store foundation.
 - Lineup Impact Engine.
 - Richer provider-backed Opponent Adjusted xG.
 

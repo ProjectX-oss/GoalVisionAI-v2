@@ -4,6 +4,20 @@ GoalVision AI keeps prediction generation, calibration, eligibility, public
 presentation, delivery, bankroll management, settlement, and result reporting
 as separate boundaries.
 
+## Pre-match data and features
+
+`app/match_data_snapshot` is the append-only provenance boundary for complete or
+partial supplied pre-match football facts. `app/feature_store` consumes one such
+immutable snapshot and derives the explicit `official_prematch_features_v1`
+Decimal-safe feature vector with separate missingness and quality indicators.
+Neither package fetches providers, generates predictions, uses odds as v1 model
+features, or invokes the Official candidate/publication stack.
+
+The intentionally deferred integration is provider adapter ->
+`register_match_data_snapshot(...)` -> `generate_match_feature_set(...)` -> future
+model input/prediction generation -> `register_official_prediction_candidate(...)`.
+None of these new callables run at application startup.
+
 ## Official prediction publication
 
 The future scheduler-facing callable is

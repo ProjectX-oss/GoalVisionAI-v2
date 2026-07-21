@@ -1400,6 +1400,163 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=15,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS match_data_snapshot_versions (
+                snapshot_id TEXT PRIMARY KEY,
+                logical_identity_fingerprint TEXT NOT NULL,
+                content_fingerprint TEXT NOT NULL UNIQUE,
+                snapshot_version INTEGER NOT NULL,
+                match_id TEXT NOT NULL,
+                source_provider TEXT NOT NULL,
+                source_event_id TEXT NOT NULL,
+                source_snapshot_id TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                effective_timestamp TEXT NOT NULL,
+                source_updated_timestamp TEXT NOT NULL,
+                registration_timestamp TEXT NOT NULL,
+                lifecycle_state_at_creation TEXT NOT NULL,
+                deterministic_snapshot TEXT NOT NULL,
+                UNIQUE (logical_identity_fingerprint, snapshot_version),
+                CHECK (snapshot_version > 0),
+                CHECK (lifecycle_state_at_creation = 'ACTIVE')
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_snapshot_match
+            ON match_data_snapshot_versions (match_id, snapshot_version)
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_snapshot_kickoff
+            ON match_data_snapshot_versions (kickoff_timestamp, snapshot_id)
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_snapshot_source
+            ON match_data_snapshot_versions (
+                source_provider, source_event_id, source_snapshot_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_snapshot_effective
+            ON match_data_snapshot_versions (effective_timestamp, snapshot_id)
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS match_data_snapshot_lifecycle_events (
+                event_id TEXT PRIMARY KEY,
+                snapshot_id TEXT NOT NULL,
+                event_sequence INTEGER NOT NULL,
+                event_type TEXT NOT NULL,
+                reason_code TEXT NOT NULL,
+                previous_snapshot_id TEXT,
+                event_timestamp TEXT NOT NULL,
+                event_snapshot TEXT NOT NULL,
+                FOREIGN KEY (snapshot_id)
+                    REFERENCES match_data_snapshot_versions(snapshot_id),
+                FOREIGN KEY (previous_snapshot_id)
+                    REFERENCES match_data_snapshot_versions(snapshot_id),
+                UNIQUE (snapshot_id, event_sequence),
+                CHECK (event_sequence > 0),
+                CHECK (event_type IN (
+                    'ACTIVE', 'SUPERSEDED', 'WITHDRAWN', 'INVALIDATED'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_snapshot_lifecycle_latest
+            ON match_data_snapshot_lifecycle_events (
+                snapshot_id, event_sequence DESC, event_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_snapshot_active
+            ON match_data_snapshot_lifecycle_events (
+                event_type, event_timestamp, snapshot_id
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS match_feature_sets (
+                feature_set_id TEXT PRIMARY KEY,
+                snapshot_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                schema_name TEXT NOT NULL,
+                schema_version TEXT NOT NULL,
+                model_compatibility_version TEXT NOT NULL,
+                source_snapshot_fingerprint TEXT NOT NULL,
+                feature_fingerprint TEXT NOT NULL UNIQUE,
+                deterministic_feature_snapshot TEXT NOT NULL,
+                missingness_snapshot TEXT NOT NULL,
+                data_quality_snapshot TEXT NOT NULL,
+                feature_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (snapshot_id)
+                    REFERENCES match_data_snapshot_versions(snapshot_id),
+                UNIQUE (
+                    snapshot_id, schema_name, schema_version,
+                    model_compatibility_version
+                )
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_feature_match
+            ON match_feature_sets (match_id, feature_timestamp, feature_set_id)
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_feature_snapshot
+            ON match_feature_sets (snapshot_id, schema_name, schema_version)
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_match_feature_schema
+            ON match_feature_sets (
+                schema_name, schema_version, model_compatibility_version,
+                feature_timestamp
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS match_data_snapshot_versions_no_update
+            BEFORE UPDATE ON match_data_snapshot_versions
+            BEGIN
+                SELECT RAISE(ABORT, 'Match data snapshot versions are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS match_data_snapshot_versions_no_delete
+            BEFORE DELETE ON match_data_snapshot_versions
+            BEGIN
+                SELECT RAISE(ABORT, 'Match data snapshot versions are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS match_data_snapshot_lifecycle_no_update
+            BEFORE UPDATE ON match_data_snapshot_lifecycle_events
+            BEGIN
+                SELECT RAISE(ABORT, 'Match data snapshot lifecycle is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS match_data_snapshot_lifecycle_no_delete
+            BEFORE DELETE ON match_data_snapshot_lifecycle_events
+            BEGIN
+                SELECT RAISE(ABORT, 'Match data snapshot lifecycle is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS match_feature_sets_no_update
+            BEFORE UPDATE ON match_feature_sets
+            BEGIN
+                SELECT RAISE(ABORT, 'Match feature sets are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS match_feature_sets_no_delete
+            BEFORE DELETE ON match_feature_sets
+            BEGIN
+                SELECT RAISE(ABORT, 'Match feature sets are immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 
