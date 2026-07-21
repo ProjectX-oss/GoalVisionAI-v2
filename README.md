@@ -15,8 +15,10 @@ features, or invokes the Official candidate/publication stack.
 
 The intentionally deferred integration is provider adapter ->
 `register_match_data_snapshot(...)` -> `generate_match_feature_set(...)` -> future
-model input/prediction generation -> `register_official_prediction_candidate(...)`.
-None of these new callables run at application startup.
+`generate_model_input(...)` -> model inference/prediction generation ->
+`register_official_prediction_candidate(...)`. `app/model_input_builder` owns only
+the fixed-order, missingness-preserving vector bridge; it does not contain or invoke
+a prediction model. None of these new callables run at application startup.
 
 ## Official prediction publication
 

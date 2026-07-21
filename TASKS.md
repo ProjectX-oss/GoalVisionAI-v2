@@ -561,6 +561,16 @@ Only append.
 - Added migration v15 with immutable `match_data_snapshot_versions`, `match_data_snapshot_lifecycle_events`, and `match_feature_sets` tables, safe indexes, unique identities, foreign keys, and update/delete triggers.
 - Added `build_match_data_snapshot_service(...)`, `register_match_data_snapshot(...)`, `build_feature_store_service(...)`, and `generate_match_feature_set(...)` without external fetching, automatic ingestion, scheduling, prediction generation, training, live processing, or startup execution.
 
+## 2026-07-21 - Prediction Model Input Builder
+
+- Added isolated `app/model_input_builder` as the deterministic bridge from persisted Feature Store output to future machine-learning engines, without implementing or invoking inference or prediction logic.
+- Added immutable `goalvision_model_input_v1` with fixed registry-derived 78-feature ordering, typed per-position metadata, explicit compatibility, source snapshot/feature provenance, and no dictionary-dependent ordering.
+- Added strict persisted-provenance and canonical Feature Store fingerprint verification, schema/compatibility enforcement, duplicate/unknown/order checks, type and finite-Decimal validation, and fail-closed required recent-form baselines.
+- Added missing-value preservation with an ordered boolean mask, ordered missing-feature list, and deterministic available-position completeness score; no zero or learned imputation is performed.
+- Added canonical model-input SHA-256 identity over schema, compatibility, ordered names/typed values, missingness, and source feature fingerprint while excluding execution time.
+- Added migration v16 with immutable append-only `model_input_vectors`, unique identities, deterministic serialization, Feature Store foreign-key linkage, indexes, and update/delete triggers.
+- Added `build_model_input_builder(...)` and `generate_model_input(...)` without training, inference, probability calibration, odds, market, candidate registry, Quality Gate, bankroll, Telegram, scheduling, or live coupling.
+
 ---
 
 # NEXT PRIORITIES
@@ -611,6 +621,7 @@ Only append.
 - [x] Risk-policy backtesting comparison.
 - [x] Immutable pre-match match-data snapshots.
 - [x] Versioned deterministic feature-store foundation.
+- [x] Versioned prediction model-input builder.
 - Lineup Impact Engine.
 - Richer provider-backed Opponent Adjusted xG.
 

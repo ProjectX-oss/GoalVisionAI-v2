@@ -50,10 +50,12 @@ Future reviewed flow:
 external/provider adapter
   -> register_match_data_snapshot(...)
   -> generate_match_feature_set(...)
-  -> future prediction model input builder
+  -> generate_model_input(...)
   -> prediction generation
   -> register_official_prediction_candidate(...)
 ```
 
-Provider adapters, automatic ingestion, scheduling, model-input assembly, training,
-prediction generation, live processing, and publication remain intentionally deferred.
+The deterministic model-input assembly boundary now exists in
+`app.model_input_builder`; provider adapters, automatic ingestion, scheduling,
+training, model inference, prediction generation, live processing, and publication
+remain intentionally deferred.

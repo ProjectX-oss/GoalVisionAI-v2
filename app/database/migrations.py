@@ -1557,6 +1557,70 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=16,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS model_input_vectors (
+                model_input_id TEXT PRIMARY KEY,
+                feature_set_id TEXT NOT NULL,
+                snapshot_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                schema_name TEXT NOT NULL,
+                schema_version TEXT NOT NULL,
+                compatibility_version TEXT NOT NULL,
+                feature_fingerprint TEXT NOT NULL,
+                source_snapshot_fingerprint TEXT NOT NULL,
+                source_feature_fingerprint TEXT NOT NULL,
+                model_input_fingerprint TEXT NOT NULL UNIQUE,
+                ordered_feature_names TEXT NOT NULL,
+                ordered_feature_values TEXT NOT NULL,
+                missingness_mask TEXT NOT NULL,
+                missing_feature_names TEXT NOT NULL,
+                feature_metadata TEXT NOT NULL,
+                completeness_score TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (feature_set_id)
+                    REFERENCES match_feature_sets(feature_set_id),
+                UNIQUE (
+                    feature_set_id, schema_name, schema_version,
+                    compatibility_version
+                )
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_model_input_feature_set
+            ON model_input_vectors (
+                feature_set_id, schema_name, schema_version,
+                compatibility_version
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_model_input_match
+            ON model_input_vectors (
+                match_id, created_timestamp, model_input_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_model_input_snapshot
+            ON model_input_vectors (snapshot_id, model_input_id)
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS model_input_vectors_no_update
+            BEFORE UPDATE ON model_input_vectors
+            BEGIN
+                SELECT RAISE(ABORT, 'Model input vectors are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS model_input_vectors_no_delete
+            BEFORE DELETE ON model_input_vectors
+            BEGIN
+                SELECT RAISE(ABORT, 'Model input vectors are immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 
