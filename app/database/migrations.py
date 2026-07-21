@@ -1621,6 +1621,78 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=17,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS prediction_inference_results (
+                inference_id TEXT PRIMARY KEY,
+                model_input_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                snapshot_id TEXT NOT NULL,
+                feature_set_id TEXT NOT NULL,
+                model_artifact_id TEXT NOT NULL,
+                model_name TEXT NOT NULL,
+                model_version TEXT NOT NULL,
+                model_family TEXT NOT NULL,
+                input_schema_name TEXT NOT NULL,
+                input_schema_version TEXT NOT NULL,
+                compatibility_version TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                model_input_fingerprint TEXT NOT NULL,
+                inference_fingerprint TEXT NOT NULL UNIQUE,
+                ordered_raw_probability_snapshot TEXT NOT NULL,
+                validation_snapshot TEXT NOT NULL,
+                inference_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (model_input_id)
+                    REFERENCES model_input_vectors(model_input_id)
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_prediction_inference_match
+            ON prediction_inference_results (
+                match_id, inference_timestamp, inference_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_prediction_inference_model_input
+            ON prediction_inference_results (
+                model_input_id, inference_timestamp, inference_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_prediction_inference_artifact
+            ON prediction_inference_results (
+                model_artifact_id, inference_timestamp, inference_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_prediction_inference_model_version
+            ON prediction_inference_results (
+                model_name, model_version, inference_timestamp, inference_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_prediction_inference_timestamp
+            ON prediction_inference_results (inference_timestamp, inference_id)
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS prediction_inference_results_no_update
+            BEFORE UPDATE ON prediction_inference_results
+            BEGIN
+                SELECT RAISE(ABORT, 'Prediction inference results are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS prediction_inference_results_no_delete
+            BEFORE DELETE ON prediction_inference_results
+            BEGIN
+                SELECT RAISE(ABORT, 'Prediction inference results are immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 

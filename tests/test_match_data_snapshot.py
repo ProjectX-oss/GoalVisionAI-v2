@@ -194,7 +194,7 @@ class MatchDataSnapshotMigrationAndConcurrencyTests(unittest.TestCase):
     def test_fresh_v15_and_v14_upgrade(self):
         fresh = Database(":memory:")
         MigrationManager(fresh.connection).migrate()
-        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 16)
+        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 17)
         fresh.close()
         upgrade = Database(":memory:")
         upgrade.connection.execute("CREATE TABLE schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)")
@@ -203,7 +203,7 @@ class MatchDataSnapshotMigrationAndConcurrencyTests(unittest.TestCase):
                 upgrade.connection.execute(statement)
             upgrade.connection.execute("INSERT INTO schema_migrations VALUES (?, 'existing')", (migration.version,))
         MigrationManager(upgrade.connection).migrate()
-        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 16)
+        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 17)
         tables = {row[0] for row in upgrade.connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         self.assertTrue({"match_data_snapshot_versions", "match_data_snapshot_lifecycle_events", "match_feature_sets"} <= tables)
         upgrade.close()

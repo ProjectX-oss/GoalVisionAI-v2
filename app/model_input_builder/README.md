@@ -59,9 +59,11 @@ Future reviewed flow:
 register_match_data_snapshot(...)
   -> generate_match_feature_set(...)
   -> generate_model_input(...)
-  -> future model inference
+  -> generate_raw_prediction(...)
+  -> probability calibration
   -> future prediction generation
 ```
 
-No model, prediction, probability, market, candidate, or publication logic is
-implemented here.
+`app.prediction_inference` is the separate downstream owner of raw probability
+generation. No model, prediction, probability, market, candidate, or publication
+logic is implemented in the model-input package.

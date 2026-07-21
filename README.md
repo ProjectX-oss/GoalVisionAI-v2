@@ -13,12 +13,21 @@ Decimal-safe feature vector with separate missingness and quality indicators.
 Neither package fetches providers, generates predictions, uses odds as v1 model
 features, or invokes the Official candidate/publication stack.
 
-The intentionally deferred integration is provider adapter ->
-`register_match_data_snapshot(...)` -> `generate_match_feature_set(...)` -> future
-`generate_model_input(...)` -> model inference/prediction generation ->
-`register_official_prediction_candidate(...)`. `app/model_input_builder` owns only
-the fixed-order, missingness-preserving vector bridge; it does not contain or invoke
-a prediction model. None of these new callables run at application startup.
+The intentionally explicit integration is provider adapter ->
+`register_match_data_snapshot(...)` -> `generate_match_feature_set(...)` ->
+`generate_model_input(...)` -> `generate_raw_prediction(...)` -> probability
+calibration -> future market prediction assembly ->
+`register_official_prediction_candidate(...)`. `app/model_input_builder` owns the
+fixed-order, missingness-preserving vector bridge. `app/prediction_inference` owns
+only explicit model-adapter execution, raw probability validation, and immutable
+inference history. It loads no model and runs no inference at startup.
+
+The inference registry accepts explicitly supplied adapters and selects only an
+explicit artifact or explicitly configured active Official model. Its canonical
+11-target order covers match result, over/under 1.5, 2.5 and 3.5, and BTTS. Raw
+Decimal probabilities must satisfy complement sums and monotonic totals rules;
+invalid model output is rejected without normalization. Calibration remains a
+separate downstream operation.
 
 ## Official prediction publication
 

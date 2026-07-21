@@ -622,6 +622,7 @@ Only append.
 - [x] Immutable pre-match match-data snapshots.
 - [x] Versioned deterministic feature-store foundation.
 - [x] Versioned prediction model-input builder.
+- [x] Deterministic prediction inference engine foundation.
 - Lineup Impact Engine.
 - Richer provider-backed Opponent Adjusted xG.
 
@@ -651,6 +652,8 @@ Review after completing the current priority.
 - Build a calibrated player-strength and lineup-impact model only after reliable minutes, starts, ratings, or internal player-strength inputs exist.
 - Integrate a richer licensed event/xG provider only when genuine xG, shots, cards, penalties, possession, and event timing are available.
 - Add scheduled historical-form ingestion only after operational review.
+- Integrate a reviewed real pre-match model artifact without implicit loading.
+- Build calibrated market prediction assembly after inference and calibration evidence is approved.
 
 - Gather a sufficient settled Shadow sample before monitoring threshold decisions.
 - Statistically tune drift thresholds after sufficient historical evidence exists.
