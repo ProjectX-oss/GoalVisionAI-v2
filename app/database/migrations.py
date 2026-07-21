@@ -1247,6 +1247,159 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=14,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_candidate_versions (
+                registry_candidate_id TEXT PRIMARY KEY,
+                logical_identity_fingerprint TEXT NOT NULL,
+                content_fingerprint TEXT NOT NULL UNIQUE,
+                candidate_version INTEGER NOT NULL,
+                prediction_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                source_event_id TEXT NOT NULL,
+                competition_id TEXT,
+                competition_display_name TEXT NOT NULL,
+                competition_normalized_name TEXT NOT NULL,
+                home_team_id TEXT,
+                home_team_display_name TEXT NOT NULL,
+                home_team_normalized_name TEXT NOT NULL,
+                away_team_id TEXT,
+                away_team_display_name TEXT NOT NULL,
+                away_team_normalized_name TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                prediction_creation_timestamp TEXT NOT NULL,
+                model_version TEXT NOT NULL,
+                normalized_market TEXT NOT NULL,
+                normalized_selection TEXT NOT NULL,
+                market_line TEXT,
+                raw_model_probability TEXT NOT NULL,
+                supplied_expected_value TEXT NOT NULL,
+                decimal_odds TEXT NOT NULL,
+                odds_timestamp TEXT NOT NULL,
+                odds_source_id TEXT NOT NULL,
+                core_match_data_timestamp TEXT NOT NULL,
+                lineup_status TEXT NOT NULL,
+                lineup_data_timestamp TEXT,
+                injury_suspension_status TEXT NOT NULL,
+                injury_suspension_data_timestamp TEXT,
+                confidence_level TEXT NOT NULL,
+                supporting_data_status TEXT NOT NULL,
+                market_availability TEXT NOT NULL,
+                reasoning_snapshot TEXT NOT NULL,
+                source_data_version TEXT NOT NULL,
+                bankroll_scope TEXT NOT NULL,
+                destination_scope TEXT NOT NULL,
+                lifecycle_state_at_creation TEXT NOT NULL,
+                registration_timestamp TEXT NOT NULL,
+                normalized_snapshot TEXT NOT NULL,
+                candidate_snapshot TEXT NOT NULL,
+                UNIQUE (logical_identity_fingerprint, candidate_version),
+                CHECK (candidate_version > 0),
+                CHECK (normalized_market IN (
+                    'MATCH_WINNER', 'DOUBLE_CHANCE', 'TOTALS', 'BTTS'
+                )),
+                CHECK (
+                    (normalized_market = 'TOTALS' AND market_line IS NOT NULL)
+                    OR
+                    (normalized_market <> 'TOTALS' AND market_line IS NULL)
+                ),
+                CHECK (lineup_status IN (
+                    'CONFIRMED', 'UNCONFIRMED', 'MISSING', 'NOT_APPLICABLE'
+                )),
+                CHECK (injury_suspension_status IN (
+                    'AVAILABLE', 'PARTIAL', 'MISSING'
+                )),
+                CHECK (confidence_level IN ('LOW', 'MEDIUM', 'HIGH', 'ELITE')),
+                CHECK (supporting_data_status IN (
+                    'AVAILABLE', 'PARTIAL', 'MISSING'
+                )),
+                CHECK (market_availability IN (
+                    'AVAILABLE', 'LIMITED', 'UNAVAILABLE'
+                )),
+                CHECK (bankroll_scope = 'OFFICIAL'),
+                CHECK (destination_scope = 'OFFICIAL'),
+                CHECK (lifecycle_state_at_creation = 'READY')
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_candidate_identity_versions
+            ON official_prediction_candidate_versions (
+                logical_identity_fingerprint, candidate_version,
+                registry_candidate_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_candidate_discovery
+            ON official_prediction_candidate_versions (
+                kickoff_timestamp, prediction_creation_timestamp,
+                prediction_id, candidate_version
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_candidate_lifecycle_events (
+                event_id TEXT PRIMARY KEY,
+                registry_candidate_id TEXT NOT NULL,
+                event_sequence INTEGER NOT NULL,
+                event_type TEXT NOT NULL,
+                reason_code TEXT NOT NULL,
+                previous_candidate_id TEXT,
+                event_timestamp TEXT NOT NULL,
+                event_snapshot TEXT NOT NULL,
+                FOREIGN KEY (registry_candidate_id)
+                    REFERENCES official_prediction_candidate_versions(registry_candidate_id),
+                FOREIGN KEY (previous_candidate_id)
+                    REFERENCES official_prediction_candidate_versions(registry_candidate_id),
+                UNIQUE (registry_candidate_id, event_sequence),
+                CHECK (event_sequence > 0),
+                CHECK (event_type IN (
+                    'READY', 'SUPERSEDED', 'WITHDRAWN', 'INVALIDATED'
+                ))
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_candidate_lifecycle_latest
+            ON official_prediction_candidate_lifecycle_events (
+                registry_candidate_id, event_sequence DESC, event_id
+            )
+            """,
+            """
+            CREATE INDEX IF NOT EXISTS idx_official_candidate_lifecycle_state
+            ON official_prediction_candidate_lifecycle_events (
+                event_type, event_timestamp, registry_candidate_id
+            )
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_candidate_versions_no_update
+            BEFORE UPDATE ON official_prediction_candidate_versions
+            BEGIN
+                SELECT RAISE(ABORT, 'Official candidate versions are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_candidate_versions_no_delete
+            BEFORE DELETE ON official_prediction_candidate_versions
+            BEGIN
+                SELECT RAISE(ABORT, 'Official candidate versions are immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_candidate_lifecycle_no_update
+            BEFORE UPDATE ON official_prediction_candidate_lifecycle_events
+            BEGIN
+                SELECT RAISE(ABORT, 'Official candidate lifecycle is immutable');
+            END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_prediction_candidate_lifecycle_no_delete
+            BEFORE DELETE ON official_prediction_candidate_lifecycle_events
+            BEGIN
+                SELECT RAISE(ABORT, 'Official candidate lifecycle is immutable');
+            END
+            """,
+        ),
+    ),
 )
 
 

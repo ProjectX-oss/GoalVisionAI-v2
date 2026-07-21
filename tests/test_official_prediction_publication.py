@@ -583,7 +583,7 @@ class OfficialPublisherAdapterTests(unittest.TestCase):
 
 
 class PublicationMigrationAndCompositionTests(unittest.TestCase):
-    def test_fresh_v12_schema_append_only_and_v11_upgrade(self):
+    def test_fresh_latest_schema_append_only_and_v11_upgrade(self):
         database = Database(":memory:")
         MigrationManager(database.connection).migrate()
         versions = tuple(
@@ -592,7 +592,7 @@ class PublicationMigrationAndCompositionTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 14)))
+        self.assertEqual(versions, tuple(range(1, 15)))
         approved = approval()
         SQLiteQualityGateEvaluationRepository(database).append(
             approved.quality_gate_evaluation
@@ -628,7 +628,7 @@ class PublicationMigrationAndCompositionTests(unittest.TestCase):
             upgrade.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            13,
+            14,
         )
         upgrade.close()
 

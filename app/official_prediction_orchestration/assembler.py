@@ -180,6 +180,20 @@ class OfficialPredictionCandidateAssembler:
                 AssemblyReason.INVALID_MODEL_VERSION,
                 "Model version must not be empty.",
             )
+        if (prediction.registry_candidate_id is None) != (
+            prediction.registry_content_fingerprint is None
+        ) or (
+            prediction.registry_candidate_id is not None
+            and (
+                not prediction.registry_candidate_id.strip()
+                or not prediction.registry_content_fingerprint
+                or not prediction.registry_content_fingerprint.strip()
+            )
+        ):
+            self._fail(
+                AssemblyReason.INVALID_PREDICTION_IDENTITY,
+                "Registry candidate identity and fingerprint must be supplied together.",
+            )
         self._valid_timestamp(evaluation_timestamp, "Evaluation timestamp")
         for value, label in (
             (prediction.prediction_timestamp, "Prediction timestamp"),
@@ -376,7 +390,7 @@ class OfficialPredictionCandidateAssembler:
         prediction = request.prediction
         bankroll = request.bankroll
         assert bankroll is not None
-        return canonical_items({
+        values = {
             "bankroll_reference_id": bankroll.reference_id,
             "bankroll_scope": bankroll.product_scope,
             "bankroll_snapshot_timestamp": bankroll.snapshot_timestamp,
@@ -422,7 +436,13 @@ class OfficialPredictionCandidateAssembler:
             "risk_evaluation_id": risk.evaluation_id,
             "selection": self._normalize(prediction.selection),
             "supporting_data_status": prediction.supporting_data_status,
-        })
+        }
+        if prediction.registry_candidate_id is not None:
+            values["registry_candidate_id"] = prediction.registry_candidate_id
+            values["registry_content_fingerprint"] = (
+                prediction.registry_content_fingerprint
+            )
+        return canonical_items(values)
 
     @staticmethod
     def _gate_publication_state(state: PublicationDeliveryState) -> PublicationState:

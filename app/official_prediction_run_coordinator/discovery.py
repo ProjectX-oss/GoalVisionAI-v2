@@ -140,6 +140,23 @@ def _malformed_reason(candidate: OfficialPredictionCandidateReference) -> str | 
     bankroll = candidate.request.bankroll
     if bankroll is None or bankroll.product_scope is not candidate.bankroll_scope:
         return "CANDIDATE_BANKROLL_IDENTITY_MISMATCH"
+    if (
+        candidate.registry_candidate_id is None
+        and (
+            candidate.candidate_version is not None
+            or prediction.registry_candidate_id is not None
+            or prediction.registry_content_fingerprint is not None
+        )
+    ) or (
+        candidate.registry_candidate_id is not None
+        and (
+            prediction.registry_candidate_id != candidate.registry_candidate_id
+            or prediction.registry_content_fingerprint != candidate.immutable_fingerprint
+            or candidate.candidate_version is None
+            or candidate.candidate_version <= 0
+        )
+    ):
+        return "REGISTRY_CANDIDATE_IDENTITY_MISMATCH"
     return None
 
 

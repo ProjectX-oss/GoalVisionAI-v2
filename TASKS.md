@@ -541,6 +541,16 @@ Only append.
 - Added canonical SHA-256 run idempotency, existing-terminal result reuse, incomplete-run replay blocking, and migration v13 with append-only immutable run start/terminal events and ordered item outcomes.
 - Added `build_official_prediction_run_coordinator(...)` and the explicit dry-run-default `run_official_prediction_batch(...)` manual callable without scheduling, provider ingestion, real credential construction, or changes to prediction, bankroll, risk, publication, settlement, or non-Official product logic.
 
+## 2026-07-21 - Official Prediction Candidate Ingestion and READY Registry
+
+- Added the isolated `app/official_prediction_candidate_registry` boundary for complete supplied pre-match Official facts without prediction, calibration, EV, risk, exposure, bankroll, Quality Gate, message, or publication calculations.
+- Added strict Official-only market, identity, Decimal, timestamp, scope, live/accumulator, and structured reasoning validation with deterministic Unicode, whitespace, identifier, market, selection, line, Decimal, timestamp, and reasoning normalization.
+- Added canonical logical-identity and material-content SHA-256 fingerprints; source events remain provenance, registration time remains audit-only, and identical content is idempotent across ingestion attempts.
+- Added append-only READY, SUPERSEDED, WITHDRAWN, and INVALIDATED lifecycle history with transaction-safe version allocation, concurrent ingestion protection, explicit withdrawal/invalidation, published-state protection, and no hard deletion or historical reactivation.
+- Added migration v14 with immutable Official candidate version and lifecycle-event tables, unique content and logical-version identities, deterministic snapshots, foreign keys, discovery indexes, and update/delete prevention triggers.
+- Added a registry-backed coordinator source and injected assembly-context port that preserve registry traceability while leaving calibration, model-health, risk, exposure, bankroll, Quality Gate, atomic publication, and retry selection in the existing orchestration stack.
+- Added `build_official_prediction_candidate_registry(...)`, `build_registry_candidate_source(...)`, and the explicit `register_official_prediction_candidate(...)` callable without automatic ingestion, scheduling, external providers, or startup execution.
+
 ---
 
 # NEXT PRIORITIES

@@ -29,3 +29,14 @@ prediction ID, then calls the existing single-prediction boundary sequentially.
 Every logical run and item outcome is append-only and idempotent. The callable
 defaults to dry-run, requires an explicit timestamp and idempotency key, and is
 not registered with application startup.
+
+## Official candidate ingestion
+
+`app/official_prediction_candidate_registry` is the append-only persistence
+boundary below manual Official batches. Existing or future prediction engines
+may explicitly register complete supplied pre-match facts; the registry
+normalizes, validates, fingerprints, versions, supersedes, withdraws, and
+invalidates those facts without calculating probabilities, EV, risk, exposure,
+bankroll, or Quality Gate decisions. Its read-only adapter supplies active
+`READY` versions to the existing coordinator, which retains all processing and
+publication-state policy. No ingestion or batch is registered at startup.

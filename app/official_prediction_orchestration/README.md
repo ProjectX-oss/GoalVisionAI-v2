@@ -103,3 +103,14 @@ explicit batch evaluation timestamp and dry-run flag, then calls
 `prepare_and_publish_official_prediction(...)` exactly once for every eligible
 reference. It does not enter or modify assembly, Quality Gate, or publisher
 logic. No scheduler or startup hook invokes the coordinator.
+
+## Registry-supplied candidates
+
+`app.official_prediction_candidate_registry` can supply the immutable
+prediction facts at the front of `OfficialCandidateAssemblyRequest`. Its
+adapter also injects existing calibration, model-health, risk, exposure, and
+bankroll records through a read-only context port. This assembler remains the
+only component that selects those records, verifies EV, reads publication
+state, and creates the Quality Gate candidate. Registry candidate ID and
+content fingerprint are included in normalized orchestration input for audit
+linkage; they do not bypass or replace the assembled candidate fingerprint.

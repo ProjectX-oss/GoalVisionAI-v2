@@ -72,6 +72,8 @@ class OfficialPredictionCandidateReference:
     bankroll_scope: RiskProductScope
     destination_scope: RiskProductScope
     request: OfficialCandidateAssemblyRequest
+    registry_candidate_id: str | None = None
+    candidate_version: int | None = None
 
 
 @dataclass(frozen=True, slots=True)

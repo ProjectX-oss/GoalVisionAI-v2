@@ -97,6 +97,8 @@ class OfficialPredictionFacts:
     market_availability: MarketAvailability
     lineup_status: LineupStatus
     injury_status: FactStatus
+    registry_candidate_id: str | None = None
+    registry_content_fingerprint: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

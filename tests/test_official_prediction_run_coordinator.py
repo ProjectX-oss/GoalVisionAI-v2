@@ -617,14 +617,14 @@ class FingerprintAndPersistenceTests(unittest.TestCase):
             with self.subTest(statement=statement), self.assertRaises(sqlite3.IntegrityError):
                 self.database.connection.execute(statement)
 
-    def test_fresh_v13_and_v12_upgrade(self):
+    def test_fresh_latest_and_v12_upgrade(self):
         versions = tuple(
             row[0]
             for row in self.database.connection.execute(
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 14)))
+        self.assertEqual(versions, tuple(range(1, 15)))
         upgrade = Database(":memory:")
         upgrade.connection.execute(
             "CREATE TABLE schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)"
@@ -641,7 +641,7 @@ class FingerprintAndPersistenceTests(unittest.TestCase):
             upgrade.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            13,
+            14,
         )
         upgrade.close()
 

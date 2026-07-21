@@ -16,6 +16,14 @@ The production factory therefore requires an injected
 immutable request references from reviewed persistence. The coordinator never
 fetches, invents, or refreshes candidate facts.
 
+The production registry-backed implementation is
+`RegistryOfficialPredictionCandidateSource`. It reads only active Official
+`READY` registry versions and uses an injected assembly-context provider to
+supply existing calibration, model-health, risk, exposure, and bankroll records.
+Registry identity is traceable in orchestration snapshots. This coordinator
+still owns lookahead, minimum-time, batch, historical rejection/review, retry,
+active-claim, published, and indeterminate classification.
+
 The concrete SQLite state reader combines those references with published
 predictions, v12 publication events, prior coordinator items, and v11
 orchestration outcomes. A changed source-owned immutable fingerprint permits a
