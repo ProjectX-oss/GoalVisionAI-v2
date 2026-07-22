@@ -232,18 +232,40 @@ def _inspect_candidate(database: Database, path: Path, args: argparse.Namespace)
 def _list_retry_required(database: Database, path: Path, args: argparse.Namespace) -> OperationsResult:
     if args.limit < 1 or args.limit > 100:
         raise DatabaseSafetyError("--limit must be between 1 and 100.")
-    clauses = ["final_pipeline_status='RETRY_REQUIRED'"]
+    clauses = ["""(
+        (
+            (e.final_pipeline_status='RETRY_REQUIRED' AND COALESCE(e.publication_state_result,'')!='INDETERMINATE')
+            OR e.publication_status='FAILED_RETRYABLE'
+        )
+        AND COALESCE((
+            SELECT publication.status
+            FROM official_prediction_candidate_versions AS candidate
+            JOIN official_prediction_publication_events AS publication
+              ON publication.prediction_id=candidate.prediction_id
+            WHERE candidate.registry_candidate_id=e.candidate_id
+            ORDER BY publication.attempt_number DESC,publication.event_sequence DESC
+            LIMIT 1
+        ),'') NOT IN ('CLAIMED','INDETERMINATE','PUBLISHED')
+    )"""]
     params: list[object] = []
     if args.match_id:
-        clauses.append("match_id=?"); params.append(args.match_id)
+        clauses.append("e.match_id=?"); params.append(args.match_id)
     if args.candidate_id:
-        clauses.append("candidate_id=?"); params.append(args.candidate_id)
+        clauses.append("e.candidate_id=?"); params.append(args.candidate_id)
     params.append(args.limit)
     rows = database.connection.execute(
-        "SELECT pipeline_execution_id,pipeline_request_identity,candidate_id,candidate_version,match_id,final_pipeline_status,pipeline_execution_timestamp FROM official_prediction_pipeline_executions WHERE " + " AND ".join(clauses) + " ORDER BY pipeline_execution_timestamp,pipeline_execution_id LIMIT ?",
+        "SELECT e.pipeline_execution_id,e.pipeline_request_identity,e.candidate_id,e.candidate_version,e.match_id,e.final_pipeline_status,e.pipeline_execution_timestamp FROM official_prediction_pipeline_executions AS e WHERE " + " AND ".join(clauses) + " ORDER BY e.pipeline_execution_timestamp,e.pipeline_execution_id LIMIT ?",
         tuple(params),
     ).fetchall()
-    return OperationsResult(command=args.command, success=True, final_status="LISTED", database_path=str(path), details={"limit": args.limit, "count": len(rows), "executions": tuple(dict(row) for row in rows)})
+    retryable: list[dict[str, object]] = []
+    for row in rows:
+        analysis = analyze_execution_recovery(database, row["pipeline_execution_id"])
+        if not analysis.retry_safe or analysis.resend_forbidden:
+            continue
+        item = dict(row)
+        item["recovery_classification"] = analysis.classification.value
+        retryable.append(item)
+    return OperationsResult(command=args.command, success=True, final_status="LISTED", database_path=str(path), details={"limit": args.limit, "count": len(retryable), "executions": tuple(retryable)})
 
 
 def _fixture_execution_arguments(parser: argparse.ArgumentParser) -> None:

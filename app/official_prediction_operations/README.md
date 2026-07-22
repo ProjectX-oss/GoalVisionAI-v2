@@ -31,7 +31,9 @@ Run `python -m app.official_prediction_operations.cli --help` for full syntax.
 - `retry-execution`: permits only a confirmed-safe recovery classification,
   `--retry`, and `YES_RETRY_OFFICIAL`; application infrastructure must inject
   the verified destination and transport.
-- `list-retry-required`: bounded to 1–100 results (default 20).
+- `list-retry-required`: bounded to 1–100 results (default 20) and filtered
+  through read-only recovery analysis so active, indeterminate, terminal, and
+  already-recovered executions are never offered for retry.
 - `smoke-startup`: creates an isolated in-memory schema and proves zero
   executions, gates, orchestrations, claims, and sends.
 

@@ -342,6 +342,13 @@ class EndToEndOperationsTests(unittest.TestCase):
         self.assertEqual((failed.final_status, failing.calls), ("PUBLICATION_SEND_FAILED", 1))
         analysis = analyze_execution_recovery(self.database, failed.execution_id)
         self.assertEqual(analysis.classification.value, "RETRYABLE_SEND_FAILURE")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(("list-retry-required", "--database", str(self.path), "--limit", "20", "--json-output"))
+        listing = json.loads(output.getvalue())
+        self.assertEqual((code, listing["details"]["count"]), (0, 1))
+        self.assertEqual(listing["details"]["executions"][0]["pipeline_execution_id"], failed.execution_id)
+        self.assertEqual(listing["details"]["executions"][0]["recovery_classification"], "RETRYABLE_SEND_FAILURE")
         successful = RecordingTelegram()
         retried = retry_persisted_execution_sync(
             self.database, database_path=self.path, execution_id=failed.execution_id,
@@ -352,6 +359,11 @@ class EndToEndOperationsTests(unittest.TestCase):
         )
         self.assertEqual((retried.final_status, successful.calls), ("PUBLISHED", 1))
         self.assertEqual(self.database.connection.execute("SELECT COUNT(*) FROM official_quality_gate_evaluations").fetchone()[0], 1)
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(("list-retry-required", "--database", str(self.path), "--limit", "20", "--json-output"))
+        listing = json.loads(output.getvalue())
+        self.assertEqual((code, listing["details"]["count"]), (0, 0))
 
     def test_indeterminate_send_is_never_retryable(self):
         telegram = RecordingTelegram(indeterminate=True)
@@ -360,6 +372,15 @@ class EndToEndOperationsTests(unittest.TestCase):
         analysis = analyze_execution_recovery(self.database, failed.execution_id)
         self.assertEqual(analysis.classification.value, "INDETERMINATE_POST_SEND")
         self.assertTrue(analysis.resend_forbidden)
+
+    def test_retry_listing_excludes_indeterminate_fixture_history(self):
+        result = self.execute(build_indeterminate_publication_fixture(), request="uncertain-fixture-1")
+        self.assertEqual(result.final_status, "RETRY_REQUIRED")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = main(("list-retry-required", "--database", str(self.path), "--limit", "20", "--json-output"))
+        listing = json.loads(output.getvalue())
+        self.assertEqual((code, listing["details"]["count"]), (0, 0))
 
     def test_diagnostics_are_read_only_and_healthy(self):
         result = self.execute(build_valid_official_fixture())
