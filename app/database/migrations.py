@@ -2792,6 +2792,218 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=26,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS historical_model_training_runs (
+                training_run_id TEXT PRIMARY KEY,
+                training_request_id TEXT NOT NULL UNIQUE,
+                request_fingerprint TEXT NOT NULL,
+                training_run_fingerprint TEXT NOT NULL UNIQUE,
+                source_split_id TEXT NOT NULL,
+                source_split_fingerprint TEXT NOT NULL,
+                fold_id TEXT NOT NULL,
+                fold_fingerprint TEXT NOT NULL,
+                model_family TEXT NOT NULL,
+                policy_versions_snapshot TEXT NOT NULL,
+                feature_schema_version TEXT NOT NULL,
+                feature_schema_fingerprint TEXT NOT NULL,
+                label_schema_version TEXT NOT NULL,
+                target_schema_version TEXT NOT NULL,
+                training_row_count INTEGER NOT NULL,
+                validation_row_count INTEGER NOT NULL,
+                target_count INTEGER NOT NULL,
+                outcome TEXT NOT NULL,
+                reason_codes_snapshot TEXT NOT NULL,
+                aggregate_metrics_snapshot TEXT NOT NULL,
+                deterministic_run_snapshot TEXT NOT NULL,
+                training_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (source_split_id) REFERENCES historical_dataset_splits(split_id),
+                FOREIGN KEY (fold_id) REFERENCES historical_dataset_split_folds(fold_id),
+                UNIQUE (training_request_id, request_fingerprint),
+                CHECK (training_row_count >= 0),
+                CHECK (validation_row_count >= 0),
+                CHECK (target_count = 11),
+                CHECK (substr(training_timestamp, -1) = 'Z'),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_model_artifacts (
+                artifact_id TEXT PRIMARY KEY,
+                training_run_id TEXT NOT NULL UNIQUE,
+                artifact_fingerprint TEXT NOT NULL UNIQUE,
+                artifact_format_version TEXT NOT NULL,
+                preprocessing_fingerprint TEXT NOT NULL,
+                estimator_bundle_fingerprint TEXT NOT NULL,
+                compatibility_snapshot TEXT NOT NULL,
+                preprocessing_snapshot TEXT NOT NULL,
+                estimator_snapshot TEXT NOT NULL,
+                provenance_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (training_run_id) REFERENCES historical_model_training_runs(training_run_id),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_model_artifact_targets (
+                target_artifact_row_id TEXT PRIMARY KEY,
+                artifact_id TEXT NOT NULL,
+                target_identity TEXT NOT NULL,
+                target_order INTEGER NOT NULL,
+                estimator_fingerprint TEXT NOT NULL,
+                model_type TEXT NOT NULL,
+                class_order_snapshot TEXT NOT NULL,
+                coefficients_snapshot TEXT NOT NULL,
+                intercept_snapshot TEXT NOT NULL,
+                convergence_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (artifact_id) REFERENCES historical_model_artifacts(artifact_id),
+                UNIQUE (artifact_id, target_identity),
+                UNIQUE (artifact_id, target_order),
+                CHECK (target_order >= 0),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_model_preprocessing_features (
+                preprocessing_row_id TEXT PRIMARY KEY,
+                artifact_id TEXT NOT NULL,
+                feature_name TEXT NOT NULL,
+                original_feature_index INTEGER NOT NULL,
+                transformed_feature_index INTEGER NOT NULL,
+                imputation_value TEXT,
+                missing_training_count INTEGER NOT NULL,
+                scaling_mean TEXT NOT NULL,
+                scaling_scale TEXT NOT NULL,
+                zero_variance_flag INTEGER NOT NULL,
+                preprocessing_row_fingerprint TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (artifact_id) REFERENCES historical_model_artifacts(artifact_id),
+                UNIQUE (artifact_id, original_feature_index),
+                UNIQUE (artifact_id, transformed_feature_index),
+                CHECK (original_feature_index >= 0),
+                CHECK (transformed_feature_index >= 0),
+                CHECK (missing_training_count >= 0),
+                CHECK (zero_variance_flag IN (0, 1)),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_model_training_examples (
+                training_example_link_id TEXT PRIMARY KEY,
+                training_run_id TEXT NOT NULL,
+                training_example_id TEXT NOT NULL,
+                example_fingerprint TEXT NOT NULL,
+                partition TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (training_run_id) REFERENCES historical_model_training_runs(training_run_id),
+                FOREIGN KEY (training_example_id) REFERENCES historical_training_examples(training_example_id),
+                UNIQUE (training_run_id, training_example_id, partition),
+                UNIQUE (training_run_id, partition, deterministic_order),
+                CHECK (partition IN ('TRAIN', 'VALIDATION')),
+                CHECK (deterministic_order >= 0),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_model_metrics (
+                metric_row_id TEXT PRIMARY KEY,
+                training_run_id TEXT NOT NULL,
+                partition TEXT NOT NULL,
+                target_identity TEXT NOT NULL,
+                metric_name TEXT NOT NULL,
+                metric_value TEXT,
+                metric_snapshot TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (training_run_id) REFERENCES historical_model_training_runs(training_run_id),
+                UNIQUE (training_run_id, partition, target_identity, metric_name),
+                UNIQUE (training_run_id, deterministic_order),
+                CHECK (partition IN ('TRAIN', 'VALIDATION')),
+                CHECK (deterministic_order >= 0),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_historical_model_run_split
+                ON historical_model_training_runs (source_split_id, training_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_model_run_fold
+                ON historical_model_training_runs (fold_id, training_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_model_run_family
+                ON historical_model_training_runs (model_family, training_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_model_artifact_run
+                ON historical_model_artifacts (training_run_id, artifact_fingerprint)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_model_target
+                ON historical_model_artifact_targets (target_identity, artifact_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_model_example_partition
+                ON historical_model_training_examples (training_run_id, partition, deterministic_order)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_model_metric_partition
+                ON historical_model_metrics (training_run_id, partition, target_identity)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_training_runs_no_update
+            BEFORE UPDATE ON historical_model_training_runs
+            BEGIN SELECT RAISE(ABORT, 'Historical model training runs are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_training_runs_no_delete
+            BEFORE DELETE ON historical_model_training_runs
+            BEGIN SELECT RAISE(ABORT, 'Historical model training runs are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_artifacts_no_update
+            BEFORE UPDATE ON historical_model_artifacts
+            BEGIN SELECT RAISE(ABORT, 'Historical model artifacts are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_artifacts_no_delete
+            BEFORE DELETE ON historical_model_artifacts
+            BEGIN SELECT RAISE(ABORT, 'Historical model artifacts are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_artifact_targets_no_update
+            BEFORE UPDATE ON historical_model_artifact_targets
+            BEGIN SELECT RAISE(ABORT, 'Historical model artifact targets are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_artifact_targets_no_delete
+            BEFORE DELETE ON historical_model_artifact_targets
+            BEGIN SELECT RAISE(ABORT, 'Historical model artifact targets are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_preprocessing_features_no_update
+            BEFORE UPDATE ON historical_model_preprocessing_features
+            BEGIN SELECT RAISE(ABORT, 'Historical model preprocessing features are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_preprocessing_features_no_delete
+            BEFORE DELETE ON historical_model_preprocessing_features
+            BEGIN SELECT RAISE(ABORT, 'Historical model preprocessing features are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_training_examples_no_update
+            BEFORE UPDATE ON historical_model_training_examples
+            BEGIN SELECT RAISE(ABORT, 'Historical model training example links are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_training_examples_no_delete
+            BEFORE DELETE ON historical_model_training_examples
+            BEGIN SELECT RAISE(ABORT, 'Historical model training example links are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_metrics_no_update
+            BEFORE UPDATE ON historical_model_metrics
+            BEGIN SELECT RAISE(ABORT, 'Historical model metrics are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_model_metrics_no_delete
+            BEFORE DELETE ON historical_model_metrics
+            BEGIN SELECT RAISE(ABORT, 'Historical model metrics are immutable'); END
+            """,
+        ),
+    ),
 )
 
 

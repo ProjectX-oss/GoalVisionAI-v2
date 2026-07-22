@@ -164,3 +164,13 @@ time boundaries, chronological ratios, and bounded expanding windows, and
 persists auditable gap/filter/boundary exclusions under migration v25. Splits
 are deterministic and append-only; no shuffle, sampling, label balancing,
 training, calibration fitting, inference, or backtesting occurs in this layer.
+
+`app/historical_model_training` consumes one verified split fold and fits only
+its TRAIN assignments. It persists a safe canonical parameter artifact under
+migration v26 using deterministic logistic baselines: coherent three-class
+match result, a monotonic four-bucket totals construction, and binary BTTS.
+Median imputation and standard scaling are fitted from TRAIN only; VALIDATION is
+evaluation-only and TEST is never loaded. The artifact produces the existing
+canonical 11-target raw, explicitly uncalibrated probability contract. No
+calibration, backtesting, comparison, promotion, live wiring, or publication is
+performed by this layer.

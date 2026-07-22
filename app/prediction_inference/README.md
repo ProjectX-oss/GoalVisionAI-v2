@@ -75,5 +75,8 @@ match snapshot -> feature set -> model input -> raw inference
   -> candidate registry -> Quality Gate -> publication
 ```
 
-Real model artifacts, training, calibration execution, and prediction-candidate
-assembly are intentionally deferred.
+`app.historical_model_training` now provides an offline safe-parameter artifact
+and a read-only compatibility adapter for this same canonical 11-target raw
+contract. It is not registered or connected to the live inference registry by
+default. Calibration execution, reviewed model promotion/live activation, and
+prediction-candidate assembly remain intentionally deferred.

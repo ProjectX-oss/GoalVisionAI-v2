@@ -774,3 +774,22 @@ Review after completing the current priority.
 - Kept model training, hyperparameter tuning, calibration fitting, inference,
   backtesting, model comparison/promotion, shadow evaluation, fetching,
   scheduling, publication, and Telegram outside this foundation.
+
+## 2026-07-22 - Historical Model Training Foundation
+
+- Added the explicit TRAIN-only `MULTI_TARGET_LOGISTIC_REGRESSION_V1` baseline
+  over verified immutable split folds and the exact 145-feature schema.
+- Added deterministic TRAIN-fitted median imputation and standard scaling,
+  evaluation-only VALIDATION handling, strict TEST isolation, class-support and
+  convergence rejection, and canonical raw 11-target probability validation.
+- Added safe executable-free JSON-compatible artifacts with ordered parameters,
+  convergence evidence, compatibility metadata, complete source provenance,
+  descriptive TRAIN/VALIDATION metrics, and read-only inference reproduction.
+- Added request, preprocessing, estimator, artifact, and run SHA-256 identities,
+  exact replay idempotency, immutable request conflicts, and atomic persistence.
+- Added migration v26 with six append-only training/artifact/target/
+  preprocessing/example/metric tables, foreign keys, uniqueness, indexes, and
+  twelve update/delete guards.
+- Kept calibration fitting, backtesting, model comparison/promotion, shadow
+  evaluation, live inference wiring, fetching, scheduling, publication, and
+  Telegram outside this foundation.

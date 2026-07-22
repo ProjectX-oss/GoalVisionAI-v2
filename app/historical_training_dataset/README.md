@@ -85,7 +85,8 @@ historical import
   -> shadow evaluation
 ```
 
-The next explicit layer is `app.historical_dataset_split`, which independently
-rechecks dataset/example fingerprints, labels, and leakage before assigning
-chronology-safe partitions. Model training, calibration fitting, backtesting,
+The next layers are `app.historical_dataset_split`, which independently rechecks
+dataset/example fingerprints, labels, and leakage before assigning
+chronology-safe partitions, and `app.historical_model_training`, which consumes
+only a verified TRAIN partition. Calibration fitting, backtesting,
 comparison/promotion, and shadow evaluation remain separately reviewed layers.

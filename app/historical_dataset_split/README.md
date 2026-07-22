@@ -81,4 +81,8 @@ historical import
   -> shadow evaluation
 ```
 
-Everything after splitting remains deliberately deferred.
+`app.historical_model_training` is the explicit next layer. It independently
+re-verifies the split and fold, fits preprocessing and model parameters from
+TRAIN only, may inspect VALIDATION without fitting from it, and never loads TEST.
+Calibration, backtesting, comparison/promotion, and shadow evaluation remain
+deliberately deferred.

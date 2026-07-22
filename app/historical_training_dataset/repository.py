@@ -137,6 +137,15 @@ class SQLiteHistoricalTrainingDatasetRepository:
         ).fetchone()
         return self.load_dataset_build(row[0]) if row is not None else None
 
+    def load_dataset_identity(self, dataset_build_id: str) -> tuple[str, str, str, str] | None:
+        """Load identity/schema metadata without materializing any example partition."""
+        row = self._connection.execute(
+            """SELECT request_fingerprint,dataset_fingerprint,feature_schema_version,label_schema_version
+               FROM historical_training_dataset_builds WHERE dataset_build_id=?""",
+            (dataset_build_id,),
+        ).fetchone()
+        return tuple(row) if row is not None else None
+
     def load_dataset_build(self, dataset_build_id: str) -> PreparedDatasetBuild | None:
         row = self._connection.execute(
             "SELECT * FROM historical_training_dataset_builds WHERE dataset_build_id=?",
