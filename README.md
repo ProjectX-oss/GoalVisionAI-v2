@@ -174,3 +174,12 @@ evaluation-only and TEST is never loaded. The artifact produces the existing
 canonical 11-target raw, explicitly uncalibrated probability contract. No
 calibration, backtesting, comparison, promotion, live wiring, or publication is
 performed by this layer.
+
+`app/historical_probability_calibration` is the explicit VALIDATION-only next
+layer. It reproduces raw probabilities with the immutable source model artifact,
+fits the existing identity/Platt/isotonic calibrators, reconciles result and
+totals groups, and derives complements. Migration v27 persists a safe inactive
+artifact set, audit predictions, metrics, and reliability bins. TRAIN is never
+refitted and TEST is never loaded. Activation, backtesting, promotion, live
+wiring, provider access, scheduling, publication, and Telegram remain outside
+this boundary.

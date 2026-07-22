@@ -793,3 +793,21 @@ Review after completing the current priority.
 - Kept calibration fitting, backtesting, model comparison/promotion, shadow
   evaluation, live inference wiring, fetching, scheduling, publication, and
   Telegram outside this foundation.
+
+## 2026-07-22 - Historical Probability Calibration Fitting Foundation
+
+- Added explicit VALIDATION-only fitting over one verified training run, model
+  artifact, split, and fold; TRAIN is not refitted and TEST is never loaded.
+- Reused the runtime identity, Platt, and isotonic fitters with strict support,
+  convergence, schema, version, and provenance validation.
+- Added seven fitted calibrators, four derived complements, lower-bounded result
+  simplex reconciliation, decreasing totals PAVA, and the canonical bounded
+  11-target output contract.
+- Added per-target and multiclass metrics, deterministic reliability bins,
+  diagnostics, and read-only reproduction and compatibility inspection.
+- Added migration v27 with six atomic append-only run/artifact/target/
+  prediction/metric/reliability tables and twelve mutation guards.
+- Added deterministic fingerprints, exact replay idempotency, immutable request
+  conflicts, and a deliberately inactive runtime compatibility adapter.
+- Kept runtime activation, TEST evaluation, backtesting, model promotion, shadow
+  evaluation, fetching, scheduling, publication, and Telegram outside scope.

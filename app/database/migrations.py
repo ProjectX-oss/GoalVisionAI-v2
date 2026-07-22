@@ -3004,6 +3004,180 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=27,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS historical_probability_calibration_runs (
+                calibration_run_id TEXT PRIMARY KEY,
+                calibration_request_id TEXT NOT NULL UNIQUE,
+                request_fingerprint TEXT NOT NULL,
+                calibration_run_fingerprint TEXT NOT NULL UNIQUE,
+                source_training_run_id TEXT NOT NULL,
+                source_training_run_fingerprint TEXT NOT NULL,
+                source_artifact_id TEXT NOT NULL,
+                source_artifact_fingerprint TEXT NOT NULL,
+                source_split_id TEXT NOT NULL,
+                source_split_fingerprint TEXT NOT NULL,
+                fold_id TEXT NOT NULL,
+                fold_fingerprint TEXT NOT NULL,
+                validation_row_count INTEGER NOT NULL,
+                fitted_target_count INTEGER NOT NULL,
+                derived_target_count INTEGER NOT NULL,
+                policy_versions_snapshot TEXT NOT NULL,
+                outcome TEXT NOT NULL,
+                reason_codes_snapshot TEXT NOT NULL,
+                aggregate_raw_metrics_snapshot TEXT NOT NULL,
+                aggregate_calibrated_metrics_snapshot TEXT NOT NULL,
+                monotonicity_summary TEXT NOT NULL,
+                reconciliation_summary TEXT NOT NULL,
+                deterministic_run_snapshot TEXT NOT NULL,
+                calibration_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (source_training_run_id) REFERENCES historical_model_training_runs(training_run_id),
+                FOREIGN KEY (source_artifact_id) REFERENCES historical_model_artifacts(artifact_id),
+                FOREIGN KEY (source_split_id) REFERENCES historical_dataset_splits(split_id),
+                FOREIGN KEY (fold_id) REFERENCES historical_dataset_split_folds(fold_id),
+                UNIQUE (calibration_request_id, request_fingerprint),
+                CHECK (validation_row_count >= 0),
+                CHECK (fitted_target_count = 7),
+                CHECK (derived_target_count = 4),
+                CHECK (substr(calibration_timestamp, -1) = 'Z'),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_probability_calibration_artifact_sets (
+                artifact_set_id TEXT PRIMARY KEY,
+                calibration_run_id TEXT NOT NULL UNIQUE,
+                artifact_set_fingerprint TEXT NOT NULL UNIQUE,
+                artifact_format_version TEXT NOT NULL,
+                runtime_compatibility_version TEXT NOT NULL,
+                target_schema_version TEXT NOT NULL,
+                canonical_target_order_snapshot TEXT NOT NULL,
+                clamp_policy_snapshot TEXT NOT NULL,
+                monotonicity_policy_snapshot TEXT NOT NULL,
+                reconciliation_policy_snapshot TEXT NOT NULL,
+                compatibility_snapshot TEXT NOT NULL,
+                provenance_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (calibration_run_id) REFERENCES historical_probability_calibration_runs(calibration_run_id),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_probability_calibration_targets (
+                target_artifact_row_id TEXT PRIMARY KEY,
+                artifact_set_id TEXT NOT NULL,
+                target_identity TEXT NOT NULL,
+                target_order INTEGER NOT NULL,
+                calibration_method TEXT NOT NULL,
+                target_artifact_fingerprint TEXT NOT NULL,
+                fitted_parameters_snapshot TEXT NOT NULL,
+                class_order_snapshot TEXT NOT NULL,
+                support_snapshot TEXT NOT NULL,
+                convergence_snapshot TEXT NOT NULL,
+                derivation_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (artifact_set_id) REFERENCES historical_probability_calibration_artifact_sets(artifact_set_id),
+                UNIQUE (artifact_set_id, target_identity),
+                UNIQUE (artifact_set_id, target_order),
+                CHECK (target_order >= 0),
+                CHECK (calibration_method IN ('IDENTITY_V1','PLATT_SCALING_V1','ISOTONIC_REGRESSION_V1')),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_probability_calibration_predictions (
+                prediction_row_id TEXT PRIMARY KEY,
+                calibration_run_id TEXT NOT NULL,
+                training_example_id TEXT NOT NULL,
+                example_fingerprint TEXT NOT NULL,
+                raw_prediction_fingerprint TEXT NOT NULL,
+                raw_probabilities_snapshot TEXT NOT NULL,
+                calibrated_probabilities_snapshot TEXT NOT NULL,
+                monotonicity_adjustment_snapshot TEXT NOT NULL,
+                reconciliation_snapshot TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (calibration_run_id) REFERENCES historical_probability_calibration_runs(calibration_run_id),
+                FOREIGN KEY (training_example_id) REFERENCES historical_training_examples(training_example_id),
+                UNIQUE (calibration_run_id, training_example_id),
+                UNIQUE (calibration_run_id, deterministic_order),
+                CHECK (deterministic_order >= 0),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_probability_calibration_metrics (
+                metric_row_id TEXT PRIMARY KEY,
+                calibration_run_id TEXT NOT NULL,
+                target_identity TEXT NOT NULL,
+                metric_phase TEXT NOT NULL,
+                metric_name TEXT NOT NULL,
+                metric_value TEXT,
+                metric_snapshot TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (calibration_run_id) REFERENCES historical_probability_calibration_runs(calibration_run_id),
+                UNIQUE (calibration_run_id, target_identity, metric_phase, metric_name),
+                UNIQUE (calibration_run_id, deterministic_order),
+                CHECK (metric_phase IN ('RAW','CALIBRATED')),
+                CHECK (deterministic_order >= 0),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_probability_calibration_reliability_bins (
+                bin_row_id TEXT PRIMARY KEY,
+                calibration_run_id TEXT NOT NULL,
+                target_identity TEXT NOT NULL,
+                metric_phase TEXT NOT NULL,
+                bin_index INTEGER NOT NULL,
+                lower_bound TEXT NOT NULL,
+                upper_bound TEXT NOT NULL,
+                sample_count INTEGER NOT NULL,
+                mean_predicted_probability TEXT,
+                observed_frequency TEXT,
+                absolute_gap TEXT,
+                bin_fingerprint TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (calibration_run_id) REFERENCES historical_probability_calibration_runs(calibration_run_id),
+                UNIQUE (calibration_run_id, target_identity, metric_phase, bin_index),
+                CHECK (metric_phase IN ('RAW','CALIBRATED')),
+                CHECK (bin_index >= 0),
+                CHECK (sample_count >= 0),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_historical_calibration_source_artifact
+                ON historical_probability_calibration_runs (source_artifact_id, calibration_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_calibration_training_run
+                ON historical_probability_calibration_runs (source_training_run_id, calibration_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_calibration_split_fold
+                ON historical_probability_calibration_runs (source_split_id, fold_id, calibration_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_calibration_target_method
+                ON historical_probability_calibration_targets (target_identity, calibration_method, artifact_set_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_calibration_prediction_run
+                ON historical_probability_calibration_predictions (calibration_run_id, deterministic_order)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_calibration_metric_run
+                ON historical_probability_calibration_metrics (calibration_run_id, target_identity, metric_phase)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_calibration_bin_run
+                ON historical_probability_calibration_reliability_bins (calibration_run_id, target_identity, metric_phase)""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_runs_no_update BEFORE UPDATE ON historical_probability_calibration_runs BEGIN SELECT RAISE(ABORT, 'Historical calibration runs are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_runs_no_delete BEFORE DELETE ON historical_probability_calibration_runs BEGIN SELECT RAISE(ABORT, 'Historical calibration runs are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_artifact_sets_no_update BEFORE UPDATE ON historical_probability_calibration_artifact_sets BEGIN SELECT RAISE(ABORT, 'Historical calibration artifact sets are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_artifact_sets_no_delete BEFORE DELETE ON historical_probability_calibration_artifact_sets BEGIN SELECT RAISE(ABORT, 'Historical calibration artifact sets are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_targets_no_update BEFORE UPDATE ON historical_probability_calibration_targets BEGIN SELECT RAISE(ABORT, 'Historical calibration targets are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_targets_no_delete BEFORE DELETE ON historical_probability_calibration_targets BEGIN SELECT RAISE(ABORT, 'Historical calibration targets are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_predictions_no_update BEFORE UPDATE ON historical_probability_calibration_predictions BEGIN SELECT RAISE(ABORT, 'Historical calibration predictions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_predictions_no_delete BEFORE DELETE ON historical_probability_calibration_predictions BEGIN SELECT RAISE(ABORT, 'Historical calibration predictions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_metrics_no_update BEFORE UPDATE ON historical_probability_calibration_metrics BEGIN SELECT RAISE(ABORT, 'Historical calibration metrics are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_metrics_no_delete BEFORE DELETE ON historical_probability_calibration_metrics BEGIN SELECT RAISE(ABORT, 'Historical calibration metrics are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_reliability_bins_no_update BEFORE UPDATE ON historical_probability_calibration_reliability_bins BEGIN SELECT RAISE(ABORT, 'Historical calibration reliability bins are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_probability_calibration_reliability_bins_no_delete BEFORE DELETE ON historical_probability_calibration_reliability_bins BEGIN SELECT RAISE(ABORT, 'Historical calibration reliability bins are immutable'); END""",
+        ),
+    ),
 )
 
 

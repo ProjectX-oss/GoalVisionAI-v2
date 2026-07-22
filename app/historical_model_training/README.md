@@ -42,6 +42,11 @@ The reviewed ML flow is:
 
 ```text
 historical import -> historical training dataset -> historical dataset split
-  -> historical model training -> calibration fitting -> historical backtesting
+  -> historical model training -> historical probability calibration fitting
+  -> historical backtesting
   -> model comparison and promotion -> shadow evaluation
 ```
+
+`app.historical_probability_calibration` implements that next boundary. It
+reproduces this artifact's raw probabilities for VALIDATION only, persists an
+inactive compatible calibration artifact set, and never loads TEST.

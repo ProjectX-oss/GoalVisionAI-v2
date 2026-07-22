@@ -75,7 +75,7 @@ historical import
   -> historical training dataset
   -> historical dataset split
   -> model training
-  -> calibration fitting
+  -> historical probability calibration fitting
   -> historical backtesting
   -> model comparison and promotion
   -> shadow evaluation
@@ -84,5 +84,7 @@ historical import
 `app.historical_model_training` is the explicit next layer. It independently
 re-verifies the split and fold, fits preprocessing and model parameters from
 TRAIN only, may inspect VALIDATION without fitting from it, and never loads TEST.
-Calibration, backtesting, comparison/promotion, and shadow evaluation remain
-deliberately deferred.
+The calibration fitting boundary now exists in
+`app.historical_probability_calibration`; it consumes VALIDATION only after a
+model training run. Backtesting, comparison/promotion, and shadow evaluation
+remain deliberately deferred.

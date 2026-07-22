@@ -54,3 +54,7 @@ match snapshot -> feature store -> model input -> raw inference
 
 Calibration training/retraining, odds, EV, selection, staking, candidate
 registration, and publication integration are intentionally deferred.
+
+`app.historical_probability_calibration` now owns offline VALIDATION-only
+fitting and maps persisted artifacts only to inactive runtime-compatible
+objects. Registration and activation remain an explicit reviewed future action.
