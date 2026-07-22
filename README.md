@@ -17,8 +17,11 @@ The intentionally explicit integration is provider adapter ->
 `register_match_data_snapshot(...)` -> `generate_match_feature_set(...)` ->
 `generate_model_input(...)` -> `generate_raw_prediction(...)` -> probability
 calibration -> market value assessment ->
-`select_official_prediction(...)` -> future risk and candidate assembly ->
-`register_official_prediction_candidate(...)`. `app/model_input_builder` owns the
+`select_official_prediction(...)` ->
+`prepare_official_candidate(...)` ->
+`register_official_prediction_candidate(...)` -> Publication Quality Gate ->
+publication orchestration -> atomic Telegram publication.
+`app/model_input_builder` owns the
 fixed-order, missingness-preserving vector bridge. `app/prediction_inference` owns
 only explicit model-adapter execution, raw probability validation, and immutable
 inference history. It loads no model and runs no inference at startup.
@@ -52,9 +55,13 @@ no-selection result is append-only in migration v20.
 
 Selection is not publication approval and carries no stake recommendation. Its
 typed handoff preserves verified value, model, calibration, and market
-provenance for future risk assessment. Risk/staking, candidate registration,
-Quality Gate execution, scheduling, Telegram publication, and the separate
-future two-leg exception-combo workflow remain outside the package.
+provenance for the independent `app/official_candidate_preparation` boundary.
+That integration consumes explicit immutable Official bankroll/exposure facts,
+calls the existing risk service once, and registers only `ELIGIBLE` or
+`REDUCED_STAKE` outcomes through the Candidate Registry. `REVIEW_REQUIRED` and
+`INELIGIBLE` become append-only no-registration decisions. It does not execute
+the Quality Gate, publish, schedule, or support the separate two-leg exception
+combo workflow. Migration v21 stores immutable executions and risk snapshots.
 
 ## Official prediction publication
 

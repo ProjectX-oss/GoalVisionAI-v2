@@ -117,6 +117,7 @@ class OfficialPredictionCandidateRegistrationCommand:
     registration_timestamp: datetime
     is_live: bool = False
     is_accumulator: bool = False
+    provenance: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -165,6 +166,7 @@ class PreparedOfficialPredictionCandidate:
     destination_scope: RiskProductScope
     registration_timestamp: datetime
     normalized_snapshot: tuple[tuple[str, str], ...]
+    provenance: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

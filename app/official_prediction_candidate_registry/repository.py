@@ -416,10 +416,11 @@ class SQLiteOfficialPredictionCandidateRepository:
                 confidence_level, supporting_data_status, market_availability,
                 reasoning_snapshot, source_data_version, bankroll_scope,
                 destination_scope, lifecycle_state_at_creation,
-                registration_timestamp, normalized_snapshot, candidate_snapshot
+                registration_timestamp, normalized_snapshot,
+                provenance_snapshot, candidate_snapshot
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
                       ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                      ?, ?, ?, ?)
+                      ?, ?, ?, ?, ?)
             """,
             (
                 value.registry_candidate_id,
@@ -464,6 +465,7 @@ class SQLiteOfficialPredictionCandidateRepository:
                 value.lifecycle_state_at_creation.value,
                 item.registration_timestamp.isoformat(),
                 _json([list(pair) for pair in item.normalized_snapshot]),
+                _json([list(pair) for pair in item.provenance]),
                 _candidate_json(value),
             ),
         )
@@ -676,6 +678,14 @@ def _candidate_from_row(row: sqlite3.Row) -> OfficialPredictionCandidateVersion:
         normalized_snapshot=tuple(
             (item[0], item[1]) for item in json.loads(row["normalized_snapshot"])
         ),
+        provenance=tuple(
+            (item[0], item[1])
+            for item in json.loads(
+                row["provenance_snapshot"]
+                if "provenance_snapshot" in row.keys()
+                else "[]"
+            )
+        ),
     )
     return OfficialPredictionCandidateVersion(
         row["registry_candidate_id"],
@@ -761,6 +771,7 @@ def _candidate_json(value: OfficialPredictionCandidateVersion) -> str:
         "prediction_creation_timestamp": (
             item.prediction_creation_timestamp.isoformat()
         ),
+        "provenance": [list(pair) for pair in item.provenance],
         "public_reasoning_facts": [
             {
                 "fact_type": fact.fact_type.value,

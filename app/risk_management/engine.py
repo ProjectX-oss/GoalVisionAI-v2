@@ -10,6 +10,7 @@ from .models import (
     LossStreakState,
     RiskAssessmentContext,
     RiskAssessmentDecision,
+    RiskAssessmentPhase,
     RiskAssessmentRequest,
     RiskAuditRecord,
     RiskProductScope,
@@ -81,10 +82,11 @@ class RiskAssessmentService:
             reasons.add(RiskReason.EXPECTED_VALUE_TOO_LOW)
         if request.quality_gate_status is QualityGateStatus.REJECTED:
             reasons.add(RiskReason.QUALITY_GATE_REJECTED)
-        review = request.quality_gate_status in {
-            None,
-            QualityGateStatus.REVIEW_REQUIRED,
-        }
+        review = (
+            request.assessment_phase is RiskAssessmentPhase.POST_PUBLICATION_GATE
+            and request.quality_gate_status
+            in {None, QualityGateStatus.REVIEW_REQUIRED}
+        )
         if review:
             reasons.add(RiskReason.QUALITY_GATE_REVIEW_REQUIRED)
             warnings.add(RiskWarning.MANUAL_REVIEW_REQUIRED)
@@ -255,6 +257,7 @@ class RiskAssessmentService:
             limiting_exposure=primary_limit if limiting else None,
             exposure_assessments=exposure_assessments,
             assessed_at=context.assessed_at,
+            assessment_phase=request.assessment_phase,
         )
 
     def _base_percentage(
@@ -409,6 +412,7 @@ class RiskAssessmentService:
                 context.assessed_at.isoformat(),
                 context.bankroll.authoritative_source_reference,
                 context.exposure.authoritative_source_reference,
+                request.assessment_phase.value,
             )
         )
         return "risk-" + hashlib.sha256(seed.encode("utf-8")).hexdigest()

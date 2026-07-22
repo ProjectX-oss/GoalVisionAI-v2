@@ -35,6 +35,11 @@ class RiskAssessmentDecision(str, Enum):
     INELIGIBLE = "INELIGIBLE"
 
 
+class RiskAssessmentPhase(str, Enum):
+    PRE_PUBLICATION_GATE = "PRE_PUBLICATION_GATE"
+    POST_PUBLICATION_GATE = "POST_PUBLICATION_GATE"
+
+
 class StakeBand(str, Enum):
     NONE = "NONE"
     MINIMUM = "MINIMUM"
@@ -286,6 +291,7 @@ class RiskAssessmentRequest:
     calibrated_probability_available: bool
     team_ids: tuple[str, ...] = ()
     market_family: str | None = None
+    assessment_phase: RiskAssessmentPhase = RiskAssessmentPhase.POST_PUBLICATION_GATE
 
     def __post_init__(self) -> None:
         for value in (
@@ -321,6 +327,15 @@ class RiskAssessmentRequest:
             raise ValueError("Sample sizes must not be negative.")
         if len(set(self.correlation_group_ids)) != len(self.correlation_group_ids):
             raise ValueError("Correlation group IDs must be unique.")
+        if not isinstance(self.assessment_phase, RiskAssessmentPhase):
+            raise ValueError("Risk assessment phase is unsupported.")
+        if (
+            self.assessment_phase is RiskAssessmentPhase.PRE_PUBLICATION_GATE
+            and self.quality_gate_status is not None
+        ):
+            raise ValueError(
+                "Pre-publication-gate risk assessment cannot claim a gate status."
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -369,6 +384,7 @@ class RiskAuditRecord:
     limiting_exposure: ExposureAssessment | None
     exposure_assessments: tuple[ExposureAssessment, ...]
     assessed_at: datetime
+    assessment_phase: RiskAssessmentPhase = RiskAssessmentPhase.POST_PUBLICATION_GATE
 
 
 @dataclass(frozen=True, slots=True)

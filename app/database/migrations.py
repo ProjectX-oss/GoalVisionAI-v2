@@ -2042,6 +2042,138 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=21,
+        statements=(
+            """ALTER TABLE official_prediction_candidate_versions
+                ADD COLUMN provenance_snapshot TEXT NOT NULL DEFAULT '[]'""",
+            """
+            CREATE TABLE IF NOT EXISTS official_candidate_preparation_executions (
+                integration_execution_id TEXT PRIMARY KEY,
+                integration_request_identity TEXT NOT NULL UNIQUE,
+                preparation_request_fingerprint TEXT NOT NULL UNIQUE,
+                integration_fingerprint TEXT NOT NULL UNIQUE,
+                selection_decision_id TEXT NOT NULL,
+                selected_value_assessment_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                risk_assessment_timestamp TEXT NOT NULL,
+                candidate_preparation_timestamp TEXT NOT NULL,
+                bankroll_snapshot_identity TEXT NOT NULL,
+                bankroll_fingerprint TEXT NOT NULL,
+                exposure_snapshot_identity TEXT NOT NULL,
+                exposure_fingerprint TEXT NOT NULL,
+                risk_handoff_fingerprint TEXT,
+                risk_outcome TEXT,
+                risk_assessment_id TEXT,
+                risk_fingerprint TEXT,
+                candidate_mapping_fingerprint TEXT,
+                candidate_registry_outcome TEXT,
+                registry_candidate_id TEXT,
+                candidate_version INTEGER,
+                candidate_fingerprint TEXT,
+                previous_candidate_id TEXT,
+                final_status TEXT NOT NULL,
+                integration_policy_version TEXT NOT NULL,
+                ordered_reason_code_snapshot TEXT NOT NULL,
+                explanation_snapshot TEXT NOT NULL,
+                deterministic_execution_summary TEXT NOT NULL,
+                deterministic_execution_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (selection_decision_id)
+                    REFERENCES official_prediction_selection_decisions(selection_decision_id),
+                FOREIGN KEY (selected_value_assessment_id)
+                    REFERENCES market_value_assessments(value_assessment_id),
+                FOREIGN KEY (registry_candidate_id)
+                    REFERENCES official_prediction_candidate_versions(registry_candidate_id),
+                FOREIGN KEY (previous_candidate_id)
+                    REFERENCES official_prediction_candidate_versions(registry_candidate_id),
+                CHECK (risk_outcome IS NULL OR risk_outcome IN (
+                    'ELIGIBLE', 'REDUCED_STAKE', 'REVIEW_REQUIRED', 'INELIGIBLE'
+                )),
+                CHECK (candidate_version IS NULL OR candidate_version > 0),
+                CHECK (final_status IN (
+                    'CANDIDATE_REGISTERED', 'IDEMPOTENT_EXISTING',
+                    'NO_REGISTRATION_INELIGIBLE',
+                    'NO_REGISTRATION_REVIEW_REQUIRED',
+                    'REJECTED_INVALID_REQUEST', 'REJECTED_PROVENANCE',
+                    'REJECTED_SCOPE', 'REJECTED_INVALID_RISK_RESULT',
+                    'RISK_EXECUTION_FAILED', 'CANDIDATE_REGISTRATION_REJECTED',
+                    'ALREADY_PUBLISHED', 'CORRECTION_REQUIRED', 'CONFLICT',
+                    'PERSISTENCE_FAILURE'
+                ))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS official_candidate_preparation_risk_snapshots (
+                risk_snapshot_id TEXT PRIMARY KEY,
+                integration_execution_id TEXT NOT NULL UNIQUE,
+                risk_assessment_id TEXT NOT NULL,
+                risk_handoff_fingerprint TEXT NOT NULL,
+                risk_fingerprint TEXT NOT NULL,
+                risk_outcome TEXT NOT NULL,
+                risk_policy_version TEXT NOT NULL,
+                stake_amount TEXT,
+                stake_currency TEXT,
+                internal_stake_percentage TEXT,
+                bankroll_amount_used TEXT NOT NULL,
+                available_bankroll TEXT NOT NULL,
+                bankroll_snapshot_identity TEXT NOT NULL,
+                bankroll_fingerprint TEXT NOT NULL,
+                exposure_snapshot_identity TEXT NOT NULL,
+                exposure_fingerprint TEXT NOT NULL,
+                exposure_summary TEXT NOT NULL,
+                ordered_reason_code_snapshot TEXT NOT NULL,
+                deterministic_risk_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (integration_execution_id)
+                    REFERENCES official_candidate_preparation_executions(integration_execution_id),
+                UNIQUE (integration_execution_id, risk_assessment_id),
+                CHECK (risk_outcome IN (
+                    'ELIGIBLE', 'REDUCED_STAKE', 'REVIEW_REQUIRED', 'INELIGIBLE'
+                ))
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_candidate_preparation_match
+                ON official_candidate_preparation_executions
+                (match_id, candidate_preparation_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_candidate_preparation_selection
+                ON official_candidate_preparation_executions
+                (selection_decision_id, candidate_preparation_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_candidate_preparation_risk_outcome
+                ON official_candidate_preparation_executions
+                (risk_outcome, candidate_preparation_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_candidate_preparation_final_status
+                ON official_candidate_preparation_executions
+                (final_status, candidate_preparation_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_candidate_preparation_candidate
+                ON official_candidate_preparation_executions
+                (registry_candidate_id, candidate_preparation_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_candidate_preparation_timestamp
+                ON official_candidate_preparation_executions
+                (candidate_preparation_timestamp)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS candidate_preparation_executions_no_update
+            BEFORE UPDATE ON official_candidate_preparation_executions
+            BEGIN SELECT RAISE(ABORT, 'Candidate preparation executions are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS candidate_preparation_executions_no_delete
+            BEFORE DELETE ON official_candidate_preparation_executions
+            BEGIN SELECT RAISE(ABORT, 'Candidate preparation executions are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS candidate_preparation_risk_no_update
+            BEFORE UPDATE ON official_candidate_preparation_risk_snapshots
+            BEGIN SELECT RAISE(ABORT, 'Candidate preparation risk snapshots are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS candidate_preparation_risk_no_delete
+            BEFORE DELETE ON official_candidate_preparation_risk_snapshots
+            BEGIN SELECT RAISE(ABORT, 'Candidate preparation risk snapshots are immutable'); END
+            """,
+        ),
+    ),
 )
 
 

@@ -42,3 +42,8 @@ repository, and publication-state protection. Call
 selected decision can be mapped through `to_official_risk_handoff(...)`; that
 mapping carries verified provenance and value facts only and makes no staking
 recommendation.
+
+`app.official_candidate_preparation` is the explicit downstream consumer. It
+re-verifies the persisted decision and selected assessment before adapting the
+typed handoff into the existing risk service. Selection remains independent:
+it does not import, call, or persist candidate-preparation behavior.

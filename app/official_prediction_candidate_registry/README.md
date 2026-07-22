@@ -125,3 +125,17 @@ supplied pre-match provenance and deterministic model-ready features. They do no
 invoke this registry. A future reviewed prediction engine may consume a feature set
 and then supply its complete prediction facts here; registry identity, validation,
 versioning, and publication protection remain unchanged.
+
+## Selection-to-risk preparation
+
+`app.official_candidate_preparation` is the reviewed upstream integration for a
+successful Official selection. It calls the existing risk service and submits
+one complete registry command only for `ELIGIBLE` or `REDUCED_STAKE` results.
+The registry still owns normalization, candidate fingerprinting, identity,
+version allocation, READY/supersession lifecycle, and publication protection.
+
+Migration v21 adds a bounded structured `provenance_snapshot` to each immutable
+candidate version. Preparation records selection, value, odds, inference,
+model/calibration, risk, stake, bankroll, and exposure fingerprints there.
+This is audit provenance, not a Quality Gate decision. Review-required and
+ineligible risk outcomes never call the registry.

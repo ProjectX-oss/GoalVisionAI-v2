@@ -22,6 +22,13 @@ stake-calculation behavior.
 consumers, but the orchestration service is the complete callable Official
 pre-publication boundary for future scheduling.
 
+The upstream `app.official_candidate_preparation` package can expose a typed
+handoff only after a successful persisted risk result, a registered candidate,
+and a current `READY` lifecycle state. That handoff supplies candidate, risk,
+exposure, and bankroll records to the existing assembler but contains no gate
+decision and never invokes this package. Calibration and model-health records
+remain separate injected assembly facts.
+
 The downstream publisher remains solely responsible for Telegram delivery
 claims, confirmed-failure retry state, and marking messages as sent. The gate
 never mutates publication, bankroll, risk, settlement, or calibration records.

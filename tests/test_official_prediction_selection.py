@@ -717,7 +717,7 @@ class OfficialPredictionSelectionTests(unittest.TestCase):
                 fresh.connection.execute(
                     "SELECT MAX(version) FROM schema_migrations"
                 ).fetchone()[0],
-                20,
+                21,
             )
             tables = {
                 row[0]
@@ -751,7 +751,9 @@ class OfficialPredictionSelectionTests(unittest.TestCase):
             upgrade.connection.execute(
                 "CREATE TABLE schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)"
             )
-            for migration in MIGRATIONS[:-1]:
+            for migration in MIGRATIONS:
+                if migration.version > 19:
+                    break
                 for statement in migration.statements:
                     upgrade.connection.execute(statement)
                 upgrade.connection.execute(
@@ -770,7 +772,7 @@ class OfficialPredictionSelectionTests(unittest.TestCase):
                 upgrade.connection.execute(
                     "SELECT MAX(version) FROM schema_migrations"
                 ).fetchone()[0],
-                20,
+                21,
             )
         finally:
             upgrade.close()

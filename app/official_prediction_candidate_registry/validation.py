@@ -213,6 +213,7 @@ class OfficialPredictionCandidateValidator:
             "MARKET_AVAILABILITY",
         )
         reasoning = self._reasoning(command.public_reasoning_facts)
+        provenance = self._provenance(command.provenance)
 
         logical = self._fingerprints.logical_identity(
             prediction_id=prediction_id,
@@ -257,6 +258,8 @@ class OfficialPredictionCandidateValidator:
             "is_live": False,
             "is_accumulator": False,
         }
+        if provenance:
+            content_material["provenance"] = provenance
         content = self._fingerprints.content(content_material)
         snapshot = canonical_items(content_material)
         return PreparedOfficialPredictionCandidate(
@@ -297,6 +300,7 @@ class OfficialPredictionCandidateValidator:
             destination_scope=RiskProductScope.OFFICIAL,
             registration_timestamp=registration,
             normalized_snapshot=snapshot,
+            provenance=provenance,
         )
 
     def normalize_reason_code(self, value: str) -> str:
@@ -501,6 +505,50 @@ class OfficialPredictionCandidateValidator:
             self._invalid(
                 "REASONING_TOTAL_TOO_LONG",
                 "Combined reasoning text exceeds its bounded limit.",
+            )
+        return ordered
+
+    def _provenance(
+        self,
+        values: tuple[tuple[str, str], ...],
+    ) -> tuple[tuple[str, str], ...]:
+        if not isinstance(values, tuple):
+            self._invalid(
+                "INVALID_PROVENANCE",
+                "Candidate provenance must be an immutable tuple.",
+            )
+        if len(values) > self.policy.maximum_provenance_item_count:
+            self._invalid(
+                "TOO_MUCH_PROVENANCE",
+                "Candidate provenance exceeds its bounded item limit.",
+            )
+        normalized: list[tuple[str, str]] = []
+        for item in values:
+            if not isinstance(item, tuple) or len(item) != 2:
+                self._invalid(
+                    "INVALID_PROVENANCE",
+                    "Candidate provenance must contain immutable text pairs.",
+                )
+            key = self._identifier(item[0], "PROVENANCE_KEY")
+            value = self._display(
+                item[1],
+                "PROVENANCE_VALUE",
+                maximum=self.policy.maximum_provenance_value_length,
+            )
+            if any(
+                pattern.search(value) or pattern.search(key)
+                for pattern in (_URL, _AFFILIATE, _CREDENTIAL)
+            ):
+                self._invalid(
+                    "UNSAFE_PROVENANCE",
+                    "Candidate provenance cannot contain URLs, affiliates, or credentials.",
+                )
+            normalized.append((key, value))
+        ordered = tuple(sorted(normalized))
+        if len({key for key, _ in ordered}) != len(ordered):
+            self._invalid(
+                "DUPLICATE_PROVENANCE_KEY",
+                "Candidate provenance keys must be unique.",
             )
         return ordered
 

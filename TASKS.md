@@ -48,6 +48,7 @@ Tasks
 Improve rating calculation.
 
 - [x] Complete deterministic Official Prediction Selection Engine foundation.
+- [x] Complete Official Selection-to-Risk and Candidate Preparation integration.
 
 Review feature weights.
 
@@ -573,6 +574,15 @@ Only append.
 - Added migration v16 with immutable append-only `model_input_vectors`, unique identities, deterministic serialization, Feature Store foreign-key linkage, indexes, and update/delete triggers.
 - Added `build_model_input_builder(...)` and `generate_model_input(...)` without training, inference, probability calibration, odds, market, candidate registry, Quality Gate, bankroll, Telegram, scheduling, or live coupling.
 
+## 2026-07-21 - Official Selection-to-Risk and Candidate Preparation
+
+- Added isolated `app/official_candidate_preparation` to re-verify one persisted selected decision and value assessment, consume explicit immutable Official EUR bankroll/exposure facts, and call the existing risk service exactly once.
+- Added explicit pre-publication-gate risk phase semantics without claiming Quality Gate approval or changing existing post-gate behavior, stake thresholds, exposure limits, bankroll logic, or selection policy.
+- Registered candidates only for exact `ELIGIBLE` or `REDUCED_STAKE` outcomes; persisted `REVIEW_REQUIRED` and `INELIGIBLE` as typed no-registration decisions without a Candidate Registry call.
+- Preserved selection, model, calibration, value, risk, stake, bankroll, and exposure provenance while leaving candidate identity, versioning, lifecycle, and publication protection under Candidate Registry authority.
+- Added migration v21 with immutable append-only preparation execution/risk snapshot tables, structured candidate provenance, deterministic fingerprints, query indexes, foreign keys, and update/delete triggers.
+- Added production composition, explicit callable, read-only downstream Quality Gate handoff, idempotent terminal replay, conflict handling, recovery-safe registry interaction, and comprehensive integration/migration/regression tests.
+
 ---
 
 # NEXT PRIORITIES
@@ -659,7 +669,6 @@ Review after completing the current priority.
 - Integrate a reviewed real pre-match model artifact without implicit loading.
 - Build calibrated market prediction assembly after inference and calibration evidence is approved.
 - Add group-aware calibration only under a new reviewed policy/schema version.
-- Build an Official Prediction Selection Engine without coupling value assessment to publication eligibility.
 
 - Gather a sufficient settled Shadow sample before monitoring threshold decisions.
 - Statistically tune drift thresholds after sufficient historical evidence exists.
