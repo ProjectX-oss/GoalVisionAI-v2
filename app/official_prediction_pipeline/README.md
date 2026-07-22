@@ -72,3 +72,17 @@ Telegram credentials, start a bot, or schedule work.
 Deferred work includes automatic discovery/scheduling, bankroll/exposure
 retrieval, result settlement/publication, live betting, exception combos, Mega
 Combo, High Risk, Lab, AutoTrader, and Telegram bot lifecycle.
+
+## Operator execution layer
+
+`app/official_prediction_operations` supplies the safe manual executable
+boundary around this package. Signed fixtures materialize the real upstream
+Match Snapshot through Candidate Registry history and then invoke this pipeline.
+Dry-run installs a no-send transport and stops at the exact existing message
+preview. Publication requires an injected verified destination, exact
+candidate/match/destination confirmations, and exact environment tokens.
+Diagnostics and recovery consume immutable execution/stage history without
+weakening candidate, gate, claim, idempotency, or resend rules.
+
+This does not wire the pipeline to startup, coordinator discovery, a scheduler,
+provider fetches, or Telegram credential resolution.

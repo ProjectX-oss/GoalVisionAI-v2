@@ -82,3 +82,12 @@ The Registered Candidate pipeline reuses this message builder for dry-run
 previews and this complete atomic adapter for manual publication. It never
 sends before a claim and treats post-send finalization uncertainty as
 non-resendable.
+
+`app/official_prediction_operations` adds outer environment/destination
+verification and exact confirmation controls. Fixture dry-runs use a transport
+sentinel that must never be invoked and require no credentials. Staging and
+production transports remain injected by application/deployment composition;
+the operations package does not load or log tokens. Explicit retry accepts only
+confirmed pre-send or confirmed Telegram no-delivery failures and reuses
+persisted gate evidence. Active claims and indeterminate post-send events remain
+zero-send.

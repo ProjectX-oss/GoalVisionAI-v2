@@ -50,6 +50,7 @@ Improve rating calculation.
 - [x] Complete deterministic Official Prediction Selection Engine foundation.
 - [x] Complete Official Selection-to-Risk and Candidate Preparation integration.
 - [x] Complete Registered Candidate-to-Quality Gate and Official Publication Pipeline integration.
+- [x] Complete controlled manual end-to-end fixtures, operational CLI, diagnostics, recovery analysis, and operator runbook.
 
 Review feature weights.
 
@@ -721,3 +722,5 @@ Review after completing the current priority.
 - Coordinate scheduled settlement and result publication only after operational review.
 - Generate weekly Official reports from immutable result and bankroll histories.
 - Send publication failures and stuck-delivery claims to the Admin channel in a future task.
+- Integrate the operations CLI with application-owned staging/production Telegram credential resolution only after deployment-specific controls are reviewed.
+- Keep automatic Official discovery, scheduling, provider ingestion, bankroll/exposure retrieval, and startup execution disabled until separately approved.

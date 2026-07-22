@@ -117,3 +117,8 @@ For one explicitly selected registered candidate,
 `run_official_prediction_pipeline_once(...)` performs the complete
 gate-to-atomic-publication flow. The coordinator remains a separate bounded
 batch/discovery concept and is not wired to that runner or startup.
+
+The controlled operations CLI does not call coordinator discovery. It accepts
+one signed fixture or one explicit persisted execution/candidate identity and
+remains bounded by operator arguments. Automatic discovery and batch scheduling
+are still deferred and disabled.

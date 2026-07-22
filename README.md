@@ -110,3 +110,20 @@ invalidates those facts without calculating probabilities, EV, risk, exposure,
 bankroll, or Quality Gate decisions. Its read-only adapter supplies active
 `READY` versions to the existing coordinator, which retains all processing and
 publication-state policy. No ingestion or batch is registered at startup.
+
+## Controlled manual operations and startup safety
+
+`app/official_prediction_operations` is the operator-facing end-to-end fixture
+and CLI boundary. It traverses the real persisted services with a deterministic
+adapter only at the external model-artifact boundary. Validation, dry-run,
+controlled publication, inspection, bounded retry listing, explicit retry,
+diagnostics, and startup smoke checks are available through
+`python -m app.official_prediction_operations.cli`.
+
+There is no default database or transport. New files require explicit creation,
+fixture environment is no-send, staging/production destinations are injected
+and verified, and exact publication/retry confirmation tokens are mandatory.
+Indeterminate post-send state forbids resend. Imports and application startup
+still execute zero fixture runs, discovery, gates, claims, sends, scheduling,
+provider fetching, or bot polling. See
+`docs/OFFICIAL_PREDICTION_OPERATIONS_RUNBOOK.md`.
