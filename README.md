@@ -156,6 +156,11 @@ compatibility with the live 78-feature schema.
 Builds, examples, source linkages, and exclusions are append-only, atomically
 persisted, fingerprinted, and independently inspectable. Imports and application
 startup perform no dataset build, provider access, model work, scheduling,
-publication, or Telegram activity. Dataset splitting, training, calibration
-fitting, backtesting, model comparison/promotion, and shadow evaluation remain
-separate future stages.
+publication, or Telegram activity.
+
+`app/historical_dataset_split` owns the next offline boundary. It verifies one
+immutable training dataset, preserves equal-kickoff groups, supports explicit
+time boundaries, chronological ratios, and bounded expanding windows, and
+persists auditable gap/filter/boundary exclusions under migration v25. Splits
+are deterministic and append-only; no shuffle, sampling, label balancing,
+training, calibration fitting, inference, or backtesting occurs in this layer.

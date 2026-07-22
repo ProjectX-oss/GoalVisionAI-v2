@@ -2652,6 +2652,146 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=25,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS historical_dataset_splits (
+                split_id TEXT PRIMARY KEY,
+                split_request_id TEXT NOT NULL UNIQUE,
+                request_fingerprint TEXT NOT NULL,
+                split_fingerprint TEXT NOT NULL UNIQUE,
+                split_name TEXT NOT NULL,
+                source_dataset_build_id TEXT NOT NULL,
+                source_dataset_fingerprint TEXT NOT NULL,
+                split_strategy TEXT NOT NULL,
+                split_policy_version TEXT NOT NULL,
+                feature_schema_version TEXT NOT NULL,
+                label_schema_version TEXT NOT NULL,
+                filter_snapshot TEXT NOT NULL,
+                boundary_ratio_snapshot TEXT NOT NULL,
+                gap_snapshot TEXT NOT NULL,
+                minimum_size_snapshot TEXT NOT NULL,
+                fold_count INTEGER NOT NULL,
+                aggregate_counts TEXT NOT NULL,
+                deterministic_split_snapshot TEXT NOT NULL,
+                split_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (source_dataset_build_id)
+                    REFERENCES historical_training_dataset_builds(dataset_build_id),
+                UNIQUE (split_request_id, request_fingerprint),
+                CHECK (split_strategy IN (
+                    'EXPLICIT_TIME_BOUNDARIES_V1',
+                    'EXPANDING_WINDOW_V1',
+                    'RATIO_BY_CHRONOLOGY_V1'
+                )),
+                CHECK (fold_count >= 0),
+                CHECK (substr(split_timestamp, -1) = 'Z'),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_dataset_split_folds (
+                fold_id TEXT PRIMARY KEY,
+                split_id TEXT NOT NULL,
+                fold_index INTEGER NOT NULL,
+                fold_fingerprint TEXT NOT NULL UNIQUE,
+                train_boundary_snapshot TEXT NOT NULL,
+                validation_boundary_snapshot TEXT NOT NULL,
+                test_boundary_snapshot TEXT NOT NULL,
+                achieved_counts TEXT NOT NULL,
+                achieved_ratios TEXT NOT NULL,
+                earliest_latest_kickoffs_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (split_id) REFERENCES historical_dataset_splits(split_id),
+                UNIQUE (split_id, fold_index),
+                CHECK (fold_index >= 0),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_dataset_split_assignments (
+                assignment_id TEXT PRIMARY KEY,
+                split_id TEXT NOT NULL,
+                fold_id TEXT NOT NULL,
+                training_example_id TEXT NOT NULL,
+                historical_match_id TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                season TEXT NOT NULL,
+                partition TEXT NOT NULL,
+                assignment_order INTEGER NOT NULL,
+                example_fingerprint TEXT NOT NULL,
+                assignment_fingerprint TEXT NOT NULL UNIQUE,
+                exclusion_reason TEXT,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (split_id) REFERENCES historical_dataset_splits(split_id),
+                FOREIGN KEY (fold_id) REFERENCES historical_dataset_split_folds(fold_id),
+                FOREIGN KEY (training_example_id) REFERENCES historical_training_examples(training_example_id),
+                FOREIGN KEY (historical_match_id) REFERENCES historical_matches(historical_match_id),
+                UNIQUE (fold_id, training_example_id),
+                UNIQUE (fold_id, assignment_order),
+                CHECK (partition IN (
+                    'TRAIN', 'VALIDATION', 'TEST', 'EXCLUDED_GAP',
+                    'EXCLUDED_FILTER', 'EXCLUDED_BOUNDARY_GROUP',
+                    'EXCLUDED_INVALID_PROVENANCE'
+                )),
+                CHECK (assignment_order >= 0),
+                CHECK (
+                    (partition IN ('TRAIN', 'VALIDATION', 'TEST') AND exclusion_reason IS NULL)
+                    OR
+                    (partition NOT IN ('TRAIN', 'VALIDATION', 'TEST') AND exclusion_reason IS NOT NULL)
+                ),
+                CHECK (substr(kickoff_timestamp, -1) = 'Z'),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_historical_dataset_split_source
+                ON historical_dataset_splits (source_dataset_build_id, split_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_dataset_split_strategy
+                ON historical_dataset_splits (split_strategy, split_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_dataset_split_fold
+                ON historical_dataset_split_folds (split_id, fold_index)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_dataset_assignment_partition
+                ON historical_dataset_split_assignments (fold_id, partition, assignment_order)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_dataset_assignment_competition
+                ON historical_dataset_split_assignments (competition, season, kickoff_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_dataset_assignment_kickoff
+                ON historical_dataset_split_assignments (kickoff_timestamp, fold_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_dataset_assignment_example
+                ON historical_dataset_split_assignments (training_example_id, split_id)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_dataset_splits_no_update
+            BEFORE UPDATE ON historical_dataset_splits
+            BEGIN SELECT RAISE(ABORT, 'Historical dataset splits are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_dataset_splits_no_delete
+            BEFORE DELETE ON historical_dataset_splits
+            BEGIN SELECT RAISE(ABORT, 'Historical dataset splits are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_dataset_split_folds_no_update
+            BEFORE UPDATE ON historical_dataset_split_folds
+            BEGIN SELECT RAISE(ABORT, 'Historical dataset split folds are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_dataset_split_folds_no_delete
+            BEFORE DELETE ON historical_dataset_split_folds
+            BEGIN SELECT RAISE(ABORT, 'Historical dataset split folds are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_dataset_split_assignments_no_update
+            BEFORE UPDATE ON historical_dataset_split_assignments
+            BEGIN SELECT RAISE(ABORT, 'Historical dataset split assignments are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_dataset_split_assignments_no_delete
+            BEFORE DELETE ON historical_dataset_split_assignments
+            BEGIN SELECT RAISE(ABORT, 'Historical dataset split assignments are immutable'); END
+            """,
+        ),
+    ),
 )
 
 

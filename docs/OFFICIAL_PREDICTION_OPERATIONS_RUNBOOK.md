@@ -29,7 +29,7 @@ identity and verify it is restorable. Never overwrite the active database.
 ## 5. Migration verification
 
 Run inspection/diagnostics against the explicit database. The expected latest
-  migration is v24. Stop if tables, foreign keys, or append-only triggers are
+  migration is v25. Stop if tables, foreign keys, or append-only triggers are
 missing. Fixture execution applies migrations only after database safety checks.
 
 ## 6. Fixture validation

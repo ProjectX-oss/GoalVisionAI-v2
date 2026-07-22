@@ -85,5 +85,7 @@ historical import
   -> shadow evaluation
 ```
 
-Everything after historical training dataset construction remains deliberately
-deferred to separately reviewed layers.
+The next explicit layer is `app.historical_dataset_split`, which independently
+rechecks dataset/example fingerprints, labels, and leakage before assigning
+chronology-safe partitions. Model training, calibration fitting, backtesting,
+comparison/promotion, and shadow evaluation remain separately reviewed layers.

@@ -758,3 +758,19 @@ Review after completing the current priority.
 - Kept splitting, training, calibration fitting, backtesting, model comparison,
   promotion, shadow evaluation, fetching, scheduling, prediction, publication,
   and Telegram activity outside this foundation.
+
+## 2026-07-22 - Historical Dataset Split Foundation
+
+- Added typed explicit-boundary, ratio-by-chronology, and bounded expanding-
+  window split strategies over one immutable verified training dataset.
+- Added strict partition chronology, indivisible equal-kickoff groups,
+  deterministic ordering, explicit buffer exclusions, and no randomization.
+- Added immutable per-fold assignments, achieved counts/ratios, all-11-label
+  reporting, bounded partition streaming, and independent integrity inspection.
+- Added canonical request, assignment, fold, and complete split SHA-256
+  identities with exact replay idempotency and immutable request conflicts.
+- Added migration v25 with atomic append-only split, fold, and assignment
+  persistence, foreign keys, uniqueness, indexes, and update/delete guards.
+- Kept model training, hyperparameter tuning, calibration fitting, inference,
+  backtesting, model comparison/promotion, shadow evaluation, fetching,
+  scheduling, publication, and Telegram outside this foundation.

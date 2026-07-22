@@ -720,7 +720,7 @@ class AvailabilityMigrationTests(unittest.TestCase):
                     "SELECT name FROM sqlite_master WHERE type='table'"
                 )
             }
-            self.assertEqual(versions, tuple(range(1, 25)))
+            self.assertEqual(versions, tuple(range(1, 26)))
             self.assertTrue({
                 "availability_sources",
                 "player_availability_observations",

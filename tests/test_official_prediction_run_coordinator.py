@@ -624,7 +624,7 @@ class FingerprintAndPersistenceTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 25)))
+        self.assertEqual(versions, tuple(range(1, 26)))
         upgrade = Database(":memory:")
         upgrade.connection.execute(
             "CREATE TABLE schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)"
@@ -641,7 +641,7 @@ class FingerprintAndPersistenceTests(unittest.TestCase):
             upgrade.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            24,
+            25,
         )
         upgrade.close()
 
