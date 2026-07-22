@@ -531,7 +531,7 @@ class RegistrationPersistenceTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 23)))
+        self.assertEqual(versions, tuple(range(1, 24)))
         upgrade = Database(":memory:")
         upgrade.connection.execute(
             "CREATE TABLE schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)"
@@ -548,7 +548,7 @@ class RegistrationPersistenceTests(unittest.TestCase):
             upgrade.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            22,
+            23,
         )
         upgrade.close()
 

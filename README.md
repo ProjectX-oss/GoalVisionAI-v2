@@ -4,6 +4,21 @@ GoalVision AI keeps prediction generation, calibration, eligibility, public
 presentation, delivery, bankroll management, settlement, and result reporting
 as separate boundaries.
 
+## Historical machine-learning data foundation
+
+`app/historical_data_import` is the append-only authoritative boundary for
+explicitly supplied historical match datasets. The versioned importer
+normalizes competition, season, round, kickoff UTC, team identities, scores,
+result, venue, optional referee/attendance, available team statistics, and
+available lineups before calculating canonical SHA-256 fingerprints.
+
+Migration v23 stores immutable import audits, versioned matches, statistics,
+and lineups in one atomic transaction. Exact replay writes nothing; corrected
+provider content appends a new match version without changing prior history.
+This boundary is intentionally upstream-only: it performs no discovery, live
+provider access, scheduling, feature generation, training, prediction,
+backtesting, publication, or Telegram work, and it is not connected to startup.
+
 ## Pre-match data and features
 
 `app/match_data_snapshot` is the append-only provenance boundary for complete or

@@ -816,7 +816,7 @@ class ShadowMigrationTests(unittest.TestCase):
                 "SELECT name FROM sqlite_master WHERE type = 'table'"
             )
         }
-        self.assertEqual(versions, tuple(range(1, 23)))
+        self.assertEqual(versions, tuple(range(1, 24)))
         self.assertIn("quality_gate_shadow_evaluations", tables)
         self.assertIn("quality_gate_shadow_errors", tables)
         self.assertEqual(

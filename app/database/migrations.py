@@ -2302,6 +2302,187 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=23,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS historical_match_imports (
+                import_id TEXT PRIMARY KEY,
+                provider TEXT NOT NULL,
+                provider_identity TEXT NOT NULL,
+                dataset_id TEXT NOT NULL,
+                dataset_version TEXT NOT NULL,
+                dataset_schema_version TEXT NOT NULL,
+                dataset_fingerprint TEXT NOT NULL UNIQUE,
+                dataset_content_fingerprint TEXT NOT NULL,
+                supplied_match_count INTEGER NOT NULL,
+                inserted_match_count INTEGER NOT NULL,
+                reused_match_count INTEGER NOT NULL,
+                match_fingerprint_snapshot TEXT NOT NULL,
+                import_timestamp TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                metadata_version TEXT NOT NULL,
+                deterministic_import_snapshot TEXT NOT NULL,
+                UNIQUE (provider_identity, dataset_id, dataset_version),
+                CHECK (supplied_match_count > 0),
+                CHECK (inserted_match_count >= 0),
+                CHECK (reused_match_count >= 0),
+                CHECK (inserted_match_count + reused_match_count = supplied_match_count),
+                CHECK (dataset_schema_version = 'goalvision_historical_dataset_v1'),
+                CHECK (metadata_version = 'v1'),
+                CHECK (substr(import_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_matches (
+                historical_match_id TEXT PRIMARY KEY,
+                import_id TEXT NOT NULL,
+                logical_identity_fingerprint TEXT NOT NULL,
+                natural_identity_fingerprint TEXT NOT NULL,
+                match_fingerprint TEXT NOT NULL UNIQUE,
+                match_version INTEGER NOT NULL,
+                source_provider TEXT NOT NULL,
+                source_match_id TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                competition_identity TEXT NOT NULL,
+                season TEXT NOT NULL,
+                competition_round TEXT NOT NULL,
+                kickoff_utc TEXT NOT NULL,
+                home_team TEXT NOT NULL,
+                home_team_identity TEXT NOT NULL,
+                away_team TEXT NOT NULL,
+                away_team_identity TEXT NOT NULL,
+                full_time_home_score INTEGER NOT NULL,
+                full_time_away_score INTEGER NOT NULL,
+                half_time_home_score INTEGER,
+                half_time_away_score INTEGER,
+                full_time_result TEXT NOT NULL,
+                venue TEXT NOT NULL,
+                referee TEXT,
+                attendance INTEGER,
+                normalized_match_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (import_id) REFERENCES historical_match_imports(import_id),
+                UNIQUE (logical_identity_fingerprint, match_version),
+                CHECK (match_version > 0),
+                CHECK (full_time_home_score BETWEEN 0 AND 30),
+                CHECK (full_time_away_score BETWEEN 0 AND 30),
+                CHECK (half_time_home_score IS NULL OR half_time_home_score BETWEEN 0 AND full_time_home_score),
+                CHECK (half_time_away_score IS NULL OR half_time_away_score BETWEEN 0 AND full_time_away_score),
+                CHECK ((half_time_home_score IS NULL) = (half_time_away_score IS NULL)),
+                CHECK (full_time_result IN ('HOME_WIN', 'DRAW', 'AWAY_WIN')),
+                CHECK (home_team_identity <> away_team_identity),
+                CHECK (attendance IS NULL OR attendance >= 0),
+                CHECK (substr(kickoff_utc, -1) = 'Z'),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_match_statistics (
+                statistics_id TEXT PRIMARY KEY,
+                historical_match_id TEXT NOT NULL,
+                team_side TEXT NOT NULL,
+                possession TEXT,
+                shots INTEGER,
+                shots_on_target INTEGER,
+                expected_goals TEXT,
+                corners INTEGER,
+                yellow_cards INTEGER,
+                red_cards INTEGER,
+                fouls INTEGER,
+                offsides INTEGER,
+                statistics_fingerprint TEXT NOT NULL UNIQUE,
+                normalized_statistics_snapshot TEXT NOT NULL,
+                FOREIGN KEY (historical_match_id) REFERENCES historical_matches(historical_match_id),
+                UNIQUE (historical_match_id, team_side),
+                CHECK (team_side IN ('HOME', 'AWAY')),
+                CHECK (possession IS NULL OR CAST(possession AS REAL) BETWEEN 0 AND 100),
+                CHECK (shots IS NULL OR shots BETWEEN 0 AND 200),
+                CHECK (shots_on_target IS NULL OR shots_on_target BETWEEN 0 AND 100),
+                CHECK (shots IS NULL OR shots_on_target IS NULL OR shots_on_target <= shots),
+                CHECK (expected_goals IS NULL OR CAST(expected_goals AS REAL) BETWEEN 0 AND 20),
+                CHECK (corners IS NULL OR corners BETWEEN 0 AND 50),
+                CHECK (yellow_cards IS NULL OR yellow_cards BETWEEN 0 AND 20),
+                CHECK (red_cards IS NULL OR red_cards BETWEEN 0 AND 5),
+                CHECK (fouls IS NULL OR fouls BETWEEN 0 AND 100),
+                CHECK (offsides IS NULL OR offsides BETWEEN 0 AND 30)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_lineups (
+                lineup_id TEXT PRIMARY KEY,
+                historical_match_id TEXT NOT NULL,
+                team_side TEXT NOT NULL,
+                formation TEXT,
+                starting_xi_snapshot TEXT NOT NULL,
+                substitutes_snapshot TEXT NOT NULL,
+                starting_xi_count INTEGER NOT NULL,
+                substitute_count INTEGER NOT NULL,
+                lineup_fingerprint TEXT NOT NULL UNIQUE,
+                normalized_lineup_snapshot TEXT NOT NULL,
+                FOREIGN KEY (historical_match_id) REFERENCES historical_matches(historical_match_id),
+                UNIQUE (historical_match_id, team_side),
+                CHECK (team_side IN ('HOME', 'AWAY')),
+                CHECK (starting_xi_count = 11),
+                CHECK (substitute_count BETWEEN 0 AND 20)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_historical_import_dataset
+                ON historical_match_imports (provider_identity, dataset_id, dataset_version)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_match_kickoff
+                ON historical_matches (kickoff_utc, historical_match_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_match_competition
+                ON historical_matches (competition_identity, season, kickoff_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_match_home_team
+                ON historical_matches (home_team_identity, kickoff_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_match_away_team
+                ON historical_matches (away_team_identity, kickoff_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_match_logical_identity
+                ON historical_matches (logical_identity_fingerprint, match_version)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_match_natural_identity
+                ON historical_matches (natural_identity_fingerprint, match_version)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_match_imports_no_update
+            BEFORE UPDATE ON historical_match_imports
+            BEGIN SELECT RAISE(ABORT, 'Historical match imports are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_match_imports_no_delete
+            BEFORE DELETE ON historical_match_imports
+            BEGIN SELECT RAISE(ABORT, 'Historical match imports are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_matches_no_update
+            BEFORE UPDATE ON historical_matches
+            BEGIN SELECT RAISE(ABORT, 'Historical matches are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_matches_no_delete
+            BEFORE DELETE ON historical_matches
+            BEGIN SELECT RAISE(ABORT, 'Historical matches are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_match_statistics_no_update
+            BEFORE UPDATE ON historical_match_statistics
+            BEGIN SELECT RAISE(ABORT, 'Historical match statistics are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_match_statistics_no_delete
+            BEFORE DELETE ON historical_match_statistics
+            BEGIN SELECT RAISE(ABORT, 'Historical match statistics are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_lineups_no_update
+            BEFORE UPDATE ON historical_lineups
+            BEGIN SELECT RAISE(ABORT, 'Historical lineups are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_lineups_no_delete
+            BEFORE DELETE ON historical_lineups
+            BEGIN SELECT RAISE(ABORT, 'Historical lineups are immutable'); END
+            """,
+        ),
+    ),
 )
 
 

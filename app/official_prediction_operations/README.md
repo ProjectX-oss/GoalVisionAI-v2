@@ -66,7 +66,7 @@ verification must be `VERIFIED`, enabled, type/environment/identity matched;
 Production also refuses fixtures explicitly marked `non_production`; the
 checked-in fictional samples can therefore never publish to production.
 
-Diagnostics are read-only and verify migration v22, required tables,
+Diagnostics are read-only and verify the latest migration v23, required tables,
 append-only triggers, candidate provenance/lifecycle, gate/orchestration links,
 claim and terminal state, ordered stages, duplicate fingerprints, request
 identity conflicts, retry safety, and optional destination verification.

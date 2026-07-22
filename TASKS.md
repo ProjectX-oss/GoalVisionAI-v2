@@ -110,6 +110,8 @@ Improve Match collector.
 
 Improve History loading.
 
+- [x] Complete the deterministic append-only Historical Match Data Import foundation.
+
 Improve retry logic.
 
 Definition of Done
@@ -724,3 +726,18 @@ Review after completing the current priority.
 - Send publication failures and stuck-delivery claims to the Admin channel in a future task.
 - Integrate the operations CLI with application-owned staging/production Telegram credential resolution only after deployment-specific controls are reviewed.
 - Keep automatic Official discovery, scheduling, provider ingestion, bankroll/exposure retrieval, and startup execution disabled until separately approved.
+
+## 2026-07-22 - Historical Match Data Import Foundation
+
+- Added the strict `goalvision_historical_dataset_v1` supplied-dataset boundary.
+- Added deterministic Unicode/team identity and UTC normalization with
+  fail-closed score, result, statistics, lineup, duplicate, and kickoff checks.
+- Added canonical SHA-256 identities for dataset content, provider/natural match
+  identity, normalized match content, statistics, and lineups.
+- Added migration v23 with atomic append-only import, match-version, statistics,
+  and lineup persistence plus update/delete rejection triggers.
+- Added exact replay idempotency, cross-version match reuse, immutable correction
+  versions, conflict detection, and full transaction rollback.
+- Kept live fetching, scheduling, provider polling, feature generation, model
+  training, prediction, backtesting, publication, Telegram, and startup imports
+  outside this foundation.

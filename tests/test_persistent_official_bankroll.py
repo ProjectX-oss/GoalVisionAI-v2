@@ -138,7 +138,7 @@ class PersistentOfficialBankrollTests(unittest.TestCase):
         self.assertIn("bankroll_transactions", tables)
         self.assertIn("bankroll_transactions_no_update", triggers)
         self.assertIn("bankroll_transactions_no_delete", triggers)
-        self.assertEqual(versions, tuple(range(1, 23)))
+        self.assertEqual(versions, tuple(range(1, 24)))
 
     def test_initializes_official_eur_10000_once(self):
         first = self.repository.load_account(BankrollProduct.OFFICIAL)
