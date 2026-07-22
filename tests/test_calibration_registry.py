@@ -237,7 +237,7 @@ class CalibrationRegistryTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 24)))
+        self.assertEqual(versions, tuple(range(1, 25)))
         self.registry.register(self.artifact)
         stored = self.database.connection.execute(
             "SELECT training_metrics FROM calibration_artifacts"

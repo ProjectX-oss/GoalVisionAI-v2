@@ -59,3 +59,9 @@ The deterministic model-input assembly boundary now exists in
 `app.model_input_builder`; provider adapters, automatic ingestion, scheduling,
 training, model inference, prediction generation, live processing, and publication
 remain intentionally deferred.
+
+Historical training uses the separate `historical_training_features_v1`
+registry. It maps shared concepts such as form, venue, season, xG, rest, and
+head-to-head explicitly, but it does not claim that historical facts have the
+same semantics as this live 78-feature schema. In particular, unavailable or
+unproven historical availability/context fields are not fabricated.

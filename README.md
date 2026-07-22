@@ -142,3 +142,20 @@ Indeterminate post-send state forbids resend. Imports and application startup
 still execute zero fixture runs, discovery, gates, claims, sends, scheduling,
 provider fetching, or bot polling. See
 `docs/OFFICIAL_PREDICTION_OPERATIONS_RUNBOOK.md`.
+
+## Historical machine-learning datasets
+
+`app/historical_data_import` is the authoritative supplied-data boundary.
+`app/historical_training_dataset` consumes explicitly selected immutable imports
+and creates reproducible pre-match training examples under migration v24. Every
+source kickoff must be strictly earlier than its target; target outcomes and
+statistics cannot enter features. The versioned 145-position historical schema
+keeps missing values and provenance explicit rather than claiming silent
+compatibility with the live 78-feature schema.
+
+Builds, examples, source linkages, and exclusions are append-only, atomically
+persisted, fingerprinted, and independently inspectable. Imports and application
+startup perform no dataset build, provider access, model work, scheduling,
+publication, or Telegram activity. Dataset splitting, training, calibration
+fitting, backtesting, model comparison/promotion, and shadow evaluation remain
+separate future stages.

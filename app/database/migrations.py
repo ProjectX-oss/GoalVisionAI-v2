@@ -2483,6 +2483,175 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=24,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS historical_training_dataset_builds (
+                dataset_build_id TEXT PRIMARY KEY,
+                request_id TEXT NOT NULL UNIQUE,
+                request_fingerprint TEXT NOT NULL,
+                dataset_fingerprint TEXT NOT NULL UNIQUE,
+                dataset_name TEXT NOT NULL,
+                source_import_ids_snapshot TEXT NOT NULL,
+                filters_snapshot TEXT NOT NULL,
+                cutoff_policy TEXT NOT NULL,
+                feature_schema_version TEXT NOT NULL,
+                label_schema_version TEXT NOT NULL,
+                dataset_policy_version TEXT NOT NULL,
+                source_match_count INTEGER NOT NULL,
+                included_count INTEGER NOT NULL,
+                excluded_insufficient_history_count INTEGER NOT NULL,
+                excluded_invalid_provenance_count INTEGER NOT NULL,
+                deterministic_build_snapshot TEXT NOT NULL,
+                build_timestamp TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                UNIQUE (request_id, request_fingerprint),
+                CHECK (cutoff_policy = 'STRICTLY_BEFORE_KICKOFF'),
+                CHECK (source_match_count >= 0),
+                CHECK (included_count >= 0),
+                CHECK (excluded_insufficient_history_count >= 0),
+                CHECK (excluded_invalid_provenance_count >= 0),
+                CHECK (substr(build_timestamp, -1) = 'Z'),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_training_examples (
+                training_example_id TEXT PRIMARY KEY,
+                dataset_build_id TEXT NOT NULL,
+                historical_match_id TEXT NOT NULL,
+                historical_match_fingerprint TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                season TEXT NOT NULL,
+                home_team_id TEXT NOT NULL,
+                away_team_id TEXT NOT NULL,
+                ordered_feature_vector TEXT NOT NULL,
+                missingness_mask TEXT NOT NULL,
+                completeness_score TEXT NOT NULL,
+                feature_provenance_snapshot TEXT NOT NULL,
+                lookback_window_identity TEXT NOT NULL,
+                cutoff_timestamp TEXT NOT NULL,
+                historical_source_fingerprints_snapshot TEXT NOT NULL,
+                labels_snapshot TEXT NOT NULL,
+                feature_schema_version TEXT NOT NULL,
+                label_schema_version TEXT NOT NULL,
+                dataset_policy_version TEXT NOT NULL,
+                example_fingerprint TEXT NOT NULL UNIQUE,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (dataset_build_id)
+                    REFERENCES historical_training_dataset_builds(dataset_build_id),
+                FOREIGN KEY (historical_match_id)
+                    REFERENCES historical_matches(historical_match_id),
+                UNIQUE (dataset_build_id, historical_match_id),
+                CHECK (home_team_id <> away_team_id),
+                CHECK (CAST(completeness_score AS REAL) BETWEEN 0 AND 1),
+                CHECK (substr(kickoff_timestamp, -1) = 'Z'),
+                CHECK (cutoff_timestamp = kickoff_timestamp),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_training_example_sources (
+                source_row_id TEXT PRIMARY KEY,
+                training_example_id TEXT NOT NULL,
+                source_historical_match_id TEXT NOT NULL,
+                source_match_fingerprint TEXT NOT NULL,
+                source_kickoff TEXT NOT NULL,
+                source_role TEXT NOT NULL,
+                deterministic_order_index INTEGER NOT NULL,
+                lookback_window_identity TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (training_example_id)
+                    REFERENCES historical_training_examples(training_example_id),
+                FOREIGN KEY (source_historical_match_id)
+                    REFERENCES historical_matches(historical_match_id),
+                UNIQUE (training_example_id, deterministic_order_index),
+                UNIQUE (training_example_id, source_historical_match_id),
+                CHECK (deterministic_order_index >= 0),
+                CHECK (substr(source_kickoff, -1) = 'Z'),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_training_exclusions (
+                exclusion_id TEXT PRIMARY KEY,
+                dataset_build_id TEXT NOT NULL,
+                historical_match_id TEXT NOT NULL,
+                exclusion_reason TEXT NOT NULL,
+                deterministic_detail_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (dataset_build_id)
+                    REFERENCES historical_training_dataset_builds(dataset_build_id),
+                FOREIGN KEY (historical_match_id)
+                    REFERENCES historical_matches(historical_match_id),
+                UNIQUE (dataset_build_id, historical_match_id),
+                CHECK (exclusion_reason IN (
+                    'EXCLUDED_INSUFFICIENT_HISTORY',
+                    'EXCLUDED_INVALID_PROVENANCE'
+                )),
+                CHECK (substr(created_timestamp, -1) = 'Z')
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_historical_training_build_name
+                ON historical_training_dataset_builds (dataset_name, build_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_training_example_dataset
+                ON historical_training_examples (dataset_build_id, kickoff_timestamp, competition, historical_match_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_training_example_match
+                ON historical_training_examples (historical_match_id, dataset_build_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_training_example_competition
+                ON historical_training_examples (competition, season, kickoff_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_training_source_example
+                ON historical_training_example_sources (training_example_id, deterministic_order_index)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_training_source_match
+                ON historical_training_example_sources (source_historical_match_id, source_kickoff)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_training_exclusion_dataset
+                ON historical_training_exclusions (dataset_build_id, exclusion_reason, historical_match_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_training_exclusion_reason
+                ON historical_training_exclusions (exclusion_reason, dataset_build_id)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_training_dataset_builds_no_update
+            BEFORE UPDATE ON historical_training_dataset_builds
+            BEGIN SELECT RAISE(ABORT, 'Historical training dataset builds are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_training_dataset_builds_no_delete
+            BEFORE DELETE ON historical_training_dataset_builds
+            BEGIN SELECT RAISE(ABORT, 'Historical training dataset builds are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_training_examples_no_update
+            BEFORE UPDATE ON historical_training_examples
+            BEGIN SELECT RAISE(ABORT, 'Historical training examples are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_training_examples_no_delete
+            BEFORE DELETE ON historical_training_examples
+            BEGIN SELECT RAISE(ABORT, 'Historical training examples are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_training_example_sources_no_update
+            BEFORE UPDATE ON historical_training_example_sources
+            BEGIN SELECT RAISE(ABORT, 'Historical training example sources are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_training_example_sources_no_delete
+            BEFORE DELETE ON historical_training_example_sources
+            BEGIN SELECT RAISE(ABORT, 'Historical training example sources are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_training_exclusions_no_update
+            BEFORE UPDATE ON historical_training_exclusions
+            BEGIN SELECT RAISE(ABORT, 'Historical training exclusions are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS historical_training_exclusions_no_delete
+            BEFORE DELETE ON historical_training_exclusions
+            BEGIN SELECT RAISE(ABORT, 'Historical training exclusions are immutable'); END
+            """,
+        ),
+    ),
 )
 
 

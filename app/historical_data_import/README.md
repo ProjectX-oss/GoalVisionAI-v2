@@ -84,3 +84,9 @@ result = importer.import_mapping(payload, import_timestamp="2026-07-22T18:00:00Z
 The caller owns dataset acquisition, authorization, file handling, database
 selection, and lifecycle. Live providers and automatic execution remain
 deliberately outside this package.
+
+The explicit downstream machine-learning boundary is
+`app.historical_training_dataset`. It reads selected immutable import snapshots,
+never mutates them, and enforces a strict source-kickoff-before-target cutoff.
+The intended flow is historical import -> training dataset -> future split,
+training, calibration fitting, backtesting, model comparison, and shadow review.

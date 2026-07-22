@@ -67,3 +67,8 @@ register_match_data_snapshot(...)
 `app.prediction_inference` is the separate downstream owner of raw probability
 generation. No model, prediction, probability, market, candidate, or publication
 logic is implemented in the model-input package.
+
+Offline historical examples use `historical_training_features_v1`, whose
+ordering and semantics are documented independently. They are not silently fed
+to `goalvision_model_input_v1`; a future reviewed training layer must declare an
+explicit schema mapping or train an artifact against the historical schema.

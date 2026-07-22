@@ -592,7 +592,7 @@ class PublicationMigrationAndCompositionTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 24)))
+        self.assertEqual(versions, tuple(range(1, 25)))
         approved = approval()
         SQLiteQualityGateEvaluationRepository(database).append(
             approved.quality_gate_evaluation
@@ -628,7 +628,7 @@ class PublicationMigrationAndCompositionTests(unittest.TestCase):
             upgrade.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-                23,
+                24,
         )
         upgrade.close()
 

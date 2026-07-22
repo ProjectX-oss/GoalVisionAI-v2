@@ -741,3 +741,20 @@ Review after completing the current priority.
 - Kept live fetching, scheduling, provider polling, feature generation, model
   training, prediction, backtesting, publication, Telegram, and startup imports
   outside this foundation.
+
+## 2026-07-22 - Historical Training Dataset Builder Foundation
+
+- Added the immutable `historical_training_features_v1` and
+  `historical_training_labels_v1` contracts over explicitly selected imports.
+- Added strict source-kickoff-before-target enforcement, independent leakage
+  inspection, fixed Decimal-safe feature ordering, masks, provenance, and
+  deterministic labels without correct-score output.
+- Added centralized last-3/5/10, venue, season, head-to-head, rest/congestion,
+  and prior-statistics projection with no target-match or future information.
+- Added migration v24 with atomic append-only builds, examples, source linkages,
+  exclusions, foreign keys, uniqueness, indexes, and update/delete guards.
+- Added immutable request/example/dataset fingerprints, replay idempotency,
+  request conflict handling, bounded streaming, and read-only inspection.
+- Kept splitting, training, calibration fitting, backtesting, model comparison,
+  promotion, shadow evaluation, fetching, scheduling, prediction, publication,
+  and Telegram activity outside this foundation.
