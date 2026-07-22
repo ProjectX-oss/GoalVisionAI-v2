@@ -52,3 +52,7 @@ never mutates publication, bankroll, risk, settlement, or calibration records.
 - Risk review, exposure warnings, limited liquidity, weak medium-confidence
   evidence, and qualifying calibration warnings require review.
 - Risk `REDUCED_STAKE` remains eligible when every other rule passes.
+
+The manual Registered Candidate pipeline evaluates and persists this gate once,
+then supplies the exact approval to orchestration. Rejection and review-required
+become immutable no-publication pipeline outcomes and never invoke a publisher.

@@ -2174,6 +2174,134 @@ MIGRATIONS = (
             """,
         ),
     ),
+    Migration(
+        version=22,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_pipeline_executions (
+                pipeline_execution_id TEXT PRIMARY KEY,
+                pipeline_request_identity TEXT NOT NULL UNIQUE,
+                request_fingerprint TEXT NOT NULL,
+                pipeline_fingerprint TEXT NOT NULL UNIQUE,
+                manual_run_identity TEXT,
+                candidate_id TEXT NOT NULL,
+                candidate_version INTEGER NOT NULL,
+                candidate_fingerprint TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                kickoff_timestamp TEXT NOT NULL,
+                quality_gate_evaluation_timestamp TEXT NOT NULL,
+                pipeline_execution_timestamp TEXT NOT NULL,
+                publication_effective_timestamp TEXT,
+                dry_run INTEGER NOT NULL,
+                retry INTEGER NOT NULL,
+                candidate_state_result TEXT,
+                publication_state_result TEXT,
+                quality_gate_evaluation_id TEXT,
+                quality_gate_status TEXT,
+                quality_gate_fingerprint TEXT,
+                orchestration_id TEXT,
+                orchestration_status TEXT,
+                orchestration_fingerprint TEXT,
+                publication_event_id TEXT,
+                publication_status TEXT,
+                publication_fingerprint TEXT,
+                publication_claim_identity TEXT,
+                message_fingerprint TEXT,
+                telegram_message_reference TEXT,
+                final_pipeline_status TEXT NOT NULL,
+                pipeline_policy_version TEXT NOT NULL,
+                ordered_reason_code_snapshot TEXT NOT NULL,
+                explanation_snapshot TEXT NOT NULL,
+                deterministic_execution_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (candidate_id)
+                    REFERENCES official_prediction_candidate_versions(registry_candidate_id),
+                FOREIGN KEY (quality_gate_evaluation_id)
+                    REFERENCES official_quality_gate_evaluations(evaluation_id),
+                FOREIGN KEY (orchestration_id)
+                    REFERENCES official_prediction_orchestrations(orchestration_id),
+                FOREIGN KEY (publication_event_id)
+                    REFERENCES official_prediction_publication_events(event_id),
+                UNIQUE (pipeline_request_identity, request_fingerprint),
+                CHECK (candidate_version > 0),
+                CHECK (dry_run IN (0, 1)),
+                CHECK (retry IN (0, 1)),
+                CHECK (final_pipeline_status IN (
+                    'PUBLISHED', 'IDEMPOTENT_EXISTING', 'DRY_RUN_COMPLETED',
+                    'NO_PUBLICATION_QUALITY_GATE_REJECTED',
+                    'NO_PUBLICATION_REVIEW_REQUIRED', 'PUBLICATION_IN_PROGRESS',
+                    'RETRY_REQUIRED', 'REJECTED_INVALID_REQUEST',
+                    'REJECTED_CANDIDATE_STATE', 'REJECTED_PROVENANCE',
+                    'REJECTED_SCOPE', 'REJECTED_INVALID_GATE_RESULT',
+                    'QUALITY_GATE_EXECUTION_FAILED', 'ORCHESTRATION_REJECTED',
+                    'ORCHESTRATION_FAILED', 'PUBLICATION_CLAIM_FAILED',
+                    'PUBLICATION_SEND_FAILED', 'PUBLICATION_FINALIZATION_FAILED',
+                    'ALREADY_PUBLISHED_CONFLICT', 'CONFLICT', 'PERSISTENCE_FAILURE'
+                )),
+                CHECK (final_pipeline_status <> 'PUBLISHED' OR
+                    (publication_event_id IS NOT NULL AND publication_status = 'PUBLISHED'))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS official_prediction_pipeline_stage_events (
+                stage_event_id TEXT PRIMARY KEY,
+                pipeline_execution_id TEXT NOT NULL,
+                stage_order INTEGER NOT NULL,
+                stage_name TEXT NOT NULL,
+                stage_status TEXT NOT NULL,
+                referenced_domain_record_id TEXT,
+                referenced_fingerprint TEXT,
+                ordered_reason_codes TEXT NOT NULL,
+                deterministic_stage_snapshot TEXT NOT NULL,
+                created_timestamp TEXT NOT NULL,
+                FOREIGN KEY (pipeline_execution_id)
+                    REFERENCES official_prediction_pipeline_executions(pipeline_execution_id),
+                UNIQUE (pipeline_execution_id, stage_order),
+                CHECK (stage_order BETWEEN 1 AND 9),
+                CHECK (stage_name IN (
+                    'REQUEST_VALIDATION', 'CANDIDATE_STATE_VERIFICATION',
+                    'PUBLICATION_STATE_VERIFICATION', 'QUALITY_GATE',
+                    'ORCHESTRATION', 'MESSAGE_ASSEMBLY', 'PUBLICATION_CLAIM',
+                    'TELEGRAM_SEND', 'PUBLICATION_FINALIZATION'
+                ))
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_official_pipeline_candidate
+                ON official_prediction_pipeline_executions (candidate_id, pipeline_execution_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_pipeline_match
+                ON official_prediction_pipeline_executions (match_id, pipeline_execution_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_pipeline_status
+                ON official_prediction_pipeline_executions (final_pipeline_status, pipeline_execution_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_pipeline_gate
+                ON official_prediction_pipeline_executions (quality_gate_status, pipeline_execution_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_pipeline_orchestration
+                ON official_prediction_pipeline_executions (orchestration_status, pipeline_execution_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_pipeline_publication
+                ON official_prediction_pipeline_executions (publication_status, pipeline_execution_timestamp)""",
+            """CREATE INDEX IF NOT EXISTS idx_official_pipeline_manual_run
+                ON official_prediction_pipeline_executions (manual_run_identity, pipeline_execution_timestamp)""",
+            """
+            CREATE TRIGGER IF NOT EXISTS official_pipeline_executions_no_update
+            BEFORE UPDATE ON official_prediction_pipeline_executions
+            BEGIN SELECT RAISE(ABORT, 'Official pipeline executions are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_pipeline_executions_no_delete
+            BEFORE DELETE ON official_prediction_pipeline_executions
+            BEGIN SELECT RAISE(ABORT, 'Official pipeline executions are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_pipeline_stage_events_no_update
+            BEFORE UPDATE ON official_prediction_pipeline_stage_events
+            BEGIN SELECT RAISE(ABORT, 'Official pipeline stage events are immutable'); END
+            """,
+            """
+            CREATE TRIGGER IF NOT EXISTS official_pipeline_stage_events_no_delete
+            BEFORE DELETE ON official_prediction_pipeline_stage_events
+            BEGIN SELECT RAISE(ABORT, 'Official pipeline stage events are immutable'); END
+            """,
+        ),
+    ),
 )
 
 

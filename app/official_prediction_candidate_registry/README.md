@@ -139,3 +139,8 @@ candidate version. Preparation records selection, value, odds, inference,
 model/calibration, risk, stake, bankroll, and exposure fingerprints there.
 This is audit provenance, not a Quality Gate decision. Review-required and
 ineligible risk outcomes never call the registry.
+
+`app/official_prediction_pipeline` is the explicit read-only consumer for one
+exact candidate ID/version/fingerprint. Non-current, superseded, withdrawn,
+invalidated, unknown, and indeterminate lifecycle states fail closed without a
+Registry mutation.

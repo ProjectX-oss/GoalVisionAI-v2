@@ -717,7 +717,7 @@ class OfficialPredictionSelectionTests(unittest.TestCase):
                 fresh.connection.execute(
                     "SELECT MAX(version) FROM schema_migrations"
                 ).fetchone()[0],
-                21,
+                22,
             )
             tables = {
                 row[0]
@@ -772,7 +772,7 @@ class OfficialPredictionSelectionTests(unittest.TestCase):
                 upgrade.connection.execute(
                     "SELECT MAX(version) FROM schema_migrations"
                 ).fetchone()[0],
-                21,
+                22,
             )
         finally:
             upgrade.close()

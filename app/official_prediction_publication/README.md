@@ -77,3 +77,8 @@ calls the single-prediction orchestration boundary, which remains the only
 owner allowed to invoke this adapter after a persisted Quality Gate approval.
 Batch idempotency supplements but never replaces prediction-level atomic
 claims, confirmed-failure retries, or indeterminate resend blocking.
+
+The Registered Candidate pipeline reuses this message builder for dry-run
+previews and this complete atomic adapter for manual publication. It never
+sends before a claim and treats post-send finalization uncertainty as
+non-resendable.

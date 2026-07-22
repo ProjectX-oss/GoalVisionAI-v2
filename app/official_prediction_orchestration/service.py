@@ -4,6 +4,7 @@ from dataclasses import replace
 from app.publication_quality_gate import (
     GateReason,
     OfficialPublicationQualityGate,
+    OfficialQualityGateEvaluation,
     QualityGateEvaluationRepository,
 )
 from app.quality_gate import QualityGateStatus
@@ -201,6 +202,135 @@ class OfficialPredictionOrchestrationService:
             result.attempt_reference,
         )
         return outcome
+
+    async def prepare_and_publish_preapproved(
+        self,
+        request: OfficialCandidateAssemblyRequest,
+        evaluation: object,
+    ) -> OfficialPredictionOrchestrationOutcome:
+        """Continue from an exact persisted gate evaluation without evaluating again.
+
+        This recovery/integration boundary is intentionally explicit.  It exists for
+        callers that own the single Quality Gate invocation and must never be used
+        with unverified or non-approved evidence.
+        """
+        prediction = request.prediction
+        snapshot = self._request_snapshot(request)
+        try:
+            publication = self._publication_states.get(
+                prediction.prediction_id,
+                prediction.match_id,
+                request.evaluation_timestamp,
+            )
+            assembly = self._assembler.assemble(request, publication)
+        except CandidateAssemblyError as exc:
+            return self._assembly_failure(request, snapshot, exc)
+        except (ValueError, TypeError) as exc:
+            return self._assembly_failure(
+                request,
+                snapshot,
+                CandidateAssemblyError(
+                    (AssemblyReason.PUBLICATION_STATE_MISSING,),
+                    (f"Publication-state assembly failed: {type(exc).__name__}.",),
+                ),
+            )
+        candidate_fingerprint = self._fingerprint.generate(assembly)
+        if not self._verified_preapproval(assembly, evaluation):
+            return self._record_failure(
+                request,
+                assembly,
+                candidate_fingerprint,
+                AssemblyReason.QUALITY_GATE_EVALUATION_FAILED,
+                "Supplied Quality Gate evaluation does not belong to this candidate.",
+            )
+        assert hasattr(evaluation, "evaluation_id")
+        try:
+            existing = self._history.latest_for_fingerprint(
+                prediction.prediction_id,
+                candidate_fingerprint,
+                request.dry_run,
+            )
+        except Exception as exc:
+            return self._unpersisted_failure(
+                request,
+                candidate_fingerprint,
+                AssemblyReason.ORCHESTRATION_PERSISTENCE_FAILED,
+                f"Orchestration history lookup failed: {type(exc).__name__}.",
+                assembly.normalized_input,
+            )
+        if existing is not None and existing.outcome.final_status in _SAFE_TERMINAL_STATUSES:
+            return existing.outcome
+        if request.dry_run:
+            return self._record_outcome(
+                request,
+                assembly,
+                candidate_fingerprint,
+                evaluation.evaluation_id,
+                OrchestrationStatus.APPROVED_NOT_PUBLISHED,
+                (AssemblyReason.DRY_RUN.value,),
+                ("Dry-run completed from the verified persisted Quality Gate approval.",),
+                None,
+            )
+        if not self._publisher.enabled:
+            return self._record_outcome(
+                request,
+                assembly,
+                candidate_fingerprint,
+                evaluation.evaluation_id,
+                OrchestrationStatus.APPROVED_NOT_PUBLISHED,
+                (AssemblyReason.PUBLISHER_DISABLED.value,),
+                ("The explicitly injected Official publisher is disabled.",),
+                None,
+            )
+        approved = ApprovedOfficialPredictionPublication(
+            orchestration_id=self._approval_id(
+                assembly,
+                candidate_fingerprint,
+                evaluation.evaluation_id,
+            ),
+            assembly=assembly,
+            candidate_fingerprint=candidate_fingerprint,
+            quality_gate_evaluation=evaluation,
+            approval_status=QualityGateStatus.APPROVED,
+            evaluated_at=request.evaluation_timestamp,
+            dry_run=False,
+        )
+        result = await self._publish(approved)
+        status, reasons, explanations = self._publisher_outcome(result)
+        return self._record_outcome(
+            request,
+            assembly,
+            candidate_fingerprint,
+            evaluation.evaluation_id,
+            status,
+            reasons,
+            explanations,
+            result.attempt_reference,
+        )
+
+    def _verified_preapproval(
+        self,
+        assembly: OfficialCandidateAssembly,
+        evaluation: object,
+    ) -> bool:
+        candidate = assembly.gate_candidate
+        return bool(
+            isinstance(evaluation, OfficialQualityGateEvaluation)
+            and evaluation.final_decision is QualityGateStatus.APPROVED
+            and evaluation.prediction_id == candidate.prediction_id
+            and evaluation.model_version == candidate.model_version
+            and evaluation.policy_version == self._gate.policy.version
+            and evaluation.raw_probability == candidate.raw_probability
+            and evaluation.calibrated_probability == candidate.calibrated_probability
+            and evaluation.decimal_odds == candidate.decimal_odds
+            and evaluation.supplied_expected_value == candidate.expected_value
+            and evaluation.confidence == candidate.confidence
+            and evaluation.prediction_timestamp == candidate.prediction_timestamp
+            and evaluation.kickoff_timestamp == candidate.kickoff_timestamp
+            and evaluation.evaluated_at == candidate.evaluation_timestamp
+            and evaluation.risk_result == candidate.risk_result
+            and evaluation.exposure_result == candidate.exposure_result
+        )
 
     async def _publish(
         self,

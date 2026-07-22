@@ -112,3 +112,8 @@ Reserved for future reviewed work: the persisted-candidate source adapter,
 manual command wrapper or admin surface, scheduling, external ingestion,
 operator recovery for incomplete or indeterminate runs, corrections, and all
 non-Official products.
+
+For one explicitly selected registered candidate,
+`run_official_prediction_pipeline_once(...)` performs the complete
+gate-to-atomic-publication flow. The coordinator remains a separate bounded
+batch/discovery concept and is not wired to that runner or startup.

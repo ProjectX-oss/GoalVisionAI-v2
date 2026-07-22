@@ -54,3 +54,7 @@ Use `build_official_candidate_preparation_service(...)` and call
 `prepare_official_candidate(...)` with one immutable command. Construction
 requires explicit repositories, policy, risk service, Candidate Registry, and
 lifecycle reader; it performs no preparation or startup work.
+
+The downstream `app/official_prediction_pipeline` consumes only a persisted
+READY handoff, re-verifies structured preparation/risk provenance, and never
+calls risk or mutates preparation history.

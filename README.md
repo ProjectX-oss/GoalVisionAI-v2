@@ -20,7 +20,10 @@ calibration -> market value assessment ->
 `select_official_prediction(...)` ->
 `prepare_official_candidate(...)` ->
 `register_official_prediction_candidate(...)` -> Publication Quality Gate ->
-publication orchestration -> atomic Telegram publication.
+publication orchestration -> atomic Telegram publication -> immutable pipeline
+result. The final manual boundary is
+`execute_official_prediction_pipeline(...)` in
+`app/official_prediction_pipeline`.
 `app/model_input_builder` owns the
 fixed-order, missingness-preserving vector bridge. `app/prediction_inference` owns
 only explicit model-adapter execution, raw probability validation, and immutable
@@ -64,6 +67,14 @@ the Quality Gate, publish, schedule, or support the separate two-leg exception
 combo workflow. Migration v21 stores immutable executions and risk snapshots.
 
 ## Official prediction publication
+
+`app/official_prediction_pipeline` verifies one exact current Registry version,
+checks durable publication state, invokes and persists the Quality Gate once,
+then continues through orchestration's verified pre-approved path. Migration
+v22 stores the immutable terminal execution and ordered stage events. Identical
+terminal requests replay without another gate, orchestration, claim, or send;
+active and indeterminate claims fail closed. Dry-run builds the existing final
+message payload but never claims or sends. The boundary is manual only.
 
 The future scheduler-facing callable is
 `prepare_and_publish_official_prediction(...)`. It assembles one supplied

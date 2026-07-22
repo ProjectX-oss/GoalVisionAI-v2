@@ -49,6 +49,7 @@ Improve rating calculation.
 
 - [x] Complete deterministic Official Prediction Selection Engine foundation.
 - [x] Complete Official Selection-to-Risk and Candidate Preparation integration.
+- [x] Complete Registered Candidate-to-Quality Gate and Official Publication Pipeline integration.
 
 Review feature weights.
 

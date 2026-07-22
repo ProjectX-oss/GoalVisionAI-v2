@@ -114,3 +114,8 @@ only component that selects those records, verifies EV, reads publication
 state, and creates the Quality Gate candidate. Registry candidate ID and
 content fingerprint are included in normalized orchestration input for audit
 linkage; they do not bypass or replace the assembled candidate fingerprint.
+
+`prepare_and_publish_preapproved(...)` is the explicit integration/recovery
+path for `app/official_prediction_pipeline`. It accepts only an exact APPROVED
+evaluation, reassembles and verifies linked facts, and continues through the
+existing history and atomic publisher without evaluating the gate again.
