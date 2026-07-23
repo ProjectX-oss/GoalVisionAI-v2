@@ -72,3 +72,8 @@ Offline historical examples use `historical_training_features_v1`, whose
 ordering and semantics are documented independently. They are not silently fed
 to `goalvision_model_input_v1`; a future reviewed training layer must declare an
 explicit schema mapping or train an artifact against the historical schema.
+
+Shadow evaluation requires both compared artifacts to declare the exact shared
+input schema, fingerprint, and feature order. Model-specific persisted
+preprocessing remains separate, and shadow never invokes this builder
+automatically.

@@ -662,7 +662,7 @@ class OddsMigrationTests(unittest.TestCase):
                     "SELECT name FROM sqlite_master WHERE type='table'"
                 )
             }
-            self.assertEqual(versions, tuple(range(1, 30)))
+            self.assertEqual(versions, tuple(range(1, 31)))
             self.assertTrue({"odds_sources", "odds_observations", "closing_odds"} <= tables)
             self.assertEqual(
                 database.connection.execute("SELECT value FROM existing").fetchone()["value"],

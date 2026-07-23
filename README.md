@@ -4,6 +4,13 @@ GoalVision AI keeps prediction generation, calibration, eligibility, public
 presentation, delivery, bankroll management, settlement, and result reporting
 as separate boundaries.
 
+`app/shadow_evaluation` is the Lab-only bridge between an immutable promotion
+recommendation and future controlled activation. It evaluates one approved
+challenger beside the authoritative champion on the exact same input and odds.
+Migration v30 retains both hypothetical decisions and later one-unit settlement
+evidence. It is disabled by default and cannot configure a model, publish,
+stake, mutate bankroll, access Telegram, or block the champion.
+
 ## Historical machine-learning data foundation
 
 `app/historical_data_import` is the append-only authoritative boundary for

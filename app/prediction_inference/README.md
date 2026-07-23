@@ -80,3 +80,7 @@ and a read-only compatibility adapter for this same canonical 11-target raw
 contract. It is not registered or connected to the live inference registry by
 default. Calibration execution, reviewed model promotion/live activation, and
 prediction-candidate assembly remain intentionally deferred.
+
+The Lab-only shadow service uses safe persisted artifacts rather than the
+active Official registry. Champion and challenger outputs remain isolated
+evidence and are never registered for publication.

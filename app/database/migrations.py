@@ -3729,6 +3729,192 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS model_comparison_exclusions_no_delete BEFORE DELETE ON model_comparison_exclusions BEGIN SELECT RAISE(ABORT, 'Model comparison exclusions are immutable'); END""",
         ),
     ),
+    Migration(
+        version=30,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_executions (
+                shadow_execution_id TEXT PRIMARY KEY,
+                shadow_request_id TEXT NOT NULL UNIQUE,
+                request_fingerprint TEXT NOT NULL,
+                execution_fingerprint TEXT NOT NULL UNIQUE,
+                status TEXT NOT NULL CHECK (status='PRE_MATCH_EVALUATED'),
+                comparison_run_id TEXT NOT NULL,
+                challenger_candidate_id TEXT NOT NULL,
+                champion_model_artifact_id TEXT NOT NULL,
+                challenger_model_artifact_id TEXT NOT NULL,
+                match_id TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                kickoff_utc TEXT NOT NULL,
+                evaluation_timestamp_utc TEXT NOT NULL,
+                command_snapshot TEXT NOT NULL,
+                deterministic_snapshot TEXT NOT NULL,
+                FOREIGN KEY (comparison_run_id) REFERENCES model_comparison_runs(comparison_run_id),
+                FOREIGN KEY (champion_model_artifact_id) REFERENCES historical_model_artifacts(artifact_id),
+                FOREIGN KEY (challenger_model_artifact_id) REFERENCES historical_model_artifacts(artifact_id),
+                CHECK (champion_model_artifact_id <> challenger_model_artifact_id),
+                CHECK (evaluation_timestamp_utc < kickoff_utc)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_input_snapshots (
+                input_snapshot_row_id TEXT PRIMARY KEY,
+                input_snapshot_fingerprint TEXT NOT NULL,
+                shadow_execution_id TEXT NOT NULL UNIQUE,
+                model_input_vector_id TEXT NOT NULL,
+                model_input_fingerprint TEXT NOT NULL,
+                odds_snapshot_set_fingerprint TEXT NOT NULL,
+                snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_inferences (
+                inference_id TEXT PRIMARY KEY,
+                shadow_execution_id TEXT NOT NULL,
+                model_role TEXT NOT NULL CHECK (model_role IN ('CHAMPION','CHALLENGER')),
+                model_artifact_id TEXT NOT NULL,
+                calibration_artifact_set_id TEXT NOT NULL,
+                raw_inference_fingerprint TEXT NOT NULL,
+                calibrated_inference_fingerprint TEXT NOT NULL,
+                preprocessing_fingerprint TEXT NOT NULL,
+                snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id),
+                FOREIGN KEY (model_artifact_id) REFERENCES historical_model_artifacts(artifact_id),
+                FOREIGN KEY (calibration_artifact_set_id) REFERENCES historical_probability_calibration_artifact_sets(artifact_set_id),
+                UNIQUE (shadow_execution_id, model_role)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_market_assessments (
+                assessment_id TEXT PRIMARY KEY,
+                shadow_execution_id TEXT NOT NULL,
+                model_role TEXT NOT NULL CHECK (model_role IN ('CHAMPION','CHALLENGER')),
+                market_identity TEXT NOT NULL,
+                odds_snapshot_id TEXT,
+                eligible INTEGER NOT NULL CHECK (eligible IN (0,1)),
+                deterministic_rank INTEGER NOT NULL,
+                assessment_fingerprint TEXT NOT NULL,
+                snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id),
+                UNIQUE (shadow_execution_id, model_role, market_identity)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_selections (
+                selection_id TEXT PRIMARY KEY,
+                shadow_execution_id TEXT NOT NULL,
+                model_role TEXT NOT NULL CHECK (model_role IN ('CHAMPION','CHALLENGER')),
+                market_identity TEXT,
+                outcome TEXT NOT NULL,
+                selection_fingerprint TEXT NOT NULL,
+                snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id),
+                UNIQUE (shadow_execution_id, model_role)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_comparisons (
+                comparison_id TEXT PRIMARY KEY,
+                shadow_execution_id TEXT NOT NULL UNIQUE,
+                disagreement_type TEXT NOT NULL,
+                severity TEXT NOT NULL,
+                comparison_fingerprint TEXT NOT NULL,
+                snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_settlements (
+                settlement_id TEXT PRIMARY KEY,
+                settlement_request_id TEXT NOT NULL UNIQUE,
+                shadow_execution_id TEXT NOT NULL UNIQUE,
+                champion_outcome TEXT NOT NULL,
+                challenger_outcome TEXT NOT NULL,
+                champion_profit_per_unit TEXT NOT NULL,
+                challenger_profit_per_unit TEXT NOT NULL,
+                final_home_score INTEGER NOT NULL CHECK (final_home_score >= 0),
+                final_away_score INTEGER NOT NULL CHECK (final_away_score >= 0),
+                source_fingerprint TEXT NOT NULL,
+                settlement_timestamp_utc TEXT NOT NULL,
+                settlement_fingerprint TEXT NOT NULL UNIQUE,
+                snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_metrics (
+                metric_id TEXT PRIMARY KEY,
+                shadow_execution_id TEXT NOT NULL,
+                phase TEXT NOT NULL,
+                model_role TEXT,
+                category TEXT NOT NULL,
+                grouping_identity TEXT NOT NULL,
+                metric_name TEXT NOT NULL,
+                metric_value TEXT,
+                metric_fingerprint TEXT NOT NULL,
+                metric_snapshot TEXT NOT NULL,
+                snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id),
+                UNIQUE (shadow_execution_id, phase, model_role, category, grouping_identity, metric_name)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_aggregate_snapshots (
+                aggregate_snapshot_id TEXT PRIMARY KEY,
+                shadow_execution_id TEXT NOT NULL,
+                grouping_category TEXT NOT NULL,
+                grouping_identity TEXT NOT NULL,
+                sample_count INTEGER NOT NULL CHECK (sample_count >= 0),
+                settled_count INTEGER NOT NULL CHECK (settled_count >= 0),
+                aggregate_fingerprint TEXT NOT NULL,
+                metric_snapshot TEXT NOT NULL,
+                snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id),
+                UNIQUE (shadow_execution_id, grouping_category, grouping_identity, aggregate_fingerprint)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS shadow_evaluation_exclusions (
+                exclusion_id TEXT PRIMARY KEY,
+                shadow_execution_id TEXT NOT NULL,
+                stage TEXT NOT NULL,
+                reason TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                detail_snapshot TEXT NOT NULL,
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id),
+                UNIQUE (shadow_execution_id, deterministic_order)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_shadow_champion ON shadow_evaluation_executions (champion_model_artifact_id,evaluation_timestamp_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_shadow_challenger ON shadow_evaluation_executions (challenger_model_artifact_id,evaluation_timestamp_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_shadow_match ON shadow_evaluation_executions (match_id,kickoff_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_shadow_pair ON shadow_evaluation_executions (champion_model_artifact_id,challenger_model_artifact_id,evaluation_timestamp_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_shadow_disagreement ON shadow_evaluation_comparisons (disagreement_type,severity)""",
+            """CREATE INDEX IF NOT EXISTS idx_shadow_metrics ON shadow_evaluation_metrics (category,metric_name,grouping_identity)""",
+            """CREATE INDEX IF NOT EXISTS idx_shadow_settlement_time ON shadow_evaluation_settlements (settlement_timestamp_utc)""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_executions_no_update BEFORE UPDATE ON shadow_evaluation_executions BEGIN SELECT RAISE(ABORT,'Shadow executions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_executions_no_delete BEFORE DELETE ON shadow_evaluation_executions BEGIN SELECT RAISE(ABORT,'Shadow executions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_input_snapshots_no_update BEFORE UPDATE ON shadow_evaluation_input_snapshots BEGIN SELECT RAISE(ABORT,'Shadow input snapshots are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_input_snapshots_no_delete BEFORE DELETE ON shadow_evaluation_input_snapshots BEGIN SELECT RAISE(ABORT,'Shadow input snapshots are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_inferences_no_update BEFORE UPDATE ON shadow_evaluation_inferences BEGIN SELECT RAISE(ABORT,'Shadow inferences are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_inferences_no_delete BEFORE DELETE ON shadow_evaluation_inferences BEGIN SELECT RAISE(ABORT,'Shadow inferences are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_market_assessments_no_update BEFORE UPDATE ON shadow_evaluation_market_assessments BEGIN SELECT RAISE(ABORT,'Shadow assessments are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_market_assessments_no_delete BEFORE DELETE ON shadow_evaluation_market_assessments BEGIN SELECT RAISE(ABORT,'Shadow assessments are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_selections_no_update BEFORE UPDATE ON shadow_evaluation_selections BEGIN SELECT RAISE(ABORT,'Shadow selections are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_selections_no_delete BEFORE DELETE ON shadow_evaluation_selections BEGIN SELECT RAISE(ABORT,'Shadow selections are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_comparisons_no_update BEFORE UPDATE ON shadow_evaluation_comparisons BEGIN SELECT RAISE(ABORT,'Shadow comparisons are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_comparisons_no_delete BEFORE DELETE ON shadow_evaluation_comparisons BEGIN SELECT RAISE(ABORT,'Shadow comparisons are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_settlements_no_update BEFORE UPDATE ON shadow_evaluation_settlements BEGIN SELECT RAISE(ABORT,'Shadow settlements are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_settlements_no_delete BEFORE DELETE ON shadow_evaluation_settlements BEGIN SELECT RAISE(ABORT,'Shadow settlements are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_metrics_no_update BEFORE UPDATE ON shadow_evaluation_metrics BEGIN SELECT RAISE(ABORT,'Shadow metrics are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_metrics_no_delete BEFORE DELETE ON shadow_evaluation_metrics BEGIN SELECT RAISE(ABORT,'Shadow metrics are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_aggregate_snapshots_no_update BEFORE UPDATE ON shadow_evaluation_aggregate_snapshots BEGIN SELECT RAISE(ABORT,'Shadow aggregates are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_aggregate_snapshots_no_delete BEFORE DELETE ON shadow_evaluation_aggregate_snapshots BEGIN SELECT RAISE(ABORT,'Shadow aggregates are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_exclusions_no_update BEFORE UPDATE ON shadow_evaluation_exclusions BEGIN SELECT RAISE(ABORT,'Shadow exclusions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_exclusions_no_delete BEFORE DELETE ON shadow_evaluation_exclusions BEGIN SELECT RAISE(ABORT,'Shadow exclusions are immutable'); END""",
+        ),
+    ),
 )
 
 

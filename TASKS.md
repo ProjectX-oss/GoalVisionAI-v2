@@ -858,3 +858,19 @@ Review after completing the current priority.
 - Kept model activation, production configuration, shadow evaluation, live
   inference wiring, training, calibration fitting, backtest execution, external
   odds retrieval, scheduling, publication, and Telegram intentionally deferred.
+
+## 2026-07-23 - Shadow Evaluation Foundation
+
+- Added the Lab-only `app/shadow_evaluation` boundary for one explicit promoted
+  challenger beside the authoritative champion on the exact same immutable
+  pre-match feature input and supplied odds.
+- Re-verified promotion gates, model/calibration linkage, schema, provenance,
+  chronology, odds fingerprints, and the canonical 11-target contract.
+- Added independent Decimal value assessment and hypothetical single selection,
+  disagreement evidence, later one-unit settlement, metrics, aggregates, and
+  read-only reproduction/export.
+- Added migration v30 with ten atomic append-only tables, fingerprints,
+  idempotent replay, conflicts, indexes, and immutable triggers.
+- Kept observation disabled and fail-open to the unchanged champion; activation,
+  Quality Gate, publication, Telegram, staking, exposure, bankroll, fetching,
+  and scheduling remain outside this foundation.

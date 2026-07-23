@@ -69,6 +69,10 @@ historical import
   -> historical probability calibration fitting
   -> historical backtesting
   -> model comparison and promotion recommendation
-  -> shadow evaluation (deferred)
+  -> explicit Lab-only shadow evaluation
   -> controlled production activation (deferred)
 ```
+
+`app.shadow_evaluation` now consumes a `PROMOTE_CHALLENGER` recommendation only
+as evidence. It re-verifies the run, candidate, recommendation, sources, and
+mandatory gates; no recommendation activates or configures a model.

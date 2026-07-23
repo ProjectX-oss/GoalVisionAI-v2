@@ -53,3 +53,7 @@ versions, uses the same 1.60 odds and 0.02 EV floors, deterministically
 deduplicates logical markets, and selects at most one single per match. Correct
 score, combos, accumulators, publication state, and Telegram remain outside the
 backtest.
+
+Shadow evaluation mirrors only the reviewed single eligibility and ranking
+rules against exact supplied odds. Both role selections are hypothetical and
+never enter publication, candidate preparation, Quality Gate, or Telegram.

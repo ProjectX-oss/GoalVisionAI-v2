@@ -58,3 +58,7 @@ registration, and publication integration are intentionally deferred.
 `app.historical_probability_calibration` now owns offline VALIDATION-only
 fitting and maps persisted artifacts only to inactive runtime-compatible
 objects. Registration and activation remain an explicit reviewed future action.
+
+Shadow evaluation applies each model's explicitly linked historical
+calibration artifact exactly once and re-verifies the canonical contract.
+Those assemblies remain isolated v30 evidence and never enter a live registry.
