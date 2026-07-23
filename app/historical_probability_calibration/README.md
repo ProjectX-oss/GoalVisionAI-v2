@@ -29,3 +29,8 @@ prediction publication, or Telegram activity.
 flow. It replays these persisted calibrators, lower-bounded result
 reconciliation, totals monotonicity, and exact complements without fitting or
 altering them. The calibration artifact set remains inactive and immutable.
+
+After TEST backtesting, `app.model_comparison_promotion` verifies the immutable
+model/calibration/backtest linkage and compares predictive, calibration,
+betting, risk, stability, and uncertainty evidence. Its result is only a
+promotion recommendation; calibration artifacts remain inactive and unchanged.

@@ -79,6 +79,7 @@ class HistoricalBacktestingService:
                 expected_fingerprint=normalized.odds_dataset_fingerprint,
                 examples=examples, markets=normalized.markets,
                 bookmaker_filters=normalized.bookmaker_filters,
+                run_namespace=run_id,
             )
             if not any(item.market_status.value == "ACTIVE" for item in decision_odds):
                 return _rejected(command, BacktestStatus.NO_VALID_ODDS, ("NO_VALID_PREMATCH_ODDS",), request_fingerprint, normalized)
@@ -130,6 +131,7 @@ class HistoricalBacktestingService:
                     expected_fingerprint=normalized.closing_odds_dataset_fingerprint or "",
                     examples=examples, markets=normalized.markets,
                     bookmaker_filters=normalized.bookmaker_filters, closing=True,
+                    run_namespace=run_id,
                 )
             ledger = build_ledger(
                 normalized.initial_bankroll, selections, settlements, run_namespace=run_id

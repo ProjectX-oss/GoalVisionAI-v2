@@ -67,6 +67,7 @@ def verify_and_select_odds(
     markets: tuple[SupportedMarket, ...],
     bookmaker_filters: tuple[str, ...],
     closing: bool = False,
+    run_namespace: str = "",
 ) -> tuple[StoredOddsSnapshot, ...]:
     if not isinstance(dataset, HistoricalOddsDataset):
         raise BacktestOddsProvenanceError("Odds input must be an immutable HistoricalOddsDataset.")
@@ -128,7 +129,7 @@ def verify_and_select_odds(
     selected.sort(key=lambda item: (item[1], item[0].competition, item[0].historical_match_id, item[3].value, item[0].bookmaker_identity))
     return tuple(
         StoredOddsSnapshot(
-            stored_odds_row_id=f"historical-backtest-odds-{sha256_fingerprint((expected_fingerprint, item[0].odds_snapshot_id, closing))}",
+            stored_odds_row_id=f"historical-backtest-odds-{sha256_fingerprint((run_namespace, expected_fingerprint, item[0].odds_snapshot_id, closing))}",
             snapshot=item[0], normalized_kickoff_utc=item[1],
             normalized_snapshot_timestamp_utc=item[2], market_identity=item[3],
             market_status=item[4], closing=closing, deterministic_order=index,

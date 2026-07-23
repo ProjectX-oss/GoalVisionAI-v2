@@ -198,6 +198,21 @@ influence decisions. This layer makes no profitability promise and performs no
 training, recalibration, comparison, promotion, activation, live wiring,
 fetching, scheduling, publication, Telegram activity, or startup execution.
 
+`app/model_comparison_promotion` is the immutable Lab-only comparison boundary.
+It verifies explicit champion and challenger model, calibration, and completed
+TEST backtest identities and fingerprints. Migration v29 atomically persists
+fair-scope evidence, predictive/calibration/betting/risk deltas, grouped
+stability, deterministic bootstrap uncertainty, mandatory gates, centralized
+weighted scores, challenger rankings, exclusions, and the final recommendation.
+Exact shared scope is preferred; intersection and policy-normalized modes are
+versioned and retain every exclusion. A high ROI cannot override integrity,
+calibration, risk, stability, or evidence gates.
+
+The only possible output is an auditable recommendation. At most one challenger
+can be recommended for promotion, and no code in this package activates a model,
+changes production configuration, performs shadow evaluation, wires live
+inference, fetches odds, schedules work, publishes, or contacts Telegram.
+
 ```text
 historical import
   -> historical training dataset
@@ -205,6 +220,7 @@ historical import
   -> historical model training (TRAIN)
   -> historical probability calibration fitting (VALIDATION)
   -> historical backtesting (TEST)
-  -> future model comparison and promotion
+  -> model comparison and promotion recommendation
   -> future shadow evaluation
+  -> future controlled production activation
 ```

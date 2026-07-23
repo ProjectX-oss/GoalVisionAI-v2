@@ -12,8 +12,9 @@ historical import
   -> historical model training (TRAIN only)
   -> historical probability calibration fitting (VALIDATION only)
   -> historical backtesting (TEST only)
-  -> future model comparison and promotion
+  -> model comparison and promotion recommendation
   -> future shadow evaluation
+  -> future controlled production activation
 ```
 
 Backtesting reproduces probabilities from one persisted safe model artifact and
@@ -105,3 +106,10 @@ The inspection API is read-only and supports summaries, record lookup, TEST-only
 verification, raw and calibrated prediction reproduction, odds-safety checks,
 Official-policy alignment, settlement and ledger reproduction, equal-kickoff
 verification, metric reproduction, and complete fingerprint verification.
+
+`app.model_comparison_promotion` consumes these completed immutable runs. Fair
+comparison defaults to identical TEST examples, supplied odds, policies, and
+initial bankroll; versioned intersection and policy-normalized modes preserve
+all exclusions. Backtest records are never edited. Multiple challengers are
+ranked deterministically, but the resulting recommendation cannot activate a
+model.

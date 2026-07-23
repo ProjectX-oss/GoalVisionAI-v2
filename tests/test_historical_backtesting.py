@@ -286,10 +286,10 @@ class HistoricalBacktestingTests(unittest.TestCase):
 
 
 class HistoricalBacktestingMigrationTests(unittest.TestCase):
-    def test_fresh_v28_and_v27_upgrade(self):
+    def test_backtesting_schema_survives_current_migration_and_v27_upgrade(self):
         fresh = Database(":memory:")
         SQLiteHistoricalBacktestingRepository(fresh)
-        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 28)
+        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 29)
         self.assertEqual(len(fresh.connection.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'historical_backtest_%'"
         ).fetchall()), 10)
@@ -301,7 +301,7 @@ class HistoricalBacktestingMigrationTests(unittest.TestCase):
         with patch("app.database.migrations.MIGRATIONS", MIGRATIONS[:27]):
             MigrationManager(connection).migrate()
         MigrationManager(connection).migrate()
-        self.assertEqual(connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 28)
+        self.assertEqual(connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 29)
         connection.close()
 
     def test_import_and_composition_have_zero_automatic_backtests(self):

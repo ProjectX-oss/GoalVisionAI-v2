@@ -635,6 +635,7 @@ Only append.
 - [x] Public stake-star mapping.
 - [x] Shadow risk recommendation adapter.
 - [x] Risk-policy backtesting comparison.
+- [x] Immutable model comparison and promotion-recommendation foundation.
 - [x] Immutable pre-match match-data snapshots.
 - [x] Versioned deterministic feature-store foundation.
 - [x] Versioned prediction model-input builder.
@@ -833,3 +834,27 @@ Review after completing the current priority.
 - Kept model comparison, promotion, shadow evaluation, production activation,
   live inference wiring, external odds access, scheduling, publication, and
   Telegram outside scope.
+
+## 2026-07-23 - Model Comparison and Promotion Foundation
+
+- Added the Lab-only `app/model_comparison_promotion` boundary over explicit
+  immutable champion and challenger model, calibration, and completed TEST
+  backtest identities and fingerprints.
+- Added exact shared, intersection, and policy-normalized scope modes with
+  strict policy/schema/currency compatibility, minimum evidence thresholds,
+  and persisted non-overlap exclusions.
+- Added direction-aware predictive, calibration, betting, and risk deltas;
+  grouped market/competition/season/month/bucket/stake stability; deterministic
+  paired bootstrap intervals; effect sizes; and uncertainty classifications.
+- Added mandatory source, scope, predictive, calibration, betting, risk,
+  stability, concentration, and evidence gates plus one centralized bounded
+  weighted score and deterministic multi-challenger tie-break.
+- Added migration v29 with ten atomic append-only comparison, candidate,
+  evidence, metric, stability, statistical, gate, score, recommendation, and
+  exclusion tables plus immutable-history triggers and indexed queries.
+- Added canonical request/source/metric/stability/statistical/evaluation/run
+  SHA-256 identities, exact request replay idempotency, conflict detection,
+  bounded event streaming, and read-only inspection/reproduction helpers.
+- Kept model activation, production configuration, shadow evaluation, live
+  inference wiring, training, calibration fitting, backtest execution, external
+  odds retrieval, scheduling, publication, and Telegram intentionally deferred.

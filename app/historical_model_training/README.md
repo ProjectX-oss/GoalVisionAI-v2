@@ -44,7 +44,8 @@ The reviewed ML flow is:
 historical import -> historical training dataset -> historical dataset split
   -> historical model training -> historical probability calibration fitting
   -> historical backtesting
-  -> model comparison and promotion -> shadow evaluation
+  -> model comparison and promotion recommendation
+  -> shadow evaluation -> controlled production activation
 ```
 
 `app.historical_probability_calibration` implements that next boundary. It
@@ -55,3 +56,8 @@ inactive compatible calibration artifact set, and never loads TEST.
 and persisted preprocessing on TEST only. It does not invoke training, alter
 parameters, use live model wiring, compare or promote models, or activate an
 artifact.
+
+`app.model_comparison_promotion` is the later read-only consumer of completed
+TEST backtests. It verifies this artifact and its compatible calibration and
+backtest fingerprints, then records comparison evidence and a recommendation
+without changing or activating the artifact.
