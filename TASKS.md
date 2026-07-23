@@ -874,3 +874,22 @@ Review after completing the current priority.
 - Kept observation disabled and fail-open to the unchanged champion; activation,
   Quality Gate, publication, Telegram, staking, exposure, bankroll, fetching,
   and scheduling remain outside this foundation.
+
+## 2026-07-23 - Controlled Model Activation and Rollback Foundation
+
+- Added isolated `app/model_activation` with conservative centralized
+  eligibility over final promotion approval, runtime artifacts, exact settled
+  shadow evidence, completeness, agreement, predictive/calibration/betting
+  degradation, and drawdown deterioration.
+- Added two-stage manual activation and rollback plans; preparation never
+  changes runtime state, while execution revalidates state and appends one
+  atomic champion generation and registry event.
+- Added an append-only champion ledger, explicit manual bootstrap, rollback to
+  compatible history as a new generation, and a read-only fail-closed resolver
+  that remains disconnected from production.
+- Added migration v31 with ten append-only request, plan, validation, generation,
+  event, execution, and evidence-link tables plus fingerprints, idempotency,
+  conflict protection, indexes, foreign keys, and mutation guards.
+- Kept automatic promotion, startup/scheduled activation, automatic rollback,
+  inference switching, Telegram, betting, bankroll, and upstream evidence
+  mutation explicitly disabled.

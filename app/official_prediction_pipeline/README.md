@@ -86,3 +86,7 @@ weakening candidate, gate, claim, idempotency, or resend rules.
 
 This does not wire the pipeline to startup, coordinator discovery, a scheduler,
 provider fetches, or Telegram credential resolution.
+
+Model activation remains outside this Official publication pipeline. Preparing
+or executing a champion generation does not publish, schedule, select, stake,
+or mutate bankroll, and the runtime resolver is intentionally not wired here.

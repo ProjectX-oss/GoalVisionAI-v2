@@ -76,3 +76,7 @@ historical import
 `app.shadow_evaluation` now consumes a `PROMOTE_CHALLENGER` recommendation only
 as evidence. It re-verifies the run, candidate, recommendation, sources, and
 mandatory gates; no recommendation activates or configures a model.
+
+Controlled activation may consume only the exact final
+`PROMOTE_CHALLENGER` recommendation after separately validating shadow and
+runtime evidence. Comparison remains advisory and never switches the champion.

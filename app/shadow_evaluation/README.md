@@ -37,3 +37,7 @@ into safe diagnostic evidence. It is not wired into startup or Official.
 backtest -> PROMOTE recommendation -> shadow evaluation -> shadow settlement
   -> rolling evidence -> controlled activation (separate approval; deferred)
 ```
+
+`app.model_activation` can consume settled shadow rows only through an explicit
+manual plan. Shadow evaluation itself never activates a model, and additional
+shadow evidence invalidates an unexecuted plan until it is prepared again.

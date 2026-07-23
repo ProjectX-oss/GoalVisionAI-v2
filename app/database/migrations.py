@@ -3915,6 +3915,180 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS shadow_evaluation_exclusions_no_delete BEFORE DELETE ON shadow_evaluation_exclusions BEGIN SELECT RAISE(ABORT,'Shadow exclusions are immutable'); END""",
         ),
     ),
+    Migration(
+        version=31,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS model_activation_requests (
+                activation_request_id TEXT PRIMARY KEY,
+                model_scope TEXT NOT NULL,
+                request_fingerprint TEXT NOT NULL,
+                activation_plan_id TEXT NOT NULL UNIQUE,
+                requested_timestamp_utc TEXT NOT NULL,
+                request_snapshot TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_activation_plans (
+                activation_plan_id TEXT PRIMARY KEY,
+                activation_request_id TEXT NOT NULL UNIQUE,
+                activation_plan_fingerprint TEXT NOT NULL UNIQUE,
+                expected_generation_number INTEGER NOT NULL CHECK(expected_generation_number > 0),
+                expected_registry_fingerprint TEXT NOT NULL,
+                prepared_timestamp_utc TEXT NOT NULL,
+                policy_snapshot TEXT NOT NULL,
+                evidence_snapshot TEXT NOT NULL,
+                plan_snapshot TEXT NOT NULL,
+                FOREIGN KEY (activation_request_id) REFERENCES model_activation_requests(activation_request_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_rollback_requests (
+                rollback_request_id TEXT PRIMARY KEY,
+                model_scope TEXT NOT NULL,
+                request_fingerprint TEXT NOT NULL,
+                rollback_plan_id TEXT NOT NULL UNIQUE,
+                requested_timestamp_utc TEXT NOT NULL,
+                request_snapshot TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_rollback_plans (
+                rollback_plan_id TEXT PRIMARY KEY,
+                rollback_request_id TEXT NOT NULL UNIQUE,
+                rollback_plan_fingerprint TEXT NOT NULL UNIQUE,
+                expected_generation_number INTEGER NOT NULL CHECK(expected_generation_number > 0),
+                expected_registry_fingerprint TEXT NOT NULL,
+                prepared_timestamp_utc TEXT NOT NULL,
+                policy_snapshot TEXT NOT NULL,
+                target_champion_generation_id TEXT NOT NULL,
+                plan_snapshot TEXT NOT NULL,
+                FOREIGN KEY (rollback_request_id) REFERENCES model_rollback_requests(rollback_request_id),
+                FOREIGN KEY (target_champion_generation_id) REFERENCES model_champion_generations(champion_generation_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_activation_validations (
+                validation_id TEXT PRIMARY KEY,
+                activation_plan_id TEXT,
+                rollback_plan_id TEXT,
+                category TEXT NOT NULL,
+                validation_name TEXT NOT NULL,
+                validation_status TEXT NOT NULL CHECK(validation_status IN ('PASS','WARNING','FAIL')),
+                detail_snapshot TEXT NOT NULL,
+                validation_fingerprint TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                FOREIGN KEY (activation_plan_id) REFERENCES model_activation_plans(activation_plan_id),
+                FOREIGN KEY (rollback_plan_id) REFERENCES model_rollback_plans(rollback_plan_id),
+                CHECK ((activation_plan_id IS NOT NULL) <> (rollback_plan_id IS NOT NULL)),
+                UNIQUE (activation_plan_id,deterministic_order),
+                UNIQUE (rollback_plan_id,deterministic_order)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_champion_generations (
+                champion_generation_id TEXT PRIMARY KEY,
+                model_scope TEXT NOT NULL,
+                generation_number INTEGER NOT NULL CHECK(generation_number > 0),
+                model_artifact_id TEXT NOT NULL,
+                calibration_artifact_set_id TEXT NOT NULL,
+                previous_champion_generation_id TEXT,
+                activation_plan_id TEXT,
+                rollback_plan_id TEXT,
+                activation_timestamp_utc TEXT NOT NULL,
+                generation_fingerprint TEXT NOT NULL UNIQUE,
+                generation_snapshot TEXT NOT NULL,
+                FOREIGN KEY (model_artifact_id) REFERENCES historical_model_artifacts(artifact_id),
+                FOREIGN KEY (calibration_artifact_set_id) REFERENCES historical_probability_calibration_artifact_sets(artifact_set_id),
+                FOREIGN KEY (previous_champion_generation_id) REFERENCES model_champion_generations(champion_generation_id),
+                FOREIGN KEY (activation_plan_id) REFERENCES model_activation_plans(activation_plan_id),
+                FOREIGN KEY (rollback_plan_id) REFERENCES model_rollback_plans(rollback_plan_id),
+                UNIQUE (model_scope,generation_number),
+                CHECK (NOT (activation_plan_id IS NOT NULL AND rollback_plan_id IS NOT NULL))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_champion_registry_events (
+                registry_event_id TEXT PRIMARY KEY,
+                model_scope TEXT NOT NULL,
+                champion_generation_id TEXT NOT NULL,
+                generation_number INTEGER NOT NULL,
+                event_type TEXT NOT NULL CHECK(event_type IN ('INITIAL_REGISTERED','CHAMPION_ACTIVATED','CHAMPION_ROLLED_BACK','RETIRED_BY_ACTIVATION','RETIRED_BY_ROLLBACK')),
+                operator_identity TEXT NOT NULL,
+                event_timestamp_utc TEXT NOT NULL,
+                event_fingerprint TEXT NOT NULL UNIQUE,
+                FOREIGN KEY (champion_generation_id) REFERENCES model_champion_generations(champion_generation_id),
+                UNIQUE (champion_generation_id,event_type)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_activation_executions (
+                activation_execution_id TEXT PRIMARY KEY,
+                activation_execution_request_id TEXT NOT NULL UNIQUE,
+                activation_plan_id TEXT NOT NULL UNIQUE,
+                activation_plan_fingerprint TEXT NOT NULL,
+                champion_generation_id TEXT NOT NULL UNIQUE,
+                execution_timestamp_utc TEXT NOT NULL,
+                execution_fingerprint TEXT NOT NULL UNIQUE,
+                FOREIGN KEY (activation_plan_id) REFERENCES model_activation_plans(activation_plan_id),
+                FOREIGN KEY (champion_generation_id) REFERENCES model_champion_generations(champion_generation_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_rollback_executions (
+                rollback_execution_id TEXT PRIMARY KEY,
+                rollback_execution_request_id TEXT NOT NULL UNIQUE,
+                rollback_plan_id TEXT NOT NULL UNIQUE,
+                rollback_plan_fingerprint TEXT NOT NULL,
+                champion_generation_id TEXT NOT NULL UNIQUE,
+                execution_timestamp_utc TEXT NOT NULL,
+                execution_fingerprint TEXT NOT NULL UNIQUE,
+                FOREIGN KEY (rollback_plan_id) REFERENCES model_rollback_plans(rollback_plan_id),
+                FOREIGN KEY (champion_generation_id) REFERENCES model_champion_generations(champion_generation_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS model_activation_evidence_links (
+                evidence_link_id TEXT PRIMARY KEY,
+                activation_plan_id TEXT NOT NULL,
+                shadow_execution_id TEXT NOT NULL,
+                shadow_execution_fingerprint TEXT NOT NULL,
+                shadow_settlement_fingerprint TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                evidence_link_fingerprint TEXT NOT NULL UNIQUE,
+                FOREIGN KEY (activation_plan_id) REFERENCES model_activation_plans(activation_plan_id),
+                FOREIGN KEY (shadow_execution_id) REFERENCES shadow_evaluation_executions(shadow_execution_id),
+                UNIQUE (activation_plan_id,deterministic_order),
+                UNIQUE (activation_plan_id,shadow_execution_id)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_champion_scope_generation ON model_champion_generations(model_scope,generation_number DESC)""",
+            """CREATE INDEX IF NOT EXISTS idx_champion_model ON model_champion_generations(model_artifact_id,activation_timestamp_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_activation_request_scope ON model_activation_requests(model_scope,requested_timestamp_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_rollback_request_scope ON model_rollback_requests(model_scope,requested_timestamp_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_activation_evidence_shadow ON model_activation_evidence_links(shadow_execution_id)""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_requests_no_update BEFORE UPDATE ON model_activation_requests BEGIN SELECT RAISE(ABORT,'Activation requests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_requests_no_delete BEFORE DELETE ON model_activation_requests BEGIN SELECT RAISE(ABORT,'Activation requests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_plans_no_update BEFORE UPDATE ON model_activation_plans BEGIN SELECT RAISE(ABORT,'Activation plans are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_plans_no_delete BEFORE DELETE ON model_activation_plans BEGIN SELECT RAISE(ABORT,'Activation plans are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_validations_no_update BEFORE UPDATE ON model_activation_validations BEGIN SELECT RAISE(ABORT,'Activation validations are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_validations_no_delete BEFORE DELETE ON model_activation_validations BEGIN SELECT RAISE(ABORT,'Activation validations are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_champion_generations_no_update BEFORE UPDATE ON model_champion_generations BEGIN SELECT RAISE(ABORT,'Champion generations are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_champion_generations_no_delete BEFORE DELETE ON model_champion_generations BEGIN SELECT RAISE(ABORT,'Champion generations are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_champion_registry_events_no_update BEFORE UPDATE ON model_champion_registry_events BEGIN SELECT RAISE(ABORT,'Champion events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_champion_registry_events_no_delete BEFORE DELETE ON model_champion_registry_events BEGIN SELECT RAISE(ABORT,'Champion events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_executions_no_update BEFORE UPDATE ON model_activation_executions BEGIN SELECT RAISE(ABORT,'Activation executions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_executions_no_delete BEFORE DELETE ON model_activation_executions BEGIN SELECT RAISE(ABORT,'Activation executions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_rollback_requests_no_update BEFORE UPDATE ON model_rollback_requests BEGIN SELECT RAISE(ABORT,'Rollback requests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_rollback_requests_no_delete BEFORE DELETE ON model_rollback_requests BEGIN SELECT RAISE(ABORT,'Rollback requests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_rollback_plans_no_update BEFORE UPDATE ON model_rollback_plans BEGIN SELECT RAISE(ABORT,'Rollback plans are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_rollback_plans_no_delete BEFORE DELETE ON model_rollback_plans BEGIN SELECT RAISE(ABORT,'Rollback plans are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_rollback_executions_no_update BEFORE UPDATE ON model_rollback_executions BEGIN SELECT RAISE(ABORT,'Rollback executions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_rollback_executions_no_delete BEFORE DELETE ON model_rollback_executions BEGIN SELECT RAISE(ABORT,'Rollback executions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_evidence_links_no_update BEFORE UPDATE ON model_activation_evidence_links BEGIN SELECT RAISE(ABORT,'Activation evidence links are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS model_activation_evidence_links_no_delete BEFORE DELETE ON model_activation_evidence_links BEGIN SELECT RAISE(ABORT,'Activation evidence links are immutable'); END""",
+        ),
+    ),
 )
 
 

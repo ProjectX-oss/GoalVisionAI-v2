@@ -11,6 +11,13 @@ Migration v30 retains both hypothetical decisions and later one-unit settlement
 evidence. It is disabled by default and cannot configure a model, publish,
 stake, mutate bankroll, access Telegram, or block the champion.
 
+`app/model_activation` adds the next deliberately manual boundary. A final
+promotion recommendation plus sufficient settled shadow evidence may prepare
+an immutable plan, but preparation has no runtime effect. Only explicit
+execution appends a new champion generation. Manual rollback appends another
+generation for a validated historical champion. Its resolver is read-only and
+remains disconnected from startup and current production inference.
+
 ## Historical machine-learning data foundation
 
 `app/historical_data_import` is the append-only authoritative boundary for

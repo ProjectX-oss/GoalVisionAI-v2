@@ -238,7 +238,7 @@ class ProbabilityCalibrationPersistenceTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 31)))
+        self.assertEqual(versions, tuple(range(1, 32)))
         columns = {
             row[1]
             for row in self.database.connection.execute(

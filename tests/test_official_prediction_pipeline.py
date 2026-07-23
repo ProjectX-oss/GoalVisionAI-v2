@@ -508,11 +508,11 @@ class OfficialPredictionPipelineMigrationTests(unittest.TestCase):
         try:
             MigrationManager(database.connection).migrate()
             versions = tuple(row[0] for row in database.connection.execute("SELECT version FROM schema_migrations ORDER BY version"))
-            self.assertEqual(versions, tuple(range(1, 31)))
+            self.assertEqual(versions, tuple(range(1, 32)))
             tables = {row[0] for row in database.connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             self.assertIn("official_prediction_pipeline_executions", tables)
             self.assertIn("official_prediction_pipeline_stage_events", tables)
-            self.assertEqual(MIGRATIONS[-1].version, 30)
+            self.assertEqual(MIGRATIONS[-1].version, 31)
         finally:
             database.close()
 
@@ -525,7 +525,7 @@ class OfficialPredictionPipelineMigrationTests(unittest.TestCase):
             MigrationManager(database.connection).migrate()
             module.MIGRATIONS = original
             MigrationManager(database.connection).migrate()
-            self.assertEqual(database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 30)
+            self.assertEqual(database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 31)
         finally:
             module.MIGRATIONS = original
             database.close()

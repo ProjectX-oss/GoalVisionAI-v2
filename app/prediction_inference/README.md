@@ -84,3 +84,7 @@ prediction-candidate assembly remain intentionally deferred.
 The Lab-only shadow service uses safe persisted artifacts rather than the
 active Official registry. Champion and challenger outputs remain isolated
 evidence and are never registered for publication.
+
+The new champion resolver returns exact artifact references only. It is not
+wired into this inference registry, performs no inference, and provides no
+fallback. Existing production resolution therefore remains unchanged.

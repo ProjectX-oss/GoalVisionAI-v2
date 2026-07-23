@@ -62,3 +62,7 @@ objects. Registration and activation remain an explicit reviewed future action.
 Shadow evaluation applies each model's explicitly linked historical
 calibration artifact exactly once and re-verifies the canonical contract.
 Those assemblies remain isolated v30 evidence and never enter a live registry.
+
+Controlled activation verifies the selected calibration set and its runtime
+compatibility again before execution or rollback. It does not fit, register,
+mutate, or silently substitute calibration artifacts.
