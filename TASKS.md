@@ -192,7 +192,7 @@ Tasks
 
 - [x] Win rate.
 
-- [ ] League reports.
+- [x] League reports.
 
 Definition of Done
 
@@ -811,3 +811,25 @@ Review after completing the current priority.
   conflicts, and a deliberately inactive runtime compatibility adapter.
 - Kept runtime activation, TEST evaluation, backtesting, model promotion, shadow
   evaluation, fetching, scheduling, publication, and Telegram outside scope.
+
+## 2026-07-23 - Historical Backtesting Foundation
+
+- Added the deterministic TEST-only `app/historical_backtesting` boundary over
+  one verified split fold, persisted model artifact, compatible persisted
+  calibration artifact set, and explicit immutable supplied odds.
+- Reproduced canonical raw and calibrated 11-target probabilities without
+  training or recalibration; verified the complete upstream fingerprint,
+  chronology, exclusivity, schema, and temporal-leakage chain.
+- Added Decimal-safe value assessment for every supported Official market,
+  version-pinned single-market selection, isolated EUR 1%/2%/3% stakes,
+  equal-kickoff decision freezing, immutable-score settlement, and a complete
+  bankroll/drawdown ledger.
+- Added TEST-wide predictive metrics, reliability bins, betting and risk
+  metrics, competition/season/market/bucket/month reports, optional decision-
+  isolated CLV, and explicit exclusions and rejection evidence.
+- Added migration v28 with ten atomic append-only backtest tables, deterministic
+  request-to-ledger SHA-256 identities, exact replay idempotency, conflicts,
+  bounded event streaming, and read-only reproduction and inspection helpers.
+- Kept model comparison, promotion, shadow evaluation, production activation,
+  live inference wiring, external odds access, scheduling, publication, and
+  Telegram outside scope.

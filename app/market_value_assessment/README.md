@@ -105,3 +105,9 @@ gate, or publication side effect.
 External odds providers, ingestion and scheduling, staking, candidate
 registration, Quality Gate execution, publication, and the separate future
 two-leg exception-combo workflow remain intentionally deferred.
+
+Historical backtesting uses the same Decimal definitions for fair odds, implied
+probability, edge, and `probability * decimal_odds - 1` EV, pinned by an explicit
+backtest policy version. It additionally persists every supported market,
+including missing, inactive, below-1.60, and below-0.02-EV rejections. This
+offline adapter does not change the live assessment service.

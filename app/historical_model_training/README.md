@@ -50,3 +50,8 @@ historical import -> historical training dataset -> historical dataset split
 `app.historical_probability_calibration` implements that next boundary. It
 reproduces this artifact's raw probabilities for VALIDATION only, persists an
 inactive compatible calibration artifact set, and never loads TEST.
+
+`app.historical_backtesting` reproduces inference from this exact safe artifact
+and persisted preprocessing on TEST only. It does not invoke training, alter
+parameters, use live model wiring, compare or promote models, or activate an
+artifact.

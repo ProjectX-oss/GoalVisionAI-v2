@@ -47,3 +47,9 @@ recommendation.
 re-verifies the persisted decision and selected assessment before adapting the
 typed handoff into the existing risk service. Selection remains independent:
 it does not import, call, or persist candidate-preparation behavior.
+
+Historical backtesting pins this package's Official eligibility and ranking
+versions, uses the same 1.60 odds and 0.02 EV floors, deterministically
+deduplicates logical markets, and selects at most one single per match. Correct
+score, combos, accumulators, publication state, and Telegram remain outside the
+backtest.

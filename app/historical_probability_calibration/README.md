@@ -24,3 +24,8 @@ runtime.
 The runtime adapter creates inactive compatibility objects only. Importing this
 package performs no fitting, database access, provider access, scheduling,
 prediction publication, or Telegram activity.
+
+`app.historical_backtesting` is the only downstream TEST consumer in this ML
+flow. It replays these persisted calibrators, lower-bounded result
+reconciliation, totals monotonicity, and exact complements without fitting or
+altering them. The calibration artifact set remains inactive and immutable.

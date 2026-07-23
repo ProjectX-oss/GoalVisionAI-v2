@@ -88,3 +88,9 @@ The calibration fitting boundary now exists in
 `app.historical_probability_calibration`; it consumes VALIDATION only after a
 model training run. Backtesting, comparison/promotion, and shadow evaluation
 remain deliberately deferred.
+
+`app.historical_backtesting` is now the downstream TEST-only consumer. It
+independently re-verifies this split, fold, chronology, exclusivity,
+equal-kickoff grouping, assignment fingerprints, and source dataset linkage
+before it loads TEST assignments. TRAIN, VALIDATION, and excluded assignments
+cannot enter evaluation.

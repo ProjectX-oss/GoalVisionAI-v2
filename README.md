@@ -183,3 +183,28 @@ artifact set, audit predictions, metrics, and reliability bins. TRAIN is never
 refitted and TEST is never loaded. Activation, backtesting, promotion, live
 wiring, provider access, scheduling, publication, and Telegram remain outside
 this boundary.
+
+`app/historical_backtesting` is the explicit TEST-only evaluation boundary. It
+verifies the full split, fold, dataset, model, and calibration fingerprint chain
+and consumes only caller-supplied immutable pre-match odds. Migration v28
+atomically stores reproduced predictions, all market assessments and
+rejections, at most one Official single per match, isolated-EUR stakes,
+immutable-score settlements, the bankroll/drawdown ledger, predictive and
+betting metrics, reliability bins, exclusions, and optional post-decision CLV.
+
+Equal-kickoff decisions share one pre-group bankroll and are frozen before any
+result settles. Decision odds must be strictly pre-kickoff; closing odds never
+influence decisions. This layer makes no profitability promise and performs no
+training, recalibration, comparison, promotion, activation, live wiring,
+fetching, scheduling, publication, Telegram activity, or startup execution.
+
+```text
+historical import
+  -> historical training dataset
+  -> historical dataset split
+  -> historical model training (TRAIN)
+  -> historical probability calibration fitting (VALIDATION)
+  -> historical backtesting (TEST)
+  -> future model comparison and promotion
+  -> future shadow evaluation
+```

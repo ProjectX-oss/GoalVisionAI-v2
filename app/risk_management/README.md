@@ -28,3 +28,9 @@ policy, snapshots, decision, and exact 1%-3% recommendation. It never copies
 stake calculation. `REVIEW_REQUIRED` and `INELIGIBLE` are persisted as valid
 no-registration outcomes; only `ELIGIBLE` and `REDUCED_STAKE` can reach the
 Candidate Registry.
+
+Historical backtesting pins `official-risk-v1` and its conservative 1%,
+standard 2%, and maximum 3% bands against an isolated supplied EUR bankroll.
+It adds only an explicit deterministic equal-kickoff batch exposure cap; every
+simultaneous selection sees the same pre-group balance. There is no martingale,
+loss recovery, borrowing, negative bankroll, or mutation of a real account.
