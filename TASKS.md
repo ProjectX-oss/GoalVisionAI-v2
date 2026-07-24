@@ -903,3 +903,23 @@ Review after completing the current priority.
   destinations, and kept automatic Lab publication disabled.
 - Kept Official publication, model activation, bankroll, statistics,
   settlement, scheduling, and application startup behavior unchanged.
+
+## 2026-07-24 - Manual Model Operations CLI and Runbook
+
+- Added an isolated manual CLI for one-time champion bootstrap, two-stage
+  activation and rollback, champion/audit inspection, generation listing, and
+  fail-closed state diagnostics.
+- Reused the v31 activation service, runtime resolver, artifact repositories,
+  settled Shadow evidence, promotion recommendations, and append-only registry
+  without duplicating domain decisions or adding a migration.
+- Required explicit database, environment, scope, immutable references,
+  fingerprints, operator reasons, incident references, and exact execution
+  confirmation phrases.
+- Added deterministic versioned JSON, secret-redacted human output, typed
+  failures, non-zero failure exits, read-only inspection connections, bounded
+  SQLite waits, and recovery guidance that never edits append-only rows.
+- Added the complete model operations runbook and a Lab preview formatter that
+  never sends Telegram.
+- Kept runtime inference integration, automatic activation/rollback,
+  scheduling, startup execution, Telegram, Official publication, bankroll,
+  settlements, and prediction behavior unchanged.

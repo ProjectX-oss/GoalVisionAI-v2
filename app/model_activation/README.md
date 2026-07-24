@@ -42,3 +42,10 @@ the existing production inference path.
 Automatic promotion, scheduled activation, background workers, automatic
 rollback, metric-triggered switching, Telegram changes, betting, bankroll
 changes, and mutation of upstream evidence remain explicitly deferred.
+
+`app.model_operations` now exposes this domain through an explicit manual CLI
+and read-only audit/diagnostic views. It does not weaken any domain validation:
+bootstrap, preparation, execution, stale-state rejection, idempotency, and
+atomic generation appends remain owned here. Only exact confirmed execution
+changes the registry; preparation remains non-activating, rollback creates a
+new generation, and runtime inference remains disconnected from the resolver.

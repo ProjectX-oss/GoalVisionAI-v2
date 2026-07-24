@@ -14,3 +14,9 @@ this is an explicit manual operation.
 
 The package has no import from application startup, scheduling, prediction,
 publication, statistics, settlement, model activation, or bankroll code.
+
+Manual model operations remain a separate no-send boundary. Their optional Lab
+adapter formats preview text only and never calls this sender. Any future
+technical publication must continue to use only `@GoalVision_AI_Lab_Bot` and
+channel `-1003510920417`; model operations must never publish activation,
+rollback, bootstrap, diagnostics, or audit data automatically.

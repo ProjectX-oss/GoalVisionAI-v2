@@ -80,3 +80,8 @@ mandatory gates; no recommendation activates or configures a model.
 Controlled activation may consume only the exact final
 `PROMOTE_CHALLENGER` recommendation after separately validating shadow and
 runtime evidence. Comparison remains advisory and never switches the champion.
+
+The manual `app.model_operations` CLI requires the exact comparison run,
+candidate, and recommendation identifiers and fingerprints. It does not turn a
+recommendation into activation automatically; preparation remains review-only
+and only an explicit confirmed activation execution appends a generation.

@@ -41,3 +41,7 @@ backtest -> PROMOTE recommendation -> shadow evaluation -> shadow settlement
 `app.model_activation` can consume settled shadow rows only through an explicit
 manual plan. Shadow evaluation itself never activates a model, and additional
 shadow evidence invalidates an unexecuted plan until it is prepared again.
+
+The manual `app.model_operations` CLI requires the operator to supply the exact
+settled-shadow evidence fingerprint before plan preparation. Shadow evaluation
+still cannot activate or roll back a champion and sends no Telegram messages.

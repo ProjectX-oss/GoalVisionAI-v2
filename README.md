@@ -238,3 +238,15 @@ historical import
   -> future shadow evaluation
   -> future controlled production activation
 ```
+
+`app/model_operations` provides the reviewed manual operator surface over the
+controlled activation foundation. It supports explicit one-time bootstrap,
+two-stage activation and rollback, immutable audit inspection, generation
+listing, and fail-closed diagnostics. Exact confirmation phrases are mandatory
+for execution. Preparation does not activate a model, rollback appends a new
+generation, and promotion and Shadow remain evidence-only.
+
+The model-operations package adds no migration, startup hook, scheduler,
+background worker, runtime inference wiring, Telegram send, prediction
+publication, settlement, bankroll, or Official behavior. See
+`docs/model_operations_runbook.md`.
