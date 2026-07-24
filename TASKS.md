@@ -893,3 +893,13 @@ Review after completing the current priority.
 - Kept automatic promotion, startup/scheduled activation, automatic rollback,
   inference switching, Telegram, betting, bankroll, and upstream evidence
   mutation explicitly disabled.
+
+## 2026-07-24 - Manual Lab Telegram Connection Test
+
+- Added one isolated manual command for a single fixed Lab connection message.
+- Reused the existing Telegram service with bounded per-call timeouts and a
+  receipt that confirms the accepted destination and message identifier.
+- Hard-locked the command to Lab channel `-1003510920417`, rejected Official
+  destinations, and kept automatic Lab publication disabled.
+- Kept Official publication, model activation, bankroll, statistics,
+  settlement, scheduling, and application startup behavior unchanged.
