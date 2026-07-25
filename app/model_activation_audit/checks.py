@@ -606,6 +606,7 @@ def _static_checks(project_root: Path, add) -> None:
         "model_operations",
         "model_operations_rehearsal",
         "model_activation_audit",
+        "staging_model_operations_rehearsal",
     }
     automatic_paths = []
     for path in (project_root / "app").rglob("*.py"):

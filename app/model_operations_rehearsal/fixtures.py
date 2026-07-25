@@ -73,6 +73,25 @@ class LabFixtureManifest:
 
 def seed_lab_fixture(database: Database) -> LabFixtureManifest:
     """Seed one complete fictional chain through typed public boundaries."""
+    return seed_fictional_fixture(database, FIXTURE_LABEL)
+
+
+def seed_fictional_fixture(
+    database: Database,
+    fixture_label: str,
+) -> LabFixtureManifest:
+    """Seed the existing deterministic chain with one explicit safe marker."""
+    if (
+        not isinstance(fixture_label, str)
+        or not fixture_label.startswith("FICTIONAL_")
+        or not fixture_label.endswith("_REHEARSAL_ONLY")
+    ):
+        raise ValueError("A deterministic fictional rehearsal marker is required.")
+    with patch(f"{__name__}.FIXTURE_LABEL", fixture_label):
+        return _seed_fictional_fixture(database)
+
+
+def _seed_fictional_fixture(database: Database) -> LabFixtureManifest:
     MigrationManager(database.connection).migrate()
     template = _seed_existing_artifact_fixture(database)
     comparison_repository = SQLiteModelComparisonRepository(database, migrate=False)

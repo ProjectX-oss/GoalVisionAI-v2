@@ -308,6 +308,57 @@ Model operations produce only a preview formatter and never send it.
 9. Never edit append-only rows manually.
 10. Prepare a new reviewed rollback only from a healthy current state.
 
+## Controlled staging rehearsal
+
+The staging rehearsal is a separate manual proof procedure. It is not a
+production change procedure and grants no authority to activate or roll back a
+production model. Run it only with an explicitly reviewed source database,
+destination below `var/staging_rehearsal`, full source commit, fixed UTC
+timestamp, `STAGING`, and `OFFICIAL_GLOBAL`.
+
+```powershell
+& $python -m app.staging_model_operations_rehearsal.cli run `
+  --source-database data\goalvision.db `
+  --destination-directory var\staging_rehearsal\20260725T120000Z `
+  --environment STAGING `
+  --scope OFFICIAL_GLOBAL `
+  --timestamp 20260725T120000Z `
+  --source-commit 78f218632fafe4ceeab708b5dd92dbd1e48a890f `
+  --artifact-mode prefer-real `
+  --allow-fixture-fallback `
+  --audit-output-mode both `
+  --evidence-report-destination docs\rehearsals\staging_model_operations_rehearsal.json `
+  --output json
+```
+
+Omit `--allow-fixture-fallback` unless the authorization explicitly permits
+fictional evidence. `real-only` fails closed when the supplied source does not
+contain one complete eligible chain. Fixture evidence is always labeled
+`FICTIONAL_STAGING_REHEARSAL_ONLY` and cannot be mistaken for production
+evidence.
+
+The source is opened read-only for inventory and integrity checks. All schema
+advancement, bootstrap, preparation, activation, rollback, injected failure,
+and replay work occurs on new copies. Before accepting the report, verify:
+
+- source SHA-256 before and after equals the backup SHA-256;
+- both staging preflights and the final independent audit passed;
+- no `WARNING` or `BLOCKER` remains in the final audit;
+- bootstrap, activation preparation/execution, rollback preparation/execution,
+  exact replay, changed-request conflict, and wrong-confirmation outcomes are
+  typed as expected;
+- the resolver sequence equals the three-generation append-only chain;
+- injected activation and rollback failures leave no partial state and exact
+  retry succeeds;
+- foreign-key violations are zero, protected upstream rows are unchanged, and
+  append-only guards remain present;
+- the output contains no secrets or machine-specific absolute paths.
+
+Never rerun into an existing destination or evidence path. Preserve the
+database copies and JSON report under the reviewed retention policy. A passed
+staging rehearsal proves technical behavior only; runtime inference remains
+unwired and production still requires a separate human-authorized change.
+
 ## Independently reviewed 25-step operator flow
 
 This sequence is normative. A second person reviews the evidence and exact
@@ -355,8 +406,9 @@ command before every state-changing step.
 19. **Lab-only testing rules:** publication is a separate manual boundary;
     model operations never call Telegram or treat publication as evidence.
 20. **Staging authorization boundary:** technical readiness is not authority.
-    Explicit human staging authorization is still required, and this runbook
-    does not start a staging rehearsal.
+    Explicit human staging authorization is still required; the controlled
+    rehearsal above must use disposable copies and never grants production
+    authority.
 21. **Production authorization boundary:** require a separate recorded human
     authorization and production change procedure.
 22. **Commands forbidden in automation:** bootstrap, both preparations, and

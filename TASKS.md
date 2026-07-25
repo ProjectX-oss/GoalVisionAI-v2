@@ -923,3 +923,23 @@ Review after completing the current priority.
 - Kept runtime inference integration, automatic activation/rollback,
   scheduling, startup execution, Telegram, Official publication, bankroll,
   settlements, and prediction behavior unchanged.
+
+## 2026-07-25 - Controlled Staging Model Operations Rehearsal
+
+- Added the explicit `STAGING`-only
+  `app/staging_model_operations_rehearsal` boundary over the existing audited
+  model-operations CLI, resolver, append-only registry, activation, and
+  rollback services.
+- Added read-only real-chain inventory with explicit deterministic fictional
+  fallback, source/backup SHA-256 verification, collision-safe disposable
+  paths, immutable evidence output, and secret/path redaction.
+- Added mandatory independent pre-bootstrap, pre-execution, and final audits
+  without weakening the complete activation audit or its readiness policy.
+- Exercised bootstrap, plan preparation, activation, resolver transition,
+  rollback, human/JSON diagnostics, exact replay, changed-request conflict,
+  confirmation rejection, and injected atomic failure/retry recovery.
+- Retained the successful controlled run as JSON and Markdown evidence and
+  documented the reviewed operator procedure.
+- Kept production activation, runtime inference, Official publication,
+  Telegram, bankroll, settlements, statistics, scheduling, workers, and
+  startup behavior unchanged.

@@ -9,7 +9,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import Sequence
+from typing import Callable, Sequence
 
 from app.database import Database
 
@@ -55,6 +55,31 @@ _ACTIVATION_TABLES = (
 
 class ExecutionRehearsalError(RuntimeError):
     """Raised when any rehearsal command or invariant fails closed."""
+
+
+@dataclass(frozen=True, slots=True)
+class ExecutionRehearsalProfile:
+    environment: str = "lab"
+    scope: str = SCOPE
+    fixture_label: str = "FICTIONAL_LAB_REHEARSAL_ONLY"
+    execution_label: str = EXECUTION_LABEL
+    operator: str = "codex-lab-rehearsal"
+    activation_prepare_request_id: str = "lab-rehearsal-activation-prepare-1"
+    activation_execution_request_id: str = ACTIVATION_EXECUTION_REQUEST_ID
+    rollback_request_id: str = ROLLBACK_REQUEST_ID
+    rollback_execution_request_id: str = ROLLBACK_EXECUTION_REQUEST_ID
+    incident_reference: str = "FICTIONAL-LAB-INCIDENT-001"
+    bootstrap_timestamp: str = "2026-07-24T23:10:00Z"
+    activation_requested_at: str = "2026-08-01T13:00:00Z"
+    activation_executed_at: str = ACTIVATION_EXECUTED_AT
+    rollback_prepared_at: str = ROLLBACK_PREPARED_AT
+    rollback_executed_at: str = ROLLBACK_EXECUTED_AT
+    expected_plan_id: str | None = FOUNDATION_PLAN_ID
+    foundation_prefix: str = "goalvision_lab_rehearsal"
+    disposable_prefix: str = "goalvision_activation_rollback"
+
+
+DEFAULT_EXECUTION_REHEARSAL_PROFILE = ExecutionRehearsalProfile()
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,6 +185,11 @@ def execute_activation_rollback_rehearsal(
     destination_directory: Path,
     timestamp: str,
     runner: SubprocessModelOperationsRunner | None = None,
+    profile: ExecutionRehearsalProfile = DEFAULT_EXECUTION_REHEARSAL_PROFILE,
+    fixture_seed: Callable[[Database], LabFixtureManifest] = seed_lab_fixture,
+    pre_bootstrap_hook: Callable[[Path], None] | None = None,
+    pre_execution_hook: Callable[[Path], None] | None = None,
+    final_hook: Callable[[Path], None] | None = None,
 ) -> ExecutionRehearsalReport:
     """Build a prepared foundation, copy it, then exercise the real CLI."""
     runner = runner or SubprocessModelOperationsRunner()
@@ -169,12 +199,13 @@ def execute_activation_rollback_rehearsal(
         source,
         destination_directory,
         timestamp=timestamp,
+        rehearsal_prefix=profile.foundation_prefix,
     )
     foundation = copies.rehearsal
     manifest_path = foundation.with_suffix(".manifest.json")
     disposable = (
         destination_directory.resolve()
-        / f"goalvision_activation_rollback_{timestamp}.db"
+        / f"{profile.disposable_prefix}_{timestamp}.db"
     )
     result_path = disposable.with_suffix(".result.json")
     if disposable.exists() or result_path.exists():
@@ -182,13 +213,22 @@ def execute_activation_rollback_rehearsal(
             "The disposable execution rehearsal destination already exists."
         )
     try:
-        manifest = _seed_and_prepare_foundation(
+        manifest, foundation_commands = _seed_and_prepare_foundation(
             foundation,
             manifest_path,
             runner,
+            profile,
+            fixture_seed,
+            pre_bootstrap_hook,
         )
         foundation_state = inspect_rehearsal_state(foundation)
-        _validate_prepared_foundation(foundation_state, manifest)
+        _validate_prepared_foundation(
+            foundation_state,
+            manifest,
+            expected_plan_id=profile.expected_plan_id,
+        )
+        if pre_execution_hook is not None:
+            pre_execution_hook(foundation)
         foundation_fingerprint = sha256_file(foundation)
         shutil.copy2(foundation, disposable)
         disposable_before = sha256_file(disposable)
@@ -205,13 +245,150 @@ def execute_activation_rollback_rehearsal(
             disposable_before,
             manifest,
             runner,
+            profile,
+            foundation_commands,
         )
+        if final_hook is not None:
+            final_hook(disposable)
         result_path.write_text(report.as_json() + "\n", encoding="utf-8")
         return report
     except Exception:
         disposable.unlink(missing_ok=True)
         result_path.unlink(missing_ok=True)
         raise
+
+
+def verify_atomic_failure_recovery(
+    *,
+    foundation: Path,
+    destination_directory: Path,
+    profile: ExecutionRehearsalProfile = DEFAULT_EXECUTION_REHEARSAL_PROFILE,
+    runner: SubprocessModelOperationsRunner | None = None,
+) -> tuple[str, ...]:
+    """Inject activation/rollback persistence failures on fresh disposable copies."""
+    runner = runner or SubprocessModelOperationsRunner()
+    activation_copy = destination_directory / "activation_atomicity.db"
+    rollback_copy = destination_directory / "rollback_atomicity.db"
+    if activation_copy.exists() or rollback_copy.exists():
+        raise ExecutionRehearsalError("Atomicity copy already exists.")
+    shutil.copy2(foundation, activation_copy)
+    shutil.copy2(foundation, rollback_copy)
+    _create_failure_trigger(
+        activation_copy,
+        "rehearsal_fail_activation_execution",
+        "model_activation_executions",
+    )
+    activation_arguments = _activation_arguments_for(activation_copy, profile)
+    failed_activation = runner.run(
+        "atomic-activation-failure",
+        activation_arguments,
+        expect_exit=6,
+        json_output=True,
+    )
+    _expect_status(failed_activation, "ACTIVATION_REJECTED")
+    state = inspect_rehearsal_state(activation_copy)
+    if (
+        len(state["generations"]) != 1
+        or state["activation_execution_count"] != 0
+        or len(state["registry_events"]) != 1
+    ):
+        raise ExecutionRehearsalError("Activation failure left partial state.")
+    _drop_trigger(activation_copy, "rehearsal_fail_activation_execution")
+    retried_activation = runner.run(
+        "atomic-activation-retry",
+        activation_arguments,
+        expect_exit=0,
+        json_output=True,
+    )
+    _expect_status(retried_activation, "ACTIVATION_EXECUTED")
+
+    activated = runner.run(
+        "rollback-atomicity-activation",
+        _activation_arguments_for(rollback_copy, profile),
+        expect_exit=0,
+        json_output=True,
+    ).parsed_json["details"]["new_champion_generation"]
+    initial = inspect_rehearsal_state(foundation)["generations"][0]
+    prepared = runner.run(
+        "rollback-atomicity-prepare",
+        (
+            "prepare-rollback",
+            *_common(rollback_copy, output="json", profile=profile),
+            "--request-id",
+            profile.rollback_request_id,
+            "--name",
+            f"{profile.execution_label} rollback atomicity",
+            "--current-generation-id",
+            activated["champion_generation_id"],
+            "--current-generation-fingerprint",
+            activated["generation_fingerprint"],
+            "--target-generation-id",
+            initial["champion_generation_id"],
+            "--reason",
+            f"{profile.execution_label} rollback atomicity",
+            "--incident-reference",
+            profile.incident_reference,
+            "--operator",
+            profile.execution_label,
+            "--requested-at",
+            profile.rollback_prepared_at,
+        ),
+        expect_exit=0,
+        json_output=True,
+    )
+    plan_id = prepared.parsed_json["details"]["rollback_plan_id"]
+    plan_fingerprint = prepared.parsed_json["details"][
+        "rollback_plan_fingerprint"
+    ]
+    _create_failure_trigger(
+        rollback_copy,
+        "rehearsal_fail_rollback_execution",
+        "model_rollback_executions",
+    )
+    rollback_arguments = (
+        "execute-rollback",
+        *_common(rollback_copy, output="json", profile=profile),
+        "--execution-request-id",
+        profile.rollback_execution_request_id,
+        "--plan-id",
+        plan_id,
+        "--plan-fingerprint",
+        plan_fingerprint,
+        "--executed-at",
+        profile.rollback_executed_at,
+        "--operator",
+        profile.execution_label,
+        "--confirm",
+        "ROLLBACK_CHAMPION",
+    )
+    failed_rollback = runner.run(
+        "atomic-rollback-failure",
+        rollback_arguments,
+        expect_exit=6,
+        json_output=True,
+    )
+    _expect_status(failed_rollback, "ROLLBACK_REJECTED")
+    state = inspect_rehearsal_state(rollback_copy)
+    if (
+        len(state["generations"]) != 2
+        or state["rollback_execution_count"] != 0
+        or len(state["registry_events"]) != 3
+    ):
+        raise ExecutionRehearsalError("Rollback failure left partial state.")
+    _drop_trigger(rollback_copy, "rehearsal_fail_rollback_execution")
+    retried_rollback = runner.run(
+        "atomic-rollback-retry",
+        rollback_arguments,
+        expect_exit=0,
+        json_output=True,
+    )
+    _expect_status(retried_rollback, "ROLLBACK_EXECUTED")
+    return (
+        "ACTIVATION_FAILURE_ATOMIC",
+        "ACTIVATION_EXACT_RETRY_SUCCEEDED",
+        "ROLLBACK_FAILURE_ATOMIC",
+        "ROLLBACK_EXACT_RETRY_SUCCEEDED",
+    )
 
 
 def inspect_rehearsal_state(path: Path) -> dict:
@@ -311,9 +488,8 @@ def inspect_rehearsal_state(path: Path) -> dict:
                 for row in connection.execute(
                     """SELECT validation_status
                        FROM model_activation_validations
-                       WHERE activation_plan_id=?
+                       WHERE rollback_plan_id IS NULL
                        ORDER BY deterministic_order""",
-                    (FOUNDATION_PLAN_ID,),
                 )
             ),
             "registry_events": tuple(
@@ -337,24 +513,29 @@ def _seed_and_prepare_foundation(
     foundation: Path,
     manifest_path: Path,
     runner: SubprocessModelOperationsRunner,
-) -> LabFixtureManifest:
+    profile: ExecutionRehearsalProfile,
+    fixture_seed: Callable[[Database], LabFixtureManifest],
+    pre_bootstrap_hook: Callable[[Path], None] | None,
+) -> tuple[LabFixtureManifest, tuple[CommandCapture, ...]]:
     database = Database(str(foundation))
     try:
-        manifest = seed_lab_fixture(database)
+        manifest = fixture_seed(database)
     finally:
         database.close()
     manifest_path.write_text(manifest.as_json() + "\n", encoding="utf-8")
-    common = _common(foundation, output="json")
+    if pre_bootstrap_hook is not None:
+        pre_bootstrap_hook(foundation)
+    common = _common(foundation, output="json", profile=profile)
     champion_arguments = (
         "bootstrap-champion",
         *common,
         *_artifact_arguments(manifest.champion),
         "--timestamp",
-        "2026-07-24T23:10:00Z",
+        profile.bootstrap_timestamp,
         "--reason",
-        "FICTIONAL_LAB_REHEARSAL_ONLY initial champion",
+        f"{profile.fixture_label} initial champion",
         "--operator",
-        "codex-lab-rehearsal",
+        profile.operator,
     )
     bootstrap = runner.run(
         "foundation-bootstrap",
@@ -362,51 +543,101 @@ def _seed_and_prepare_foundation(
         expect_exit=0,
         json_output=True,
     )
+    _expect_status(bootstrap, "BOOTSTRAP_EXECUTED")
+    bootstrap_replay = runner.run(
+        "foundation-bootstrap-replay",
+        champion_arguments,
+        expect_exit=6,
+        json_output=True,
+    )
+    _expect_status(bootstrap_replay, "BOOTSTRAP_REJECTED")
+    bootstrap_conflict = runner.run(
+        "foundation-bootstrap-conflict",
+        _replace_cli_option(
+            champion_arguments,
+            "--reason",
+            f"{profile.fixture_label} conflicting bootstrap",
+        ),
+        expect_exit=6,
+        json_output=True,
+    )
+    _expect_status(bootstrap_conflict, "BOOTSTRAP_REJECTED")
     generation = bootstrap.parsed_json["details"]["champion_generation"]
+    prepare_arguments = (
+        "prepare-activation",
+        *common,
+        "--request-id",
+        profile.activation_prepare_request_id,
+        "--name",
+        f"{profile.fixture_label} activation preparation",
+        "--current-generation-id",
+        generation["champion_generation_id"],
+        "--current-generation-fingerprint",
+        generation["generation_fingerprint"],
+        *_artifact_arguments(manifest.champion, "current"),
+        *_artifact_arguments(manifest.challenger, "challenger"),
+        "--comparison-run-id",
+        manifest.comparison_run_id,
+        "--comparison-run-fingerprint",
+        manifest.comparison_run_fingerprint,
+        "--challenger-candidate-id",
+        manifest.challenger_candidate_id,
+        "--recommendation-id",
+        manifest.recommendation_id,
+        "--recommendation-fingerprint",
+        manifest.recommendation_fingerprint,
+        "--shadow-evidence-fingerprint",
+        manifest.shadow_evidence_fingerprint,
+        "--evidence-cutoff",
+        manifest.evidence_cutoff_timestamp_utc,
+        "--requested-at",
+        profile.activation_requested_at,
+        "--reason",
+        f"{profile.fixture_label} reviewed preparation",
+        "--operator",
+        profile.operator,
+    )
     prepare = runner.run(
         "foundation-prepare-activation",
-        (
-            "prepare-activation",
-            *common,
-            "--request-id",
-            "lab-rehearsal-activation-prepare-1",
-            "--name",
-            "FICTIONAL_LAB_REHEARSAL_ONLY activation preparation",
-            "--current-generation-id",
-            generation["champion_generation_id"],
-            "--current-generation-fingerprint",
-            generation["generation_fingerprint"],
-            *_artifact_arguments(manifest.champion, "current"),
-            *_artifact_arguments(manifest.challenger, "challenger"),
-            "--comparison-run-id",
-            manifest.comparison_run_id,
-            "--comparison-run-fingerprint",
-            manifest.comparison_run_fingerprint,
-            "--challenger-candidate-id",
-            manifest.challenger_candidate_id,
-            "--recommendation-id",
-            manifest.recommendation_id,
-            "--recommendation-fingerprint",
-            manifest.recommendation_fingerprint,
-            "--shadow-evidence-fingerprint",
-            manifest.shadow_evidence_fingerprint,
-            "--evidence-cutoff",
-            manifest.evidence_cutoff_timestamp_utc,
-            "--requested-at",
-            "2026-08-01T13:00:00Z",
-            "--reason",
-            "FICTIONAL_LAB_REHEARSAL_ONLY reviewed preparation",
-            "--operator",
-            "codex-lab-rehearsal",
-        ),
+        prepare_arguments,
         expect_exit=0,
         json_output=True,
     )
-    if prepare.parsed_json["details"]["activation_plan_id"] != FOUNDATION_PLAN_ID:
+    _expect_status(prepare, "ACTIVATION_PLAN_PREPARED")
+    prepare_replay = runner.run(
+        "foundation-prepare-activation-replay",
+        prepare_arguments,
+        expect_exit=0,
+        json_output=True,
+    )
+    _expect_status(prepare_replay, "ACTIVATION_PLAN_PREPARED")
+    prepare_conflict = runner.run(
+        "foundation-prepare-activation-conflict",
+        _replace_cli_option(
+            prepare_arguments,
+            "--reason",
+            f"{profile.fixture_label} conflicting preparation",
+        ),
+        expect_exit=6,
+        json_output=True,
+    )
+    _expect_status(prepare_conflict, "ACTIVATION_CONFLICT")
+    if (
+        profile.expected_plan_id is not None
+        and prepare.parsed_json["details"]["activation_plan_id"]
+        != profile.expected_plan_id
+    ):
         raise ExecutionRehearsalError(
             "The deterministic foundation activation plan ID differs."
         )
-    return manifest
+    return manifest, (
+        bootstrap,
+        bootstrap_replay,
+        bootstrap_conflict,
+        prepare,
+        prepare_replay,
+        prepare_conflict,
+    )
 
 
 def _run_disposable_rehearsal(
@@ -418,10 +649,16 @@ def _run_disposable_rehearsal(
     disposable_before: str,
     manifest: LabFixtureManifest,
     runner: SubprocessModelOperationsRunner,
+    profile: ExecutionRehearsalProfile,
+    foundation_commands: tuple[CommandCapture, ...],
 ) -> ExecutionRehearsalReport:
-    commands: list[CommandCapture] = []
+    commands: list[CommandCapture] = list(foundation_commands)
     pre = inspect_rehearsal_state(disposable)
-    _validate_prepared_foundation(pre, manifest)
+    _validate_prepared_foundation(
+        pre,
+        manifest,
+        expected_plan_id=profile.expected_plan_id,
+    )
     initial = pre["generations"][0]
     plan = pre["pending_activation_plans"][0]
 
@@ -436,7 +673,7 @@ def _run_disposable_rehearsal(
                     f"pre-{command}-{output}",
                     (
                         command,
-                        *_common(disposable, output=output),
+                        *_common(disposable, output=output, profile=profile),
                         *(
                             ("--limit", "20")
                             if command == "list-generations"
@@ -453,7 +690,7 @@ def _run_disposable_rehearsal(
                 f"pre-show-activation-{output}",
                 (
                     "show-activation",
-                    *_common(disposable, output=output),
+                    *_common(disposable, output=output, profile=profile),
                     "--plan-id",
                     plan["activation_plan_id"],
                 ),
@@ -464,17 +701,17 @@ def _run_disposable_rehearsal(
 
     activation_arguments = (
         "execute-activation",
-        *_common(disposable, output="json"),
+        *_common(disposable, output="json", profile=profile),
         "--execution-request-id",
-        ACTIVATION_EXECUTION_REQUEST_ID,
+        profile.activation_execution_request_id,
         "--plan-id",
         plan["activation_plan_id"],
         "--plan-fingerprint",
         plan["activation_plan_fingerprint"],
         "--executed-at",
-        ACTIVATION_EXECUTED_AT,
+        profile.activation_executed_at,
         "--operator",
-        EXECUTION_LABEL,
+        profile.execution_label,
         "--confirm",
         "ACTIVATE_CHAMPION",
     )
@@ -550,7 +787,7 @@ def _run_disposable_rehearsal(
                     f"post-activation-{command}-{output}",
                     (
                         command,
-                        *_common(disposable, output=output),
+                        *_common(disposable, output=output, profile=profile),
                         *(
                             ("--limit", "20")
                             if command == "list-generations"
@@ -566,7 +803,7 @@ def _run_disposable_rehearsal(
             "post-activation-show-plan-json",
             (
                 "show-activation",
-                *_common(disposable, output="json"),
+                *_common(disposable, output="json", profile=profile),
                 "--plan-id",
                 plan["activation_plan_id"],
             ),
@@ -577,11 +814,11 @@ def _run_disposable_rehearsal(
 
     rollback_arguments = (
         "prepare-rollback",
-        *_common(disposable, output="json"),
+        *_common(disposable, output="json", profile=profile),
         "--request-id",
-        ROLLBACK_REQUEST_ID,
+        profile.rollback_request_id,
         "--name",
-        f"{EXECUTION_LABEL} rollback preparation",
+        f"{profile.execution_label} rollback preparation",
         "--current-generation-id",
         activated["champion_generation_id"],
         "--current-generation-fingerprint",
@@ -589,13 +826,13 @@ def _run_disposable_rehearsal(
         "--target-generation-id",
         initial["champion_generation_id"],
         "--reason",
-        f"{EXECUTION_LABEL} controlled rollback",
+        f"{profile.execution_label} controlled rollback",
         "--incident-reference",
-        "FICTIONAL-LAB-INCIDENT-001",
+        profile.incident_reference,
         "--operator",
-        EXECUTION_LABEL,
+        profile.execution_label,
         "--requested-at",
-        ROLLBACK_PREPARED_AT,
+        profile.rollback_prepared_at,
     )
     rollback_prepare = runner.run(
         "prepare-rollback",
@@ -627,7 +864,7 @@ def _run_disposable_rehearsal(
     rollback_conflict_args = list(rollback_arguments)
     rollback_conflict_args[
         rollback_conflict_args.index("--reason") + 1
-    ] = f"{EXECUTION_LABEL} conflicting rollback"
+    ] = f"{profile.execution_label} conflicting rollback"
     rollback_prepare_conflict = runner.run(
         "prepare-rollback-conflict",
         rollback_conflict_args,
@@ -648,17 +885,17 @@ def _run_disposable_rehearsal(
 
     rollback_execution_arguments = (
         "execute-rollback",
-        *_common(disposable, output="json"),
+        *_common(disposable, output="json", profile=profile),
         "--execution-request-id",
-        ROLLBACK_EXECUTION_REQUEST_ID,
+        profile.rollback_execution_request_id,
         "--plan-id",
         rollback_plan_id,
         "--plan-fingerprint",
         rollback_plan_fingerprint,
         "--executed-at",
-        ROLLBACK_EXECUTED_AT,
+        profile.rollback_executed_at,
         "--operator",
-        EXECUTION_LABEL,
+        profile.execution_label,
         "--confirm",
         "ROLLBACK_CHAMPION",
     )
@@ -715,7 +952,7 @@ def _run_disposable_rehearsal(
                     f"final-{command}-{output}",
                     (
                         command,
-                        *_common(disposable, output=output),
+                        *_common(disposable, output=output, profile=profile),
                         *(
                             ("--limit", "20")
                             if command == "list-generations"
@@ -731,7 +968,7 @@ def _run_disposable_rehearsal(
             "final-show-rollback-json",
             (
                 "show-activation",
-                *_common(disposable, output="json"),
+                *_common(disposable, output="json", profile=profile),
                 "--plan-id",
                 rollback_plan_id,
             ),
@@ -776,7 +1013,7 @@ def _run_disposable_rehearsal(
     )
     events = tuple(item["event_type"] for item in final["registry_events"])
     return ExecutionRehearsalReport(
-        label=EXECUTION_LABEL,
+        label=profile.execution_label,
         source_database_name=source.name,
         foundation_database_name=foundation.name,
         disposable_database_name=disposable.name,
@@ -825,6 +1062,8 @@ def _run_disposable_rehearsal(
 def _validate_prepared_foundation(
     state: dict,
     manifest: LabFixtureManifest,
+    *,
+    expected_plan_id: str | None = FOUNDATION_PLAN_ID,
 ) -> None:
     failures = []
     if state["schema_version"] != 31:
@@ -845,8 +1084,10 @@ def _validate_prepared_foundation(
     if len(state["pending_activation_plans"]) != 1:
         failures.append("PENDING_ACTIVATION_COUNT_NOT_ONE")
     elif (
+        expected_plan_id is not None
+        and
         state["pending_activation_plans"][0]["activation_plan_id"]
-        != FOUNDATION_PLAN_ID
+        != expected_plan_id
     ):
         failures.append("FOUNDATION_PLAN_ID_MISMATCH")
     if state["activation_request_count"] != 1:
@@ -928,17 +1169,64 @@ def _validate_final_state(
         raise ExecutionRehearsalError("Final foreign-key violations exist.")
 
 
-def _common(path: Path, *, output: str) -> tuple[str, ...]:
+def _common(
+    path: Path,
+    *,
+    output: str,
+    profile: ExecutionRehearsalProfile = DEFAULT_EXECUTION_REHEARSAL_PROFILE,
+) -> tuple[str, ...]:
     return (
         "--database",
         str(path.resolve()),
         "--environment",
-        "lab",
+        profile.environment,
         "--scope",
-        SCOPE,
+        profile.scope,
         "--output",
         output,
     )
+
+
+def _activation_arguments_for(path: Path, profile):
+    plan = inspect_rehearsal_state(path)["pending_activation_plans"][0]
+    return (
+        "execute-activation",
+        *_common(path, output="json", profile=profile),
+        "--execution-request-id",
+        profile.activation_execution_request_id,
+        "--plan-id",
+        plan["activation_plan_id"],
+        "--plan-fingerprint",
+        plan["activation_plan_fingerprint"],
+        "--executed-at",
+        profile.activation_executed_at,
+        "--operator",
+        profile.execution_label,
+        "--confirm",
+        "ACTIVATE_CHAMPION",
+    )
+
+
+def _create_failure_trigger(path: Path, name: str, table: str) -> None:
+    database = Database(str(path))
+    try:
+        database.connection.execute(
+            f"""CREATE TRIGGER {name}
+                BEFORE INSERT ON {table}
+                BEGIN SELECT RAISE(ABORT,'injected rehearsal failure'); END"""
+        )
+        database.connection.commit()
+    finally:
+        database.close()
+
+
+def _drop_trigger(path: Path, name: str) -> None:
+    database = Database(str(path))
+    try:
+        database.connection.execute(f"DROP TRIGGER {name}")
+        database.connection.commit()
+    finally:
+        database.close()
 
 
 def _artifact_arguments(reference, prefix: str | None = None) -> tuple[str, ...]:
@@ -972,6 +1260,27 @@ def _artifact_arguments(reference, prefix: str | None = None) -> tuple[str, ...]
         for name, field_value in fields
         for value in (f"--{option}{name}", field_value)
     )
+
+
+def _replace_cli_option(
+    arguments: tuple[str, ...],
+    option: str,
+    replacement: str,
+) -> tuple[str, ...]:
+    """Return arguments with one required option value replaced."""
+    try:
+        index = arguments.index(option)
+    except ValueError as exc:
+        raise ExecutionRehearsalError(
+            f"Required CLI option is absent: {option}."
+        ) from exc
+    if index + 1 >= len(arguments):
+        raise ExecutionRehearsalError(
+            f"Required CLI option has no value: {option}."
+        )
+    updated = list(arguments)
+    updated[index + 1] = replacement
+    return tuple(updated)
 
 
 def _expect_status(capture: CommandCapture, status: str) -> None:

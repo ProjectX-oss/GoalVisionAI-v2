@@ -20,6 +20,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
     audit = subcommands.add_parser("audit", help="Run all mandatory checks.")
+    preflight = subcommands.add_parser(
+        "preflight",
+        help="Run the separate typed staging pre-bootstrap/pre-execution checks.",
+    )
+    for command in (audit, preflight):
+        _audit_arguments(command)
+    return parser
+
+
+def _audit_arguments(audit) -> None:
     audit.add_argument("--database", required=True)
     audit.add_argument(
         "--environment",
@@ -32,7 +42,6 @@ def build_parser() -> argparse.ArgumentParser:
     audit.add_argument("--output", choices=("human", "json"), default="human")
     audit.add_argument("--evidence-export")
     audit.add_argument("--timeout-seconds", type=float, default=5.0)
-    return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -42,7 +51,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         repository = ReadOnlyAuditRepository(
             args.database, args.timeout_seconds
         )
-        report = ModelActivationAuditService(repository).audit(
+        service = (
+            ModelActivationAuditService(repository)
+            if args.command == "audit"
+            else _staging_preflight_service(repository)
+        )
+        report = service.audit(
             source_commit=args.source_commit,
             generated_timestamp_utc=args.generated_at,
             environment=args.environment,
@@ -84,6 +98,14 @@ def _export(value: str, content: str) -> None:
     if not path.parent.is_dir():
         raise AuditInputError("Evidence export parent directory does not exist.")
     path.write_text(content + "\n", encoding="utf-8")
+
+
+def _staging_preflight_service(repository):
+    from app.staging_model_operations_rehearsal.preflight import (
+        StagingPreflightAuditService,
+    )
+
+    return StagingPreflightAuditService(repository)
 
 
 if __name__ == "__main__":

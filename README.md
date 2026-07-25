@@ -250,3 +250,20 @@ The model-operations package adds no migration, startup hook, scheduler,
 background worker, runtime inference wiring, Telegram send, prediction
 publication, settlement, bankroll, or Official behavior. See
 `docs/model_operations_runbook.md`.
+
+`app/staging_model_operations_rehearsal` is the separate, explicit
+`STAGING`-only proof boundary. It inventories a caller-supplied SQLite source
+read-only, verifies a byte-identical backup, requires the independent audit
+before bootstrap and execution, and exercises the real bootstrap, activation,
+resolver, rollback, diagnostics, replay, conflict, confirmation, and
+atomic-recovery paths on disposable copies. If no complete persisted
+model/calibration/backtest/comparison/promotion/settled-Shadow chain exists,
+fixture fallback must be explicitly authorized and is permanently marked
+`FICTIONAL_STAGING_REHEARSAL_ONLY`.
+
+The rehearsal has no default source or destination, rejects production and
+path collisions, never overwrites evidence, and is not imported by startup.
+It does not authorize production activation or change runtime inference,
+Official publication, Telegram, bankroll, settlements, statistics,
+scheduling, or workers. See `docs/model_operations_runbook.md` and
+`docs/rehearsals/staging_model_operations_rehearsal.md`.

@@ -46,6 +46,7 @@ def create_rehearsal_database_copies(
     destination_directory: Path,
     *,
     timestamp: str,
+    rehearsal_prefix: str = "goalvision_lab_rehearsal",
 ) -> RehearsalDatabaseCopies:
     """Create a byte-identical backup and an isolated working copy."""
     source = source.resolve()
@@ -55,7 +56,15 @@ def create_rehearsal_database_copies(
     if not timestamp or any(character not in "0123456789TZ" for character in timestamp):
         raise RehearsalSafetyError("A compact UTC timestamp is required.")
     backup = destination_directory / f"goalvision_backup_{timestamp}.db"
-    rehearsal = destination_directory / f"goalvision_lab_rehearsal_{timestamp}.db"
+    if (
+        not rehearsal_prefix
+        or any(
+            character not in "abcdefghijklmnopqrstuvwxyz0123456789_"
+            for character in rehearsal_prefix
+        )
+    ):
+        raise RehearsalSafetyError("The rehearsal filename prefix is invalid.")
+    rehearsal = destination_directory / f"{rehearsal_prefix}_{timestamp}.db"
     if source in {backup, rehearsal}:
         raise RehearsalSafetyError("The source cannot be a rehearsal destination.")
     if backup.exists() or rehearsal.exists():
