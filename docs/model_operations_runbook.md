@@ -307,3 +307,84 @@ Model operations produce only a preview formatter and never send it.
 8. Escalate `RECOVERY_REQUIRED` or `INVALID_STATE`.
 9. Never edit append-only rows manually.
 10. Prepare a new reviewed rollback only from a healthy current state.
+
+## Independently reviewed 25-step operator flow
+
+This sequence is normative. A second person reviews the evidence and exact
+command before every state-changing step.
+
+1. **Preflight environment validation:** name the environment, explicit
+   database file, and `OFFICIAL_GLOBAL` scope; reject aliases and ambiguity.
+2. **Database backup:** stop writers under the operational procedure, take a
+   consistent backup, hash it, and prove it opens before a state change.
+3. **Read-only diagnostic:** retain `diagnose-state`, `show-champion`, and
+   `list-generations` outputs and exit codes.
+4. **Bootstrap eligibility:** bootstrap only an empty, healthy scope with
+   separately recorded authorization; never use it to recover corrupt state.
+5. **Evidence review:** independently verify promotion, exact artifact pair,
+   settled shadow evidence, fingerprints, and policy thresholds.
+6. **Activation preparation:** `prepare-activation` is **STATE-CHANGING (PLAN
+   PERSISTENCE ONLY)**; it does not activate a model.
+7. **Independent plan review:** compare the persisted plan ID, fingerprint,
+   expected generation, registry fingerprint, validations, and evidence links.
+8. **Activation execution confirmation:** `execute-activation` is
+   **STATE-CHANGING** and requires exactly `--confirm ACTIVATE_CHAMPION`;
+   generic confirmation and `--yes` are forbidden.
+9. **Immediate post-activation checks:** verify one appended generation, event
+   sequence, exact resolver output, and execution fingerprint read-only.
+10. **Observation period:** retain evidence and monitor only through the
+    separately authorized process; do not automate rollback.
+11. **Rollback preparation:** `prepare-rollback` is **STATE-CHANGING (PLAN
+    PERSISTENCE ONLY)** and requires an incident, reason, current generation,
+    and historical target.
+12. **Rollback execution:** `execute-rollback` is **STATE-CHANGING** and
+    requires exactly `--confirm ROLLBACK_CHAMPION`.
+13. **Ambiguous failure handling:** stop writes, retain output, and inspect the
+    plan, execution, and registry read-only. Do not edit registry rows.
+14. **Idempotent replay:** replay only the identical request ID, plan ID,
+    fingerprint, timestamp, operator, and confirmation after review.
+15. **Registry audit:** verify contiguous generations, previous links,
+    creation/retirement events, execution links, and the unique highest row.
+16. **Artifact verification:** verify model, preprocessing, estimator,
+    calibration, feature schema, probability contract, provenance, and runtime
+    compatibility fingerprints.
+17. **Append-only verification:** verify all v31 update/delete triggers and
+    uniqueness constraints; never disable triggers or update/delete rows.
+18. **Resolver verification:** confirm the exact highest generation and
+    artifact chain; missing, duplicate, or corrupt evidence must fail closed.
+19. **Lab-only testing rules:** publication is a separate manual boundary;
+    model operations never call Telegram or treat publication as evidence.
+20. **Staging authorization boundary:** technical readiness is not authority.
+    Explicit human staging authorization is still required, and this runbook
+    does not start a staging rehearsal.
+21. **Production authorization boundary:** require a separate recorded human
+    authorization and production change procedure.
+22. **Commands forbidden in automation:** bootstrap, both preparations, and
+    both executions are forbidden in startup, schedulers, workers, unattended
+    scripts, and retry loops.
+23. **Emergency stop checklist:** stop state-changing commands, preserve the
+    database and backup, capture diagnostics, record the incident, and escalate.
+24. **Incident record requirements:** retain environment, scope, database
+    identifier (not credentials), timestamps, identities, IDs, fingerprints,
+    exit codes, reason codes, decisions, and hashes.
+25. **Evidence retention requirements:** retain immutable backup hashes, audit
+    JSON/fingerprint, CLI outputs, plans, registry/artifact diagnostics,
+    rehearsal reports, authorizations, and incident records under the
+    controlled retention policy. Never retain secrets in audit output.
+
+Runtime inference remains unwired. This flow never implies automatic
+activation, rollback, publication, or fallback.
+
+## Second-person reviewer checklist
+
+- You verify environment, database, scope, backup hash, and read-only
+  diagnostics before reviewing a write.
+- You verify plan and evidence fingerprints against retained sources.
+- You identify every state-changing command and its exact confirmation.
+- You reject stale plans and never repair state by direct database edits.
+- You handle ambiguous execution through inspection and exact idempotent replay.
+- You verify append-only controls, registry, artifacts, and resolver afterward.
+- You keep Lab, staging, and production authorizations separate.
+- You confirm state-changing commands are forbidden in automation.
+- You retain required evidence without secrets.
+- You stop on any ambiguous identity, database, fingerprint, or authorization.
