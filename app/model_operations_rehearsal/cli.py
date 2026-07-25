@@ -9,9 +9,9 @@ import sys
 
 from app.database import Database
 
+from .execution import execute_activation_rollback_rehearsal
 from .fixtures import seed_lab_fixture
 from .safety import (
-    RehearsalSafetyError,
     create_rehearsal_database_copies,
     resolve_database_source,
     sha256_file,
@@ -21,18 +21,61 @@ from .safety import (
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="goalvision-model-operations-rehearsal",
-        description="Create one isolated, fictional Lab model-operations database.",
+        description="Manual isolated fictional Lab model-operations rehearsals.",
     )
-    parser.add_argument("prepare-lab-db", choices=("prepare-lab-db",))
-    parser.add_argument("--source-database", type=Path, required=True)
-    parser.add_argument("--destination-directory", type=Path, required=True)
-    parser.add_argument("--timestamp")
+    commands = parser.add_subparsers(dest="command", required=True)
+    prepare = commands.add_parser(
+        "prepare-lab-db",
+        help="Create one prepared fictional evidence database.",
+    )
+    _database_arguments(prepare)
+    execute = commands.add_parser(
+        "execute-activation-rollback-rehearsal",
+        help="Run activation and rollback through the real manual CLI.",
+    )
+    _database_arguments(execute)
     return parser
 
 
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        if args.command == "execute-activation-rollback-rehearsal":
+            report = execute_activation_rollback_rehearsal(
+                source_database=args.source_database,
+                destination_directory=args.destination_directory,
+                timestamp=(
+                    args.timestamp
+                    or datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+                ),
+            )
+            print("status=LAB_ACTIVATION_ROLLBACK_REHEARSAL_COMPLETED")
+            print(f"source_fingerprint={report.source_fingerprint}")
+            print(
+                "foundation_fingerprint="
+                f"{report.foundation_fingerprint}"
+            )
+            print(
+                "disposable_before_fingerprint="
+                f"{report.disposable_before_fingerprint}"
+            )
+            print(
+                "disposable_after_fingerprint="
+                f"{report.disposable_after_fingerprint}"
+            )
+            print(
+                "activation_execution_fingerprint="
+                f"{report.activation_execution_fingerprint}"
+            )
+            print(
+                "rollback_execution_fingerprint="
+                f"{report.rollback_execution_fingerprint}"
+            )
+            print(
+                "disposable_database="
+                f"{report.disposable_database_name}"
+            )
+            return 0
         source = resolve_database_source(explicit=args.source_database)
         timestamp = args.timestamp or datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         copies = create_rehearsal_database_copies(
@@ -66,6 +109,12 @@ def main(argv=None) -> int:
         print(f"status=LAB_REHEARSAL_REJECTED")
         print(f"reason={type(exc).__name__}")
         return 2
+
+
+def _database_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--source-database", type=Path, required=True)
+    parser.add_argument("--destination-directory", type=Path, required=True)
+    parser.add_argument("--timestamp")
 
 
 if __name__ == "__main__":

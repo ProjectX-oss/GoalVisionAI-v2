@@ -10,8 +10,9 @@ fixtures labeled `FICTIONAL_LAB_REHEARSAL_ONLY`. They exercise typed services
 and append-only repositories. They are not scientific evidence and must never
 be interpreted as an approval for production.
 
-The package has no startup import, scheduler, Telegram integration, activation
-execution, rollback execution, or automatic publication path.
+The package has no startup import, scheduler, Telegram integration, automatic
+activation, automatic rollback, or publication path. Execution is available
+only through the explicit disposable rehearsal command below.
 
 Example:
 
@@ -20,3 +21,18 @@ python -m app.model_operations_rehearsal.cli prepare-lab-db \
   --source-database data/goalvision.db \
   --destination-directory var/lab_rehearsal
 ```
+
+The explicit end-to-end execution rehearsal creates a deterministic prepared
+foundation, copies it to a new disposable database, then invokes the real model
+operations CLI in subprocesses:
+
+```text
+python -m app.model_operations_rehearsal.cli \
+  execute-activation-rollback-rehearsal \
+  --source-database data/goalvision.db \
+  --destination-directory var/lab_rehearsal
+```
+
+It requires the real `ACTIVATE_CHAMPION` and `ROLLBACK_CHAMPION` confirmation
+phrases, verifies every state transition, and never imports Telegram or
+application startup wiring.
