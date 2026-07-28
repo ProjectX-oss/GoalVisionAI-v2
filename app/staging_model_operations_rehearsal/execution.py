@@ -6,6 +6,7 @@ from dataclasses import replace
 from hashlib import sha256
 import json
 from pathlib import Path
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -15,16 +16,18 @@ from app.model_operations_rehearsal.execution import (
     execute_activation_rollback_rehearsal,
     verify_atomic_failure_recovery,
 )
-from app.model_operations_rehearsal.fixtures import seed_fictional_fixture
 from app.model_operations_rehearsal.safety import sha256_file
+from app.database import Database
+from app.staging_real_artifact_chain import build_real_artifact_chain
 
-from .inventory import inventory_real_artifacts
 from .models import (
+    ArtifactCandidate,
+    ArtifactInventory,
     AuditCapture,
     EVIDENCE_SCHEMA_VERSION,
     InitialStagingState,
     SourceDatabaseEvidence,
-    STAGING_FIXTURE_LABEL,
+    STAGING_SOURCE_LABEL,
     StagingRehearsalCommand,
     StagingRehearsalOutcome,
 )
@@ -123,33 +126,67 @@ def run_staging_rehearsal(
     before = sha256_file(source)
     source_size = source.stat().st_size
     source_schema, source_fk = _source_integrity(source, policy)
-    inventory = inventory_real_artifacts(
-        source,
-        artifact_mode=command.artifact_mode,
-        allow_fixture_fallback=command.allow_fixture_fallback,
+    if destination.exists():
+        raise StagingRehearsalError("Staging destination must be new.")
+    destination.mkdir(parents=True)
+    external_backup = destination / f"source_backup_{command.timestamp}.db"
+    shutil.copy2(source, external_backup)
+    if sha256_file(external_backup) != before:
+        raise StagingRehearsalError("External source backup fingerprint differs.")
+    controlled_source = (
+        destination / f"controlled_real_artifact_source_{command.timestamp}.db"
     )
-    if inventory.selected_candidate_id is not None:
-        raise StagingRehearsalError(
-            "Real chain discovery succeeded, but this command will not replace "
-            "or bootstrap over persisted staging state implicitly."
-        )
-    if not inventory.used_fixture_fallback:
-        raise StagingRehearsalError(
-            "No complete real artifact chain qualified and fallback is disabled."
-        )
+    chain_database = Database(controlled_source)
+    try:
+        chain = build_real_artifact_chain(chain_database)
+        challenger_estimator_fingerprint = chain_database.connection.execute(
+            """SELECT estimator_bundle_fingerprint
+               FROM historical_model_artifacts
+               WHERE artifact_id=?""",
+            (chain.challenger.model_artifact_id,),
+        ).fetchone()[0]
+    finally:
+        chain_database.close()
+    candidate = ArtifactCandidate(
+        model_artifact_id=chain.challenger.model_artifact_id,
+        model_artifact_fingerprint=chain.challenger.model_artifact_fingerprint,
+        training_run_id=chain.challenger_training_run_id,
+        preprocessing_fingerprint=chain.challenger.preprocessing_fingerprint,
+        estimator_fingerprint=challenger_estimator_fingerprint,
+        calibration_artifact_set_id=chain.challenger.calibration_artifact_set_id,
+        calibration_artifact_set_fingerprint=(
+            chain.challenger.calibration_artifact_set_fingerprint
+        ),
+        backtest_run_id=chain.challenger_backtest_run_id,
+        comparison_run_id=chain.comparison_run_id,
+        recommendation_id=chain.recommendation_id,
+        settled_shadow_count=chain.settled_shadow_count,
+        feature_schema_version=chain.challenger.feature_schema_version,
+        probability_contract_version=chain.challenger.probability_contract_version,
+        runtime_compatibility_version=(
+            chain.challenger.runtime_compatibility_version
+        ),
+        complete=True,
+        audit_eligible=True,
+        rejection_reasons=(),
+    )
+    inventory = ArtifactInventory(
+        candidates=(candidate,),
+        selected_candidate_id=candidate.model_artifact_id,
+        used_fixture_fallback=False,
+        inventory_reason_codes=("CONTROLLED_REAL_ARTIFACT_CHAIN_COMPLETE",),
+    )
     audit_runner = AuditCliRunner(
         command.source_commit,
         _compact_to_iso(command.timestamp),
     )
     profile = _staging_profile(command.timestamp)
     report = execute_activation_rollback_rehearsal(
-        source_database=source,
+        source_database=controlled_source,
         destination_directory=destination,
         timestamp=command.timestamp,
         profile=profile,
-        fixture_seed=lambda database: seed_fictional_fixture(
-            database, STAGING_FIXTURE_LABEL
-        ),
+        fixture_seed=lambda database: chain,
         pre_bootstrap_hook=lambda path: audit_runner.require_preflight(
             path, "PRE_BOOTSTRAP"
         ),
@@ -168,8 +205,7 @@ def run_staging_rehearsal(
         profile=profile,
     )
     after = sha256_file(source)
-    backup = destination / f"goalvision_backup_{command.timestamp}.db"
-    if before != after or sha256_file(backup) != before:
+    if before != after or sha256_file(external_backup) != before:
         raise StagingRehearsalError(
             "Source or byte-identical backup fingerprint verification failed."
         )
@@ -238,13 +274,17 @@ def run_staging_rehearsal(
             source.name,
             before,
             after,
-            sha256_file(backup),
+            sha256_file(external_backup),
             source_size,
             source_schema,
             source_fk,
         ),
         artifact_inventory=inventory,
-        selected_artifact_mode="FIXTURE_FALLBACK",
+        artifact_mode=command.artifact_mode.name,
+        fixture_fallback_used=False,
+        real_artifact_chain_complete=True,
+        real_artifact_chain_fingerprint=chain.chain_fingerprint,
+        selected_artifact_mode="REAL_ONLY",
         selected_artifact_references=selected_references,
         initial_state=InitialStagingState.STAGING_UNBOOTSTRAPPED.value,
         preflight_audits=preflight,
@@ -283,9 +323,9 @@ def run_staging_rehearsal(
 def _staging_profile(timestamp: str) -> ExecutionRehearsalProfile:
     return ExecutionRehearsalProfile(
         environment="staging",
-        fixture_label=STAGING_FIXTURE_LABEL,
-        execution_label=STAGING_FIXTURE_LABEL,
-        operator=STAGING_FIXTURE_LABEL,
+        fixture_label=STAGING_SOURCE_LABEL,
+        execution_label=STAGING_SOURCE_LABEL,
+        operator=STAGING_SOURCE_LABEL,
         activation_prepare_request_id="staging-rehearsal-activation-prepare-1",
         activation_execution_request_id="staging-rehearsal-activation-execution-1",
         rollback_request_id="staging-rehearsal-rollback-prepare-1",

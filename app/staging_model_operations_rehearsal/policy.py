@@ -57,6 +57,10 @@ def validate_command(
         raise StagingRehearsalPolicyError("Unsupported explicit audit output mode.")
     if not isinstance(command.artifact_mode, ArtifactMode):
         raise StagingRehearsalPolicyError("Unsupported artifact-selection mode.")
+    if command.artifact_mode is not ArtifactMode.REAL_ONLY:
+        raise StagingRehearsalPolicyError(
+            "The controlled staging command requires REAL_ONLY artifacts."
+        )
     source = Path(command.source_database).expanduser().resolve()
     destination = Path(command.destination_directory).expanduser().resolve()
     if not source.is_file() or source.suffix.casefold() != ".db":
@@ -70,10 +74,6 @@ def validate_command(
     if not any(_is_within(destination, root) for root in policy.roots(project_root)):
         raise StagingRehearsalPolicyError(
             "Destination is outside approved ignored staging runtime locations."
-        )
-    if command.artifact_mode is ArtifactMode.REAL_ONLY and command.allow_fixture_fallback:
-        raise StagingRehearsalPolicyError(
-            "Real-only selection conflicts with fixture fallback."
         )
     return source, destination
 

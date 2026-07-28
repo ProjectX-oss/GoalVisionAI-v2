@@ -7,13 +7,11 @@ from enum import Enum
 
 
 EVIDENCE_SCHEMA_VERSION = "goalvision-staging-model-operations-rehearsal-v1"
-STAGING_FIXTURE_LABEL = "FICTIONAL_STAGING_REHEARSAL_ONLY"
+STAGING_SOURCE_LABEL = "CONTROLLED_SYNTHETIC_STAGING_SOURCE"
 
 
 class ArtifactMode(str, Enum):
-    PREFER_REAL = "prefer-real"
     REAL_ONLY = "real-only"
-    FIXTURE_ONLY = "fixture-only"
 
 
 class InitialStagingState(str, Enum):
@@ -33,8 +31,7 @@ class StagingRehearsalCommand:
     source_commit: str
     audit_output_mode: str = "both"
     evidence_report_destination: str | None = None
-    artifact_mode: ArtifactMode = ArtifactMode.PREFER_REAL
-    allow_fixture_fallback: bool = False
+    artifact_mode: ArtifactMode = ArtifactMode.REAL_ONLY
 
 
 @dataclass(frozen=True, slots=True)
@@ -98,6 +95,10 @@ class StagingRehearsalOutcome:
     scope: str
     source: SourceDatabaseEvidence
     artifact_inventory: ArtifactInventory
+    artifact_mode: str
+    fixture_fallback_used: bool
+    real_artifact_chain_complete: bool
+    real_artifact_chain_fingerprint: str
     selected_artifact_mode: str
     selected_artifact_references: tuple[tuple[str, str], ...]
     initial_state: str

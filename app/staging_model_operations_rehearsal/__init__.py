@@ -10,7 +10,7 @@ from .models import (
     EVIDENCE_SCHEMA_VERSION,
     InitialStagingState,
     SourceDatabaseEvidence,
-    STAGING_FIXTURE_LABEL,
+    STAGING_SOURCE_LABEL,
     StagingRehearsalCommand,
     StagingRehearsalOutcome,
 )

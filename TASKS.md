@@ -943,3 +943,23 @@ Review after completing the current priority.
 - Kept production activation, runtime inference, Official publication,
   Telegram, bankroll, settlements, statistics, scheduling, workers, and
   startup behavior unchanged.
+
+## 2026-07-28 - Controlled REAL_ONLY Staging Artifact Chain
+
+- Replaced staging fixture fallback with a mandatory deterministic
+  `REAL_ONLY` chain built through the real historical import, training dataset,
+  chronological split, model training, calibration, TEST backtesting,
+  comparison/promotion, Shadow evaluation, and settlement services.
+- Used only `CONTROLLED_SYNTHETIC_STAGING_SOURCE` for generated historical
+  labels and preserved full persisted provenance from source matches through
+  activation evidence.
+- Kept the caller-supplied database read-only, retained matching before/after
+  and backup SHA-256 fingerprints, and confined all mutations to ignored
+  staging databases.
+- Completed the audited bootstrap, activation, resolver transition, rollback,
+  replay/conflict rejection, confirmation rejection, and atomic failure/retry
+  rehearsal with final audit status `AUDIT_PASSED`.
+- Added regression coverage for sparse odds ranking and restored Decimal
+  stability concentrations discovered by the genuine service-scale chain.
+- Kept production activation, runtime inference, Official publication,
+  Telegram, bankroll, scheduling, workers, and startup behavior unchanged.

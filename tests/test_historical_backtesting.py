@@ -1,5 +1,6 @@
 import sqlite3
 import unittest
+from types import SimpleNamespace
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -55,6 +56,30 @@ from app.historical_probability_calibration import (
 from app.historical_training_dataset import SQLiteHistoricalTrainingDatasetRepository
 from tests.test_historical_model_training import build_foundations, command as training_command
 from tests.test_historical_probability_calibration import low_support_policy
+from app.historical_backtesting.selection import _rank_key
+
+
+class SparseOddsRankingRegressionTests(unittest.TestCase):
+    def test_unavailable_market_with_none_rank_values_sorts_last(self):
+        def row(identity, value):
+            return SimpleNamespace(
+                expected_value=value,
+                calibrated_probability=value,
+                edge=value,
+                decimal_odds=value,
+                odds_age_seconds=None if value is None else 60,
+                market_identity=SupportedMarket.HOME_WIN,
+                odds_row_id=identity if value is not None else None,
+                assessment_id=identity,
+                assessment_fingerprint=identity,
+            )
+
+        available = row("available", Decimal("0.2"))
+        unavailable = row("unavailable", None)
+        self.assertEqual(
+            sorted((unavailable, available), key=_rank_key),
+            [available, unavailable],
+        )
 
 
 class HistoricalBacktestingTests(unittest.TestCase):

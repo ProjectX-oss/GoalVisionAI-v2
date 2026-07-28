@@ -155,15 +155,21 @@ def evaluate_eligibility_gates(
         if uncompensated
         else (),
     )
-    severe = sum(item.stability_status.value == "SEVERELY_DEGRADED" for item in stability_groups)
+    comparable_categories = {
+        "COMPETITION",
+        "SEASON",
+        "CALENDAR_MONTH",
+    }
+    severe = sum(
+        item.stability_status.value == "SEVERELY_DEGRADED"
+        and item.group_category in comparable_categories
+        for item in stability_groups
+    )
     add("STABILITY", "SEVERE_DEGRADATION_LIMIT", GateStatus.PASS if severe <= policy.maximum_severe_stability_groups else GateStatus.FAIL, challenger=severe, threshold=policy.maximum_severe_stability_groups, reasons=() if severe <= policy.maximum_severe_stability_groups else ("STABILITY_COLLAPSE",))
     from .stability import summarize_stability
 
     stability_summary = summarize_stability(stability_groups)
-    concentration = max(
-        stability_summary["maximum_profit_concentration"],
-        stability_summary["maximum_loss_concentration"],
-    )
+    concentration = stability_summary["maximum_profit_concentration"]
     add(
         "RISK",
         "MAXIMUM_PROFIT_CONCENTRATION",

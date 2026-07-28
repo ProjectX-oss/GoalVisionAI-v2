@@ -6,14 +6,11 @@ import json
 import sqlite3
 from pathlib import Path
 
-from .models import ArtifactCandidate, ArtifactInventory, ArtifactMode
+from .models import ArtifactCandidate, ArtifactInventory
 
 
 def inventory_real_artifacts(
     source: Path,
-    *,
-    artifact_mode: ArtifactMode,
-    allow_fixture_fallback: bool,
 ) -> ArtifactInventory:
     connection = sqlite3.connect(
         f"{source.as_uri()}?mode=ro", uri=True, timeout=5.0
@@ -37,10 +34,8 @@ def inventory_real_artifacts(
             "shadow_evaluation_settlements",
         }
         if not required.issubset(tables):
-            return _fallback_or_empty(
-                artifact_mode,
-                allow_fixture_fallback,
-                ("SOURCE_SCHEMA_LACKS_COMPLETE_ML_CHAIN",),
+            return ArtifactInventory(
+                (), None, False, ("SOURCE_SCHEMA_LACKS_COMPLETE_ML_CHAIN",)
             )
         candidates = tuple(
             _candidate(connection, row)
@@ -62,9 +57,6 @@ def inventory_real_artifacts(
                 ("COMPLETE_REAL_ARTIFACT_CHAIN_SELECTED",),
             )
         reasons = ("NO_COMPLETE_REAL_ARTIFACT_CHAIN",)
-        if allow_fixture_fallback and artifact_mode is not ArtifactMode.REAL_ONLY:
-            reasons += ("DETERMINISTIC_FIXTURE_FALLBACK_SELECTED",)
-            return ArtifactInventory(candidates, None, True, reasons)
         return ArtifactInventory(candidates, None, False, reasons)
     finally:
         connection.close()
@@ -165,17 +157,6 @@ def _candidate(connection, model) -> ArtifactCandidate:
         complete=complete,
         audit_eligible=complete,
         rejection_reasons=tuple(reasons),
-    )
-
-
-def _fallback_or_empty(mode, allow, reasons):
-    fallback = allow and mode is not ArtifactMode.REAL_ONLY
-    return ArtifactInventory(
-        (),
-        None,
-        fallback,
-        reasons
-        + (("DETERMINISTIC_FIXTURE_FALLBACK_SELECTED",) if fallback else ()),
     )
 
 

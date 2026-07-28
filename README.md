@@ -252,14 +252,14 @@ publication, settlement, bankroll, or Official behavior. See
 `docs/model_operations_runbook.md`.
 
 `app/staging_model_operations_rehearsal` is the separate, explicit
-`STAGING`-only proof boundary. It inventories a caller-supplied SQLite source
-read-only, verifies a byte-identical backup, requires the independent audit
-before bootstrap and execution, and exercises the real bootstrap, activation,
-resolver, rollback, diagnostics, replay, conflict, confirmation, and
-atomic-recovery paths on disposable copies. If no complete persisted
-model/calibration/backtest/comparison/promotion/settled-Shadow chain exists,
-fixture fallback must be explicitly authorized and is permanently marked
-`FICTIONAL_STAGING_REHEARSAL_ONLY`.
+`STAGING`-only proof boundary. It verifies a caller-supplied SQLite source and
+byte-identical backup without using that database as a label source, then
+builds a deterministic `REAL_ONLY` chain through the genuine import, dataset,
+chronological split, training, calibration, TEST backtest, comparison,
+promotion, Shadow evaluation, and settlement services. Fixture fallback is
+forbidden. Independent audits gate bootstrap and execution before the real
+activation, resolver, rollback, diagnostics, replay, conflict, confirmation,
+and atomic-recovery paths run on disposable copies.
 
 The rehearsal has no default source or destination, rejects production and
 path collisions, never overwrites evidence, and is not imported by startup.

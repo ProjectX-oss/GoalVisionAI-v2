@@ -85,8 +85,18 @@ def verify_selection_policy_alignment(selections, assessments) -> tuple[str, ...
 
 def _rank_key(item):
     return (
-        -item.expected_value, -item.calibrated_probability, -item.edge,
-        -item.decimal_odds, item.odds_age_seconds,
+        item.expected_value is None,
+        -item.expected_value if item.expected_value is not None else 0,
+        item.calibrated_probability is None,
+        -item.calibrated_probability
+        if item.calibrated_probability is not None
+        else 0,
+        item.edge is None,
+        -item.edge if item.edge is not None else 0,
+        item.decimal_odds is None,
+        -item.decimal_odds if item.decimal_odds is not None else 0,
+        item.odds_age_seconds is None,
+        item.odds_age_seconds if item.odds_age_seconds is not None else 0,
         tuple(type(item.market_identity)).index(item.market_identity),
         item.odds_row_id or "", item.assessment_id, item.assessment_fingerprint,
     )

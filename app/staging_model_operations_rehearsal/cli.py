@@ -32,11 +32,9 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--evidence-report-destination")
     run.add_argument(
         "--artifact-mode",
-        choices=tuple(item.value for item in ArtifactMode),
-        default=ArtifactMode.PREFER_REAL.value,
+        choices=(ArtifactMode.REAL_ONLY.value,),
+        default=ArtifactMode.REAL_ONLY.value,
     )
-    run.add_argument("--real-artifacts-required", action="store_true")
-    run.add_argument("--allow-fixture-fallback", action="store_true")
     run.add_argument("--output", choices=("human", "json"), default="human")
     return parser
 
@@ -44,11 +42,6 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        mode = (
-            ArtifactMode.REAL_ONLY
-            if args.real_artifacts_required
-            else ArtifactMode(args.artifact_mode)
-        )
         outcome = run_staging_rehearsal(
             StagingRehearsalCommand(
                 source_database=args.source_database,
@@ -59,8 +52,7 @@ def main(argv=None) -> int:
                 source_commit=args.source_commit,
                 audit_output_mode=args.audit_output_mode,
                 evidence_report_destination=args.evidence_report_destination,
-                artifact_mode=mode,
-                allow_fixture_fallback=args.allow_fixture_fallback,
+                artifact_mode=ArtifactMode(args.artifact_mode),
             )
         )
         print(canonical_json(outcome) if args.output == "json" else format_human(outcome))

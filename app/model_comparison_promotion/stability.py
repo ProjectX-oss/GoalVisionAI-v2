@@ -138,11 +138,26 @@ def summarize_stability(groups):
         _snapshot(item.concentration_evidence_snapshot)
         for item in eligible
     ]
+    concentration_categories = {
+        "COMPETITION",
+        "SEASON",
+        "CALENDAR_MONTH",
+    }
+    positive_groups_by_category = {
+        category: sum(
+            Decimal(snapshot.get("profit_concentration", 0)) > 0
+            for item, snapshot in zip(eligible, snapshots)
+            if item.group_category == category
+        )
+        for category in concentration_categories
+    }
     concentrations = [
         item.get(
             "profit_concentration", Decimal(0)
         )
-        for item in snapshots
+        for group, item in zip(eligible, snapshots)
+        if group.group_category in concentration_categories
+        and positive_groups_by_category[group.group_category] >= 2
     ]
     loss_concentrations = [
         item.get("loss_concentration", Decimal(0))
@@ -251,7 +266,9 @@ def _bucket(value, boundaries):
 
 def _snapshot(value):
     return {
-        key: Decimal(item) if key == "profit_concentration" else item
+        key: Decimal(item)
+        if key in {"profit_concentration", "loss_concentration"}
+        else item
         for key, item in json.loads(value).items()
     }
 

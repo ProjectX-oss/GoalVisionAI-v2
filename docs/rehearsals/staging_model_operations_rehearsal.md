@@ -1,169 +1,112 @@
-# Controlled Staging Model Operations Rehearsal
+# Controlled REAL_ONLY Staging Model Operations Rehearsal
 
 ## Result
 
 Status: `STAGING_REHEARSAL_COMPLETED`
 
-The controlled staging rehearsal passed. This is technical staging evidence,
-not production authorization.
+The controlled staging rehearsal completed the genuine historical ML artifact
+chain and the activation/rollback workflow. This is staging evidence only and
+does not authorize production activation.
 
-- Source commit:
-  `78f218632fafe4ceeab708b5dd92dbd1e48a890f`
-- Final commit: the atomic commit containing this report, with message
-  `feat: add controlled staging model operations rehearsal`; its hash is
-  recorded in the completion handoff because a commit cannot contain its own
-  hash.
+- Source commit: `5387bd62cd8b435af5d444aca186219b9c879514`
 - Environment/scope: `STAGING` / `OFFICIAL_GLOBAL`
-- Fixed rehearsal timestamp: `20260725T120000Z`
-- Evidence schema:
-  `goalvision-staging-model-operations-rehearsal-v1`
+- Fixed rehearsal timestamp: `20260728T160000Z`
+- Artifact mode: `REAL_ONLY`
+- Fixture fallback used: `false`
+- Real artifact chain complete: `true`
+- Controlled source label: `CONTROLLED_SYNTHETIC_STAGING_SOURCE`
+- Chain fingerprint:
+  `4ac5ea5879122417ebfa426c38686c104d61c4355da046c21f81934154f165f5`
 - Evidence fingerprint:
-  `7e8f4d6b307009b5d085e5cdb40695a9f4e62e0bbd0cb60a11be33122ab45d91`
+  `39abc9d897e0cdb15c5166567acb251a7501c9457a0a8a30312871e302400ac1`
 
-The canonical machine-readable evidence is
-`docs/rehearsals/staging_model_operations_rehearsal.json`.
+The complete canonical machine-readable evidence is
+`docs/rehearsals/staging_model_operations_real_only_20260728.json`; the
+companion `staging_model_operations_rehearsal.json` is a compact summary.
 
-## Source safety and artifact selection
+## Source safety
 
-The explicitly supplied `data/goalvision.db` source was opened read-only for
-inventory and integrity checks.
+The supplied SQLite database was not used as an ML-label source. It was opened
+read-only for integrity checks and copied byte-for-byte before the isolated
+controlled source was created.
 
-- Source schema version: `7`
+- Source schema: `7`
 - Source size: `286720` bytes
-- Source SHA-256 before:
+- SHA-256 before, after, and backup:
   `61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0`
-- Source SHA-256 after:
-  `61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0`
-- Byte-identical backup SHA-256:
-  `61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0`
-- Source foreign-key violations: `0`
-
-The v7 source has no complete persisted modern
-model/calibration/backtest/comparison/promotion/settled-Shadow chain.
-The explicitly authorized fallback was therefore selected with reason codes
-`SOURCE_SCHEMA_LACKS_COMPLETE_ML_CHAIN` and
-`DETERMINISTIC_FIXTURE_FALLBACK_SELECTED`. Every generated artifact is marked
-`FICTIONAL_STAGING_REHEARSAL_ONLY`.
-
-No candidate chain was rejected individually because the source has none of
-the required modern chain tables. The selected complete fictional chain used:
-
-- champion model:
-  `historical-model-artifact-61292eade01cb6dc9e33981fe5b565990c65a8a2f37fe63deb6446b4088dfa63`;
-- champion calibration:
-  `historical-calibration-artifact-set-b5da5055001b33f8894083d9924d7776d0336949418aa34058a8828fb81a6db7`;
-- challenger model:
-  `historical-model-artifact-a71245558c393106cb5f76b65fe8ba9e85d94dd6b23552cba96767e0acc918c4`;
-- challenger calibration:
-  `historical-calibration-artifact-set-9e9777992145e5b12e308291e0f54922a900e9accd6e27c161a1b073598014cc`;
-- comparison:
-  `model-comparison-run-6e894f65db1a0b8ba8d4ada923d6b441244ca08219d1b25c12e139f39c84b14e`;
-- promotion recommendation:
-  `model-comparison-recommendation-187fbd8fdbc15cc517174b6e9c2b5482ffb49b53d9853ee4cb0211e907f76ddb`;
-- settled Shadow evidence fingerprint:
-  `d4d16b49baabd3d1b05d062a9b8cc13961d2b4975bc797feb42f4d3ce13a038c`.
-
-## Mandatory audit gates
-
-All audit invocations used both human and JSON output.
-
-| Phase | Status | PASS | INFO | WARNING | BLOCKER | Fingerprint |
-|---|---:|---:|---:|---:|---:|---|
-| Pre-bootstrap | `AUDIT_PASSED` | 16 | 1 | 0 | 0 | `1445cab990f73d68b24cdda6f0ac76366d0c49f656a97a1d847eedab76b1f531` |
-| Pre-execution | `AUDIT_PASSED` | 17 | 0 | 0 | 0 | `6da8fc7591257e5c0d8884b2c9988e4e0675091f9e67304a2f172594d69f140b` |
-| Final independent audit | `AUDIT_PASSED` | 35 | 0 | 0 | 0 | `7f95c55b2a79446aad8e95003688cc1fab10b903d5955bb3f241d4c5f7a995cd` |
-
-The pre-bootstrap INFO is the expected explicit unbootstrapped staging
-registry. Final staging readiness is `STAGING_REHEARSAL_READY`.
-
-## Model operation transitions
-
-Bootstrap executed once. A second bootstrap was rejected because initialization
-is intentionally one-shot; both its exact re-attempt and changed-content
-conflict exited `6` with `BOOTSTRAP_REJECTED`. Exact activation preparation
-replay exited `0` and returned the same prepared plan; changed content under
-the request ID exited `6` with `ACTIVATION_CONFLICT`.
-
-Activation then executed exactly once. Exact execution replay returned
-`ACTIVATION_ALREADY_EXECUTED` at exit `6`; changed content returned
-`ACTIVATION_CONFLICT` at exit `6`; the wrong confirmation returned
-`CONFIRMATION_REJECTED` at exit `2`.
-
-Rollback preparation executed, replayed idempotently, and rejected changed
-content with `ROLLBACK_CONFLICT` at exit `6`. Rollback executed exactly once.
-Exact execution replay returned `ROLLBACK_ALREADY_EXECUTED` at exit `6`;
-changed content returned `ROLLBACK_CONFLICT` at exit `6`; the wrong
-confirmation returned `CONFIRMATION_REJECTED` at exit `2`.
-
-The read-only resolver produced the exact append-only chain:
-
-1. `champion-generation-7e0158680bf188ff09bc3131c03c160e030cafe4a3c9c1e40c5d8e9c58b19f8b`
-2. `champion-generation-cd78dff99e156bfb6ca41c22a2d9d7181c94b59966c95a464130e887a034fec5`
-3. `champion-generation-9c081a2c78dfb538fb57878ab9cc6cada4a760e0ee4a012741e743108c10d1f8`
-
-The final registry event sequence was `INITIAL_REGISTERED`,
-`RETIRED_BY_ACTIVATION`, `CHAMPION_ACTIVATED`,
-`RETIRED_BY_ROLLBACK`, `CHAMPION_ROLLED_BACK`.
-
-## Persistence and recovery evidence
-
-- Foundation/disposable-before canonical-content SHA-256:
-  `faea10afa7365bd6cc78b475f9948cd1fc06727a11b73ef7c1b14047c5037a6e`
-- Disposable-after canonical-content SHA-256:
-  `d43bba96446535edfe3b46d90ff7de2b18509606b958566087d2b7b38a6942ea`
-- Generations: `3`
-- Activation requests/plans/executions: `1 / 1 / 1`
-- Rollback requests/plans/executions: `1 / 1 / 1`
-- Registry events: `5`
-- Evidence links: `30`
-- Append-only triggers: `184`
 - Foreign-key violations: `0`
-- Protected upstream state unchanged: `true`
 
-Injected persistence failures proved
-`ACTIVATION_FAILURE_ATOMIC`, `ACTIVATION_EXACT_RETRY_SUCCEEDED`,
-`ROLLBACK_FAILURE_ATOMIC`, and `ROLLBACK_EXACT_RETRY_SUCCEEDED`.
+All ML and model-operations writes were confined to the ignored
+`var/staging_rehearsal/` destination. No source or production database was
+mutated.
 
-## Commands and verification
+## Genuine artifact chain
 
-The exact authorized rehearsal command is documented in
-`docs/model_operations_runbook.md` and was executed with the source, destination,
-timestamp, source commit, `prefer-real`, explicit fixture fallback, both audit
-formats, JSON evidence destination, and JSON output shown there. It exited `0`.
-An independent run with the same inputs and human output also exited `0` and
-returned the identical evidence fingerprint
-`7e8f4d6b307009b5d085e5cdb40695a9f4e62e0bbd0cb60a11be33122ab45d91`.
+Every step used the production domain service and persisted its normal
+provenance:
 
-- Focused staging rehearsal:
-  `python -m unittest tests.test_staging_model_operations_rehearsal -v` —
-  12 passed in 39.229 seconds.
-- Cross-domain focused matrix: 186 passed in 139.496 seconds.
-- Complete suite: 1091 passed in 215.801 seconds.
-- Compilation: `python -m compileall -q app tests` — exit `0`.
-- Complete import smoke: 566 application modules, zero failures.
-- Controlled startup:
-  `python -m app.official_prediction_operations.cli smoke-startup --json-output`
-  — `HEALTHY`, exit `0`; gate, orchestration, pipeline, publication-claim, and
-  Telegram-send counts were all zero.
-- Staging rehearsal, independent audit, and model-operations CLI help smokes:
-  exit `0`.
-- Staging human and canonical JSON output smokes: exit `0`, matching evidence
-  fingerprints.
-- Source and backup byte SHA-256 re-verification: matched.
+1. Imported `1200` controlled historical matches.
+2. Built `1188` leakage-safe training examples.
+3. Created chronological champion and challenger splits. The challenger fold
+   contains `688` TRAIN, `200` VALIDATION, and `300` TEST examples.
+4. Trained two real logistic model artifacts and fitted real calibration
+   artifacts.
+5. Reproduced predictions and ran both backtests on the same `300` TEST
+   examples with pre-kickoff controlled odds.
+6. Completed the default comparison policy with
+   `PROMOTE_CHALLENGER` and score
+   `0.6474693837108956663057189680`.
+7. Settled `30` shadow evaluations over `29` observation days and built
+   activation evidence from the persisted results.
+
+Key evidence:
+
+- Comparison:
+  `model-comparison-run-ccb115a90ea49ee2555e4567d2d11286c6296f44d755f28381bad83d4c959e37`
+- Recommendation:
+  `model-comparison-recommendation-645847420f0840a4222f7bd47ca7c1862885419369724dd7fa7af670b6fd8996`
+- Shadow evidence:
+  `cd7dd67c682b65399d54eb66b14576b8a6cdff5a2f41fd358dfd525c7aa69575`
+
+The controlled odds are derived before outcomes. The shadow market is
+deliberately conservative so both genuine runtime paths select no bet; later
+settlement still uses the imported final scores.
+
+## Activation, rollback, and audit evidence
+
+The independent audits all passed:
+
+| Phase | PASS | INFO | WARNING | BLOCKER | Fingerprint |
+|---|---:|---:|---:|---:|---|
+| Pre-bootstrap | 16 | 1 | 0 | 0 | `908610c80c442dcbc38baa7b886eef7b0d9cb35a00616b8b21c62e35ded61a2b` |
+| Pre-execution | 17 | 0 | 0 | 0 | `5e0ab9e8ac0ceb84f47f7e139ec3ee31d4ec76846bc86d6ca53152eceebf2129` |
+| Final | 35 | 0 | 0 | 0 | `d3ca7c33c23f230f75ec8595d2e80b42b7ee2b3ead1d16323bb1b2536166d7dc` |
+
+Bootstrap, activation preparation, activation, rollback preparation, and
+rollback each succeeded. Exact replays were idempotent or rejected as already
+executed; changed requests and incorrect confirmations failed closed. The
+resolver observed the exact three-generation append-only sequence. Final
+counts were one activation, one rollback, three generations, five registry
+events, and thirty evidence links.
+
+Injected activation and rollback persistence failures left no partial state;
+exact retries succeeded. The final database had `184` append-only triggers,
+zero foreign-key violations, and unchanged protected upstream state.
+
+## Verification
+
+- Complete suite: `1094` tests passed.
+- Focused staging suite: `12` loaded tests passed; the added exact replay check
+  was also exercised independently.
+- Application import smoke: `562` modules, zero failures.
+- Controlled startup smoke: `HEALTHY`; gate, orchestration, pipeline,
+  publication-claim, and Telegram-send counts were all zero.
+- Compilation and evidence JSON validation: passed.
+- Final source SHA-256 recheck: unchanged.
 
 ## Safety conclusion
 
-No Telegram message was sent. No Official publication, bankroll, settlement,
-statistics, scheduling, worker, automatic activation, automatic rollback,
-startup execution, or runtime inference wiring was introduced or changed.
-Production activation remains unauthorized.
-
-## Known limitations and next step
-
-The supplied v7 source contains no real persisted reviewed ML artifact chain,
-so this first rehearsal necessarily proves the explicit deterministic fixture
-path. Real-chain inventory remains read-only and fails closed on incomplete or
-ambiguous evidence. The next logical step is to persist and independently
-review a complete real candidate chain in an isolated staging source, then run
-the same authorized procedure in `real-only` mode. That later action still
-must not wire runtime inference or authorize production.
+No Telegram message, Official prediction, bankroll change, settlement,
+statistics update, scheduler, worker, startup integration, automatic
+activation, automatic rollback, or runtime inference wiring was introduced or
+executed. Production activation remains unauthorized.

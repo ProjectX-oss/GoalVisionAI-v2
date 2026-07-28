@@ -752,5 +752,16 @@ class ModelComparisonMigrationTests(unittest.TestCase):
         database.close()
 
 
+class ModelComparisonStabilityRegressionTests(unittest.TestCase):
+    def test_profit_and_loss_concentrations_restore_as_decimals(self):
+        from app.model_comparison_promotion.stability import _snapshot
+
+        restored = _snapshot(
+            '{"loss_concentration":"0.25","profit_concentration":"0.75"}'
+        )
+        self.assertEqual(restored["profit_concentration"], Decimal("0.75"))
+        self.assertEqual(restored["loss_concentration"], Decimal("0.25"))
+
+
 if __name__ == "__main__":
     unittest.main()

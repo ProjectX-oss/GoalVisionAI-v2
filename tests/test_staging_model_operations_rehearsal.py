@@ -9,7 +9,7 @@ import unittest
 from unittest.mock import patch
 from uuid import uuid4
 
-from app.database import MigrationManager
+from app.database import Database, MigrationManager
 from app.database.migrations import MIGRATIONS
 from app.model_operations_rehearsal.safety import sha256_file
 from app.staging_model_operations_rehearsal import (
@@ -22,10 +22,10 @@ from app.staging_model_operations_rehearsal import (
     run_staging_rehearsal,
 )
 from app.staging_model_operations_rehearsal.execution import (
-    StagingRehearsalError,
     _sqlite_content_sha256,
 )
 from app.staging_model_operations_rehearsal.reporting import redact
+from app.staging_real_artifact_chain import build_real_artifact_chain
 
 
 SOURCE_COMMIT = "78f218632fafe4ceeab708b5dd92dbd1e48a890f"
@@ -57,8 +57,7 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
             scope="OFFICIAL_GLOBAL",
             timestamp=TIMESTAMP,
             source_commit=SOURCE_COMMIT,
-            artifact_mode=ArtifactMode.PREFER_REAL,
-            allow_fixture_fallback=True,
+            artifact_mode=ArtifactMode.REAL_ONLY,
         )
         cls.source_before = sha256_file(cls.source)
         cls.outcome = run_staging_rehearsal(cls.command)
@@ -104,15 +103,38 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
             {"BLOCKER": 0, "INFO": 0, "PASS": 35, "WARNING": 0},
         )
 
-    def test_fixture_fallback_is_explicit_complete_and_staging_marked(self):
-        self.assertTrue(self.outcome.artifact_inventory.used_fixture_fallback)
-        self.assertEqual(self.outcome.selected_artifact_mode, "FIXTURE_FALLBACK")
+    def test_real_only_chain_is_explicit_complete_and_source_marked(self):
+        self.assertFalse(self.outcome.fixture_fallback_used)
+        self.assertFalse(self.outcome.artifact_inventory.used_fixture_fallback)
+        self.assertTrue(self.outcome.real_artifact_chain_complete)
+        self.assertEqual(self.outcome.artifact_mode, "REAL_ONLY")
+        self.assertEqual(self.outcome.selected_artifact_mode, "REAL_ONLY")
+        self.assertEqual(
+            self.outcome.artifact_inventory.inventory_reason_codes,
+            ("CONTROLLED_REAL_ARTIFACT_CHAIN_COMPLETE",),
+        )
         manifest = (
             self.destination
             / f"goalvision_staging_rehearsal_{TIMESTAMP}.manifest.json"
         ).read_text(encoding="utf-8")
-        self.assertIn("FICTIONAL_STAGING_REHEARSAL_ONLY", manifest)
-        self.assertNotIn("FICTIONAL_LAB_REHEARSAL_ONLY", manifest)
+        self.assertIn("CONTROLLED_SYNTHETIC_STAGING_SOURCE", manifest)
+        self.assertNotIn("FICTIONAL_", manifest)
+
+    def test_real_chain_exact_replay_is_idempotent(self):
+        controlled_source = (
+            self.destination
+            / f"controlled_real_artifact_source_{TIMESTAMP}.db"
+        )
+        database = Database(controlled_source)
+        try:
+            replay = build_real_artifact_chain(database)
+        finally:
+            database.close()
+        self.assertEqual(
+            replay.chain_fingerprint,
+            self.outcome.real_artifact_chain_fingerprint,
+        )
+        self.assertEqual(replay.label, "CONTROLLED_SYNTHETIC_STAGING_SOURCE")
 
     def test_activation_rollback_and_resolver_sequence_are_exact(self):
         self.assertEqual(self.outcome.status, "STAGING_REHEARSAL_COMPLETED")
@@ -245,7 +267,7 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
             fingerprints.append(_sqlite_content_sha256(path.resolve()))
         self.assertEqual(fingerprints[0], fingerprints[1])
 
-    def test_production_outside_root_collision_and_no_fallback_reject(self):
+    def test_production_outside_root_and_collision_reject(self):
         with self.assertRaises(StagingRehearsalPolicyError):
             run_staging_rehearsal(
                 replace(self.command, environment="PRODUCTION")
@@ -255,17 +277,6 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
         )
         with self.assertRaises(StagingRehearsalPolicyError):
             run_staging_rehearsal(self.command, policy=policy)
-        no_fallback = StagingRehearsalCommand(
-            source_database=str(self.source),
-            destination_directory=str(self.root / "no-fallback"),
-            environment="STAGING",
-            scope="OFFICIAL_GLOBAL",
-            timestamp="20260725T130000Z",
-            source_commit=SOURCE_COMMIT,
-            artifact_mode=ArtifactMode.REAL_ONLY,
-        )
-        with self.assertRaises(StagingRehearsalError):
-            run_staging_rehearsal(no_fallback)
         with self.assertRaises(StagingRehearsalPolicyError):
             run_staging_rehearsal(
                 replace(
