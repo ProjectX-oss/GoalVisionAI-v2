@@ -27,11 +27,13 @@ the live `goalvision_model_input_v1` / `official_prediction_model_input_v1`
 contract and whose linked calibration artifact set passes the controlled
 resolver's fingerprint checks.
 
-At the current repository state, the trained artifacts use the separate
-145-position historical schema. That is not compatible with the 78-position
-live Feature Store schema. Analysis therefore fails closed until a reviewed
-live-compatible champion is trained, compared, shadowed, and activated. Do not
-work around this check.
+The repository now contains the controlled 78-position model foundation. A
+compatible champion and calibration chain may be used only from an isolated
+staging/Lab database produced by that foundation. This does not authorize or
+change production activation. Before each operational analysis, verify the
+active generation, exact 78-feature schema fingerprint, model and calibration
+fingerprints, and calibration freshness. A structurally compatible but stale
+calibration must remain non-actionable.
 
 ## Input JSON
 
@@ -149,5 +151,6 @@ Manual facts can be incomplete or transcribed incorrectly; provenance and
 freshness validation cannot prove source truth. This feature does not discover
 upcoming fixtures, call a sports API, collect recurring data, schedule analysis,
 send automatically, settle results, publish Official predictions, activate
-production, or provide a dashboard. The next prerequisite is a reviewed
-live-Feature-Store-compatible champion artifact and calibration chain.
+production, or provide a dashboard. A separately reviewed, recently calibrated
+live-compatible champion is required before an optional Lab send can be
+considered.

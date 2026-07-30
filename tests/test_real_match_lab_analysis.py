@@ -1,4 +1,6 @@
 import asyncio
+import contextlib
+import io
 import json
 import sqlite3
 import tempfile
@@ -28,6 +30,7 @@ from app.real_match_lab_analysis import (
     parse_input,
 )
 from app.real_match_lab_analysis.input import InputValidationError
+from app.real_match_lab_analysis.cli import _json_text, _print_value
 from app.real_match_lab_analysis.message import build_message
 from app.real_match_lab_analysis.service import RealMatchLabAnalysisService
 from app.services.telegram_service import TelegramMessageReceipt
@@ -93,6 +96,18 @@ class RecordingTransport:
 
 
 class RealMatchLabInputTests(unittest.TestCase):
+    def test_json_cli_output_is_ascii_safe_and_round_trips_unicode(self):
+        value = {"confidence": "⭐⭐⭐⭐", "status": "NO_SELECTION"}
+        rendered = _json_text(value)
+        self.assertTrue(rendered.isascii())
+        self.assertEqual(json.loads(rendered), value)
+
+    def test_human_structured_cli_output_is_ascii_safe(self):
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            _print_value([{"confidence": "⭐⭐"}], "human")
+        self.assertTrue(output.getvalue().isascii())
+
     def test_valid_real_match_input_validation(self):
         value = parse_input(raw_input(), now=NOW)
         self.assertEqual(value.schema_version, INPUT_SCHEMA_VERSION)

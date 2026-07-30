@@ -1,0 +1,227 @@
+{
+  "schema_version": "goalvision-real-match-lab-genuine-analysis-evidence-v1",
+  "source_commit": "ffccab285cab34c26093b2a2d2101b594c472ae4",
+  "execution": {
+    "collected_at_utc": "2026-07-30T18:17:52Z",
+    "odds_captured_at_utc": "2026-07-30T18:16:14Z",
+    "input_validation_exit_status": 0,
+    "human_analysis_exit_status": 0,
+    "json_analysis_exit_status_after_cli_fix": 0,
+    "input_schema": "goalvision-real-match-lab-input-v1",
+    "environment": "LAB",
+    "scope": "OFFICIAL_GLOBAL"
+  },
+  "match": {
+    "match_id": "mls-nycfc-toronto-2026-07-31",
+    "home_team": "New York City FC",
+    "away_team": "Toronto FC",
+    "competition": "Major League Soccer",
+    "season": "2026",
+    "kickoff_utc": "2026-07-31T23:30:00Z",
+    "venue": "Yankee Stadium",
+    "neutral_venue": false,
+    "chosen_before_model_output": true
+  },
+  "provenance": {
+    "fixture": [
+      {
+        "source": "Sofascore public match page",
+        "url": "https://www.sofascore.com/football/match/new-york-city-fc-toronto-fc/FQcsTcAb",
+        "summary": "Teams, 2026-07-31T23:30:00Z kickoff, and Yankee Stadium."
+      },
+      {
+        "source": "Toronto FC official 2026 schedule announcement",
+        "url": "https://www.torontofc.ca/news/toronto-fc-announce-schedule-for-the-2026-mls-season",
+        "summary": "Official club schedule corroboration."
+      }
+    ],
+    "form_and_context": [
+      {
+        "source": "Sports Mole match guide",
+        "url": "https://www.sportsmole.co.uk/football/mls/new-york-city-fc-vs-toronto_game_252574.html",
+        "summary": "Recent six-match results, season scoring totals, standings context, and recent head-to-head results."
+      }
+    ],
+    "odds": [
+      {
+        "source": "Betfred public event page",
+        "url": "https://www.betfred.com/sports/football/event/36222598",
+        "bookmaker": "BETFRED",
+        "quote_type": "DIRECT_BOOKMAKER_ODDS",
+        "source_event_id": "36222598",
+        "markets_captured": 11,
+        "summary": "One immutable direct quote for every supported single market; no averaging."
+      },
+      {
+        "source": "bet365 public MLS page",
+        "url": "https://www.bet365.com/hub/en-us/football/football-competitions/mls",
+        "quote_type": "DIRECT_BOOKMAKER_CORROBORATION",
+        "summary": "Independent fixture and 1X2 market corroboration; not used as the persisted price source."
+      }
+    ],
+    "operator_method": "Manual review of accessible public pages; no login, scraping bypass, credentials, cookies, private data, or automated collection claim."
+  },
+  "input_validation": {
+    "result": "VALID",
+    "request_id": "real-match-lab-nycfc-toronto-20260731-v1",
+    "request_fingerprint": "9b02fd97ade64a7bdaeb21ff3bb3d6101b8b13bfd03bfff13a2c3eb17b7b6cae",
+    "normalized_match_identity": "mls-nycfc-toronto-2026-07-31",
+    "kickoff_future_at_collection": true,
+    "feature_completeness": "0.589744",
+    "available_feature_count": 46,
+    "missing_optional_feature_count": 32,
+    "required_baselines_present": true,
+    "odds_count": 11,
+    "odds_age_seconds": 98,
+    "odds_freshness": "FRESH",
+    "lineup_status": "NOT_AVAILABLE",
+    "warnings": [
+      "Optional xG, venue-split, lineup, injury, suspension, and goalkeeper facts were not populated without current verified provenance.",
+      "The controlled champion calibration was structurally compatible but stale under the existing value policy."
+    ]
+  },
+  "champion": {
+    "champion_generation_id": "champion-generation-030ec5d74b66ef4adb60973a9cb77be9883204306bd4389a901c969fb41df3b5",
+    "generation_number": 3,
+    "generation_fingerprint": "030ec5d74b66ef4adb60973a9cb77be9883204306bd4389a901c969fb41df3b5",
+    "model_artifact_id": "historical-model-artifact-5714e557bb301baf5d6e780c3a9b36a3cd49182b760fd9b4603c3e5bda23fac0",
+    "model_artifact_fingerprint": "5714e557bb301baf5d6e780c3a9b36a3cd49182b760fd9b4603c3e5bda23fac0",
+    "calibration_artifact_id": "historical-calibration-artifact-set-11a407ead516be7c9f1ce27ff8c25477be969512ec33d5d3ee27fbb774e7db7e",
+    "calibration_fingerprint": "11a407ead516be7c9f1ce27ff8c25477be969512ec33d5d3ee27fbb774e7db7e",
+    "calibration_effective_at_utc": "2026-07-01T14:00:00Z",
+    "calibration_age_seconds": 2521072,
+    "input_schema_id": "goalvision_model_input_v1",
+    "input_schema_version": "v1",
+    "feature_count": 78,
+    "schema_fingerprint": "048405d961c2752d492819479788274942cd65c3397f9c9120c83c1a93e5be8a",
+    "preprocessing_fingerprint": "cd669de742c4864aeaf2f43cfe4595e7792a247921aad2b5ac211de338b67516",
+    "runtime_compatibility": "PASS",
+    "production_activation_changed": false,
+    "production_activation_authorized": false
+  },
+  "pipeline": {
+    "analysis_id": "real-match-lab-analysis-38ce499591e997c785fc64ed0e98fc5da5765477d7b36343da163c24e9dd7e2f",
+    "result_fingerprint": "0fede6d83dfd247bf5e955b5d3c57cf72883ab59de207ef4062b506f71594461",
+    "match_snapshot_id": "match-snapshot-fa598c56b8caafc6558c8588aa859e985a7f2f425ebd27c1aa5b8ed52706cdc4",
+    "match_snapshot_fingerprint": "6c16f17001a1b25a61a6f27dbd45c0b556e67df66a305ae6ba1c214a695a148b",
+    "feature_set_id": "match-feature-set-3f48d0125942e915de5078a46b35b1c91e5669ac54356e62fe48595d56535466",
+    "feature_snapshot_fingerprint": "ad08698948113908829b863eab925e9cb383a555381d5597bb1a2a898a6f240f",
+    "model_input_id": "model-input-89d2216a6b1af12bf3086e1153dc8f95ec93edb93886c309c679e0b59b0c59a9",
+    "model_input_fingerprint": "dd727f50f9e77989ca47d8d056f455a9da7285106aedac69aa0709fabd6290af",
+    "inference_id": "inference-15a3493898f8c65b918fc51705bc4ab9314ec4263f9a403ba0067c69805a8a3c",
+    "raw_probability_fingerprint": "4afcf39a52212fa2b7aee3706ad25070e62966e4bf9676d278f82c7fb5233c63",
+    "inference_fingerprint": "b011d8a240eabaa42aa4032453bed314c56486e37174f5392bb3972a8ce5e20b",
+    "calibrated_assembly_id": "calibrated-assembly-1bc0cd1e845df6edc9e2f173cd0b63255e9f45fc84033bb96d2d7de1367a0677",
+    "calibrated_probability_fingerprint": "8bae2e0ab974da5cecdbf384eb8fec3265359eb2c7042725fc6103bbe464303f",
+    "calibrated_assembly_fingerprint": "ffe694cab3429f9035fedf6913eb7bfa9ee34c36d818c4f402acaeb245035413",
+    "odds_snapshot_fingerprint": "9292d882791e350d83032a412a9cb189677fd9279c67c31844ee3305dce0c351",
+    "value_assessment_fingerprint": "884fd9da2403517c9c0c2d775ebd2c1adbe2d12f8847d497c149312841076d81",
+    "selection_decision_fingerprint": "513c44f61ffa4b5e01b52cc2805e0d9267b7e718fd20ba332d40ebc32db3ff89",
+    "status": "NO_SELECTION",
+    "selected_market": null,
+    "selection_reasons": [],
+    "rejection_reasons": [
+      "NO_POSITIVE_VALUE_LAB_SELECTION",
+      "ALL_MARKETS_NON_ACTIONABLE_STALE"
+    ],
+    "message_preview": null,
+    "message_fingerprint": null,
+    "no_selection_report": "Fresh bookmaker quotes were evaluated, but the 29-day-old controlled calibration made every market NON_ACTIONABLE_STALE. No Telegram-safe message was assembled."
+  },
+  "probabilities": [
+    {"market": "HOME_WIN", "raw": "0.084936", "calibrated": "0.001498749374687343671835917959"},
+    {"market": "DRAW", "raw": "0.151065", "calibrated": "0.499250625312656328164082041"},
+    {"market": "AWAY_WIN", "raw": "0.763999", "calibrated": "0.499250625312656328164082041"},
+    {"market": "OVER_1_5", "raw": "0.113967", "calibrated": "0.001"},
+    {"market": "UNDER_1_5", "raw": "0.886033", "calibrated": "0.999"},
+    {"market": "OVER_2_5", "raw": "0.106578", "calibrated": "0.001"},
+    {"market": "UNDER_2_5", "raw": "0.893422", "calibrated": "0.999"},
+    {"market": "OVER_3_5", "raw": "0.09919", "calibrated": "0.001"},
+    {"market": "UNDER_3_5", "raw": "0.90081", "calibrated": "0.999"},
+    {"market": "BTTS_YES", "raw": "0.308539", "calibrated": "0.999"},
+    {"market": "BTTS_NO", "raw": "0.691461", "calibrated": "0.001"}
+  ],
+  "market_evaluations": [
+    {"rank": null, "market": "HOME_WIN", "raw_probability": "0.084936", "calibrated_probability": "0.001499", "fair_odds": "667.222964", "bookmaker_odds": "1.6", "implied_probability": "0.625", "edge": "-0.623501", "expected_value": "-0.997602", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "afae97896035bd36134e2275a9095f00cafe3316d44ef019e10b8b5c5339ce68", "value_assessment_id": "market-value-6d623b4b11f7b4cd3526a4464fa5a545fca4ad776aad7a5ab87ccc78cca2df97"},
+    {"rank": null, "market": "DRAW", "raw_probability": "0.151065", "calibrated_probability": "0.499251", "fair_odds": "2.003002", "bookmaker_odds": "4", "implied_probability": "0.25", "edge": "0.249251", "expected_value": "0.997003", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "129673d4e156036345b10b60ceed36e4a1b1a97497b79f17f6ff77517070003d", "value_assessment_id": "market-value-f9732febae2c0f736c0085cad759e52017a0517a598ebb56b9ef28ac9bdb32e7"},
+    {"rank": null, "market": "AWAY_WIN", "raw_probability": "0.763999", "calibrated_probability": "0.499251", "fair_odds": "2.003002", "bookmaker_odds": "4.6", "implied_probability": "0.217391", "edge": "0.281859", "expected_value": "1.296553", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "df84cd561c076c0ebd9ec62c734109c269c45d02811a7aa2f18156842066c817", "value_assessment_id": "market-value-c16e4931c0ba535a7c30316dc553e5c95926de2cb5cac61b4fbcf2661c0549fa"},
+    {"rank": null, "market": "OVER_1_5", "raw_probability": "0.113967", "calibrated_probability": "0.001", "fair_odds": "1000", "bookmaker_odds": "1.25", "implied_probability": "0.8", "edge": "-0.799", "expected_value": "-0.99875", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": false, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "628ff588e7f69c90c249c6e55426fc83e1384a371ccaef4927c026bbed723280", "value_assessment_id": "market-value-661849d4ff7e2b35b5d165faad0fa09fd1cfc55cbbac2bed1afec063903d0634"},
+    {"rank": null, "market": "UNDER_1_5", "raw_probability": "0.886033", "calibrated_probability": "0.999", "fair_odds": "1.001001", "bookmaker_odds": "3.75", "implied_probability": "0.266667", "edge": "0.732333", "expected_value": "2.74625", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "f355cd83fac29d019adc60b97cfcb8f0e20b3153135574f7ac7b274ed15f4990", "value_assessment_id": "market-value-e3c38c076fca88254639b8d5c834edb8562248c61cd41652ed47d6a3ff2b8692"},
+    {"rank": null, "market": "OVER_2_5", "raw_probability": "0.106578", "calibrated_probability": "0.001", "fair_odds": "1000", "bookmaker_odds": "1.727273", "implied_probability": "0.578947", "edge": "-0.577947", "expected_value": "-0.998273", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "bbc8424dfbff1f5499e88e85aa4b5f29925967146cfddb6e8f8f924cd22d8807", "value_assessment_id": "market-value-66580982c9c40c4f2d826560f8d0cf9a41f17b0b0627377cfc79051684b1a986"},
+    {"rank": null, "market": "UNDER_2_5", "raw_probability": "0.893422", "calibrated_probability": "0.999", "fair_odds": "1.001001", "bookmaker_odds": "2", "implied_probability": "0.5", "edge": "0.499", "expected_value": "0.998", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "d6f4c54abcdb5d66bc94140ad28f90bab78ca9b06f49223fe81ae8f67c3a5454", "value_assessment_id": "market-value-a784fda6de57a37c566dc93ef452a16c6136ebac5c523763892740df49b85933"},
+    {"rank": null, "market": "OVER_3_5", "raw_probability": "0.09919", "calibrated_probability": "0.001", "fair_odds": "1000", "bookmaker_odds": "2.75", "implied_probability": "0.363636", "edge": "-0.362636", "expected_value": "-0.99725", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "735d8d3f5004e988d7ee832331ebcef732568f25da6f6fa3e17d2528afe40270", "value_assessment_id": "market-value-00e2424dd53cefa02457e76c6c003ed92208396012fdfdcc5cc6caa6e3e32683"},
+    {"rank": null, "market": "UNDER_3_5", "raw_probability": "0.90081", "calibrated_probability": "0.999", "fair_odds": "1.001001", "bookmaker_odds": "1.4", "implied_probability": "0.714286", "edge": "0.284714", "expected_value": "0.3986", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": false, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "41884a421e862cfb8340306058b9a62371f39c88f30e6b3c32cdba6de6b84041", "value_assessment_id": "market-value-341eb8f1a9d6f87d15df4d43d07fa4d8fdbef8b665772e7c7ea24deb2180b21d"},
+    {"rank": null, "market": "BTTS_YES", "raw_probability": "0.308539", "calibrated_probability": "0.999", "fair_odds": "1.001001", "bookmaker_odds": "1.727273", "implied_probability": "0.578947", "edge": "0.420053", "expected_value": "0.725546", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "759f2684bda4d293c414710e167d54f0b73d20d3c5ec92cf9c8ab1c97ab870a1", "value_assessment_id": "market-value-4e74b66e974035920ef1ad39b60a400964b1cb2f4d3aecc9e850d21c22bdfb84"},
+    {"rank": null, "market": "BTTS_NO", "raw_probability": "0.691461", "calibrated_probability": "0.001", "fair_odds": "1000", "bookmaker_odds": "2", "implied_probability": "0.5", "edge": "-0.499", "expected_value": "-0.998", "probability_valid": true, "odds_valid": true, "data_validity": "STALE_CALIBRATION", "lab_policy_eligible": false, "official_minimum_odds_pass": true, "official_quality_gate_pass": false, "selected": false, "rejection_reasons": ["NON_ACTIONABLE_STALE"], "odds_fingerprint": "f952a5366db6693e3179cbd104e8a548332e37b4b4cb5e4403ac18f4953aa8f9", "value_assessment_id": "market-value-876673336d0800e77a293879224551d92e81390a448fb0ef1500c83ab5db9ceb"}
+  ],
+  "stage_events": [
+    {"order": 0, "stage": "INPUT_VALIDATION", "status": "PASSED", "reason": null},
+    {"order": 1, "stage": "DESTINATION_GUARD", "status": "PASSED", "reason": null},
+    {"order": 2, "stage": "MATCH_SNAPSHOT", "status": "PASSED", "reason": null},
+    {"order": 3, "stage": "FEATURE_STORE", "status": "PASSED", "reason": null},
+    {"order": 4, "stage": "MODEL_INPUT", "status": "PASSED", "reason": null},
+    {"order": 5, "stage": "CHAMPION_RESOLUTION", "status": "PASSED", "reason": null},
+    {"order": 6, "stage": "RAW_INFERENCE", "status": "PASSED", "reason": null},
+    {"order": 7, "stage": "CALIBRATION", "status": "PASSED", "reason": null},
+    {"order": 8, "stage": "VALUE_ASSESSMENT", "status": "PASSED", "reason": null},
+    {"order": 9, "stage": "LAB_SELECTION", "status": "PASSED", "reason": null},
+    {"order": 10, "stage": "MESSAGE_ASSEMBLY", "status": "SKIPPED", "reason": "NO_POSITIVE_VALUE_LAB_SELECTION"}
+  ],
+  "database": {
+    "isolated_path": "var/real_match_lab_first_genuine_analysis.db",
+    "schema_version": 32,
+    "integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "append_only_update_test": "BLOCKED: Real Match Lab analyses are immutable",
+    "append_only_delete_test": "BLOCKED: Real Match Lab analyses are immutable",
+    "append_only_trigger_count": 8,
+    "source_database_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_database_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "isolated_database_sha256": "0340facdd1d5dfaf434cbcbca9cf48232fff8e73719cc20dc268bed9a1cc5622"
+  },
+  "safety": {
+    "telegram_send_count": 0,
+    "delivery_record_count": 0,
+    "telegram_api_call_count": 0,
+    "telegram_receipt_count": 0,
+    "official_publication_event_count_before": 0,
+    "official_publication_event_count_after": 0,
+    "result_publication_count_before": 0,
+    "result_publication_count_after": 0,
+    "bankroll_transaction_count_before": 0,
+    "bankroll_transaction_count_after": 0,
+    "champion_generation_count_before": 3,
+    "champion_generation_count_after": 3,
+    "activation_execution_count_before": 1,
+    "activation_execution_count_after": 1,
+    "rollback_execution_count_before": 1,
+    "rollback_execution_count_after": 1,
+    "official_statistics_changed": false,
+    "official_bankroll_changed": false,
+    "production_activation_changed": false,
+    "scheduling_changed": false,
+    "automatic_execution_enabled": false,
+    "startup_execution_enabled": false,
+    "lab_token_present_during_diagnosis": false
+  },
+  "verification": {
+    "focused_tests": "162 passed",
+    "full_suite": "1139 passed",
+    "compiled": true,
+    "imported_modules": 572,
+    "startup_status": "HEALTHY",
+    "startup_gate_executions": 0,
+    "startup_pipeline_executions": 0,
+    "startup_publication_claims": 0,
+    "startup_telegram_sends": 0,
+    "json_cli_regression_fixed": true
+  },
+  "limitations": [
+    "The champion and calibration originate from controlled synthetic staging history and are not evidence of real-world predictive quality.",
+    "Feature completeness was 58.9744%; required baselines were present, while optional xG, venue splits, lineups, injuries, suspensions, and goalkeeper facts remained missing.",
+    "The bookmaker prices were fresh, but the controlled calibration was 2521072 seconds old and therefore stale under the unchanged value policy.",
+    "No nominal expected-value figure in this evidence is actionable while calibration freshness fails."
+  ],
+  "next_operator_action": "Produce and independently review a recently calibrated live-78-compatible champion in an isolated Lab/staging database, then collect a new immutable match snapshot and bookmaker odds, rerun validation and dry-run analysis, review any generated preview, and obtain separate explicit authorization before invoking send.",
+  "evidence_fingerprint": "dd23e53f0fd78ec58d0e89e77f8ef93f59ebaadb309f4cbc3b4b3d72e8c75345"
+}

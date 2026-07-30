@@ -187,7 +187,7 @@ def _diagnose(args):
 
 def _print_record(record, output):
     if output == "json":
-        print(canonical_json({
+        print(_json_text({
             "schema_version": OUTPUT_SCHEMA_VERSION,
             "analysis": record,
             "send_confirmation": SEND_CONFIRMATION,
@@ -209,13 +209,24 @@ def _print_record(record, output):
 
 def _print_value(value, output):
     if output == "json":
-        print(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False))
+        print(_json_text(value))
     else:
         if isinstance(value, dict):
             for key, item in value.items():
                 print(f"{key}: {item}")
         else:
-            print(json.dumps(value, indent=2, ensure_ascii=False))
+            print(json.dumps(value, indent=2, ensure_ascii=True))
+
+
+def _json_text(value):
+    """Render deterministic JSON safely through non-UTF-8 operator terminals."""
+    normalized = json.loads(canonical_json(value))
+    return json.dumps(
+        normalized,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    )
 
 
 def _clean(value):
