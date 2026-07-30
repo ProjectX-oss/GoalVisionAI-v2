@@ -46,14 +46,22 @@ def load_verified_partitions(command, training_repository, split_repository):
         split_repository.list_assignments_by_partition(fold.fold_id, Partition.VALIDATION)
         if command.evaluate_validation else ()
     )
-    train = _load_assignments(train_assignments, training_repository, Partition.TRAIN, request_fingerprint)
-    validation = _load_assignments(validation_assignments, training_repository, Partition.VALIDATION, request_fingerprint)
+    train = _load_assignments(
+        train_assignments, training_repository, Partition.TRAIN,
+        request_fingerprint, command,
+    )
+    validation = _load_assignments(
+        validation_assignments, training_repository, Partition.VALIDATION,
+        request_fingerprint, command,
+    )
     if set(item.training_example_id for item in train) & set(item.training_example_id for item in validation):
         raise PartitionSafetyError("TRAIN and VALIDATION overlap.")
     return split, fold, train, validation
 
 
-def _load_assignments(assignments, repository, partition, dataset_request_fingerprint):
+def _load_assignments(
+    assignments, repository, partition, dataset_request_fingerprint, command
+):
     examples = []
     for assignment in assignments:
         if assignment.partition is not partition:
@@ -61,7 +69,12 @@ def _load_assignments(assignments, repository, partition, dataset_request_finger
         example = repository.load_training_example(assignment.training_example_id)
         if example is None or example.example_fingerprint != assignment.example_fingerprint:
             raise PartitionSafetyError("Assignment example provenance mismatch.")
-        validate_example(example)
+        validate_example(
+            example,
+            feature_schema_version=command.feature_schema_version,
+            feature_schema_fingerprint=command.feature_schema_fingerprint,
+            ordered_feature_names=command.ordered_feature_names,
+        )
         expected = sha256_fingerprint({
             "dataset_request_fingerprint": dataset_request_fingerprint,
             "historical_match_fingerprint": example.historical_match_fingerprint,

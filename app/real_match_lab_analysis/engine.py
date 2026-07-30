@@ -2,18 +2,25 @@
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import replace
 from datetime import datetime
 from decimal import Decimal
 
 from app.calibrated_market_probabilities import (
-    CalibrationRegistry,
     CalibrationSetDefinition,
     CalibrationTargetMapping,
-    ExistingProbabilityCalibrationEngineFactory,
     SQLiteCalibratedMarketProbabilityRepository,
-    build_calibrated_market_probability_service,
 )
+from app.calibrated_market_probabilities.fingerprint import (
+    assembly_fingerprint,
+    target_result_fingerprint,
+)
+from app.calibrated_market_probabilities.models import (
+    CalibratedMarketProbabilityAssembly,
+    CalibratedTargetResult,
+)
+from app.calibrated_market_probabilities.validation import CalibratedAssemblyValidator
 from app.calibrated_market_probabilities.policy import (
     DEFAULT_CALIBRATED_MARKET_PROBABILITY_POLICY,
 )
@@ -21,13 +28,20 @@ from app.database import Database
 from app.feature_store import SCHEMA_VERSION as FEATURE_SCHEMA_VERSION
 from app.feature_store import build_feature_store_service
 from app.historical_model_training import (
+    LIVE_TRAINING_FEATURE_CONTRACT,
     SQLiteHistoricalModelTrainingRepository,
     predict_raw_probabilities,
+    verify_feature_compatibility,
 )
 from app.historical_probability_calibration import (
+    DEFAULT_HISTORICAL_CALIBRATION_POLICY,
     SQLiteHistoricalProbabilityCalibrationRepository,
+    ValidationPrediction,
     to_runtime_calibration_artifacts,
 )
+from app.historical_probability_calibration.artifact import apply_calibration
+from app.historical_dataset_split import Partition
+from app.historical_model_training.fingerprint import sha256_fingerprint
 from app.historical_training_dataset import SQLiteHistoricalTrainingDatasetRepository
 from app.market_value_assessment import (
     MarketMappingRegistry,
@@ -83,10 +97,25 @@ class ApprovedChampionAdapter:
     def validate_compatibility(self, model_input) -> None:
         if (
             self.artifact.feature_schema_version != model_input.schema_version
+            or self.artifact.feature_schema_fingerprint
+            != LIVE_TRAINING_FEATURE_CONTRACT.schema_fingerprint
             or self.artifact.ordered_feature_names != model_input.ordered_feature_names
+            or len(model_input.ordered_feature_names)
+            != LIVE_TRAINING_FEATURE_CONTRACT.feature_count
         ):
             raise ValueError(
                 "Approved champion feature schema is incompatible with the live model input."
+            )
+        failures = verify_feature_compatibility(
+            self.artifact,
+            LIVE_TRAINING_FEATURE_CONTRACT.schema_version,
+            LIVE_TRAINING_FEATURE_CONTRACT.schema_fingerprint,
+            LIVE_TRAINING_FEATURE_CONTRACT.ordered_feature_names,
+        )
+        if failures:
+            raise ValueError(
+                "Approved champion compatibility verification failed: "
+                + "|".join(failures)
             )
 
     def infer(self, model_input):
@@ -219,30 +248,20 @@ class RealDomainAnalysisEngine:
             CalibrationTargetMapping(item.target, item.artifact_id)
             for item in runtime_artifacts
         )
+        calibration_effective_at = datetime.fromisoformat(
+            historical_set.command.calibration_timestamp.replace("Z", "+00:00")
+        )
         definition = CalibrationSetDefinition(
             historical_set.artifact_set_id, "approved-champion", "v1",
             artifact.artifact_id, (artifact.artifact_id,), mappings,
-            calibration_policy.version, True, now, now,
+            calibration_policy.version, True,
+            calibration_effective_at, calibration_effective_at,
             historical_set.artifact_set_fingerprint,
         )
-        calibration_registry = CalibrationRegistry(
-            calibration_policy, runtime_artifacts, (definition,)
-        )
         calibrated_repo = SQLiteCalibratedMarketProbabilityRepository(self.database)
-        calibrated_service = build_calibrated_market_probability_service(
-            inference_repo, calibration_registry, calibrated_repo, calibrated_repo,
-            ExistingProbabilityCalibrationEngineFactory(), calibration_policy,
-        )
-        calibrated_outcome = calibrated_service.generate(
-            inference, calibration_effective_timestamp=now,
-            calibration_set_id=historical_set.artifact_set_id,
-        )
-        if calibrated_outcome.calibrated_assembly_id is None:
-            raise EngineRejected(
-                "CALIBRATION_REJECTED", "Calibrated market assembly failed safely."
-            )
-        assembly = calibrated_repo.load_assembly_by_id(
-            calibrated_outcome.calibrated_assembly_id
+        assembly = _persist_historical_calibrated_assembly(
+            inference, historical_set, runtime_artifacts, definition,
+            calibrated_repo, now,
         )
 
         value_repo = SQLiteMarketValueAssessmentRepository(self.database)
@@ -307,6 +326,114 @@ class RealDomainAnalysisEngine:
             max(0, int((now - features.feature_timestamp).total_seconds())),
             _lineup_status(command), _reasoning(command),
         )
+
+
+def _persist_historical_calibrated_assembly(
+    inference, historical_set, runtime_artifacts, definition, repository, now
+):
+    """Apply the persisted historical parameters, including reconciliation."""
+    temporary = ValidationPrediction(
+        training_example_id=f"runtime:{inference.match_id}",
+        example_fingerprint=inference.model_input_fingerprint,
+        artifact_id=inference.model_artifact_id,
+        artifact_fingerprint=inference.inference_fingerprint,
+        training_run_id="runtime-inference",
+        split_id="runtime-inference",
+        fold_id="runtime-inference",
+        partition=Partition.VALIDATION,
+        raw_probabilities=inference.raw_probabilities,
+        calibrated_probabilities=None,
+        raw_prediction_fingerprint=inference.inference_fingerprint,
+    )
+    calibrated = apply_calibration(
+        temporary,
+        historical_set.target_artifacts,
+        DEFAULT_HISTORICAL_CALIBRATION_POLICY,
+    ).calibrated_probabilities
+    artifacts = {item.target: item for item in runtime_artifacts}
+    diagnostics = (
+        "PERSISTED_HISTORICAL_CALIBRATION_APPLIED",
+        "CANONICAL_RECONCILIATION_APPLIED",
+    )
+    results = []
+    for raw_item, calibrated_item in zip(
+        inference.raw_probabilities.ordered_probabilities,
+        calibrated.ordered_probabilities,
+        strict=True,
+    ):
+        runtime = artifacts[raw_item.target]
+        report_reference = sha256_fingerprint(
+            (
+                historical_set.artifact_set_fingerprint,
+                runtime.quality_metadata_reference,
+                inference.inference_fingerprint,
+                raw_item.target.value,
+                calibrated_item.probability,
+            )
+        )
+        target_fingerprint = target_result_fingerprint(
+            target=raw_item.target.value,
+            raw=raw_item.probability,
+            calibrated=calibrated_item.probability,
+            artifact=runtime,
+            report_reference=report_reference,
+            diagnostics=diagnostics,
+        )
+        results.append(CalibratedTargetResult(
+            raw_item.target,
+            raw_item.probability,
+            calibrated_item.probability,
+            runtime.artifact_id,
+            runtime.method,
+            runtime.calibration_model_version,
+            runtime.calibration_policy_version,
+            report_reference,
+            runtime.quality_metadata_reference,
+            None,
+            diagnostics,
+            target_fingerprint,
+        ))
+    ordered = tuple(results)
+    policy = DEFAULT_CALIBRATED_MARKET_PROBABILITY_POLICY
+    validation = CalibratedAssemblyValidator().validate_outputs(ordered, policy)
+    fingerprint = assembly_fingerprint(
+        inference_id=inference.inference_id,
+        raw_inference_fingerprint=inference.inference_fingerprint,
+        model_artifact_id=inference.model_artifact_id,
+        model_version=inference.model_version,
+        calibration_identity=historical_set.artifact_set_fingerprint,
+        targets=ordered,
+        policy_version=policy.version,
+        effective_timestamp=datetime.fromisoformat(
+            historical_set.command.calibration_timestamp.replace("Z", "+00:00")
+        ),
+    )
+    assembly = CalibratedMarketProbabilityAssembly(
+        "calibrated-assembly-"
+        + hashlib.sha256(fingerprint.encode("utf-8")).hexdigest(),
+        inference.inference_id,
+        inference.model_input_id,
+        inference.match_id,
+        inference.source_snapshot_id,
+        inference.source_feature_set_id,
+        inference.model_artifact_id,
+        inference.model_name,
+        inference.model_version,
+        inference.inference_fingerprint,
+        historical_set.artifact_set_id,
+        historical_set.artifact_set_fingerprint,
+        policy.version,
+        datetime.fromisoformat(
+            historical_set.command.calibration_timestamp.replace("Z", "+00:00")
+        ),
+        now,
+        ordered,
+        validation,
+        fingerprint,
+    )
+    repository.append_calibration_set(definition)
+    stored, _ = repository.append_calibrated_assembly(assembly)
+    return stored
 
 
 def _market_identity(market):

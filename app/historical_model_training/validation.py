@@ -9,13 +9,16 @@ from decimal import Decimal
 
 from app.historical_dataset_split import Partition
 from app.historical_training_dataset import (
-    FEATURE_SCHEMA_VERSION, HISTORICAL_TRAINING_FEATURES_V1, LABEL_ORDER,
-    LABEL_SCHEMA_VERSION, HistoricalTrainingExample,
+    LABEL_ORDER, LABEL_SCHEMA_VERSION, HistoricalTrainingExample,
 )
 from app.prediction_inference.models import OFFICIAL_TARGET_ORDER, RawProbabilitySet
 
 from .exceptions import FeatureSchemaError, InvalidProbabilityError, LabelSchemaError, TrainingRequestValidationError
-from .fingerprint import sha256_fingerprint
+from .feature_contracts import (
+    LEGACY_FEATURE_NAMES,
+    LEGACY_FEATURE_SCHEMA_FINGERPRINT,
+    resolve_training_feature_contract,
+)
 from .models import HistoricalModelTrainingCommand, NormalizedTrainingCommand
 from .policy import (
     ARTIFACT_FORMAT_VERSION, METADATA_VERSION, MODEL_FAMILY, MODEL_POLICY_VERSION,
@@ -24,11 +27,8 @@ from .policy import (
 )
 
 
-FEATURE_NAMES = tuple(item.name for item in HISTORICAL_TRAINING_FEATURES_V1)
-FEATURE_SCHEMA_FINGERPRINT = sha256_fingerprint({
-    "schema_version": FEATURE_SCHEMA_VERSION,
-    "features": tuple((item.index, item.name, item.data_type.value) for item in HISTORICAL_TRAINING_FEATURES_V1),
-})
+FEATURE_NAMES = LEGACY_FEATURE_NAMES
+FEATURE_SCHEMA_FINGERPRINT = LEGACY_FEATURE_SCHEMA_FINGERPRINT
 _IDENTIFIER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,199}$")
 
 
@@ -44,8 +44,6 @@ def normalize_training_command(command: HistoricalModelTrainingCommand) -> Norma
     partition = _enum(Partition, command.training_partition, "training partition")
     if partition is not Partition.TRAIN:
         raise TrainingRequestValidationError("Only TRAIN may be selected for fitting; TEST access is forbidden.")
-    if command.feature_schema_version != FEATURE_SCHEMA_VERSION:
-        raise TrainingRequestValidationError("Unsupported feature schema version.")
     if command.label_schema_version != LABEL_SCHEMA_VERSION:
         raise TrainingRequestValidationError("Unsupported label schema version.")
     if command.target_schema_version != TARGET_SCHEMA_VERSION:
@@ -60,8 +58,12 @@ def normalize_training_command(command: HistoricalModelTrainingCommand) -> Norma
         raise TrainingRequestValidationError("Feature names and schema fingerprint must be explicit.")
     names = command.ordered_feature_names
     fingerprint = command.feature_schema_fingerprint
-    if names != FEATURE_NAMES or len(names) != 145 or fingerprint != FEATURE_SCHEMA_FINGERPRINT:
-        raise TrainingRequestValidationError("The exact 145-position feature contract is required.")
+    try:
+        resolve_training_feature_contract(
+            command.feature_schema_version, fingerprint, names
+        )
+    except ValueError as exc:
+        raise TrainingRequestValidationError(str(exc)) from exc
     from .models import EstimatorConfiguration
     if not isinstance(command.estimator, EstimatorConfiguration):
         raise TrainingRequestValidationError("A typed EstimatorConfiguration is required.")
@@ -101,11 +103,25 @@ def normalize_training_command(command: HistoricalModelTrainingCommand) -> Norma
     )
 
 
-def validate_example(example: HistoricalTrainingExample) -> None:
-    if example.feature_schema_version != FEATURE_SCHEMA_VERSION:
+def validate_example(
+    example: HistoricalTrainingExample,
+    *,
+    feature_schema_version: str,
+    feature_schema_fingerprint: str,
+    ordered_feature_names: tuple[str, ...],
+) -> None:
+    contract = resolve_training_feature_contract(
+        feature_schema_version, feature_schema_fingerprint, ordered_feature_names
+    )
+    if example.feature_schema_version != contract.schema_version:
         raise FeatureSchemaError("Feature schema mismatch.")
-    if len(example.ordered_feature_vector) != 145 or len(example.missingness_mask) != 145:
-        raise FeatureSchemaError("Feature vector and mask must contain exactly 145 positions.")
+    if (
+        len(example.ordered_feature_vector) != contract.feature_count
+        or len(example.missingness_mask) != contract.feature_count
+    ):
+        raise FeatureSchemaError(
+            f"Feature vector and mask must contain exactly {contract.feature_count} positions."
+        )
     for index, (value, missing) in enumerate(zip(example.ordered_feature_vector, example.missingness_mask)):
         if missing != (value is None):
             raise FeatureSchemaError(f"Missingness mask mismatch at feature {index}.")
@@ -116,6 +132,10 @@ def validate_example(example: HistoricalTrainingExample) -> None:
                 raise FeatureSchemaError(f"Malformed feature at position {index}.") from exc
             if not math.isfinite(number):
                 raise FeatureSchemaError(f"Non-finite feature at position {index}.")
+    for required in contract.required_feature_names:
+        index = contract.ordered_feature_names.index(required)
+        if example.missingness_mask[index]:
+            raise FeatureSchemaError(f"Required baseline feature is missing: {required}.")
     if not example.completeness_score.is_finite() or not Decimal(0) <= example.completeness_score <= Decimal(1):
         raise FeatureSchemaError("Completeness score is invalid.")
     if example.label_schema_version != LABEL_SCHEMA_VERSION:

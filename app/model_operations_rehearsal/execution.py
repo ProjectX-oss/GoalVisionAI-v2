@@ -155,7 +155,8 @@ class SubprocessModelOperationsRunner:
         )
         if completed.returncode not in expected:
             raise ExecutionRehearsalError(
-                f"{name} returned {completed.returncode}; expected {expected}."
+                f"{name} returned {completed.returncode}; expected {expected}; "
+                f"stdout={completed.stdout.strip()!r}; stderr={completed.stderr.strip()!r}."
             )
         if completed.stderr.strip():
             raise ExecutionRehearsalError(

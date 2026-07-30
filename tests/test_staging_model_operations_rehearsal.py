@@ -26,6 +26,13 @@ from app.staging_model_operations_rehearsal.execution import (
 )
 from app.staging_model_operations_rehearsal.reporting import redact
 from app.staging_real_artifact_chain import build_real_artifact_chain
+from app.real_match_lab_analysis import (
+    AnalysisStatus,
+    SQLiteRealMatchLabRepository,
+    build_real_match_lab_analysis_service,
+    parse_input,
+)
+from datetime import datetime, timezone
 
 
 SOURCE_COMMIT = "78f218632fafe4ceeab708b5dd92dbd1e48a890f"
@@ -177,6 +184,52 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
         self.assertEqual(
             statuses["execute-activation-conflict"], ("ACTIVATION_CONFLICT", 6)
         )
+
+    def test_activated_compatible_champion_runs_real_match_lab_without_delivery(self):
+        disposable = (
+            self.destination
+            / f"goalvision_staging_activation_rollback_{TIMESTAMP}.db"
+        )
+        raw = json.loads(
+            Path("tests/fixtures/real_match_lab/valid.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        now = datetime(2026, 7, 30, 12, tzinfo=timezone.utc)
+        command = parse_input(raw, now=now)
+        database = Database(disposable)
+        try:
+            service = build_real_match_lab_analysis_service(database)
+            record = service.analyze(command)
+            diagnostic = None
+            if record.status is AnalysisStatus.REJECTED:
+                try:
+                    service.engine.analyze(command, command.collected_at)
+                except Exception as exc:
+                    diagnostic = str(exc)
+            deliveries = database.connection.execute(
+                "SELECT COUNT(*) FROM real_match_lab_deliveries"
+            ).fetchone()[0]
+        finally:
+            database.close()
+        self.assertIn(
+            record.status, {AnalysisStatus.COMPLETED, AnalysisStatus.NO_SELECTION},
+            diagnostic or record.rejection_reasons,
+        )
+        self.assertIsNotNone(record.evidence)
+        references = dict(self.outcome.selected_artifact_references)
+        self.assertIn(
+            record.evidence.model_artifact_id,
+            {
+                references["champion_model_artifact_id"],
+                references["challenger_model_artifact_id"],
+            },
+        )
+        self.assertEqual(deliveries, 0)
+        statuses = {
+            name: (status, exit_code)
+            for name, status, exit_code in self.outcome.command_statuses
+        }
         self.assertEqual(
             statuses["execute-activation-wrong-confirmation"],
             ("CONFIRMATION_REJECTED", 2),

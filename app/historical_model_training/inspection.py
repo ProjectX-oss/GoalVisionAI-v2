@@ -9,7 +9,8 @@ from app.historical_dataset_split import Partition
 from .artifact import predict_raw_probabilities
 from .fingerprint import sha256_fingerprint
 from .metrics import calculate_metrics
-from .validation import FEATURE_NAMES, FEATURE_SCHEMA_FINGERPRINT, validate_raw_probabilities
+from .feature_contracts import resolve_training_feature_contract
+from .validation import validate_raw_probabilities
 
 
 def summarize_training_run(repository, training_run_id: str):
@@ -51,11 +52,25 @@ def verify_preprocessing_train_only(repository, training_repository, training_ru
     examples = tuple(training_repository.load_training_example(item) for item in training_ids)
     if any(item is None for item in examples):
         return ("TRAINING_EXAMPLE_NOT_FOUND",)
-    from .policy import PreprocessingPolicy, MissingValuePolicy, ScalingPolicy
+    from .policy import (
+        AllMissingFeaturePolicy,
+        MissingValuePolicy,
+        PreprocessingPolicy,
+        ScalingPolicy,
+    )
     from .preprocessing import fit_preprocessing
+    all_missing_policy = (
+        AllMissingFeaturePolicy.CONSTANT_ZERO
+        if any(
+            item.missing_training_count == len(examples)
+            for item in run.artifact.preprocessing.features
+        )
+        else AllMissingFeaturePolicy.REJECT
+    )
     policy = PreprocessingPolicy(
         missing_value_policy=MissingValuePolicy(run.artifact.preprocessing.missing_value_policy),
         scaling_policy=ScalingPolicy(run.artifact.preprocessing.scaling_policy),
+        all_missing_feature_policy=all_missing_policy,
         append_missingness_indicators=run.artifact.preprocessing.append_missingness_indicators,
     )
     reproduced = fit_preprocessing(examples, run.artifact.ordered_feature_names, policy)
@@ -118,10 +133,18 @@ def verify_feature_compatibility(artifact, schema_version, schema_fingerprint, f
     failures = []
     if schema_version != artifact.feature_schema_version:
         failures.append("FEATURE_SCHEMA_VERSION_MISMATCH")
-    if schema_fingerprint != artifact.feature_schema_fingerprint or schema_fingerprint != FEATURE_SCHEMA_FINGERPRINT:
+    if schema_fingerprint != artifact.feature_schema_fingerprint:
         failures.append("FEATURE_SCHEMA_FINGERPRINT_MISMATCH")
-    if tuple(feature_names) != artifact.ordered_feature_names or tuple(feature_names) != FEATURE_NAMES:
+    if tuple(feature_names) != artifact.ordered_feature_names:
         failures.append("FEATURE_ORDER_MISMATCH")
+    try:
+        resolve_training_feature_contract(
+            artifact.feature_schema_version,
+            artifact.feature_schema_fingerprint,
+            artifact.ordered_feature_names,
+        )
+    except ValueError:
+        failures.append("UNSUPPORTED_FEATURE_CONTRACT")
     return tuple(failures)
 
 

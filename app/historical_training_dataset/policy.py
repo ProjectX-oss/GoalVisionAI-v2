@@ -20,6 +20,7 @@ class HistoricalTrainingDatasetPolicy:
     rolling_windows: tuple[int, ...] = (3, 5, 10)
     head_to_head_window: int = 5
     calculation_precision: str = "0.000001"
+    neutral_venue_indicator: bool | None = None
 
     def __post_init__(self) -> None:
         if self.minimum_prior_matches_per_team < 1:
@@ -33,3 +34,9 @@ class HistoricalTrainingDatasetPolicy:
 
 
 DEFAULT_HISTORICAL_TRAINING_POLICY = HistoricalTrainingDatasetPolicy()
+
+LIVE_CONTRACT_HISTORICAL_TRAINING_POLICY = HistoricalTrainingDatasetPolicy(
+    version="historical_live_model_input_dataset_policy_v1",
+    feature_schema_version="v1",
+    neutral_venue_indicator=False,
+)

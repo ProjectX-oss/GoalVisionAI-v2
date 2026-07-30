@@ -1,4 +1,9 @@
 from .builder import DeterministicModelInputBuilder
+from .contract import (
+    LIVE_MODEL_INPUT_CONTRACT,
+    LiveModelInputContract,
+    build_live_model_input_contract,
+)
 from .exceptions import (
     ModelInputBuilderError,
     ModelInputConflictError,
@@ -36,6 +41,8 @@ __all__ = (
     "DEFAULT_MODEL_INPUT_BUILDER_POLICY",
     "DeterministicModelInputBuilder",
     "GOALVISION_MODEL_INPUT_V1",
+    "LIVE_MODEL_INPUT_CONTRACT",
+    "LiveModelInputContract",
     "ModelInputBuilderError",
     "ModelInputBuilderPolicy",
     "ModelInputConflictError",
@@ -54,6 +61,7 @@ __all__ = (
     "REQUIRED_BASELINE_FEATURES",
     "SQLiteModelInputRepository",
     "build_model_input_builder",
+    "build_live_model_input_contract",
     "build_model_input_schema",
     "generate_model_input",
 )

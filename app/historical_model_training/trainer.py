@@ -17,6 +17,10 @@ from .exceptions import (
     TrainingPersistenceError, TrainingRequestValidationError,
 )
 from .fingerprint import canonical_json, sha256_fingerprint
+from .feature_contracts import (
+    LEGACY_TRAINING_FEATURE_CONTRACT,
+    resolve_training_feature_contract,
+)
 from .metrics import calculate_metrics
 from .models import (
     HistoricalModelTrainingCommand, ModelArtifact, PreparedTrainingRun, TrainingExampleLink,
@@ -85,7 +89,12 @@ class HistoricalModelTrainer:
             return _rejected(command, TrainingStatus.REJECTED_CONVERGENCE, ("ESTIMATOR_DID_NOT_CONVERGE", str(exc)), request_fingerprint)
 
         training_run_id = f"historical-model-training-run-{request_fingerprint}"
-        compatibility = canonical_json({
+        feature_contract = resolve_training_feature_contract(
+            normalized.feature_schema_version,
+            normalized.feature_schema_fingerprint,
+            normalized.ordered_feature_names,
+        )
+        compatibility_material = {
             "model_family": normalized.model_family,
             "feature_schema_version": normalized.feature_schema_version,
             "feature_schema_fingerprint": normalized.feature_schema_fingerprint,
@@ -99,7 +108,15 @@ class HistoricalModelTrainer:
             "model_policy_version": normalized.model_policy_version,
             "artifact_format_version": normalized.artifact_format_version,
             "raw_uncalibrated": True,
-        })
+        }
+        if feature_contract is not LEGACY_TRAINING_FEATURE_CONTRACT:
+            compatibility_material.update({
+                "input_schema_identifier": feature_contract.schema_identifier,
+                "compatibility_version": feature_contract.compatibility_version,
+                "fingerprint_version": feature_contract.fingerprint_version,
+                "feature_count": feature_contract.feature_count,
+            })
+        compatibility = canonical_json(compatibility_material)
         provenance = canonical_json({
             "training_request_fingerprint": request_fingerprint,
             "source_split_id": normalized.source_split_id,

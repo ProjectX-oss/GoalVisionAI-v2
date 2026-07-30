@@ -13,12 +13,16 @@ schema, probability, odds, freshness, or model compatibility check fails. It
 does not perform fixture discovery, fetch data, schedule work, activate models,
 publish Official predictions, or mutate bankroll/statistics.
 
-The current activated historical artifacts declare the 145-position
-`historical_training_features_v1` contract, while the pre-match Feature Store
-produces the 78-position `goalvision_model_input_v1` contract. The engine
-deliberately rejects this mismatch with `MODEL_INPUT_SCHEMA_INCOMPATIBLE`.
-No hidden remapping, imputation, placeholder inference, or fictional probability
-is used. A successful real preview requires a reviewed champion artifact trained
-for the live Feature Store contract.
+Legacy artifacts declare the 145-position `historical_training_features_v1`
+contract and remain deliberately incompatible. The controlled compatible path
+trains new artifacts directly on historical rows projected through the canonical
+78-position `goalvision_model_input_v1` authority. No remapping, padding,
+truncation, aliasing, or placeholder inference is used.
+
+Before inference the engine verifies schema version, exact ordered names, count,
+schema fingerprint, preprocessing input order, missingness format, and
+compatibility metadata. Historical calibration parameters are applied with
+their persisted simplex reconciliation, totals projection, and complement
+rules before the calibrated assembly is appended.
 
 See `docs/REAL_MATCH_LAB_ANALYSIS_RUNBOOK.md` for the operator procedure.

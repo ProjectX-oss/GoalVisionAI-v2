@@ -3,11 +3,7 @@
 from __future__ import annotations
 
 from app.historical_dataset_split import Partition
-from app.historical_model_training import (
-    FEATURE_NAMES,
-    FEATURE_SCHEMA_FINGERPRINT,
-    predict_raw_probabilities,
-)
+from app.historical_model_training import predict_raw_probabilities
 from app.historical_probability_calibration import (
     DEFAULT_HISTORICAL_CALIBRATION_POLICY,
     ValidationPrediction,
@@ -26,8 +22,8 @@ def reproduce_predictions(examples, artifact, calibration_set, *, run_namespace=
         raw = predict_raw_probabilities(
             artifact, example.ordered_feature_vector, example.missingness_mask,
             feature_schema_version=example.feature_schema_version,
-            feature_schema_fingerprint=FEATURE_SCHEMA_FINGERPRINT,
-            ordered_feature_names=FEATURE_NAMES,
+            feature_schema_fingerprint=artifact.feature_schema_fingerprint,
+            ordered_feature_names=artifact.ordered_feature_names,
         )
         raw_fingerprint = sha256_fingerprint(
             {

@@ -10,6 +10,26 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# LIVE FEATURE CONTRACT-COMPATIBLE MODEL FOUNDATION
+
+Status:
+
+COMPLETED
+
+- [x] Expose the live 78-position model-input schema as the single authority.
+- [x] Build leakage-safe historical rows in the exact live contract.
+- [x] Preserve unavailable optional fields as explicit missing values.
+- [x] Parameterize training, calibration, inference, and backtesting contracts.
+- [x] Keep legacy 145-position artifacts distinct and incompatible.
+- [x] Run compatible train, calibration, TEST backtest, comparison, promotion,
+  shadow, staging activation, resolver, and Real Match Lab dry-run flows.
+- [x] Preserve zero Telegram sends and zero Official publications.
+
+Next: validate the foundation on a reviewed external historical dataset with
+explicit venue-neutrality and richer pre-kickoff availability provenance.
+
+---
+
 # PRIORITY 1
 
 ## Stabilize Current Project

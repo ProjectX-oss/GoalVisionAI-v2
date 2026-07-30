@@ -6,6 +6,7 @@ from decimal import Decimal
 
 from .chronology import verify_sources_strictly_prior
 from .feature_projection import HISTORICAL_TRAINING_FEATURES_V1
+from app.model_input_builder import LIVE_MODEL_INPUT_CONTRACT
 from .fingerprint import sha256_fingerprint
 from .labels import validate_labels
 from .models import DatasetSummary, HistoricalTrainingExample, PreparedDatasetBuild
@@ -57,7 +58,13 @@ def verify_dataset_fingerprints(repository: HistoricalTrainingDatasetRepository,
     failures = []
     for example in build.examples:
         try:
-            validate_example(example, len(HISTORICAL_TRAINING_FEATURES_V1))
+            validate_example(
+                example,
+                LIVE_MODEL_INPUT_CONTRACT.feature_count
+                if example.feature_schema_version
+                == LIVE_MODEL_INPUT_CONTRACT.schema_version
+                else len(HISTORICAL_TRAINING_FEATURES_V1),
+            )
         except Exception as exc:
             failures.append(f"{example.training_example_id}:{exc}")
         expected_example = sha256_fingerprint({

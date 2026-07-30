@@ -7,8 +7,9 @@ from datetime import datetime, timezone
 from decimal import Decimal
 
 from app.historical_dataset_split import Partition
-from app.historical_model_training import FEATURE_SCHEMA_FINGERPRINT, TARGET_SCHEMA_VERSION
-from app.historical_training_dataset import FEATURE_SCHEMA_VERSION, LABEL_SCHEMA_VERSION
+from app.historical_model_training import TARGET_SCHEMA_VERSION
+from app.historical_model_training.feature_contracts import SUPPORTED_TRAINING_FEATURE_CONTRACTS
+from app.historical_training_dataset import LABEL_SCHEMA_VERSION
 from app.prediction_inference import OFFICIAL_TARGET_ORDER, RawProbabilitySet
 
 from .exceptions import CalibrationRequestValidationError, InvalidCalibratedProbabilityError
@@ -43,8 +44,6 @@ def normalize_calibration_command(command: HistoricalCalibrationCommand) -> Norm
     if partition is not Partition.VALIDATION:
         raise CalibrationRequestValidationError("Calibration fitting is restricted to VALIDATION; TRAIN and TEST are forbidden.")
     expected = (
-        (command.feature_schema_version, FEATURE_SCHEMA_VERSION),
-        (command.feature_schema_fingerprint, FEATURE_SCHEMA_FINGERPRINT),
         (command.label_schema_version, LABEL_SCHEMA_VERSION),
         (command.target_schema_version, TARGET_SCHEMA_VERSION),
         (command.artifact_format_version, ARTIFACT_FORMAT_VERSION),
@@ -57,6 +56,12 @@ def normalize_calibration_command(command: HistoricalCalibrationCommand) -> Norm
     )
     if any(actual != supported for actual, supported in expected):
         raise CalibrationRequestValidationError("Unsupported schema, artifact, compatibility, or policy version.")
+    if not any(
+        item.schema_version == command.feature_schema_version
+        and item.schema_fingerprint == command.feature_schema_fingerprint
+        for item in SUPPORTED_TRAINING_FEATURE_CONTRACTS
+    ):
+        raise CalibrationRequestValidationError("Unsupported feature schema declaration.")
     methods = tuple(_method(item) for item in (command.match_result_method, command.totals_method, command.btts_method))
     if not isinstance(command.target_method_overrides, tuple) or any(not isinstance(item, TargetMethodOverride) for item in command.target_method_overrides):
         raise CalibrationRequestValidationError("Target method overrides must be typed and immutable.")

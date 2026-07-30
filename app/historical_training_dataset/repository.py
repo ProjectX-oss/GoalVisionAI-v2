@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from decimal import Decimal
+from app.model_input_builder import LIVE_MODEL_INPUT_CONTRACT
 from typing import Iterator
 
 from app.database import Database, MigrationManager
@@ -359,10 +360,24 @@ class SQLiteHistoricalTrainingDatasetRepository:
 
     def _example(self, row: sqlite3.Row) -> HistoricalTrainingExample:
         raw_values = json.loads(row["ordered_feature_vector"])
-        values = tuple(
-            None if value is None else int(value) if definition.data_type.value == "INTEGER" else Decimal(value)
-            for definition, value in zip(HISTORICAL_TRAINING_FEATURES_V1, raw_values)
-        )
+        if row["feature_schema_version"] == LIVE_MODEL_INPUT_CONTRACT.schema_version:
+            converters = {
+                "DECIMAL": Decimal,
+                "INTEGER": int,
+                "BOOLEAN": lambda value: bool(value),
+            }
+            values = tuple(
+                None if value is None else converters[kind](value)
+                for kind, value in zip(
+                    LIVE_MODEL_INPUT_CONTRACT.ordered_feature_types, raw_values,
+                    strict=True,
+                )
+            )
+        else:
+            values = tuple(
+                None if value is None else int(value) if definition.data_type.value == "INTEGER" else Decimal(value)
+                for definition, value in zip(HISTORICAL_TRAINING_FEATURES_V1, raw_values)
+            )
         sources = self.list_sources_for_example(row["training_example_id"])
         return HistoricalTrainingExample(
             training_example_id=row["training_example_id"], dataset_build_id=row["dataset_build_id"],

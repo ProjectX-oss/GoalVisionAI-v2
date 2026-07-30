@@ -1,0 +1,151 @@
+{
+  "schema_version": "goalvision-live-78-feature-champion-rehearsal-v1",
+  "source_commit": "4716d3496a165390b4395da0d90e3b68c79fa91a",
+  "database_schema_version": 32,
+  "live_input_schema": {
+    "identifier": "goalvision_model_input_v1",
+    "name": "goalvision_model_input",
+    "version": "v1",
+    "compatibility_version": "official_prediction_model_input_v1",
+    "feature_count": 78,
+    "schema_fingerprint": "048405d961c2752d492819479788274942cd65c3397f9c9120c83c1a93e5be8a",
+    "fingerprint_version": "goalvision-model-input-fingerprint-v1"
+  },
+  "feature_coverage": {
+    "DIRECTLY_DERIVED": 12,
+    "HISTORICALLY_AGGREGATED": 50,
+    "OPTIONAL_LEGITIMATELY_MISSING": 16,
+    "UNAVAILABLE_AND_BLOCKING": 0
+  },
+  "historical_dataset": {
+    "id": "historical-training-dataset-ecf79ce29e1d338d8d6c5efb726b870a6a6a0f25f1a26f854b6d40b997423050",
+    "fingerprint": "ecf79ce29e1d338d8d6c5efb726b870a6a6a0f25f1a26f854b6d40b997423050",
+    "row_count": 1188,
+    "train_count": 688,
+    "validation_count": 200,
+    "test_count": 300
+  },
+  "training_artifact": {
+    "id": "historical-model-artifact-7ac4ff2c99a784bfe6a35217f307c9fe78b4317c8b55b6393941084eb817f917",
+    "fingerprint": "7ac4ff2c99a784bfe6a35217f307c9fe78b4317c8b55b6393941084eb817f917",
+    "input_schema_identifier": "goalvision_model_input_v1",
+    "feature_count": 78,
+    "transformed_feature_count": 156,
+    "missingness_indicators": true
+  },
+  "calibration_artifact": {
+    "id": "historical-calibration-artifact-set-4f4542c1f3b531e8febd9dfd786479a68bcc8990cf682aa809eeeb0f3586e85b",
+    "fingerprint": "4f4542c1f3b531e8febd9dfd786479a68bcc8990cf682aa809eeeb0f3586e85b",
+    "fit_partition": "VALIDATION"
+  },
+  "backtest": {
+    "id": "historical-backtest-run-01f63c07958524ae9b10806db6cae1f48339cb8f88dd6561901308fc9e41bcdd",
+    "fingerprint": "b610bc813d47d1b23d4c7d046c6e2a4d653ed7acb1a3ba4e83ffcefe165a3cdf",
+    "partition": "TEST",
+    "test_examples": 300,
+    "selected_bets": 300,
+    "settled": 300,
+    "roi": "0.4328693445559540047019058799",
+    "net_profit": "82670.309435",
+    "maximum_drawdown": "0.09269388181978339534259212983"
+  },
+  "comparison": {
+    "id": "model-comparison-run-ffd59123dd8a503e35f46f08ca575d9f1aa99551d76fda312859b4286c2f8f18",
+    "fingerprint": "ffd59123dd8a503e35f46f08ca575d9f1aa99551d76fda312859b4286c2f8f18",
+    "promotion_recommendation": "PROMOTE_CHALLENGER",
+    "promotion_score": "0.7015055872250699743175621953",
+    "recommendation_id": "model-comparison-recommendation-059299870c3614accbd7843f32c2f5d632e6d7271889b3c998375e40bd84754e",
+    "recommendation_fingerprint": "059299870c3614accbd7843f32c2f5d632e6d7271889b3c998375e40bd84754e"
+  },
+  "shadow": {
+    "settled_count": 30,
+    "observation_days": "29.0",
+    "evidence_fingerprint": "50a079a2e760fef79d9b09d53d3d999b4f1cd67985f10b3b294d358f44f8f4d8"
+  },
+  "activation": {
+    "plan_id": "activation-plan-d0283d47e32964332a42b324aa51fbc26513895c4a50a912c009d9598d8080b4",
+    "plan_fingerprint": "d0283d47e32964332a42b324aa51fbc26513895c4a50a912c009d9598d8080b4",
+    "execution_fingerprint": "011a19f781a2390f875ab976eaab10f0960d43ebbb63a0cb191fc39f97f03539",
+    "activated_generation": "champion-generation-bab8cd8cc530ec741a70d527b059bd11da7ccd38af9cf2ce48693ae78877083d",
+    "rollback_execution_fingerprint": "35fc62e3fd11186c4c9e261af13ab766c9e562cc99b7c8982c407135c602b6db",
+    "active_generation": "champion-generation-030ec5d74b66ef4adb60973a9cb77be9883204306bd4389a901c969fb41df3b5",
+    "active_model_artifact_id": "historical-model-artifact-5714e557bb301baf5d6e780c3a9b36a3cd49182b760fd9b4603c3e5bda23fac0",
+    "runtime_compatibility": "PASS"
+  },
+  "real_match_lab": {
+    "analysis_id": "real-match-lab-analysis-cb4158b59e89f483749e932baa942d4fa7062d6e0186fcdf082f1665814f0475",
+    "status": "NO_SELECTION",
+    "selected_market": null,
+    "message_fingerprint": null,
+    "model_input_fingerprint": "4371776aacec6365829fa9b5aa240596375bb311651968d03b5106dd9639fd0b",
+    "model_artifact_id": "historical-model-artifact-5714e557bb301baf5d6e780c3a9b36a3cd49182b760fd9b4603c3e5bda23fac0",
+    "calibration_id": "historical-calibration-artifact-set-11a407ead516be7c9f1ce27ff8c25477be969512ec33d5d3ee27fbb774e7db7e",
+    "raw_probabilities": {
+      "HOME_WIN": "0.415206",
+      "DRAW": "0.330103",
+      "AWAY_WIN": "0.254692",
+      "OVER_1_5": "0.023427",
+      "UNDER_1_5": "0.976573",
+      "OVER_2_5": "0.011996",
+      "UNDER_2_5": "0.988004",
+      "OVER_3_5": "0.000564",
+      "UNDER_3_5": "0.999436",
+      "BTTS_YES": "0.645563",
+      "BTTS_NO": "0.354437"
+    },
+    "calibrated_probabilities": {
+      "HOME_WIN": "0.3333333333333333333333333333",
+      "DRAW": "0.3333333333333333333333333333",
+      "AWAY_WIN": "0.3333333333333333333333333334",
+      "OVER_1_5": "0.001",
+      "UNDER_1_5": "0.999",
+      "OVER_2_5": "0.001",
+      "UNDER_2_5": "0.999",
+      "OVER_3_5": "0.001",
+      "UNDER_3_5": "0.999",
+      "BTTS_YES": "0.999",
+      "BTTS_NO": "0.001"
+    },
+    "market_evaluations": [
+      {
+        "market": "HOME_WIN",
+        "bookmaker_odds": "1.78",
+        "fair_probability": "0.333333",
+        "expected_value": "-0.406667",
+        "actionability": "NON_ACTIONABLE_STALE",
+        "assessment_fingerprint": "af0f5ff268ece732d6f3df550572803bab19256e5e70c9bf9b1aaa45d36436a3"
+      },
+      {
+        "market": "OVER_2_5",
+        "bookmaker_odds": "1.95",
+        "fair_probability": "0.001",
+        "expected_value": "-0.99805",
+        "actionability": "NON_ACTIONABLE_STALE",
+        "assessment_fingerprint": "b156a02297e46a36c9ce243d564d9b9bd22445a3696c99c13fa310d472410a79"
+      }
+    ]
+  },
+  "audit": {
+    "status": "AUDIT_PASSED",
+    "readiness": "STAGING_REHEARSAL_READY",
+    "fingerprint": "b9c5a82f4216f0c4e4a841d86d502f95d5a29c3a5ad33abf6cb10ec580f2c5a8",
+    "summary": {
+      "PASS": 35,
+      "WARNING": 0,
+      "BLOCKER": 0,
+      "INFO": 0
+    }
+  },
+  "safety": {
+    "telegram_send_count": 0,
+    "official_publication_count": 0,
+    "result_publication_count": 0,
+    "production_activation_count": 0,
+    "official_bankroll_statistics_changed": false,
+    "source_database_sha256_before": "1e3e29d5e256edae0f58c0f5523bb3a23d832079b720df340a5ddd4160f1ae0a",
+    "source_database_sha256_after": "1e3e29d5e256edae0f58c0f5523bb3a23d832079b720df340a5ddd4160f1ae0a",
+    "source_database_unchanged": true,
+    "staging_database_sha256": "c174081770cd9d15d94b12886e15fb726c53aad5a88c2b6055c35e633224d351"
+  },
+  "evidence_fingerprint": "2dbc0dfc9a9f596612499bfb539b0b023c947f381e3c57565f143f91a9ded189"
+}

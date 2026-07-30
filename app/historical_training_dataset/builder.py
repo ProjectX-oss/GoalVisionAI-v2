@@ -13,6 +13,8 @@ from .exceptions import (
     TemporalLeakageError,
 )
 from .feature_projection import HISTORICAL_TRAINING_FEATURES_V1, project_features
+from .live_feature_projection import project_live_features
+from app.model_input_builder import LIVE_MODEL_INPUT_CONTRACT
 from .fingerprint import canonical_json, sha256_fingerprint
 from .labels import generate_labels, validate_labels
 from .models import (
@@ -87,7 +89,15 @@ class HistoricalTrainingDatasetBuilder:
                 ))
                 continue
             try:
-                projection = project_features(target, prior, selected_policy)
+                is_live_contract = (
+                    selected_policy.feature_schema_version
+                    == LIVE_MODEL_INPUT_CONTRACT.schema_version
+                )
+                projection = (
+                    project_live_features(target, prior, selected_policy)
+                    if is_live_contract
+                    else project_features(target, prior, selected_policy)
+                )
                 leakage = verify_sources_strictly_prior(target.historical_match_id, target.kickoff_utc, projection.sources)
                 if leakage:
                     raise TemporalLeakageError("|".join(leakage))
@@ -121,7 +131,12 @@ class HistoricalTrainingDatasetBuilder:
                     example_fingerprint=example_fingerprint,
                     sources=projection.sources,
                 )
-                validate_example(example, len(HISTORICAL_TRAINING_FEATURES_V1))
+                validate_example(
+                    example,
+                    LIVE_MODEL_INPUT_CONTRACT.feature_count
+                    if is_live_contract
+                    else len(HISTORICAL_TRAINING_FEATURES_V1),
+                )
                 validate_labels(example.labels)
                 examples_without_build.append(example)
             except (SourceProvenanceError, TemporalLeakageError, ValueError) as exc:

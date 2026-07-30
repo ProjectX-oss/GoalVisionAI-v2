@@ -40,10 +40,11 @@ from app.historical_dataset_split import (
     build_historical_dataset_split_service,
 )
 from app.historical_model_training import (
-    FEATURE_NAMES,
-    FEATURE_SCHEMA_FINGERPRINT,
+    AllMissingFeaturePolicy,
     EstimatorConfiguration,
     HistoricalModelTrainingCommand,
+    LIVE_TRAINING_FEATURE_CONTRACT,
+    PreprocessingPolicy,
     SQLiteHistoricalModelTrainingRepository,
     TrainingStatus,
     build_historical_model_training_service,
@@ -59,6 +60,7 @@ from app.historical_probability_calibration import (
 from app.historical_training_dataset import (
     DatasetBuildCommand,
     DatasetBuildStatus,
+    LIVE_CONTRACT_HISTORICAL_TRAINING_POLICY,
     SQLiteHistoricalTrainingDatasetRepository,
     build_historical_training_dataset_service,
 )
@@ -378,7 +380,10 @@ def _build_dataset(database, import_id):
             kickoff_lower_bound=BASE_KICKOFF + timedelta(days=12),
             kickoff_upper_bound=BASE_KICKOFF + timedelta(days=1200),
             build_timestamp=BUILD_AT,
-        )
+            feature_schema_version=LIVE_TRAINING_FEATURE_CONTRACT.schema_version,
+            dataset_policy_version=LIVE_CONTRACT_HISTORICAL_TRAINING_POLICY.version,
+        ),
+        policy=LIVE_CONTRACT_HISTORICAL_TRAINING_POLICY,
     )
     if result.status not in {
         DatasetBuildStatus.DATASET_BUILT,
@@ -396,6 +401,7 @@ def _split_dataset(database, dataset):
         strategy=SplitStrategy.EXPLICIT_TIME_BOUNDARIES_V1,
         minimum_partition_sizes=MinimumPartitionSizes(40, 40, 100),
         split_timestamp=SPLIT_AT,
+        feature_schema_version=LIVE_TRAINING_FEATURE_CONTRACT.schema_version,
     )
     champion_outcome = service.create(
         DatasetSplitCommand(
@@ -432,7 +438,10 @@ def _split_dataset(database, dataset):
     }
     if champion_outcome.status not in allowed or outcome.status not in allowed:
         raise RealArtifactChainError(
-            "One or both chronological dataset splits failed."
+            "One or both chronological dataset splits failed: "
+            f"champion={champion_outcome.status.value}:"
+            f"{champion_outcome.ordered_reason_codes};"
+            f"challenger={outcome.status.value}:{outcome.ordered_reason_codes}"
         )
     repository = SQLiteHistoricalDatasetSplitRepository(database, migrate=False)
     champion_split = repository.load_dataset_split(champion_outcome.split_id)
@@ -449,7 +458,12 @@ def _split_dataset(database, dataset):
 
 def _train(database, split, fold, request_id, name, estimator):
     outcome = build_historical_model_training_service(
-        database, migrate=False
+        database,
+        preprocessing_policy=PreprocessingPolicy(
+            all_missing_feature_policy=AllMissingFeaturePolicy.CONSTANT_ZERO,
+            append_missingness_indicators=True,
+        ),
+        migrate=False,
     ).train(
         HistoricalModelTrainingCommand(
             training_request_id=request_id,
@@ -458,8 +472,10 @@ def _train(database, split, fold, request_id, name, estimator):
             source_split_fingerprint=split.split_fingerprint,
             fold_id=fold.fold_id,
             fold_fingerprint=fold.fold_fingerprint,
-            feature_schema_fingerprint=FEATURE_SCHEMA_FINGERPRINT,
-            ordered_feature_names=FEATURE_NAMES,
+            feature_schema_version=LIVE_TRAINING_FEATURE_CONTRACT.schema_version,
+            feature_schema_fingerprint=LIVE_TRAINING_FEATURE_CONTRACT.schema_fingerprint,
+            ordered_feature_names=LIVE_TRAINING_FEATURE_CONTRACT.ordered_feature_names,
+            append_missingness_indicators=True,
             estimator=estimator,
             training_timestamp=TRAIN_AT,
             environment_metadata_version=CONTROLLED_SOURCE_LABEL,
@@ -501,7 +517,8 @@ def _calibrate(database, split, fold, training, request_id, method):
             source_split_fingerprint=split.split_fingerprint,
             fold_id=fold.fold_id,
             fold_fingerprint=fold.fold_fingerprint,
-            feature_schema_fingerprint=FEATURE_SCHEMA_FINGERPRINT,
+            feature_schema_version=artifact.feature_schema_version,
+            feature_schema_fingerprint=artifact.feature_schema_fingerprint,
             match_result_method=method,
             totals_method=method,
             btts_method=method,
@@ -834,6 +851,7 @@ def _shadow(
         model_input_fingerprint = sha256_fingerprint(
             (example.training_example_id, example.example_fingerprint, "shadow-input")
         )
+        shadow_values, shadow_mask = _complete_controlled_shadow_input(example)
         snapshot = fingerprint_input_snapshot(
             ShadowModelInputSnapshot(
                 model_input_vector_id=(
@@ -856,15 +874,18 @@ def _shadow(
                         example.historical_source_fingerprints,
                     )
                 ),
-                ordered_feature_names=FEATURE_NAMES,
-                ordered_feature_values=example.ordered_feature_vector,
-                missingness_mask=example.missingness_mask,
+                ordered_feature_names=LIVE_TRAINING_FEATURE_CONTRACT.ordered_feature_names,
+                ordered_feature_values=shadow_values,
+                missingness_mask=shadow_mask,
                 ordered_missing_features=tuple(
                     name
-                    for name, missing in zip(FEATURE_NAMES, example.missingness_mask)
+                    for name, missing in zip(
+                        LIVE_TRAINING_FEATURE_CONTRACT.ordered_feature_names,
+                        shadow_mask,
+                    )
                     if missing
                 ),
-                completeness_score=example.completeness_score,
+                completeness_score=Decimal("1"),
                 ordered_source_timestamps=tuple(
                     datetime.fromisoformat(
                         item.source_kickoff.replace("Z", "+00:00")
@@ -987,6 +1008,40 @@ def _shadow(
     if evidence.settled_count != 30 or evidence.observation_days < 14:
         raise RealArtifactChainError("Shadow evidence is not activation-eligible.")
     return evidence
+
+
+def _complete_controlled_shadow_input(example):
+    """Supply explicit staging pre-match facts absent from historical imports."""
+    supplied = {
+        "normalized_league_position_difference": Decimal("0"),
+        "missing_player_difference": Decimal("0"),
+        "home_confirmed_lineup_indicator": True,
+        "home_probable_lineup_indicator": True,
+        "home_injuries_count": 0,
+        "home_suspensions_count": 0,
+        "home_missing_key_players_count": 0,
+        "home_goalkeeper_available_indicator": True,
+        "away_confirmed_lineup_indicator": True,
+        "away_probable_lineup_indicator": True,
+        "away_injuries_count": 0,
+        "away_suspensions_count": 0,
+        "away_missing_key_players_count": 0,
+        "away_goalkeeper_available_indicator": True,
+        "derby_indicator": False,
+        "competition_stage_encoding": 1,
+    }
+    values = tuple(
+        supplied.get(name, value)
+        for name, value in zip(
+            LIVE_TRAINING_FEATURE_CONTRACT.ordered_feature_names,
+            example.ordered_feature_vector,
+            strict=True,
+        )
+    )
+    mask = tuple(value is None for value in values)
+    if any(mask):
+        raise RealArtifactChainError("Controlled shadow fixture remains incomplete.")
+    return values, mask
 
 
 def _historical_results(database, examples):
