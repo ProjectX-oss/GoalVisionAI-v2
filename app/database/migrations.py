@@ -4089,6 +4089,91 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS model_activation_evidence_links_no_delete BEFORE DELETE ON model_activation_evidence_links BEGIN SELECT RAISE(ABORT,'Activation evidence links are immutable'); END""",
         ),
     ),
+    Migration(
+        version=32,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS real_match_lab_analyses (
+                analysis_id TEXT PRIMARY KEY,
+                request_id TEXT NOT NULL UNIQUE,
+                request_fingerprint TEXT NOT NULL UNIQUE,
+                result_fingerprint TEXT NOT NULL UNIQUE,
+                status TEXT NOT NULL CHECK(status IN ('COMPLETED','NO_SELECTION','REJECTED','CONFLICT')),
+                match_id TEXT NOT NULL,
+                kickoff_utc TEXT NOT NULL,
+                environment TEXT NOT NULL CHECK(environment='LAB'),
+                scope TEXT NOT NULL CHECK(scope='OFFICIAL_GLOBAL'),
+                destination_chat_id TEXT NOT NULL CHECK(destination_chat_id='-1003510920417'),
+                destination_bot TEXT NOT NULL CHECK(destination_bot='@GoalVision_AI_Lab_Bot'),
+                selected_market TEXT,
+                message_html TEXT,
+                message_fingerprint TEXT,
+                request_snapshot TEXT NOT NULL,
+                result_snapshot TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                CHECK ((status='COMPLETED')=(selected_market IS NOT NULL)),
+                CHECK ((message_html IS NULL)=(message_fingerprint IS NULL))
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS real_match_lab_market_evaluations (
+                evaluation_id TEXT PRIMARY KEY,
+                analysis_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                market TEXT NOT NULL,
+                selected INTEGER NOT NULL CHECK(selected IN (0,1)),
+                evaluation_fingerprint TEXT NOT NULL UNIQUE,
+                evaluation_snapshot TEXT NOT NULL,
+                FOREIGN KEY(analysis_id) REFERENCES real_match_lab_analyses(analysis_id),
+                UNIQUE(analysis_id,deterministic_order),
+                UNIQUE(analysis_id,market)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS real_match_lab_stage_events (
+                event_id TEXT PRIMARY KEY,
+                analysis_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL,
+                stage TEXT NOT NULL,
+                status TEXT NOT NULL,
+                reason_code TEXT,
+                event_fingerprint TEXT NOT NULL UNIQUE,
+                event_snapshot TEXT NOT NULL,
+                occurred_at TEXT NOT NULL,
+                FOREIGN KEY(analysis_id) REFERENCES real_match_lab_analyses(analysis_id),
+                UNIQUE(analysis_id,deterministic_order)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS real_match_lab_deliveries (
+                delivery_id TEXT PRIMARY KEY,
+                analysis_id TEXT NOT NULL,
+                attempt_number INTEGER NOT NULL CHECK(attempt_number>0),
+                event_sequence INTEGER NOT NULL CHECK(event_sequence IN (1,2)),
+                status TEXT NOT NULL CHECK(status IN ('CLAIMED','SENT','FAILED','INDETERMINATE')),
+                destination_chat_id TEXT NOT NULL CHECK(destination_chat_id='-1003510920417'),
+                message_fingerprint TEXT NOT NULL,
+                telegram_message_id INTEGER,
+                reason_code TEXT,
+                delivery_fingerprint TEXT NOT NULL UNIQUE,
+                occurred_at TEXT NOT NULL,
+                FOREIGN KEY(analysis_id) REFERENCES real_match_lab_analyses(analysis_id),
+                UNIQUE(analysis_id,attempt_number,event_sequence),
+                CHECK ((status='SENT')=(telegram_message_id IS NOT NULL))
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_real_match_lab_match ON real_match_lab_analyses(match_id,kickoff_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_real_match_lab_delivery ON real_match_lab_deliveries(analysis_id,attempt_number,event_sequence)""",
+            """CREATE TRIGGER IF NOT EXISTS real_match_lab_analyses_no_update BEFORE UPDATE ON real_match_lab_analyses BEGIN SELECT RAISE(ABORT,'Real Match Lab analyses are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS real_match_lab_analyses_no_delete BEFORE DELETE ON real_match_lab_analyses BEGIN SELECT RAISE(ABORT,'Real Match Lab analyses are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS real_match_lab_market_evaluations_no_update BEFORE UPDATE ON real_match_lab_market_evaluations BEGIN SELECT RAISE(ABORT,'Real Match Lab evaluations are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS real_match_lab_market_evaluations_no_delete BEFORE DELETE ON real_match_lab_market_evaluations BEGIN SELECT RAISE(ABORT,'Real Match Lab evaluations are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS real_match_lab_stage_events_no_update BEFORE UPDATE ON real_match_lab_stage_events BEGIN SELECT RAISE(ABORT,'Real Match Lab events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS real_match_lab_stage_events_no_delete BEFORE DELETE ON real_match_lab_stage_events BEGIN SELECT RAISE(ABORT,'Real Match Lab events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS real_match_lab_deliveries_no_update BEFORE UPDATE ON real_match_lab_deliveries BEGIN SELECT RAISE(ABORT,'Real Match Lab deliveries are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS real_match_lab_deliveries_no_delete BEFORE DELETE ON real_match_lab_deliveries BEGIN SELECT RAISE(ABORT,'Real Match Lab deliveries are immutable'); END""",
+        ),
+    ),
 )
 
 

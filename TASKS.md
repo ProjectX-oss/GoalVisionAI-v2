@@ -963,3 +963,28 @@ Review after completing the current priority.
   stability concentrations discovered by the genuine service-scale chain.
 - Kept production activation, runtime inference, Official publication,
   Telegram, bankroll, scheduling, workers, and startup behavior unchanged.
+
+## 2026-07-30 - Controlled Manual Real Match Analysis to Lab
+
+- Added isolated `app/real_match_lab_analysis` with a versioned one-match JSON
+  contract, immutable typed outcomes, deterministic Lab-only single-market
+  policy, traceable reasoning, Telegram-safe HTML, human/JSON operator output,
+  and complete inspection commands.
+- Composed the real immutable match snapshot, Feature Store, model-input,
+  controlled champion resolver, inference, calibration, and market-value
+  boundaries without adding a parallel prediction engine.
+- Added migration v32 with append-only analysis, market evaluation, stage event,
+  and exactly-once Lab delivery tables, deterministic SHA-256 identities,
+  foreign keys, indexes, and UPDATE/DELETE guards.
+- Hard-locked the only explicit send command to `LAB`, chat
+  `-1003510920417`, bot `@GoalVision_AI_Lab_Bot`, and exact confirmation
+  `SEND_TO_GOALVISION_AI_LAB`; dry-run, validation, diagnostics, imports, and
+  startup remain network-inert.
+- Documented the current fail-closed incompatibility between the activated
+  145-position historical artifact schema and the live 78-position Feature
+  Store contract. No remapping, placeholder inference, or fictional
+  probabilities were introduced.
+- Deferred automatic discovery, external API integration, collection,
+  scheduling, background work, automatic sends, settlement, Official
+  publication, production wiring, High Risk, Combo, Live, AutoTrader, and web
+  dashboard work.

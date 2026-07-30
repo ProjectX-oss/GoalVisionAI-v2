@@ -1066,8 +1066,8 @@ def _validate_prepared_foundation(
     expected_plan_id: str | None = FOUNDATION_PLAN_ID,
 ) -> None:
     failures = []
-    if state["schema_version"] != 31:
-        failures.append("SCHEMA_NOT_V31")
+    if state["schema_version"] != 32:
+        failures.append("SCHEMA_NOT_V32")
     if state["foreign_keys_enabled"] != 1:
         failures.append("FOREIGN_KEYS_DISABLED")
     if state["foreign_key_violations"]:

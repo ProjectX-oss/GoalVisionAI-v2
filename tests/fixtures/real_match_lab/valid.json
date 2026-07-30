@@ -1,0 +1,92 @@
+{
+  "schema_version": "goalvision-real-match-lab-input-v1",
+  "request_id": "manual-real-match-lab-fixture-v1",
+  "environment": "LAB",
+  "scope": "OFFICIAL_GLOBAL",
+  "operator_identity": "fixture-operator",
+  "match_id": "real-fixture-2099-01",
+  "competition_id": "premier-league",
+  "competition": "Premier League",
+  "season": "2098/2099",
+  "home_team_id": "arsenal",
+  "home_team": "Arsenal",
+  "away_team_id": "chelsea",
+  "away_team": "Chelsea",
+  "kickoff_utc": "2099-08-01T20:00:00Z",
+  "collected_at": "2026-07-30T12:00:00Z",
+  "source_updated_at": "2026-07-30T11:59:00Z",
+  "source_provider": "MANUAL_VERIFIED_SOURCE",
+  "source_event_id": "provider-event-2099-01",
+  "source_snapshot_id": "provider-snapshot-2099-01",
+  "operator_notes": "Deterministic non-send verification fixture.",
+  "data": {
+    "venue": "Emirates Stadium",
+    "neutral_venue": false,
+    "home_recent_form": {
+      "match_count": 5,
+      "wins": 4,
+      "draws": 1,
+      "losses": 0,
+      "goals_scored": 11,
+      "goals_conceded": 3,
+      "clean_sheets": 3,
+      "failed_to_score": 0,
+      "expected_goals_for": "9.8",
+      "expected_goals_against": "4.1"
+    },
+    "away_recent_form": {
+      "match_count": 5,
+      "wins": 2,
+      "draws": 1,
+      "losses": 2,
+      "goals_scored": 7,
+      "goals_conceded": 7,
+      "clean_sheets": 1,
+      "failed_to_score": 1,
+      "expected_goals_for": "7.2",
+      "expected_goals_against": "7.0"
+    },
+    "home_availability": {
+      "confirmed_lineup": false,
+      "probable_lineup": true,
+      "injuries_count": 1,
+      "suspensions_count": 0,
+      "missing_key_players_count": 0,
+      "lineup_source_timestamp": "2026-07-30T11:55:00Z"
+    },
+    "away_availability": {
+      "confirmed_lineup": false,
+      "probable_lineup": true,
+      "injuries_count": 2,
+      "suspensions_count": 1,
+      "missing_key_players_count": 1,
+      "lineup_source_timestamp": "2026-07-30T11:54:00Z"
+    },
+    "context": {
+      "home_rest_days": 6,
+      "away_rest_days": 4,
+      "competition_stage": "REGULAR_SEASON",
+      "derby_indicator": true
+    }
+  },
+  "odds": [
+    {
+      "snapshot_id": "odds-home-v1",
+      "market": "HOME_WIN",
+      "decimal_odds": "1.78",
+      "source_provider": "MANUAL_BOOKMAKER_FEED",
+      "bookmaker_id": "BOOK_A",
+      "source_event_id": "book-event-2099-01",
+      "captured_at": "2026-07-30T11:58:00Z"
+    },
+    {
+      "snapshot_id": "odds-over25-v1",
+      "market": "OVER_2_5",
+      "decimal_odds": "1.95",
+      "source_provider": "MANUAL_BOOKMAKER_FEED",
+      "bookmaker_id": "BOOK_A",
+      "source_event_id": "book-event-2099-01",
+      "captured_at": "2026-07-30T11:58:00Z"
+    }
+  ]
+}

@@ -265,7 +265,7 @@ class ModelActivationMigrationTests(unittest.TestCase):
     def test_fresh_v31_migration_and_immutable_tables(self):
         database = Database(":memory:")
         MigrationManager(database.connection).migrate()
-        self.assertEqual(database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 31)
+        self.assertEqual(database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 32)
         tables = database.connection.execute(
             """SELECT name FROM sqlite_master WHERE type='table' AND
                (name LIKE 'model_activation_%' OR name LIKE 'model_rollback_%' OR name LIKE 'model_champion_%')"""
@@ -288,7 +288,7 @@ class ModelActivationMigrationTests(unittest.TestCase):
         connection.commit()
         MigrationManager(connection).migrate()
         versions = tuple(row[0] for row in connection.execute("SELECT version FROM schema_migrations ORDER BY version"))
-        self.assertEqual(versions, tuple(range(1, 32)))
+        self.assertEqual(versions, tuple(range(1, 33)))
 
 
 if __name__ == "__main__":
