@@ -30,4 +30,11 @@ totals projection, and complement rules before the calibrated assembly is
 appended. Missing lineups remain explicitly unavailable; they are never treated
 as fresh observations.
 
+The post-calibration review reconstructs every fitted, clamped, reconciled,
+projected, and complemented probability; measures immutable VALIDATION support;
+and compares all 78 live features with the champion's TRAIN, VALIDATION, and
+TEST distributions. Mathematical rank, actionability, preview availability,
+and send eligibility are separate. Controlled-synthetic evidence cannot pass
+the send boundary.
+
 See `docs/REAL_MATCH_LAB_ANALYSIS_RUNBOOK.md` for the operator procedure.

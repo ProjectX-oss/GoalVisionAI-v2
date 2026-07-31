@@ -135,7 +135,11 @@ class SQLiteRealMatchLabRepository:
         try:
             self.connection.execute("BEGIN IMMEDIATE")
             analysis = self.load_analysis(analysis_id)
-            if analysis is None or analysis["status"] != "COMPLETED":
+            if (
+                analysis is None
+                or analysis["status"] != "COMPLETED"
+                or not analysis_send_eligible(analysis)
+            ):
                 raise DeliveryConflictError("Analysis is not eligible to send.")
             history = self.delivery_history(analysis_id)
             if history and history[-1].status in {
@@ -226,3 +230,18 @@ def row_as_dict(row: sqlite3.Row | None) -> dict | None:
         if key in result:
             result[key] = json.loads(result[key])
     return result
+
+
+def analysis_send_eligible(row: sqlite3.Row) -> bool:
+    """Fail closed for legacy analyses and any quality-ineligible analysis."""
+    try:
+        result = json.loads(row["result_snapshot"])
+        evidence = result.get("evidence") or {}
+        quality = evidence.get("calibration_quality_report") or {}
+        return bool(
+            evidence.get("send_eligible") is True
+            and quality.get("send_eligible") is True
+            and quality.get("lab_outcome") == "CALIBRATION_QUALITY_ACCEPTABLE"
+        )
+    except (TypeError, ValueError, KeyError, json.JSONDecodeError):
+        return False

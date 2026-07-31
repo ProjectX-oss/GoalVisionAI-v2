@@ -17,6 +17,10 @@ from app.calibration_freshness import (
     DEFAULT_CALIBRATION_FRESHNESS_POLICY,
     assess_calibration_freshness,
 )
+from app.calibration_quality_review import (
+    build_calibration_quality_report,
+    market_quality_reasons,
+)
 from app.calibrated_market_probabilities.fingerprint import (
     assembly_fingerprint,
     target_result_fingerprint,
@@ -76,7 +80,11 @@ from app.prediction_inference import (
 )
 
 from .models import EngineEvidence, MarketEvaluation, RealMatchLabInput
-from .policy import LAB_MARKET_VALUE_ASSESSMENT_POLICY, LabSelectionPolicy
+from .policy import (
+    LAB_MARKET_VALUE_ASSESSMENT_POLICY,
+    SUPPORTED_MARKETS,
+    LabSelectionPolicy,
+)
 
 
 class EngineRejected(RuntimeError):
@@ -321,6 +329,14 @@ class RealDomainAnalysisEngine:
             inference, historical_set, runtime_artifacts, definition,
             calibrated_repo, now, calibration_effective_at,
         )
+        quality_report = build_calibration_quality_report(
+            self.database, artifact, historical_set, calibration_run,
+            inference.raw_probabilities, model_input,
+            audit_status=audit.overall_status.value,
+            freshness_status=calibration_freshness.actionability_status.value,
+        )
+        traces = {item.target: item for item in quality_report.traces}
+        support = {item.target: item for item in quality_report.target_evidence}
 
         value_repo = SQLiteMarketValueAssessmentRepository(self.database)
         value_service = build_market_value_assessment_service(
@@ -349,6 +365,12 @@ class RealDomainAnalysisEngine:
                     f"Value assessment rejected market {supplied.market}.",
                 )
             stored = value_repo.load_assessment_by_id(outcome.value_assessment_id)
+            trace = traces[supplied.market]
+            quality_reasons = market_quality_reasons(quality_report, trace)
+            value_reasons = (
+                () if stored.actionability_status.value == "ACTIONABLE"
+                else (stored.actionability_status.value,)
+            )
             evaluations.append(MarketEvaluation(
                 market=supplied.market,
                 raw_probability=raw_by_target[supplied.market],
@@ -365,13 +387,40 @@ class RealDomainAnalysisEngine:
                     stored.bookmaker_decimal_odds >= self.policy.official_minimum_odds
                 ),
                 official_quality_gate_pass=False,
-                rejection_reasons=(
-                    () if stored.actionability_status.value == "ACTIONABLE"
-                    else (stored.actionability_status.value,)
-                ),
+                rejection_reasons=tuple(dict.fromkeys((*value_reasons, *quality_reasons))),
                 odds_fingerprint=stored.odds_fingerprint,
                 value_assessment_id=stored.value_assessment_id,
+                calibration_method=trace.method,
+                absolute_calibration_adjustment=trace.absolute_adjustment,
+                extreme_status=trace.extreme_status,
+                calibration_support_status=support[supplied.market].support_status,
+                distribution_shift_status=quality_report.distribution_shift.status.value,
+                calibration_quality_outcome=(
+                    "CALIBRATION_QUALITY_INELIGIBLE" if quality_reasons
+                    else "CALIBRATION_QUALITY_ACCEPTABLE"
+                ),
+                actionable=not value_reasons and not quality_reasons,
             ))
+        mathematical = tuple(sorted(
+            (
+                item for item in evaluations
+                if item.expected_value > self.policy.minimum_expected_value
+                and item.bookmaker_odds > Decimal("1")
+            ),
+            key=lambda item: (
+                -item.calibrated_probability,
+                -item.expected_value,
+                SUPPORTED_MARKETS.index(item.market),
+            ),
+        ))
+        ranks = {
+            item.value_assessment_id: rank
+            for rank, item in enumerate(mathematical, 1)
+        }
+        evaluations = [
+            replace(item, mathematical_rank=ranks.get(item.value_assessment_id))
+            for item in evaluations
+        ]
         selected_evaluations, _ = self.policy.select(tuple(evaluations))
         feature_age = int((now - features.feature_timestamp).total_seconds())
         if feature_age < 0 or feature_age > self.policy.feature_snapshot_max_age_seconds:
@@ -391,6 +440,9 @@ class RealDomainAnalysisEngine:
             _lineup_status(command), _reasoning(command),
             calibration_freshness, "FRESH", lineup_freshness,
             audit.overall_status.value, audit.audit_fingerprint,
+            quality_report,
+            mathematical[0].market if mathematical else None,
+            quality_report.send_eligible,
         )
 
 

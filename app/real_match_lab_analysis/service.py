@@ -87,7 +87,12 @@ class RealMatchLabAnalysisService:
                 stages.append(("MESSAGE_ASSEMBLY", "PASSED", None))
             else:
                 status = AnalysisStatus.NO_SELECTION
-                reasons = ("NO_POSITIVE_VALUE_LAB_SELECTION",)
+                reasons = tuple(dict.fromkeys(
+                    reason
+                    for item in evidence.evaluations
+                    if item.mathematical_rank == 1
+                    for reason in item.rejection_reasons
+                )) or ("NO_POSITIVE_VALUE_LAB_SELECTION",)
                 stages.append(("MESSAGE_ASSEMBLY", "SKIPPED", reasons[0]))
         except EngineRejected as exc:
             status = AnalysisStatus.REJECTED

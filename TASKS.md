@@ -10,6 +10,25 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# CALIBRATION QUALITY AND EXTREME PROBABILITY REVIEW
+
+Status:
+
+COMPLETED
+
+- [x] Reproduce and trace the exact Aberdeen `UNDER_2_5 = 0.999` path.
+- [x] Persist per-target support, reliability, scoring, adjustment, and
+  reconciliation evidence without mutating calibration artifacts.
+- [x] Compare all 78 live inputs with TRAIN, VALIDATION, and TEST distributions.
+- [x] Separate mathematical rank, calibration actionability, preview, and send
+  eligibility.
+- [x] Keep controlled-synthetic calibration send-ineligible and Official
+  fail-closed.
+- [x] Add deterministic operator inspection and sanitized evidence export.
+- [x] Replay all 11 Aberdeen markets with zero Telegram or Official mutations.
+
+---
+
 # CALIBRATION EVIDENCE AND MARKET FRESHNESS SEPARATION
 
 Status:

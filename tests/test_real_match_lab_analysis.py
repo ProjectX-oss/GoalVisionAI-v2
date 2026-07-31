@@ -33,6 +33,7 @@ from app.real_match_lab_analysis.input import InputValidationError
 from app.real_match_lab_analysis.cli import _json_text, _print_value
 from app.real_match_lab_analysis.message import build_message
 from app.real_match_lab_analysis.service import RealMatchLabAnalysisService
+from app.real_match_lab_analysis.repository import analysis_send_eligible
 from app.services.telegram_service import TelegramMessageReceipt
 
 
@@ -79,6 +80,12 @@ class FakeEngine:
             "PARTIAL_OR_PROBABLE",
             ("Arsenal has the stronger supplied recent points rate",
              "lineup information is partial"),
+            calibration_quality_report={
+                "lab_outcome": "CALIBRATION_QUALITY_ACCEPTABLE",
+                "send_eligible": True,
+                "reason_codes": [],
+            },
+            send_eligible=True,
         )
 
 
@@ -299,6 +306,20 @@ class AnalysisPersistenceTests(unittest.TestCase):
 
     def test_latest_migration_is_32(self):
         self.assertEqual(MIGRATIONS[-1].version, 32)
+
+    def test_legacy_analysis_without_quality_report_is_not_send_eligible(self):
+        row = {"result_snapshot": json.dumps({"evidence": {}})}
+        self.assertFalse(analysis_send_eligible(row))
+
+    def test_controlled_synthetic_quality_is_not_send_eligible(self):
+        row = {"result_snapshot": json.dumps({"evidence": {
+            "send_eligible": False,
+            "calibration_quality_report": {
+                "lab_outcome": "CALIBRATION_QUALITY_REVIEW_REQUIRED",
+                "send_eligible": False,
+            },
+        }})}
+        self.assertFalse(analysis_send_eligible(row))
 
 
 class DeliveryTests(unittest.TestCase):

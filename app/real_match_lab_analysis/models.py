@@ -87,6 +87,14 @@ class MarketEvaluation:
     rejection_reasons: tuple[str, ...]
     odds_fingerprint: str
     value_assessment_id: str
+    calibration_method: str = "CALIBRATION_QUALITY_NOT_EVALUATED"
+    absolute_calibration_adjustment: Decimal = Decimal("0")
+    extreme_status: str = "CALIBRATION_QUALITY_NOT_EVALUATED"
+    calibration_support_status: str = "CALIBRATION_QUALITY_NOT_EVALUATED"
+    distribution_shift_status: str = "CALIBRATION_QUALITY_NOT_EVALUATED"
+    calibration_quality_outcome: str = "CALIBRATION_QUALITY_NOT_EVALUATED"
+    mathematical_rank: int | None = None
+    actionable: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,6 +120,9 @@ class EngineEvidence:
     lineup_freshness_status: str = "UNKNOWN"
     activation_audit_status: str = "UNKNOWN"
     activation_audit_fingerprint: str | None = None
+    calibration_quality_report: object | None = None
+    mathematically_top_ranked_market: str | None = None
+    send_eligible: bool = False
 
 
 @dataclass(frozen=True, slots=True)

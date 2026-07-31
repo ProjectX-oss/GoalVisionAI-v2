@@ -84,6 +84,19 @@ python -m app.real_match_lab_analysis delivery --database path/to/lab-copy.db --
 python -m app.real_match_lab_analysis diagnose --database path/to/lab-copy.db --env-file .env
 ```
 
+Calibration-quality inspection is read-only and never constructs a Telegram
+transport:
+
+```text
+python -m app.real_match_lab_analysis inspect-calibration-quality --database path/to/lab-copy.db --analysis-id <id>
+python -m app.real_match_lab_analysis inspect-target-support --database path/to/lab-copy.db --analysis-id <id>
+python -m app.real_match_lab_analysis inspect-extreme-probabilities --database path/to/lab-copy.db --analysis-id <id>
+python -m app.real_match_lab_analysis inspect-calibration-trace --database path/to/lab-copy.db --analysis-id <id>
+python -m app.real_match_lab_analysis inspect-live-input-shift --database path/to/lab-copy.db --analysis-id <id>
+python -m app.real_match_lab_analysis inspect-market-actionability --database path/to/lab-copy.db --analysis-id <id>
+python -m app.real_match_lab_analysis inspect-send-eligibility --database path/to/lab-copy.db --analysis-id <id>
+```
+
 The preview reports the exact destination, model/calibration identifiers and
 fingerprints, feature and model-input fingerprints, raw and calibrated
 probabilities, fair/bookmaker odds, implied probability, edge, EV, freshness,
@@ -105,6 +118,12 @@ of validation-evidence age and requires an activation audit reviewed within 24
 hours. Official has no authorized lifetime and therefore fails closed. Feature
 snapshots are limited to 15 minutes, supplied lineup observations to 60 minutes,
 and odds retain their independent 5/15/30-minute fresh/aging/stale thresholds.
+
+Calibration quality is evaluated after probability assembly and before Lab
+selection. Raw/calibrated values and mathematical rank remain inspectable even
+when quality rejects actionability. Controlled-synthetic calibration is always
+send-ineligible. A legacy analysis without a quality report is displayed as
+`CALIBRATION_QUALITY_NOT_EVALUATED` and fails closed for sending.
 
 Reasons are deterministic facts from supplied data and computed features. No
 generative model creates narrative reasoning.
