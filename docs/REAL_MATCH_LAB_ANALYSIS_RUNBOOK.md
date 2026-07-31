@@ -40,6 +40,7 @@ calibration must remain non-actionable.
 The top-level schema is `goalvision-real-match-lab-input-v1`. It contains:
 
 - request, operator, `LAB` environment, and `OFFICIAL_GLOBAL` model scope;
+- the full lowercase source commit used by the independent activation audit;
 - match/provider/event/snapshot identities;
 - competition, season, teams, and UTC kickoff;
 - collection and source-update timestamps;
@@ -96,6 +97,14 @@ canonical market order, and assessment identity, and selects at most one. It
 never creates a combo or stake. Official minimum odds and Quality Gate outcomes
 are reported separately and are never weakened. A Lab candidate can remain
 experimental when Official rejects it.
+
+Calibration freshness is based on the newest immutable validation-example
+kickoff linked to the active calibration artifact, not on fit, copy, activation,
+or analysis time. Lab currently permits at most one leap-safe season (366 days)
+of validation-evidence age and requires an activation audit reviewed within 24
+hours. Official has no authorized lifetime and therefore fails closed. Feature
+snapshots are limited to 15 minutes, supplied lineup observations to 60 minutes,
+and odds retain their independent 5/15/30-minute fresh/aging/stale thresholds.
 
 Reasons are deterministic facts from supplied data and computed features. No
 generative model creates narrative reasoning.

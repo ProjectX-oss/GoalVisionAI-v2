@@ -8,9 +8,9 @@ promotion, scheduling, fixture discovery, publication, bankroll mutation, or
 Telegram delivery. Controlled synthetic performance is rehearsal evidence only
 and is not evidence of real predictive quality.
 
-## Exact freshness semantics
+## Superseded v1 freshness semantics
 
-The Real Match Lab runtime loads the immutable historical calibration artifact
+The original Real Match Lab runtime loaded the immutable historical calibration artifact
 set and reads `artifact_set.command.calibration_timestamp`. It propagates that
 same value to the calibrated assembly's `calibration_effective_timestamp`.
 Market value assessment calculates:
@@ -21,7 +21,10 @@ Policy v1 classifies calibration as `FRESH` through 1,800 seconds, `AGING`
 through 7,200 seconds, and `STALE` afterward. Stale data is non-actionable. The
 runtime does not use source retrieval time, activation time, champion generation
 time, database insertion time, or the newest validation kickoff as a substitute.
-Negative age also fails closed in the champion freshness report.
+Negative age also failed closed in the champion freshness report. This
+two-hour fit-age interpretation was reviewed and corrected by
+`docs/CALIBRATION_FRESHNESS_POLICY.md`; it is retained here as historical
+implementation evidence, not current policy.
 
 The timestamp represents the explicit time at which the real calibration
 service completed a fit from immutable VALIDATION predictions. A new recent

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
@@ -77,6 +78,9 @@ def parse_input(raw: object, *, now: datetime | None = None) -> RealMatchLabInpu
     notes = raw.get("operator_notes")
     if notes is not None:
         notes = _text(notes, "operator_notes", maximum=1000)
+    source_commit = raw.get("source_commit")
+    if source_commit is not None and not re.fullmatch(r"[0-9a-f]{40}", source_commit):
+        raise InputValidationError("source_commit must be a full lowercase SHA-1.")
     return RealMatchLabInput(
         schema_version=INPUT_SCHEMA_VERSION,
         request_id=values["request_id"],
@@ -100,6 +104,7 @@ def parse_input(raw: object, *, now: datetime | None = None) -> RealMatchLabInpu
         match_snapshot=snapshot,
         odds=odds,
         operator_notes=notes,
+        source_commit=source_commit,
     )
 
 

@@ -9,7 +9,7 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-from app.market_value_assessment import DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY
+from app.calibration_freshness import DEFAULT_CALIBRATION_FRESHNESS_POLICY
 from app.recent_calibration_champion import (
     ChampionFreshnessError,
     calibration_freshness_status,
@@ -57,7 +57,7 @@ class RecentCalibrationChronologyTests(unittest.TestCase):
         self.assertEqual((age, status), (300, "FRESH"))
         self.assertEqual(
             maximum,
-            DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY.calibrated_aging_seconds,
+            DEFAULT_CALIBRATION_FRESHNESS_POLICY.lab_evidence_max_age_seconds,
         )
 
     def test_old_calibration_remains_stale(self):
@@ -65,7 +65,7 @@ class RecentCalibrationChronologyTests(unittest.TestCase):
             calibration_freshness_status(
                 NOW - timedelta(
                     seconds=(
-                        DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY.calibrated_aging_seconds
+                        DEFAULT_CALIBRATION_FRESHNESS_POLICY.lab_evidence_max_age_seconds
                         + 1
                     )
                 ),

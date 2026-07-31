@@ -25,7 +25,10 @@ from app.staging_model_operations_rehearsal.execution import (
     _sqlite_content_sha256,
 )
 from app.staging_model_operations_rehearsal.reporting import redact
-from app.staging_real_artifact_chain import build_real_artifact_chain
+from app.staging_real_artifact_chain import (
+    build_real_artifact_chain,
+    recent_calibration_rehearsal_profile,
+)
 from app.real_match_lab_analysis import (
     AnalysisStatus,
     SQLiteRealMatchLabRepository,
@@ -67,7 +70,13 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
             artifact_mode=ArtifactMode.REAL_ONLY,
         )
         cls.source_before = sha256_file(cls.source)
-        cls.outcome = run_staging_rehearsal(cls.command)
+        cls.chain_profile = recent_calibration_rehearsal_profile(
+            datetime(2026, 7, 31, 16, 16, 16, tzinfo=timezone.utc)
+        )
+        cls.outcome = run_staging_rehearsal(
+            cls.command,
+            chain_profile=cls.chain_profile,
+        )
 
     @classmethod
     def tearDownClass(cls):
@@ -134,7 +143,10 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
         )
         database = Database(controlled_source)
         try:
-            replay = build_real_artifact_chain(database)
+            replay = build_real_artifact_chain(
+                database,
+                profile=self.chain_profile,
+            )
         finally:
             database.close()
         self.assertEqual(
@@ -185,7 +197,7 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
             statuses["execute-activation-conflict"], ("ACTIVATION_CONFLICT", 6)
         )
 
-    def test_activated_compatible_champion_runs_real_match_lab_without_delivery(self):
+    def test_rolled_back_legacy_champion_is_stale_without_delivery(self):
         disposable = (
             self.destination
             / f"goalvision_staging_activation_rollback_{TIMESTAMP}.db"
@@ -195,7 +207,18 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        now = datetime(2026, 7, 30, 12, tzinfo=timezone.utc)
+        raw["source_commit"] = SOURCE_COMMIT
+        raw["collected_at"] = "2026-08-01T14:00:00Z"
+        raw["source_updated_at"] = "2026-08-01T13:59:00Z"
+        raw["data"]["home_availability"]["lineup_source_timestamp"] = (
+            "2026-08-01T13:55:00Z"
+        )
+        raw["data"]["away_availability"]["lineup_source_timestamp"] = (
+            "2026-08-01T13:54:00Z"
+        )
+        for odds in raw["odds"]:
+            odds["captured_at"] = "2026-08-01T13:58:00Z"
+        now = datetime(2026, 8, 1, 14, tzinfo=timezone.utc)
         command = parse_input(raw, now=now)
         database = Database(disposable)
         try:
@@ -212,19 +235,10 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
             ).fetchone()[0]
         finally:
             database.close()
-        self.assertIn(
-            record.status, {AnalysisStatus.COMPLETED, AnalysisStatus.NO_SELECTION},
-            diagnostic or record.rejection_reasons,
-        )
-        self.assertIsNotNone(record.evidence)
-        references = dict(self.outcome.selected_artifact_references)
-        self.assertIn(
-            record.evidence.model_artifact_id,
-            {
-                references["champion_model_artifact_id"],
-                references["challenger_model_artifact_id"],
-            },
-        )
+        self.assertEqual(record.status, AnalysisStatus.REJECTED)
+        self.assertIn("CALIBRATION_EVIDENCE_STALE", record.rejection_reasons)
+        self.assertIn("CALIBRATION_EVIDENCE_STALE", diagnostic)
+        self.assertIsNone(record.evidence)
         self.assertEqual(deliveries, 0)
         statuses = {
             name: (status, exit_code)

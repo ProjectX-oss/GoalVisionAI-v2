@@ -66,6 +66,7 @@ class RealMatchLabInput:
     match_snapshot: object
     odds: tuple[ManualOdds, ...]
     operator_notes: str | None = None
+    source_commit: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -106,6 +107,11 @@ class EngineEvidence:
     feature_age_seconds: int
     lineup_status: str
     reasoning_facts: tuple[str, ...]
+    calibration_freshness: object | None = None
+    feature_freshness_status: str = "UNKNOWN"
+    lineup_freshness_status: str = "UNKNOWN"
+    activation_audit_status: str = "UNKNOWN"
+    activation_audit_fingerprint: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

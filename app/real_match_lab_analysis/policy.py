@@ -6,6 +6,8 @@ from dataclasses import dataclass, replace
 from decimal import Decimal
 
 from .models import MarketEvaluation
+from app.calibration_freshness import DEFAULT_CALIBRATION_FRESHNESS_POLICY
+from app.market_value_assessment import DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY
 
 
 SUPPORTED_MARKETS = (
@@ -15,11 +17,25 @@ SUPPORTED_MARKETS = (
 )
 
 
+LAB_MARKET_VALUE_ASSESSMENT_POLICY = replace(
+    DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY,
+    version="market-value-assessment-policy-lab-v2",
+    calibrated_fresh_seconds=(
+        DEFAULT_CALIBRATION_FRESHNESS_POLICY.lab_evidence_max_age_seconds
+    ),
+    calibrated_aging_seconds=(
+        DEFAULT_CALIBRATION_FRESHNESS_POLICY.lab_evidence_max_age_seconds
+    ),
+)
+
+
 @dataclass(frozen=True, slots=True)
 class LabSelectionPolicy:
     version: str = "goalvision-real-match-lab-selection-policy-v1"
     minimum_expected_value: Decimal = Decimal("0")
     official_minimum_odds: Decimal = Decimal("1.60")
+    feature_snapshot_max_age_seconds: int = 15 * 60
+    lineup_snapshot_max_age_seconds: int = 60 * 60
 
     def select(
         self, values: tuple[MarketEvaluation, ...]

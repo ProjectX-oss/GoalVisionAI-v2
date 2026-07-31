@@ -11,11 +11,13 @@ from app.historical_model_training import (
     LIVE_TRAINING_FEATURE_CONTRACT,
     SQLiteHistoricalModelTrainingRepository,
 )
+from app.calibration_freshness import (
+    CalibrationActionabilityStatus,
+    DEFAULT_CALIBRATION_FRESHNESS_POLICY,
+    assess_calibration_freshness,
+)
 from app.historical_probability_calibration import (
     SQLiteHistoricalProbabilityCalibrationRepository,
-)
-from app.market_value_assessment import (
-    DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY,
 )
 from app.model_activation import (
     ActivationStatus,
@@ -27,7 +29,7 @@ from app.model_activation_audit.repository import ReadOnlyAuditRepository
 from .models import ChampionFreshnessReport
 
 
-REPORT_SCHEMA_VERSION = "goalvision-live-78-champion-freshness-report-v1"
+REPORT_SCHEMA_VERSION = "goalvision-live-78-champion-freshness-report-v2"
 
 
 class ChampionFreshnessError(RuntimeError):
@@ -38,19 +40,14 @@ def calibration_freshness_status(
     reference_timestamp: datetime,
     controlled_now: datetime,
 ) -> tuple[int, int, str]:
-    """Classify the exact runtime freshness reference under current policy."""
+    """Classify a calibration *evidence* timestamp under the Lab v2 policy."""
     reference = _utc(reference_timestamp)
     now = _utc(controlled_now)
     age = int((now - reference).total_seconds())
-    maximum = DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY.calibrated_aging_seconds
+    maximum = DEFAULT_CALIBRATION_FRESHNESS_POLICY.lab_evidence_max_age_seconds
     if age < 0 or age > maximum:
         raise ChampionFreshnessError("The active champion calibration is not fresh.")
-    status = (
-        "FRESH"
-        if age
-        <= DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY.calibrated_fresh_seconds
-        else "AGING"
-    )
+    status = "FRESH"
     return age, maximum, status
 
 
@@ -95,8 +92,6 @@ def inspect_active_champion_freshness(
     )
     if not compatible:
         raise ChampionFreshnessError("The active champion is not live-78 compatible.")
-    reference_at = _parse_utc(calibration.command.calibration_timestamp)
-    age, maximum, freshness = calibration_freshness_status(reference_at, now)
     audit_repository = ReadOnlyAuditRepository(str(database.path))
     try:
         audit = ModelActivationAuditService(audit_repository).audit(
@@ -111,6 +106,29 @@ def inspect_active_champion_freshness(
         audit_repository.close()
     if audit.overall_status.value != "AUDIT_PASSED":
         raise ChampionFreshnessError("Independent activation audit did not pass.")
+    freshness_assessment = assess_calibration_freshness(
+        database,
+        calibration,
+        environment=environment,
+        assessment_timestamp=now,
+        review_timestamp=_parse_utc(audit.generated_timestamp_utc),
+        policy=DEFAULT_CALIBRATION_FRESHNESS_POLICY,
+    )
+    if (
+        freshness_assessment.actionability_status
+        is not CalibrationActionabilityStatus.ACTIONABLE_FOR_LAB
+    ):
+        raise ChampionFreshnessError(
+            "The active champion calibration is non-actionable: "
+            + "|".join(freshness_assessment.ordered_reason_codes)
+        )
+    reference_at = freshness_assessment.evidence_timestamp
+    if reference_at is None or freshness_assessment.artifact_created_timestamp is None:
+        raise ChampionFreshnessError("Calibration freshness provenance is missing.")
+    age = freshness_assessment.evidence_age_seconds
+    if age is None:
+        raise ChampionFreshnessError("Calibration evidence age is unavailable.")
+    maximum = DEFAULT_CALIBRATION_FRESHNESS_POLICY.lab_evidence_max_age_seconds
     report = ChampionFreshnessReport(
         REPORT_SCHEMA_VERSION,
         environment.upper(),
@@ -121,11 +139,19 @@ def inspect_active_champion_freshness(
         model.artifact_fingerprint,
         calibration.artifact_set_id,
         calibration.artifact_set_fingerprint,
+        _format_utc(freshness_assessment.artifact_created_timestamp),
+        _format_utc(reference_at),
         _format_utc(reference_at),
         _format_utc(now),
         age,
         maximum,
-        freshness,
+        freshness_assessment.evidence_status.value,
+        freshness_assessment.integrity_status.value,
+        _format_utc(freshness_assessment.review_timestamp),
+        _format_utc(freshness_assessment.review_expiry_timestamp),
+        freshness_assessment.review_status.value,
+        freshness_assessment.actionability_status.value,
+        freshness_assessment.ordered_reason_codes,
         contract.schema_identifier,
         contract.schema_version,
         contract.feature_count,

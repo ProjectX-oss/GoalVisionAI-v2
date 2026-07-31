@@ -16,11 +16,19 @@ class ChampionFreshnessReport:
     model_fingerprint: str
     calibration_id: str
     calibration_fingerprint: str
+    calibration_artifact_created_timestamp: str
+    calibration_evidence_timestamp: str
     calibration_freshness_reference_timestamp: str
     controlled_clock_timestamp: str
     calibration_age_seconds: int
     maximum_allowed_age_seconds: int
     freshness_status: str
+    calibration_integrity_status: str
+    calibration_review_timestamp: str
+    calibration_review_expiry: str
+    calibration_review_status: str
+    market_actionability_status: str
+    freshness_reason_codes: tuple[str, ...]
     live_schema_id: str
     live_schema_version: str
     feature_count: int

@@ -10,6 +10,24 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# CALIBRATION EVIDENCE AND MARKET FRESHNESS SEPARATION
+
+Status:
+
+COMPLETED
+
+- [x] Trace the original 7,200-second fit-age implementation and its history.
+- [x] Separate immutable calibration evidence time from artifact creation time.
+- [x] Add typed integrity, evidence, review, and Lab actionability statuses.
+- [x] Keep odds, feature, and lineup freshness independent and fail-closed.
+- [x] Keep controlled synthetic calibration evidence Lab/staging-only and
+  Official fail-closed.
+- [x] Preserve legacy inspection without fabricating or mutating timestamps.
+- [x] Reproduce the original two-hour failure with deterministic regression
+  coverage and complete the controlled audit/dry-run evidence workflow.
+
+---
+
 # RECENT LIVE-78 CALIBRATION CHAMPION FOUNDATION
 
 Status:

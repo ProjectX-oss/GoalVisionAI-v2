@@ -12,6 +12,11 @@ from app.calibrated_market_probabilities import (
     CalibrationTargetMapping,
     SQLiteCalibratedMarketProbabilityRepository,
 )
+from app.calibration_freshness import (
+    CalibrationActionabilityStatus,
+    DEFAULT_CALIBRATION_FRESHNESS_POLICY,
+    assess_calibration_freshness,
+)
 from app.calibrated_market_probabilities.fingerprint import (
     assembly_fingerprint,
     target_result_fingerprint,
@@ -52,12 +57,13 @@ from app.market_value_assessment import (
     SuppliedOddsSnapshot,
     build_market_value_assessment_service,
 )
-from app.market_value_assessment.policy import DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY
 from app.match_data_snapshot import (
     SQLiteMatchDataSnapshotRepository,
     build_match_data_snapshot_service,
 )
 from app.model_activation import ActivationStatus, build_runtime_champion_resolver
+from app.model_activation_audit import ModelActivationAuditService
+from app.model_activation_audit.repository import ReadOnlyAuditRepository
 from app.model_input_builder import build_model_input_builder
 from app.prediction_inference import (
     DEFAULT_PREDICTION_INFERENCE_POLICY,
@@ -70,7 +76,7 @@ from app.prediction_inference import (
 )
 
 from .models import EngineEvidence, MarketEvaluation, RealMatchLabInput
-from .policy import LabSelectionPolicy
+from .policy import LAB_MARKET_VALUE_ASSESSMENT_POLICY, LabSelectionPolicy
 
 
 class EngineRejected(RuntimeError):
@@ -231,6 +237,52 @@ class RealDomainAnalysisEngine:
                 "CALIBRATION_PROVENANCE_MISMATCH",
                 "Champion calibration differs from activation provenance.",
             )
+        if command.source_commit is None:
+            raise EngineRejected(
+                "CALIBRATION_REVIEW_MISSING",
+                "A source commit is required for the independent Lab audit.",
+            )
+        audit_repository = ReadOnlyAuditRepository(str(self.database.path))
+        try:
+            audit = ModelActivationAuditService(audit_repository).audit(
+                source_commit=command.source_commit,
+                generated_timestamp_utc=now.isoformat(timespec="seconds").replace(
+                    "+00:00", "Z"
+                ),
+                environment="LAB",
+                scope=command.scope,
+            )
+        finally:
+            audit_repository.close()
+        if audit.overall_status.value != "AUDIT_PASSED":
+            raise EngineRejected(
+                "CALIBRATION_REVIEW_AUDIT_FAILED",
+                "Independent activation audit did not pass.",
+            )
+        calibration_freshness = assess_calibration_freshness(
+            self.database,
+            historical_set,
+            environment=command.environment,
+            assessment_timestamp=now,
+            review_timestamp=datetime.fromisoformat(
+                audit.generated_timestamp_utc.replace("Z", "+00:00")
+            ),
+            policy=DEFAULT_CALIBRATION_FRESHNESS_POLICY,
+        )
+        if (
+            calibration_freshness.actionability_status
+            is not CalibrationActionabilityStatus.ACTIONABLE_FOR_LAB
+        ):
+            reason = (
+                calibration_freshness.ordered_reason_codes[0]
+                if calibration_freshness.ordered_reason_codes
+                else "CALIBRATION_NON_ACTIONABLE"
+            )
+            raise EngineRejected(
+                reason,
+                "Calibration freshness validation failed closed: "
+                + ", ".join(calibration_freshness.ordered_reason_codes),
+            )
         calibration_run = historical_cal_repo.load_calibration_run(
             historical_set.calibration_run_id
         )
@@ -248,26 +300,32 @@ class RealDomainAnalysisEngine:
             CalibrationTargetMapping(item.target, item.artifact_id)
             for item in runtime_artifacts
         )
-        calibration_effective_at = datetime.fromisoformat(
+        calibration_created_at = datetime.fromisoformat(
             historical_set.command.calibration_timestamp.replace("Z", "+00:00")
         )
+        calibration_effective_at = calibration_freshness.evidence_timestamp
+        if calibration_effective_at is None:
+            raise EngineRejected(
+                "CALIBRATION_EVIDENCE_TIMESTAMP_MISSING",
+                "Calibration evidence timestamp is unavailable.",
+            )
         definition = CalibrationSetDefinition(
             historical_set.artifact_set_id, "approved-champion", "v1",
             artifact.artifact_id, (artifact.artifact_id,), mappings,
             calibration_policy.version, True,
-            calibration_effective_at, calibration_effective_at,
+            calibration_created_at, calibration_effective_at,
             historical_set.artifact_set_fingerprint,
         )
         calibrated_repo = SQLiteCalibratedMarketProbabilityRepository(self.database)
         assembly = _persist_historical_calibrated_assembly(
             inference, historical_set, runtime_artifacts, definition,
-            calibrated_repo, now,
+            calibrated_repo, now, calibration_effective_at,
         )
 
         value_repo = SQLiteMarketValueAssessmentRepository(self.database)
         value_service = build_market_value_assessment_service(
             value_repo, value_repo, MarketMappingRegistry(),
-            DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY,
+            LAB_MARKET_VALUE_ASSESSMENT_POLICY,
         )
         evaluations = []
         raw_by_target = {
@@ -315,6 +373,12 @@ class RealDomainAnalysisEngine:
                 value_assessment_id=stored.value_assessment_id,
             ))
         selected_evaluations, _ = self.policy.select(tuple(evaluations))
+        feature_age = int((now - features.feature_timestamp).total_seconds())
+        if feature_age < 0 or feature_age > self.policy.feature_snapshot_max_age_seconds:
+            raise EngineRejected("FEATURE_SNAPSHOT_STALE", "Feature snapshot is not fresh.")
+        lineup_freshness = _lineup_freshness(command, now, self.policy.lineup_snapshot_max_age_seconds)
+        if lineup_freshness == "STALE":
+            raise EngineRejected("LINEUP_DATA_STALE", "Supplied lineup-sensitive data is stale.")
         return EngineEvidence(
             snapshot.snapshot_id, features.feature_set_id,
             features.feature_fingerprint, model_input.model_input_id,
@@ -323,13 +387,16 @@ class RealDomainAnalysisEngine:
             historical_set.artifact_set_fingerprint, inference.inference_id,
             inference.inference_fingerprint, assembly.calibrated_assembly_id,
             selected_evaluations,
-            max(0, int((now - features.feature_timestamp).total_seconds())),
+            feature_age,
             _lineup_status(command), _reasoning(command),
+            calibration_freshness, "FRESH", lineup_freshness,
+            audit.overall_status.value, audit.audit_fingerprint,
         )
 
 
 def _persist_historical_calibrated_assembly(
-    inference, historical_set, runtime_artifacts, definition, repository, now
+    inference, historical_set, runtime_artifacts, definition, repository, now,
+    calibration_effective_at,
 ):
     """Apply the persisted historical parameters, including reconciliation."""
     temporary = ValidationPrediction(
@@ -404,9 +471,7 @@ def _persist_historical_calibrated_assembly(
         calibration_identity=historical_set.artifact_set_fingerprint,
         targets=ordered,
         policy_version=policy.version,
-        effective_timestamp=datetime.fromisoformat(
-            historical_set.command.calibration_timestamp.replace("Z", "+00:00")
-        ),
+        effective_timestamp=calibration_effective_at,
     )
     assembly = CalibratedMarketProbabilityAssembly(
         "calibrated-assembly-"
@@ -423,9 +488,7 @@ def _persist_historical_calibrated_assembly(
         historical_set.artifact_set_id,
         historical_set.artifact_set_fingerprint,
         policy.version,
-        datetime.fromisoformat(
-            historical_set.command.calibration_timestamp.replace("Z", "+00:00")
-        ),
+        calibration_effective_at,
         now,
         ordered,
         validation,
@@ -469,6 +532,23 @@ def _lineup_status(command):
     if home or away:
         return "PARTIAL_OR_PROBABLE"
     return "NOT_AVAILABLE"
+
+
+def _lineup_freshness(command, now, maximum_age):
+    timestamps = tuple(
+        timestamp
+        for availability in (
+            command.match_snapshot.home_availability,
+            command.match_snapshot.away_availability,
+        )
+        if availability is not None
+        for timestamp in (availability.lineup_source_timestamp,)
+        if timestamp is not None
+    )
+    if not timestamps:
+        return "NOT_AVAILABLE"
+    ages = tuple(int((now - value).total_seconds()) for value in timestamps)
+    return "FRESH" if all(0 <= age <= maximum_age for age in ages) else "STALE"
 
 
 def _reasoning(command):

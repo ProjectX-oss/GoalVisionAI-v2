@@ -21,8 +21,13 @@ truncation, aliasing, or placeholder inference is used.
 
 Before inference the engine verifies schema version, exact ordered names, count,
 schema fingerprint, preprocessing input order, missingness format, and
-compatibility metadata. Historical calibration parameters are applied with
-their persisted simplex reconciliation, totals projection, and complement
-rules before the calibrated assembly is appended.
+compatibility metadata. It also independently audits the activated generation
+against the supplied source commit, validates immutable calibration provenance,
+and keeps calibration artifact creation, validation-evidence recency, audit
+review validity, features, lineups, and odds on separate clocks. Historical
+calibration parameters are applied with their persisted simplex reconciliation,
+totals projection, and complement rules before the calibrated assembly is
+appended. Missing lineups remain explicitly unavailable; they are never treated
+as fresh observations.
 
 See `docs/REAL_MATCH_LAB_ANALYSIS_RUNBOOK.md` for the operator procedure.
