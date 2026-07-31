@@ -19,7 +19,7 @@ class StagingRehearsalPolicy:
     required_environment: str = "STAGING"
     required_scope: str = "OFFICIAL_GLOBAL"
     minimum_schema_version: int = 7
-    current_schema_version: int = 32
+    current_schema_version: int = 33
     allow_preflight_warnings: bool = False
     approved_destination_roots: tuple[Path, ...] = ()
 

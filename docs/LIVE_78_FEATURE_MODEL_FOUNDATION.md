@@ -121,10 +121,11 @@ coverage report classifies every canonical feature as directly derived,
 historically aggregated, or optional and legitimately missing. Required
 baseline absence rejects the row.
 
-Neutral-venue state is never guessed. The live historical policy requires an
-explicit source-level declaration; the controlled rehearsal declares its
-generated home-ground fixtures non-neutral. A caller without this provenance
-is rejected.
+Neutral-venue state is never guessed. The controlled rehearsal explicitly
+declares its generated home-ground fixtures non-neutral. A reviewed-real source
+without a reliable neutral-venue flag retains this optional feature as missing;
+the absence is reported in coverage and preprocessing rather than converted to
+false.
 
 Training uses TRAIN-only median imputation and scaling. Features missing across
 all TRAIN rows receive an explicit internal constant with a parallel

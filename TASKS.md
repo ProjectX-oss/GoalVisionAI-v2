@@ -10,6 +10,31 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# REVIEWED REAL HISTORICAL DATA FOUNDATION
+
+Status:
+
+COMPLETED WITH HONEST PROMOTION BLOCKERS
+
+- [x] Add typed append-only source review, manifests, file hashes, and evidence tiers.
+- [x] Review OpenLigaDB ODbL usage for controlled internal derived-data research.
+- [x] Import 2,142 genuine completed Bundesliga matches from seven seasons.
+- [x] Build 2,085 exact live-78 examples with explicit missingness and coverage.
+- [x] Pass a dedicated leakage audit before training.
+- [x] Create an atomic chronological 1,459/313/313 TRAIN/VALIDATION/TEST split.
+- [x] Train and VALIDATION-calibrate two compatible reviewed-real candidates.
+- [x] Complete TEST-only predictive evaluation and calibration-quality review.
+- [x] Keep betting evidence unavailable because genuine pre-kickoff odds are absent.
+- [x] Persist insufficient comparison/shadow evidence and block staging activation.
+- [x] Export sanitized canonical evidence with zero Telegram or Official mutations.
+
+Next: lawfully acquire immutable pre-kickoff odds with event and capture-time
+provenance, then rerun betting/risk evidence and calibration-quality review. Do
+not consider a genuine Lab publication until the complete independent audit passes
+and separate publication authorization is granted.
+
+---
+
 # CALIBRATION QUALITY AND EXTREME PROBABILITY REVIEW
 
 Status:

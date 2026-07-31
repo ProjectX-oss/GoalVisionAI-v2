@@ -4174,6 +4174,130 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS real_match_lab_deliveries_no_delete BEFORE DELETE ON real_match_lab_deliveries BEGIN SELECT RAISE(ABORT,'Real Match Lab deliveries are immutable'); END""",
         ),
     ),
+    Migration(
+        version=33,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS historical_source_reviews (
+                source_review_id TEXT PRIMARY KEY,
+                source_id TEXT NOT NULL UNIQUE,
+                approval_status TEXT NOT NULL CHECK(approval_status IN (
+                    'APPROVED_FOR_CONTROLLED_RESEARCH','APPROVED_FOR_INTERNAL_DERIVED_DATA',
+                    'REVIEW_REQUIRED','REJECTED','ACCESS_UNAVAILABLE','TERMS_UNCLEAR'
+                )),
+                review_timestamp_utc TEXT NOT NULL,
+                review_fingerprint TEXT NOT NULL UNIQUE,
+                review_snapshot TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_source_manifests (
+                source_manifest_id TEXT PRIMARY KEY,
+                source_id TEXT NOT NULL,
+                source_version TEXT NOT NULL,
+                acquisition_timestamp_utc TEXT NOT NULL,
+                manifest_fingerprint TEXT NOT NULL UNIQUE,
+                manifest_snapshot TEXT NOT NULL,
+                FOREIGN KEY(source_id) REFERENCES historical_source_reviews(source_id),
+                UNIQUE(source_id,source_version)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_source_files (
+                source_file_id TEXT PRIMARY KEY,
+                source_manifest_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL CHECK(deterministic_order>=0),
+                file_name TEXT NOT NULL,
+                sha256 TEXT NOT NULL,
+                byte_count INTEGER NOT NULL CHECK(byte_count>=0),
+                row_count INTEGER NOT NULL CHECK(row_count>=0),
+                file_snapshot TEXT NOT NULL,
+                FOREIGN KEY(source_manifest_id) REFERENCES historical_source_manifests(source_manifest_id),
+                UNIQUE(source_manifest_id,deterministic_order),
+                UNIQUE(source_manifest_id,file_name)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_team_aliases (
+                team_alias_id TEXT PRIMARY KEY,
+                source_id TEXT NOT NULL,
+                source_team_id TEXT NOT NULL,
+                competition TEXT NOT NULL,
+                season TEXT NOT NULL,
+                canonical_team_id TEXT NOT NULL,
+                alias_fingerprint TEXT NOT NULL UNIQUE,
+                alias_snapshot TEXT NOT NULL,
+                FOREIGN KEY(source_id) REFERENCES historical_source_reviews(source_id),
+                UNIQUE(source_id,source_team_id,competition,season)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_feature_coverage_reports (
+                feature_coverage_report_id TEXT PRIMARY KEY,
+                dataset_build_id TEXT NOT NULL,
+                report_fingerprint TEXT NOT NULL UNIQUE,
+                report_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(dataset_build_id) REFERENCES historical_training_dataset_builds(dataset_build_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_data_quality_reports (
+                data_quality_report_id TEXT PRIMARY KEY,
+                source_manifest_id TEXT NOT NULL,
+                report_fingerprint TEXT NOT NULL UNIQUE,
+                report_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(source_manifest_id) REFERENCES historical_source_manifests(source_manifest_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_leakage_audit_reports (
+                leakage_audit_report_id TEXT PRIMARY KEY,
+                dataset_build_id TEXT NOT NULL,
+                audit_status TEXT NOT NULL CHECK(audit_status IN ('LEAKAGE_AUDIT_PASSED','LEAKAGE_AUDIT_BLOCKED')),
+                report_fingerprint TEXT NOT NULL UNIQUE,
+                report_snapshot TEXT NOT NULL,
+                audit_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(dataset_build_id) REFERENCES historical_training_dataset_builds(dataset_build_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_evidence_tiers (
+                evidence_tier_record_id TEXT PRIMARY KEY,
+                artifact_type TEXT NOT NULL,
+                artifact_id TEXT NOT NULL,
+                evidence_tier TEXT NOT NULL CHECK(evidence_tier IN ('CONTROLLED_SYNTHETIC','REVIEWED_REAL_HISTORICAL','PRODUCTION_AUTHORIZED')),
+                publication_eligible INTEGER NOT NULL CHECK(publication_eligible IN (0,1)),
+                authorization_reference TEXT,
+                tier_fingerprint TEXT NOT NULL UNIQUE,
+                tier_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                UNIQUE(artifact_type,artifact_id),
+                CHECK(evidence_tier='PRODUCTION_AUTHORIZED' OR publication_eligible=0),
+                CHECK(evidence_tier!='PRODUCTION_AUTHORIZED' OR authorization_reference IS NOT NULL)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_source_manifest_source ON historical_source_manifests(source_id,source_version)""",
+            """CREATE INDEX IF NOT EXISTS idx_team_alias_source ON historical_team_aliases(source_id,source_team_id,competition,season)""",
+            """CREATE TRIGGER IF NOT EXISTS historical_source_reviews_no_update BEFORE UPDATE ON historical_source_reviews BEGIN SELECT RAISE(ABORT,'Historical source reviews are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_source_reviews_no_delete BEFORE DELETE ON historical_source_reviews BEGIN SELECT RAISE(ABORT,'Historical source reviews are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_source_manifests_no_update BEFORE UPDATE ON historical_source_manifests BEGIN SELECT RAISE(ABORT,'Historical source manifests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_source_manifests_no_delete BEFORE DELETE ON historical_source_manifests BEGIN SELECT RAISE(ABORT,'Historical source manifests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_source_files_no_update BEFORE UPDATE ON historical_source_files BEGIN SELECT RAISE(ABORT,'Historical source files are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_source_files_no_delete BEFORE DELETE ON historical_source_files BEGIN SELECT RAISE(ABORT,'Historical source files are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_team_aliases_no_update BEFORE UPDATE ON historical_team_aliases BEGIN SELECT RAISE(ABORT,'Historical team aliases are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_team_aliases_no_delete BEFORE DELETE ON historical_team_aliases BEGIN SELECT RAISE(ABORT,'Historical team aliases are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_feature_coverage_reports_no_update BEFORE UPDATE ON historical_feature_coverage_reports BEGIN SELECT RAISE(ABORT,'Historical feature coverage reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_feature_coverage_reports_no_delete BEFORE DELETE ON historical_feature_coverage_reports BEGIN SELECT RAISE(ABORT,'Historical feature coverage reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_data_quality_reports_no_update BEFORE UPDATE ON historical_data_quality_reports BEGIN SELECT RAISE(ABORT,'Historical data quality reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_data_quality_reports_no_delete BEFORE DELETE ON historical_data_quality_reports BEGIN SELECT RAISE(ABORT,'Historical data quality reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_leakage_audit_reports_no_update BEFORE UPDATE ON historical_leakage_audit_reports BEGIN SELECT RAISE(ABORT,'Historical leakage audit reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_leakage_audit_reports_no_delete BEFORE DELETE ON historical_leakage_audit_reports BEGIN SELECT RAISE(ABORT,'Historical leakage audit reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_evidence_tiers_no_update BEFORE UPDATE ON historical_evidence_tiers BEGIN SELECT RAISE(ABORT,'Historical evidence tiers are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_evidence_tiers_no_delete BEFORE DELETE ON historical_evidence_tiers BEGIN SELECT RAISE(ABORT,'Historical evidence tiers are immutable'); END""",
+        ),
+    ),
 )
 
 

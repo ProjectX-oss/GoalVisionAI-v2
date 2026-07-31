@@ -92,10 +92,6 @@ def project_live_features(
     policy: HistoricalTrainingDatasetPolicy,
 ) -> ProjectedFeatures:
     """Build the exact live vector without a duplicated feature list."""
-    if policy.neutral_venue_indicator is None:
-        raise ValueError(
-            "Live-contract historical projection requires explicit neutral-venue provenance."
-        )
     # Reuse the established chronology/source collector. Its vector is discarded.
     legacy = project_features(target, prior_matches, policy)
     home_history = tuple(
