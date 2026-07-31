@@ -703,7 +703,7 @@ class ModelComparisonMigrationTests(unittest.TestCase):
             fresh.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            33,
+            34,
         )
         self.assertEqual(
             len(
@@ -732,7 +732,7 @@ class ModelComparisonMigrationTests(unittest.TestCase):
             connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            33,
+            34,
         )
         connection.close()
 

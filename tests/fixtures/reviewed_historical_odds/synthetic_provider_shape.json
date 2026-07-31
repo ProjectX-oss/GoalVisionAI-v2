@@ -1,0 +1,51 @@
+{
+  "timestamp": "2024-01-09T12:00:00Z",
+  "previous_timestamp": "2024-01-09T11:55:00Z",
+  "next_timestamp": "2024-01-09T12:05:00Z",
+  "data": [
+    {
+      "id": "test-event-1",
+      "sport_key": "soccer_germany_bundesliga",
+      "sport_title": "Bundesliga - Germany",
+      "commence_time": "2024-01-10T18:30:00Z",
+      "home_team": "Home FC",
+      "away_team": "Away FC",
+      "bookmakers": [
+        {
+          "key": "pinnacle",
+          "title": "Pinnacle",
+          "last_update": "2024-01-09T11:59:00Z",
+          "markets": [
+            {
+              "key": "h2h",
+              "outcomes": [
+                {"name": "Home FC", "price": 2.1},
+                {"name": "Away FC", "price": 3.4},
+                {"name": "Draw", "price": 3.2}
+              ]
+            },
+            {
+              "key": "h2h_lay",
+              "outcomes": [{"name": "Home FC", "price": 2.2}]
+            }
+          ]
+        },
+        {
+          "key": "otherbook",
+          "title": "Other Book",
+          "last_update": "2024-01-09T11:58:00Z",
+          "markets": [
+            {
+              "key": "h2h",
+              "outcomes": [
+                {"name": "Home FC", "price": 9.9},
+                {"name": "Away FC", "price": 9.9},
+                {"name": "Draw", "price": 9.9}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

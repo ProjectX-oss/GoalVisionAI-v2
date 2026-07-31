@@ -163,7 +163,7 @@ def run_openligadb_pilot(
             "execution_timestamp_utc": timestamp,
             "source_commit": source_commit,
             "branch": branch,
-            "database_schema_version": 33,
+            "database_schema_version": 34,
             "source_review": asdict(prepare_source_review(source_review)),
             "source_manifest": asdict(manifest),
             "raw_source_match_count": parsed.supplied_record_count,

@@ -85,8 +85,11 @@ An operator must re-review source terms, acquire versioned snapshots outside Git
 record acquisition time, validate fingerprints, and run against a new isolated
 database. Runtime never downloads historical data.
 
-Before any genuine Lab publication can be considered, acquire lawful immutable
-pre-kickoff odds with event/timestamp/bookmaker provenance, rerun TEST betting and
-risk evidence, obtain acceptable per-target calibration quality, complete settled
-shadow evidence, pass the independent audit, and receive separate explicit
-publication authorization. Production activation is outside this task.
+The follow-on foundation is documented in
+`docs/REVIEWED_HISTORICAL_ODDS_AND_BETTING_EVIDENCE.md`. A lawful public sample
+validated import and linkage, but it did not cover TEST. Before any genuine Lab
+publication can be considered, acquire lawful immutable pre-kickoff odds covering
+TEST with event/timestamp/bookmaker provenance, rerun betting and risk evidence,
+obtain acceptable per-target calibration quality, complete settled shadow evidence,
+pass the independent audit, and receive separate explicit publication authorization.
+Production activation is outside this task.

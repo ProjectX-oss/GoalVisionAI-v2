@@ -10,6 +10,38 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# REVIEWED HISTORICAL PRE-KICKOFF ODDS AND BETTING EVIDENCE FOUNDATION
+
+Status:
+
+COMPLETED WITH GENUINE TEST-ODDS BLOCKER
+
+- [x] Add typed append-only odds source reviews, manifests, hashes, event links,
+  normalized quotes, quote selections, coverage, integrity, evidence, shadow,
+  and audit records in schema v34.
+- [x] Review The Odds API public sample, BALLDONTLIE, and the
+  DataHub/football-data.co.uk mirror without bypassing access controls.
+- [x] Import 591 genuine timestamped 1X2 quotes from 18 October 2022 Bundesliga
+  events and link all events deterministically to reviewed OpenLigaDB matches.
+- [x] Enforce a fixed Pinnacle 24-hour cutoff with no best-price hindsight.
+- [x] Report complete source, bookmaker, market, season, capture-window, and
+  TRAIN/VALIDATION/TEST coverage without hiding missing TEST coverage.
+- [x] Preserve VALIDATION-only calibration and reject odds as labels.
+- [x] Keep TEST betting metrics unavailable because the sample has zero TEST
+  quotes; do not substitute synthetic or untimestamped closing odds.
+- [x] Persist `INSUFFICIENT_BETTING_EVIDENCE`, shadow insufficiency, blocked
+  audit, and no staging activation.
+- [x] Export canonical sanitized evidence with zero Telegram, Official,
+  production activation, bankroll/statistics, and scheduling mutations.
+
+Next: obtain an authorized timestamped odds archive covering the immutable
+2024/25 TEST window and a distinct post-TEST shadow window, then rerun all
+calibration, betting, risk, stability, comparison, shadow, and audit gates.
+No genuine Lab publication may be considered before those gates pass and
+separate publication authorization is granted.
+
+---
+
 # REVIEWED REAL HISTORICAL DATA FOUNDATION
 
 Status:

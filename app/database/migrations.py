@@ -4298,6 +4298,182 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS historical_evidence_tiers_no_delete BEFORE DELETE ON historical_evidence_tiers BEGIN SELECT RAISE(ABORT,'Historical evidence tiers are immutable'); END""",
         ),
     ),
+    Migration(
+        version=34,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_source_reviews (
+                odds_source_review_id TEXT PRIMARY KEY,
+                source_id TEXT NOT NULL UNIQUE,
+                approval_status TEXT NOT NULL CHECK(approval_status IN (
+                    'APPROVED_FOR_CONTROLLED_RESEARCH','APPROVED_FOR_INTERNAL_DERIVED_DATA',
+                    'REVIEW_REQUIRED','REJECTED','ACCESS_UNAVAILABLE','TERMS_UNCLEAR'
+                )),
+                review_timestamp_utc TEXT NOT NULL,
+                review_fingerprint TEXT NOT NULL UNIQUE,
+                review_snapshot TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_source_manifests (
+                odds_manifest_id TEXT PRIMARY KEY,
+                source_id TEXT NOT NULL,
+                source_version TEXT NOT NULL,
+                acquisition_timestamp_utc TEXT NOT NULL,
+                manifest_fingerprint TEXT NOT NULL UNIQUE,
+                manifest_snapshot TEXT NOT NULL,
+                FOREIGN KEY(source_id) REFERENCES historical_odds_source_reviews(source_id),
+                UNIQUE(source_id,source_version)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_source_files (
+                odds_source_file_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL CHECK(deterministic_order>=0),
+                file_name TEXT NOT NULL,
+                sha256 TEXT NOT NULL,
+                byte_count INTEGER NOT NULL CHECK(byte_count>=0),
+                raw_row_count INTEGER NOT NULL CHECK(raw_row_count>=0),
+                file_snapshot TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id),
+                UNIQUE(odds_manifest_id,deterministic_order),
+                UNIQUE(odds_manifest_id,file_name)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_event_links (
+                event_link_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                source_event_id TEXT NOT NULL,
+                historical_match_id TEXT,
+                link_status TEXT NOT NULL CHECK(link_status IN (
+                    'EXACT_MATCH','REVIEWED_ALIAS_MATCH','TIMESTAMP_TOLERANCE_MATCH',
+                    'AMBIGUOUS_MATCH','NO_MATCH','CONFLICTING_MATCH'
+                )),
+                link_fingerprint TEXT NOT NULL UNIQUE,
+                link_snapshot TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id),
+                FOREIGN KEY(historical_match_id) REFERENCES historical_matches(historical_match_id),
+                UNIQUE(odds_manifest_id,source_event_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_quotes (
+                quote_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                event_link_id TEXT NOT NULL,
+                historical_match_id TEXT NOT NULL,
+                source_quote_id TEXT NOT NULL,
+                canonical_market TEXT NOT NULL,
+                decimal_odds TEXT NOT NULL,
+                captured_at_utc TEXT NOT NULL,
+                kickoff_utc TEXT NOT NULL,
+                quote_fingerprint TEXT NOT NULL UNIQUE,
+                quote_snapshot TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id),
+                FOREIGN KEY(event_link_id) REFERENCES historical_odds_event_links(event_link_id),
+                FOREIGN KEY(historical_match_id) REFERENCES historical_matches(historical_match_id),
+                UNIQUE(odds_manifest_id,source_quote_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_quote_selections (
+                quote_selection_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                historical_match_id TEXT NOT NULL,
+                canonical_market TEXT NOT NULL,
+                selected_quote_id TEXT NOT NULL,
+                cutoff_timestamp_utc TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                selection_fingerprint TEXT NOT NULL UNIQUE,
+                selection_snapshot TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id),
+                FOREIGN KEY(historical_match_id) REFERENCES historical_matches(historical_match_id),
+                FOREIGN KEY(selected_quote_id) REFERENCES historical_odds_quotes(quote_id),
+                UNIQUE(odds_manifest_id,historical_match_id,canonical_market,policy_version)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_coverage_reports (
+                coverage_report_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                report_fingerprint TEXT NOT NULL UNIQUE,
+                report_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS reviewed_odds_backtest_integrity_reports (
+                integrity_report_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                integrity_status TEXT NOT NULL CHECK(integrity_status IN ('BACKTEST_INTEGRITY_PASSED','BACKTEST_INTEGRITY_BLOCKED')),
+                report_fingerprint TEXT NOT NULL UNIQUE,
+                report_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_betting_evidence_summaries (
+                betting_evidence_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                evidence_status TEXT NOT NULL,
+                evidence_fingerprint TEXT NOT NULL UNIQUE,
+                evidence_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_shadow_summaries (
+                shadow_summary_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                shadow_status TEXT NOT NULL,
+                summary_fingerprint TEXT NOT NULL UNIQUE,
+                summary_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_audit_reports (
+                odds_audit_id TEXT PRIMARY KEY,
+                odds_manifest_id TEXT NOT NULL,
+                audit_status TEXT NOT NULL CHECK(audit_status IN ('AUDIT_PASSED','AUDIT_BLOCKED')),
+                audit_fingerprint TEXT NOT NULL UNIQUE,
+                audit_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(odds_manifest_id) REFERENCES historical_odds_source_manifests(odds_manifest_id)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_historical_odds_quotes_match ON historical_odds_quotes(historical_match_id,canonical_market,captured_at_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_historical_odds_links_source ON historical_odds_event_links(odds_manifest_id,source_event_id)""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_source_reviews_no_update BEFORE UPDATE ON historical_odds_source_reviews BEGIN SELECT RAISE(ABORT,'Historical odds source reviews are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_source_reviews_no_delete BEFORE DELETE ON historical_odds_source_reviews BEGIN SELECT RAISE(ABORT,'Historical odds source reviews are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_source_manifests_no_update BEFORE UPDATE ON historical_odds_source_manifests BEGIN SELECT RAISE(ABORT,'Historical odds source manifests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_source_manifests_no_delete BEFORE DELETE ON historical_odds_source_manifests BEGIN SELECT RAISE(ABORT,'Historical odds source manifests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_source_files_no_update BEFORE UPDATE ON historical_odds_source_files BEGIN SELECT RAISE(ABORT,'Historical odds source files are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_source_files_no_delete BEFORE DELETE ON historical_odds_source_files BEGIN SELECT RAISE(ABORT,'Historical odds source files are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_event_links_no_update BEFORE UPDATE ON historical_odds_event_links BEGIN SELECT RAISE(ABORT,'Historical odds event links are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_event_links_no_delete BEFORE DELETE ON historical_odds_event_links BEGIN SELECT RAISE(ABORT,'Historical odds event links are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_quotes_no_update BEFORE UPDATE ON historical_odds_quotes BEGIN SELECT RAISE(ABORT,'Historical odds quotes are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_quotes_no_delete BEFORE DELETE ON historical_odds_quotes BEGIN SELECT RAISE(ABORT,'Historical odds quotes are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_quote_selections_no_update BEFORE UPDATE ON historical_odds_quote_selections BEGIN SELECT RAISE(ABORT,'Historical odds quote selections are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_quote_selections_no_delete BEFORE DELETE ON historical_odds_quote_selections BEGIN SELECT RAISE(ABORT,'Historical odds quote selections are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_coverage_reports_no_update BEFORE UPDATE ON historical_odds_coverage_reports BEGIN SELECT RAISE(ABORT,'Historical odds coverage reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_coverage_reports_no_delete BEFORE DELETE ON historical_odds_coverage_reports BEGIN SELECT RAISE(ABORT,'Historical odds coverage reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS reviewed_odds_backtest_integrity_reports_no_update BEFORE UPDATE ON reviewed_odds_backtest_integrity_reports BEGIN SELECT RAISE(ABORT,'Historical backtest integrity reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS reviewed_odds_backtest_integrity_reports_no_delete BEFORE DELETE ON reviewed_odds_backtest_integrity_reports BEGIN SELECT RAISE(ABORT,'Historical backtest integrity reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_betting_evidence_summaries_no_update BEFORE UPDATE ON historical_betting_evidence_summaries BEGIN SELECT RAISE(ABORT,'Historical betting evidence summaries are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_betting_evidence_summaries_no_delete BEFORE DELETE ON historical_betting_evidence_summaries BEGIN SELECT RAISE(ABORT,'Historical betting evidence summaries are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_shadow_summaries_no_update BEFORE UPDATE ON historical_odds_shadow_summaries BEGIN SELECT RAISE(ABORT,'Historical odds shadow summaries are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_shadow_summaries_no_delete BEFORE DELETE ON historical_odds_shadow_summaries BEGIN SELECT RAISE(ABORT,'Historical odds shadow summaries are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_audit_reports_no_update BEFORE UPDATE ON historical_odds_audit_reports BEGIN SELECT RAISE(ABORT,'Historical odds audit reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_audit_reports_no_delete BEFORE DELETE ON historical_odds_audit_reports BEGIN SELECT RAISE(ABORT,'Historical odds audit reports are immutable'); END""",
+        ),
+    ),
 )
 
 
