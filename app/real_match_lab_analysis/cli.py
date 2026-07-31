@@ -201,7 +201,7 @@ def _print_record(record, output):
     print(f"Result fingerprint: {record.result_fingerprint}")
     if record.message_html:
         print("\n--- Lab preview (no message sent) ---\n")
-        print(record.message_html)
+        _human_print(record.message_html)
     else:
         print("Rejection reasons: " + ", ".join(record.rejection_reasons or ("NO_SELECTION",)))
     print(f"\nSend confirmation required: {SEND_CONFIRMATION}")
@@ -213,9 +213,17 @@ def _print_value(value, output):
     else:
         if isinstance(value, dict):
             for key, item in value.items():
-                print(f"{key}: {item}")
+                _human_print(f"{key}: {item}")
         else:
             print(json.dumps(value, indent=2, ensure_ascii=True))
+
+
+def _human_print(value: object) -> None:
+    """Render arbitrary persisted Unicode safely on the active terminal."""
+    text = str(value)
+    encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+    safe = text.encode(encoding, errors="backslashreplace").decode(encoding)
+    print(safe)
 
 
 def _json_text(value):

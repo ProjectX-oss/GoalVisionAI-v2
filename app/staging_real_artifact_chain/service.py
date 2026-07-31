@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, replace
+from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, ROUND_CEILING
 from hashlib import sha256 as hashlib_sha256
@@ -108,15 +108,78 @@ COMPARE_AT = datetime(2026, 7, 1, 16, tzinfo=UTC)
 EVIDENCE_CUTOFF = datetime(2026, 8, 1, 12, tzinfo=UTC)
 
 
+@dataclass(frozen=True, slots=True)
+class RealArtifactChainProfile:
+    """Injected chronology for deterministic, replay-safe controlled chains."""
+
+    base_kickoff: datetime = BASE_KICKOFF
+    match_interval: timedelta = timedelta(days=1)
+    import_at: datetime = IMPORT_AT
+    build_at: datetime = BUILD_AT
+    split_at: datetime = SPLIT_AT
+    train_at: datetime = TRAIN_AT
+    calibrate_at: datetime = CALIBRATE_AT
+    backtest_at: datetime = BACKTEST_AT
+    compare_at: datetime = COMPARE_AT
+    evidence_cutoff: datetime = EVIDENCE_CUTOFF
+    source_match_count: int = 1200
+    champion_validation_end_index: int = 240
+    champion_test_start_index: int = 900
+    champion_validation_test_gap_days: int = 660
+    challenger_train_end_index: int = 700
+    challenger_validation_end_index: int = 900
+
+    def kickoff(self, index: int) -> datetime:
+        return self.base_kickoff + self.match_interval * index
+
+
+DEFAULT_REAL_ARTIFACT_CHAIN_PROFILE = RealArtifactChainProfile()
+
+
+def recent_calibration_rehearsal_profile(
+    controlled_now: datetime,
+) -> RealArtifactChainProfile:
+    """Return a recent controlled chronology without consulting wall clock time."""
+    if controlled_now.tzinfo is None or controlled_now.utcoffset() is None:
+        raise ValueError("The controlled clock must be timezone-aware.")
+    now = controlled_now.astimezone(UTC)
+    interval = timedelta(days=1)
+    source_match_count = 1200
+    return RealArtifactChainProfile(
+        base_kickoff=(
+            now - timedelta(hours=48) - interval * (source_match_count - 1)
+        ),
+        match_interval=interval,
+        import_at=now - timedelta(minutes=40),
+        build_at=now - timedelta(minutes=35),
+        split_at=now - timedelta(minutes=30),
+        train_at=now - timedelta(minutes=20),
+        calibrate_at=now - timedelta(minutes=5),
+        backtest_at=now - timedelta(minutes=4),
+        compare_at=now - timedelta(minutes=2),
+        evidence_cutoff=now,
+        source_match_count=source_match_count,
+        champion_validation_end_index=240,
+        champion_test_start_index=900,
+        champion_validation_test_gap_days=660,
+        challenger_train_end_index=700,
+        challenger_validation_end_index=900,
+    )
+
+
 class RealArtifactChainError(RuntimeError):
     """A genuine staging chain failed closed."""
 
 
-def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
+def build_real_artifact_chain(
+    database: Database,
+    *,
+    profile: RealArtifactChainProfile = DEFAULT_REAL_ARTIFACT_CHAIN_PROFILE,
+) -> RealArtifactChainManifest:
     """Build every artifact through its production domain service."""
     MigrationManager(database.connection).migrate()
-    imported = _import_history(database)
-    dataset = _build_dataset(database, imported.import_id)
+    imported = _import_history(database, profile)
+    dataset = _build_dataset(database, imported.import_id, profile)
     (
         champion_split_outcome,
         champion_split,
@@ -124,7 +187,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         split_outcome,
         split,
         fold,
-    ) = _split_dataset(database, dataset)
+    ) = _split_dataset(database, dataset, profile)
     champion_training = _train(
         database,
         champion_split,
@@ -134,6 +197,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         estimator=EstimatorConfiguration(
             convergence_tolerance=Decimal("0.001"),
         ),
+        profile=profile,
     )
     challenger_training = _train(
         database,
@@ -144,6 +208,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         estimator=EstimatorConfiguration(
             convergence_tolerance=Decimal("0.001"),
         ),
+        profile=profile,
     )
     champion_calibration = _calibrate(
         database,
@@ -152,6 +217,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         champion_training,
         "controlled-staging-champion-calibration-v1",
         CalibrationMethod.ISOTONIC_REGRESSION_V1,
+        profile,
     )
     challenger_calibration = _calibrate(
         database,
@@ -160,6 +226,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         challenger_training,
         "controlled-staging-challenger-calibration-v1",
         CalibrationMethod.PLATT_SCALING_V1,
+        profile,
     )
     examples = _partition_examples(database, fold.fold_id, Partition.TEST)
     odds = _historical_odds(
@@ -177,6 +244,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         champion_calibration,
         odds,
         "controlled-staging-champion-backtest-v1",
+        profile,
     )
     challenger_backtest = _backtest(
         database,
@@ -186,6 +254,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         challenger_calibration,
         odds,
         "controlled-staging-challenger-backtest-v1",
+        profile,
     )
     comparison, evaluation, recommendation = _compare(
         database,
@@ -195,6 +264,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         challenger_training,
         challenger_calibration,
         challenger_backtest,
+        profile,
     )
     champion = _runtime_reference(champion_training, champion_calibration)
     challenger = _runtime_reference(challenger_training, challenger_calibration)
@@ -206,6 +276,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         comparison,
         evaluation,
         recommendation,
+        profile,
     )
     values = dict(
         schema_version=CHAIN_SCHEMA_VERSION,
@@ -241,7 +312,7 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
         recommendation_fingerprint=recommendation.recommendation_fingerprint,
         promotion_recommendation=evaluation.recommendation.value,
         promotion_score=str(evaluation.promotion_score),
-        evidence_cutoff_timestamp_utc=_utc(EVIDENCE_CUTOFF),
+        evidence_cutoff_timestamp_utc=_utc(profile.evidence_cutoff),
         shadow_evidence_fingerprint=evidence.evidence_fingerprint,
         settled_shadow_count=evidence.settled_count,
         observation_days=str(evidence.observation_days),
@@ -251,23 +322,23 @@ def build_real_artifact_chain(database: Database) -> RealArtifactChainManifest:
     return RealArtifactChainManifest(**{**values, "chain_fingerprint": fingerprint})
 
 
-def _import_history(database):
+def _import_history(database, profile):
     result = build_historical_match_importer(database, migrate=False).import_dataset(
         HistoricalDataset(
             schema_version=HISTORICAL_DATASET_SCHEMA,
             provider=CONTROLLED_SOURCE_LABEL,
             dataset_id="controlled-staging-history-v1",
             dataset_version="v1",
-            matches=_source_matches(),
+            matches=_source_matches(profile),
         ),
-        import_timestamp=IMPORT_AT,
+        import_timestamp=profile.import_at,
     )
-    if result.supplied_match_count != 1200:
+    if result.supplied_match_count != profile.source_match_count:
         raise RealArtifactChainError("Controlled historical import is incomplete.")
     return result
 
 
-def _source_matches() -> tuple[HistoricalMatchInput, ...]:
+def _source_matches(profile) -> tuple[HistoricalMatchInput, ...]:
     schedule = (
         (("Alpha", "Delta", 1, 0), ("Bravo", "Charlie", 1, 0)),
         (("Delta", "Alpha", 0, 1), ("Charlie", "Bravo", 0, 0)),
@@ -278,7 +349,7 @@ def _source_matches() -> tuple[HistoricalMatchInput, ...]:
     )
     matches = []
     fixtures = tuple(item for pair in schedule for item in pair)
-    for day in range(1200):
+    for day in range(profile.source_match_count):
         home, away, home_score, away_score = fixtures[day % len(fixtures)]
         noise = hashlib_sha256(
             f"{CONTROLLED_SOURCE_LABEL}:{day}".encode("utf-8")
@@ -329,7 +400,7 @@ def _source_matches() -> tuple[HistoricalMatchInput, ...]:
                         else "2025/26"
                     ),
                     round=f"Round {day + 1}",
-                    kickoff_utc=BASE_KICKOFF + timedelta(days=day),
+                    kickoff_utc=profile.kickoff(day),
                     home_team=home,
                     away_team=away,
                     full_time_home_score=home_score,
@@ -364,7 +435,7 @@ def _statistics(seed: int, possession: int, goals: int):
     )
 
 
-def _build_dataset(database, import_id):
+def _build_dataset(database, import_id, profile):
     result = build_historical_training_dataset_service(
         database, migrate=False
     ).build(
@@ -377,9 +448,9 @@ def _build_dataset(database, import_id):
                 "Controlled Staging League B",
             ),
             season_filters=("2024/25", "2025/26"),
-            kickoff_lower_bound=BASE_KICKOFF + timedelta(days=12),
-            kickoff_upper_bound=BASE_KICKOFF + timedelta(days=1200),
-            build_timestamp=BUILD_AT,
+            kickoff_lower_bound=profile.kickoff(12),
+            kickoff_upper_bound=profile.kickoff(profile.source_match_count),
+            build_timestamp=profile.build_at,
             feature_schema_version=LIVE_TRAINING_FEATURE_CONTRACT.schema_version,
             dataset_policy_version=LIVE_CONTRACT_HISTORICAL_TRAINING_POLICY.version,
         ),
@@ -393,14 +464,14 @@ def _build_dataset(database, import_id):
     return result
 
 
-def _split_dataset(database, dataset):
+def _split_dataset(database, dataset, profile):
     service = build_historical_dataset_split_service(database, migrate=False)
     common = dict(
         source_dataset_build_id=dataset.dataset_build_id,
         source_dataset_fingerprint=dataset.dataset_fingerprint,
         strategy=SplitStrategy.EXPLICIT_TIME_BOUNDARIES_V1,
         minimum_partition_sizes=MinimumPartitionSizes(40, 40, 100),
-        split_timestamp=SPLIT_AT,
+        split_timestamp=profile.split_at,
         feature_schema_version=LIVE_TRAINING_FEATURE_CONTRACT.schema_version,
     )
     champion_outcome = service.create(
@@ -408,13 +479,15 @@ def _split_dataset(database, dataset):
             split_request_id="controlled-staging-champion-split-v1",
             split_name="Controlled old-regime champion chronological split",
             explicit_boundaries=ExplicitTimeBoundaries(
-                BASE_KICKOFF + timedelta(days=160),
-                BASE_KICKOFF + timedelta(days=160),
-                BASE_KICKOFF + timedelta(days=240),
-                BASE_KICKOFF + timedelta(days=900),
+                profile.kickoff(160),
+                profile.kickoff(160),
+                profile.kickoff(profile.champion_validation_end_index),
+                profile.kickoff(profile.champion_test_start_index),
                 None,
             ),
-            gaps=GapConfiguration(0, 660),
+            gaps=GapConfiguration(
+                0, profile.champion_validation_test_gap_days
+            ),
             **common,
         )
     )
@@ -423,10 +496,10 @@ def _split_dataset(database, dataset):
             split_request_id="controlled-staging-challenger-split-v1",
             split_name="Controlled current-regime challenger chronological split",
             explicit_boundaries=ExplicitTimeBoundaries(
-                BASE_KICKOFF + timedelta(days=700),
-                BASE_KICKOFF + timedelta(days=700),
-                BASE_KICKOFF + timedelta(days=900),
-                BASE_KICKOFF + timedelta(days=900),
+                profile.kickoff(profile.challenger_train_end_index),
+                profile.kickoff(profile.challenger_train_end_index),
+                profile.kickoff(profile.challenger_validation_end_index),
+                profile.kickoff(profile.challenger_validation_end_index),
                 None,
             ),
             **common,
@@ -456,7 +529,7 @@ def _split_dataset(database, dataset):
     )
 
 
-def _train(database, split, fold, request_id, name, estimator):
+def _train(database, split, fold, request_id, name, estimator, profile):
     outcome = build_historical_model_training_service(
         database,
         preprocessing_policy=PreprocessingPolicy(
@@ -477,7 +550,7 @@ def _train(database, split, fold, request_id, name, estimator):
             ordered_feature_names=LIVE_TRAINING_FEATURE_CONTRACT.ordered_feature_names,
             append_missingness_indicators=True,
             estimator=estimator,
-            training_timestamp=TRAIN_AT,
+            training_timestamp=profile.train_at,
             environment_metadata_version=CONTROLLED_SOURCE_LABEL,
         )
     )
@@ -493,7 +566,7 @@ def _train(database, split, fold, request_id, name, estimator):
     ).load_training_run(outcome.training_run_id)
 
 
-def _calibrate(database, split, fold, training, request_id, method):
+def _calibrate(database, split, fold, training, request_id, method, profile):
     artifact = training.artifact
     policy = (
         replace(
@@ -522,7 +595,7 @@ def _calibrate(database, split, fold, training, request_id, method):
             match_result_method=method,
             totals_method=method,
             btts_method=method,
-            calibration_timestamp=CALIBRATE_AT,
+            calibration_timestamp=profile.calibrate_at,
             environment_metadata_version=CONTROLLED_SOURCE_LABEL,
         )
     )
@@ -677,7 +750,9 @@ def _historical_odds(
     return create_odds_dataset("controlled-staging-test-odds-v1", tuple(snapshots))
 
 
-def _backtest(database, split, fold, training, calibration, odds, request_id):
+def _backtest(
+    database, split, fold, training, calibration, odds, request_id, profile
+):
     artifact = training.artifact
     artifact_set = calibration.artifact_set
     outcome = build_historical_backtesting_service(
@@ -703,7 +778,7 @@ def _backtest(database, split, fold, training, calibration, odds, request_id):
             odds_dataset_id=odds.odds_dataset_id,
             odds_dataset_fingerprint=odds.odds_dataset_fingerprint,
             initial_bankroll=Decimal("10000"),
-            backtest_timestamp=BACKTEST_AT,
+            backtest_timestamp=profile.backtest_at,
             environment_metadata_version=CONTROLLED_SOURCE_LABEL,
         ),
         odds_dataset=odds,
@@ -729,6 +804,7 @@ def _compare(
     challenger_training,
     challenger_calibration,
     challenger_backtest,
+    profile,
 ):
     candidate = ChallengerCandidate(
         challenger_candidate_id="controlled-staging-challenger-v1",
@@ -768,7 +844,7 @@ def _compare(
             scope=ComparisonScope(
                 comparison_scope_version="comparison-scope-v1",
             ),
-            comparison_timestamp=COMPARE_AT,
+            comparison_timestamp=profile.compare_at,
             environment_metadata_version=CONTROLLED_SOURCE_LABEL,
         )
     )
@@ -777,7 +853,8 @@ def _compare(
         ComparisonStatus.IDEMPOTENT_EXISTING,
     }:
         raise RealArtifactChainError(
-            f"Model comparison failed: {outcome.status.value}"
+            f"Model comparison failed: {outcome.status.value} "
+            + ",".join(outcome.ordered_reason_codes)
         )
     repository = SQLiteModelComparisonRepository(database, migrate=False)
     comparison = repository.load_comparison_run(outcome.comparison_run_id)
@@ -831,6 +908,7 @@ def _shadow(
     comparison,
     evaluation,
     recommendation,
+    profile,
 ):
     selected = examples[-30:]
     if len(selected) != 30:
@@ -970,7 +1048,9 @@ def _shadow(
                 match_id=command.match_id,
                 final_home_score=home_score,
                 final_away_score=away_score,
-                settlement_timestamp_utc=EVIDENCE_CUTOFF - timedelta(minutes=index),
+                settlement_timestamp_utc=(
+                    profile.evidence_cutoff - timedelta(minutes=index)
+                ),
                 source_identity=CONTROLLED_SOURCE_LABEL,
                 source_version="v1",
                 source_record_identity=f"controlled-result-{command.match_id}",
@@ -997,8 +1077,8 @@ def _shadow(
         challenger_candidate_id=evaluation.candidate.challenger_candidate_id,
         recommendation_id=recommendation.recommendation_id,
         recommendation_fingerprint=recommendation.recommendation_fingerprint,
-        evidence_cutoff_timestamp_utc=EVIDENCE_CUTOFF,
-        requested_timestamp_utc=EVIDENCE_CUTOFF,
+        evidence_cutoff_timestamp_utc=profile.evidence_cutoff,
+        requested_timestamp_utc=profile.evidence_cutoff,
         activation_reason=CONTROLLED_SOURCE_LABEL,
         operator_identity="controlled-staging-rehearsal",
     )

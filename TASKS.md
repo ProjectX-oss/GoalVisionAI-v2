@@ -10,6 +10,30 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# RECENT LIVE-78 CALIBRATION CHAMPION FOUNDATION
+
+Status:
+
+COMPLETED
+
+- [x] Recover the expected Real Match Lab commit onto a development branch.
+- [x] Preserve all unrelated working-tree and operational artifacts.
+- [x] Document the exact runtime calibration freshness timestamp semantics.
+- [x] Add an injected recent controlled chronology without changing defaults.
+- [x] Preserve TRAIN-only preprocessing, VALIDATION-only calibration, and
+  TEST-only backtesting through the existing domain services.
+- [x] Add a fail-closed live-78 active-champion freshness report.
+- [x] Complete and retain the controlled chain, audit, staging activation,
+  rollback/reactivation, Real Match Lab rehearsal, and canonical evidence.
+- [x] Complete focused and full verification and commit the reviewed changes.
+
+The source mode is explicitly
+`CONTROLLED_SYNTHETIC_RECENT_CALIBRATION_REHEARSAL`; its performance is not a
+claim of real predictive quality. Production activation and every publication,
+Telegram, scheduler, and Official bankroll/statistics path remain unauthorized.
+
+---
+
 # LIVE FEATURE CONTRACT-COMPATIBLE MODEL FOUNDATION
 
 Status:
@@ -311,6 +335,22 @@ Move completed work here.
 Never delete completed tasks.
 
 Only append.
+
+## 2026-07-31 - Recently Calibrated Live-78 Staging Champion
+
+- Recovered preserved commit `27fb6a2` onto
+  `goalvision/live-78-fresh-calibration` without touching unrelated work.
+- Added an injected controlled chronology and produced immutable live-78 model
+  and calibration artifacts through the real TRAIN, VALIDATION, and TEST
+  services; the runtime freshness reference is the persisted calibration fit
+  timestamp and remained fresh without timestamp mutation or policy changes.
+- Completed compatible backtests, promotion, settled Shadow evidence,
+  independent audit, manual staging activation/rollback, resolver and freshness
+  inspection, and a deterministic all-11-market Real Match Lab rehearsal.
+- Retained canonical non-production evidence at
+  `docs/rehearsals/live_78_recent_calibration_champion_2026-07-31.json` with
+  zero Telegram calls, sends, deliveries, Official publications, bankroll or
+  statistics changes, production activation, scheduling, or startup execution.
 
 ## 2026-07-12 - Stabilize Current Project
 

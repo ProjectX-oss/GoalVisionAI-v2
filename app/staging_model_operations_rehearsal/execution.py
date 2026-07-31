@@ -18,7 +18,11 @@ from app.model_operations_rehearsal.execution import (
 )
 from app.model_operations_rehearsal.safety import sha256_file
 from app.database import Database
-from app.staging_real_artifact_chain import build_real_artifact_chain
+from app.staging_real_artifact_chain import (
+    DEFAULT_REAL_ARTIFACT_CHAIN_PROFILE,
+    RealArtifactChainProfile,
+    build_real_artifact_chain,
+)
 
 from .models import (
     ArtifactCandidate,
@@ -119,6 +123,9 @@ def run_staging_rehearsal(
     *,
     policy: StagingRehearsalPolicy = DEFAULT_STAGING_REHEARSAL_POLICY,
     project_root: Path | None = None,
+    chain_profile: RealArtifactChainProfile = (
+        DEFAULT_REAL_ARTIFACT_CHAIN_PROFILE
+    ),
 ) -> StagingRehearsalOutcome:
     root = project_root or Path(__file__).resolve().parents[2]
     source, destination = validate_command(command, policy, root)
@@ -138,7 +145,9 @@ def run_staging_rehearsal(
     )
     chain_database = Database(controlled_source)
     try:
-        chain = build_real_artifact_chain(chain_database)
+        chain = build_real_artifact_chain(
+            chain_database, profile=chain_profile
+        )
         challenger_estimator_fingerprint = chain_database.connection.execute(
             """SELECT estimator_bundle_fingerprint
                FROM historical_model_artifacts
@@ -186,7 +195,9 @@ def run_staging_rehearsal(
         destination_directory=destination,
         timestamp=command.timestamp,
         profile=profile,
-        fixture_seed=lambda database: chain,
+        fixture_seed=lambda database: build_real_artifact_chain(
+            database, profile=chain_profile
+        ),
         pre_bootstrap_hook=lambda path: audit_runner.require_preflight(
             path, "PRE_BOOTSTRAP"
         ),
