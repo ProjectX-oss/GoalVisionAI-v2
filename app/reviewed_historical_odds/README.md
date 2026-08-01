@@ -1,6 +1,6 @@
 # Reviewed historical odds
 
-This package provides offline-only, deterministic source review, immutable
+This package provides deterministic source review, immutable
 manifests, exact event linkage, quote normalization, a fixed-bookmaker 24-hour
 cutoff, coverage reporting, and backtest-integrity auditing.
 
@@ -11,11 +11,19 @@ archive parser accepts deterministic JSON arrays or JSON Lines and supports all
 versioned; the original fixed Pinnacle 24-hour policy remains the primary
 default.
 
-It never fetches data, publishes predictions, activates models, or mutates an
-Official bankroll. Raw provider files remain in operator-controlled ignored
-storage. Inspection and import require an explicit local file.
+It never fetches data during import, application startup, or ordinary inspection,
+publishes predictions, activates models, or mutates an Official bankroll. Raw
+provider files remain in operator-controlled ignored storage. The only network
+paths are the explicitly invoked `provider-diagnose` and `coverage-probe`
+commands. Both are bounded and fail before client creation when the documented
+provider credential is absent.
 
 `build-extended-coverage-foundation` is network-inert. It records reviewed
 access findings and returns `REVIEWED_TEST_ODDS_COVERAGE_UNAVAILABLE` when no
 approved raw archive overlaps TEST. It never treats missing evidence as zero
 performance and cannot authorize publication or activation.
+
+The credential-ready workflow is documented in
+`docs/HISTORICAL_ODDS_PROVIDER_COVERAGE_PROBE.md`. Bulk acquisition remains
+separately gated by approved terms, confirmed sampled coverage, sufficient
+provider-reported quota, and an exact operator confirmation phrase.

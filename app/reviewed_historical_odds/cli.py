@@ -14,6 +14,12 @@ from .models import OddsSourceReview
 from .pilot import run_pilot
 from .service import prepare_source_review
 from .the_odds_api import parse_historical_archive
+from .provider_config import load_provider_credential
+from .provider_evidence import SPLIT_ID, build_credential_status_evidence
+from .provider_export import assert_export_authorized, build_bulk_request_plan
+from .provider_http import ProviderHttpError
+from .provider_models import HistoricalOddsProvider
+from .provider_probe import prepare_probe_request, run_coverage_probe
 
 
 INSPECTION_COMMANDS = (
@@ -51,6 +57,18 @@ def build_parser() -> argparse.ArgumentParser:
     for name in INSPECTION_COMMANDS:
         inspect = sub.add_parser(name); inspect.add_argument("evidence_json"); inspect.add_argument("--output", choices=("human", "json"), default="human")
     export = sub.add_parser("export-canonical-evidence"); export.add_argument("evidence_json")
+    diagnose = sub.add_parser("provider-diagnose", help="explicit bounded provider authentication check")
+    diagnose.add_argument("--provider", choices=("thestatsapi",), required=True); diagnose.add_argument("--output", choices=("human", "json"), default="human")
+    probe = sub.add_parser("coverage-probe", help="explicit bounded historical coverage sample")
+    probe.add_argument("--provider", choices=("thestatsapi",), required=True); probe.add_argument("--competition", required=True)
+    probe.add_argument("--date-from", required=True); probe.add_argument("--date-to", required=True)
+    probe.add_argument("--sample-limit", type=int, default=10); probe.add_argument("--max-requests", type=int, default=25)
+    probe.add_argument("--output", choices=("human", "json"), default="human")
+    plan = sub.add_parser("export-plan"); plan.add_argument("--provider", choices=("thestatsapi",), required=True)
+    plan.add_argument("--split-id", default=SPLIT_ID); plan.add_argument("--competition", default="bundesliga"); plan.add_argument("--output", choices=("human", "json"), default="json")
+    authorized = sub.add_parser("authorized-export"); authorized.add_argument("--provider", choices=("thestatsapi",), required=True)
+    authorized.add_argument("--confirmation", required=True); authorized.add_argument("--destination", required=True); authorized.add_argument("--output", choices=("human", "json"), default="human")
+    evidence = sub.add_parser("provider-evidence"); evidence.add_argument("--export"); evidence.add_argument("--output", choices=("human", "json"), default="json")
     return parser
 
 
@@ -92,6 +110,45 @@ def main(argv: list[str] | None = None) -> int:
         )
         if args.export: Path(args.export).write_text(canonical_json(evidence) + "\n", encoding="utf-8")
         return _render(evidence, "json")
+    if args.command == "provider-evidence":
+        evidence = build_credential_status_evidence()
+        if args.export: Path(args.export).write_text(canonical_json(evidence) + "\n", encoding="utf-8")
+        return _render(evidence, args.output)
+    if args.command == "export-plan":
+        return _render(build_bulk_request_plan(provider=HistoricalOddsProvider(args.provider), split_id=args.split_id, competition_query=args.competition), args.output)
+    if args.command in {"provider-diagnose", "coverage-probe"}:
+        provider = HistoricalOddsProvider(args.provider); credential = load_provider_credential(provider)
+        if not credential.configured:
+            if args.command == "provider-diagnose": return _render({"provider": provider.value, "status": "PROVIDER_CREDENTIAL_NOT_CONFIGURED", "environment_variable": credential.environment_variable}, args.output)
+            request = prepare_probe_request(provider, args.competition, args.date_from, args.date_to, args.sample_limit, args.max_requests)
+            return _render(run_coverage_probe(request, None), args.output)
+        from .thestatsapi_provider import TheStatsApiProvider
+        adapter = TheStatsApiProvider(credential)
+        if args.command == "provider-diagnose":
+            try:
+                valid, receipt = adapter.diagnose_credentials()
+                return _render({"provider": provider.value, "status": "PROVIDER_CREDENTIAL_VALID" if valid else "PROVIDER_AUTHENTICATION_FAILED", "receipt": receipt}, args.output)
+            except ProviderHttpError as exc:
+                status = "PROVIDER_AUTHENTICATION_FAILED" if exc.status_code in (401, 403) else "PROVIDER_QUOTA_INSUFFICIENT" if exc.status_code == 429 else "PROVIDER_RESPONSE_INCOMPATIBLE"
+                return _render({"provider": provider.value, "status": status, "http_status": exc.status_code}, args.output)
+            except (KeyError, TypeError, ValueError):
+                return _render({"provider": provider.value, "status": "PROVIDER_RESPONSE_INCOMPATIBLE"}, args.output)
+        request = prepare_probe_request(provider, args.competition, args.date_from, args.date_to, args.sample_limit, args.max_requests)
+        return _render(run_coverage_probe(request, adapter), args.output)
+    if args.command == "authorized-export":
+        credential = load_provider_credential(HistoricalOddsProvider(args.provider))
+        plan = build_bulk_request_plan(provider=HistoricalOddsProvider(args.provider), split_id=SPLIT_ID, competition_query="bundesliga")
+        request = prepare_probe_request(HistoricalOddsProvider(args.provider), "bundesliga", "2023-05-13T13:30:00Z", "2025-05-17T13:30:00Z")
+        report = run_coverage_probe(request, None)
+        try:
+            assert_export_authorized(
+                confirmation=args.confirmation, credential_configured=credential.configured,
+                source_approval_status=SourceApprovalStatus.REVIEW_REQUIRED, coverage_report=report,
+                available_quota=None, plan=plan,
+            )
+        except PermissionError as exc:
+            return _render({"status": "AUTHORIZED_EXPORT_BLOCKED", "reason_codes": tuple(str(exc).split(",")), "destination_written": False}, args.output)
+        return _render({"status": "AUTHORIZED_EXPORT_BLOCKED", "reason_codes": ("PERSISTED_APPROVAL_AND_PROBE_REQUIRED",), "destination_written": False}, args.output)
     evidence = json.loads(Path(args.evidence_json).read_text(encoding="utf-8"))
     if args.command == "export-canonical-evidence": return _render(evidence, "json")
     sections = {

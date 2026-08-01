@@ -10,6 +10,35 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# HISTORICAL ODDS PROVIDER COVERAGE PROBE
+
+Status:
+
+COMPLETED — PROVIDER CREDENTIAL NOT CONFIGURED
+
+- [x] Add a provider-neutral, credential-ready acquisition boundary and a
+  concrete TheStatsAPI adapter without import-time or startup networking.
+- [x] Load `GOALVISION_THESTATSAPI_API_KEY` only for explicit provider commands;
+  redact credentials from endpoints, receipts, errors, evidence, and output.
+- [x] Bound sampling to ten fixtures, 25 requests, six stratified VALIDATION/TEST
+  periods, finite timeouts, and at most two transient-only retries.
+- [x] Preserve real opening and last-seen capture timestamps and reject missing
+  timestamps as coverage proof instead of inventing them.
+- [x] Add deterministic 626-fixture request, quota, storage, and resume planning;
+  keep bulk export behind five independent fail-closed authorization gates.
+- [x] Record TheStatsAPI as `REVIEW_REQUIRED`; advertised capabilities are not
+  treated as verified coverage and storage/redistribution remain unresolved.
+- [x] Produce sanitized evidence at
+  `docs/rehearsals/historical_odds_provider_coverage_probe_2026-08-01.json` with
+  zero network, Telegram, Official, bankroll, production, or raw-data changes.
+
+Next: an operator may configure an authorized credential and run only the bounded
+probe. Source terms, sampled coverage, and provider-reported quota must then be
+reviewed before any separately confirmed export. No publication or activation is
+authorized.
+
+---
+
 # EXTENDED REVIEWED HISTORICAL ODDS COVERAGE FOUNDATION
 
 Status:
