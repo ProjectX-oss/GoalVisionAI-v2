@@ -1,18 +1,18 @@
 import asyncio
-import os
 from datetime import datetime
+from pathlib import Path
 
 import httpx
+
+from .configuration import resolve_api_football_credential
 
 class FootballClient:
 
     BASE_URL = "https://v3.football.api-sports.io"
 
-    def __init__(self, api_key: str | None = None):
+    def __init__(self, api_key: str | None = None, *, env_file: Path | str = Path(".env")):
 
-        api_key = (api_key or os.getenv("FOOTBALL_API_KEY") or "").strip()
-        if not api_key:
-            raise RuntimeError("FOOTBALL_API_KEY not found.")
+        api_key = resolve_api_football_credential(api_key, env_file=env_file)
         self._quota: dict[str, str | None] = {}
 
         self._client = httpx.AsyncClient(
@@ -43,6 +43,16 @@ class FootballClient:
 
         response.raise_for_status()
 
+        return response.json()
+
+    async def fixtures_between(self, date_from: str, date_to: str):
+        response = await self._get(
+            "/fixtures", params={"from": date_from, "to": date_to}
+        )
+        return response.json()
+
+    async def account_status(self):
+        response = await self._get("/status", params={})
         return response.json()
 
     async def fixture(self, fixture_id: int):
@@ -140,11 +150,11 @@ class FootballClient:
         for attempt in range(3):
             try:
                 response = await self._client.get(path, params=params)
-                response.raise_for_status()
                 self._quota = {
                     "requests_remaining": response.headers.get("x-ratelimit-requests-remaining"),
                     "daily_remaining": response.headers.get("x-ratelimit-remaining"),
                 }
+                response.raise_for_status()
                 return response
             except httpx.HTTPStatusError as exc:
                 if exc.response.status_code not in {408, 425, 500, 502, 503, 504} or attempt == 2:

@@ -6,6 +6,7 @@ import unittest
 from contextlib import redirect_stdout
 from datetime import datetime, timezone
 from decimal import Decimal
+from unittest.mock import patch
 
 from app.current_odds_forward_test.audit import audit_observation
 from app.current_odds_forward_test.cli import main as cli_main
@@ -14,12 +15,14 @@ from app.current_odds_forward_test.models import ODDS_SCHEMA_VERSION, RESULT_SCH
 from app.current_odds_forward_test.repository import ForwardTestConflictError, SQLiteForwardTestRepository
 from app.current_odds_forward_test.service import ForwardTestService, ForwardTestValidationError, _won
 from app.current_odds_forward_test.statistics import build_statistics
-from app.current_odds_forward_test.evidence import build_foundation_evidence
+from app.current_odds_forward_test.evidence import build_api_football_discovery_evidence, build_foundation_evidence
+from app.current_odds_forward_test.discovery import discover_current_fixture
 from app.database import Database, MigrationManager
 from app.database.migrations import MIGRATIONS
 from app.real_match_lab_analysis.fingerprint import canonical_json, fingerprint
 from app.real_match_lab_analysis.policy import SUPPORTED_MARKETS
 from app.football.client import FootballClient
+from app.football.configuration import FootballCredentialError, api_football_credential_status, resolve_api_football_credential
 import httpx
 
 
@@ -86,6 +89,27 @@ class ForwardTestFoundationTests(unittest.TestCase):
         raw = normalize_api_football_current_odds(payload, fixture_id="fixture-1", kickoff_utc=KICKOFF, retrieved_at_utc="2026-08-01T12:01:00+00:00", source_selected_at_utc="2026-08-01T11:59:00+00:00")
         value = parse_current_odds(raw, now=datetime(2026, 8, 1, 12, 1, tzinfo=timezone.utc)); self.assertEqual({q.market for q in value.quotes}, {"HOME_WIN", "DRAW", "OVER_2_5"}); self.assertTrue(all(q.captured_at_by_goalvision for q in value.quotes))
 
+    def test_api_provider_timestamp_is_distinct_from_goalvision_capture(self):
+        payload = {"response": [{"update": "2026-08-01T12:00:00+00:00", "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}]}]}]}]}
+        raw = normalize_api_football_current_odds(payload, fixture_id="fixture-1", kickoff_utc=KICKOFF, retrieved_at_utc="2026-08-01T12:01:00+00:00", source_selected_at_utc="2026-08-01T12:00:30+00:00")
+        value = parse_current_odds(raw, now=datetime(2026, 8, 1, 12, 1, tzinfo=timezone.utc))
+        self.assertEqual(value.captured_at_utc.isoformat(), "2026-08-01T12:01:00+00:00")
+        self.assertEqual(value.quotes[0].provider_origin_timestamp_utc.isoformat(), "2026-08-01T12:00:00+00:00")
+        self.assertFalse(value.quotes[0].captured_at_by_goalvision)
+
+    def test_existing_canonical_env_file_credential_is_detected_without_output(self):
+        out = io.StringIO()
+        with patch("app.football.configuration.dotenv_values", return_value={"FOOTBALL_API_KEY": "dummy-test-value"}), patch.dict("os.environ", {}, clear=True), redirect_stdout(out):
+            self.assertEqual(resolve_api_football_credential(), "dummy-test-value")
+        self.assertEqual(out.getvalue(), "")
+
+    def test_conflicting_canonical_sources_fail_closed_without_secret_value(self):
+        with patch("app.football.configuration.dotenv_values", return_value={"FOOTBALL_API_KEY": "file-test-value"}):
+            with self.assertRaises(FootballCredentialError) as captured:
+                resolve_api_football_credential(environment={"FOOTBALL_API_KEY": "process-test-value"})
+            self.assertNotIn("file-test-value", str(captured.exception)); self.assertNotIn("process-test-value", str(captured.exception))
+            self.assertEqual(api_football_credential_status(environment={"FOOTBALL_API_KEY": "process-test-value"}), "INVALID")
+
     def test_api_football_client_is_network_inert_until_explicit_call(self):
         client = FootballClient(api_key="test-key"); self.assertIsNotNone(client._client); asyncio.run(client.close())
 
@@ -103,9 +127,25 @@ class ForwardTestFoundationTests(unittest.TestCase):
     def test_api_football_missing_credential_cli_is_terminal_safe(self):
         out, err = io.StringIO(), io.StringIO()
         from contextlib import redirect_stderr
-        from unittest.mock import patch
-        with patch.dict("os.environ", {}, clear=True), redirect_stdout(out), redirect_stderr(err): code = cli_main(["discover-current-fixtures", "--output", "json"])
+        with patch.dict("os.environ", {}, clear=True), redirect_stdout(out), redirect_stderr(err): code = cli_main(["discover-current-fixtures", "--env-file", "missing-test.env", "--output", "json"])
         self.assertEqual(code, 3); self.assertEqual(out.getvalue(), ""); self.assertIn("API_FOOTBALL_UNAVAILABLE", err.getvalue())
+
+    def test_bounded_discovery_is_deterministic_and_stops_before_inference(self):
+        class FakeClient:
+            def __init__(self): self.calls = 0
+            async def fixtures_between(self, *_):
+                self.calls += 1
+                return {"response": [{
+                    "fixture": {"id": 7, "date": "2026-08-01T18:00:00+00:00", "status": {"short": "NS"}},
+                    "league": {"id": 78, "name": "Bundesliga", "season": 2026},
+                    "teams": {"home": {"id": 1, "name": "Home"}, "away": {"id": 2, "name": "Away"}},
+                }]}
+            async def last_matches(self, *_ , **__): self.calls += 1; return [{"fixture": {"id": i}} for i in range(5)]
+            async def current_odds(self, *_):
+                self.calls += 1
+                return {"response": [{"update": None, "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}, {"value": "Away", "odd": "3.10"}]}]}]}]}
+        client = FakeClient(); value = asyncio.run(discover_current_fixture(client, now=NOW, maximum_api_calls=4))
+        self.assertEqual(value["terminal_result"], "ELIGIBLE_CURRENT_FIXTURE_FOUND"); self.assertEqual(value["api_call_count"], 4); self.assertFalse(value["inference_executed"]); self.assertEqual(value["telegram_sends"], 0)
 
     def test_deterministic_snapshot_and_exact_replay(self):
         value = parse_current_odds(odds_raw(), now=NOW); self.assertEqual(value, parse_current_odds(odds_raw(), now=NOW))
@@ -208,6 +248,13 @@ class ForwardTestFoundationTests(unittest.TestCase):
         value = build_foundation_evidence(source_hash_before="61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0", source_hash_after="61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0", isolated_database_hash="8b58382e382690e4f339df81085cf9c02437a2baba7ca3885a56ee43a7d3287a")
         with open("docs/rehearsals/current_odds_forward_test_foundation_2026-08-01.json", encoding="utf-8") as stream: committed = json.load(stream)
         self.assertEqual(committed, json.loads(canonical_json(value))); self.assertEqual(value["evidence_fingerprint"], "a916467d59e8e4d0c9c3f73a158034018e5f7f7a19d3ea7ef48a4e3ffc44f274")
+
+    def test_api_discovery_evidence_is_sanitized_and_reproducible(self):
+        value = build_api_football_discovery_evidence()
+        with open("docs/rehearsals/api_football_current_discovery_2026-08-01.json", encoding="utf-8") as stream: committed = json.load(stream)
+        self.assertEqual(committed, json.loads(canonical_json(value)))
+        self.assertEqual(value["evidence_fingerprint"], "f2c9d84dc98b2a826b83e09b8c2a6d94fc2ca88a218bb2f38bc0139a67e5535a")
+        self.assertNotIn("dummy-test-value", canonical_json(value)); self.assertNotIn("process-test-value", canonical_json(value))
 
 
 if __name__ == "__main__": unittest.main()

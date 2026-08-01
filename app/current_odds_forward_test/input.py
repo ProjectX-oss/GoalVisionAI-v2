@@ -31,9 +31,6 @@ def parse_current_odds(raw: object, *, now: datetime | None = None) -> CurrentOd
     retrieved = _time(raw.get("source_retrieval_timestamp_utc"), "source_retrieval_timestamp_utc")
     if not selected <= captured <= retrieved <= now: raise CurrentOddsValidationError("Odds source/capture/retrieval order is invalid.")
     if captured >= kickoff: raise CurrentOddsValidationError("ODDS_CAPTURE_AFTER_KICKOFF")
-    age = int((now - captured).total_seconds())
-    freshness = classify_odds_freshness(age, DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY).value
-    if freshness in {"STALE", "EXPIRED"}: raise CurrentOddsValidationError("STALE_CURRENT_ODDS")
     try: source_type = CurrentOddsSourceType(_text(raw.get("source_type"), "source_type"))
     except ValueError as exc: raise CurrentOddsValidationError("Unsupported current odds source type.") from exc
     provider = _text(raw.get("provider_source_id"), "provider_source_id")
@@ -48,6 +45,12 @@ def parse_current_odds(raw: object, *, now: datetime | None = None) -> CurrentOd
     provider_time = _optional_time(raw.get("provider_origin_timestamp_utc"), "provider_origin_timestamp_utc")
     if by_goalvision == (provider_time is not None):
         raise CurrentOddsValidationError("Exactly one provider-origin or GoalVision retrieval timestamp mode is required.")
+    if provider_time is not None and provider_time > retrieved:
+        raise CurrentOddsValidationError("Provider odds timestamp cannot follow retrieval.")
+    quote_time = provider_time or captured
+    age = int((now - quote_time).total_seconds())
+    freshness = classify_odds_freshness(age, DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY).value
+    if freshness in {"STALE", "EXPIRED"}: raise CurrentOddsValidationError("STALE_CURRENT_ODDS")
     markets = raw.get("markets")
     if not isinstance(markets, list) or not markets: raise CurrentOddsValidationError("At least one current quote is required.")
     quotes = []
@@ -102,7 +105,7 @@ def normalize_api_football_current_odds(payload: object, *, fixture_id: str, kic
             if name == "Goals Over/Under" and label in {"Over 1.5", "Under 1.5", "Over 2.5", "Under 2.5", "Over 3.5", "Under 3.5"}: market = label.upper().replace(" ", "_").replace(".", "_")
             if market: markets.append({"market": market, "decimal_odds": str(value.get("odd"))})
     updated = root.get("update") if isinstance(root, dict) else None
-    return {"schema_version": ODDS_SCHEMA_VERSION, "fixture_id": fixture_id, "kickoff_utc": kickoff_utc, "fixture_status": "SCHEDULED", "provider_source_id": "API_FOOTBALL", "source_type": CurrentOddsSourceType.API_FOOTBALL_CURRENT_ODDS.value, "bookmaker": str(book.get("name")), "provider_event_id": fixture_id, "source_selected_at_utc": source_selected_at_utc, "captured_at_utc": updated or retrieved_at_utc, "source_retrieval_timestamp_utc": retrieved_at_utc, "provider_origin_timestamp_utc": updated, "captured_at_by_goalvision": updated is None, "direct_bookmaker": False, "provenance": "API-Football current pre-match odds endpoint retrieved by GoalVision AI", "markets": markets}
+    return {"schema_version": ODDS_SCHEMA_VERSION, "fixture_id": fixture_id, "kickoff_utc": kickoff_utc, "fixture_status": "SCHEDULED", "provider_source_id": "API_FOOTBALL", "source_type": CurrentOddsSourceType.API_FOOTBALL_CURRENT_ODDS.value, "bookmaker": str(book.get("name")), "provider_event_id": fixture_id, "source_selected_at_utc": source_selected_at_utc, "captured_at_utc": retrieved_at_utc, "source_retrieval_timestamp_utc": retrieved_at_utc, "provider_origin_timestamp_utc": updated, "captured_at_by_goalvision": updated is None, "direct_bookmaker": False, "provenance": "API-Football current pre-match odds endpoint retrieved by GoalVision AI", "markets": markets}
 
 
 def _text(value, label, maximum=512):

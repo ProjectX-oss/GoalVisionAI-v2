@@ -1,5 +1,17 @@
 # TASKS.md
 
+## API-Football configuration and first current discovery (2026-08-01)
+
+- [x] Reuse the canonical `FOOTBALL_API_KEY` from the project `.env` lazily.
+- [x] Fail closed on conflicting process and `.env` canonical values.
+- [x] Add secret-safe explicit authentication, plan and quota diagnosis.
+- [x] Add deterministic discovery ceilings of 50 candidates and 50 API calls.
+- [x] Run the first bounded discovery: authenticated, active plan, one API call,
+  zero provider fixtures in the 2026-08-01 through 2026-08-08 UTC window,
+  terminal result `NO_ELIGIBLE_CURRENT_FIXTURE`.
+- [x] Keep odds retrieval, inference, Telegram, publication, bankroll, startup,
+  scheduling, TheStatsAPI and historical-odds probing at zero for that result.
+
 # GoalVision AI Development Tasks
 
 Version 1.0

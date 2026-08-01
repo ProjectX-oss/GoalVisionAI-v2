@@ -27,8 +27,9 @@ def build_parser():
         item = sub.add_parser(name); item.add_argument("--input", type=Path, required=True); item.add_argument("--output", choices=("human", "json"), default="human")
     capture = sub.add_parser("capture-current-odds"); capture.add_argument("--database", type=Path, required=True); capture.add_argument("--input", type=Path, required=True); capture.add_argument("--output", choices=("human", "json"), default="human")
     api = sub.add_parser("capture-api-football-odds"); api.add_argument("--database", type=Path, required=True); api.add_argument("--fixture-id", type=int, required=True); api.add_argument("--kickoff-utc", required=True); api.add_argument("--source-selected-at-utc", required=True); api.add_argument("--output", choices=("human", "json"), default="human")
-    discover = sub.add_parser("discover-current-fixtures"); discover.add_argument("--output", choices=("human", "json"), default="human")
-    fixture = sub.add_parser("inspect-current-fixture"); fixture.add_argument("--fixture-id", type=int, required=True); fixture.add_argument("--output", choices=("human", "json"), default="human")
+    diagnose_api = sub.add_parser("diagnose-api-football"); diagnose_api.add_argument("--env-file", type=Path, default=Path(".env")); diagnose_api.add_argument("--output", choices=("human", "json"), default="human")
+    discover = sub.add_parser("discover-current-fixtures"); discover.add_argument("--env-file", type=Path, default=Path(".env")); discover.add_argument("--max-candidates", type=int, default=50); discover.add_argument("--max-api-calls", type=int, default=8); discover.add_argument("--horizon-days", type=int, default=7); discover.add_argument("--minimum-lead-minutes", type=int, default=60); discover.add_argument("--output", choices=("human", "json"), default="human")
+    fixture = sub.add_parser("inspect-current-fixture"); fixture.add_argument("--env-file", type=Path, default=Path(".env")); fixture.add_argument("--fixture-id", type=int, required=True); fixture.add_argument("--output", choices=("human", "json"), default="human")
     create = sub.add_parser("create-forward-test-observation"); create.add_argument("--database", type=Path, required=True); create.add_argument("--request-id", required=True); create.add_argument("--analysis-id", required=True); create.add_argument("--odds-snapshot-id", required=True); create.add_argument("--output", choices=("human", "json"), default="human")
     result = sub.add_parser("record-forward-test-result"); result.add_argument("--database", type=Path, required=True); result.add_argument("--observation-id", required=True); result.add_argument("--input", type=Path, required=True); result.add_argument("--output", choices=("human", "json"), default="human")
     settle = sub.add_parser("settle-forward-test-observation"); settle.add_argument("--database", type=Path, required=True); settle.add_argument("--observation-id", required=True); settle.add_argument("--output", choices=("human", "json"), default="human")
@@ -44,7 +45,9 @@ def main(argv=None):
     args = build_parser().parse_args(argv)
     try:
         if args.command == "validate-forward-test-input": return _render(parse_current_odds(_json(args.input)), args.output)
-        if args.command in {"discover-current-fixtures", "inspect-current-fixture"}: return asyncio.run(_api_read(args))
+        if args.command == "diagnose-api-football": return asyncio.run(_api_diagnose(args))
+        if args.command == "discover-current-fixtures": return asyncio.run(_api_discover(args))
+        if args.command == "inspect-current-fixture": return asyncio.run(_api_read(args))
         if args.command == "capture-api-football-odds": return asyncio.run(_api_capture(args))
         database = Database(args.database)
         try:
@@ -86,14 +89,82 @@ def main(argv=None):
         print("REJECTED: API_FOOTBALL_UNAVAILABLE", file=sys.stderr); return 3
 
 
+async def _api_diagnose(args):
+    from app.football.client import FootballClient
+    from app.football.configuration import (
+        CANONICAL_API_FOOTBALL_ENVIRONMENT_VARIABLE,
+        api_football_credential_status,
+    )
+    credential_status = api_football_credential_status(env_file=args.env_file)
+    value = {
+        "provider": "API_FOOTBALL",
+        "canonical_environment_variable": CANONICAL_API_FOOTBALL_ENVIRONMENT_VARIABLE,
+        "credential_status": credential_status,
+        "authentication_status": "NOT_EXECUTED",
+        "plan_status": "NOT_EXECUTED",
+        "quota": {"requests_remaining": None, "daily_remaining": None},
+        "startup_request_count": 0,
+    }
+    if credential_status != "CONFIGURED":
+        return _render(value, args.output, 3)
+    client = FootballClient(env_file=args.env_file)
+    try:
+        payload = await client.account_status()
+        response = payload.get("response") if isinstance(payload, dict) else None
+        subscription = response.get("subscription") if isinstance(response, dict) else None
+        requests = response.get("requests") if isinstance(response, dict) else None
+        value["authentication_status"] = "AUTHENTICATED"
+        value["plan_status"] = "AVAILABLE" if isinstance(subscription, dict) and subscription.get("active") else "PLAN_RESTRICTED"
+        value["quota"] = {
+            "requests_remaining": client.quota_snapshot().get("requests_remaining"),
+            "daily_remaining": client.quota_snapshot().get("daily_remaining"),
+            "daily_limit": requests.get("limit_day") if isinstance(requests, dict) else None,
+            "daily_used": requests.get("current") if isinstance(requests, dict) else None,
+        }
+        return _render(value, args.output, 0 if value["plan_status"] == "AVAILABLE" else 4)
+    except httpx.HTTPStatusError as exc:
+        value["quota"] = client.quota_snapshot()
+        if exc.response.status_code == 401:
+            value["authentication_status"] = "AUTHENTICATION_FAILED"
+            value["plan_status"] = "INVALID"
+        elif exc.response.status_code in {403, 429}:
+            value["authentication_status"] = "AUTHENTICATED"
+            value["plan_status"] = "PLAN_RESTRICTED"
+        else:
+            value["authentication_status"] = "INVALID"
+            value["plan_status"] = "INVALID"
+        return _render(value, args.output, 4)
+    finally:
+        await client.close()
+
+
 async def _api_read(args):
     from app.football.client import FootballClient
-    client = FootballClient()
+    client = FootballClient(env_file=args.env_file)
     try:
         data = await (client.fixture(args.fixture_id) if args.command == "inspect-current-fixture" else client.fixtures())
         value = {"data": data, "quota": client.quota_snapshot()}
     finally: await client.close()
     return _render(value, args.output)
+
+
+async def _api_discover(args):
+    from app.football.client import FootballClient
+    from .discovery import discover_current_fixture
+    client = FootballClient(env_file=args.env_file)
+    try:
+        value = await discover_current_fixture(
+            client,
+            now=datetime.now(timezone.utc),
+            maximum_candidates=args.max_candidates,
+            maximum_api_calls=args.max_api_calls,
+            horizon_days=args.horizon_days,
+            minimum_lead_minutes=args.minimum_lead_minutes,
+        )
+        value["quota"] = client.quota_snapshot()
+    finally:
+        await client.close()
+    return _render(value, args.output, 0 if value["selected_fixture"] else 4)
 
 
 async def _api_capture(args):

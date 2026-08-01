@@ -42,6 +42,12 @@ provider-origin timestamp. Otherwise GoalVision records its retrieval time as
 `captured_at_by_goalvision=true`; it is never described as a provider historical
 snapshot.
 
+The canonical API-Football credential remains `FOOTBALL_API_KEY`. The client
+resolves it lazily from the process environment or the project `.env` file; if
+both canonical sources are configured they must agree. No alias is introduced.
+Credential resolution never imports the broader startup configuration, prints
+the value, mutates the process environment, or performs a network request.
+
 Manual mode uses the versioned template at
 `docs/templates/current_odds_manual_v1.json`. The operator may transcribe a
 current bookmaker or Flashscore value but must supply provenance and confirm it
@@ -101,6 +107,12 @@ flow is `discover-current-fixtures` or manual fixture selection,
 `create-forward-test-observation`, inspections, `record-forward-test-result`,
 `settle-forward-test-observation`, `forward-test-statistics`, and
 `audit-forward-test`. Inspection never creates a Telegram transport.
+
+Use `diagnose-api-football` for a single explicit, sanitized account/plan check.
+`discover-current-fixtures` accepts hard ceilings for candidate count and API
+calls, orders fixtures by kickoff then provider ID, checks baseline recent-form
+availability before requesting odds, and never runs inference itself. A zero
+fixture response is an honest `NO_ELIGIBLE_CURRENT_FIXTURE` result.
 
 Reproduce only against an isolated schema-v36 database. Verify foreign keys and
 append-only triggers, export sanitized evidence, and compare the protected

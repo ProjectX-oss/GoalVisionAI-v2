@@ -40,3 +40,78 @@ def build_foundation_evidence(*, source_hash_before: str, source_hash_after: str
     }
     value["evidence_fingerprint"] = fingerprint(value)
     return value
+
+
+def build_api_football_discovery_evidence() -> dict:
+    """Reproduce the sanitized first bounded provider discovery record."""
+
+    value = {
+        "schema_version": "goalvision-api-football-current-discovery-evidence-v1",
+        "source_commit": "760eb26",
+        "branch": "goalvision/live-78-fresh-calibration",
+        "execution_timestamp_utc": "2026-08-01T08:49:35.063497+00:00",
+        "canonical_environment_variable": "FOOTBALL_API_KEY",
+        "credential_status": "CONFIGURED",
+        "authentication_status": "AUTHENTICATED",
+        "plan_status": "AVAILABLE",
+        "quota": {
+            "daily_limit": 100,
+            "daily_used_at_diagnosis": 0,
+            "daily_remaining_header_after_discovery": "9",
+            "requests_remaining_header_after_discovery": "99",
+        },
+        "discovery": {
+            "window_utc": ["2026-08-01", "2026-08-08"],
+            "maximum_candidates": 50,
+            "maximum_api_calls": 8,
+            "actual_api_calls": 1,
+            "candidate_fixture_count": 0,
+            "fixtures_inspected": 0,
+            "skipped_candidate_count": 0,
+            "skip_reasons": {},
+            "fixture_order": "KICKOFF_UTC_THEN_PROVIDER_FIXTURE_ID",
+            "selected_fixture": None,
+            "terminal_result": "NO_ELIGIBLE_CURRENT_FIXTURE",
+        },
+        "odds": {
+            "source": "API_FOOTBALL_CURRENT_PREMATCH_ODDS",
+            "request_executed": False,
+            "bookmaker": None,
+            "available_markets": [],
+            "timestamps": None,
+            "snapshot_fingerprint": None,
+        },
+        "forward_test": {
+            "observation_id": None,
+            "feature_completeness": "NOT_EVALUATED",
+            "model_calibration_compatibility": "NOT_EVALUATED",
+            "market_evaluation": "NOT_EXECUTED",
+            "selection": "NO_SELECTION_NOT_ANALYZED",
+            "preview": None,
+        },
+        "database_integrity": {
+            "schema_version": 36,
+            "foreign_key_violations": 0,
+            "source_database_sha256_before": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0",
+            "source_database_sha256_after": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0",
+            "isolated_database_sha256": "8b58382e382690e4f339df81085cf9c02437a2baba7ca3885a56ee43a7d3287a",
+        },
+        "safety": {
+            "telegram_sends": 0,
+            "delivery_records": 0,
+            "official_publications": 0,
+            "bankroll_statistics_mutations": 0,
+            "production_activation_mutations": 0,
+            "scheduler_startup_changes": 0,
+            "historical_odds_probes": 0,
+            "thestatsapi_calls": 0,
+        },
+        "limitations": [
+            "The authenticated provider returned zero fixtures in the bounded discovery window.",
+            "No fixture was selected, so odds retrieval and inference correctly did not run.",
+            "This run establishes configuration and bounded connectivity only, not predictive quality.",
+        ],
+        "next_operator_action": "Repeat the same bounded discovery command when API-Football lists an upcoming supported top-league fixture; do not run inference until fresh current odds and required baseline data pass all gates.",
+    }
+    value["evidence_fingerprint"] = fingerprint(value)
+    return value
