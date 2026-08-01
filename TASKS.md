@@ -1,5 +1,24 @@
 # TASKS.md
 
+## API-Football discovery request efficiency (2026-08-01)
+
+- [x] Trace shared fixture-list, team-history, optional-data, odds, retry and
+  cache costs for every deeply considered candidate.
+- [x] Reject explicit fixture/odds coverage failures from the fixture-list and
+  cached league-season metadata before detailed calls.
+- [x] Add a sanitized, fingerprinted six-hour competition capability cache and
+  context-bound 15-minute team/standings reuse without startup networking.
+- [x] Plan the full remaining mandatory cost before starting a candidate and
+  short-circuit immediately when the first required team baseline is blocked.
+- [x] Preserve required-before-optional ordering and query exact fixture odds
+  only after both current-season team baselines are available.
+- [x] Run the optimized bounded discovery: 967 fixtures, 620 prefiltered,
+  seven planned, six deeply called, zero odds, terminal
+  `DISCOVERY_QUOTA_INSUFFICIENT`.
+- [x] Prove the configured free plan rejects 2026 team history and therefore
+  cannot support a genuine current-season forward observation without a plan
+  change; no data was fabricated or mixed across seasons.
+
 ## Adaptive API-Football fixture discovery (2026-08-01)
 
 - [x] Prove the original zero result was a rejected unfiltered `from`/`to`

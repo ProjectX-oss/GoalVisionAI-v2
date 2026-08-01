@@ -213,3 +213,104 @@ def build_adaptive_fixture_discovery_evidence() -> dict:
     }
     value["evidence_fingerprint"] = fingerprint(value)
     return value
+
+
+def build_discovery_efficiency_evidence() -> dict:
+    """Canonical sanitized evidence for quota-efficient current discovery."""
+
+    candidate_ids = (1556629, 1556630, 1490362, 1490363, 1490364, 1490365)
+    value = {
+        "schema_version": "goalvision-api-football-discovery-efficiency-evidence-v1",
+        "source_branch": "goalvision/live-78-fresh-calibration",
+        "source_commit": "5a49aa71d226bc2fece3033b7deb0003eaa5a244",
+        "final_commit": "PENDING_COMMIT",
+        "execution_timestamp_utc": "2026-08-01T11:14:03.780639+00:00",
+        "request_cost_findings": {
+            "previous_candidate_cost": {"team_history": 2, "odds": 1, "total": 3},
+            "exact_bottleneck": "EACH_CANDIDATE_REQUESTED_BOTH_TEAM_HISTORIES_BEFORE_CHECKING_THE_FIRST_RESPONSE",
+            "provider_blocker": {
+                "endpoint": "/fixtures",
+                "query_shape": {"team": "REDACTED_NUMERIC_ID", "last": 5, "league": 179, "season": 2026},
+                "http_status": 200,
+                "errors": {"plan": "Free plans do not have access to this season, try from 2022 to 2024."},
+                "result": "API_FOOTBALL_PLAN_RESTRICTED",
+            },
+            "optimized_failed_candidate_cost": {"team_history": 1, "odds": 0, "total": 1},
+            "fixture_list_call_cost": 1,
+            "competition_metadata_or_quota_refresh_cost": 1,
+            "retries": 0,
+        },
+        "optimizations": [
+            "FIXTURE_RESPONSE_ONLY_COVERAGE_AND_IDENTITY_PREFILTER",
+            "HOME_BASELINE_SHORT_CIRCUIT_BEFORE_AWAY_BASELINE",
+            "CONTEXT_BOUND_TEAM_HISTORY_REUSE",
+            "LEAGUE_SEASON_CAPABILITY_CACHE_WITH_SIX_HOUR_EXPIRY",
+            "FULL_MANDATORY_COST_PLANNED_BEFORE_CANDIDATE_START",
+            "REQUIRED_BASELINE_BEFORE_OPTIONAL_DATA_AND_ODDS",
+            "COMPETITION_PRIORITY_AND_CACHE_REUSE_ORDERING_WITHOUT_MODEL_OUTPUT",
+        ],
+        "cache_strategy": {
+            "status": "REFRESHED",
+            "record_count": 1235,
+            "retrieved_at_utc": "2026-08-01T11:14:03.780639+00:00",
+            "expires_at_utc": "2026-08-01T17:14:03.780639+00:00",
+            "cache_fingerprint": "ea16d9816da2f19e44ca96a92cd3d0b85f9a844d113b8258b8a4fccca7e1f128",
+            "credentials_present": False,
+            "team_cache_scope": "TEAM+LEAGUE+SEASON+EVALUATION_CUTOFF",
+            "team_cache_ttl_minutes": 15,
+            "standings_cache_scope": "LEAGUE+SEASON",
+            "season_aggregate_cache_scope": "TEAM+LEAGUE+SEASON",
+            "injury_cache_scope": "FIXTURE+TEAM_WITH_FOUR_HOUR_TTL",
+            "lineup_cache_scope": "FIXTURE_WITH_ONE_HOUR_TTL",
+            "startup_network_calls": 0,
+        },
+        "batching_findings": {
+            "fixtures_ids": "SUPPORTED_UP_TO_20_IDS_BUT_NOT_USEFUL_FOR_UNKNOWN_RECENT_TEAM_FIXTURE_IDS",
+            "injuries_ids": "SUPPORTED_UP_TO_20_FIXTURE_IDS_OPTIONAL_AND_NOT_CALLED_BEFORE_BASELINE",
+            "team_season_reuse": "SUPPORTED_AND_CONTEXT_BOUND",
+            "standings_reuse": "ONE_LEAGUE_SEASON_RESPONSE_CAN_SERVE_ALL_CANDIDATES_BUT_EXISTING_REQUIRED_BASELINE_DOES_NOT_REQUIRE_IT",
+            "date_odds": "SUPPORTED_WITH_TEN_RESULTS_PER_PAGE_BUT_EXACT_FIXTURE_QUERY_IS_SMALLER_AND_IDENTITY_SAFE",
+            "odds_fixture_ids_batch": "NOT_DOCUMENTED",
+            "bookmaker_filter": "SUPPORTED_BUT_NO_PREDECLARED_SINGLE_BOOKMAKER_POLICY",
+            "bet_filter": "SUPPORTED_BUT_ONE_FILTER_CANNOT_RETURN_ALL_CANONICAL_MARKETS",
+        },
+        "canonical_run": {
+            "provider_fixtures_returned": 967,
+            "candidates_prefiltered": 620,
+            "candidates_planned": 7,
+            "candidates_with_deep_network_call": 6,
+            "per_candidate_request_costs": [
+                {"provider_fixture_id": identifier, "team_history_calls": 1, "odds_calls": 0, "retries": 0, "result": "CANDIDATE_SKIPPED_BASELINE", "reason": "API_FOOTBALL_PLAN_RESTRICTED"}
+                for identifier in candidate_ids
+            ] + [
+                {"provider_fixture_id": 1490366, "team_history_calls": 0, "odds_calls": 0, "retries": 0, "result": "CANDIDATE_SKIPPED_QUOTA", "reason": "FULL_THREE_CALL_BUDGET_UNAVAILABLE"}
+            ],
+            "skip_reasons": {"ALREADY_STARTED": 4, "API_FOOTBALL_PLAN_RESTRICTED": 6, "API_FOOTBALL_QUOTA_INSUFFICIENT": 1, "EXCLUDED_FIXTURE_CLASS": 222, "KICKOFF_TOO_CLOSE": 42, "NOT_UPCOMING_OR_POSTPONED": 207, "NO_FIXTURE_COVERAGE": 90, "NO_ODDS_CAPABILITY": 36, "UNSUPPORTED_COMPETITION_TYPE": 19},
+            "odds_requests": 0,
+            "selected_fixture": None,
+            "terminal_result": "DISCOVERY_QUOTA_INSUFFICIENT",
+        },
+        "api_usage": {
+            "canonical_run_calls": 8,
+            "supplemental_exact_plan_error_call": 1,
+            "total_calls": 9,
+            "maximum_calls_per_discovery_run": 10,
+            "daily_reserve": 20,
+        },
+        "quota_after_canonical_run": {
+            "interpretation_status": "NORMALIZED",
+            "daily_limit": 100,
+            "daily_remaining": 81,
+            "minute_limit": 10,
+            "minute_remaining_at_last_normalized_header": 8,
+            "exact_headers": {"x-ratelimit-requests-limit": "100", "x-ratelimit-requests-remaining": "81", "x-ratelimit-limit": "10", "x-ratelimit-remaining": "8"},
+        },
+        "odds": {"request_count": 0, "bookmaker": None, "markets": [], "snapshot_fingerprint": None},
+        "forward_test": {"observation_id": None, "feature_completeness": "REQUIRED_BASELINE_INCOMPLETE", "model_id": None, "model_fingerprint": None, "calibration_id": None, "calibration_fingerprint": None, "calibration_quality": "NOT_EVALUATED", "distribution_shift": "NOT_EVALUATED", "market_evaluations": [], "selection": "NO_SELECTION_NOT_ANALYZED", "preview": None, "preview_fingerprint": None},
+        "database_integrity": {"migration_changed": False, "source_database_schema": 7, "source_database_sha256_before": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0", "source_database_sha256_after": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0", "source_database_foreign_key_violations": 0, "isolated_database_created": False, "reason": "NO_ODDS_SNAPSHOT_OR_FORWARD_OBSERVATION_TO_PERSIST"},
+        "safety": {"telegram_calls": 0, "telegram_sends": 0, "delivery_records": 0, "official_publications": 0, "bankroll_statistics_mutations": 0, "production_activation_mutations": 0, "scheduling_startup_changes": 0, "bookmaker_transactions": 0, "thestatsapi_calls": 0},
+        "limitations": ["The configured free plan exposes current fixture listings but rejects current-season team history, so required baseline features cannot be constructed without fabricating or mixing incompatible seasons.", "No candidate reached current odds, inference, calibration, distribution-shift review, market evaluation or forward-test persistence."],
+        "next_operator_action": "Use an API-Football plan that permits 2026 team-history access, then rerun the same bounded discovery command after the capability cache expires or is explicitly refreshed; do not run inference until the exact current-season baseline and fresh odds pass.",
+    }
+    value["evidence_fingerprint"] = fingerprint(value)
+    return value

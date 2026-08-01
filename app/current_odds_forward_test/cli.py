@@ -31,10 +31,11 @@ def build_parser():
     diagnose_discovery = sub.add_parser("diagnose-fixture-discovery"); diagnose_discovery.add_argument("--env-file", type=Path, default=Path(".env")); diagnose_discovery.add_argument("--metadata-output", type=Path); diagnose_discovery.add_argument("--output", choices=("human", "json"), default="human")
     for name in ("inspect-provider-leagues", "inspect-current-seasons", "inspect-provider-quota"):
         item = sub.add_parser(name); item.add_argument("--env-file", type=Path, default=Path(".env")); item.add_argument("--output", choices=("human", "json"), default="human")
-    for name in ("discover-current-fixtures", "inspect-discovery-candidates"):
-        discover = sub.add_parser(name); discover.add_argument("--env-file", type=Path, default=Path(".env")); discover.add_argument("--database", type=Path); discover.add_argument("--max-candidates", type=int, default=50); discover.add_argument("--max-api-calls", type=int, default=40); discover.add_argument("--horizon-days", type=int, default=7); discover.add_argument("--minimum-lead-minutes", type=int, default=60); discover.add_argument("--daily-quota-reserve", type=int, default=20); discover.add_argument("--output", choices=("human", "json"), default="human")
+    for name in ("discover-current-fixtures", "inspect-discovery-candidates", "inspect-discovery-request-costs"):
+        discover = sub.add_parser(name); discover.add_argument("--env-file", type=Path, default=Path(".env")); discover.add_argument("--database", type=Path); discover.add_argument("--capability-cache", type=Path, default=Path("var/api_football_capabilities.json")); discover.add_argument("--metadata-output", type=Path); discover.add_argument("--max-candidates", type=int, default=50); discover.add_argument("--max-api-calls", type=int, default=40); discover.add_argument("--horizon-days", type=int, default=7); discover.add_argument("--minimum-lead-minutes", type=int, default=60); discover.add_argument("--daily-quota-reserve", type=int, default=20); discover.add_argument("--output", choices=("human", "json"), default="human")
     fixture = sub.add_parser("inspect-current-fixture"); fixture.add_argument("--env-file", type=Path, default=Path(".env")); fixture.add_argument("--fixture-id", type=int, required=True); fixture.add_argument("--output", choices=("human", "json"), default="human")
     fixture_odds = sub.add_parser("inspect-fixture-odds"); fixture_odds.add_argument("--env-file", type=Path, default=Path(".env")); fixture_odds.add_argument("--fixture-id", type=int, required=True); fixture_odds.add_argument("--kickoff-utc", required=True); fixture_odds.add_argument("--output", choices=("human", "json"), default="human")
+    team_baseline = sub.add_parser("inspect-team-baseline"); team_baseline.add_argument("--env-file", type=Path, default=Path(".env")); team_baseline.add_argument("--team-id", type=int, required=True); team_baseline.add_argument("--league-id", type=int, required=True); team_baseline.add_argument("--season", type=int, required=True); team_baseline.add_argument("--output", choices=("human", "json"), default="human")
     create = sub.add_parser("create-forward-test-observation"); create.add_argument("--database", type=Path, required=True); create.add_argument("--request-id", required=True); create.add_argument("--analysis-id", required=True); create.add_argument("--odds-snapshot-id", required=True); create.add_argument("--output", choices=("human", "json"), default="human")
     result = sub.add_parser("record-forward-test-result"); result.add_argument("--database", type=Path, required=True); result.add_argument("--observation-id", required=True); result.add_argument("--input", type=Path, required=True); result.add_argument("--output", choices=("human", "json"), default="human")
     settle = sub.add_parser("settle-forward-test-observation"); settle.add_argument("--database", type=Path, required=True); settle.add_argument("--observation-id", required=True); settle.add_argument("--output", choices=("human", "json"), default="human")
@@ -53,9 +54,10 @@ def main(argv=None):
         if args.command == "diagnose-api-football": return asyncio.run(_api_diagnose(args))
         if args.command == "diagnose-fixture-discovery": return asyncio.run(_diagnose_fixture_discovery(args))
         if args.command in {"inspect-provider-leagues", "inspect-current-seasons", "inspect-provider-quota"}: return asyncio.run(_inspect_provider(args))
-        if args.command in {"discover-current-fixtures", "inspect-discovery-candidates"}: return asyncio.run(_api_discover(args))
+        if args.command in {"discover-current-fixtures", "inspect-discovery-candidates", "inspect-discovery-request-costs"}: return asyncio.run(_api_discover(args))
         if args.command == "inspect-current-fixture": return asyncio.run(_api_read(args))
         if args.command == "inspect-fixture-odds": return asyncio.run(_inspect_fixture_odds(args))
+        if args.command == "inspect-team-baseline": return asyncio.run(_inspect_team_baseline(args))
         if args.command == "capture-api-football-odds": return asyncio.run(_api_capture(args))
         database = Database(args.database)
         try:
@@ -196,6 +198,7 @@ async def _api_discover(args):
             horizon_days=args.horizon_days,
             minimum_lead_minutes=args.minimum_lead_minutes,
             daily_quota_reserve=args.daily_quota_reserve,
+            capability_cache_path=args.capability_cache,
         )
         value["quota"] = client.quota_snapshot()
         selected = value.get("selected_fixture")
@@ -208,9 +211,23 @@ async def _api_discover(args):
             finally:
                 database.close()
             value["odds_sealed"] = True
+        if args.metadata_output is not None:
+            from .provider import write_sanitized_metadata
+            write_sanitized_metadata(args.metadata_output, value)
     finally:
         await client.close()
-    return _render(value, args.output, 0 if value["selected_fixture"] else 4)
+    if args.command == "inspect-discovery-request-costs":
+        value = {
+            "schema_version": "goalvision-api-football-request-cost-report-v1",
+            "terminal_result": value["terminal_result"],
+            "stage_request_costs": value["stage_request_costs"],
+            "candidate_request_costs": value["request_cost_report"],
+            "api_call_count": value["api_call_count"],
+            "quota": value["quota"],
+            "telegram_sends": 0,
+        }
+        return _render(value, args.output)
+    return _render(value, args.output, 0 if value.get("selected_fixture") else 4)
 
 
 async def _inspect_fixture_odds(args):
@@ -223,6 +240,26 @@ async def _inspect_fixture_odds(args):
         raw = normalize_api_football_current_odds(payload, fixture_id=str(args.fixture_id), kickoff_utc=args.kickoff_utc, retrieved_at_utc=retrieved.isoformat(), source_selected_at_utc=selected.isoformat())
         snapshot = parse_current_odds(raw, now=retrieved)
         value = {"schema_version": "goalvision-api-football-fixture-odds-inspection-v1", "fixture_id": str(args.fixture_id), "bookmaker": snapshot.bookmaker_name, "markets": [{"market": quote.market, "decimal_odds": str(quote.decimal_odds)} for quote in snapshot.quotes], "provider_update_timestamp_utc": snapshot.quotes[0].provider_origin_timestamp_utc, "goalvision_retrieval_timestamp_utc": retrieved, "freshness": snapshot.freshness_status, "snapshot_fingerprint": snapshot.snapshot_fingerprint, "quota": client.quota_snapshot(), "inference_executed": False, "telegram_sends": 0}
+    finally:
+        await client.close()
+    return _render(value, args.output)
+
+
+async def _inspect_team_baseline(args):
+    from app.football.client import FootballClient
+    client = FootballClient(env_file=args.env_file, request_limit=1)
+    try:
+        rows = await client.last_matches(
+            args.team_id, last=5, league_id=args.league_id, season=args.season
+        )
+        metadata = client.response_metadata()
+        value = {
+            "schema_version": "goalvision-api-football-team-baseline-inspection-v1",
+            "team_id": args.team_id, "league_id": args.league_id,
+            "season": args.season, "result_count": len(rows),
+            "request": metadata, "quota": client.quota_snapshot(),
+            "inference_executed": False, "telegram_sends": 0,
+        }
     finally:
         await client.close()
     return _render(value, args.output)

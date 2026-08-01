@@ -141,6 +141,54 @@ dates were rejected and were not treated as empty fixture days. Odds coverage
 metadata comes from each league season's `coverage.odds`; `/odds/leagues` is not
 a valid API-Football v3 endpoint.
 
+### Discovery request efficiency
+
+The current discovery request planner records integer call costs, retries,
+cache hits/misses, required/optional status and the rejection reason for every
+deeply considered candidate. Date-level fixture retrieval is a shared cost;
+each candidate has zero incremental fixture-list cost. Before starting a
+candidate, the planner reserves all uncached team-history calls plus one exact
+fixture-odds call. Local snapshot sealing and observation creation have zero
+provider-call cost. A candidate is never partially started when the complete
+mandatory provider cost cannot be funded.
+
+Fixture-list fields and the cached league-season coverage record now reject
+malformed identities, incompatible seasons, unsupported types, explicit lack
+of fixture or odds coverage, excluded classes, unsafe kickoffs and duplicate
+events before detailed calls. Candidate order is fixed from pre-inference
+facts: reviewed competition priority, reusable context-matched team data,
+kickoff and provider fixture ID. Model probability, EV and market
+attractiveness are never inputs to fixture selection.
+
+The capability cache is sanitized, fingerprinted, conflict-checked and valid
+for six hours under ignored `var/`. It records league, season, dates and
+fixtures, standings, injuries, lineups, statistics and odds coverage. Loading
+it does not trigger network activity; an explicit operator discovery refreshes
+quota with one status request. Team histories are reusable for 15 minutes only
+when team, league, season and evaluation cutoff all match. Standings use a
+separate league-season cache. Optional standings, injuries, lineups and richer
+statistics are not requested before required baseline viability. When later
+required, run-local season aggregates, injuries and lineups are keyed by their
+team/competition/fixture identities and expire after six hours, four hours and
+one hour respectively.
+
+API-Football documents multi-ID fixture retrieval for up to 20 known fixture
+IDs and an injury `ids` filter. Neither can discover the unknown historical
+fixture IDs needed for current team form. Pre-match odds can be queried by date
+but return ten results per page; exact fixture odds remain the smallest,
+identity-safe request. Bookmaker filtering is supported but GoalVision has no
+predeclared single-bookmaker policy, while one bet filter cannot supply all
+canonical markets.
+
+The optimized real run returned 967 fixtures, prefiltered 620, planned seven
+candidates and made deep calls for six. Each failed after one home-team history
+call, rather than spending both team calls. The provider returned HTTP 200 with
+`plan: Free plans do not have access to this season, try from 2022 to 2024.`
+for the valid team+league+2026 query. Mixing 2022–2024 history into a 2026
+league-season context would violate baseline provenance, so odds and inference
+remained at zero. A provider plan with current-season history access is now the
+honest prerequisite for the first genuine automated forward observation.
+
 Reproduce only against an isolated schema-v36 database. Verify foreign keys and
 append-only triggers, export sanitized evidence, and compare the protected
 database hash before and after. A future Betfair Exchange read-only adapter may

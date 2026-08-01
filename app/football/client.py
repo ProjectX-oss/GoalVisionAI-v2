@@ -93,14 +93,23 @@ class FootballClient:
         self,
         team_id: int,
         last: int = 5,
+        *,
+        league_id: int | None = None,
+        season: int | None = None,
     ):
+
+        params: dict[str, object] = {
+            "team": team_id,
+            "last": last,
+        }
+        if league_id is not None:
+            params["league"] = league_id
+        if season is not None:
+            params["season"] = season
 
         response = await self._get(
             "/fixtures",
-            params={
-                "team": team_id,
-                "last": last,
-            },
+            params=params,
         )
 
         response.raise_for_status()
@@ -203,6 +212,8 @@ class FootballClient:
                     "results": payload.get("results") if isinstance(payload, dict) else None,
                     "paging": payload.get("paging") if isinstance(payload, dict) else None,
                     "quota": observed_quota.as_dict(),
+                    "attempts": attempt + 1,
+                    "retries": attempt,
                 }
                 response.raise_for_status()
                 return response

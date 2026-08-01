@@ -191,7 +191,7 @@ class AdaptiveDiscoveryTests(unittest.TestCase):
     def test_quota_ambiguity_and_reserve_enforced_before_fixture_calls(self):
         client = FakeProvider(daily=20)
         value = self.run_discovery(client, daily_quota_reserve=20)
-        self.assertEqual(value["terminal_result"], "API_FOOTBALL_QUOTA_INSUFFICIENT"); self.assertEqual(value["api_call_count"], 1)
+        self.assertEqual(value["terminal_result"], "DISCOVERY_QUOTA_INSUFFICIENT"); self.assertEqual(value["api_call_count"], 1)
 
     def test_zero_network_safety_counters_and_odds_before_any_inference(self):
         client = FakeProvider({"2026-08-01": [fixture(1)]}, {1: odds(1)}); value = self.run_discovery(client)
