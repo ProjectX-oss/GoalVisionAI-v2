@@ -1,5 +1,23 @@
 # TASKS.md
 
+## Forward-test monitoring and weekly reporting foundation (2026-08-01)
+
+- [x] Add a centralized, immutable monitoring policy with conservative sample,
+  freshness, anomaly, calibration and segmentation thresholds.
+- [x] Add schema v38 append-only snapshots, reports, lifecycle audits,
+  incidents, acknowledgement events and export manifests.
+- [x] Add deterministic cumulative and Riga-week reports with Decimal-only
+  predictive, calibration and hypothetical flat-stake metrics.
+- [x] Include wins, losses, voids, pending results, blocked analyses,
+  no-selections, unpublished observations and explicit sample warnings.
+- [x] Add lifecycle and data-quality findings with identifiers and provenance,
+  unresolved work queues, offline health inspection and incident recording.
+- [x] Add deterministic JSON, Markdown, Telegram-preview and nine-file CSV
+  export bundles with exact report reproduction and overwrite protection.
+- [x] Keep generation manual-only with zero networking, Telegram transport,
+  scheduler, Official state or bankroll mutation.
+- [x] Document the operator runbook and controlled rehearsal evidence.
+
 ## First LAB prediction operational readiness (2026-08-01)
 
 - [x] Add offline and one-call network `pro-readiness` diagnosis with typed,

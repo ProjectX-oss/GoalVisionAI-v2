@@ -497,7 +497,7 @@ class ProviderPersistenceTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 38)))
+        self.assertEqual(versions, tuple(range(1, 39)))
         loaded = self.repository.history("1", cutoff=NOW)[0]
         self.assertEqual(loaded.home_xg, Decimal("1.2300"))
 

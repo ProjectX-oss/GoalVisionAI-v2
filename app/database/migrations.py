@@ -4729,6 +4729,107 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS forward_test_result_previews_no_delete BEFORE DELETE ON forward_test_result_previews BEGIN SELECT RAISE(ABORT,'Forward-test result previews are immutable'); END""",
         ),
     ),
+    Migration(
+        version=38,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_monitoring_snapshots (
+                snapshot_id TEXT PRIMARY KEY,
+                requested_cutoff_utc TEXT NOT NULL,
+                generated_at_utc TEXT NOT NULL,
+                policy_id TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                source_database_identity TEXT NOT NULL,
+                source_fingerprint TEXT NOT NULL,
+                snapshot_fingerprint TEXT NOT NULL UNIQUE,
+                snapshot_json TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_monitoring_reports (
+                report_id TEXT PRIMARY KEY,
+                report_kind TEXT NOT NULL CHECK(report_kind IN ('WEEKLY','CUMULATIVE')),
+                period_start_utc TEXT,
+                period_end_utc TEXT NOT NULL,
+                generated_at_utc TEXT NOT NULL,
+                policy_id TEXT NOT NULL,
+                policy_version TEXT NOT NULL,
+                snapshot_id TEXT NOT NULL,
+                request_fingerprint TEXT NOT NULL UNIQUE,
+                report_fingerprint TEXT NOT NULL UNIQUE,
+                report_json TEXT NOT NULL,
+                FOREIGN KEY(snapshot_id) REFERENCES forward_test_monitoring_snapshots(snapshot_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_monitoring_audits (
+                audit_id TEXT PRIMARY KEY,
+                observation_id TEXT NOT NULL,
+                cutoff_utc TEXT NOT NULL,
+                status TEXT NOT NULL CHECK(status IN ('LIFECYCLE_AUDIT_PASSED','LIFECYCLE_AUDIT_WARNING','LIFECYCLE_AUDIT_BLOCKED','LIFECYCLE_AUDIT_CORRUPT')),
+                audit_fingerprint TEXT NOT NULL UNIQUE,
+                audit_json TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL,
+                FOREIGN KEY(observation_id) REFERENCES forward_test_observations(observation_id),
+                UNIQUE(observation_id,cutoff_utc)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_monitoring_incidents (
+                incident_id TEXT PRIMARY KEY,
+                incident_code TEXT NOT NULL,
+                severity TEXT NOT NULL CHECK(severity IN ('INFO','WARNING','BLOCKING','CORRUPT')),
+                affected_identifier TEXT,
+                detected_at_utc TEXT NOT NULL,
+                incident_fingerprint TEXT NOT NULL UNIQUE,
+                incident_json TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_monitoring_incident_events (
+                event_id TEXT PRIMARY KEY,
+                incident_id TEXT NOT NULL,
+                event_type TEXT NOT NULL CHECK(event_type IN ('ACKNOWLEDGED','RESOLVED')),
+                operator_identity TEXT NOT NULL,
+                reason TEXT NOT NULL,
+                occurred_at_utc TEXT NOT NULL,
+                event_fingerprint TEXT NOT NULL UNIQUE,
+                event_json TEXT NOT NULL,
+                FOREIGN KEY(incident_id) REFERENCES forward_test_monitoring_incidents(incident_id),
+                UNIQUE(incident_id,event_type)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_monitoring_exports (
+                export_id TEXT PRIMARY KEY,
+                report_id TEXT NOT NULL,
+                export_format TEXT NOT NULL CHECK(export_format IN ('JSON','MARKDOWN','TELEGRAM_PREVIEW','CSV_BUNDLE')),
+                content_fingerprint TEXT NOT NULL,
+                relative_path TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL,
+                export_fingerprint TEXT NOT NULL UNIQUE,
+                export_json TEXT NOT NULL,
+                FOREIGN KEY(report_id) REFERENCES forward_test_monitoring_reports(report_id),
+                UNIQUE(report_id,export_format,relative_path)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_ft_monitoring_reports_period ON forward_test_monitoring_reports(report_kind,period_end_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_ft_monitoring_audits_observation ON forward_test_monitoring_audits(observation_id,cutoff_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_ft_monitoring_incidents_code ON forward_test_monitoring_incidents(incident_code,detected_at_utc)""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_snapshots_no_update BEFORE UPDATE ON forward_test_monitoring_snapshots BEGIN SELECT RAISE(ABORT,'Forward-test monitoring snapshots are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_snapshots_no_delete BEFORE DELETE ON forward_test_monitoring_snapshots BEGIN SELECT RAISE(ABORT,'Forward-test monitoring snapshots are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_reports_no_update BEFORE UPDATE ON forward_test_monitoring_reports BEGIN SELECT RAISE(ABORT,'Forward-test monitoring reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_reports_no_delete BEFORE DELETE ON forward_test_monitoring_reports BEGIN SELECT RAISE(ABORT,'Forward-test monitoring reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_audits_no_update BEFORE UPDATE ON forward_test_monitoring_audits BEGIN SELECT RAISE(ABORT,'Forward-test monitoring audits are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_audits_no_delete BEFORE DELETE ON forward_test_monitoring_audits BEGIN SELECT RAISE(ABORT,'Forward-test monitoring audits are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_incidents_no_update BEFORE UPDATE ON forward_test_monitoring_incidents BEGIN SELECT RAISE(ABORT,'Forward-test monitoring incidents are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_incidents_no_delete BEFORE DELETE ON forward_test_monitoring_incidents BEGIN SELECT RAISE(ABORT,'Forward-test monitoring incidents are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_incident_events_no_update BEFORE UPDATE ON forward_test_monitoring_incident_events BEGIN SELECT RAISE(ABORT,'Forward-test monitoring incident events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_incident_events_no_delete BEFORE DELETE ON forward_test_monitoring_incident_events BEGIN SELECT RAISE(ABORT,'Forward-test monitoring incident events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_exports_no_update BEFORE UPDATE ON forward_test_monitoring_exports BEGIN SELECT RAISE(ABORT,'Forward-test monitoring exports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS ft_monitoring_exports_no_delete BEFORE DELETE ON forward_test_monitoring_exports BEGIN SELECT RAISE(ABORT,'Forward-test monitoring exports are immutable'); END""",
+        ),
+    ),
 )
 
 
