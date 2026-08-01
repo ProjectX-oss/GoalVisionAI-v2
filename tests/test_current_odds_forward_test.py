@@ -234,8 +234,8 @@ class ForwardTestFoundationTests(unittest.TestCase):
         self.capture_and_observe(); after = {table: self.db.connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0] for table in before}
         self.assertEqual(before, after)
 
-    def test_schema_36_fresh_migration(self):
-        self.assertEqual(self.db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 36)
+    def test_schema_37_fresh_migration(self):
+        self.assertEqual(self.db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 37)
         self.assertTrue(self.db.connection.execute("SELECT name FROM sqlite_master WHERE name='forward_test_observations'").fetchone())
 
     def test_v35_upgrade_migration(self):
@@ -244,12 +244,12 @@ class ForwardTestFoundationTests(unittest.TestCase):
             if migration.version > 35: break
             for statement in migration.statements: upgrade.connection.execute(statement)
             upgrade.connection.execute("INSERT INTO schema_migrations VALUES (?, 'existing')", (migration.version,))
-        MigrationManager(upgrade.connection).migrate(); self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 36); self.assertEqual(upgrade.connection.execute("PRAGMA foreign_key_check").fetchall(), []); upgrade.close()
+        MigrationManager(upgrade.connection).migrate(); self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 37); self.assertEqual(upgrade.connection.execute("PRAGMA foreign_key_check").fetchall(), []); upgrade.close()
 
     def test_cli_human_json_diagnose_and_no_startup_execution(self):
         out = io.StringIO()
         with redirect_stdout(out): code = cli_main(["diagnose-forward-test", "--database", ":memory:", "--output", "json"])
-        value = json.loads(out.getvalue()); self.assertEqual(code, 0); self.assertEqual(value["schema_version"], 36); self.assertFalse(value["startup_execution"]); self.assertFalse(value["telegram_transport_constructed"])
+        value = json.loads(out.getvalue()); self.assertEqual(code, 0); self.assertEqual(value["schema_version"], 37); self.assertFalse(value["startup_execution"]); self.assertFalse(value["telegram_transport_constructed"])
 
     def test_canonical_evidence_fingerprint_and_committed_artifact(self):
         value = build_foundation_evidence(source_hash_before="61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0", source_hash_after="61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0", isolated_database_hash="8b58382e382690e4f339df81085cf9c02437a2baba7ca3885a56ee43a7d3287a")

@@ -38,6 +38,7 @@ async def discover_current_fixture(
     minimum_lead_minutes: int = 60,
     daily_quota_reserve: int = 20,
     capability_cache_path: Path | None = None,
+    quota_already_verified: bool = False,
 ) -> dict:
     """Search staged current fixtures and odds without invoking inference."""
 
@@ -76,7 +77,8 @@ async def discover_current_fixture(
         capability_cache_status = "REFRESHED"
     else:
         before = _request_count(client)
-        await client.account_status()
+        if not quota_already_verified:
+            await client.account_status()
         after = _request_count(client)
         reports.append(_stage_report("QUOTA_REFRESH_CAPABILITY_CACHE_HIT", client.response_metadata()))
         stage_request_costs.append({"stage": "QUOTA_REFRESH_CAPABILITY_CACHE_HIT", "actual_calls": after - before, "cache": "HIT"})
@@ -316,9 +318,43 @@ async def _evaluate_candidates(
             "odds_snapshot_id": snapshot.snapshot_id,
             "odds_snapshot_fingerprint": snapshot.snapshot_fingerprint,
             "odds_contract": normalized,
-            "feature_baseline": {"home_recent_matches": len(home_history), "away_recent_matches": len(away_history)},
+            "feature_baseline": {
+                "home_recent_matches": len(home_history),
+                "away_recent_matches": len(away_history),
+                "home_recent_form": _history_form(home_history, fixture["home_team_id"]),
+                "away_recent_form": _history_form(away_history, fixture["away_team_id"]),
+            },
         }, used, traces)
     return None, used, traces
+
+
+def _history_form(rows, team_id):
+    """Build the minimal deterministic Real Match Lab form contract."""
+    totals = {
+        "match_count": 0, "wins": 0, "draws": 0, "losses": 0,
+        "goals_scored": 0, "goals_conceded": 0, "clean_sheets": 0,
+        "failed_to_score": 0,
+    }
+    for row in rows:
+        teams = row.get("teams", {}) if isinstance(row, dict) else {}
+        goals = row.get("goals", {}) if isinstance(row, dict) else {}
+        home = teams.get("home", {}) if isinstance(teams, dict) else {}
+        away = teams.get("away", {}) if isinstance(teams, dict) else {}
+        try:
+            is_home = int(home.get("id")) == int(team_id)
+            scored = int(goals.get("home") if is_home else goals.get("away"))
+            conceded = int(goals.get("away") if is_home else goals.get("home"))
+        except (TypeError, ValueError):
+            continue
+        if not is_home and int(away.get("id", -1)) != int(team_id):
+            continue
+        totals["match_count"] += 1
+        totals["goals_scored"] += scored
+        totals["goals_conceded"] += conceded
+        totals["wins" if scored > conceded else "draws" if scored == conceded else "losses"] += 1
+        totals["clean_sheets"] += int(conceded == 0)
+        totals["failed_to_score"] += int(scored == 0)
+    return totals
 
 
 async def _team_history(client, cache, fixture, team_id, side, *, cutoff, trace):

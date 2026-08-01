@@ -44,12 +44,22 @@ def build_parser():
     stats = sub.add_parser("forward-test-statistics"); stats.add_argument("--database", type=Path, required=True); stats.add_argument("--output", choices=("human", "json"), default="human")
     diagnose = sub.add_parser("diagnose-forward-test"); diagnose.add_argument("--database", type=Path, required=True); diagnose.add_argument("--output", choices=("human", "json"), default="human")
     export = sub.add_parser("export-forward-test-evidence"); export.add_argument("--database", type=Path, required=True); export.add_argument("--output-path", type=Path, required=True); export.add_argument("--source-database", type=Path)
+    ready = sub.add_parser("pro-readiness"); ready.add_argument("--env-file", type=Path, default=Path(".env")); ready.add_argument("--capability-cache", type=Path, default=Path("var/api_football_capabilities.json")); ready.add_argument("--network-verify", action="store_true"); ready.add_argument("--output", choices=("human", "json"), default="human")
+    first = sub.add_parser("first-lab-dry-run"); first.add_argument("--database", type=Path, required=True); first.add_argument("--env-file", type=Path, default=Path(".env")); first.add_argument("--capability-cache", type=Path, default=Path("var/api_football_capabilities.json")); first.add_argument("--run-id"); first.add_argument("--max-candidates", type=int, default=50); first.add_argument("--max-calls", type=int, default=40); first.add_argument("--daily-reserve", type=int, default=20); first.add_argument("--output", choices=("human", "json"), default="human")
+    review = sub.add_parser("publication-review"); review.add_argument("--database", type=Path, required=True); review.add_argument("--observation-id", required=True); review.add_argument("--output", choices=("human", "json"), default="human")
+    send_review = sub.add_parser("validate-lab-send-readiness"); send_review.add_argument("--database", type=Path, required=True); send_review.add_argument("--observation-id", required=True); send_review.add_argument("--review-fingerprint", required=True); send_review.add_argument("--message-fingerprint", required=True); send_review.add_argument("--confirmation", required=True); send_review.add_argument("--environment", required=True); send_review.add_argument("--chat-id", required=True); send_review.add_argument("--bot", required=True); send_review.add_argument("--output", choices=("human", "json"), default="human")
+    fetch_result = sub.add_parser("fetch-forward-test-result"); fetch_result.add_argument("--database", type=Path, required=True); fetch_result.add_argument("--observation-id", required=True); fetch_result.add_argument("--env-file", type=Path, default=Path(".env")); fetch_result.add_argument("--output", choices=("human", "json"), default="human")
+    result_preview = sub.add_parser("result-message-preview"); result_preview.add_argument("--database", type=Path, required=True); result_preview.add_argument("--observation-id", required=True); result_preview.add_argument("--output", choices=("human", "json"), default="human")
+    inspect_run = sub.add_parser("inspect-first-lab-run"); inspect_run.add_argument("--database", type=Path, required=True); inspect_run.add_argument("--run-id", required=True); inspect_run.add_argument("--output", choices=("human", "json"), default="human")
     return parser
 
 
 def main(argv=None):
     args = build_parser().parse_args(argv)
     try:
+        if args.command == "pro-readiness": return asyncio.run(_pro_readiness(args))
+        if args.command == "first-lab-dry-run": return asyncio.run(_first_lab_dry_run(args))
+        if args.command == "fetch-forward-test-result": return asyncio.run(_fetch_result(args))
         if args.command == "validate-forward-test-input": return _render(parse_current_odds(_json(args.input)), args.output)
         if args.command == "diagnose-api-football": return asyncio.run(_api_diagnose(args))
         if args.command == "diagnose-fixture-discovery": return asyncio.run(_diagnose_fixture_discovery(args))
@@ -73,6 +83,21 @@ def main(argv=None):
             if args.command == "record-forward-test-result": return _render(service.record_result(args.observation_id, _json(args.input)), args.output)
             if args.command == "settle-forward-test-observation": return _render(service.settle(args.observation_id), args.output)
             if args.command == "forward-test-statistics": return _render(build_statistics(repository), args.output)
+            if args.command == "publication-review":
+                from .operations import FirstLabOperationsRepository, build_publication_review
+                value = build_publication_review(repository, args.observation_id, persist=FirstLabOperationsRepository(database, migrate=False))
+                return _render(value, args.output, 0 if value["status"] == "LAB_PUBLICATION_REVIEW_PASSED" else 4)
+            if args.command == "validate-lab-send-readiness":
+                from .operations import validate_manual_send_authorization
+                value = validate_manual_send_authorization(repository, observation_id=args.observation_id, review_fingerprint=args.review_fingerprint, message_fingerprint=args.message_fingerprint, confirmation=args.confirmation, environment=args.environment, chat_id=args.chat_id, bot=args.bot)
+                return _render(value, args.output, 0 if value["status"] == "LAB_MANUAL_SEND_AUTHORIZED" else 4)
+            if args.command == "result-message-preview":
+                from .operations import FirstLabOperationsRepository, build_result_preview
+                return _render(build_result_preview(repository, args.observation_id, persist=FirstLabOperationsRepository(database, migrate=False)), args.output)
+            if args.command == "inspect-first-lab-run":
+                from .operations import FirstLabOperationsRepository
+                value = {"status": "FOUND", "run_id": args.run_id, "stages": FirstLabOperationsRepository(database, migrate=False).stages(args.run_id)}
+                return _render(value, args.output, 0 if value["stages"] else 2)
             if args.command == "audit-forward-test": return _render(audit_observation(repository, args.observation_id), args.output)
             if args.command == "diagnose-forward-test":
                 version = database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0]
@@ -97,6 +122,90 @@ def main(argv=None):
         print(f"REJECTED: {exc}", file=sys.stderr); return 3
     except (RuntimeError, httpx.HTTPError):
         print("REJECTED: API_FOOTBALL_UNAVAILABLE", file=sys.stderr); return 3
+
+
+async def _pro_readiness(args):
+    from app.football.client import FootballClient
+    from .operations import build_pro_readiness
+    if not args.network_verify:
+        return _render(build_pro_readiness(env_file=args.env_file, cache_path=args.capability_cache), args.output, 4)
+    client = FootballClient(env_file=args.env_file, request_limit=1)
+    try:
+        payload = await client.account_status()
+        response = payload.get("response") if isinstance(payload, dict) else {}
+        subscription = response.get("subscription") if isinstance(response, dict) else {}
+        plan = str(subscription.get("plan") or subscription.get("name") or "UNKNOWN")
+        quota = client.quota_snapshot()
+        daily_limit = quota.get("daily_limit") or (response.get("requests") or {}).get("limit_day")
+        if plan.upper() == "UNKNOWN" and isinstance(daily_limit, int):
+            plan = "FREE" if daily_limit <= 100 else "PRO"
+        value = build_pro_readiness(env_file=args.env_file, cache_path=args.capability_cache, network_verified=True, authenticated=True, detected_plan=plan, quota=quota)
+        return _render(value, args.output, 0 if value["status"] == "PRO_PLAN_READY" else 4)
+    except httpx.HTTPStatusError as exc:
+        value = build_pro_readiness(env_file=args.env_file, cache_path=args.capability_cache, network_verified=True, authenticated=False if exc.response.status_code == 401 else True, detected_plan="UNKNOWN", quota=client.quota_snapshot())
+        return _render(value, args.output, 4)
+    finally:
+        await client.close()
+
+
+async def _first_lab_dry_run(args):
+    from app.football.client import FootballClient
+    from app.real_match_lab_analysis.factory import build_real_match_lab_analysis_service
+    from .discovery import discover_current_fixture
+    from .operations import FirstLabOperationsRepository, build_pro_readiness
+    from .workflow import FirstLabDryRunWorkflow
+    now = datetime.now(timezone.utc)
+    run_id = args.run_id or f"first-lab-{now:%Y%m%d}"
+    database = Database(args.database)
+    client = None
+    try:
+        operations = FirstLabOperationsRepository(database)
+        repository = SQLiteForwardTestRepository(database, migrate=False)
+        try:
+            client = FootballClient(env_file=args.env_file, request_limit=args.max_calls)
+            status_payload = await client.account_status()
+            response = status_payload.get("response") if isinstance(status_payload, dict) else {}
+            subscription = response.get("subscription") if isinstance(response, dict) else {}
+            plan = str(subscription.get("plan") or subscription.get("name") or "UNKNOWN")
+            quota = client.quota_snapshot()
+            daily_limit = quota.get("daily_limit") or (response.get("requests") or {}).get("limit_day")
+            if plan.upper() == "UNKNOWN" and isinstance(daily_limit, int): plan = "FREE" if daily_limit <= 100 else "PRO"
+            readiness = build_pro_readiness(env_file=args.env_file, cache_path=args.capability_cache, now=now, network_verified=True, authenticated=True, detected_plan=plan, quota=quota)
+        except Exception:
+            readiness = build_pro_readiness(env_file=args.env_file, cache_path=args.capability_cache, now=now, network_verified=True, authenticated=False, detected_plan="UNKNOWN")
+        async def discover():
+            assert client is not None
+            return await discover_current_fixture(client, now=now, maximum_candidates=args.max_candidates, maximum_api_calls=args.max_calls, daily_quota_reserve=args.daily_reserve, capability_cache_path=args.capability_cache, quota_already_verified=True)
+        workflow = FirstLabDryRunWorkflow(operations, repository, build_real_match_lab_analysis_service(database).analyze)
+        value = await workflow.run(run_id=run_id, readiness=readiness, discover=discover, parameters={"max_candidates": args.max_candidates, "max_calls": args.max_calls, "daily_reserve": args.daily_reserve, "capability_cache": str(args.capability_cache)}, now=now)
+        return _render(value, args.output, 0 if value["status"] == "FIRST_LAB_DRY_RUN_COMPLETED" else 4)
+    finally:
+        if client is not None: await client.close()
+        database.close()
+
+
+async def _fetch_result(args):
+    from app.football.client import FootballClient
+    repository_db = Database(args.database)
+    try:
+        repository = SQLiteForwardTestRepository(repository_db)
+        observation = repository.load_observation(args.observation_id)
+        if observation is None: return _render({"status": "NOT_FOUND"}, args.output, 2)
+        fixture_id = int(observation["canonical_fixture_id"])
+        client = FootballClient(env_file=args.env_file, request_limit=1)
+        try:
+            payload = await client.fixture(fixture_id)
+            rows = payload.get("response") if isinstance(payload, dict) else None
+            row = rows[0] if isinstance(rows, list) and len(rows) == 1 else None
+            fixture = row.get("fixture", {}) if isinstance(row, dict) else {}
+            goals = row.get("goals", {}) if isinstance(row, dict) else {}
+            status = (fixture.get("status") or {}).get("short") if isinstance(fixture.get("status"), dict) else None
+            if status not in {"FT", "AET", "PEN"}:
+                return _render({"status": "RESULT_NOT_FINAL", "fixture_id": fixture_id, "provider_status": status, "manual_json_fallback": True}, args.output, 4)
+            raw = {"schema_version": "goalvision-forward-test-result-v1", "fixture_id": str(fixture_id), "final_home_score": goals.get("home"), "final_away_score": goals.get("away"), "final_status": status, "result_source": "API_FOOTBALL", "result_retrieval_timestamp_utc": datetime.now(timezone.utc).isoformat(), "provenance": "API-Football exact fixture final result"}
+            return _render(ForwardTestService(repository).record_result(args.observation_id, raw), args.output)
+        finally: await client.close()
+    finally: repository_db.close()
 
 
 async def _api_diagnose(args):

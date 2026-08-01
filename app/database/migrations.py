@@ -4657,6 +4657,78 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS forward_test_rejections_no_delete BEFORE DELETE ON forward_test_rejections BEGIN SELECT RAISE(ABORT,'Forward-test rejections are immutable'); END""",
         ),
     ),
+    Migration(
+        version=37,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS first_lab_run_executions (
+                run_id TEXT PRIMARY KEY,
+                request_fingerprint TEXT NOT NULL UNIQUE,
+                mode TEXT NOT NULL CHECK(mode IN ('GENUINE','CONTROLLED_REHEARSAL')),
+                execution_state TEXT NOT NULL CHECK(execution_state='STARTED'),
+                created_at_utc TEXT NOT NULL,
+                run_fingerprint TEXT NOT NULL UNIQUE,
+                run_snapshot TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS first_lab_run_stage_events (
+                event_id TEXT PRIMARY KEY,
+                run_id TEXT NOT NULL,
+                stage_order INTEGER NOT NULL CHECK(stage_order>=0),
+                stage_name TEXT NOT NULL,
+                stage_status TEXT NOT NULL CHECK(stage_status IN ('PASSED','BLOCKED','COMPLETED')),
+                artifact_type TEXT,
+                artifact_id TEXT,
+                artifact_fingerprint TEXT,
+                occurred_at_utc TEXT NOT NULL,
+                event_fingerprint TEXT NOT NULL UNIQUE,
+                event_snapshot TEXT NOT NULL,
+                FOREIGN KEY(run_id) REFERENCES first_lab_run_executions(run_id),
+                UNIQUE(run_id,stage_name)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_publication_reviews (
+                review_id TEXT PRIMARY KEY,
+                observation_id TEXT NOT NULL,
+                review_status TEXT NOT NULL CHECK(review_status IN (
+                    'LAB_PUBLICATION_REVIEW_PASSED','LAB_PUBLICATION_REVIEW_BLOCKED',
+                    'LAB_PUBLICATION_REVIEW_REQUIRED'
+                )),
+                message_fingerprint TEXT,
+                reviewed_at_utc TEXT NOT NULL,
+                review_fingerprint TEXT NOT NULL UNIQUE,
+                review_snapshot TEXT NOT NULL,
+                FOREIGN KEY(observation_id) REFERENCES forward_test_observations(observation_id),
+                UNIQUE(observation_id,review_fingerprint)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_result_previews (
+                preview_id TEXT PRIMARY KEY,
+                observation_id TEXT NOT NULL,
+                settlement_id TEXT NOT NULL,
+                preview_fingerprint TEXT NOT NULL UNIQUE,
+                preview_snapshot TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL,
+                FOREIGN KEY(observation_id) REFERENCES forward_test_observations(observation_id),
+                FOREIGN KEY(settlement_id) REFERENCES forward_test_settlements(settlement_id),
+                UNIQUE(observation_id,settlement_id)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_first_lab_stage_run ON first_lab_run_stage_events(run_id,stage_order)""",
+            """CREATE INDEX IF NOT EXISTS idx_forward_test_review_observation ON forward_test_publication_reviews(observation_id,reviewed_at_utc)""",
+            """CREATE TRIGGER IF NOT EXISTS first_lab_run_executions_no_update BEFORE UPDATE ON first_lab_run_executions BEGIN SELECT RAISE(ABORT,'First Lab run executions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS first_lab_run_executions_no_delete BEFORE DELETE ON first_lab_run_executions BEGIN SELECT RAISE(ABORT,'First Lab run executions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS first_lab_run_stage_events_no_update BEFORE UPDATE ON first_lab_run_stage_events BEGIN SELECT RAISE(ABORT,'First Lab run stage events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS first_lab_run_stage_events_no_delete BEFORE DELETE ON first_lab_run_stage_events BEGIN SELECT RAISE(ABORT,'First Lab run stage events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_publication_reviews_no_update BEFORE UPDATE ON forward_test_publication_reviews BEGIN SELECT RAISE(ABORT,'Forward-test publication reviews are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_publication_reviews_no_delete BEFORE DELETE ON forward_test_publication_reviews BEGIN SELECT RAISE(ABORT,'Forward-test publication reviews are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_result_previews_no_update BEFORE UPDATE ON forward_test_result_previews BEGIN SELECT RAISE(ABORT,'Forward-test result previews are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_result_previews_no_delete BEFORE DELETE ON forward_test_result_previews BEGIN SELECT RAISE(ABORT,'Forward-test result previews are immutable'); END""",
+        ),
+    ),
 )
 
 

@@ -315,7 +315,7 @@ class ReviewedHistoricalOddsTests(unittest.TestCase):
 
     def test_migration_35_fresh_foreign_keys_and_append_only(self):
         db = Database(":memory:"); MigrationManager(db.connection).migrate()
-        self.assertEqual(db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 36)
+        self.assertEqual(db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 37)
         self.assertEqual(db.connection.execute("PRAGMA foreign_key_check").fetchall(), [])
         repo = SQLiteReviewedHistoricalOddsRepository(db, migrate=False); repo.append_review(review())
         with self.assertRaises(sqlite3.IntegrityError): db.connection.execute("UPDATE historical_odds_source_reviews SET approval_status='REJECTED'")

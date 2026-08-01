@@ -304,8 +304,8 @@ class AnalysisPersistenceTests(unittest.TestCase):
         }
         self.assertEqual(before, after)
 
-    def test_latest_migration_is_36(self):
-        self.assertEqual(MIGRATIONS[-1].version, 36)
+    def test_latest_migration_is_37(self):
+        self.assertEqual(MIGRATIONS[-1].version, 37)
 
     def test_legacy_analysis_without_quality_report_is_not_send_eligible(self):
         row = {"result_snapshot": json.dumps({"evidence": {}})}

@@ -107,9 +107,9 @@ class ReviewedRealMigrationTests(unittest.TestCase):
 
     def tearDown(self): self.database.close()
 
-    def test_latest_migration_is_36_and_foreign_keys_hold(self):
+    def test_latest_migration_is_37_and_foreign_keys_hold(self):
         version = self.database.connection.execute("SELECT max(version) FROM schema_migrations").fetchone()[0]
-        self.assertEqual(version, 36)
+        self.assertEqual(version, 37)
         self.assertEqual(self.database.connection.execute("PRAGMA foreign_key_check").fetchall(), [])
 
     def test_source_review_is_append_only(self):

@@ -69,7 +69,7 @@ def build_statistics(repository: SQLiteForwardTestRepository) -> ForwardTestStat
     rejection_counts = Counter(row[0] for row in repository.connection.execute("SELECT reason_code FROM forward_test_rejections"))
     lineup_counts = Counter("AVAILABLE" if any(evaluation.get("lineup_freshness_status") == "FRESH" for evaluation in item.get("market_evaluations", [])) else "NOT_RECORDED" for item in observations)
     raw = dict(
-        sample_status=status, total_analyses=len(observations), selected=len(selected), no_selection=len(observations)-len(selected),
+        sample_status=status, total_analyses=len(observations), blocked_analyses=sum(item.get("status") == "BLOCKED" for item in observations), selected=len(selected), no_selection=sum(item.get("status") == "NO_SELECTION" for item in observations),
         actionable=sum(bool(item.get("actionable")) for item in observations), non_actionable=sum(not bool(item.get("actionable")) for item in observations),
         preview_available=sum(bool(item.get("preview_available")) for item in observations), published=0, unpublished=len(observations),
         settled=len(settlements), unsettled=len(observations)-len(settlements), wins=wins, losses=losses,
@@ -83,7 +83,7 @@ def build_statistics(repository: SQLiteForwardTestRepository) -> ForwardTestStat
         calibration_buckets=calibration_buckets,
         confidence_buckets=tuple((label, count, correct) for label, (count, correct) in _confidence(probability_rows).items()),
         market_distribution=tuple(sorted(market_counts.items())), competition_distribution=tuple(sorted(competition_counts.items())),
-        source_distribution=tuple(sorted(source_counts.items())), monthly_results=tuple((month, month_counts[(month, "WON")], month_counts[(month, "LOST")]) for month in sorted({key[0] for key in month_counts})),
+        source_distribution=tuple(sorted(source_counts.items())), bookmaker_distribution=tuple(sorted(Counter(key.split(":", 1)[-1] for key in source_counts.elements()).items())), monthly_results=tuple((month, month_counts[(month, "WON")], month_counts[(month, "LOST")]) for month in sorted({key[0] for key in month_counts})),
         average_feature_completeness=None, required_missing_count=0,
         distribution_shift_counts=tuple(sorted(shift_counts.items())), calibration_quality_outcomes=tuple(sorted(quality_counts.items())),
         lineup_availability=tuple(sorted(lineup_counts.items())),

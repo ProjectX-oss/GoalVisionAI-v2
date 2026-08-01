@@ -1,5 +1,21 @@
 # TASKS.md
 
+## First LAB prediction operational readiness (2026-08-01)
+
+- [x] Add offline and one-call network `pro-readiness` diagnosis with typed,
+  secret-free plan, capability and quota outcomes.
+- [x] Add explicit bounded `first-lab-dry-run` orchestration through live-78
+  analysis, observation and Lab preview, always stopping before Telegram.
+- [x] Add schema v37 append-only run stages, publication reviews and result
+  previews with replay/conflict and foreign-key protection.
+- [x] Harden the operator sender with exact observation, message and passing
+  review linkage while retaining the Lab environment/chat/bot/confirmation locks.
+- [x] Complete result fetch/manual fallback, settlement preview and transparent
+  statistics operations without Official or bankroll mutation.
+- [x] Rehearse the full flow offline with controlled evidence; create no genuine
+  observation, delivery record, publication, schedule, or production activation.
+- [x] Document first-week operation and the manual post-2026-08-10 Pro checklist.
+
 ## API-Football discovery request efficiency (2026-08-01)
 
 - [x] Trace shared fixture-list, team-history, optional-data, odds, retry and

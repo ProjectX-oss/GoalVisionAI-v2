@@ -189,8 +189,43 @@ league-season context would violate baseline provenance, so odds and inference
 remained at zero. A provider plan with current-season history access is now the
 honest prerequisite for the first genuine automated forward observation.
 
-Reproduce only against an isolated schema-v36 database. Verify foreign keys and
+Reproduce only against an isolated schema-v37 database. Verify foreign keys and
 append-only triggers, export sanitized evidence, and compare the protected
 database hash before and after. A future Betfair Exchange read-only adapter may
 reuse the current-odds contract only after explicit credential and legal review;
 no authenticated Betfair work is included now.
+
+## First-Lab operations, review, results, and statistics
+
+`pro-readiness` is offline by default and reports configuration/cache facts
+without constructing a client. `--network-verify` makes one explicit bounded
+account request. `first-lab-dry-run` then coordinates readiness, capabilities,
+fixture discovery, current-season baselines, exact-fixture odds, immutable input,
+the existing live-78 Real Match Lab pipeline, observation creation and preview.
+It always stops before Telegram. Schema 37 adds append-only run executions,
+stage events, publication reviews and result previews. Exact stage replays reuse
+the prior artifact; conflicting replays fail, and stale odds are revalidated at
+every recovery boundary.
+
+`publication-review` checks fixture timing, odds order/freshness/provenance,
+baseline and live-78 compatibility, model/calibration provenance, production
+evidence, calibration quality, distribution shift, actionability, extreme
+probability safety, single-market policy, message identity, exact Lab
+destination, Official separation, result readiness and integrity. A pass never
+sends. The Real Match Lab `send` command additionally requires the exact linked
+observation, message fingerprint and persisted review fingerprint before it may
+construct a Telegram transport.
+
+For results, use `fetch-forward-test-result` only after full time or the existing
+versioned manual JSON command, then inspect, settle, and run
+`result-message-preview`. Result and settlement rows cannot mutate prediction
+snapshots. Previews state WON/LOST/VOID, cumulative forward-test totals and the
+absence of any Official bankroll claim; losses are retained.
+
+`forward-test-statistics` human and canonical JSON output includes observations,
+blocked/no-selection/actionable counts, settlement totals, wins/losses/voids,
+hit rate, average odds and calibrated probability, hypothetical flat-stake ROI
+and drawdown, calibration and shift distributions, market/competition/bookmaker
+distributions, monthly results, and published/unpublished counts. It reports
+`FORWARD_TEST_SAMPLE_INSUFFICIENT` below the centralized 30-settlement threshold.
+Early figures are descriptive simulations and do not prove profitability.

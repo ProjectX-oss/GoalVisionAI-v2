@@ -289,7 +289,7 @@ class HistoricalCalibrationMigrationAndStartupTests(unittest.TestCase):
     def test_calibration_schema_survives_current_migration_and_v26_upgrade(self):
         fresh = Database(":memory:")
         SQLiteHistoricalProbabilityCalibrationRepository(fresh)
-        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 36)
+        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 37)
         self.assertEqual(len(fresh.connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'historical_probability_calibration_%'").fetchall()), 6)
         fresh.close()
 
@@ -297,7 +297,7 @@ class HistoricalCalibrationMigrationAndStartupTests(unittest.TestCase):
         with patch("app.database.migrations.MIGRATIONS", MIGRATIONS[:26]):
             MigrationManager(connection).migrate()
         MigrationManager(connection).migrate()
-        self.assertEqual(connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 36)
+        self.assertEqual(connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 37)
         connection.close()
 
     def test_import_and_service_composition_have_zero_startup_side_effects(self):

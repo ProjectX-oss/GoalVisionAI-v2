@@ -64,6 +64,9 @@ def build_parser() -> argparse.ArgumentParser:
     send = sub.add_parser("send")
     send.add_argument("--database", type=Path, required=True)
     send.add_argument("--analysis-id", required=True)
+    send.add_argument("--observation-id", required=True)
+    send.add_argument("--publication-review-fingerprint", required=True)
+    send.add_argument("--message-fingerprint", required=True)
     send.add_argument("--confirmation", required=True)
     send.add_argument("--env-file", type=Path, default=Path(".env"))
     diagnose = sub.add_parser("diagnose")
@@ -263,6 +266,18 @@ def _send(args):
         service = build_real_match_lab_analysis_service(database)
         if not token:
             raise DeliveryConflictError("Lab bot token is missing.")
+        from app.current_odds_forward_test.operations import validate_manual_send_authorization
+        from app.current_odds_forward_test.repository import SQLiteForwardTestRepository
+        authorization = validate_manual_send_authorization(
+            SQLiteForwardTestRepository(database, migrate=False),
+            observation_id=args.observation_id,
+            review_fingerprint=args.publication_review_fingerprint,
+            message_fingerprint=args.message_fingerprint,
+            confirmation=args.confirmation,
+            environment="LAB", chat_id=chat_id or "", bot=bot or "",
+        )
+        if authorization["status"] != "LAB_MANUAL_SEND_AUTHORIZED" or authorization["analysis_id"] != args.analysis_id:
+            raise DeliveryConflictError("Forward-test publication review did not authorize this exact message.")
         result = asyncio.run(service.send(
             args.analysis_id, args.confirmation, token=token,
             configured_chat_id=chat_id, configured_bot=bot,

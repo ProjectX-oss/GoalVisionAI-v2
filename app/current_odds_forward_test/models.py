@@ -161,6 +161,7 @@ class ForwardTestSettlement:
 class ForwardTestStatistics:
     sample_status: ForwardTestSampleStatus
     total_analyses: int
+    blocked_analyses: int
     selected: int
     no_selection: int
     actionable: int
@@ -192,6 +193,7 @@ class ForwardTestStatistics:
     market_distribution: tuple[tuple[str, int], ...]
     competition_distribution: tuple[tuple[str, int], ...]
     source_distribution: tuple[tuple[str, int], ...]
+    bookmaker_distribution: tuple[tuple[str, int], ...]
     monthly_results: tuple[tuple[str, int, int], ...]
     average_feature_completeness: Decimal | None
     required_missing_count: int
