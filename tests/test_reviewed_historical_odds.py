@@ -10,18 +10,21 @@ from pathlib import Path
 from app.database import Database, MigrationManager
 from app.historical_backtesting.models import SupportedMarket
 from app.reviewed_historical_odds.cli import main as cli_main
+from app.reviewed_historical_odds.coverage_foundation import build_extended_coverage_evidence
 from app.reviewed_historical_odds.models import (
-    BacktestIntegrityStatus, EventLinkStatus, HistoricalMatchReference,
-    OddsSourceReview, QuoteSelectionPolicy, SourceOddsEvent, SourceOddsQuote,
+    BacktestIntegrityStatus, CoverageSufficiencyStatus, EventLinkStatus,
+    HistoricalMatchReference, OddsSourceReview, QuoteSelectionPolicy,
+    QuoteSelectionPolicyType, SourceOddsEvent, SourceOddsQuote,
 )
 from app.reviewed_historical_odds.repository import SQLiteReviewedHistoricalOddsRepository
 from app.reviewed_historical_odds.service import (
     audit_backtest_integrity, bootstrap_roi_confidence_interval,
-    build_coverage_report, build_manifest, decimal_odds, link_events,
-    normalize_quotes, normalize_utc, prepare_source_review, require_import_approval,
-    select_quotes, validate_manifest_files,
+    build_coverage_report, build_manifest, build_partition_coverage_report,
+    decimal_odds, derive_acquisition_window, link_events, normalize_quotes,
+    normalize_utc, prepare_source_review, require_import_approval, select_quotes,
+    validate_manifest_files,
 )
-from app.reviewed_historical_odds.the_odds_api import parse_historical_snapshot
+from app.reviewed_historical_odds.the_odds_api import parse_historical_archive, parse_historical_snapshot
 from app.reviewed_real_historical_data.models import SourceApprovalStatus
 
 
@@ -210,6 +213,74 @@ class ReviewedHistoricalOddsTests(unittest.TestCase):
         selected = select_quotes((late,))
         self.assertFalse(selected)
 
+    def test_all_eleven_canonical_markets_normalize(self):
+        event = SourceOddsEvent("e", "Bundesliga", "2024-01-10T18:30:00Z", "Home FC", "Away FC")
+        link = link_events((event,), (match(),), reviewed_aliases={})
+        inputs = [
+            ("h2h", "Home FC", None), ("h2h", "Draw", None), ("h2h", "Away FC", None),
+            ("totals", "Over", "1.5"), ("totals", "Under", "1.5"),
+            ("totals", "Over", "2.5"), ("totals", "Under", "2.5"),
+            ("totals", "Over", "3.5"), ("totals", "Under", "3.5"),
+            ("btts", "Yes", None), ("btts", "No", None),
+        ]
+        quotes = tuple(SourceOddsQuote(
+            source_quote_id=f"q-{index}", source_event_id="e",
+            source_bookmaker_id="pinnacle", source_bookmaker_name="Pinnacle",
+            source_market_name=market_name, source_selection_name=selection,
+            odds_value="2.0", original_odds_format="DECIMAL",
+            captured_at_utc="2024-01-09T12:00:00Z",
+            source_effective_timestamp_utc="2024-01-09T12:00:00Z", source_point=point,
+        ) for index, (market_name, selection, point) in enumerate(inputs))
+        normalized, rejected = normalize_quotes(
+            quotes, (event,), link, manifest_id="m", acquisition_timestamp_utc="2024-01-10T00:00:00Z",
+        )
+        self.assertFalse(rejected)
+        self.assertEqual({item.canonical_market for item in normalized}, set(SupportedMarket))
+
+    def test_reviewed_bookmaker_set_policy_requires_predeclared_comparison(self):
+        _, _, quotes, _ = parsed_and_linked()
+        blocked = QuoteSelectionPolicy(
+            version="reviewed-set-v1", policy_type=QuoteSelectionPolicyType.REVIEWED_BOOKMAKER_SET_BEST_AVAILABLE_AT_OR_BEFORE_CUTOFF,
+            reviewed_bookmaker_ids=("pinnacle", "other"),
+        )
+        with self.assertRaises(ValueError):
+            select_quotes(quotes, blocked)
+        allowed = replace(blocked, historical_odds_comparison_available=True)
+        selected = select_quotes(quotes, allowed)
+        self.assertEqual(len(selected), 3)
+        self.assertTrue(all(item.policy_version == "reviewed-set-v1" for item in selected))
+
+    def test_persisted_split_window_is_derived_without_repartitioning(self):
+        evidence = json.loads((Path(__file__).parent.parent / "docs" / "rehearsals" / "live_78_reviewed_real_historical_foundation_2026-07-31.json").read_text(encoding="utf-8"))
+        window = derive_acquisition_window(evidence)
+        self.assertEqual(window.split_id, "historical-dataset-split-a86228e7921bc560b897a3fd0e3187bb78df31adedfbc6f5ce107ff87d7d9977")
+        self.assertEqual(window.split_fingerprint, "2fb37779db0dd6eab9f46cc12482809780f68c5083c499b61b137d06c318a077")
+        self.assertEqual((window.train_match_count, window.validation_match_count, window.test_match_count), (1459, 313, 313))
+        self.assertEqual((window.validation_start_utc, window.test_end_utc), ("2023-05-13T13:30:00Z", "2025-05-17T13:30:00Z"))
+        self.assertEqual(window.temporal_gap_count, 0)
+        self.assertEqual(window.required_primary_markets, (SupportedMarket.HOME_WIN, SupportedMarket.DRAW, SupportedMarket.AWAY_WIN))
+
+    def test_empty_partition_coverage_preserves_unavailable_blocker(self):
+        evidence = json.loads((Path(__file__).parent.parent / "docs" / "rehearsals" / "live_78_reviewed_real_historical_foundation_2026-07-31.json").read_text(encoding="utf-8"))
+        window = derive_acquisition_window(evidence)
+        report = build_partition_coverage_report(window=window, quotes=(), selections=(), partitions={}, links=(), rejected=())
+        self.assertIs(report.coverage_status, CoverageSufficiencyStatus.REVIEWED_TEST_ODDS_COVERAGE_UNAVAILABLE)
+        self.assertEqual(report.test_matches_with_odds, 0)
+        self.assertEqual(report.test_candidate_market_count, 0)
+        self.assertEqual(report.blocker_codes, ("REVIEWED_TEST_ODDS_COVERAGE_UNAVAILABLE",))
+
+    def test_source_reviews_are_versioned_without_mutating_prior_review(self):
+        db = Database(":memory:"); repo = SQLiteReviewedHistoricalOddsRepository(db)
+        first = review(); second = prepare_source_review(replace(
+            first, review_timestamp_utc="2026-08-01T00:00:00Z",
+            operator_note="new immutable review evidence", review_fingerprint="",
+        ))
+        repo.append_review(first); repo.append_review(second); repo.append_review(second)
+        self.assertEqual(db.connection.execute("SELECT COUNT(*) FROM historical_odds_source_reviews").fetchone()[0], 1)
+        self.assertEqual(db.connection.execute("SELECT COUNT(*) FROM historical_odds_source_review_versions").fetchone()[0], 2)
+        self.assertEqual(db.connection.execute("SELECT COUNT(*) FROM historical_odds_source_review_versions WHERE supersedes_review_id IS NOT NULL").fetchone()[0], 1)
+        db.close()
+
     def test_coverage_is_transparent_and_partitioned(self):
         _, links, quotes, rejected = parsed_and_linked()
         report = build_coverage_report(reviewed_match_count=10, quotes=quotes, links=links, partitions={"match-1": "TEST"}, rejected=rejected)
@@ -242,14 +313,23 @@ class ReviewedHistoricalOddsTests(unittest.TestCase):
         self.assertLessEqual(first[0], first[1])
         self.assertEqual(bootstrap_roi_confidence_interval(()), (None, None))
 
-    def test_migration_34_fresh_foreign_keys_and_append_only(self):
+    def test_migration_35_fresh_foreign_keys_and_append_only(self):
         db = Database(":memory:"); MigrationManager(db.connection).migrate()
-        self.assertEqual(db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 34)
+        self.assertEqual(db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 35)
         self.assertEqual(db.connection.execute("PRAGMA foreign_key_check").fetchall(), [])
         repo = SQLiteReviewedHistoricalOddsRepository(db, migrate=False); repo.append_review(review())
         with self.assertRaises(sqlite3.IntegrityError): db.connection.execute("UPDATE historical_odds_source_reviews SET approval_status='REJECTED'")
         with self.assertRaises(sqlite3.IntegrityError): db.connection.execute("DELETE FROM historical_odds_source_reviews")
+        evidence = json.loads((Path(__file__).parent.parent / "docs" / "rehearsals" / "live_78_reviewed_real_historical_foundation_2026-07-31.json").read_text(encoding="utf-8"))
+        window = derive_acquisition_window(evidence); repo.append_acquisition_window(window, "2026-08-01T00:00:00Z")
+        with self.assertRaises(sqlite3.IntegrityError): db.connection.execute("UPDATE historical_odds_acquisition_windows SET test_match_count=0")
+        with self.assertRaises(sqlite3.IntegrityError): db.connection.execute("DELETE FROM historical_odds_acquisition_windows")
         db.close()
+
+    def test_offline_archive_parser_replays_single_snapshot(self):
+        snapshots = parse_historical_archive(FIXTURE)
+        self.assertEqual(len(snapshots), 1)
+        self.assertEqual(snapshots[0], parse_historical_snapshot(FIXTURE))
 
     def test_evidence_fingerprints_replay(self):
         _, links, quotes, _ = parsed_and_linked()
@@ -265,6 +345,33 @@ class ReviewedHistoricalOddsTests(unittest.TestCase):
         output = io.StringIO()
         with self.assertRaises(SystemExit) as caught, redirect_stdout(output): cli_main(["--help"])
         self.assertEqual(caught.exception.code, 0)
+
+    def test_extended_foundation_is_deterministic_and_source_database_read_only(self):
+        root = Path(__file__).parent.parent
+        reviews = tuple(root / "docs" / "data_sources" / name for name in (
+            "the_odds_api_historical_archive_review_v1.json",
+            "sportmonks_premium_historical_odds_review_v1.json",
+            "betfair_historical_exchange_review_v1.json",
+        ))
+        isolated = root / "var" / "test_extended_reviewed_historical_odds.db"
+        kwargs = dict(
+            prior_real_evidence_path=root / "docs" / "rehearsals" / "live_78_reviewed_real_historical_foundation_2026-07-31.json",
+            prior_odds_evidence_path=root / "docs" / "rehearsals" / "live_78_reviewed_historical_odds_backtest_2026-07-31.json",
+            source_review_paths=reviews, protected_database_path=root / "data" / "goalvision.db",
+            isolated_database_path=isolated, branch="goalvision/live-78-fresh-calibration",
+            starting_commit="5679346", execution_timestamp_utc="2026-08-01T00:00:00Z",
+        )
+        first = build_extended_coverage_evidence(**kwargs)
+        second = build_extended_coverage_evidence(**kwargs)
+        self.assertEqual(first, second)
+        self.assertEqual(first["coverage_sufficiency"], "REVIEWED_TEST_ODDS_COVERAGE_UNAVAILABLE")
+        self.assertEqual(first["source_database_hash_before"], first["source_database_hash_after"])
+        self.assertFalse(first["publication_eligibility"])
+        self.assertEqual(first["safety"]["telegram_calls"], 0)
+        connection = sqlite3.connect(isolated)
+        self.assertEqual(connection.execute("SELECT COUNT(*) FROM historical_odds_source_review_versions").fetchone()[0], 3)
+        self.assertEqual(connection.execute("PRAGMA foreign_key_check").fetchall(), [])
+        connection.close()
 
     def test_official_policy_boundaries_are_unchanged(self):
         from app.historical_backtesting.policy import DEFAULT_HISTORICAL_BACKTEST_POLICY

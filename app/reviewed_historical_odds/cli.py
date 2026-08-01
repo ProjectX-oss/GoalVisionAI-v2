@@ -9,9 +9,11 @@ from pathlib import Path
 from app.reviewed_real_historical_data.models import SourceApprovalStatus
 
 from .fingerprint import canonical_json, file_sha256
+from .coverage_foundation import build_extended_coverage_evidence
 from .models import OddsSourceReview
 from .pilot import run_pilot
 from .service import prepare_source_review
+from .the_odds_api import parse_historical_archive
 
 
 INSPECTION_COMMANDS = (
@@ -19,6 +21,9 @@ INSPECTION_COMMANDS = (
     "inspect-pre-kickoff", "inspect-bets", "inspect-bankroll", "inspect-risk",
     "inspect-betting-evidence", "inspect-backtest-integrity", "compare-candidates",
     "inspect-shadow", "inspect-audit", "inspect-activation-eligibility",
+    "inspect-unmatched-events", "inspect-ambiguous-events",
+    "inspect-partition-coverage", "inspect-quote-selections", "inspect-test-coverage",
+    "inspect-confidence-intervals",
     "register-odds-manifest", "run-quote-selection", "run-test-only-backtest",
     "run-backtest-integrity-audit", "run-shadow-evaluation", "run-model-audit",
 )
@@ -29,6 +34,13 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     review = sub.add_parser("review-source"); review.add_argument("review_json"); review.add_argument("--output", choices=("human", "json"), default="human")
     validate = sub.add_parser("validate-source-file"); validate.add_argument("path"); validate.add_argument("sha256")
+    raw = sub.add_parser("validate-raw-odds-file"); raw.add_argument("path"); raw.add_argument("--output", choices=("human", "json"), default="human")
+    extended = sub.add_parser("build-extended-coverage-foundation")
+    extended.add_argument("prior_real_evidence"); extended.add_argument("prior_odds_evidence")
+    extended.add_argument("protected_database"); extended.add_argument("isolated_database")
+    extended.add_argument("--review", action="append", required=True)
+    extended.add_argument("--branch", required=True); extended.add_argument("--starting-commit", required=True)
+    extended.add_argument("--timestamp", required=True); extended.add_argument("--export")
     for command in ("run-pilot", "import-historical-odds"):
         pilot = sub.add_parser(command)
         for name in ("base_database", "isolated_database", "odds_file", "review_json", "prior_evidence", "protected_database"):
@@ -49,6 +61,26 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "validate-source-file":
         actual = file_sha256(args.path); ok = actual.lower() == args.sha256.lower()
         _render({"status": "VALID" if ok else "HASH_MISMATCH", "file": Path(args.path).name, "sha256": actual}, "human"); return 0 if ok else 2
+    if args.command == "validate-raw-odds-file":
+        snapshots = parse_historical_archive(args.path)
+        return _render({
+            "status": "VALID", "file": Path(args.path).name,
+            "sha256": file_sha256(args.path), "snapshot_count": len(snapshots),
+            "event_count": sum(len(item.events) for item in snapshots),
+            "quote_count": sum(len(item.quotes) for item in snapshots),
+            "unsupported_market_rows": sum(item.unsupported_market_rows for item in snapshots),
+        }, args.output)
+    if args.command == "build-extended-coverage-foundation":
+        evidence = build_extended_coverage_evidence(
+            prior_real_evidence_path=args.prior_real_evidence,
+            prior_odds_evidence_path=args.prior_odds_evidence,
+            source_review_paths=tuple(args.review), protected_database_path=args.protected_database,
+            isolated_database_path=args.isolated_database, branch=args.branch,
+            starting_commit=args.starting_commit, execution_timestamp_utc=args.timestamp,
+        )
+        if args.export:
+            Path(args.export).write_text(canonical_json(evidence) + "\n", encoding="utf-8")
+        return _render(evidence, "json")
     if args.command in {"run-pilot", "import-historical-odds"}:
         evidence = run_pilot(
             base_database_path=args.base_database, isolated_database_path=args.isolated_database,
@@ -70,6 +102,9 @@ def main(argv: list[str] | None = None) -> int:
         "inspect-betting-evidence": "betting_evidence", "inspect-backtest-integrity": "backtest_integrity",
         "compare-candidates": "comparison_result", "inspect-shadow": "shadow_result",
         "inspect-audit": "audit_result", "inspect-activation-eligibility": "staging_activation_result",
+        "inspect-unmatched-events": "event_links", "inspect-ambiguous-events": "event_links",
+        "inspect-partition-coverage": "coverage_report", "inspect-quote-selections": "quote_selection_policies",
+        "inspect-test-coverage": "coverage_report", "inspect-confidence-intervals": "uncertainty_metrics",
         "register-odds-manifest": "source_manifest", "run-quote-selection": "quote_selection_policy",
         "run-test-only-backtest": "betting_evidence", "run-backtest-integrity-audit": "backtest_integrity",
         "run-shadow-evaluation": "shadow_result", "run-model-audit": "audit_result",

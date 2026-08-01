@@ -9,9 +9,11 @@ from app.database import Database, MigrationManager
 from .fingerprint import canonical_json
 from .models import (
     BacktestIntegrityReport, EventLinkDecision, NormalizedOddsQuote,
-    OddsCoverageReport, OddsSourceManifest, OddsSourceReview,
+    OddsAcquisitionWindow, OddsCoverageReport, OddsSourceManifest, OddsSourceReview,
+    PartitionCoverageReport,
     QuoteSelectionDecision,
 )
+from .service import prepare_source_review
 
 
 class SQLiteReviewedHistoricalOddsRepository:
@@ -21,14 +23,36 @@ class SQLiteReviewedHistoricalOddsRepository:
             MigrationManager(database.connection).migrate()
 
     def append_review(self, review: OddsSourceReview) -> None:
-        self._append_identity(
-            "historical_odds_source_reviews", "source_id", review.source_id,
-            "review_fingerprint", review.review_fingerprint,
-            "INSERT INTO historical_odds_source_reviews(odds_source_review_id,source_id,approval_status,review_timestamp_utc,review_fingerprint,review_snapshot) VALUES(?,?,?,?,?,?)",
-            (f"odds-source-review-{review.review_fingerprint}", review.source_id,
-             review.approval_status.value, review.review_timestamp_utc,
-             review.review_fingerprint, canonical_json(review)),
-        )
+        if review.review_fingerprint != prepare_source_review(review).review_fingerprint:
+            raise ValueError("Odds source review fingerprint is invalid.")
+        review_id = f"odds-source-review-{review.review_fingerprint}"
+        legacy = self.database.connection.execute(
+            "SELECT review_fingerprint FROM historical_odds_source_reviews WHERE source_id=?", (review.source_id,),
+        ).fetchone()
+        with self.database.connection:
+            if legacy is None:
+                self.database.connection.execute(
+                    "INSERT INTO historical_odds_source_reviews(odds_source_review_id,source_id,approval_status,review_timestamp_utc,review_fingerprint,review_snapshot) VALUES(?,?,?,?,?,?)",
+                    (review_id, review.source_id, review.approval_status.value,
+                     review.review_timestamp_utc, review.review_fingerprint, canonical_json(review)),
+                )
+            prior = self.database.connection.execute(
+                "SELECT odds_source_review_id FROM historical_odds_source_review_versions WHERE source_id=? ORDER BY review_timestamp_utc DESC,odds_source_review_id DESC LIMIT 1",
+                (review.source_id,),
+            ).fetchone()
+            existing = self.database.connection.execute(
+                "SELECT review_fingerprint FROM historical_odds_source_review_versions WHERE odds_source_review_id=?", (review_id,),
+            ).fetchone()
+            if existing is not None:
+                if existing[0] != review.review_fingerprint:
+                    raise ValueError("Immutable historical odds source review version conflict.")
+                return
+            self.database.connection.execute(
+                "INSERT INTO historical_odds_source_review_versions(odds_source_review_id,source_id,approval_status,review_timestamp_utc,review_fingerprint,supersedes_review_id,review_snapshot) VALUES(?,?,?,?,?,?,?)",
+                (review_id, review.source_id, review.approval_status.value,
+                 review.review_timestamp_utc, review.review_fingerprint,
+                 prior[0] if prior else None, canonical_json(review)),
+            )
 
     def append_manifest(self, manifest: OddsSourceManifest) -> str:
         row = self.database.connection.execute(
@@ -40,7 +64,8 @@ class SQLiteReviewedHistoricalOddsRepository:
                 raise ValueError("Odds source version resolves to different content.")
             return f"historical-odds-manifest-{manifest.manifest_fingerprint}"
         review = self.database.connection.execute(
-            "SELECT approval_status FROM historical_odds_source_reviews WHERE source_id=?", (manifest.source_id,),
+            "SELECT approval_status FROM historical_odds_source_review_versions WHERE odds_source_review_id=?",
+            (manifest.source_review_id,),
         ).fetchone()
         if review is None or review[0] not in {"APPROVED_FOR_CONTROLLED_RESEARCH", "APPROVED_FOR_INTERNAL_DERIVED_DATA"}:
             raise PermissionError("An approved persisted odds source review is required.")
@@ -60,6 +85,47 @@ class SQLiteReviewedHistoricalOddsRepository:
                      item.raw_row_count, canonical_json(item)),
                 )
         return manifest_id
+
+    def append_acquisition_window(self, window: OddsAcquisitionWindow, timestamp: str) -> str:
+        identifier = f"historical-odds-window-{window.window_fingerprint}"
+        row = self.database.connection.execute(
+            "SELECT window_fingerprint FROM historical_odds_acquisition_windows WHERE split_id=? AND split_fingerprint=?",
+            (window.split_id, window.split_fingerprint),
+        ).fetchone()
+        if row is not None:
+            if row[0] != window.window_fingerprint:
+                raise ValueError("Immutable odds acquisition window conflict.")
+            return identifier
+        with self.database.connection:
+            self.database.connection.execute(
+                "INSERT INTO historical_odds_acquisition_windows(acquisition_window_id,split_id,split_fingerprint,equal_kickoff_grouping_policy,train_start_utc,train_end_utc,validation_start_utc,validation_end_utc,test_start_utc,test_end_utc,train_match_count,validation_match_count,test_match_count,temporal_gap_count,window_fingerprint,window_snapshot,created_timestamp_utc) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (identifier, window.split_id, window.split_fingerprint,
+                 window.equal_kickoff_grouping_policy, window.train_start_utc,
+                 window.train_end_utc, window.validation_start_utc,
+                 window.validation_end_utc, window.test_start_utc, window.test_end_utc,
+                 window.train_match_count, window.validation_match_count,
+                 window.test_match_count, window.temporal_gap_count,
+                 window.window_fingerprint, canonical_json(window), timestamp),
+            )
+        return identifier
+
+    def append_partition_coverage(self, report: PartitionCoverageReport, timestamp: str) -> str:
+        identifier = f"historical-odds-partition-coverage-{report.report_fingerprint}"
+        row = self.database.connection.execute(
+            "SELECT report_fingerprint FROM historical_odds_partition_coverage_reports WHERE report_fingerprint=?",
+            (report.report_fingerprint,),
+        ).fetchone()
+        if row is None:
+            with self.database.connection:
+                self.database.connection.execute(
+                    "INSERT INTO historical_odds_partition_coverage_reports(partition_coverage_report_id,acquisition_window_id,odds_manifest_id,coverage_status,validation_matches_with_odds,test_matches_with_odds,test_candidate_market_count,ambiguous_event_count,post_kickoff_exclusion_count,report_fingerprint,report_snapshot,created_timestamp_utc) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (identifier, report.acquisition_window_id, report.odds_manifest_id,
+                     report.coverage_status.value, report.validation_matches_with_odds,
+                     report.test_matches_with_odds, report.test_candidate_market_count,
+                     report.ambiguous_event_count, report.post_kickoff_exclusion_count,
+                     report.report_fingerprint, canonical_json(report), timestamp),
+                )
+        return identifier
 
     def append_links(self, manifest_id: str, links: tuple[EventLinkDecision, ...]) -> None:
         for item in links:

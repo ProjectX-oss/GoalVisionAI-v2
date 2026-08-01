@@ -15,9 +15,11 @@ from app.historical_backtesting.models import SupportedMarket
 from .fingerprint import file_sha256, sha256_fingerprint
 from .models import (
     BacktestIntegrityReport, BacktestIntegrityStatus, EventLinkDecision,
-    EventLinkStatus, HistoricalMatchReference, NormalizedOddsQuote,
+    CoverageSufficiencyStatus, EventLinkStatus, HistoricalMatchReference, NormalizedOddsQuote,
+    OddsAcquisitionWindow,
     OddsCoverageReport, OddsSourceFile, OddsSourceManifest, OddsSourceReview,
-    QuoteSelectionDecision, QuoteSelectionPolicy, QuoteTimingStatus,
+    PartitionCoverageReport, QuoteSelectionDecision, QuoteSelectionPolicy,
+    QuoteSelectionPolicyType, QuoteTimingStatus,
     SourceOddsEvent, SourceOddsQuote,
 )
 
@@ -41,6 +43,8 @@ def prepare_source_review(review: OddsSourceReview) -> OddsSourceReview:
         review.terms_of_use_status, review.licensing_or_redistribution_status,
         review.storage_permission, review.derived_data_permission,
         review.review_timestamp_utc, review.operator_note,
+        review.pricing_or_access_tier, review.redistribution_permission,
+        review.update_cadence,
     )
     if not all(value.strip() for value in required):
         raise ValueError("Odds source review fields must not be empty.")
@@ -146,6 +150,7 @@ def link_events(
         )
         candidates = []
         reversed_found = False
+        effective_tolerance = max(kickoff_tolerance_seconds, event.kickoff_precision_seconds)
         for match in matches:
             match_home, match_away = normalized_team_name(match.home_team), normalized_team_name(match.away_team)
             delta = abs(int((_datetime(match.kickoff_utc) - event_time).total_seconds()))
@@ -159,10 +164,16 @@ def link_events(
             )
             if not competition_matches:
                 continue
-            if match_home == away and match_away == home and delta <= kickoff_tolerance_seconds:
+            if event.season is not None and match.season != event.season:
+                continue
+            if match_home == away and match_away == home and delta <= effective_tolerance:
                 reversed_found = True
-            if match_home == home and match_away == away and delta <= kickoff_tolerance_seconds:
+            if match_home == home and match_away == away and delta <= effective_tolerance:
                 candidates.append((match, delta))
+        if len(candidates) > 1 and event.round_name:
+            round_matches = [item for item in candidates if normalized_team_name(item[0].round_name or "") == normalized_team_name(event.round_name)]
+            if round_matches:
+                candidates = round_matches
         if len(candidates) > 1:
             status, match, delta, reasons = EventLinkStatus.AMBIGUOUS_MATCH, None, None, ("MULTIPLE_MATCHES",)
         elif len(candidates) == 0:
@@ -257,16 +268,28 @@ def select_quotes(
     quotes: tuple[NormalizedOddsQuote, ...], policy: QuoteSelectionPolicy = QuoteSelectionPolicy(),
 ) -> tuple[QuoteSelectionDecision, ...]:
     grouped: dict[tuple[str, SupportedMarket], list[NormalizedOddsQuote]] = defaultdict(list)
+    if policy.policy_type is QuoteSelectionPolicyType.REVIEWED_BOOKMAKER_SET_BEST_AVAILABLE_AT_OR_BEFORE_CUTOFF:
+        if not policy.historical_odds_comparison_available or not policy.reviewed_bookmaker_ids:
+            raise ValueError("Reviewed bookmaker-set selection requires a predeclared historical comparison capability and bookmaker set.")
+        permitted_bookmakers = set(policy.reviewed_bookmaker_ids)
+    else:
+        permitted_bookmakers = {policy.canonical_bookmaker_id}
     for quote in quotes:
-        if quote.canonical_bookmaker_id != policy.canonical_bookmaker_id:
+        if quote.canonical_bookmaker_id not in permitted_bookmakers:
             continue
         cutoff = _datetime(quote.linked_kickoff_utc) - timedelta(seconds=policy.cutoff_seconds_before_kickoff)
         if _datetime(quote.captured_at_utc) <= cutoff:
             grouped[(quote.historical_match_id, quote.canonical_market)].append(quote)
     result = []
     for (match_id, market), values in sorted(grouped.items(), key=lambda item: (item[0][0], item[0][1].value)):
-        ordered = sorted(values, key=lambda item: (item.captured_at_utc, item.source_quote_id, item.quote_id))
-        latest = ordered[-1]
+        latest_by_bookmaker = {}
+        for value in sorted(values, key=lambda item: (item.captured_at_utc, item.source_quote_id, item.quote_id)):
+            latest_by_bookmaker[value.canonical_bookmaker_id] = value
+        candidates = tuple(latest_by_bookmaker.values())
+        if policy.policy_type is QuoteSelectionPolicyType.REVIEWED_BOOKMAKER_SET_BEST_AVAILABLE_AT_OR_BEFORE_CUTOFF:
+            latest = sorted(candidates, key=lambda item: (item.decimal_odds, item.canonical_bookmaker_id, item.quote_id))[-1]
+        else:
+            latest = candidates[0]
         cutoff = _datetime(latest.linked_kickoff_utc) - timedelta(seconds=policy.cutoff_seconds_before_kickoff)
         cutoff_text = cutoff.isoformat(timespec="seconds").replace("+00:00", "Z")
         material = {"match": match_id, "market": market, "quote": latest.quote_fingerprint, "cutoff": cutoff_text, "policy": policy}
@@ -323,16 +346,18 @@ def build_coverage_report(
 def audit_backtest_integrity(
     *, quotes: tuple[NormalizedOddsQuote, ...], selections: tuple[QuoteSelectionDecision, ...],
     partitions: dict[str, str], synthetic_odds: bool = False, bankroll_isolated: bool = True,
-    production_side_effects: int = 0,
+    production_side_effects: int = 0, policy: QuoteSelectionPolicy = QuoteSelectionPolicy(),
+    source_approved: bool = True, ambiguous_event_count: int = 0,
 ) -> BacktestIntegrityReport:
     quote_by_id = {item.quote_id: item for item in quotes}
     checks = (
         ("TEST_ONLY", bool(selections) and all(partitions.get(item.historical_match_id) == "TEST" for item in selections)),
         ("NO_TRAIN_VALIDATION_LEAKAGE", all(partitions.get(item.historical_match_id) == "TEST" for item in selections)),
         ("PRE_KICKOFF_TIMESTAMPS", all(_datetime(item.captured_at_utc) < _datetime(item.linked_kickoff_utc) for item in quotes)),
-        ("DETERMINISTIC_FIXED_BOOKMAKER_POLICY", all(item.policy_version == QuoteSelectionPolicy().version for item in selections)),
-        ("NO_BEST_PRICE_HINDSIGHT", all(quote_by_id[item.selected_quote_id].canonical_bookmaker_id == QuoteSelectionPolicy().canonical_bookmaker_id for item in selections)),
-        ("EXACT_EVENT_LINKAGE", all(item.historical_match_id for item in quotes)),
+        ("DETERMINISTIC_QUOTE_SELECTION_POLICY", all(item.policy_version == policy.version for item in selections)),
+        ("NO_BEST_PRICE_HINDSIGHT", policy.policy_type is QuoteSelectionPolicyType.FIXED_BOOKMAKER_LATEST_AT_OR_BEFORE_CUTOFF or policy.historical_odds_comparison_available),
+        ("EXACT_EVENT_LINKAGE", ambiguous_event_count == 0 and all(item.historical_match_id for item in quotes)),
+        ("SOURCE_APPROVED", source_approved),
         ("IMMUTABLE_SETTLEMENT", True), ("BANKROLL_ISOLATED", bankroll_isolated),
         ("OFFICIAL_POLICY_CONSISTENT", True), ("NO_SYNTHETIC_ODDS", not synthetic_odds),
         ("SOURCE_PROVENANCE_COMPLETE", all(item.provenance_fingerprint for item in quotes)),
@@ -360,16 +385,93 @@ def bootstrap_roi_confidence_interval(returns: tuple[Decimal, ...], *, iteration
     return samples[int(iterations * .025)], samples[min(iterations - 1, int(iterations * .975))]
 
 
+def derive_acquisition_window(split_evidence: dict[str, object]) -> OddsAcquisitionWindow:
+    """Derive the odds target without changing or re-partitioning the persisted split."""
+    split = split_evidence.get("split")
+    if not isinstance(split, dict):
+        raise ValueError("Persisted split evidence is required.")
+    ranges = {item[0]: item[1:] for item in split.get("earliest_latest_kickoffs", ())}
+    counts = split.get("counts", {})
+    required = ("TRAIN", "VALIDATION", "TEST")
+    if any(name not in ranges or name not in counts for name in required):
+        raise ValueError("Persisted split evidence is incomplete.")
+    if not (ranges["TRAIN"][1] < ranges["VALIDATION"][0] <= ranges["VALIDATION"][1] < ranges["TEST"][0]):
+        raise ValueError("Persisted split chronology is invalid.")
+    temporal_gap_count = int(counts.get("EXCLUDED_GAP", 0))
+    value = OddsAcquisitionWindow(
+        split_id=str(split["split_id"]), split_fingerprint=str(split["fingerprint"]),
+        equal_kickoff_grouping_policy="INDIVISIBLE_EQUAL_KICKOFF_GROUPS_V1",
+        train_start_utc=normalize_utc(ranges["TRAIN"][0]), train_end_utc=normalize_utc(ranges["TRAIN"][1]),
+        validation_start_utc=normalize_utc(ranges["VALIDATION"][0]), validation_end_utc=normalize_utc(ranges["VALIDATION"][1]),
+        test_start_utc=normalize_utc(ranges["TEST"][0]), test_end_utc=normalize_utc(ranges["TEST"][1]),
+        train_match_count=int(counts["TRAIN"]), validation_match_count=int(counts["VALIDATION"]),
+        test_match_count=int(counts["TEST"]), temporal_gap_count=temporal_gap_count,
+        seasons=("2018/2019", "2019/2020", "2020/2021", "2021/2022", "2022/2023", "2023/2024", "2024/2025"),
+        required_primary_markets=(SupportedMarket.HOME_WIN, SupportedMarket.DRAW, SupportedMarket.AWAY_WIN),
+        preferred_markets=tuple(SupportedMarket),
+    )
+    return replace(value, window_fingerprint=sha256_fingerprint(value))
+
+
+def build_partition_coverage_report(
+    *, window: OddsAcquisitionWindow, quotes: tuple[NormalizedOddsQuote, ...],
+    selections: tuple[QuoteSelectionDecision, ...], partitions: dict[str, str],
+    links: tuple[EventLinkDecision, ...], rejected: tuple[tuple[str, str], ...],
+    odds_manifest_id: str | None = None,
+) -> PartitionCoverageReport:
+    test_quotes = tuple(item for item in quotes if partitions.get(item.historical_match_id) == "TEST")
+    validation_matches = {item.historical_match_id for item in quotes if partitions.get(item.historical_match_id) == "VALIDATION"}
+    test_matches = {item.historical_match_id for item in test_quotes}
+    test_candidates = {(item.historical_match_id, item.canonical_market) for item in test_quotes}
+    month_matches, market_matches, bookmaker_matches = defaultdict(set), defaultdict(set), defaultdict(set)
+    for item in test_quotes:
+        month_matches[item.linked_kickoff_utc[:7]].add(item.historical_match_id)
+        market_matches[item.canonical_market.value].add(item.historical_match_id)
+        bookmaker_matches[item.canonical_bookmaker_id].add(item.historical_match_id)
+    if not odds_manifest_id and not test_matches:
+        status = CoverageSufficiencyStatus.REVIEWED_TEST_ODDS_COVERAGE_UNAVAILABLE
+    elif len(test_matches) >= 100 and len(test_candidates) >= 300:
+        status = CoverageSufficiencyStatus.SUFFICIENT_TEST_ODDS_COVERAGE
+    else:
+        status = CoverageSufficiencyStatus.INSUFFICIENT_TEST_ODDS_COVERAGE
+    blockers = () if status is CoverageSufficiencyStatus.SUFFICIENT_TEST_ODDS_COVERAGE else (status.value,)
+    value = PartitionCoverageReport(
+        acquisition_window_id=f"historical-odds-window-{window.window_fingerprint}", odds_manifest_id=odds_manifest_id,
+        coverage_status=status, validation_matches_with_odds=len(validation_matches),
+        test_matches_with_odds=len(test_matches), test_candidate_market_count=len(test_candidates),
+        selected_quote_count=sum(partitions.get(item.historical_match_id) == "TEST" for item in selections),
+        ambiguous_event_count=sum(item.status is EventLinkStatus.AMBIGUOUS_MATCH for item in links),
+        unmatched_event_count=sum(item.historical_match_id is None for item in links),
+        post_kickoff_exclusion_count=sum(reason == "POST_KICKOFF_ODDS" for _, reason in rejected),
+        missing_timestamp_count=sum(reason == "UNKNOWN_CAPTURE_TIME" for _, reason in rejected),
+        per_month_test_coverage=tuple(sorted((key, len(items)) for key, items in month_matches.items())),
+        per_market_test_coverage=tuple(sorted((key, len(items)) for key, items in market_matches.items())),
+        per_bookmaker_test_coverage=tuple(sorted((key, len(items)) for key, items in bookmaker_matches.items())),
+        blocker_codes=blockers,
+    )
+    return replace(value, report_fingerprint=sha256_fingerprint(value))
+
+
 def _market(event: SourceOddsEvent, quote: SourceOddsQuote) -> SupportedMarket:
-    if quote.source_market_name != "h2h":
-        raise ValueError("Unsupported source market.")
+    source_market = normalized_team_name(quote.source_market_name).replace(" ", "_")
     selection = normalized_team_name(quote.source_selection_name)
-    if selection == normalized_team_name(event.home_team):
-        return SupportedMarket.HOME_WIN
-    if selection == normalized_team_name(event.away_team):
-        return SupportedMarket.AWAY_WIN
-    if selection == "draw":
-        return SupportedMarket.DRAW
+    if source_market in {"h2h", "match_winner", "fulltime_result"}:
+        if selection == normalized_team_name(event.home_team):
+            return SupportedMarket.HOME_WIN
+        if selection == normalized_team_name(event.away_team):
+            return SupportedMarket.AWAY_WIN
+        if selection == "draw":
+            return SupportedMarket.DRAW
+    if source_market in {"totals", "total_goals", "over_under"}:
+        point = quote.source_point
+        if point not in {"1.5", "2.5", "3.5"}:
+            raise ValueError("Unsupported totals point.")
+        prefix = "OVER" if selection == "over" else "UNDER" if selection == "under" else None
+        if prefix:
+            return SupportedMarket(f"{prefix}_{point.replace('.', '_')}")
+    if source_market in {"btts", "both_teams_to_score"}:
+        if selection in {"yes", "no"}:
+            return SupportedMarket(f"BTTS_{selection.upper()}")
     raise ValueError("Selection does not map exactly to event identity.")
 
 

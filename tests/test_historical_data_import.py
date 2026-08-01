@@ -423,7 +423,7 @@ class HistoricalMigrationAndStartupTests(unittest.TestCase):
     def test_fresh_v23_schema_has_tables_indexes_and_eight_immutable_guards(self):
         database = Database(":memory:")
         MigrationManager(database.connection).migrate()
-        self.assertEqual(database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 34)
+        self.assertEqual(database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 35)
         objects = {
             (row[0], row[1])
             for row in database.connection.execute(
@@ -452,7 +452,7 @@ class HistoricalMigrationAndStartupTests(unittest.TestCase):
         connection.execute("INSERT INTO published_predictions (prediction_id,fixture_id,market,pick,published_at) VALUES ('sentinel',1,'MATCH_WINNER','HOME','2026-01-01T00:00:00Z')")
         connection.commit()
         MigrationManager(connection).migrate()
-        self.assertEqual(connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 34)
+        self.assertEqual(connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 35)
         self.assertEqual(connection.execute("SELECT prediction_id FROM published_predictions").fetchone()[0], "sentinel")
         database.close()
 

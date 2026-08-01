@@ -4474,6 +4474,81 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS historical_odds_audit_reports_no_delete BEFORE DELETE ON historical_odds_audit_reports BEGIN SELECT RAISE(ABORT,'Historical odds audit reports are immutable'); END""",
         ),
     ),
+    Migration(
+        version=35,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_source_review_versions (
+                odds_source_review_id TEXT PRIMARY KEY,
+                source_id TEXT NOT NULL,
+                approval_status TEXT NOT NULL CHECK(approval_status IN (
+                    'APPROVED_FOR_CONTROLLED_RESEARCH','APPROVED_FOR_INTERNAL_DERIVED_DATA',
+                    'REVIEW_REQUIRED','REJECTED','ACCESS_UNAVAILABLE','TERMS_UNCLEAR'
+                )),
+                review_timestamp_utc TEXT NOT NULL,
+                review_fingerprint TEXT NOT NULL UNIQUE,
+                supersedes_review_id TEXT,
+                review_snapshot TEXT NOT NULL,
+                FOREIGN KEY(supersedes_review_id)
+                    REFERENCES historical_odds_source_review_versions(odds_source_review_id),
+                UNIQUE(source_id,review_timestamp_utc)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_acquisition_windows (
+                acquisition_window_id TEXT PRIMARY KEY,
+                split_id TEXT NOT NULL,
+                split_fingerprint TEXT NOT NULL,
+                equal_kickoff_grouping_policy TEXT NOT NULL,
+                train_start_utc TEXT NOT NULL,
+                train_end_utc TEXT NOT NULL,
+                validation_start_utc TEXT NOT NULL,
+                validation_end_utc TEXT NOT NULL,
+                test_start_utc TEXT NOT NULL,
+                test_end_utc TEXT NOT NULL,
+                train_match_count INTEGER NOT NULL CHECK(train_match_count>=0),
+                validation_match_count INTEGER NOT NULL CHECK(validation_match_count>=0),
+                test_match_count INTEGER NOT NULL CHECK(test_match_count>=0),
+                temporal_gap_count INTEGER NOT NULL CHECK(temporal_gap_count>=0),
+                window_fingerprint TEXT NOT NULL UNIQUE,
+                window_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                UNIQUE(split_id,split_fingerprint)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS historical_odds_partition_coverage_reports (
+                partition_coverage_report_id TEXT PRIMARY KEY,
+                acquisition_window_id TEXT NOT NULL,
+                odds_manifest_id TEXT,
+                coverage_status TEXT NOT NULL CHECK(coverage_status IN (
+                    'SUFFICIENT_TEST_ODDS_COVERAGE','INSUFFICIENT_TEST_ODDS_COVERAGE',
+                    'REVIEWED_TEST_ODDS_COVERAGE_UNAVAILABLE'
+                )),
+                validation_matches_with_odds INTEGER NOT NULL CHECK(validation_matches_with_odds>=0),
+                test_matches_with_odds INTEGER NOT NULL CHECK(test_matches_with_odds>=0),
+                test_candidate_market_count INTEGER NOT NULL CHECK(test_candidate_market_count>=0),
+                ambiguous_event_count INTEGER NOT NULL CHECK(ambiguous_event_count>=0),
+                post_kickoff_exclusion_count INTEGER NOT NULL CHECK(post_kickoff_exclusion_count>=0),
+                report_fingerprint TEXT NOT NULL UNIQUE,
+                report_snapshot TEXT NOT NULL,
+                created_timestamp_utc TEXT NOT NULL,
+                FOREIGN KEY(acquisition_window_id)
+                    REFERENCES historical_odds_acquisition_windows(acquisition_window_id),
+                FOREIGN KEY(odds_manifest_id)
+                    REFERENCES historical_odds_source_manifests(odds_manifest_id)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_odds_review_versions_source ON historical_odds_source_review_versions(source_id,review_timestamp_utc)""",
+            """CREATE INDEX IF NOT EXISTS idx_odds_partition_coverage_window ON historical_odds_partition_coverage_reports(acquisition_window_id,created_timestamp_utc)""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_source_review_versions_no_update BEFORE UPDATE ON historical_odds_source_review_versions BEGIN SELECT RAISE(ABORT,'Historical odds source review versions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_source_review_versions_no_delete BEFORE DELETE ON historical_odds_source_review_versions BEGIN SELECT RAISE(ABORT,'Historical odds source review versions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_acquisition_windows_no_update BEFORE UPDATE ON historical_odds_acquisition_windows BEGIN SELECT RAISE(ABORT,'Historical odds acquisition windows are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_acquisition_windows_no_delete BEFORE DELETE ON historical_odds_acquisition_windows BEGIN SELECT RAISE(ABORT,'Historical odds acquisition windows are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_partition_coverage_reports_no_update BEFORE UPDATE ON historical_odds_partition_coverage_reports BEGIN SELECT RAISE(ABORT,'Historical odds partition coverage reports are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS historical_odds_partition_coverage_reports_no_delete BEFORE DELETE ON historical_odds_partition_coverage_reports BEGIN SELECT RAISE(ABORT,'Historical odds partition coverage reports are immutable'); END""",
+        ),
+    ),
 )
 
 

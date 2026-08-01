@@ -1,5 +1,10 @@
 # Reviewed Historical Odds and Betting Evidence Foundation
 
+> 2026-08-01 continuation: the extended coverage foundation is documented in
+> `EXTENDED_REVIEWED_HISTORICAL_ODDS_COVERAGE.md`. No authorized TEST-period
+> archive was available, so the original schema-v34 evidence remains immutable
+> and all promotion gates remain blocked.
+
 ## Outcome
 
 The foundation is implemented and exercised with genuine timestamped

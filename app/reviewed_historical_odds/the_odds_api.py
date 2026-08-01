@@ -9,7 +9,8 @@ from pathlib import Path
 from .models import SourceOddsEvent, SourceOddsQuote
 
 
-PARSER_VERSION = "the-odds-api-historical-v4-offline-parser-v1"
+PARSER_VERSION = "the-odds-api-historical-v4-offline-parser-v2"
+SUPPORTED_SOURCE_MARKETS = frozenset({"h2h", "totals", "btts"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -22,6 +23,31 @@ class ParsedOddsSnapshot:
 
 def parse_historical_snapshot(path: str | Path) -> ParsedOddsSnapshot:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    return _parse_payload(payload)
+
+
+def parse_historical_archive(path: str | Path) -> tuple[ParsedOddsSnapshot, ...]:
+    """Parse an offline array/JSONL archive without network access or secret handling."""
+    text = Path(path).read_text(encoding="utf-8")
+    try:
+        payload = json.loads(text)
+        payloads = payload if isinstance(payload, list) else [payload]
+    except json.JSONDecodeError:
+        payloads = [json.loads(line) for line in text.splitlines() if line.strip()]
+    snapshots = tuple(sorted((_parse_payload(item) for item in payloads), key=lambda item: item.snapshot_timestamp_utc))
+    seen: dict[str, SourceOddsQuote] = {}
+    for snapshot in snapshots:
+        for quote in snapshot.quotes:
+            prior = seen.get(quote.source_quote_id)
+            if prior is not None and prior != quote:
+                raise ValueError("Historical archive contains a conflicting source quote identity.")
+            seen[quote.source_quote_id] = quote
+    return snapshots
+
+
+def _parse_payload(payload: dict) -> ParsedOddsSnapshot:
+    if not isinstance(payload, dict):
+        raise ValueError("The Odds API historical snapshot must be an object.")
     snapshot_timestamp = _required(payload, "timestamp")
     events: list[SourceOddsEvent] = []
     quotes: list[SourceOddsQuote] = []
@@ -41,12 +67,13 @@ def parse_historical_snapshot(path: str | Path) -> ParsedOddsSnapshot:
             captured = bookmaker.get("last_update")
             for market in bookmaker.get("markets", ()):
                 market_name = _required(market, "key")
-                if market_name != "h2h":
+                if market_name not in SUPPORTED_SOURCE_MARKETS:
                     unsupported += len(market.get("outcomes", ()))
                     continue
                 for index, outcome in enumerate(market.get("outcomes", ())):
+                    point = outcome.get("point")
                     quotes.append(SourceOddsQuote(
-                        source_quote_id=f"{event_id}:{bookmaker_id}:{market_name}:{index}:{outcome.get('name', '')}",
+                        source_quote_id=f"{event_id}:{bookmaker_id}:{market_name}:{point}:{index}:{outcome.get('name', '')}:{captured}",
                         source_event_id=event_id,
                         source_bookmaker_id=bookmaker_id,
                         source_bookmaker_name=_required(bookmaker, "title"),
@@ -56,6 +83,7 @@ def parse_historical_snapshot(path: str | Path) -> ParsedOddsSnapshot:
                         original_odds_format="DECIMAL",
                         captured_at_utc=str(captured) if captured else None,
                         source_effective_timestamp_utc=snapshot_timestamp,
+                        source_point=str(point) if point is not None else None,
                     ))
     return ParsedOddsSnapshot(
         snapshot_timestamp_utc=snapshot_timestamp,

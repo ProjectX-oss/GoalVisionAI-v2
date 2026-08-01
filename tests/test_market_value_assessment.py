@@ -723,7 +723,7 @@ class MarketValueMigrationTests(unittest.TestCase):
             database.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            34,
+            35,
         )
         for table in ("market_odds_snapshots", "market_value_assessments"):
             self.assertIsNotNone(
@@ -783,7 +783,7 @@ class MarketValueMigrationTests(unittest.TestCase):
             database.connection.execute(
                 "SELECT MAX(version) FROM schema_migrations"
             ).fetchone()[0],
-            34,
+            35,
         )
         database.close()
 

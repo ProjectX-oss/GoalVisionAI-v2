@@ -33,6 +33,17 @@ class BacktestIntegrityStatus(str, Enum):
     BACKTEST_INTEGRITY_BLOCKED = "BACKTEST_INTEGRITY_BLOCKED"
 
 
+class CoverageSufficiencyStatus(str, Enum):
+    SUFFICIENT_TEST_ODDS_COVERAGE = "SUFFICIENT_TEST_ODDS_COVERAGE"
+    INSUFFICIENT_TEST_ODDS_COVERAGE = "INSUFFICIENT_TEST_ODDS_COVERAGE"
+    REVIEWED_TEST_ODDS_COVERAGE_UNAVAILABLE = "REVIEWED_TEST_ODDS_COVERAGE_UNAVAILABLE"
+
+
+class QuoteSelectionPolicyType(str, Enum):
+    FIXED_BOOKMAKER_LATEST_AT_OR_BEFORE_CUTOFF = "FIXED_BOOKMAKER_LATEST_AT_OR_BEFORE_CUTOFF"
+    REVIEWED_BOOKMAKER_SET_BEST_AVAILABLE_AT_OR_BEFORE_CUTOFF = "REVIEWED_BOOKMAKER_SET_BEST_AVAILABLE_AT_OR_BEFORE_CUTOFF"
+
+
 @dataclass(frozen=True, slots=True)
 class OddsSourceReview:
     source_id: str
@@ -61,6 +72,9 @@ class OddsSourceReview:
     operator_note: str
     approval_status: SourceApprovalStatus
     review_fingerprint: str = ""
+    pricing_or_access_tier: str = "not specified"
+    redistribution_permission: str = "not specified"
+    update_cadence: str = "not specified"
 
 
 @dataclass(frozen=True, slots=True)
@@ -114,6 +128,10 @@ class SourceOddsEvent:
     kickoff_utc: str
     home_team: str
     away_team: str
+    season: str | None = None
+    round_name: str | None = None
+    venue: str | None = None
+    kickoff_precision_seconds: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -128,6 +146,7 @@ class SourceOddsQuote:
     original_odds_format: str
     captured_at_utc: str | None
     source_effective_timestamp_utc: str
+    source_point: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -173,6 +192,9 @@ class QuoteSelectionPolicy:
     version: str = "fixed-pinnacle-latest-at-or-before-24h-v1"
     cutoff_seconds_before_kickoff: int = 86400
     canonical_bookmaker_id: str = "pinnacle"
+    policy_type: QuoteSelectionPolicyType = QuoteSelectionPolicyType.FIXED_BOOKMAKER_LATEST_AT_OR_BEFORE_CUTOFF
+    reviewed_bookmaker_ids: tuple[str, ...] = ()
+    historical_odds_comparison_available: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -218,3 +240,44 @@ class BacktestIntegrityReport:
     checked_quote_count: int
     checked_selection_count: int
     report_fingerprint: str
+
+
+@dataclass(frozen=True, slots=True)
+class OddsAcquisitionWindow:
+    split_id: str
+    split_fingerprint: str
+    equal_kickoff_grouping_policy: str
+    train_start_utc: str
+    train_end_utc: str
+    validation_start_utc: str
+    validation_end_utc: str
+    test_start_utc: str
+    test_end_utc: str
+    train_match_count: int
+    validation_match_count: int
+    test_match_count: int
+    temporal_gap_count: int
+    seasons: tuple[str, ...]
+    required_primary_markets: tuple[SupportedMarket, ...]
+    preferred_markets: tuple[SupportedMarket, ...]
+    window_fingerprint: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class PartitionCoverageReport:
+    acquisition_window_id: str
+    odds_manifest_id: str | None
+    coverage_status: CoverageSufficiencyStatus
+    validation_matches_with_odds: int
+    test_matches_with_odds: int
+    test_candidate_market_count: int
+    selected_quote_count: int
+    ambiguous_event_count: int
+    unmatched_event_count: int
+    post_kickoff_exclusion_count: int
+    missing_timestamp_count: int
+    per_month_test_coverage: tuple[tuple[str, int], ...]
+    per_market_test_coverage: tuple[tuple[str, int], ...]
+    per_bookmaker_test_coverage: tuple[tuple[str, int], ...]
+    blocker_codes: tuple[str, ...]
+    report_fingerprint: str = ""

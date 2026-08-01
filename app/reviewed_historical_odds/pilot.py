@@ -150,7 +150,7 @@ def run_pilot(
     evidence = {
         "schema_version": "goalvision-reviewed-historical-odds-backtest-evidence-v1",
         "pilot_version": PILOT_VERSION, "source_commit": source_commit, "branch": branch,
-        "execution_timestamp_utc": execution_timestamp_utc, "database_schema_version": 34,
+        "execution_timestamp_utc": execution_timestamp_utc, "database_schema_version": 35,
         "odds_source_reviews": [asdict(item) for item in all_reviews], "source_manifest": asdict(manifest),
         "storage_limitations": ["Raw provider snapshot remains outside Git.", "Raw odds may not be resold, repackaged, or redistributed as a standalone data product."],
         "raw_quote_count": len(parsed.quotes), "normalized_quote_count": len(quotes),

@@ -12,6 +12,7 @@ import sys
 from typing import Callable, Sequence
 
 from app.database import Database
+from app.database.migrations import MIGRATIONS
 
 from .fixtures import LabFixtureManifest, seed_lab_fixture
 from .safety import (
@@ -1067,8 +1068,8 @@ def _validate_prepared_foundation(
     expected_plan_id: str | None = FOUNDATION_PLAN_ID,
 ) -> None:
     failures = []
-    if state["schema_version"] != 34:
-        failures.append("SCHEMA_NOT_V34")
+    if state["schema_version"] != MIGRATIONS[-1].version:
+        failures.append(f"SCHEMA_NOT_V{MIGRATIONS[-1].version}")
     if state["foreign_keys_enabled"] != 1:
         failures.append("FOREIGN_KEYS_DISABLED")
     if state["foreign_key_violations"]:

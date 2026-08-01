@@ -10,6 +10,40 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# EXTENDED REVIEWED HISTORICAL ODDS COVERAGE FOUNDATION
+
+Status:
+
+COMPLETED WITH REVIEWED TEST-ODDS COVERAGE UNAVAILABLE
+
+- [x] Derive and persist the unchanged split acquisition window: 1,459 TRAIN,
+  313 VALIDATION, and 313 TEST examples with indivisible equal-kickoff groups.
+- [x] Review The Odds API paid archive, Sportmonks Premium Odds Feed, and
+  Betfair Historical Data using official public documentation only.
+- [x] Record all three sources as `ACCESS_UNAVAILABLE`; no authorized API key,
+  subscription export, eligible exchange archive, or operator-supplied raw file
+  is present.
+- [x] Add schema v35 versioned immutable source reviews, acquisition windows,
+  and partition coverage reports without mutating schema-v34 evidence.
+- [x] Extend offline parsing and normalization across 1X2, totals 1.5/2.5/3.5,
+  and BTTS, with multi-snapshot replay and content-conflict rejection.
+- [x] Preserve the primary Pinnacle 24-hour policy and add an explicit reviewed
+  bookmaker-set policy that is unusable unless historical comparison capability
+  was declared before evaluation.
+- [x] Keep TEST backtesting, comparison, shadow, staging activation, and Lab
+  rehearsal blocked; perform zero Telegram, Official, bankroll, production,
+  scheduler, or startup mutations.
+- [x] Export canonical evidence at
+  `docs/rehearsals/live_78_extended_test_odds_coverage_2026-08-01.json`.
+
+Next: provide an operator-approved licensed archive or authorized API credential
+covering 2023-05-13 through 2025-05-17, plus a separately reserved post-TEST
+shadow window. Then import once under a predeclared quote policy and rerun every
+quality, integrity, comparison, shadow, and audit gate. Lab publication remains
+separately unauthorized.
+
+---
+
 # REVIEWED HISTORICAL PRE-KICKOFF ODDS AND BETTING EVIDENCE FOUNDATION
 
 Status:
