@@ -1,5 +1,22 @@
 # TASKS.md
 
+## Adaptive API-Football fixture discovery (2026-08-01)
+
+- [x] Prove the original zero result was a rejected unfiltered `from`/`to`
+  request whose HTTP-200 provider errors were discarded.
+- [x] Preserve sanitized query, errors, result count, paging and exact quota
+  headers and distinguish provider validation errors from empty schedules.
+- [x] Correct daily versus per-minute quota meanings and enforce request,
+  candidate and reserve ceilings across real HTTP attempts and retries.
+- [x] Resolve reviewed competition IDs and provider-current season chronology;
+  reject stale current flags whose season end has passed.
+- [x] Replace the invalid range boundary with staged UTC date discovery,
+  deterministic priority/all-supported fallbacks and explicit senior-fixture
+  exclusions.
+- [x] Enforce baseline-before-odds, one odds request per fixture, exact identity,
+  current timestamp provenance, supported markets and 15-minute freshness.
+- [x] Keep discovery and every inspection command inference- and Telegram-free.
+
 ## API-Football configuration and first current discovery (2026-08-01)
 
 - [x] Reuse the canonical `FOOTBALL_API_KEY` from the project `.env` lazily.

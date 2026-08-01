@@ -85,12 +85,12 @@ class ForwardTestFoundationTests(unittest.TestCase):
         with self.assertRaisesRegex(CurrentOddsValidationError, "ODDS_PROVENANCE_INCOMPLETE"): parse_current_odds(odds_raw(provenance="Bearer secret-value"), now=NOW)
 
     def test_api_football_normalization(self):
-        payload = {"response": [{"update": None, "bookmakers": [{"name": "Bet365", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}]}, {"name": "Goals Over/Under", "values": [{"value": "Over 2.5", "odd": "1.90"}]}]}]}]}
+        payload = {"response": [{"fixture": {"id": "fixture-1"}, "update": None, "bookmakers": [{"name": "Bet365", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}]}, {"name": "Goals Over/Under", "values": [{"value": "Over 2.5", "odd": "1.90"}]}]}]}]}
         raw = normalize_api_football_current_odds(payload, fixture_id="fixture-1", kickoff_utc=KICKOFF, retrieved_at_utc="2026-08-01T12:01:00+00:00", source_selected_at_utc="2026-08-01T11:59:00+00:00")
         value = parse_current_odds(raw, now=datetime(2026, 8, 1, 12, 1, tzinfo=timezone.utc)); self.assertEqual({q.market for q in value.quotes}, {"HOME_WIN", "DRAW", "OVER_2_5"}); self.assertTrue(all(q.captured_at_by_goalvision for q in value.quotes))
 
     def test_api_provider_timestamp_is_distinct_from_goalvision_capture(self):
-        payload = {"response": [{"update": "2026-08-01T12:00:00+00:00", "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}]}]}]}]}
+        payload = {"response": [{"fixture": {"id": "fixture-1"}, "update": "2026-08-01T12:00:00+00:00", "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}]}]}]}]}
         raw = normalize_api_football_current_odds(payload, fixture_id="fixture-1", kickoff_utc=KICKOFF, retrieved_at_utc="2026-08-01T12:01:00+00:00", source_selected_at_utc="2026-08-01T12:00:30+00:00")
         value = parse_current_odds(raw, now=datetime(2026, 8, 1, 12, 1, tzinfo=timezone.utc))
         self.assertEqual(value.captured_at_utc.isoformat(), "2026-08-01T12:01:00+00:00")
@@ -132,9 +132,16 @@ class ForwardTestFoundationTests(unittest.TestCase):
 
     def test_bounded_discovery_is_deterministic_and_stops_before_inference(self):
         class FakeClient:
-            def __init__(self): self.calls = 0
-            async def fixtures_between(self, *_):
-                self.calls += 1
+            def __init__(self): self.calls = 0; self._metadata = {}
+            @property
+            def request_count(self): return self.calls
+            def quota_snapshot(self): return {"interpretation_status": "NORMALIZED", "daily_remaining": 99, "minute_remaining": 10}
+            def response_metadata(self): return self._metadata
+            async def leagues(self, **_):
+                self.calls += 1; self._metadata = {"endpoint": "/leagues", "query": {"current": "true"}, "errors": [], "results": 1}
+                return {"response": [{"league": {"id": 78, "name": "Bundesliga", "type": "League"}, "country": {"name": "Germany"}, "seasons": [{"year": 2026, "start": "2026-07-01", "end": "2027-06-01", "current": True, "coverage": {"fixtures": {"events": True}, "odds": True}}]}]}
+            async def fixtures_by_date(self, *_ , **__):
+                self.calls += 1; self._metadata = {"endpoint": "/fixtures", "query": {"date": "2026-08-01", "timezone": "UTC"}, "errors": [], "results": 1}
                 return {"response": [{
                     "fixture": {"id": 7, "date": "2026-08-01T18:00:00+00:00", "status": {"short": "NS"}},
                     "league": {"id": 78, "name": "Bundesliga", "season": 2026},
@@ -143,9 +150,9 @@ class ForwardTestFoundationTests(unittest.TestCase):
             async def last_matches(self, *_ , **__): self.calls += 1; return [{"fixture": {"id": i}} for i in range(5)]
             async def current_odds(self, *_):
                 self.calls += 1
-                return {"response": [{"update": None, "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}, {"value": "Away", "odd": "3.10"}]}]}]}]}
-        client = FakeClient(); value = asyncio.run(discover_current_fixture(client, now=NOW, maximum_api_calls=4))
-        self.assertEqual(value["terminal_result"], "ELIGIBLE_CURRENT_FIXTURE_FOUND"); self.assertEqual(value["api_call_count"], 4); self.assertFalse(value["inference_executed"]); self.assertEqual(value["telegram_sends"], 0)
+                return {"response": [{"fixture": {"id": 7}, "update": None, "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}, {"value": "Away", "odd": "3.10"}]}]}]}]}
+        client = FakeClient(); value = asyncio.run(discover_current_fixture(client, now=NOW, maximum_api_calls=6, horizon_days=1))
+        self.assertEqual(value["terminal_result"], "ELIGIBLE_CURRENT_FIXTURE_FOUND"); self.assertEqual(value["api_call_count"], 5); self.assertFalse(value["inference_executed"]); self.assertEqual(value["telegram_sends"], 0)
 
     def test_deterministic_snapshot_and_exact_replay(self):
         value = parse_current_odds(odds_raw(), now=NOW); self.assertEqual(value, parse_current_odds(odds_raw(), now=NOW))

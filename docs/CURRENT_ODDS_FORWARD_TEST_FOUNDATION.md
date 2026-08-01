@@ -109,10 +109,37 @@ flow is `discover-current-fixtures` or manual fixture selection,
 `audit-forward-test`. Inspection never creates a Telegram transport.
 
 Use `diagnose-api-football` for a single explicit, sanitized account/plan check.
-`discover-current-fixtures` accepts hard ceilings for candidate count and API
-calls, orders fixtures by kickoff then provider ID, checks baseline recent-form
-availability before requesting odds, and never runs inference itself. A zero
-fixture response is an honest `NO_ELIGIBLE_CURRENT_FIXTURE` result.
+`diagnose-fixture-discovery` preserves endpoint, method, non-secret query,
+provider errors, result count, paging and exact quota headers under `var/` when
+an ignored metadata output is requested. API-Football requires another selector
+with `from`/`to`; an unfiltered range is a rejected HTTP-200 response, not an
+empty schedule. Adaptive discovery therefore uses supported `date` plus `UTC`
+queries and never interprets a non-empty provider `errors` object as zero data.
+
+`discover-current-fixtures` accepts hard ceilings of 50 candidates and 40 real
+HTTP attempts, keeps a daily quota reserve, and respects the independent
+per-minute counter. The exact header meanings are: `x-ratelimit-requests-*` for
+the daily subscription quota and `x-ratelimit-*` for the minute window. Missing
+or inconsistent headers fail closed.
+
+Competition identities and active seasons come from `/leagues?current=true`.
+A provider `current=true` season whose end date is already past is rejected as
+stale. The reviewed priority list is fixed before inference; discovery searches
+priority competitions over accessible UTC dates, then falls back to all current
+provider-covered senior League/Cup fixtures while excluding youth, reserves,
+virtual/esports, friendlies, malformed identities, started, postponed,
+cancelled, abandoned and too-close fixtures. Ordering is earliest safe kickoff,
+competition priority, then provider fixture ID. At least one genuine completed
+recent match for each team is required before a fixture's odds are requested;
+the exact sample sizes remain explicit rather than pretending every team has
+five accessible matches. Each fixture receives at most one odds
+request, and inference remains a separate explicit operation.
+
+Provider plan date coverage is itself evidence. The configured plan exposed
+2026-07-31 through 2026-08-02 during the 2026-08-01 diagnostic; later requested
+dates were rejected and were not treated as empty fixture days. Odds coverage
+metadata comes from each league season's `coverage.odds`; `/odds/leagues` is not
+a valid API-Football v3 endpoint.
 
 Reproduce only against an isolated schema-v36 database. Verify foreign keys and
 append-only triggers, export sanitized evidence, and compare the protected

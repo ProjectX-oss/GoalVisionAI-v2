@@ -28,8 +28,13 @@ def build_parser():
     capture = sub.add_parser("capture-current-odds"); capture.add_argument("--database", type=Path, required=True); capture.add_argument("--input", type=Path, required=True); capture.add_argument("--output", choices=("human", "json"), default="human")
     api = sub.add_parser("capture-api-football-odds"); api.add_argument("--database", type=Path, required=True); api.add_argument("--fixture-id", type=int, required=True); api.add_argument("--kickoff-utc", required=True); api.add_argument("--source-selected-at-utc", required=True); api.add_argument("--output", choices=("human", "json"), default="human")
     diagnose_api = sub.add_parser("diagnose-api-football"); diagnose_api.add_argument("--env-file", type=Path, default=Path(".env")); diagnose_api.add_argument("--output", choices=("human", "json"), default="human")
-    discover = sub.add_parser("discover-current-fixtures"); discover.add_argument("--env-file", type=Path, default=Path(".env")); discover.add_argument("--max-candidates", type=int, default=50); discover.add_argument("--max-api-calls", type=int, default=8); discover.add_argument("--horizon-days", type=int, default=7); discover.add_argument("--minimum-lead-minutes", type=int, default=60); discover.add_argument("--output", choices=("human", "json"), default="human")
+    diagnose_discovery = sub.add_parser("diagnose-fixture-discovery"); diagnose_discovery.add_argument("--env-file", type=Path, default=Path(".env")); diagnose_discovery.add_argument("--metadata-output", type=Path); diagnose_discovery.add_argument("--output", choices=("human", "json"), default="human")
+    for name in ("inspect-provider-leagues", "inspect-current-seasons", "inspect-provider-quota"):
+        item = sub.add_parser(name); item.add_argument("--env-file", type=Path, default=Path(".env")); item.add_argument("--output", choices=("human", "json"), default="human")
+    for name in ("discover-current-fixtures", "inspect-discovery-candidates"):
+        discover = sub.add_parser(name); discover.add_argument("--env-file", type=Path, default=Path(".env")); discover.add_argument("--database", type=Path); discover.add_argument("--max-candidates", type=int, default=50); discover.add_argument("--max-api-calls", type=int, default=40); discover.add_argument("--horizon-days", type=int, default=7); discover.add_argument("--minimum-lead-minutes", type=int, default=60); discover.add_argument("--daily-quota-reserve", type=int, default=20); discover.add_argument("--output", choices=("human", "json"), default="human")
     fixture = sub.add_parser("inspect-current-fixture"); fixture.add_argument("--env-file", type=Path, default=Path(".env")); fixture.add_argument("--fixture-id", type=int, required=True); fixture.add_argument("--output", choices=("human", "json"), default="human")
+    fixture_odds = sub.add_parser("inspect-fixture-odds"); fixture_odds.add_argument("--env-file", type=Path, default=Path(".env")); fixture_odds.add_argument("--fixture-id", type=int, required=True); fixture_odds.add_argument("--kickoff-utc", required=True); fixture_odds.add_argument("--output", choices=("human", "json"), default="human")
     create = sub.add_parser("create-forward-test-observation"); create.add_argument("--database", type=Path, required=True); create.add_argument("--request-id", required=True); create.add_argument("--analysis-id", required=True); create.add_argument("--odds-snapshot-id", required=True); create.add_argument("--output", choices=("human", "json"), default="human")
     result = sub.add_parser("record-forward-test-result"); result.add_argument("--database", type=Path, required=True); result.add_argument("--observation-id", required=True); result.add_argument("--input", type=Path, required=True); result.add_argument("--output", choices=("human", "json"), default="human")
     settle = sub.add_parser("settle-forward-test-observation"); settle.add_argument("--database", type=Path, required=True); settle.add_argument("--observation-id", required=True); settle.add_argument("--output", choices=("human", "json"), default="human")
@@ -46,8 +51,11 @@ def main(argv=None):
     try:
         if args.command == "validate-forward-test-input": return _render(parse_current_odds(_json(args.input)), args.output)
         if args.command == "diagnose-api-football": return asyncio.run(_api_diagnose(args))
-        if args.command == "discover-current-fixtures": return asyncio.run(_api_discover(args))
+        if args.command == "diagnose-fixture-discovery": return asyncio.run(_diagnose_fixture_discovery(args))
+        if args.command in {"inspect-provider-leagues", "inspect-current-seasons", "inspect-provider-quota"}: return asyncio.run(_inspect_provider(args))
+        if args.command in {"discover-current-fixtures", "inspect-discovery-candidates"}: return asyncio.run(_api_discover(args))
         if args.command == "inspect-current-fixture": return asyncio.run(_api_read(args))
+        if args.command == "inspect-fixture-odds": return asyncio.run(_inspect_fixture_odds(args))
         if args.command == "capture-api-football-odds": return asyncio.run(_api_capture(args))
         database = Database(args.database)
         try:
@@ -102,7 +110,7 @@ async def _api_diagnose(args):
         "credential_status": credential_status,
         "authentication_status": "NOT_EXECUTED",
         "plan_status": "NOT_EXECUTED",
-        "quota": {"requests_remaining": None, "daily_remaining": None},
+        "quota": {"interpretation_status": "NOT_OBSERVED"},
         "startup_request_count": 0,
     }
     if credential_status != "CONFIGURED":
@@ -115,12 +123,9 @@ async def _api_diagnose(args):
         requests = response.get("requests") if isinstance(response, dict) else None
         value["authentication_status"] = "AUTHENTICATED"
         value["plan_status"] = "AVAILABLE" if isinstance(subscription, dict) and subscription.get("active") else "PLAN_RESTRICTED"
-        value["quota"] = {
-            "requests_remaining": client.quota_snapshot().get("requests_remaining"),
-            "daily_remaining": client.quota_snapshot().get("daily_remaining"),
-            "daily_limit": requests.get("limit_day") if isinstance(requests, dict) else None,
-            "daily_used": requests.get("current") if isinstance(requests, dict) else None,
-        }
+        value["quota"] = client.quota_snapshot()
+        value["quota"]["status_payload_daily_limit"] = requests.get("limit_day") if isinstance(requests, dict) else None
+        value["quota"]["status_payload_daily_used"] = requests.get("current") if isinstance(requests, dict) else None
         return _render(value, args.output, 0 if value["plan_status"] == "AVAILABLE" else 4)
     except httpx.HTTPStatusError as exc:
         value["quota"] = client.quota_snapshot()
@@ -138,6 +143,36 @@ async def _api_diagnose(args):
         await client.close()
 
 
+async def _diagnose_fixture_discovery(args):
+    from app.football.client import FootballClient
+    from .provider import diagnose_fixture_discovery, write_sanitized_metadata
+    client = FootballClient(env_file=args.env_file, request_limit=20)
+    try:
+        value = await diagnose_fixture_discovery(client, now=datetime.now(timezone.utc))
+        if args.metadata_output is not None:
+            write_sanitized_metadata(args.metadata_output, value)
+    finally:
+        await client.close()
+    return _render(value, args.output)
+
+
+async def _inspect_provider(args):
+    from app.football.client import FootballClient
+    from .provider import resolve_current_competitions
+    client = FootballClient(env_file=args.env_file, request_limit=2)
+    try:
+        if args.command == "inspect-provider-quota":
+            await client.account_status()
+            value = {"schema_version": "goalvision-api-football-quota-v1", "quota": client.quota_snapshot()}
+        else:
+            payload = await client.leagues(current=True)
+            competitions = resolve_current_competitions(payload, observed_at=datetime.now(timezone.utc))
+            value = {"schema_version": "goalvision-api-football-competitions-v1", "competitions": competitions, "quota": client.quota_snapshot()}
+    finally:
+        await client.close()
+    return _render(value, args.output)
+
+
 async def _api_read(args):
     from app.football.client import FootballClient
     client = FootballClient(env_file=args.env_file)
@@ -151,7 +186,7 @@ async def _api_read(args):
 async def _api_discover(args):
     from app.football.client import FootballClient
     from .discovery import discover_current_fixture
-    client = FootballClient(env_file=args.env_file)
+    client = FootballClient(env_file=args.env_file, request_limit=args.max_api_calls)
     try:
         value = await discover_current_fixture(
             client,
@@ -160,11 +195,37 @@ async def _api_discover(args):
             maximum_api_calls=args.max_api_calls,
             horizon_days=args.horizon_days,
             minimum_lead_minutes=args.minimum_lead_minutes,
+            daily_quota_reserve=args.daily_quota_reserve,
         )
         value["quota"] = client.quota_snapshot()
+        selected = value.get("selected_fixture")
+        value["odds_sealed"] = False
+        if selected is not None and args.database is not None:
+            snapshot = parse_current_odds(selected["odds_contract"], now=datetime.fromisoformat(selected["api_retrieval_timestamp_utc"]))
+            database = Database(args.database)
+            try:
+                ForwardTestService(SQLiteForwardTestRepository(database)).capture_odds(snapshot)
+            finally:
+                database.close()
+            value["odds_sealed"] = True
     finally:
         await client.close()
     return _render(value, args.output, 0 if value["selected_fixture"] else 4)
+
+
+async def _inspect_fixture_odds(args):
+    from app.football.client import FootballClient
+    client = FootballClient(env_file=args.env_file, request_limit=1)
+    selected = retrieved = datetime.now(timezone.utc)
+    try:
+        payload = await client.current_odds(args.fixture_id)
+        retrieved = datetime.now(timezone.utc)
+        raw = normalize_api_football_current_odds(payload, fixture_id=str(args.fixture_id), kickoff_utc=args.kickoff_utc, retrieved_at_utc=retrieved.isoformat(), source_selected_at_utc=selected.isoformat())
+        snapshot = parse_current_odds(raw, now=retrieved)
+        value = {"schema_version": "goalvision-api-football-fixture-odds-inspection-v1", "fixture_id": str(args.fixture_id), "bookmaker": snapshot.bookmaker_name, "markets": [{"market": quote.market, "decimal_odds": str(quote.decimal_odds)} for quote in snapshot.quotes], "provider_update_timestamp_utc": snapshot.quotes[0].provider_origin_timestamp_utc, "goalvision_retrieval_timestamp_utc": retrieved, "freshness": snapshot.freshness_status, "snapshot_fingerprint": snapshot.snapshot_fingerprint, "quota": client.quota_snapshot(), "inference_executed": False, "telegram_sends": 0}
+    finally:
+        await client.close()
+    return _render(value, args.output)
 
 
 async def _api_capture(args):

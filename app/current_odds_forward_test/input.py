@@ -93,17 +93,25 @@ def normalize_api_football_current_odds(payload: object, *, fixture_id: str, kic
     if not isinstance(payload, dict) or not isinstance(payload.get("response"), list) or not payload["response"]:
         raise CurrentOddsValidationError("API-Football odds response is empty or incompatible.")
     root = payload["response"][0]
+    provider_fixture = root.get("fixture") if isinstance(root, dict) else None
+    if not isinstance(provider_fixture, dict) or provider_fixture.get("id") is None:
+        raise CurrentOddsValidationError("FIXTURE_ODDS_IDENTITY_MISSING")
+    if str(provider_fixture.get("id")) != str(fixture_id):
+        raise CurrentOddsValidationError("FIXTURE_ODDS_IDENTITY_MISMATCH")
     bookmakers = root.get("bookmakers") if isinstance(root, dict) else None
     if not isinstance(bookmakers, list) or not bookmakers: raise CurrentOddsValidationError("API-Football bookmaker response is empty.")
-    book = sorted(bookmakers, key=lambda item: str(item.get("name", "")))[0]
     mappings = {("Match Winner", "Home"): "HOME_WIN", ("Match Winner", "Draw"): "DRAW", ("Match Winner", "Away"): "AWAY_WIN", ("Both Teams Score", "Yes"): "BTTS_YES", ("Both Teams Score", "No"): "BTTS_NO"}
-    markets = []
-    for bet in book.get("bets", []):
-        name = str(bet.get("name", ""))
-        for value in bet.get("values", []):
-            label = str(value.get("value", "")); market = mappings.get((name, label))
-            if name == "Goals Over/Under" and label in {"Over 1.5", "Under 1.5", "Over 2.5", "Under 2.5", "Over 3.5", "Under 3.5"}: market = label.upper().replace(" ", "_").replace(".", "_")
-            if market: markets.append({"market": market, "decimal_odds": str(value.get("odd"))})
+    choices = []
+    for book in sorted(bookmakers, key=lambda item: (str(item.get("name", "")).casefold(), str(item.get("id", "")))):
+        markets = []
+        for bet in book.get("bets", []):
+            name = str(bet.get("name", ""))
+            for value in bet.get("values", []):
+                label = str(value.get("value", "")); market = mappings.get((name, label))
+                if name == "Goals Over/Under" and label in {"Over 1.5", "Under 1.5", "Over 2.5", "Under 2.5", "Over 3.5", "Under 3.5"}: market = label.upper().replace(" ", "_").replace(".", "_")
+                if market: markets.append({"market": market, "decimal_odds": str(value.get("odd"))})
+        choices.append((book, markets))
+    book, markets = next(((book, markets) for book, markets in choices if len({item["market"] for item in markets}) >= 3), choices[0])
     updated = root.get("update") if isinstance(root, dict) else None
     return {"schema_version": ODDS_SCHEMA_VERSION, "fixture_id": fixture_id, "kickoff_utc": kickoff_utc, "fixture_status": "SCHEDULED", "provider_source_id": "API_FOOTBALL", "source_type": CurrentOddsSourceType.API_FOOTBALL_CURRENT_ODDS.value, "bookmaker": str(book.get("name")), "provider_event_id": fixture_id, "source_selected_at_utc": source_selected_at_utc, "captured_at_utc": retrieved_at_utc, "source_retrieval_timestamp_utc": retrieved_at_utc, "provider_origin_timestamp_utc": updated, "captured_at_by_goalvision": updated is None, "direct_bookmaker": False, "provenance": "API-Football current pre-match odds endpoint retrieved by GoalVision AI", "markets": markets}
 

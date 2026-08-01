@@ -115,3 +115,101 @@ def build_api_football_discovery_evidence() -> dict:
     }
     value["evidence_fingerprint"] = fingerprint(value)
     return value
+
+
+def build_adaptive_fixture_discovery_evidence() -> dict:
+    """Canonical sanitized evidence for the adaptive provider correction."""
+
+    value = {
+        "schema_version": "goalvision-api-football-fixture-discovery-fix-evidence-v1",
+        "starting_branch": "goalvision/live-78-fresh-calibration",
+        "starting_commit": "ad1cfd7",
+        "final_commit": "PENDING_COMMIT",
+        "execution_timestamp_utc": "2026-08-01T10:40:45.536973+00:00",
+        "previous_zero_result_cause": {
+            "code": "PROVIDER_QUERY_REJECTED_ERRORS_DISCARDED",
+            "endpoint": "/fixtures",
+            "method": "GET",
+            "query": {"from": "2026-08-01", "to": "2026-08-08"},
+            "league_filter": None,
+            "season_filter": None,
+            "timezone": None,
+            "status_filter": None,
+            "pagination": None,
+            "http_status": 200,
+            "errors": {"from": "The From field need another parameter.", "to": "The To field need another parameter."},
+            "results": 0,
+            "paging": {"current": 1, "total": 1},
+            "parser_defect": "NON_EMPTY_PROVIDER_ERRORS_WERE_INTERPRETED_AS_EMPTY_FIXTURE_DATA",
+        },
+        "endpoint_correction": {
+            "endpoint": "/fixtures",
+            "method": "GET",
+            "query_mode": "DATE_ONLY_WITH_UTC",
+            "canonical_query": {"date": "2026-08-01", "timezone": "UTC"},
+            "http_status": 200,
+            "errors": [],
+            "results": 967,
+            "paging": {"current": 1, "total": 1},
+        },
+        "provider_capability": {
+            "authentication": "AUTHENTICATED",
+            "plan": "AVAILABLE_WITH_DATE_COVERAGE_LIMIT",
+            "accessible_fixture_dates": ["2026-07-31", "2026-08-02"],
+            "later_date_result": "API_FOOTBALL_PLAN_RESTRICTED",
+            "league_results": 1234,
+            "odds_coverage_source": "/leagues season.coverage.odds",
+            "invalid_odds_metadata_endpoint_rejected": "/odds/leagues",
+        },
+        "competition_resolver": {
+            "status": "CURRENT_PROVIDER_CHRONOLOGY_ENFORCED",
+            "priority_competitions": 14,
+            "resolved_current": [179, 2, 3, 848, 253],
+            "stale_current_season_rejected": [39, 78, 140, 135, 61, 88, 94, 144, 203],
+            "source": "/leagues?current=true",
+            "ordering": "EARLIEST_SAFE_KICKOFF_THEN_COMPETITION_PRIORITY_THEN_PROVIDER_FIXTURE_ID",
+        },
+        "canonical_discovery": {
+            "stages_attempted": ["COMPETITION_RESOLUTION", "PRIORITY_24_TO_72_HOURS"],
+            "date_queries": ["2026-08-01"],
+            "provider_fixture_rows": 967,
+            "candidate_fixture_count": 4,
+            "fixtures_inspected": 4,
+            "skip_reasons": {"ALREADY_STARTED": 9, "API_FOOTBALL_QUOTA_INSUFFICIENT": 1, "EXCLUDED_FIXTURE_CLASS": 248, "INSUFFICIENT_REQUIRED_DATA": 3, "KICKOFF_TOO_CLOSE": 45, "NOT_UPCOMING_OR_POSTPONED": 164, "UNSUPPORTED_COMPETITION_TYPE": 20},
+            "selected_fixture": None,
+            "terminal_result": "NO_ELIGIBLE_CURRENT_FIXTURE",
+            "odds_requests": 0,
+            "reason_odds_not_requested": "BASELINE_BEFORE_ODDS_GATE_FAILED_FOR_THREE_CANDIDATES_AND_REMAINING_MINUTE_CAPACITY_COULD_NOT_FUND_ANOTHER_COMPLETE_CANDIDATE",
+        },
+        "api_usage": {
+            "diagnostic_calls": 6,
+            "fixture_and_odds_discovery_calls_across_bounded_correction_runs": 37,
+            "canonical_run_calls": 8,
+            "task_total_calls": 43,
+            "diagnostic_limit": 20,
+            "discovery_limit": 40,
+            "daily_reserve": 20,
+        },
+        "quota": {
+            "interpretation_status": "NORMALIZED",
+            "exact_headers": {"x-ratelimit-requests-limit": "100", "x-ratelimit-requests-remaining": "83", "x-ratelimit-limit": "10", "x-ratelimit-remaining": "8"},
+            "daily_limit": 100,
+            "daily_remaining": 83,
+            "minute_limit": 10,
+            "minute_remaining_at_last_header": 8,
+            "semantics": {"x-ratelimit-requests-*": "DAILY_SUBSCRIPTION", "x-ratelimit-*": "PER_MINUTE"},
+        },
+        "selected_fixture": None,
+        "kickoff_utc": None,
+        "bookmaker": None,
+        "available_markets": [],
+        "odds_capture_timestamps": None,
+        "forward_test": {"observation_id": None, "feature_completeness": "NOT_EVALUATED", "model_id": None, "model_fingerprint": None, "calibration_id": None, "calibration_fingerprint": None, "calibration_quality": "NOT_EVALUATED", "distribution_shift": "NOT_EVALUATED", "market_evaluations": [], "selection": "NO_SELECTION_NOT_ANALYZED", "preview": None, "preview_fingerprint": None},
+        "database_integrity": {"migration_changed": False, "schema_version": 36, "append_only_status": "PASS", "foreign_key_violations": 0, "source_database_sha256_before": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0", "source_database_sha256_after": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0", "isolated_database_sha256": "aabcec4e111e407ec93ec4934e8b25408f731856831d88033a96ed36999a5b6e"},
+        "startup_result": "HEALTHY_ZERO_FORWARD_TEST_EXECUTION",
+        "safety": {"telegram_calls": 0, "telegram_sends": 0, "delivery_records": 0, "official_publications": 0, "bankroll_statistics_mutations": 0, "production_activation_mutations": 0, "scheduling_startup_changes": 0, "bookmaker_transactions": 0, "historical_odds_probes": 0, "thestatsapi_calls": 0},
+        "limitations": ["No fixture passed the required baseline-before-odds gate during the canonical minute-bounded run.", "No odds snapshot, inference, model output, calibration result, market evaluation, observation or preview was created.", "The run validates adaptive provider discovery and safety, not predictive quality."],
+        "next_operator_action": "After the API-Football per-minute window resets, rerun the same bounded discovery command; the next deterministic candidate must still pass baseline, fresh odds and every existing quality gate before inference.",
+    }
+    value["evidence_fingerprint"] = fingerprint(value)
+    return value
