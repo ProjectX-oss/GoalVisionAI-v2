@@ -200,7 +200,7 @@ def test_v30_migration_creates_ten_immutable_tables():
     triggers = database.connection.execute(
         "SELECT name FROM sqlite_master WHERE type='trigger' AND name LIKE 'shadow_evaluation_%'"
     ).fetchall()
-    assert version == 35
+    assert version == 36
     assert len(tables) == 10
     assert len(triggers) == 20
 
@@ -218,7 +218,7 @@ def test_existing_v29_database_upgrades_to_v30_without_rewriting_history():
     MigrationManager(connection).migrate()
     after = tuple(row[0] for row in connection.execute("SELECT version FROM schema_migrations ORDER BY version"))
     assert before == tuple(range(1, 30))
-    assert after == tuple(range(1, 36))
+    assert after == tuple(range(1, 37))
 
 
 def test_repository_replay_load_and_immutable_trigger():

@@ -489,7 +489,7 @@ class CandidatePreparationMigrationTests(unittest.TestCase):
     def test_fresh_v21_and_v20_upgrade(self):
         fresh = Database(":memory:")
         MigrationManager(fresh.connection).migrate()
-        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 35)
+        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 36)
         tables = {row[0] for row in fresh.connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         self.assertIn("official_candidate_preparation_executions", tables)
         self.assertIn("official_candidate_preparation_risk_snapshots", tables)
@@ -504,7 +504,7 @@ class CandidatePreparationMigrationTests(unittest.TestCase):
                 upgrade.connection.execute(statement)
             upgrade.connection.execute("INSERT INTO schema_migrations VALUES (?, 'existing')", (migration.version,))
         MigrationManager(upgrade.connection).migrate()
-        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 35)
+        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 36)
         fresh.close()
         upgrade.close()
 

@@ -10,6 +10,38 @@ No task may be skipped unless explicitly approved.
 
 ---
 
+# CURRENT ODDS CAPTURE AND FORWARD-TEST FOUNDATION
+
+Status:
+
+COMPLETED — READY FOR FIRST OPERATOR-SUPPLIED GENUINE FIXTURE
+
+- [x] Introduce the isolated `FORWARD_TEST_REAL_TIME` evidence tier without
+  reclassifying historical or legacy Real Match Lab evidence.
+- [x] Add API-Football-assisted and versioned manual current-odds modes with
+  exact GoalVision-vs-provider timestamp semantics and all 11 single markets.
+- [x] Enforce source selection, capture, sealing, inference, and kickoff order;
+  reject stale, replaced, post-inference, post-kickoff, and incomplete quotes.
+- [x] Add schema v36 append-only odds, observation, result, settlement, and
+  event chains linked to immutable Real Match Lab analyses.
+- [x] Retain completed, no-selection, blocked, losing, unpublished, and pending
+  observations with separate mathematical, actionable, Lab, and Official states.
+- [x] Add deterministic result capture and statistical-only settlement without
+  a stake, bookmaker transaction, or production bankroll entry.
+- [x] Add transparent predictive, calibration, selection, distribution, data
+  quality, simulated-risk, sample-maturity, and read-only integrity reporting.
+- [x] Keep Telegram sends, delivery records, Official publication/statistics,
+  production activation, scheduling, and startup execution at zero.
+- [x] Export sanitized canonical evidence at
+  `docs/rehearsals/current_odds_forward_test_foundation_2026-08-01.json`.
+
+Next: select one genuine upcoming fixture, predeclare one source/bookmaker,
+capture current odds before inference using the versioned template, seal them in
+an isolated schema-v36 database, run Real Match Lab analysis, and explicitly
+create the first forward-test observation. No send is authorized.
+
+---
+
 # HISTORICAL ODDS PROVIDER COVERAGE PROBE
 
 Status:
@@ -32,10 +64,9 @@ COMPLETED — PROVIDER CREDENTIAL NOT CONFIGURED
   `docs/rehearsals/historical_odds_provider_coverage_probe_2026-08-01.json` with
   zero network, Telegram, Official, bankroll, production, or raw-data changes.
 
-Next: an operator may configure an authorized credential and run only the bounded
-probe. Source terms, sampled coverage, and provider-reported quota must then be
-reviewed before any separately confirmed export. No publication or activation is
-authorized.
+Historical paid acquisition is paused. Keep this foundation dormant and
+inspectable; do not configure or probe TheStatsAPI. Current forward testing is
+the active evidence strategy. No publication or activation is authorized.
 
 ---
 

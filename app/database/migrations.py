@@ -4549,6 +4549,114 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS historical_odds_partition_coverage_reports_no_delete BEFORE DELETE ON historical_odds_partition_coverage_reports BEGIN SELECT RAISE(ABORT,'Historical odds partition coverage reports are immutable'); END""",
         ),
     ),
+    Migration(
+        version=36,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_odds_snapshots (
+                odds_snapshot_id TEXT PRIMARY KEY,
+                canonical_fixture_id TEXT NOT NULL,
+                kickoff_utc TEXT NOT NULL,
+                provider_source_id TEXT NOT NULL,
+                provider_type TEXT NOT NULL,
+                bookmaker_name TEXT NOT NULL,
+                source_selected_at_utc TEXT NOT NULL,
+                captured_at_utc TEXT NOT NULL,
+                sealed_at_utc TEXT NOT NULL,
+                freshness_status TEXT NOT NULL CHECK(freshness_status IN ('FRESH','AGING')),
+                snapshot_fingerprint TEXT NOT NULL UNIQUE,
+                snapshot_json TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_observations (
+                observation_id TEXT PRIMARY KEY,
+                request_id TEXT NOT NULL UNIQUE,
+                request_fingerprint TEXT NOT NULL UNIQUE,
+                analysis_id TEXT NOT NULL UNIQUE,
+                odds_snapshot_id TEXT NOT NULL,
+                canonical_fixture_id TEXT NOT NULL,
+                evidence_tier TEXT NOT NULL CHECK(evidence_tier='FORWARD_TEST_REAL_TIME'),
+                status TEXT NOT NULL CHECK(status IN ('ANALYSIS_COMPLETED','NO_SELECTION','BLOCKED')),
+                actionable INTEGER NOT NULL CHECK(actionable IN (0,1)),
+                preview_available INTEGER NOT NULL CHECK(preview_available IN (0,1)),
+                lab_send_eligible INTEGER NOT NULL CHECK(lab_send_eligible=0),
+                official_eligible INTEGER NOT NULL CHECK(official_eligible=0),
+                observation_fingerprint TEXT NOT NULL UNIQUE,
+                observation_json TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL,
+                FOREIGN KEY(analysis_id) REFERENCES real_match_lab_analyses(analysis_id),
+                FOREIGN KEY(odds_snapshot_id) REFERENCES forward_test_odds_snapshots(odds_snapshot_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_results (
+                result_id TEXT PRIMARY KEY,
+                observation_id TEXT NOT NULL UNIQUE,
+                canonical_fixture_id TEXT NOT NULL,
+                final_home_score INTEGER NOT NULL CHECK(final_home_score BETWEEN 0 AND 30),
+                final_away_score INTEGER NOT NULL CHECK(final_away_score BETWEEN 0 AND 30),
+                final_status TEXT NOT NULL,
+                result_retrieval_timestamp_utc TEXT NOT NULL,
+                result_fingerprint TEXT NOT NULL UNIQUE,
+                result_json TEXT NOT NULL,
+                FOREIGN KEY(observation_id) REFERENCES forward_test_observations(observation_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_settlements (
+                settlement_id TEXT PRIMARY KEY,
+                observation_id TEXT NOT NULL UNIQUE,
+                result_id TEXT NOT NULL UNIQUE,
+                outcome TEXT NOT NULL CHECK(outcome IN ('WON','LOST','VOID','UNSETTLED','NOT_APPLICABLE')),
+                market TEXT,
+                settlement_fingerprint TEXT NOT NULL UNIQUE,
+                settlement_json TEXT NOT NULL,
+                settled_at_utc TEXT NOT NULL,
+                FOREIGN KEY(observation_id) REFERENCES forward_test_observations(observation_id),
+                FOREIGN KEY(result_id) REFERENCES forward_test_results(result_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_events (
+                event_id TEXT PRIMARY KEY,
+                observation_id TEXT NOT NULL,
+                event_sequence INTEGER NOT NULL CHECK(event_sequence>=0),
+                event_type TEXT NOT NULL,
+                event_fingerprint TEXT NOT NULL UNIQUE,
+                event_json TEXT NOT NULL,
+                occurred_at_utc TEXT NOT NULL,
+                FOREIGN KEY(observation_id) REFERENCES forward_test_observations(observation_id),
+                UNIQUE(observation_id,event_sequence)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS forward_test_rejections (
+                rejection_id TEXT PRIMARY KEY,
+                request_fingerprint TEXT NOT NULL,
+                stage TEXT NOT NULL,
+                reason_code TEXT NOT NULL,
+                rejection_fingerprint TEXT NOT NULL UNIQUE,
+                rejection_json TEXT NOT NULL,
+                occurred_at_utc TEXT NOT NULL,
+                UNIQUE(request_fingerprint,stage,reason_code)
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_forward_test_fixture ON forward_test_observations(canonical_fixture_id,created_at_utc)""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_odds_snapshots_no_update BEFORE UPDATE ON forward_test_odds_snapshots BEGIN SELECT RAISE(ABORT,'Forward-test odds snapshots are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_odds_snapshots_no_delete BEFORE DELETE ON forward_test_odds_snapshots BEGIN SELECT RAISE(ABORT,'Forward-test odds snapshots are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_observations_no_update BEFORE UPDATE ON forward_test_observations BEGIN SELECT RAISE(ABORT,'Forward-test observations are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_observations_no_delete BEFORE DELETE ON forward_test_observations BEGIN SELECT RAISE(ABORT,'Forward-test observations are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_results_no_update BEFORE UPDATE ON forward_test_results BEGIN SELECT RAISE(ABORT,'Forward-test results are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_results_no_delete BEFORE DELETE ON forward_test_results BEGIN SELECT RAISE(ABORT,'Forward-test results are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_settlements_no_update BEFORE UPDATE ON forward_test_settlements BEGIN SELECT RAISE(ABORT,'Forward-test settlements are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_settlements_no_delete BEFORE DELETE ON forward_test_settlements BEGIN SELECT RAISE(ABORT,'Forward-test settlements are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_events_no_update BEFORE UPDATE ON forward_test_events BEGIN SELECT RAISE(ABORT,'Forward-test events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_events_no_delete BEFORE DELETE ON forward_test_events BEGIN SELECT RAISE(ABORT,'Forward-test events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_rejections_no_update BEFORE UPDATE ON forward_test_rejections BEGIN SELECT RAISE(ABORT,'Forward-test rejections are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS forward_test_rejections_no_delete BEFORE DELETE ON forward_test_rejections BEGIN SELECT RAISE(ABORT,'Forward-test rejections are immutable'); END""",
+        ),
+    ),
 )
 
 
