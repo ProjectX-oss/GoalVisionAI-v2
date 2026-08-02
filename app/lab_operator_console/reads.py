@@ -23,7 +23,7 @@ class ConsoleReadService:
 
     def _overview(self,_):
         health=self._health(None); counts=self._counts(); activity=[]
-        for table,time_col,id_col in (("first_lab_run_executions","created_at_utc","run_id"),("forward_test_observations","created_at_utc","observation_id"),("forward_test_results","result_retrieval_timestamp_utc","result_id"),("forward_test_settlements","settled_at_utc","settlement_id"),("forward_test_monitoring_reports","generated_at_utc","report_id"),("forward_test_monitoring_incidents","detected_at_utc","incident_id")):
+        for table,time_col,id_col in (("lab_launch_authorizations","authorized_at_utc","authorization_id"),("lab_launch_readiness_audits","audited_at_utc","audit_id"),("lab_launch_executions","started_at_utc","execution_id"),("first_lab_run_executions","created_at_utc","run_id"),("forward_test_observations","created_at_utc","observation_id"),("forward_test_results","result_retrieval_timestamp_utc","result_id"),("forward_test_settlements","settled_at_utc","settlement_id"),("forward_test_monitoring_reports","generated_at_utc","report_id"),("forward_test_monitoring_incidents","detected_at_utc","incident_id")):
             row=self._one(f"SELECT {id_col},{time_col} FROM {table} ORDER BY {time_col} DESC LIMIT 1") if self._table(table) else None
             activity.append((table,row[0] if row else "NONE",row[1] if row else "N/A"))
         warnings=["API-Football Free does not provide compatible 2026 team history; no genuine discovery should run before plan review."]
@@ -36,6 +36,20 @@ class ConsoleReadService:
         from app.football.configuration import api_football_credential_status
         summary=("credential_status",api_football_credential_status()),("persisted_plan",self._json_find(cache,"plan","UNKNOWN")),("current_season_access",self._json_find(cache,"current_season_access","BLOCKED_OR_UNKNOWN")),("quota",self._json_find(cache,"quota","NOT_PERSISTED")),("capability_cache","AVAILABLE" if cache else "NOT_AVAILABLE"),("network_calls_current_request",0),("free_plan_example","FREE_PLAN_BLOCKED"),("simulated_pro_example","CONTROLLED_PRO_READY" if self.demo else "NOT_APPLICABLE"),("readiness_outcome","FREE_PLAN_BLOCKED" if not self.demo else "CONTROLLED_PRO_READY_AND_FREE_BLOCK_EXAMPLES")
         return PageModel("Readiness","BLOCKED" if not self.demo else "WARNING",summary,(TableModel("Persisted readiness runs",("run","mode","state","created"),runs),),("Opening this page performs no provider request.",),self.demo)
+
+    def _governance_policy_review(self,identifier):return self._launch_evidence("Governance Policy Review","governance_policy_reviews",("review_id","policy_version","policy_fingerprint","outcome","review_fingerprint","reviewed_at_utc"),identifier)
+    def _governance_policy_approval(self,identifier):return self._launch_evidence("Governance Policy Approval","governance_policy_approvals",("approval_id","review_id","policy_fingerprint","operator_identity","approval_fingerprint","approved_at_utc"),identifier)
+    def _approval_history(self,identifier):return self._launch_evidence("Approval History","governance_policy_approval_events",("event_id","approval_id","event_type","operator_identity","event_fingerprint","occurred_at_utc"),identifier)
+    def _launch_authorization(self,identifier):return self._launch_evidence("Launch Authorization","lab_launch_authorizations",("authorization_id","approval_id","environment","chat_id","bot_username","expires_at_utc","publication_capacity","operator_identity","authorization_fingerprint","authorized_at_utc"),identifier)
+    def _authorization_capacity(self,identifier):return self._launch_evidence("Authorization Capacity","lab_launch_authorization_events",("event_id","authorization_id","event_type","linked_identifier","operator_identity","event_fingerprint","occurred_at_utc"),identifier)
+    def _final_launch_audit(self,identifier):return self._launch_evidence("Final Launch Audit","lab_launch_readiness_audits",("audit_id","authorization_id","outcome","audit_fingerprint","audited_at_utc"),identifier)
+    def _pro_preflight(self,identifier):return self._launch_evidence("Pro Preflight","lab_launch_preflights",("preflight_id","outcome","network_verified","provider_call_count","preflight_fingerprint","checked_at_utc"),identifier)
+    def _backup_status(self,identifier):return self._launch_evidence("Backup Status","lab_database_backups",("backup_id","source_sha256","backup_sha256","schema_version","backup_path","backup_fingerprint","created_at_utc"),identifier)
+    def _backup_verification(self,identifier):return self._launch_evidence("Backup Verification","lab_database_backup_verifications",("verification_id","backup_id","outcome","verification_fingerprint","verified_at_utc"),identifier)
+    def _first_genuine_run_readiness(self,identifier):return self._final_launch_audit(identifier)
+    def _launch_execution(self,identifier):return self._launch_evidence("Launch Execution","lab_launch_executions",("execution_id","authorization_id","readiness_audit_id","outcome","execution_fingerprint","started_at_utc"),identifier)
+    def _post_run_audit(self,identifier):return self._launch_evidence("Post-Run Audit","lab_run_audits",("run_audit_id","execution_id","outcome","audit_fingerprint","audited_at_utc"),identifier)
+    def _post_match_review(self,identifier):return self._launch_evidence("Post-Match Review","lab_launch_post_match_reviews",("review_id","observation_id","outcome","review_fingerprint","reviewed_at_utc"),identifier)
 
     def _discovery(self,_):
         runs=self._rows("SELECT run_id,mode,execution_state,created_at_utc,run_fingerprint FROM first_lab_run_executions ORDER BY created_at_utc DESC LIMIT ?",(self.page_size,)) if self._table("first_lab_run_executions") else ()
@@ -159,6 +173,13 @@ class ConsoleReadService:
         if identifier:query+=f" WHERE {columns[0]}=? OR observation_id=?";params.extend((identifier,identifier))
         query+=f" ORDER BY {time_col} DESC LIMIT ?";params.append(self.page_size)
         return PageModel(title,"READ_ONLY",(("immutable",True),),(TableModel(title,columns,self._rows(query,tuple(params)) if self._table(table) else ()),),(),self.demo)
+
+    def _launch_evidence(self,title,table,columns,identifier):
+        if not self._table(table):return PageModel(title,"NOT_CONFIGURED",(("records",0),),(),("Schema migration 42 is required.",),self.demo)
+        query=f"SELECT {','.join(columns)} FROM {table}";params=[]
+        if identifier:query+=f" WHERE {columns[0]}=?";params.append(identifier)
+        query+=f" ORDER BY {columns[-1]} DESC LIMIT ?";params.append(self.page_size);rows=self._rows(query,tuple(params))
+        return PageModel(title,"READ_ONLY",(("records",len(rows)),("network_calls_current_request",0),("telegram_calls_current_request",0)),(TableModel(title,columns,rows),),("Opening this page is read-only and performs no external call.",),self.demo)
 
     def _evidence_search(self,title,columns,keys):
         rows=[]

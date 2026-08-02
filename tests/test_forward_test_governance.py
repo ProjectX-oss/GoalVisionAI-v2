@@ -92,7 +92,7 @@ class ForwardTestGovernanceTests(unittest.TestCase):
         self.assertEqual(status,200);self.assertIn(b"Forward-test governance",body);self.assertIn(b"Generation Comparison",body);self.assertIn(b"Recommendations",body);self.assertIn("governance",NAV);self.assertNotIn(b"Execute bounded action",body);self.database=Database(self.path)
 
     def test_014_schema_41_fresh_and_v40_upgrade(self):
-        self.assertEqual(self.database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0],41);self.assertEqual(self.database.connection.execute("SELECT COUNT(*) FROM forward_test_governance_evaluations").fetchone()[0],0)
+        self.assertEqual(self.database.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0],42);self.assertEqual(self.database.connection.execute("SELECT COUNT(*) FROM forward_test_governance_evaluations").fetchone()[0],0)
         path=Path(self.temporary.name)/"upgrade.db";upgrade=Database(path)
         try:
             upgrade.connection.execute("CREATE TABLE schema_migrations(version INTEGER PRIMARY KEY,applied_at TEXT NOT NULL)")
@@ -101,7 +101,7 @@ class ForwardTestGovernanceTests(unittest.TestCase):
                     with upgrade.connection:
                         for statement in migration.statements:upgrade.connection.execute(statement)
                         upgrade.connection.execute("INSERT OR IGNORE INTO schema_migrations VALUES (?,datetime('now'))",(migration.version,))
-            MigrationManager(upgrade.connection).migrate();self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0],41);self.assertEqual(upgrade.connection.execute("PRAGMA foreign_key_check").fetchall(),[])
+            MigrationManager(upgrade.connection).migrate();self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0],42);self.assertEqual(upgrade.connection.execute("PRAGMA foreign_key_check").fetchall(),[])
         finally:upgrade.close()
 
 

@@ -1,5 +1,9 @@
 # Forward-Test Governance
 
+## Independent policy authorization
+
+The frozen governance thresholds now have a separate deterministic review artifact. Operator approval binds the exact policy fingerprint and can be revoked only through an append-only event. Launch authorization is invalid whenever its underlying approval is revoked. This governance layer never changes thresholds, trains, recalibrates, activates, rolls back, schedules, or publishes automatically.
+
 This manual-only foundation evaluates immutable, settled LAB forward-test evidence. It never fetches provider data, sends Telegram, changes Official state, trains, recalibrates, activates, rolls back, or schedules work.
 
 Policy v1 uses explicit UTC cutoffs, Riga calendar weeks, lifetime and rolling 7/20/50-observation windows, rolling 7/30-day windows, and model, calibration, market, competition, and bookmaker scopes. Maturity progresses through `NO_EVIDENCE`, `GOVERNANCE_SAMPLE_INSUFFICIENT`, `WARM_UP`, `MONITORING`, `REVIEWABLE`, and `POLICY_MINIMUM_MET`. Early results must remain insufficient even when they happen to win.

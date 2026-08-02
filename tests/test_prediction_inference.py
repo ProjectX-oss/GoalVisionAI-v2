@@ -412,7 +412,7 @@ class PredictionInferenceMigrationTests(unittest.TestCase):
     def test_fresh_v17_and_v16_upgrade(self) -> None:
         fresh = Database(":memory:")
         MigrationManager(fresh.connection).migrate()
-        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 41)
+        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 42)
         self.assertIsNotNone(fresh.connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='prediction_inference_results'").fetchone())
         fresh.close()
 
@@ -425,7 +425,7 @@ class PredictionInferenceMigrationTests(unittest.TestCase):
                 upgrade.connection.execute(statement)
             upgrade.connection.execute("INSERT INTO schema_migrations VALUES (?, 'existing')", (migration.version,))
         MigrationManager(upgrade.connection).migrate()
-        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 41)
+        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 42)
         self.assertIsNotNone(upgrade.connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='prediction_inference_results'").fetchone())
         upgrade.close()
 

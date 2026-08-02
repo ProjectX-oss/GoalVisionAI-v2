@@ -1,5 +1,9 @@
 # First LAB Prediction Operations Runbook
 
+## Final authorization boundary
+
+Before the existing dry-run workflow, require a passed policy review, active operator approval, unexpired one-use launch authorization, final readiness audit, Pro capability/quota proof, and a verified SQLite backup. Persist the launch execution and stage order. Stop after publication review. Actual send requires the exact authorization plus preview, reasoning, reasoning-audit, governance-evaluation, observation-governance, and publication-review fingerprints.
+
 Before any future manual LAB send, a current governance evaluation is mandatory. Publication review fails closed when the evaluation is missing or stale, the system is paused, or the selected market, competition, bookmaker, model generation, calibration artifact, input drift, or explanation drift is blocked. Persist the observation-time governance snapshot so later settlements cannot rewrite decision-time eligibility.
 
 The optional local review surface is documented in

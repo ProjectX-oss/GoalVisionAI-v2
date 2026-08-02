@@ -1,5 +1,9 @@
 # GoalVision AI Lab Operator Console
 
+## Final launch governance
+
+Schema 42 adds read-only pages for policy review and approval history, launch authorization and capacity, final audit, Pro preflight, backup/verification, first-run readiness and execution, post-run audit, and post-match review. GET requests remain inert. Mutating forms appear only with actions enabled, require CSRF, operator identity, and their exact confirmation phrase. Provider verification is deliberately redirected to the bounded CLI; the console never makes an automatic provider call or Telegram send.
+
 The Governance page presents the latest immutable decision, maturity, predictive and calibration status, input/data/odds/explanation drift, scoped market/competition/bookmaker/model/calibration outcomes, recommendations, transitions, and reproduction history. Its explicit POST actions require the existing session, CSRF token, operator identity, and exact confirmation. Evaluation, reproduction, acknowledgement, and report generation make no provider or Telegram call. A GET never evaluates governance.
 
 ## Boundary

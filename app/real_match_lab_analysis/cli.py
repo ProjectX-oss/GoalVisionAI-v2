@@ -7,6 +7,7 @@ import asyncio
 import hashlib
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import dotenv_values
@@ -67,6 +68,12 @@ def build_parser() -> argparse.ArgumentParser:
     send.add_argument("--observation-id", required=True)
     send.add_argument("--publication-review-fingerprint", required=True)
     send.add_argument("--message-fingerprint", required=True)
+    send.add_argument("--launch-authorization-id", required=True)
+    send.add_argument("--reasoning-fingerprint", required=True)
+    send.add_argument("--reasoning-audit-fingerprint", required=True)
+    send.add_argument("--governance-evaluation-fingerprint", required=True)
+    send.add_argument("--observation-governance-fingerprint", required=True)
+    send.add_argument("--operator", required=True)
     send.add_argument("--confirmation", required=True)
     send.add_argument("--env-file", type=Path, default=Path(".env"))
     diagnose = sub.add_parser("diagnose")
@@ -278,11 +285,34 @@ def _send(args):
         )
         if authorization["status"] != "LAB_MANUAL_SEND_AUTHORIZED" or authorization["analysis_id"] != args.analysis_id:
             raise DeliveryConflictError("Forward-test publication review did not authorize this exact message.")
+        from app.lab_launch_readiness import LabLaunchService
+        launch = LabLaunchService(database.connection).validate_send(
+            args.launch_authorization_id,
+            observation_id=args.observation_id,
+            confirmation=args.confirmation,
+            environment="LAB", chat_id=chat_id or "", bot=bot or "",
+            fingerprints={
+                "preview": args.message_fingerprint,
+                "reasoning": args.reasoning_fingerprint,
+                "reasoning_audit": args.reasoning_audit_fingerprint,
+                "governance_evaluation": args.governance_evaluation_fingerprint,
+                "observation_governance": args.observation_governance_fingerprint,
+                "publication_review": args.publication_review_fingerprint,
+            },
+            now=datetime.now(timezone.utc),
+        )
+        if launch["status"] != "LAB_MANUAL_SEND_AUTHORIZED":
+            raise DeliveryConflictError("An active first-LAB launch authorization did not authorize this exact message.")
         result = asyncio.run(service.send(
             args.analysis_id, args.confirmation, token=token,
             configured_chat_id=chat_id, configured_bot=bot,
             transport=TelegramService(token),
         ))
+        if result.status.value == "SENT":
+            LabLaunchService(database.connection).consume(
+                args.launch_authorization_id, args.observation_id, args.operator,
+                occurred_at_utc=datetime.now(timezone.utc), send_succeeded=True,
+            )
         print(
             f"{result.status.value}: analysis={result.analysis_id} "
             f"destination={result.destination_chat_id} "

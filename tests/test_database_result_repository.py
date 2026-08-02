@@ -143,7 +143,7 @@ class DatabaseResultRepositoryTests(unittest.TestCase):
             "SELECT COUNT(*) AS count FROM schema_migrations"
         ).fetchone()["count"]
         self.assertEqual(value, "keep-me")
-        self.assertEqual(migration_count, 41)
+        self.assertEqual(migration_count, 42)
 
     def test_saves_published_prediction_idempotently(self):
         prediction = self.prediction()

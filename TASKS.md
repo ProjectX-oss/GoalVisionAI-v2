@@ -1,5 +1,13 @@
 # TASKS.md
 
+## Final LAB launch readiness foundation (2026-08-02)
+
+- [x] Add independent governance policy review and append-only operator approval/revocation.
+- [x] Add one-use, expiring first-LAB launch authorization bound to exact destination and model evidence.
+- [x] Add final readiness, inert Pro preflight, SQLite backup/verification/restore rehearsal, launch execution stages, post-run audit, and post-match review boundaries.
+- [x] Extend the local operator console with schema-42 launch governance pages and confirmed POST actions.
+- [x] Add the 39-check controlled fictional final-launch rehearsal and operator checklist.
+
 ## Forward-test model governance foundation (2026-08-02)
 
 - [x] Add centralized, versioned, conservative governance policy and deterministic settled-evidence windows.

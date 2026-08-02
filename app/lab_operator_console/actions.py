@@ -38,6 +38,14 @@ ACTION_POLICY={
     "READINESS_NETWORK_VERIFY":("VERIFY_API_FOOTBALL_ONCE",1,False,"lab_operator_console_actions"),
     "BOUNDED_DISCOVERY":("RUN_BOUNDED_DISCOVERY",40,False,"first_lab_run_executions"),
     "FAKE_LAB_SEND":("FAKE_LAB_SEND_ONLY",0,True,"lab_operator_console_action_events"),
+    "REVIEW_GOVERNANCE_POLICY":("REVIEW_GOALVISION_LAB_GOVERNANCE_POLICY",0,False,"governance_policy_reviews"),
+    "APPROVE_GOVERNANCE_POLICY":("APPROVE_GOALVISION_LAB_GOVERNANCE_POLICY",0,False,"governance_policy_approvals"),
+    "REVOKE_GOVERNANCE_POLICY":("REVOKE_GOALVISION_LAB_GOVERNANCE_POLICY",0,False,"governance_policy_approval_events"),
+    "AUTHORIZE_FIRST_LAB_LAUNCH":("AUTHORIZE_FIRST_GOALVISION_LAB_FORWARD_TEST",0,False,"lab_launch_authorizations"),
+    "REVOKE_FIRST_LAB_LAUNCH":("REVOKE_FIRST_GOALVISION_LAB_FORWARD_TEST",0,False,"lab_launch_authorization_events"),
+    "FINAL_LAUNCH_AUDIT":("RUN_FINAL_GOALVISION_LAB_LAUNCH_AUDIT",0,False,"lab_launch_readiness_audits"),
+    "PRO_PREFLIGHT":("VERIFY_API_FOOTBALL_PRO_ONCE",1,False,"lab_launch_preflights"),
+    "CREATE_LAB_BACKUP":("CREATE_GOALVISION_LAB_DATABASE_BACKUP",0,False,"lab_database_backups"),
 }
 
 
@@ -69,6 +77,32 @@ class ConsoleActionService:
 
     def _dispatch(self,request):
         ft=SQLiteForwardTestRepository(self.database,migrate=False); monitoring=MonitoringService(SQLiteMonitoringRepository(self.database,migrate=False)); now=datetime.fromisoformat(request.requested_at_utc.replace("Z","+00:00"))
+        if request.action_type=="REVIEW_GOVERNANCE_POLICY":
+            from app.forward_test_governance_review import GovernancePolicyReviewService,review_governance_policy
+            value=GovernancePolicyReviewService(self.connection).persist_review(review_governance_policy(reviewed_at_utc=now));return _created("governance_policy_reviews",value["review_id"],value["review_fingerprint"],value["outcome"])
+        if request.action_type=="APPROVE_GOVERNANCE_POLICY":
+            from app.forward_test_governance.policy import DEFAULT_POLICY
+            from app.forward_test_governance_review import GovernancePolicyReviewService
+            value=GovernancePolicyReviewService(self.connection).approve(request.target_identifier or "",DEFAULT_POLICY.fingerprint,request.operator_identifier,request.confirmation,approved_at_utc=now);return _created("governance_policy_approvals",value["approval_id"],value["approval_fingerprint"],"COMPLETED")
+        if request.action_type=="REVOKE_GOVERNANCE_POLICY":
+            from app.forward_test_governance_review import GovernancePolicyReviewService
+            value=GovernancePolicyReviewService(self.connection).revoke(request.target_identifier or "",request.operator_identifier,request.confirmation,occurred_at_utc=now);return _created("governance_policy_approval_events",value["event_id"],value["event_fingerprint"],"COMPLETED")
+        if request.action_type=="AUTHORIZE_FIRST_LAB_LAUNCH":
+            from datetime import timedelta
+            from app.lab_launch_readiness import LabLaunchService
+            value=LabLaunchService(self.connection).authorize(request.target_identifier or "",request.operator_identifier,request.confirmation,authorized_at_utc=now,expires_at_utc=now+timedelta(hours=72),champion_generation_id=str(request.normalized_input.get("champion_generation_id","")),calibration_artifact_id=str(request.normalized_input.get("calibration_artifact_id","")));return _created("lab_launch_authorizations",value["authorization_id"],value["authorization_fingerprint"],"COMPLETED")
+        if request.action_type=="REVOKE_FIRST_LAB_LAUNCH":
+            from app.lab_launch_readiness import LabLaunchService
+            value=LabLaunchService(self.connection).revoke(request.target_identifier or "",request.operator_identifier,request.confirmation,occurred_at_utc=now);return _created("lab_launch_authorization_events",value["event_id"],value["event_fingerprint"],"COMPLETED")
+        if request.action_type=="FINAL_LAUNCH_AUDIT":
+            from app.lab_launch_readiness import LabLaunchService
+            value=LabLaunchService(self.connection).readiness_audit(request.target_identifier or "",audited_at_utc=now);return _created("lab_launch_readiness_audits",value["audit_id"],value["audit_fingerprint"],value["outcome"])
+        if request.action_type=="PRO_PREFLIGHT":
+            return {"status":"BLOCKED","provider_calls":0,"telegram_calls":0,"after_fingerprint":fingerprint({"reason":"Use the dedicated bounded CLI for the one explicit provider verification."})}
+        if request.action_type=="CREATE_LAB_BACKUP":
+            if not self.allowed_output_roots:raise ValueError("No allowed backup root is configured.")
+            from app.lab_launch_readiness import LabBackupService
+            value=LabBackupService(self.connection,self.database.path,self.allowed_output_roots[0]).create(created_at_utc=now);return _created("lab_database_backups",value["backup_id"],value["backup_fingerprint"],"COMPLETED")
         if request.action_type=="CREATE_PUBLICATION_REVIEW":
             value=build_publication_review(ft,request.target_identifier or "",reviewed_at=now,persist=FirstLabOperationsRepository(self.database,migrate=False)); return _created("forward_test_publication_reviews",value.get("review_id"),value.get("review_fingerprint"),value["status"])
         if request.action_type=="CREATE_REASONING":

@@ -5100,6 +5100,96 @@ MIGRATIONS = (
             "CREATE TRIGGER IF NOT EXISTS governance_events_no_delete BEFORE DELETE ON forward_test_governance_events BEGIN SELECT RAISE(ABORT,'Governance events are immutable'); END"
         ),
     ),
+    Migration(
+        version=42,
+        statements=(
+            """CREATE TABLE IF NOT EXISTS governance_policy_reviews (
+                review_id TEXT PRIMARY KEY, policy_version TEXT NOT NULL,
+                policy_fingerprint TEXT NOT NULL, outcome TEXT NOT NULL,
+                review_fingerprint TEXT NOT NULL UNIQUE, review_json TEXT NOT NULL,
+                reviewed_at_utc TEXT NOT NULL)""",
+            """CREATE TABLE IF NOT EXISTS governance_policy_review_findings (
+                finding_id TEXT PRIMARY KEY, review_id TEXT NOT NULL, classification TEXT NOT NULL,
+                parameter_name TEXT NOT NULL, finding_fingerprint TEXT NOT NULL UNIQUE,
+                finding_json TEXT NOT NULL, FOREIGN KEY(review_id) REFERENCES governance_policy_reviews(review_id))""",
+            """CREATE TABLE IF NOT EXISTS governance_policy_approvals (
+                approval_id TEXT PRIMARY KEY, review_id TEXT NOT NULL, policy_fingerprint TEXT NOT NULL,
+                operator_identity TEXT NOT NULL, approval_fingerprint TEXT NOT NULL UNIQUE,
+                approval_json TEXT NOT NULL, approved_at_utc TEXT NOT NULL,
+                FOREIGN KEY(review_id) REFERENCES governance_policy_reviews(review_id))""",
+            """CREATE TABLE IF NOT EXISTS governance_policy_approval_events (
+                event_id TEXT PRIMARY KEY, approval_id TEXT NOT NULL, event_type TEXT NOT NULL,
+                operator_identity TEXT NOT NULL, event_fingerprint TEXT NOT NULL UNIQUE,
+                event_json TEXT NOT NULL, occurred_at_utc TEXT NOT NULL,
+                FOREIGN KEY(approval_id) REFERENCES governance_policy_approvals(approval_id))""",
+            """CREATE TABLE IF NOT EXISTS lab_launch_authorizations (
+                authorization_id TEXT PRIMARY KEY, approval_id TEXT NOT NULL, environment TEXT NOT NULL,
+                chat_id TEXT NOT NULL, bot_username TEXT NOT NULL, expires_at_utc TEXT NOT NULL,
+                publication_capacity INTEGER NOT NULL CHECK(publication_capacity=1), operator_identity TEXT NOT NULL,
+                authorization_fingerprint TEXT NOT NULL UNIQUE, authorization_json TEXT NOT NULL,
+                authorized_at_utc TEXT NOT NULL, FOREIGN KEY(approval_id) REFERENCES governance_policy_approvals(approval_id))""",
+            """CREATE TABLE IF NOT EXISTS lab_launch_authorization_events (
+                event_id TEXT PRIMARY KEY, authorization_id TEXT NOT NULL, event_type TEXT NOT NULL,
+                linked_identifier TEXT, operator_identity TEXT NOT NULL, event_fingerprint TEXT NOT NULL UNIQUE,
+                event_json TEXT NOT NULL, occurred_at_utc TEXT NOT NULL,
+                FOREIGN KEY(authorization_id) REFERENCES lab_launch_authorizations(authorization_id))""",
+            """CREATE TABLE IF NOT EXISTS lab_launch_readiness_audits (
+                audit_id TEXT PRIMARY KEY, authorization_id TEXT, outcome TEXT NOT NULL,
+                audit_fingerprint TEXT NOT NULL UNIQUE, audit_json TEXT NOT NULL, audited_at_utc TEXT NOT NULL,
+                FOREIGN KEY(authorization_id) REFERENCES lab_launch_authorizations(authorization_id))""",
+            """CREATE TABLE IF NOT EXISTS lab_launch_preflights (
+                preflight_id TEXT PRIMARY KEY, outcome TEXT NOT NULL, network_verified INTEGER NOT NULL,
+                provider_call_count INTEGER NOT NULL, preflight_fingerprint TEXT NOT NULL UNIQUE,
+                preflight_json TEXT NOT NULL, checked_at_utc TEXT NOT NULL)""",
+            """CREATE TABLE IF NOT EXISTS lab_launch_executions (
+                execution_id TEXT PRIMARY KEY, authorization_id TEXT NOT NULL, readiness_audit_id TEXT NOT NULL,
+                outcome TEXT NOT NULL, execution_fingerprint TEXT NOT NULL UNIQUE,
+                execution_json TEXT NOT NULL, started_at_utc TEXT NOT NULL,
+                FOREIGN KEY(authorization_id) REFERENCES lab_launch_authorizations(authorization_id),
+                FOREIGN KEY(readiness_audit_id) REFERENCES lab_launch_readiness_audits(audit_id))""",
+            """CREATE TABLE IF NOT EXISTS lab_launch_stage_events (
+                event_id TEXT PRIMARY KEY, execution_id TEXT NOT NULL, stage_order INTEGER NOT NULL,
+                stage_name TEXT NOT NULL, stage_status TEXT NOT NULL, event_fingerprint TEXT NOT NULL UNIQUE,
+                event_json TEXT NOT NULL, occurred_at_utc TEXT NOT NULL,
+                FOREIGN KEY(execution_id) REFERENCES lab_launch_executions(execution_id), UNIQUE(execution_id,stage_order))""",
+            """CREATE TABLE IF NOT EXISTS lab_database_backups (
+                backup_id TEXT PRIMARY KEY, source_sha256 TEXT NOT NULL, backup_sha256 TEXT NOT NULL,
+                schema_version INTEGER NOT NULL, backup_path TEXT NOT NULL UNIQUE,
+                backup_fingerprint TEXT NOT NULL UNIQUE, manifest_json TEXT NOT NULL, created_at_utc TEXT NOT NULL)""",
+            """CREATE TABLE IF NOT EXISTS lab_database_backup_verifications (
+                verification_id TEXT PRIMARY KEY, backup_id TEXT NOT NULL, outcome TEXT NOT NULL,
+                verification_fingerprint TEXT NOT NULL UNIQUE, verification_json TEXT NOT NULL,
+                verified_at_utc TEXT NOT NULL, FOREIGN KEY(backup_id) REFERENCES lab_database_backups(backup_id))""",
+            """CREATE TABLE IF NOT EXISTS lab_run_audits (
+                run_audit_id TEXT PRIMARY KEY, execution_id TEXT NOT NULL, outcome TEXT NOT NULL,
+                audit_fingerprint TEXT NOT NULL UNIQUE, audit_json TEXT NOT NULL, audited_at_utc TEXT NOT NULL,
+                FOREIGN KEY(execution_id) REFERENCES lab_launch_executions(execution_id))""",
+            """CREATE TABLE IF NOT EXISTS lab_launch_post_match_reviews (
+                review_id TEXT PRIMARY KEY, observation_id TEXT NOT NULL, outcome TEXT NOT NULL,
+                review_fingerprint TEXT NOT NULL UNIQUE, review_json TEXT NOT NULL, reviewed_at_utc TEXT NOT NULL)""",
+            "CREATE INDEX IF NOT EXISTS idx_launch_authorization_expiry ON lab_launch_authorizations(expires_at_utc)",
+            "CREATE INDEX IF NOT EXISTS idx_launch_authorization_events ON lab_launch_authorization_events(authorization_id,occurred_at_utc)",
+            "CREATE INDEX IF NOT EXISTS idx_launch_stages ON lab_launch_stage_events(execution_id,stage_order)",
+            *tuple(
+                f"CREATE TRIGGER IF NOT EXISTS {table}_no_update BEFORE UPDATE ON {table} BEGIN SELECT RAISE(ABORT,'{table} is immutable'); END"
+                for table in (
+                    "governance_policy_reviews","governance_policy_review_findings","governance_policy_approvals",
+                    "governance_policy_approval_events","lab_launch_authorizations","lab_launch_authorization_events",
+                    "lab_launch_readiness_audits","lab_launch_preflights","lab_launch_executions","lab_launch_stage_events",
+                    "lab_database_backups","lab_database_backup_verifications","lab_run_audits","lab_launch_post_match_reviews"
+                )
+            ),
+            *tuple(
+                f"CREATE TRIGGER IF NOT EXISTS {table}_no_delete BEFORE DELETE ON {table} BEGIN SELECT RAISE(ABORT,'{table} is immutable'); END"
+                for table in (
+                    "governance_policy_reviews","governance_policy_review_findings","governance_policy_approvals",
+                    "governance_policy_approval_events","lab_launch_authorizations","lab_launch_authorization_events",
+                    "lab_launch_readiness_audits","lab_launch_preflights","lab_launch_executions","lab_launch_stage_events",
+                    "lab_database_backups","lab_database_backup_verifications","lab_run_audits","lab_launch_post_match_reviews"
+                )
+            ),
+        ),
+    ),
 )
 
 

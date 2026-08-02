@@ -21,7 +21,7 @@ from .reads import ConsoleReadService
 from .security import Session, SessionSecurity
 
 
-NAV = ("overview", "readiness", "discovery", "candidates", "fixtures", "odds", "analyses", "reasoning", "observations", "previews", "reviews", "send_readiness", "results", "settlements", "governance", "monitoring", "reports", "unresolved", "incidents", "health", "actions")
+NAV = ("overview", "readiness", "governance_policy_review", "governance_policy_approval", "approval_history", "launch_authorization", "authorization_capacity", "final_launch_audit", "pro_preflight", "backup_status", "backup_verification", "first_genuine_run_readiness", "launch_execution", "post_run_audit", "post_match_review", "discovery", "candidates", "fixtures", "odds", "analyses", "reasoning", "observations", "previews", "reviews", "send_readiness", "results", "settlements", "governance", "monitoring", "reports", "unresolved", "incidents", "health", "actions")
 PACKAGE = Path(__file__).parent
 
 
@@ -140,6 +140,12 @@ class ConsoleApplication:
     def _forms(self, page: str, session: Session) -> str:
         definitions = {
             "readiness": (("READINESS_NETWORK_VERIFY", "VERIFY_API_FOOTBALL_ONCE"),),
+            "governance_policy_review": (("REVIEW_GOVERNANCE_POLICY", "REVIEW_GOALVISION_LAB_GOVERNANCE_POLICY"),),
+            "governance_policy_approval": (("APPROVE_GOVERNANCE_POLICY", "APPROVE_GOALVISION_LAB_GOVERNANCE_POLICY"),("REVOKE_GOVERNANCE_POLICY", "REVOKE_GOALVISION_LAB_GOVERNANCE_POLICY")),
+            "launch_authorization": (("AUTHORIZE_FIRST_LAB_LAUNCH", "AUTHORIZE_FIRST_GOALVISION_LAB_FORWARD_TEST"),("REVOKE_FIRST_LAB_LAUNCH", "REVOKE_FIRST_GOALVISION_LAB_FORWARD_TEST")),
+            "final_launch_audit": (("FINAL_LAUNCH_AUDIT", "RUN_FINAL_GOALVISION_LAB_LAUNCH_AUDIT"),),
+            "pro_preflight": (("PRO_PREFLIGHT", "VERIFY_API_FOOTBALL_PRO_ONCE"),),
+            "backup_status": (("CREATE_LAB_BACKUP", "CREATE_GOALVISION_LAB_DATABASE_BACKUP"),),
             "discovery": (("BOUNDED_DISCOVERY", "RUN_BOUNDED_DISCOVERY"),),
             "reviews": (("CREATE_PUBLICATION_REVIEW", "CREATE_PUBLICATION_REVIEW"),),
             "reasoning": (("CREATE_REASONING", "CREATE_PREDICTION_REASONING"),),
@@ -157,6 +163,7 @@ class ConsoleApplication:
             if action == "IMPORT_RESULT":extra='<textarea name="result_json" aria-label="Versioned result JSON"></textarea>'
             elif action == "CREATE_EXPORT":extra='<input name="output_name" aria-label="Safe export directory name" placeholder="report-export" required>'
             elif action == "COMPARE_REPORTS":extra='<input name="comparison_report_id" aria-label="Comparison report identifier" required>'
+            elif action == "AUTHORIZE_FIRST_LAB_LAUNCH":extra='<input name="champion_generation_id" aria-label="Exact champion generation ID" required><input name="calibration_artifact_id" aria-label="Exact calibration artifact ID" required>'
             else:extra='<input name="reason" aria-label="Reason" placeholder="Reason or operator note">'
             maximum_calls = 1 if action == "READINESS_NETWORK_VERIFY" else 40 if action == "BOUNDED_DISCOVERY" else 0
             forms.append(f'<section class="panel"><h2>Explicit manual action: {html.escape(action.replace("_"," ").title())}</h2><form method="post" action="/action"><input type="hidden" name="csrf_token" value="{csrf}"><input type="hidden" name="action_type" value="{action}"><label>Operator identifier<input name="operator_identifier" required value="{html.escape(session.operator_identifier)}"></label><label>Target identifier<input name="target_identifier"></label>{extra}<label>Exact confirmation<input name="confirmation" required placeholder="{confirmation}"></label><label><input type="checkbox" required> I understand this is an explicit LAB operator action.</label><button>Execute bounded action</button></form><p>Maximum provider calls: {maximum_calls}. Telegram calls: 0.</p></section>')

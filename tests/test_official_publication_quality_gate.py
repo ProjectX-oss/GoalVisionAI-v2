@@ -367,7 +367,7 @@ class OfficialQualityGatePersistenceTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 42)))
+        self.assertEqual(versions, tuple(range(1, 43)))
         table = self.database.connection.execute(
             """
             SELECT name FROM sqlite_master
@@ -429,7 +429,7 @@ class OfficialQualityGatePersistenceTests(unittest.TestCase):
                 "SELECT version FROM schema_migrations ORDER BY version"
             )
         )
-        self.assertEqual(versions, tuple(range(1, 42)))
+        self.assertEqual(versions, tuple(range(1, 43)))
         self.assertIsNotNone(
             database.connection.execute(
                 "SELECT name FROM sqlite_master WHERE name='official_quality_gate_evaluations'"
