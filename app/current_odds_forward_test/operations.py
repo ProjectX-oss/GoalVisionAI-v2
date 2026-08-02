@@ -296,13 +296,34 @@ def build_publication_review(repository: SQLiteForwardTestRepository, observatio
             ("AUDIT_INTEGRITY", audit_observation(repository, observation_id).status.value != "FORWARD_TEST_INTEGRITY_BLOCKED"),
         ]
         checks.extend(publication_reasoning_checks(reasoning, reasoning_audit, analysis_id=observation["analysis_id"], observation_id=observation_id, selected_market=observation.get("actionable_market")))
+        from app.forward_test_governance import GovernanceService
+        governance = GovernanceService(repository.database if hasattr(repository, "database") else _database_adapter(repository.connection)).publication_status(observation_id, reviewed.isoformat())
+        checks.extend((f"GOVERNANCE_{item['name']}", item["passed"]) for item in governance.get("checks", ()))
+        if governance["status"] == "PUBLICATION_GOVERNANCE_REQUIRED":
+            checks.append(("GOVERNANCE_EVALUATION_REQUIRED", False))
+        elif governance["status"] == "PUBLICATION_GOVERNANCE_BLOCKED":
+            checks.append(("GOVERNANCE_PUBLICATION_ALLOWED", False))
+        else:
+            checks.append(("GOVERNANCE_PUBLICATION_ALLOWED", True))
         blockers = [name for name, passed in checks if not passed]
         status = PublicationReviewOutcome.PASSED.value if not blockers else PublicationReviewOutcome.BLOCKED.value
         reasoned = compose_reasoned_message(analysis["message_html"] or "", reasoning) if reasoning else None
-        material = {"schema_version": REVIEW_SCHEMA, "observation_id": observation_id, "status": status, "checks": [{"name": name, "passed": passed} for name, passed in checks], "blocker_codes": blockers, "reviewed_at_utc": reviewed.isoformat(), "message_fingerprint": reasoned["message_fingerprint"] if reasoned else None, "reasoning_id": reasoning.reasoning_id if reasoning else None, "reasoning_fingerprint": reasoning.reasoning_fingerprint if reasoning else None, "reasoning_audit_fingerprint": reasoning_audit.audit_fingerprint if reasoning_audit else None}
+        material = {"schema_version": REVIEW_SCHEMA, "observation_id": observation_id, "status": status, "checks": [{"name": name, "passed": passed} for name, passed in checks], "blocker_codes": blockers, "reviewed_at_utc": reviewed.isoformat(), "message_fingerprint": reasoned["message_fingerprint"] if reasoned else None, "reasoning_id": reasoning.reasoning_id if reasoning else None, "reasoning_fingerprint": reasoning.reasoning_fingerprint if reasoning else None, "reasoning_audit_fingerprint": reasoning_audit.audit_fingerprint if reasoning_audit else None, "governance_status": governance["status"], "governance_evaluation_id": governance.get("evaluation_id")}
     review_fp = fingerprint(material)
     report = {**material, "review_id": "lab-publication-review-" + review_fp, "review_fingerprint": review_fp, "telegram_send_executed": False}
-    return persist.append_review(report) if persist and row is not None else report
+    if persist and row is not None:
+        stored=persist.append_review(report)
+        if material.get("governance_evaluation_id"):
+            GovernanceService(_database_adapter(repository.connection)).snapshot_observation(observation_id,reviewed.isoformat())
+        return stored
+    return report
+
+
+def _database_adapter(connection):
+    """Supply an existing migrated connection without opening another database."""
+    class Adapter:
+        pass
+    value=Adapter();value.connection=connection;return value
 
 
 def build_reasoned_lab_preview(repository: SQLiteForwardTestRepository, observation_id: str) -> dict:

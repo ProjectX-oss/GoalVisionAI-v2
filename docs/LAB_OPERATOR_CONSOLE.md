@@ -1,5 +1,7 @@
 # GoalVision AI Lab Operator Console
 
+The Governance page presents the latest immutable decision, maturity, predictive and calibration status, input/data/odds/explanation drift, scoped market/competition/bookmaker/model/calibration outcomes, recommendations, transitions, and reproduction history. Its explicit POST actions require the existing session, CSRF token, operator identity, and exact confirmation. Evaluation, reproduction, acknowledgement, and report generation make no provider or Telegram call. A GET never evaluates governance.
+
 ## Boundary
 
 The console is a local, manual review surface over existing immutable Lab and

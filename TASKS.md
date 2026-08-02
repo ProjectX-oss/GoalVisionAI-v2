@@ -1,5 +1,13 @@
 # TASKS.md
 
+## Forward-test model governance foundation (2026-08-02)
+
+- [x] Add centralized, versioned, conservative governance policy and deterministic settled-evidence windows.
+- [x] Add predictive, calibration, feature/input, completeness, odds, market, competition, bookmaker, explanation, and generation governance.
+- [x] Add append-only schema v41 evaluations, windows, scopes, decisions, transitions, recommendations, reproductions, observation snapshots, and events.
+- [x] Add fail-closed LAB publication integration, deduplicated incidents, manual recommendations, reports, reproduction, CLI, console panels/actions, and controlled fictional rehearsal.
+- [x] Keep genuine provider access, Telegram, Official state, training, recalibration, model activation/rollback, scheduling, bets, and bookmaker transactions disabled.
+
 ## Prediction explainability and reasoning quality foundation (2026-08-02)
 
 - [x] Add exact deterministic live-78 multinomial score/probability attribution

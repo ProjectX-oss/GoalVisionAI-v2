@@ -21,7 +21,7 @@ from .reads import ConsoleReadService
 from .security import Session, SessionSecurity
 
 
-NAV = ("overview", "readiness", "discovery", "candidates", "fixtures", "odds", "analyses", "reasoning", "observations", "previews", "reviews", "send_readiness", "results", "settlements", "monitoring", "reports", "unresolved", "incidents", "health", "actions")
+NAV = ("overview", "readiness", "discovery", "candidates", "fixtures", "odds", "analyses", "reasoning", "observations", "previews", "reviews", "send_readiness", "results", "settlements", "governance", "monitoring", "reports", "unresolved", "incidents", "health", "actions")
 PACKAGE = Path(__file__).parent
 
 
@@ -146,6 +146,7 @@ class ConsoleApplication:
             "results": (("IMPORT_RESULT", "IMPORT_FORWARD_TEST_RESULT"),),
             "settlements": (("SETTLE", "SETTLE_FORWARD_TEST_OBSERVATION"),),
             "reports": (("GENERATE_WEEKLY_REPORT", "GENERATE_WEEKLY_REPORT"),("GENERATE_CUMULATIVE_REPORT", "GENERATE_CUMULATIVE_REPORT"),("REPRODUCE_REPORT", "REPRODUCE_REPORT"),("COMPARE_REPORTS", "COMPARE_REPORTS"),("CREATE_EXPORT", "CREATE_REPORT_EXPORT")),
+            "governance": (("EVALUATE_GOVERNANCE", "EVALUATE_GOVERNANCE"),("REPRODUCE_GOVERNANCE", "REPRODUCE_GOVERNANCE"),("ACKNOWLEDGE_GOVERNANCE_WARNING", "ACKNOWLEDGE_GOVERNANCE_WARNING"),("GENERATE_GOVERNANCE_REPORT", "GENERATE_GOVERNANCE_REPORT")),
             "incidents": (("ACKNOWLEDGE_INCIDENT", "ACKNOWLEDGE_INCIDENT"),("RESOLVE_INCIDENT", "RESOLVE_INCIDENT")),
         }
         if page not in definitions:

@@ -5002,6 +5002,104 @@ MIGRATIONS = (
             "CREATE TRIGGER IF NOT EXISTS reasoning_findings_no_delete BEFORE DELETE ON prediction_reasoning_audit_findings BEGIN SELECT RAISE(ABORT,'Prediction reasoning findings are immutable'); END",
         ),
     ),
+    Migration(
+        version=41,
+        statements=(
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_policies (
+                policy_id TEXT PRIMARY KEY, policy_version TEXT NOT NULL,
+                policy_fingerprint TEXT NOT NULL UNIQUE, policy_json TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_evaluations (
+                evaluation_id TEXT PRIMARY KEY, cutoff_utc TEXT NOT NULL,
+                evidence_class TEXT NOT NULL, sample_maturity TEXT NOT NULL,
+                governance_status TEXT NOT NULL, policy_fingerprint TEXT NOT NULL,
+                evaluation_fingerprint TEXT NOT NULL UNIQUE, request_fingerprint TEXT NOT NULL UNIQUE,
+                evaluation_json TEXT NOT NULL, created_at_utc TEXT NOT NULL,
+                FOREIGN KEY(policy_fingerprint) REFERENCES forward_test_governance_policies(policy_fingerprint)
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_windows (
+                window_id TEXT PRIMARY KEY, evaluation_id TEXT NOT NULL,
+                window_kind TEXT NOT NULL, scope_type TEXT NOT NULL, scope_value TEXT NOT NULL,
+                sample_size INTEGER NOT NULL CHECK(sample_size>=0), window_fingerprint TEXT NOT NULL,
+                window_json TEXT NOT NULL, FOREIGN KEY(evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id),
+                UNIQUE(evaluation_id,window_kind,scope_type,scope_value)
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_scope_statuses (
+                scope_status_id TEXT PRIMARY KEY, evaluation_id TEXT NOT NULL,
+                scope_type TEXT NOT NULL, scope_value TEXT NOT NULL, status TEXT NOT NULL,
+                primary_reason TEXT NOT NULL, scope_fingerprint TEXT NOT NULL,
+                metrics_json TEXT NOT NULL, FOREIGN KEY(evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id),
+                UNIQUE(evaluation_id,scope_type,scope_value)
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_decisions (
+                decision_id TEXT PRIMARY KEY, evaluation_id TEXT NOT NULL UNIQUE,
+                status TEXT NOT NULL, publication_impact TEXT NOT NULL,
+                decision_fingerprint TEXT NOT NULL UNIQUE, decision_json TEXT NOT NULL,
+                FOREIGN KEY(evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_transitions (
+                transition_id TEXT PRIMARY KEY, evaluation_id TEXT NOT NULL,
+                previous_evaluation_id TEXT, previous_status TEXT, current_status TEXT NOT NULL,
+                transition_reason TEXT NOT NULL, transition_fingerprint TEXT NOT NULL UNIQUE,
+                transition_json TEXT NOT NULL, occurred_at_utc TEXT NOT NULL,
+                FOREIGN KEY(evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id),
+                FOREIGN KEY(previous_evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_recommendations (
+                recommendation_id TEXT PRIMARY KEY, evaluation_id TEXT NOT NULL,
+                recommendation_type TEXT NOT NULL, outcome TEXT NOT NULL,
+                recommendation_fingerprint TEXT NOT NULL UNIQUE, recommendation_json TEXT NOT NULL,
+                FOREIGN KEY(evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id),
+                UNIQUE(evaluation_id,recommendation_type)
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_reproductions (
+                reproduction_id TEXT PRIMARY KEY, evaluation_id TEXT NOT NULL,
+                status TEXT NOT NULL, reproduction_fingerprint TEXT NOT NULL UNIQUE,
+                reproduction_json TEXT NOT NULL, checked_at_utc TEXT NOT NULL,
+                FOREIGN KEY(evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_observation_governance_snapshots (
+                snapshot_id TEXT PRIMARY KEY, observation_id TEXT NOT NULL UNIQUE,
+                evaluation_id TEXT NOT NULL, publication_decision TEXT NOT NULL,
+                snapshot_fingerprint TEXT NOT NULL UNIQUE, snapshot_json TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL,
+                FOREIGN KEY(observation_id) REFERENCES forward_test_observations(observation_id),
+                FOREIGN KEY(evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS forward_test_governance_events (
+                event_id TEXT PRIMARY KEY, evaluation_id TEXT NOT NULL,
+                event_type TEXT NOT NULL, operator_identity TEXT, reason TEXT,
+                event_fingerprint TEXT NOT NULL UNIQUE, event_json TEXT NOT NULL,
+                occurred_at_utc TEXT NOT NULL,
+                FOREIGN KEY(evaluation_id) REFERENCES forward_test_governance_evaluations(evaluation_id)
+            )""",
+            "CREATE INDEX IF NOT EXISTS idx_governance_evaluations_cutoff ON forward_test_governance_evaluations(cutoff_utc,evaluation_id)",
+            "CREATE INDEX IF NOT EXISTS idx_governance_scope_status ON forward_test_governance_scope_statuses(scope_type,scope_value,status)",
+            "CREATE INDEX IF NOT EXISTS idx_governance_recommendation_outcome ON forward_test_governance_recommendations(recommendation_type,outcome)",
+            "CREATE INDEX IF NOT EXISTS idx_governance_events_evaluation ON forward_test_governance_events(evaluation_id,occurred_at_utc)",
+            "CREATE TRIGGER IF NOT EXISTS governance_policies_no_update BEFORE UPDATE ON forward_test_governance_policies BEGIN SELECT RAISE(ABORT,'Governance policies are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_policies_no_delete BEFORE DELETE ON forward_test_governance_policies BEGIN SELECT RAISE(ABORT,'Governance policies are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_evaluations_no_update BEFORE UPDATE ON forward_test_governance_evaluations BEGIN SELECT RAISE(ABORT,'Governance evaluations are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_evaluations_no_delete BEFORE DELETE ON forward_test_governance_evaluations BEGIN SELECT RAISE(ABORT,'Governance evaluations are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_windows_no_update BEFORE UPDATE ON forward_test_governance_windows BEGIN SELECT RAISE(ABORT,'Governance windows are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_windows_no_delete BEFORE DELETE ON forward_test_governance_windows BEGIN SELECT RAISE(ABORT,'Governance windows are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_scopes_no_update BEFORE UPDATE ON forward_test_governance_scope_statuses BEGIN SELECT RAISE(ABORT,'Governance scope statuses are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_scopes_no_delete BEFORE DELETE ON forward_test_governance_scope_statuses BEGIN SELECT RAISE(ABORT,'Governance scope statuses are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_decisions_no_update BEFORE UPDATE ON forward_test_governance_decisions BEGIN SELECT RAISE(ABORT,'Governance decisions are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_decisions_no_delete BEFORE DELETE ON forward_test_governance_decisions BEGIN SELECT RAISE(ABORT,'Governance decisions are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_transitions_no_update BEFORE UPDATE ON forward_test_governance_transitions BEGIN SELECT RAISE(ABORT,'Governance transitions are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_transitions_no_delete BEFORE DELETE ON forward_test_governance_transitions BEGIN SELECT RAISE(ABORT,'Governance transitions are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_recommendations_no_update BEFORE UPDATE ON forward_test_governance_recommendations BEGIN SELECT RAISE(ABORT,'Governance recommendations are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_recommendations_no_delete BEFORE DELETE ON forward_test_governance_recommendations BEGIN SELECT RAISE(ABORT,'Governance recommendations are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_reproductions_no_update BEFORE UPDATE ON forward_test_governance_reproductions BEGIN SELECT RAISE(ABORT,'Governance reproductions are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_reproductions_no_delete BEFORE DELETE ON forward_test_governance_reproductions BEGIN SELECT RAISE(ABORT,'Governance reproductions are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS observation_governance_no_update BEFORE UPDATE ON forward_test_observation_governance_snapshots BEGIN SELECT RAISE(ABORT,'Observation governance snapshots are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS observation_governance_no_delete BEFORE DELETE ON forward_test_observation_governance_snapshots BEGIN SELECT RAISE(ABORT,'Observation governance snapshots are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_events_no_update BEFORE UPDATE ON forward_test_governance_events BEGIN SELECT RAISE(ABORT,'Governance events are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS governance_events_no_delete BEFORE DELETE ON forward_test_governance_events BEGIN SELECT RAISE(ABORT,'Governance events are immutable'); END"
+        ),
+    ),
 )
 
 

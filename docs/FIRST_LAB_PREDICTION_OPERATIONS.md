@@ -1,5 +1,7 @@
 # First LAB Prediction Operations Runbook
 
+Before any future manual LAB send, a current governance evaluation is mandatory. Publication review fails closed when the evaluation is missing or stale, the system is paused, or the selected market, competition, bookmaker, model generation, calibration artifact, input drift, or explanation drift is blocked. Persist the observation-time governance snapshot so later settlements cannot rewrite decision-time eligibility.
+
 The optional local review surface is documented in
 `docs/LAB_OPERATOR_CONSOLE.md`. Start it read-only on `127.0.0.1`; it does not
 replace or schedule any existing readiness, discovery, review, sender, result

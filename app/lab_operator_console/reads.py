@@ -113,6 +113,23 @@ class ConsoleReadService:
         findings=tuple((f["severity"],f["code"],f["affected_identifier"],f["detail"]) for f in report["data_quality"]["findings"])
         return PageModel("Monitoring",report["data_quality"]["status"],summary,(TableModel("Data quality",("severity","code","identifier","detail"),findings),),("Hypothetical results are not proof of profitability.",),self.demo)
 
+    def _governance(self,identifier):
+        if not self._table("forward_test_governance_evaluations"):
+            return PageModel("Forward-test governance","GOVERNANCE_REQUIRED",(("latest_evaluation","NONE"),),(),("Run an explicit governance evaluation after settled evidence exists.",),self.demo)
+        query="SELECT evaluation_json FROM forward_test_governance_evaluations"
+        params=[]
+        if identifier:query+=" WHERE evaluation_id=?";params.append(identifier)
+        query+=" ORDER BY cutoff_utc DESC,evaluation_id DESC LIMIT 1"
+        row=self._one(query,tuple(params))
+        if not row:return PageModel("Forward-test governance","GOVERNANCE_REQUIRED",(("latest_evaluation","NONE"),),(),("Publication fails closed without current governance evidence.",),self.demo)
+        value=json.loads(row[0]);decision=value["decision"];metrics=value["metrics"]
+        scopes=tuple((item["scope_type"],item["scope_value"],item["status"],item["primary_reason"],item["scope_fingerprint"]) for item in value["scope_statuses"])
+        recommendations=tuple((item["type"],item["outcome"],item.get("execution_performed",False),json.dumps(item,sort_keys=True)) for item in value["recommendations"])
+        transitions=self._rows("SELECT previous_status,current_status,transition_reason,occurred_at_utc,transition_fingerprint FROM forward_test_governance_transitions ORDER BY occurred_at_utc DESC LIMIT ?",(self.page_size,))
+        reproductions=self._rows("SELECT status,checked_at_utc,reproduction_fingerprint FROM forward_test_governance_reproductions ORDER BY checked_at_utc DESC LIMIT ?",(self.page_size,))
+        summary=(("evaluation_id",value["evaluation_id"]),("cutoff_utc",value["cutoff_utc"]),("sample_maturity",value["sample_maturity"]),("decision",decision["status"]),("publication_impact",decision["publication_impact"]),("predictive",metrics["predictive_status"]),("calibration",metrics["calibration_status"]),("input_drift",metrics["input_drift_status"]),("data_completeness",metrics["data_completeness"]["status"]),("odds_drift",metrics["odds_drift"]["status"]),("explanation_drift",metrics["explanation_drift"]["status"]),("generation_comparison",metrics["generation_comparison"]["status"]),("network_calls_current_request",0),("telegram_calls_current_request",0))
+        return PageModel("Forward-test governance",decision["status"],summary,(TableModel("Market, competition, bookmaker, model and calibration scopes",("type","scope","status","reason","fingerprint"),scopes),TableModel("Manual recommendations",("type","outcome","executed","evidence"),recommendations),TableModel("Transitions",("previous","current","reason","occurred","fingerprint"),transitions),TableModel("Reproduction",("status","checked","fingerprint"),reproductions)),("Early samples remain insufficient; governance is not proof of profitability.","Recommendations never train, recalibrate, activate, or roll back automatically."),self.demo)
+
     def _reports(self,identifier):
         query="SELECT report_id,report_kind,period_start_utc,period_end_utc,policy_version,report_fingerprint,report_json FROM forward_test_monitoring_reports";params=[]
         if identifier:query+=" WHERE report_id=?";params.append(identifier)
@@ -153,7 +170,7 @@ class ConsoleReadService:
 
     def _counts(self):
         def count(table,where="1=1"):return self._one(f"SELECT COUNT(*) FROM {table} WHERE {where}")[0] if self._table(table) else 0
-        return {"discovery_runs":count("first_lab_run_executions"),"candidates":count("first_lab_run_stage_events","stage_name LIKE '%CANDIDATE%'"),"observations":count("forward_test_observations"),"actionable":count("forward_test_observations","actionable=1"),"blocked":count("forward_test_observations","status='BLOCKED'"),"no_selections":count("forward_test_observations","status='NO_SELECTION'"),"reviews":count("forward_test_publication_reviews"),"lab_publications":count("real_match_lab_deliveries","status='SENT'"),"pending_results":count("forward_test_observations")-count("forward_test_results"),"settlements":count("forward_test_settlements"),"incidents":count("forward_test_monitoring_incidents")}
+        return {"discovery_runs":count("first_lab_run_executions"),"candidates":count("first_lab_run_stage_events","stage_name LIKE '%CANDIDATE%'"),"observations":count("forward_test_observations"),"actionable":count("forward_test_observations","actionable=1"),"blocked":count("forward_test_observations","status='BLOCKED'"),"no_selections":count("forward_test_observations","status='NO_SELECTION'"),"reviews":count("forward_test_publication_reviews"),"lab_publications":count("real_match_lab_deliveries","status='SENT'"),"pending_results":count("forward_test_observations")-count("forward_test_results"),"settlements":count("forward_test_settlements"),"governance_evaluations":count("forward_test_governance_evaluations"),"incidents":count("forward_test_monitoring_incidents")}
 
     def _not_found(self,_):return PageModel("Not found","NOT_FOUND",(),(),("Unknown console page.",),self.demo)
     def _table(self,name):return self._one("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",(name,)) is not None

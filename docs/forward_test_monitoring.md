@@ -1,5 +1,7 @@
 # Forward-Test Monitoring and Weekly Reporting
 
+Monitoring incidents now include deduplicated serious governance failures and recommendation escalations linked to the immutable evaluation fingerprint. Acknowledgement records awareness only; resolution requires append-only corrective evidence and a later policy-valid governance evaluation.
+
 The local console integrates these reports through typed read services. It
 computes page views with `persist=False`; report persistence is possible only
 through an explicitly enabled, confirmed POST action. See

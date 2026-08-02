@@ -184,7 +184,7 @@ class FirstLabOperationalReadinessTests(unittest.TestCase):
         result, _ = self.run_workflow(); self.assertEqual(fingerprint(result["preview"]["message_html"]), fingerprint(result["preview"]["message_html"])); result["preview"]["message_html"].encode("ascii", errors="backslashreplace")
 
     def test_22_schema_37_and_zero_startup_execution(self):
-        self.assertEqual(self.db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 40); self.assertEqual(self.db.connection.execute("SELECT COUNT(*) FROM first_lab_run_executions").fetchone()[0], 0)
+        self.assertEqual(self.db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 41); self.assertEqual(self.db.connection.execute("SELECT COUNT(*) FROM first_lab_run_executions").fetchone()[0], 0)
 
     def test_23_interrupted_after_provider_call_recovers_without_discovery(self):
         run_id = "interrupted"; parameters = {"max_calls": 40}; selected = selected_fixture()

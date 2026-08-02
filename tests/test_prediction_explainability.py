@@ -121,7 +121,7 @@ class PredictionExplainabilityTests(unittest.TestCase):
         self.assertEqual(caught.exception.status,"FEATURE_SCHEMA_MISMATCH")
 
     def test_schema_40_and_no_startup_reasoning(self):
-        self.assertEqual(self.db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0],40)
+        self.assertEqual(self.db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0],41)
         empty=Database(":memory:")
         try:
             SQLiteReasoningRepository(empty)

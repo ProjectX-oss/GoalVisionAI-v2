@@ -31,6 +31,10 @@ ACTION_POLICY={
     "CREATE_EXPORT":("CREATE_REPORT_EXPORT",0,False,"forward_test_monitoring_exports"),
     "ACKNOWLEDGE_INCIDENT":("ACKNOWLEDGE_INCIDENT",0,False,"forward_test_monitoring_incident_events"),
     "RESOLVE_INCIDENT":("RESOLVE_INCIDENT",0,False,"forward_test_monitoring_incident_events"),
+    "EVALUATE_GOVERNANCE":("EVALUATE_GOVERNANCE",0,False,"forward_test_governance_evaluations"),
+    "REPRODUCE_GOVERNANCE":("REPRODUCE_GOVERNANCE",0,False,"forward_test_governance_reproductions"),
+    "ACKNOWLEDGE_GOVERNANCE_WARNING":("ACKNOWLEDGE_GOVERNANCE_WARNING",0,False,"forward_test_governance_events"),
+    "GENERATE_GOVERNANCE_REPORT":("GENERATE_GOVERNANCE_REPORT",0,False,"forward_test_governance_events"),
     "READINESS_NETWORK_VERIFY":("VERIFY_API_FOOTBALL_ONCE",1,False,"lab_operator_console_actions"),
     "BOUNDED_DISCOVERY":("RUN_BOUNDED_DISCOVERY",40,False,"first_lab_run_executions"),
     "FAKE_LAB_SEND":("FAKE_LAB_SEND_ONLY",0,True,"lab_operator_console_action_events"),
@@ -96,6 +100,21 @@ class ConsoleActionService:
             return _created("forward_test_monitoring_exports",value["manifest_fingerprint"],value["manifest_fingerprint"],"COMPLETED")
         if request.action_type in {"ACKNOWLEDGE_INCIDENT","RESOLVE_INCIDENT"}:
             value=monitoring.acknowledge_incident(request.target_identifier or "",request.operator_identifier,str(request.normalized_input.get("reason","")),now,resolved=request.action_type=="RESOLVE_INCIDENT"); return _created("forward_test_monitoring_incident_events",value["event_id"],value["event_fingerprint"],"COMPLETED")
+        if request.action_type in {"EVALUATE_GOVERNANCE","REPRODUCE_GOVERNANCE","ACKNOWLEDGE_GOVERNANCE_WARNING","GENERATE_GOVERNANCE_REPORT"}:
+            from app.forward_test_governance import GovernanceService
+            from app.forward_test_governance.reports import build_report
+            governance=GovernanceService(self.database)
+            if request.action_type=="EVALUATE_GOVERNANCE":
+                value=governance.evaluate(str(request.normalized_input.get("cutoff") or request.requested_at_utc));governance.record_incidents(value["evaluation_id"]);return _created("forward_test_governance_evaluations",value["evaluation_id"],value["evaluation_fingerprint"],value["decision"]["status"])
+            if request.action_type=="REPRODUCE_GOVERNANCE":
+                value=governance.reproduce(request.target_identifier or "",request.requested_at_utc);return _created("forward_test_governance_reproductions",value["reproduction_id"],value["reproduction_fingerprint"],"COMPLETED" if value["status"]=="GOVERNANCE_REPRODUCED" else "BLOCKED")
+            evaluation=governance.repository.load(request.target_identifier or "") or governance.repository.latest()
+            if evaluation is None:raise ValueError("Governance evaluation not found.")
+            if request.action_type=="ACKNOWLEDGE_GOVERNANCE_WARNING":
+                reason=str(request.normalized_input.get("reason","")).strip()
+                if not reason:raise ValueError("A reason is required.")
+                value=governance.repository.append_event(evaluation["evaluation_id"],"WARNING_ACKNOWLEDGED",request.operator_identifier,reason,request.requested_at_utc);return _created("forward_test_governance_events",value["event_id"],value["event_fingerprint"],"COMPLETED")
+            report=build_report(evaluation);value=governance.repository.append_event(evaluation["evaluation_id"],"REPORT_GENERATED",request.operator_identifier,report["report_fingerprint"],request.requested_at_utc);return _created("forward_test_governance_events",value["event_id"],value["event_fingerprint"],"COMPLETED")
         if request.action_type=="FAKE_LAB_SEND":return {"status":"COMPLETED","provider_calls":0,"telegram_calls":0,"after_fingerprint":fingerprint({"fake_transport":True,"target":request.target_identifier})}
         return {"status":"BLOCKED","provider_calls":0,"telegram_calls":0,"after_fingerprint":fingerprint({"reason":"Provider action requires a separately injected bounded executor."})}
 

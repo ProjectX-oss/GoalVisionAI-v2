@@ -109,7 +109,7 @@ class ReviewedRealMigrationTests(unittest.TestCase):
 
     def test_latest_migration_is_37_and_foreign_keys_hold(self):
         version = self.database.connection.execute("SELECT max(version) FROM schema_migrations").fetchone()[0]
-        self.assertEqual(version, 40)
+        self.assertEqual(version, 41)
         self.assertEqual(self.database.connection.execute("PRAGMA foreign_key_check").fetchall(), [])
 
     def test_source_review_is_append_only(self):
