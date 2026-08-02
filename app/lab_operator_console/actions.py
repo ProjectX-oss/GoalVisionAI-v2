@@ -21,6 +21,7 @@ from .models import ActionRequest
 
 ACTION_POLICY={
     "CREATE_PUBLICATION_REVIEW":("CREATE_PUBLICATION_REVIEW",0,False,"forward_test_publication_reviews"),
+    "CREATE_REASONING":("CREATE_PREDICTION_REASONING",0,False,"prediction_reasoning_records"),
     "IMPORT_RESULT":("IMPORT_FORWARD_TEST_RESULT",0,False,"forward_test_results"),
     "SETTLE":("SETTLE_FORWARD_TEST_OBSERVATION",0,False,"forward_test_settlements"),
     "GENERATE_WEEKLY_REPORT":("GENERATE_WEEKLY_REPORT",0,False,"forward_test_monitoring_reports"),
@@ -66,6 +67,10 @@ class ConsoleActionService:
         ft=SQLiteForwardTestRepository(self.database,migrate=False); monitoring=MonitoringService(SQLiteMonitoringRepository(self.database,migrate=False)); now=datetime.fromisoformat(request.requested_at_utc.replace("Z","+00:00"))
         if request.action_type=="CREATE_PUBLICATION_REVIEW":
             value=build_publication_review(ft,request.target_identifier or "",reviewed_at=now,persist=FirstLabOperationsRepository(self.database,migrate=False)); return _created("forward_test_publication_reviews",value.get("review_id"),value.get("review_fingerprint"),value["status"])
+        if request.action_type=="CREATE_REASONING":
+            from app.prediction_explainability import PredictionExplainabilityService
+            value=PredictionExplainabilityService(self.database).create_for_analysis(request.target_identifier or "",created_at_utc=now.isoformat(),observation_id=request.normalized_input.get("observation_id") or None)
+            return _created("prediction_reasoning_records",value["record"].reasoning_id,value["record"].reasoning_fingerprint,"COMPLETED" if value["audit"].status in {"REASONING_AUDIT_PASSED","REASONING_AUDIT_WARNING"} else "BLOCKED")
         if request.action_type=="IMPORT_RESULT":
             value=ForwardTestService(ft).record_result(request.target_identifier or "",request.normalized_input["result"]); return _created("forward_test_results",value.result_id,value.result_fingerprint,"COMPLETED")
         if request.action_type=="SETTLE":

@@ -65,6 +65,15 @@ class ConsoleReadService:
             rows.append((row[0],row[1],row[2],row[3],row[4],evidence.get("model_artifact_id","UNKNOWN"),evidence.get("calibration_set_id","UNKNOWN"),markets,row[6],row[7]))
         return PageModel("Analysis and market comparison","READ_ONLY",(("canonical_market_maximum",11),("browser_inference",False)),(TableModel("Analyses",("analysis","fixture","kickoff","outcome","selected","model","calibration","market evaluations","fingerprint","created"),tuple(rows)),),(),self.demo)
 
+    def _reasoning(self,identifier):
+        query="""SELECT r.reasoning_id,r.observation_id,r.analysis_id,r.selected_market,r.reasoning_status,r.public_reasoning_fingerprint,r.reasoning_fingerprint,r.created_at_utc,r.reasoning_json,a.status,a.audit_fingerprint FROM prediction_reasoning_records r LEFT JOIN prediction_reasoning_audits a ON a.reasoning_id=r.reasoning_id""";params=[]
+        if identifier:query+=" WHERE r.reasoning_id=? OR r.analysis_id=? OR r.observation_id=?";params.extend((identifier,identifier,identifier))
+        query+=" ORDER BY r.created_at_utc DESC,r.reasoning_id LIMIT ?";params.append(self.page_size);rows=[]
+        for row in self._rows(query,tuple(params)) if self._table("prediction_reasoning_records") else ():
+            raw=json.loads(row[8]);rows.append(tuple(row[:8])+(raw.get("contribution_reproduction_status"),raw.get("explanation_stability_status"),raw.get("supporting_factors"),raw.get("opposing_factors"),raw.get("risk_factors"),raw.get("missing_data_disclosures"),raw.get("calibration_explanation"),raw.get("shift_explanation"),raw.get("confidence_explanation"),raw.get("counterfactuals"),raw.get("market_explanations"),raw.get("public_reasoning_html"),raw.get("operator_reasoning_json"),row[9],row[10]))
+        columns=("reasoning","observation","analysis","market","status","public fingerprint","fingerprint","created","reproduction","stability","positive evidence","negative evidence","risks","missing data","calibration","shift","confidence","counterfactuals","rejected markets","public preview","operator JSON","audit","audit fingerprint")
+        return PageModel("Prediction reasoning","READ_ONLY",(("browser_recalculation",False),("network_calls_current_request",0),("telegram_calls_current_request",0)),(TableModel("Immutable reasoning and audit",columns,tuple(rows)),),("Reasoning is coefficient evidence, not causation or proof of profitability.",),self.demo)
+
     def _observations(self,identifier):
         query="SELECT observation_id,canonical_fixture_id,analysis_id,odds_snapshot_id,status,actionable,preview_available,lab_send_eligible,official_eligible,evidence_tier,observation_fingerprint,created_at_utc FROM forward_test_observations";params=[]
         if identifier:query+=" WHERE observation_id=?";params.append(identifier)
@@ -76,9 +85,13 @@ class ConsoleReadService:
         if identifier:query+=" AND observation_id=?";params.append(identifier)
         query+=" ORDER BY created_at_utc DESC LIMIT ?";params.append(self.page_size)
         rows=[]
+        from app.prediction_explainability.presentation import compose_reasoned_message
+        from app.prediction_explainability.repository import SQLiteReasoningRepository
+        reasoning_repository=SQLiteReasoningRepository.from_connection(self.connection) if self._table("prediction_reasoning_records") else None
         for row in self._rows(query,tuple(params)) if self._table("forward_test_observations") else ():
-            raw=json.loads(row[2]);rows.append((row[0],row[1],raw.get("message_preview"),raw.get("message_fingerprint"),row[3]))
-        return PageModel("LAB previews","PREVIEW_ONLY",(("telegram_sent",False),("notice","PREVIEW ONLY — NOTHING HAS BEEN SENT")),(TableModel("Telegram-safe previews",("observation","analysis","escaped source","fingerprint","created"),tuple(rows)),),("Copying a preview does not authorize publication.",),self.demo)
+            raw=json.loads(row[2]);reasoning=reasoning_repository.for_observation(row[0]) if reasoning_repository else None;audit=reasoning_repository.audit_for(reasoning.reasoning_id) if reasoning else None;reasoned=compose_reasoned_message(raw.get("message_preview") or "",reasoning) if reasoning else None
+            rows.append((row[0],row[1],raw.get("message_preview"),raw.get("message_fingerprint"),reasoning.public_reasoning_html if reasoning else "REASONING_REQUIRED",reasoned["message_fingerprint"] if reasoned else None,audit.status if audit else "REASONING_AUDIT_REQUIRED",row[3]))
+        return PageModel("LAB previews","PREVIEW_ONLY",(("telegram_sent",False),("notice","PREVIEW ONLY — NOTHING HAS BEEN SENT")),(TableModel("Telegram-safe previews",("observation","analysis","escaped source","original fingerprint","public reasoning","reasoned fingerprint","reasoning audit","created"),tuple(rows)),),("Copying a preview does not authorize publication.",),self.demo)
 
     def _reviews(self,identifier):
         query="SELECT review_id,observation_id,review_status,message_fingerprint,reviewed_at_utc,review_fingerprint,review_snapshot FROM forward_test_publication_reviews";params=[]
@@ -96,7 +109,7 @@ class ConsoleReadService:
 
     def _monitoring(self,_):
         service=MonitoringService(SQLiteMonitoringRepository(self.database,migrate=False)); cutoff=datetime.now(timezone.utc); report=service.report("CUMULATIVE",cutoff,generated_at_utc=cutoff,persist=False); metrics=report["metrics"]
-        summary=tuple(metrics["volume"].items())+(("sample_status",metrics["sample_status"]),("hypothetical_label","HYPOTHETICAL_FLAT_STAKE"),("net_units",metrics["hypothetical_flat_stake"]["net_profit_units"]),("roi",metrics["hypothetical_flat_stake"]["roi"]),("drawdown",metrics["hypothetical_flat_stake"]["maximum_drawdown"]),("calibration_status",metrics["calibration"]["status"]),("network_calls_current_request",0))
+        explainability=report.get("explainability",{});summary=tuple(metrics["volume"].items())+(("sample_status",metrics["sample_status"]),("hypothetical_label","HYPOTHETICAL_FLAT_STAKE"),("net_units",metrics["hypothetical_flat_stake"]["net_profit_units"]),("roi",metrics["hypothetical_flat_stake"]["roi"]),("drawdown",metrics["hypothetical_flat_stake"]["maximum_drawdown"]),("calibration_status",metrics["calibration"]["status"]),("reasoning_records",explainability.get("reasoning_records_created",0)),("reasoning_audits",explainability.get("audit_status_counts",{})),("explanation_stability",explainability.get("stability_distribution",{})),("network_calls_current_request",0))
         findings=tuple((f["severity"],f["code"],f["affected_identifier"],f["detail"]) for f in report["data_quality"]["findings"])
         return PageModel("Monitoring",report["data_quality"]["status"],summary,(TableModel("Data quality",("severity","code","identifier","detail"),findings),),("Hypothetical results are not proof of profitability.",),self.demo)
 
@@ -105,8 +118,8 @@ class ConsoleReadService:
         if identifier:query+=" WHERE report_id=?";params.append(identifier)
         query+=" ORDER BY generated_at_utc DESC LIMIT ?";params.append(self.page_size); rows=[]
         for row in self._rows(query,tuple(params)) if self._table("forward_test_monitoring_reports") else ():
-            raw=json.loads(row[6]); rows.append(tuple(row[:6])+(raw.get("metrics",{}).get("sample_status"),raw.get("limitations",[])))
-        return PageModel("Weekly and cumulative reports","READ_ONLY",(("automatic_publication",False),),(TableModel("Reports",("report","kind","start","end","policy","fingerprint","sample","limitations"),tuple(rows)),),(),self.demo)
+            raw=json.loads(row[6]); rows.append(tuple(row[:6])+(raw.get("metrics",{}).get("sample_status"),raw.get("explainability",{}),raw.get("limitations",[])))
+        return PageModel("Weekly and cumulative reports","READ_ONLY",(("automatic_publication",False),),(TableModel("Reports",("report","kind","start","end","policy","fingerprint","sample","explainability","limitations"),tuple(rows)),),(),self.demo)
 
     def _unresolved(self,_):
         service=MonitoringService(SQLiteMonitoringRepository(self.database,migrate=False)); rows=service.unresolved(datetime.now(timezone.utc)); values=tuple((r["state"],"WARNING" if r["overdue"] else "INFO",r["observation_id"],r["due_at_utc"],"Inspect linked immutable evidence; do not auto-resolve.") for r in rows)

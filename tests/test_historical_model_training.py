@@ -338,7 +338,7 @@ class MigrationAndStartupTests(unittest.TestCase):
     def test_fresh_v26_and_v25_upgrade(self):
         fresh = Database(":memory:")
         MigrationManager(fresh.connection).migrate()
-        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 39)
+        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 40)
         self.assertEqual(fresh.connection.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name LIKE 'historical_model_%'").fetchone()[0], 6)
         fresh.close()
 
@@ -351,7 +351,7 @@ class MigrationAndStartupTests(unittest.TestCase):
             upgrade.connection.execute("CREATE TABLE IF NOT EXISTS schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)")
             upgrade.connection.execute("INSERT OR IGNORE INTO schema_migrations VALUES (?, 'now')", (migration.version,))
         MigrationManager(upgrade.connection).migrate()
-        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 39)
+        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 40)
         upgrade.close()
 
     def test_import_is_inert_and_creates_no_training_rows(self):

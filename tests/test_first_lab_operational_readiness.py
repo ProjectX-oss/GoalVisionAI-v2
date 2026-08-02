@@ -139,19 +139,19 @@ class FirstLabOperationalReadinessTests(unittest.TestCase):
         result, _ = self.run_workflow(); report = build_publication_review(self.repo, result["observation_id"], reviewed_at=NOW, persist=self.ops)
         self.assertEqual(report["status"], "LAB_PUBLICATION_REVIEW_BLOCKED"); self.assertIn("CALIBRATION_EVIDENCE_PRODUCTION", report["blocker_codes"]); self.assertFalse(report["telegram_send_executed"])
 
-    def test_13_publication_review_passes_production_evidence(self):
+    def test_13_publication_review_requires_reasoning_even_with_production_evidence(self):
         result, _ = self.run_workflow(controlled=False); report = build_publication_review(self.repo, result["observation_id"], reviewed_at=NOW, persist=self.ops)
-        self.assertEqual(report["status"], "LAB_PUBLICATION_REVIEW_PASSED"); self.assertTrue(report["review_fingerprint"])
+        self.assertEqual(report["status"], "LAB_PUBLICATION_REVIEW_BLOCKED"); self.assertIn("REASONING_PRESENT",report["blocker_codes"]); self.assertTrue(report["review_fingerprint"])
 
     def test_14_wrong_destination_confirmation_and_message_rejected(self):
         result, _ = self.run_workflow(controlled=False); obs = json.loads(self.repo.load_observation(result["observation_id"])["observation_json"]); review = build_publication_review(self.repo, result["observation_id"], reviewed_at=NOW, persist=self.ops)
         report = validate_manual_send_authorization(self.repo, observation_id=result["observation_id"], review_fingerprint=review["review_fingerprint"], message_fingerprint="wrong", confirmation="wrong", environment="PROD", chat_id="wrong", bot="wrong", now=NOW)
         self.assertEqual(report["status"], "LAB_MANUAL_SEND_REJECTED"); self.assertIn("WRONG_DESTINATION", report["blocker_codes"]); self.assertIn("MESSAGE_FINGERPRINT_CONFLICT", report["blocker_codes"])
 
-    def test_15_exact_manual_send_readiness_links_all_fingerprints_but_does_not_send(self):
+    def test_15_exact_manual_send_readiness_fails_closed_without_reasoning(self):
         result, _ = self.run_workflow(controlled=False); obs = json.loads(self.repo.load_observation(result["observation_id"])["observation_json"]); review = build_publication_review(self.repo, result["observation_id"], reviewed_at=NOW, persist=self.ops)
         report = validate_manual_send_authorization(self.repo, observation_id=result["observation_id"], review_fingerprint=review["review_fingerprint"], message_fingerprint=obs["message_fingerprint"], confirmation=SEND_CONFIRMATION, environment="LAB", chat_id=LAB_CHAT_ID, bot=LAB_BOT_USERNAME, now=NOW)
-        self.assertEqual(report["status"], "LAB_MANUAL_SEND_AUTHORIZED"); self.assertFalse(report["transport_constructed"]); self.assertFalse(report["telegram_send_executed"])
+        self.assertEqual(report["status"], "LAB_MANUAL_SEND_REJECTED"); self.assertIn("PUBLICATION_REVIEW_NOT_PASSED",report["blocker_codes"]); self.assertFalse(report["transport_constructed"]); self.assertFalse(report["telegram_send_executed"])
 
     def test_16_non_actionable_observation_cannot_send(self):
         result, _ = self.run_workflow(controlled=False, actionable=False); review = build_publication_review(self.repo, result["observation_id"], reviewed_at=NOW, persist=self.ops)
@@ -184,7 +184,7 @@ class FirstLabOperationalReadinessTests(unittest.TestCase):
         result, _ = self.run_workflow(); self.assertEqual(fingerprint(result["preview"]["message_html"]), fingerprint(result["preview"]["message_html"])); result["preview"]["message_html"].encode("ascii", errors="backslashreplace")
 
     def test_22_schema_37_and_zero_startup_execution(self):
-        self.assertEqual(self.db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 39); self.assertEqual(self.db.connection.execute("SELECT COUNT(*) FROM first_lab_run_executions").fetchone()[0], 0)
+        self.assertEqual(self.db.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 40); self.assertEqual(self.db.connection.execute("SELECT COUNT(*) FROM first_lab_run_executions").fetchone()[0], 0)
 
     def test_23_interrupted_after_provider_call_recovers_without_discovery(self):
         run_id = "interrupted"; parameters = {"max_calls": 40}; selected = selected_fixture()

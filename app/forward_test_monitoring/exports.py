@@ -24,6 +24,7 @@ def markdown(report: dict[str, Any]) -> str:
         "> LAB forward-test evidence only. No bets were placed. Returns are HYPOTHETICAL_FLAT_STAKE. This is not proof of profitability.", "",
         "## Volume", "", f"- Observations: {volume['observations_created']}", f"- Actionable: {volume['actionable_selections']}", f"- No selection: {volume['no_selections']}", f"- Blocked: {volume['blocked_analyses']}", f"- Published / unpublished: {volume['published_predictions']} / {volume['unpublished_valid_predictions']}", "",
         "## Results", "", f"- Won / lost / void: {results['wins']} / {results['losses']} / {results['voids']}", f"- Hit rate: {_show(results['hit_rate'])}", f"- Net units: {_show(simulation['net_profit_units'])}", f"- ROI: {_show(simulation['roi'])}", f"- Maximum drawdown: {_show(simulation['maximum_drawdown'])}", "",
+        "## Explainability", "", f"- Reasoning records: {report.get('explainability',{}).get('reasoning_records_created',0)}", f"- Reasoning audits: {_show(report.get('explainability',{}).get('audit_status_counts',{}))}", f"- Explanation sample: {report.get('explainability',{}).get('sample_status','FORWARD_TEST_SAMPLE_INSUFFICIENT')}", "",
         "## Data quality", "", f"- Status: {report['data_quality']['status']}", f"- Findings: {len(report['data_quality']['findings'])}", f"- Unresolved: {len(report['unresolved'])}", "",
         "## Limitations", "", *(f"- {item}" for item in report["limitations"]), "", f"Report fingerprint: `{report['report_fingerprint']}`", "",
     ))
@@ -31,7 +32,7 @@ def markdown(report: dict[str, Any]) -> str:
 
 def telegram_preview(report: dict[str, Any]) -> str:
     metrics=report["metrics"]; volume=metrics["volume"]; results=metrics["results"]; simulation=metrics["hypothetical_flat_stake"]
-    return "\n".join(("⚽ GoalVision AI LAB Forward-Test", f"{report['report_kind'].title()} monitoring preview", "", f"Observations: {volume['observations_created']}", f"Actionable / no selection / blocked: {volume['actionable_selections']} / {volume['no_selections']} / {volume['blocked_analyses']}", f"W / L / Void: {results['wins']} / {results['losses']} / {results['voids']}", f"Hypothetical net: {_show(simulation['net_profit_units'])} units", f"Sample: {metrics['sample_status']}", "", "LAB forward-test only. No bets were placed.", "Hypothetical flat-stake simulation; not proof of profitability.", "Preview only — Telegram send is disabled."))
+    return "\n".join(("⚽ GoalVision AI LAB Forward-Test", f"{report['report_kind'].title()} monitoring preview", "", f"Observations: {volume['observations_created']}", f"Actionable / no selection / blocked: {volume['actionable_selections']} / {volume['no_selections']} / {volume['blocked_analyses']}", f"W / L / Void: {results['wins']} / {results['losses']} / {results['voids']}", f"Reasoning records: {report.get('explainability',{}).get('reasoning_records_created',0)}", f"Hypothetical net: {_show(simulation['net_profit_units'])} units", f"Sample: {metrics['sample_status']}", "", "LAB forward-test only. No bets were placed.", "Explanation frequency does not prove predictive quality or profitability.", "Hypothetical flat-stake simulation; not proof of profitability.", "Preview only — Telegram send is disabled."))
 
 
 def export_bundle(report: dict[str, Any], output_directory: Path, *, overwrite: bool = False) -> dict[str, Any]:

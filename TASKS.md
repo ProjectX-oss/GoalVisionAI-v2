@@ -1,5 +1,21 @@
 # TASKS.md
 
+## Prediction explainability and reasoning quality foundation (2026-08-02)
+
+- [x] Add exact deterministic live-78 multinomial score/probability attribution
+  with explicit bucket-derived totals and no fabricated direct contribution.
+- [x] Add a reviewed 78-feature catalog, grouped material evidence, risks,
+  missing-data, calibration, shift, confidence and counterfactual disclosures.
+- [x] Add schema v40 immutable reasoning, normalized contribution and strict
+  audit evidence with replay/conflict and foreign-key protection.
+- [x] Bind Lab publication review to the exact reasoning, passed audit and
+  composite message fingerprint; keep pre-reasoning previews diagnostic-only.
+- [x] Add offline CLI, operator-console, monitoring and reporting integration.
+- [x] Complete a controlled fictional rehearsal with exact reproduction and
+  zero provider, Telegram, delivery, Official, bankroll, statistics, scheduler
+  or production activity.
+- [x] Document policy, audit, operator use and limitations.
+
 ## Local Lab operator console foundation (2026-08-02)
 
 - [x] Add a standard-library, server-rendered local console with no new runtime

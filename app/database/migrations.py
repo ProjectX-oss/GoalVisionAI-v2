@@ -4896,6 +4896,112 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS lab_console_demo_manifests_no_delete BEFORE DELETE ON lab_operator_console_demo_manifests BEGIN SELECT RAISE(ABORT,'Lab console demo manifests are immutable'); END""",
         ),
     ),
+    Migration(
+        version=40,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS prediction_reasoning_records (
+                reasoning_id TEXT PRIMARY KEY,
+                observation_id TEXT,
+                analysis_id TEXT NOT NULL,
+                model_input_id TEXT NOT NULL,
+                model_input_fingerprint TEXT NOT NULL,
+                model_artifact_id TEXT NOT NULL,
+                model_artifact_fingerprint TEXT NOT NULL,
+                calibration_artifact_id TEXT NOT NULL,
+                calibration_fingerprint TEXT NOT NULL,
+                selected_market TEXT NOT NULL,
+                reasoning_status TEXT NOT NULL CHECK(reasoning_status IN ('REASONING_CREATED','REASONING_BLOCKED')),
+                feature_catalog_fingerprint TEXT NOT NULL,
+                reasoning_policy_fingerprint TEXT NOT NULL,
+                public_reasoning_fingerprint TEXT NOT NULL,
+                reasoning_fingerprint TEXT NOT NULL UNIQUE,
+                reasoning_json TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL,
+                FOREIGN KEY(observation_id) REFERENCES forward_test_observations(observation_id),
+                FOREIGN KEY(analysis_id) REFERENCES real_match_lab_analyses(analysis_id),
+                UNIQUE(analysis_id,selected_market)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS prediction_reasoning_feature_contributions (
+                contribution_id TEXT PRIMARY KEY, reasoning_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL CHECK(deterministic_order>=0),
+                estimator_identity TEXT NOT NULL, class_identity TEXT NOT NULL,
+                feature_name TEXT NOT NULL, signed_contribution TEXT NOT NULL,
+                contribution_fingerprint TEXT NOT NULL, contribution_json TEXT NOT NULL,
+                FOREIGN KEY(reasoning_id) REFERENCES prediction_reasoning_records(reasoning_id),
+                UNIQUE(reasoning_id,deterministic_order)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS prediction_reasoning_group_contributions (
+                group_contribution_id TEXT PRIMARY KEY, reasoning_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL CHECK(deterministic_order>=1),
+                group_id TEXT NOT NULL, signed_contribution TEXT NOT NULL,
+                group_fingerprint TEXT NOT NULL, group_json TEXT NOT NULL,
+                FOREIGN KEY(reasoning_id) REFERENCES prediction_reasoning_records(reasoning_id),
+                UNIQUE(reasoning_id,deterministic_order)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS prediction_reasoning_factors (
+                factor_id TEXT PRIMARY KEY, reasoning_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL CHECK(deterministic_order>=0),
+                factor_type TEXT NOT NULL CHECK(factor_type IN ('SUPPORTING','OPPOSING')),
+                group_id TEXT NOT NULL, factor_fingerprint TEXT NOT NULL, factor_json TEXT NOT NULL,
+                FOREIGN KEY(reasoning_id) REFERENCES prediction_reasoning_records(reasoning_id),
+                UNIQUE(reasoning_id,deterministic_order)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS prediction_reasoning_market_explanations (
+                market_explanation_id TEXT PRIMARY KEY, reasoning_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL CHECK(deterministic_order>=0),
+                market TEXT NOT NULL, primary_rejection_code TEXT,
+                market_fingerprint TEXT NOT NULL, market_json TEXT NOT NULL,
+                FOREIGN KEY(reasoning_id) REFERENCES prediction_reasoning_records(reasoning_id),
+                UNIQUE(reasoning_id,market), UNIQUE(reasoning_id,deterministic_order)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS prediction_reasoning_audits (
+                audit_id TEXT PRIMARY KEY, reasoning_id TEXT NOT NULL UNIQUE,
+                status TEXT NOT NULL CHECK(status IN ('REASONING_AUDIT_PASSED','REASONING_AUDIT_WARNING','REASONING_AUDIT_BLOCKED','REASONING_AUDIT_CORRUPT')),
+                checked_at_utc TEXT NOT NULL, audit_fingerprint TEXT NOT NULL UNIQUE, audit_json TEXT NOT NULL,
+                FOREIGN KEY(reasoning_id) REFERENCES prediction_reasoning_records(reasoning_id)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS prediction_reasoning_audit_findings (
+                finding_id TEXT PRIMARY KEY, audit_id TEXT NOT NULL,
+                deterministic_order INTEGER NOT NULL CHECK(deterministic_order>=0),
+                finding_code TEXT NOT NULL, severity TEXT NOT NULL,
+                detail TEXT NOT NULL, finding_json TEXT NOT NULL,
+                FOREIGN KEY(audit_id) REFERENCES prediction_reasoning_audits(audit_id),
+                UNIQUE(audit_id,deterministic_order)
+            )
+            """,
+            "CREATE INDEX IF NOT EXISTS idx_reasoning_observation ON prediction_reasoning_records(observation_id,created_at_utc)",
+            "CREATE INDEX IF NOT EXISTS idx_reasoning_analysis ON prediction_reasoning_records(analysis_id,created_at_utc)",
+            "CREATE INDEX IF NOT EXISTS idx_reasoning_factor_group ON prediction_reasoning_factors(group_id,factor_type)",
+            "CREATE INDEX IF NOT EXISTS idx_reasoning_audit_status ON prediction_reasoning_audits(status,checked_at_utc)",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_records_no_update BEFORE UPDATE ON prediction_reasoning_records BEGIN SELECT RAISE(ABORT,'Prediction reasoning records are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_records_no_delete BEFORE DELETE ON prediction_reasoning_records BEGIN SELECT RAISE(ABORT,'Prediction reasoning records are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_features_no_update BEFORE UPDATE ON prediction_reasoning_feature_contributions BEGIN SELECT RAISE(ABORT,'Prediction reasoning contributions are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_features_no_delete BEFORE DELETE ON prediction_reasoning_feature_contributions BEGIN SELECT RAISE(ABORT,'Prediction reasoning contributions are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_groups_no_update BEFORE UPDATE ON prediction_reasoning_group_contributions BEGIN SELECT RAISE(ABORT,'Prediction reasoning groups are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_groups_no_delete BEFORE DELETE ON prediction_reasoning_group_contributions BEGIN SELECT RAISE(ABORT,'Prediction reasoning groups are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_factors_no_update BEFORE UPDATE ON prediction_reasoning_factors BEGIN SELECT RAISE(ABORT,'Prediction reasoning factors are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_factors_no_delete BEFORE DELETE ON prediction_reasoning_factors BEGIN SELECT RAISE(ABORT,'Prediction reasoning factors are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_markets_no_update BEFORE UPDATE ON prediction_reasoning_market_explanations BEGIN SELECT RAISE(ABORT,'Prediction reasoning markets are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_markets_no_delete BEFORE DELETE ON prediction_reasoning_market_explanations BEGIN SELECT RAISE(ABORT,'Prediction reasoning markets are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_audits_no_update BEFORE UPDATE ON prediction_reasoning_audits BEGIN SELECT RAISE(ABORT,'Prediction reasoning audits are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_audits_no_delete BEFORE DELETE ON prediction_reasoning_audits BEGIN SELECT RAISE(ABORT,'Prediction reasoning audits are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_findings_no_update BEFORE UPDATE ON prediction_reasoning_audit_findings BEGIN SELECT RAISE(ABORT,'Prediction reasoning findings are immutable'); END",
+            "CREATE TRIGGER IF NOT EXISTS reasoning_findings_no_delete BEFORE DELETE ON prediction_reasoning_audit_findings BEGIN SELECT RAISE(ABORT,'Prediction reasoning findings are immutable'); END",
+        ),
+    ),
 )
 
 

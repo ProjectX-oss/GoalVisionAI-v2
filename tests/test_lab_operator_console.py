@@ -112,8 +112,8 @@ class LabOperatorConsoleTests(unittest.TestCase):
         compared=service.execute(ActionRequest("compare","COMPARE_REPORTS","operator","/reports",weekly,"COMPARE_REPORTS",{"comparison_report_id":cumulative},"2026-08-02T12:35:00+00:00"));self.assertEqual(compared["status"],"COMPLETED")
         reproduced=service.execute(ActionRequest("reproduce","REPRODUCE_REPORT","operator","/reports",weekly,"REPRODUCE_REPORT",{},"2026-08-02T12:36:00+00:00"));self.assertEqual(reproduced["status"],"COMPLETED")
         exported=service.execute(ActionRequest("export","CREATE_EXPORT","operator","/reports",weekly,"CREATE_REPORT_EXPORT",{"output_name":"controlled-export"},"2026-08-02T12:37:00+00:00"));self.assertEqual(exported["status"],"COMPLETED");self.assertTrue((self.root/"controlled-export"/"manifest.json").exists());db.close()
-    def test_031_schema_39_fresh_upgrade_foreign_keys_and_append_only(self):
-        self.assertEqual(max(m.version for m in MIGRATIONS),39);db=Database(str(self.path));self.assertEqual(db.connection.execute("select max(version) from schema_migrations").fetchone()[0],39);self.assertEqual(db.connection.execute("pragma foreign_key_check").fetchall(),[])
+    def test_031_schema_40_fresh_upgrade_foreign_keys_and_append_only(self):
+        self.assertEqual(max(m.version for m in MIGRATIONS),40);db=Database(str(self.path));self.assertEqual(db.connection.execute("select max(version) from schema_migrations").fetchone()[0],40);self.assertEqual(db.connection.execute("pragma foreign_key_check").fetchall(),[])
         for sql in ("update lab_operator_console_demo_manifests set demo_version='x'","delete from lab_operator_console_demo_manifests"):
             with self.assertRaises(sqlite3.IntegrityError):db.connection.execute(sql)
             db.connection.rollback()
@@ -124,7 +124,7 @@ class LabOperatorConsoleTests(unittest.TestCase):
             if migration.version>38:break
             for statement in migration.statements:db.connection.execute(statement)
             db.connection.execute("insert into schema_migrations values (?,'existing')",(migration.version,))
-        MigrationManager(db.connection).migrate();self.assertEqual(db.connection.execute("select max(version) from schema_migrations").fetchone()[0],39);self.assertEqual(db.connection.execute("pragma foreign_key_check").fetchall(),[]);db.close()
+        MigrationManager(db.connection).migrate();self.assertEqual(db.connection.execute("select max(version) from schema_migrations").fetchone()[0],40);self.assertEqual(db.connection.execute("pragma foreign_key_check").fetchall(),[]);db.close()
     def test_033_cli_help_config_check_and_ascii_terminal(self):
         self.assertIsNotNone(build_parser().parse_args(["run","--database",str(self.path)]));out=io.StringIO()
         with redirect_stdout(out):code=cli_main(["config-check","--database",str(self.path),"--allowed-root",str(self.root)])

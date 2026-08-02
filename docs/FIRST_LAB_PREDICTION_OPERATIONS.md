@@ -76,3 +76,9 @@ Stop the first-week program if secrets appear in output, foreign-key checks
 fail, source database hashes change unexpectedly, Official or bankroll tables
 change, any scheduler is enabled, or any destination differs from the exact Lab
 channel and bot.
+# Reasoning publication prerequisite
+
+Every new Lab candidate must have an immutable reasoning record and passed audit
+before publication review. The review binds the exact public reasoning to the
+candidate message fingerprint. A preview created before reasoning is internal
+diagnostic evidence and cannot be authorized for send.

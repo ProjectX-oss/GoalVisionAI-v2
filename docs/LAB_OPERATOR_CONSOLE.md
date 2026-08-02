@@ -103,3 +103,9 @@ bounded discovery service, inspect current-season baselines and exact current
 odds, and run the existing dry-run pipeline. Create/review one genuine Lab
 observation only if every gate passes. Keep the console read-only for review.
 Publication, result and settlement remain separate explicit operations.
+# Reasoning integration
+
+The read-only `Reasoning` page shows immutable public and operator explanations,
+feature/group evidence, all market explanations and audit status. With actions
+explicitly enabled, `CREATE_REASONING` remains a confirmed, zero-network,
+zero-Telegram action. See `LAB_PREDICTION_REASONING.md`.

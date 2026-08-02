@@ -116,3 +116,9 @@ genuine current odds. Do not substitute older history. For every genuine
 observation record the selected source/bookmaker before capture, seal before
 inference, keep the Lab review explicit, capture the final result after
 completion, settle deterministically, then follow the weekly checklist above.
+# Explainability monitoring
+
+Reports now include reasoning volume, audit outcomes/pass rate, public factor
+counts, missing/calibration/shift disclosure rates, explanation stability and
+top supporting/opposing groups. These are transparency diagnostics; explanation
+frequency does not prove causation, predictive quality or profitability.

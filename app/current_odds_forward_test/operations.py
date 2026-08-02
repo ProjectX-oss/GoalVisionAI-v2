@@ -209,13 +209,16 @@ def build_lab_preview(observation: dict, request: dict, odds: dict) -> dict:
     evaluation = next((item for item in observation.get("market_evaluations", ()) if item.get("market") == market), {})
     quality = observation.get("calibration_quality") or {}
     shift = observation.get("distribution_shift") or {}
-    controlled = bool(quality.get("controlled_synthetic"))
+    controlled = bool(quality.get("controlled_synthetic") or (request.get("match_snapshot") or {}).get("controlled_fictional") or odds.get("provider_source_id") == "CONTROLLED_DEMO")
     calibrated = _float(evaluation.get("calibrated_probability"))
     extreme = calibrated is not None and calibrated > MAX_TRUSTED_PRESENTED_PROBABILITY
+    reasoning = observation.get("approved_reasoning")
+    reasoning_valid = bool(reasoning and reasoning.get("audit_status") == "REASONING_AUDIT_PASSED")
     publishable = bool(
         observation.get("actionable") and market and not controlled and not extreme
         and quality.get("lab_outcome") == "CALIBRATION_QUALITY_ACCEPTABLE"
         and shift.get("status") == "DISTRIBUTION_SHIFT_ACCEPTABLE"
+        and reasoning_valid
     )
     kickoff = _time(request["kickoff_utc"])
     captured = _time(odds["captured_at_utc"])
@@ -239,14 +242,14 @@ def build_lab_preview(observation: dict, request: dict, odds: dict) -> dict:
         f"<b>Lineups:</b> {evaluation.get('lineup_freshness_status', 'NOT_RECORDED')}",
         f"<b>Calibration quality:</b> {quality.get('lab_outcome', 'NOT_EVALUATED')}",
         f"<b>Distribution shift:</b> {shift.get('status', 'NOT_EVALUATED')}",
-        f"<b>Reasoning:</b> {'; '.join(observation.get('rejection_reasons') or ('model ranking and immutable current odds',))}",
+        reasoning.get("public_reasoning_html") if reasoning_valid else "<b>Reasoning:</b> REQUIRED — create and pass the immutable reasoning audit before publication review.",
         f"<b>Trace:</b> {observation.get('observation_id', '')[-16:]}",
         "⚠️ Experimental forward-test evidence only. No guarantee.",
         "Excluded from Official bankroll and Official statistics.",
     ]
     body = "\n".join(lines)
-    material = {"version": "goalvision-first-lab-preview-v1", "observation_id": observation.get("observation_id"), "publishable": publishable, "body": body}
-    return {"status": "LAB_PREVIEW_PUBLISHABLE" if publishable else "LAB_PREVIEW_INTERNAL_DIAGNOSTIC", "publishable": publishable, "message_html": body, "message_fingerprint": fingerprint(material), "quality_blockers_visible": not publishable, "preview_fingerprint": fingerprint(material)}
+    material = {"version": "goalvision-first-lab-preview-v2", "observation_id": observation.get("observation_id"), "publishable": publishable, "reasoning_fingerprint": reasoning.get("reasoning_fingerprint") if reasoning_valid else None, "body": body}
+    return {"status": "LAB_PREVIEW_PUBLISHABLE" if publishable else "LAB_PREVIEW_INTERNAL_DIAGNOSTIC", "publishable": publishable, "message_html": body, "message_fingerprint": fingerprint(material), "reasoning_required": not reasoning_valid, "reasoning_fingerprint": material["reasoning_fingerprint"], "quality_blockers_visible": not publishable, "preview_fingerprint": fingerprint(material)}
 
 
 def build_publication_review(repository: SQLiteForwardTestRepository, observation_id: str, *, reviewed_at: datetime | None = None, persist: FirstLabOperationsRepository | None = None) -> dict:
@@ -264,6 +267,11 @@ def build_publication_review(repository: SQLiteForwardTestRepository, observatio
         evaluations = observation.get("market_evaluations") or []
         selected = next((item for item in evaluations if item.get("market") == observation.get("actionable_market")), {})
         probability = _float(selected.get("calibrated_probability"))
+        from app.prediction_explainability.repository import SQLiteReasoningRepository
+        from app.prediction_explainability.presentation import compose_reasoned_message, publication_reasoning_checks
+        reason_repo = SQLiteReasoningRepository.from_connection(repository.connection)
+        reasoning = reason_repo.for_observation(observation_id)
+        reasoning_audit = reason_repo.audit_for(reasoning.reasoning_id) if reasoning else None
         checks = [
             ("REAL_UPCOMING_FIXTURE", request.get("match_snapshot") is not None and reviewed < kickoff),
             ("ODDS_BEFORE_INFERENCE", captured <= inference), ("ODDS_BEFORE_KICKOFF", captured < kickoff),
@@ -287,12 +295,29 @@ def build_publication_review(repository: SQLiteForwardTestRepository, observatio
             ("RESULT_TRACKING_READY", repository.load_result(observation_id) is None),
             ("AUDIT_INTEGRITY", audit_observation(repository, observation_id).status.value != "FORWARD_TEST_INTEGRITY_BLOCKED"),
         ]
+        checks.extend(publication_reasoning_checks(reasoning, reasoning_audit, analysis_id=observation["analysis_id"], observation_id=observation_id, selected_market=observation.get("actionable_market")))
         blockers = [name for name, passed in checks if not passed]
         status = PublicationReviewOutcome.PASSED.value if not blockers else PublicationReviewOutcome.BLOCKED.value
-        material = {"schema_version": REVIEW_SCHEMA, "observation_id": observation_id, "status": status, "checks": [{"name": name, "passed": passed} for name, passed in checks], "blocker_codes": blockers, "reviewed_at_utc": reviewed.isoformat(), "message_fingerprint": observation.get("message_fingerprint")}
+        reasoned = compose_reasoned_message(analysis["message_html"] or "", reasoning) if reasoning else None
+        material = {"schema_version": REVIEW_SCHEMA, "observation_id": observation_id, "status": status, "checks": [{"name": name, "passed": passed} for name, passed in checks], "blocker_codes": blockers, "reviewed_at_utc": reviewed.isoformat(), "message_fingerprint": reasoned["message_fingerprint"] if reasoned else None, "reasoning_id": reasoning.reasoning_id if reasoning else None, "reasoning_fingerprint": reasoning.reasoning_fingerprint if reasoning else None, "reasoning_audit_fingerprint": reasoning_audit.audit_fingerprint if reasoning_audit else None}
     review_fp = fingerprint(material)
     report = {**material, "review_id": "lab-publication-review-" + review_fp, "review_fingerprint": review_fp, "telegram_send_executed": False}
     return persist.append_review(report) if persist and row is not None else report
+
+
+def build_reasoned_lab_preview(repository: SQLiteForwardTestRepository, observation_id: str) -> dict:
+    """Rebuild a preview from the exact persisted reasoning and audit."""
+    row=repository.load_observation(observation_id)
+    if row is None:raise ValueError("Observation not found.")
+    observation=json.loads(row["observation_json"])
+    analysis=repository.connection.execute("SELECT request_snapshot FROM real_match_lab_analyses WHERE analysis_id=?",(observation["analysis_id"],)).fetchone()
+    odds=repository.load_odds(observation["odds_snapshot_id"])
+    if analysis is None or odds is None:raise ValueError("Analysis request or odds snapshot is unavailable.")
+    from app.prediction_explainability.repository import SQLiteReasoningRepository
+    reason_repo=SQLiteReasoningRepository.from_connection(repository.connection);reasoning=reason_repo.for_observation(observation_id);audit=reason_repo.audit_for(reasoning.reasoning_id) if reasoning else None
+    if reasoning:
+        observation["approved_reasoning"]={"reasoning_id":reasoning.reasoning_id,"reasoning_fingerprint":reasoning.reasoning_fingerprint,"public_reasoning_html":reasoning.public_reasoning_html,"audit_status":audit.status if audit else None}
+    return build_lab_preview(observation,json.loads(analysis[0]),json.loads(odds["snapshot_json"]))
 
 
 def validate_manual_send_authorization(
@@ -312,7 +337,7 @@ def validate_manual_send_authorization(
     if bot != LAB_BOT_USERNAME: blockers.append("WRONG_BOT")
     if confirmation != SEND_CONFIRMATION: blockers.append("WRONG_CONFIRMATION")
     if review_row is None or review_row["review_status"] != PublicationReviewOutcome.PASSED.value: blockers.append("PUBLICATION_REVIEW_NOT_PASSED")
-    if observation.get("message_fingerprint") != message_fingerprint: blockers.append("MESSAGE_FINGERPRINT_CONFLICT")
+    if review_row is None or review_row["message_fingerprint"] != message_fingerprint: blockers.append("MESSAGE_FINGERPRINT_CONFLICT")
     if not observation.get("actionable"): blockers.append("NON_ACTIONABLE_OBSERVATION")
     if (observation.get("calibration_quality") or {}).get("controlled_synthetic") is not False: blockers.append("SYNTHETIC_OR_UNKNOWN_EVIDENCE")
     analysis_id = observation["analysis_id"]

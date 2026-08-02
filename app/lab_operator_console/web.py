@@ -21,7 +21,7 @@ from .reads import ConsoleReadService
 from .security import Session, SessionSecurity
 
 
-NAV = ("overview", "readiness", "discovery", "candidates", "fixtures", "odds", "analyses", "observations", "previews", "reviews", "send_readiness", "results", "settlements", "monitoring", "reports", "unresolved", "incidents", "health", "actions")
+NAV = ("overview", "readiness", "discovery", "candidates", "fixtures", "odds", "analyses", "reasoning", "observations", "previews", "reviews", "send_readiness", "results", "settlements", "monitoring", "reports", "unresolved", "incidents", "health", "actions")
 PACKAGE = Path(__file__).parent
 
 
@@ -142,6 +142,7 @@ class ConsoleApplication:
             "readiness": (("READINESS_NETWORK_VERIFY", "VERIFY_API_FOOTBALL_ONCE"),),
             "discovery": (("BOUNDED_DISCOVERY", "RUN_BOUNDED_DISCOVERY"),),
             "reviews": (("CREATE_PUBLICATION_REVIEW", "CREATE_PUBLICATION_REVIEW"),),
+            "reasoning": (("CREATE_REASONING", "CREATE_PREDICTION_REASONING"),),
             "results": (("IMPORT_RESULT", "IMPORT_FORWARD_TEST_RESULT"),),
             "settlements": (("SETTLE", "SETTLE_FORWARD_TEST_OBSERVATION"),),
             "reports": (("GENERATE_WEEKLY_REPORT", "GENERATE_WEEKLY_REPORT"),("GENERATE_CUMULATIVE_REPORT", "GENERATE_CUMULATIVE_REPORT"),("REPRODUCE_REPORT", "REPRODUCE_REPORT"),("COMPARE_REPORTS", "COMPARE_REPORTS"),("CREATE_EXPORT", "CREATE_REPORT_EXPORT")),
