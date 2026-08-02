@@ -35,8 +35,8 @@ class ForwardTestMonitoringTests(unittest.TestCase):
     def test_policy_is_centralized_versioned_and_conservative(self):
         self.assertEqual(DEFAULT_POLICY.timezone,"Europe/Riga"); self.assertEqual(DEFAULT_POLICY.policy_minimum_sample,300); self.assertEqual(DEFAULT_POLICY.sample_status(0),"NO_SAMPLE"); self.assertEqual(DEFAULT_POLICY.sample_status(1),"FORWARD_TEST_SAMPLE_INSUFFICIENT"); self.assertEqual(DEFAULT_POLICY.sample_status(300),"POLICY_MINIMUM_MET")
 
-    def test_schema_38_is_latest_and_foreign_keys_hold(self):
-        self.assertEqual(max(m.version for m in MIGRATIONS),38); self.assertEqual(self.db.connection.execute("select max(version) from schema_migrations").fetchone()[0],38); self.assertEqual(self.db.connection.execute("pragma foreign_key_check").fetchall(),[])
+    def test_schema_39_is_latest_and_foreign_keys_hold(self):
+        self.assertEqual(max(m.version for m in MIGRATIONS),39); self.assertEqual(self.db.connection.execute("select max(version) from schema_migrations").fetchone()[0],39); self.assertEqual(self.db.connection.execute("pragma foreign_key_check").fetchall(),[])
 
     def test_schema_37_upgrade(self):
         db=Database(":memory:"); db.connection.execute("CREATE TABLE schema_migrations(version INTEGER PRIMARY KEY,applied_at TEXT NOT NULL)")
@@ -44,7 +44,7 @@ class ForwardTestMonitoringTests(unittest.TestCase):
             if migration.version>37:break
             for statement in migration.statements:db.connection.execute(statement)
             db.connection.execute("INSERT INTO schema_migrations VALUES (?,'existing')",(migration.version,))
-        MigrationManager(db.connection).migrate(); self.assertEqual(db.connection.execute("select max(version) from schema_migrations").fetchone()[0],38); self.assertEqual(db.connection.execute("pragma foreign_key_check").fetchall(),[]); db.close()
+        MigrationManager(db.connection).migrate(); self.assertEqual(db.connection.execute("select max(version) from schema_migrations").fetchone()[0],39); self.assertEqual(db.connection.execute("pragma foreign_key_check").fetchall(),[]); db.close()
 
     def test_empty_snapshot_is_deterministic_and_replayable(self):
         first=self.service.snapshot(CUTOFF); second=self.service.snapshot(CUTOFF); self.assertEqual(first,second); self.assertEqual(first["counts"]["observations"],0); self.assertEqual(self.db.connection.execute("select count(*) from forward_test_monitoring_snapshots").fetchone()[0],1)

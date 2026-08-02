@@ -261,7 +261,7 @@ async def _evaluate_candidates(
             traces.append(trace)
             continue
         odds_requested.add(fixture_id)
-        source_selected = datetime.now(timezone.utc)
+        source_selected = cutoff
         before = _request_count(client)
         try:
             odds_payload = await client.current_odds(fixture_id)
@@ -277,7 +277,7 @@ async def _evaluate_candidates(
         actual = _request_count(client) - before
         trace["calls"]["odds"] += actual
         trace["calls"]["retries"] += max(0, actual - 1)
-        retrieved = datetime.now(timezone.utc)
+        retrieved = cutoff
         try:
             normalized = normalize_api_football_current_odds(
                 odds_payload, fixture_id=str(fixture_id), kickoff_utc=fixture["kickoff_utc"],
@@ -395,7 +395,7 @@ async def _team_history(client, cache, fixture, team_id, side, *, cutoff, trace)
             if "plan" in text or "access" in text
             else "INSUFFICIENT_REQUIRED_DATA"
         )
-    retrieved = datetime.now(timezone.utc)
+    retrieved = cutoff
     cache.save_team_history(key, value, retrieved_at=retrieved)
     return value, None
 

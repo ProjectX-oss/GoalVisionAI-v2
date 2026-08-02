@@ -1,5 +1,19 @@
 # TASKS.md
 
+## Local Lab operator console foundation (2026-08-02)
+
+- [x] Add a standard-library, server-rendered local console with no new runtime
+  dependency, CDN, telemetry, remote font, or asset build pipeline.
+- [x] Enforce `127.0.0.1`, read-only default operation, allowed database roots,
+  signed ephemeral sessions, SameSite/HttpOnly cookies and action-bound CSRF.
+- [x] Add typed presentation services for the complete Lab workflow, monitoring,
+  reports, unresolved work, incidents, health and operator action history.
+- [x] Add schema v39 append-only console actions/events and fictional demo
+  manifests with replay, conflict, foreign-key and immutability protection.
+- [x] Centralize confirmed POST-only actions and retain zero automatic provider,
+  inference, Telegram, scheduler, publication or startup work.
+- [x] Add a deterministic fictional demo and document local-only operation.
+
 ## Forward-test monitoring and weekly reporting foundation (2026-08-01)
 
 - [x] Add a centralized, immutable monitoring policy with conservative sample,

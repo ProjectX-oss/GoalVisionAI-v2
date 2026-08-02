@@ -1,5 +1,10 @@
 # First LAB Prediction Operations Runbook
 
+The optional local review surface is documented in
+`docs/LAB_OPERATOR_CONSOLE.md`. Start it read-only on `127.0.0.1`; it does not
+replace or schedule any existing readiness, discovery, review, sender, result
+or settlement gate.
+
 This runbook is for the first seven days after API-Football Pro is activated
 manually. Nothing here schedules work, sends Telegram automatically, publishes
 Official content, or places a bet. TheStatsAPI remains paused. No historical

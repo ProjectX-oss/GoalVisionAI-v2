@@ -390,7 +390,7 @@ class InspectionMigrationStartupTests(unittest.TestCase):
     def test_fresh_v25_and_v24_upgrade_preserve_existing_data(self):
         fresh = Database(":memory:")
         MigrationManager(fresh.connection).migrate()
-        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 38)
+        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 39)
         objects = {(row[0], row[1]) for row in fresh.connection.execute("SELECT name,type FROM sqlite_master")}
         for table in ("historical_dataset_splits", "historical_dataset_split_folds", "historical_dataset_split_assignments"):
             self.assertIn((table, "table"), objects)
@@ -406,7 +406,7 @@ class InspectionMigrationStartupTests(unittest.TestCase):
         upgrade.connection.execute("INSERT INTO published_predictions (prediction_id,fixture_id,market,pick,published_at) VALUES ('sentinel',1,'MATCH_WINNER','HOME','2026-01-01T00:00:00Z')")
         upgrade.connection.commit()
         MigrationManager(upgrade.connection).migrate()
-        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 38)
+        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 39)
         self.assertEqual(upgrade.connection.execute("SELECT prediction_id FROM published_predictions").fetchone()[0], "sentinel")
         upgrade.close()
 

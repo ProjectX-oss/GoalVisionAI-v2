@@ -1,5 +1,10 @@
 # Forward-Test Monitoring and Weekly Reporting
 
+The local console integrates these reports through typed read services. It
+computes page views with `persist=False`; report persistence is possible only
+through an explicitly enabled, confirmed POST action. See
+`docs/LAB_OPERATOR_CONSOLE.md`.
+
 ## Scope and safety boundary
 
 This foundation observes the isolated `FORWARD_TEST_REAL_TIME` evidence chain.

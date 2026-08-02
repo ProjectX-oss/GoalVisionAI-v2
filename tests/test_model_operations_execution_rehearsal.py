@@ -62,7 +62,7 @@ class ModelOperationsExecutionRehearsalTests(unittest.TestCase):
             self.report.disposable_before_fingerprint,
         )
         state = inspect_rehearsal_state(self.foundation)
-        self.assertEqual(state["schema_version"], 38)
+        self.assertEqual(state["schema_version"], 39)
         self.assertEqual(state["foreign_key_violations"], 0)
         self.assertEqual(len(state["generations"]), 1)
         self.assertEqual(
@@ -230,7 +230,7 @@ class ModelOperationsExecutionRehearsalTests(unittest.TestCase):
         database = Database(str(copy))
         try:
             database.connection.execute(
-                "DELETE FROM schema_migrations WHERE version=38"
+                "DELETE FROM schema_migrations WHERE version=39"
             )
             database.connection.commit()
         finally:

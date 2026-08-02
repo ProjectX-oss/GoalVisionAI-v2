@@ -267,7 +267,7 @@ class CalibratedMarketProbabilityMigrationTests(unittest.TestCase):
     def test_fresh_v18_and_v17_upgrade(self) -> None:
         fresh = Database(":memory:")
         MigrationManager(fresh.connection).migrate()
-        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 38)
+        self.assertEqual(fresh.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 39)
         fresh.close()
         upgrade = Database(":memory:")
         upgrade.connection.execute("CREATE TABLE schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)")
@@ -278,7 +278,7 @@ class CalibratedMarketProbabilityMigrationTests(unittest.TestCase):
                 upgrade.connection.execute(statement)
             upgrade.connection.execute("INSERT INTO schema_migrations VALUES (?, 'existing')", (migration.version,))
         MigrationManager(upgrade.connection).migrate()
-        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 38)
+        self.assertEqual(upgrade.connection.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0], 39)
         tables = {x[0] for x in upgrade.connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         self.assertTrue({"probability_calibration_sets", "calibrated_market_probability_assemblies", "calibrated_market_probability_targets"} <= tables)
         upgrade.close()

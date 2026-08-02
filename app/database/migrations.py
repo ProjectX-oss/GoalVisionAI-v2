@@ -4830,6 +4830,72 @@ MIGRATIONS = (
             """CREATE TRIGGER IF NOT EXISTS ft_monitoring_exports_no_delete BEFORE DELETE ON forward_test_monitoring_exports BEGIN SELECT RAISE(ABORT,'Forward-test monitoring exports are immutable'); END""",
         ),
     ),
+    Migration(
+        version=39,
+        statements=(
+            """
+            CREATE TABLE IF NOT EXISTS lab_operator_console_actions (
+                action_id TEXT PRIMARY KEY,
+                request_id TEXT NOT NULL UNIQUE,
+                action_type TEXT NOT NULL,
+                operator_identifier TEXT NOT NULL,
+                source_page TEXT NOT NULL,
+                target_identifier TEXT,
+                requested_at_utc TEXT NOT NULL,
+                input_fingerprint TEXT NOT NULL,
+                confirmation_status TEXT NOT NULL CHECK(confirmation_status IN ('CONFIRMED','NOT_REQUIRED')),
+                expected_side_effects TEXT NOT NULL,
+                maximum_provider_calls INTEGER NOT NULL CHECK(maximum_provider_calls>=0),
+                telegram_possible INTEGER NOT NULL CHECK(telegram_possible IN (0,1)),
+                mutation_scope TEXT NOT NULL,
+                action_fingerprint TEXT NOT NULL UNIQUE,
+                action_json TEXT NOT NULL
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS lab_operator_console_action_events (
+                event_id TEXT PRIMARY KEY,
+                action_id TEXT NOT NULL,
+                event_sequence INTEGER NOT NULL CHECK(event_sequence>=0),
+                outcome TEXT NOT NULL CHECK(outcome IN ('STARTED','COMPLETED','BLOCKED','FAILED')),
+                provider_call_count INTEGER NOT NULL CHECK(provider_call_count>=0),
+                telegram_call_count INTEGER NOT NULL CHECK(telegram_call_count>=0),
+                created_record_type TEXT,
+                created_record_id TEXT,
+                before_fingerprint TEXT,
+                after_fingerprint TEXT,
+                occurred_at_utc TEXT NOT NULL,
+                event_fingerprint TEXT NOT NULL UNIQUE,
+                event_json TEXT NOT NULL,
+                FOREIGN KEY(action_id) REFERENCES lab_operator_console_actions(action_id),
+                UNIQUE(action_id,event_sequence)
+            )
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS lab_operator_console_demo_manifests (
+                manifest_id TEXT PRIMARY KEY,
+                demo_version TEXT NOT NULL,
+                database_identity TEXT NOT NULL,
+                fixture_count INTEGER NOT NULL CHECK(fixture_count>=0),
+                observation_count INTEGER NOT NULL CHECK(observation_count>=0),
+                network_call_count INTEGER NOT NULL CHECK(network_call_count=0),
+                telegram_call_count INTEGER NOT NULL CHECK(telegram_call_count=0),
+                official_mutation_count INTEGER NOT NULL CHECK(official_mutation_count=0),
+                manifest_fingerprint TEXT NOT NULL UNIQUE,
+                manifest_json TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL
+            )
+            """,
+            """CREATE INDEX IF NOT EXISTS idx_console_actions_time ON lab_operator_console_actions(requested_at_utc,action_id)""",
+            """CREATE INDEX IF NOT EXISTS idx_console_events_action ON lab_operator_console_action_events(action_id,event_sequence)""",
+            """CREATE TRIGGER IF NOT EXISTS lab_console_actions_no_update BEFORE UPDATE ON lab_operator_console_actions BEGIN SELECT RAISE(ABORT,'Lab console actions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS lab_console_actions_no_delete BEFORE DELETE ON lab_operator_console_actions BEGIN SELECT RAISE(ABORT,'Lab console actions are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS lab_console_action_events_no_update BEFORE UPDATE ON lab_operator_console_action_events BEGIN SELECT RAISE(ABORT,'Lab console action events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS lab_console_action_events_no_delete BEFORE DELETE ON lab_operator_console_action_events BEGIN SELECT RAISE(ABORT,'Lab console action events are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS lab_console_demo_manifests_no_update BEFORE UPDATE ON lab_operator_console_demo_manifests BEGIN SELECT RAISE(ABORT,'Lab console demo manifests are immutable'); END""",
+            """CREATE TRIGGER IF NOT EXISTS lab_console_demo_manifests_no_delete BEFORE DELETE ON lab_operator_console_demo_manifests BEGIN SELECT RAISE(ABORT,'Lab console demo manifests are immutable'); END""",
+        ),
+    ),
 )
 
 

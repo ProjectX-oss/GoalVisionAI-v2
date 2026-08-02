@@ -1,5 +1,10 @@
 # Current odds capture and forward-test foundation
 
+The local Lab operator console can inspect this immutable chain without making
+provider calls or changing evidence. See `docs/LAB_OPERATOR_CONSOLE.md`. Schema
+v39 adds only console action audits and fictional-demo manifests; it does not
+change the v36 evidence contracts.
+
 ## Decision and boundary
 
 Paid historical-odds acquisition is paused. The existing provider-probe code is
@@ -189,7 +194,7 @@ league-season context would violate baseline provenance, so odds and inference
 remained at zero. A provider plan with current-season history access is now the
 honest prerequisite for the first genuine automated forward observation.
 
-Reproduce only against an isolated schema-v37 database. Verify foreign keys and
+Reproduce only against an isolated schema-v39 database. Verify foreign keys and
 append-only triggers, export sanitized evidence, and compare the protected
 database hash before and after. A future Betfair Exchange read-only adapter may
 reuse the current-odds contract only after explicit credential and legal review;
