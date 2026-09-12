@@ -10,6 +10,7 @@ from app.historical_training_dataset import HistoricalTrainingExample
 from .exceptions import PreprocessingError
 from .fingerprint import sha256_fingerprint
 from .models import FittedPreprocessing, PreprocessingFeature
+from .numerics import deterministic_sqrt, square
 from .policy import AllMissingFeaturePolicy, MissingValuePolicy, PreprocessingPolicy
 
 
@@ -35,8 +36,8 @@ def fit_preprocessing(
             imputation = float(median(observed))
         completed = tuple(imputation if row[index] is None else row[index] for row in rows)
         mean = math.fsum(completed) / len(completed)
-        variance = math.fsum((value - mean) ** 2 for value in completed) / len(completed)
-        scale = math.sqrt(variance)
+        variance = math.fsum(square(value - mean) for value in completed) / len(completed)
+        scale = deterministic_sqrt(variance)
         zero = scale == 0.0
         if zero:
             scale = 1.0

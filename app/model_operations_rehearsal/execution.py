@@ -26,7 +26,7 @@ from .safety import (
 SCOPE = "OFFICIAL_GLOBAL"
 FOUNDATION_PLAN_ID = (
     "activation-plan-"
-    "52de46d3503b82ba317fd1aebf3b4d63439561b66f94336510f7f6f7131dfcac"
+    "5732a3dbc4f000a5abc6c6f71ab99bf71ded1a1642746ea20a52162bfed230cf"
 )
 EXECUTION_LABEL = "FICTIONAL_LAB_EXECUTION_REHEARSAL_ONLY"
 ACTIVATION_EXECUTION_REQUEST_ID = (
@@ -1349,8 +1349,9 @@ def _redact_capture(
     redacted = tuple(
         "<DISPOSABLE_DB>"
         if value == str(database_path.resolve())
+        or (index > 0 and capture.arguments[index - 1] == "--database")
         else value
-        for value in capture.arguments
+        for index, value in enumerate(capture.arguments)
     )
     return CommandCapture(
         name=capture.name,

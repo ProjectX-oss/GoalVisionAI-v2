@@ -11,6 +11,7 @@ from app.historical_training_dataset import HistoricalTrainingExample
 
 from .fingerprint import canonical_json
 from .models import MetricRecord
+from .numerics import deterministic_log, square
 
 
 def calculate_metrics(partition: Partition, examples, predictions, start_order: int = 0):
@@ -22,8 +23,8 @@ def calculate_metrics(partition: Partition, examples, predictions, start_order: 
         labels = [dict(item.labels)[target] for item in examples]
         probabilities = [float(pred.probability_for(_target(pred, target))) for pred in predictions]
         clipped = [min(max(value, 1e-15), 1 - 1e-15) for value in probabilities]
-        loss = math.fsum(-(label * math.log(prob) + (1 - label) * math.log(1 - prob)) for label, prob in zip(labels, clipped)) / len(labels)
-        brier = math.fsum((prob - label) ** 2 for label, prob in zip(labels, probabilities)) / len(labels)
+        loss = math.fsum(-(label * deterministic_log(prob) + (1 - label) * deterministic_log(1 - prob)) for label, prob in zip(labels, clipped)) / len(labels)
+        brier = math.fsum(square(prob - label) for label, prob in zip(labels, probabilities)) / len(labels)
         accuracy = sum((prob >= 0.5) == bool(label) for label, prob in zip(labels, probabilities)) / len(labels)
         losses.append(loss); briers.append(brier)
         snapshot = canonical_json({
@@ -44,7 +45,7 @@ def calculate_metrics(partition: Partition, examples, predictions, start_order: 
         ]
         actual = [next(index for index, name in enumerate(result_names) if dict(item.labels)[name]) for item in examples]
         predicted = [max(range(3), key=lambda index: row[index]) for row in result_probabilities]
-        multiclass_loss = math.fsum(-math.log(max(row[label], 1e-15)) for row, label in zip(result_probabilities, actual)) / len(actual)
+        multiclass_loss = math.fsum(-deterministic_log(max(row[label], 1e-15)) for row, label in zip(result_probabilities, actual)) / len(actual)
         multiclass_accuracy = sum(left == right for left, right in zip(actual, predicted)) / len(actual)
         confusion = tuple(tuple(sum(a == row and p == column for a, p in zip(actual, predicted)) for column in range(3)) for row in range(3))
         result_snapshot = canonical_json({

@@ -9,6 +9,7 @@ from app.historical_training_dataset import HistoricalTrainingExample
 from .exceptions import EstimatorConvergenceError, InsufficientClassSupportError
 from .fingerprint import sha256_fingerprint
 from .models import FittedEstimator
+from .numerics import deterministic_exp
 from .policy import ModelTrainingPolicy
 
 
@@ -130,6 +131,6 @@ def _scores(row, coefficients, intercepts):
 
 def _softmax(scores):
     maximum = max(scores)
-    exponentials = tuple(math.exp(score - maximum) for score in scores)
+    exponentials = tuple(deterministic_exp(score - maximum) for score in scores)
     denominator = math.fsum(exponentials)
     return tuple(value / denominator for value in exponentials)

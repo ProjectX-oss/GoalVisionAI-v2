@@ -6,6 +6,8 @@ import math
 import json
 from decimal import Decimal
 
+from app.historical_model_training.numerics import deterministic_log
+
 from .fingerprint import canonical_json, sha256_fingerprint
 from .models import CalibrationMetric, ReliabilityBin
 
@@ -102,7 +104,7 @@ def _binary_summary(probabilities, labels):
     count = len(labels)
     clipped = tuple(min(Decimal("0.999999999999999"), max(Decimal("0.000000000000001"), value)) for value in probabilities)
     brier = sum((value - label) ** 2 for value, label in zip(probabilities, labels)) / count
-    log_loss = Decimal(str(math.fsum(-(label * math.log(float(value)) + (1-label) * math.log(1-float(value))) for value, label in zip(clipped, labels)) / count))
+    log_loss = Decimal(str(math.fsum(-(label * deterministic_log(float(value)) + (1-label) * deterministic_log(1-float(value))) for value, label in zip(clipped, labels)) / count))
     return {
         "sample_count": Decimal(count), "positive_count": Decimal(sum(labels)),
         "negative_count": Decimal(count - sum(labels)), "brier_score": brier,
@@ -114,7 +116,7 @@ def _binary_summary(probabilities, labels):
 
 def _multiclass_summary(probabilities, actual):
     count = len(actual)
-    loss = Decimal(str(math.fsum(-math.log(max(float(row[label]), 1e-15)) for row, label in zip(probabilities, actual)) / count))
+    loss = Decimal(str(math.fsum(-deterministic_log(max(float(row[label]), 1e-15)) for row, label in zip(probabilities, actual)) / count))
     brier = sum(sum((value - (1 if index == label else 0)) ** 2 for index, value in enumerate(row)) for row, label in zip(probabilities, actual)) / count
     predicted = tuple(max(range(3), key=lambda index: row[index]) for row in probabilities)
     confusion = tuple(tuple(sum(a == row and p == column for a, p in zip(actual, predicted)) for column in range(3)) for row in range(3))
