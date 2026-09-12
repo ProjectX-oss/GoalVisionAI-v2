@@ -1,0 +1,15 @@
+[Unit]
+Description=GoalVision Lab-only bounded combo discovery
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=arvis
+WorkingDirectory=/home/arvis/GoalVisionAI
+ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -m app.lab_combo discover --send
+TimeoutStartSec=20min
+UMask=0077
+NoNewPrivileges=true
+StandardOutput=null
+StandardError=journal

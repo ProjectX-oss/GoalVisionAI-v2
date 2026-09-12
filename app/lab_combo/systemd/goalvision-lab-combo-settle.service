@@ -1,0 +1,15 @@
+[Unit]
+Description=GoalVision Lab-only bounded combo settlement
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=arvis
+WorkingDirectory=/home/arvis/GoalVisionAI
+ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -m app.lab_combo settle --send
+TimeoutStartSec=10min
+UMask=0077
+NoNewPrivileges=true
+StandardOutput=null
+StandardError=journal

@@ -192,15 +192,24 @@ class FootballClient:
     def request_count(self) -> int:
         return self._request_count
 
+    def restrict_requests(self, maximum_calls: int, *, daily_reserve: int = 20) -> None:
+        """Tighten the total request ceiling and enforce reserve before every retry."""
+        if maximum_calls < 1 or daily_reserve < 20:
+            raise ValueError("Invalid bounded request policy")
+        self._request_limit = min(self._request_limit or maximum_calls, maximum_calls)
+        self._daily_reserve = daily_reserve
+
     async def _get(self, path: str, *, params: dict):
         for attempt in range(3):
             try:
                 if self._request_limit is not None and self._request_count >= self._request_limit:
                     raise FootballRequestLimitError("API_FOOTBALL_REQUEST_LIMIT_REACHED")
+                if getattr(self, "_daily_reserve", None) is not None and self._quota is not None:
+                    self._quota.require_capacity(additional_calls=1, daily_reserve=self._daily_reserve)
                 self._request_count += 1
                 response = await self._client.get(path, params=params)
                 observed_quota = FootballQuotaReport.from_headers(response.headers)
-                if observed_quota.interpretation_status == "NORMALIZED":
+                if observed_quota.interpretation_status == "NORMALIZED" or getattr(self, "_daily_reserve", None) is not None:
                     self._quota = observed_quota
                 payload = _safe_json(response)
                 self._last_response_metadata = {

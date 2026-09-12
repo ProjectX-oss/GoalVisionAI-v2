@@ -10,6 +10,7 @@ import re
 import httpx
 
 from app.football.quota import FootballQuotaError
+from app.football.client import FootballRequestLimitError
 
 from .efficiency import (
     CompetitionCapabilityCache,
@@ -39,6 +40,7 @@ async def discover_current_fixture(
     daily_quota_reserve: int = 20,
     capability_cache_path: Path | None = None,
     quota_already_verified: bool = False,
+    maximum_fixtures: int = 1,
 ) -> dict:
     """Search staged current fixtures and odds without invoking inference."""
 
@@ -46,6 +48,13 @@ async def discover_current_fixture(
         raise ValueError("Discovery limits exceed the reviewed 50-candidate/40-call policy.")
     if not 1 <= horizon_days <= 7 or minimum_lead_minutes < 60:
         raise ValueError("Discovery horizon or safe kickoff lead is outside policy.")
+    if not 1 <= maximum_fixtures <= 50:
+        raise ValueError("Fixture collection limit must be between 1 and 50.")
+    collected: list[dict] = []
+    if daily_quota_reserve < 20:
+        raise ValueError("Daily quota reserve cannot be lowered below 20.")
+    if hasattr(client, "restrict_requests"):
+        client.restrict_requests(maximum_api_calls, daily_reserve=daily_quota_reserve)
     now = now.astimezone(timezone.utc)
     reports: list[dict] = []
     skipped: dict[str, int] = {}
@@ -58,147 +67,190 @@ async def discover_current_fixture(
     stage_request_costs: list[dict] = []
     data_cache = RunDataCache()
 
-    capability_cache = (
-        CompetitionCapabilityCache.load(capability_cache_path, now=now)
-        if capability_cache_path is not None else None
-    )
-    if capability_cache is None:
-        before = _request_count(client)
-        leagues_payload = await client.leagues(current=True)
-        after = _request_count(client)
-        reports.append(_stage_report("COMPETITION_RESOLUTION", client.response_metadata()))
-        stage_request_costs.append({"stage": "COMPETITION_RESOLUTION", "actual_calls": after - before, "cache": "MISS"})
-        competitions = resolve_current_competitions(leagues_payload, observed_at=now)
-        capability_cache = CompetitionCapabilityCache.from_provider_payload(
-            leagues_payload, retrieved_at_utc=now
-        )
-        if capability_cache_path is not None:
-            capability_cache.save(capability_cache_path)
-        capability_cache_status = "REFRESHED"
-    else:
-        before = _request_count(client)
-        if not quota_already_verified:
-            await client.account_status()
-        after = _request_count(client)
-        reports.append(_stage_report("QUOTA_REFRESH_CAPABILITY_CACHE_HIT", client.response_metadata()))
-        stage_request_costs.append({"stage": "QUOTA_REFRESH_CAPABILITY_CACHE_HIT", "actual_calls": after - before, "cache": "HIT"})
-        competitions = _resolved_from_cache(capability_cache, observed_at=now)
-        capability_cache_status = "HIT"
-    catalog = _catalog_from_cache(capability_cache, now.date())
-    priority = {league_id: rank for rank, (league_id, *_rest) in enumerate(PRIORITY_COMPETITIONS)}
-    try:
-        effective_limit = _effective_call_limit(client, maximum_api_calls, daily_quota_reserve)
-    except FootballQuotaError as exc:
-        terminal = (
-            "DISCOVERY_QUOTA_INSUFFICIENT"
-            if "INSUFFICIENT" in str(exc) else str(exc)
-        )
-        return _result(
-            now, reports, competitions, skipped, None, fixture_results, 0,
-            client, terminal, maximum_candidates=maximum_candidates,
-            maximum_api_calls=maximum_api_calls, request_cost_report=request_cost_report,
-            stage_request_costs=stage_request_costs, capability_cache=capability_cache,
-            capability_cache_status=capability_cache_status,
-        )
-
-    stage_dates = (
-        ("PRIORITY_24_TO_72_HOURS", range(0, min(3, horizon_days) + 1), True),
-        ("PRIORITY_NEXT_7_DAYS", range(min(3, horizon_days) + 1, horizon_days + 1), True),
-    )
-    selected = None
+    competitions = ()
+    capability_cache = None
+    capability_cache_status = "NOT_CONFIGURED"
     candidates_considered = 0
-    coverage_limited = False
-    for stage_name, offsets, priority_only in stage_dates:
-        for offset in offsets:
-            if _request_count(client) >= effective_limit:
-                coverage_limited = True
-                break
-            day = (now.date() + timedelta(days=offset)).isoformat()
+    try:
+        capability_cache = (
+            CompetitionCapabilityCache.load(capability_cache_path, now=now)
+            if capability_cache_path is not None else None
+        )
+        if capability_cache is None:
             before = _request_count(client)
-            payload = await client.fixtures_by_date(day, timezone_name="UTC")
+            leagues_payload = await client.leagues(current=True)
             after = _request_count(client)
-            metadata = client.response_metadata()
-            reports.append(_stage_report(stage_name, metadata))
-            stage_request_costs.append({"stage": stage_name, "date": day, "actual_calls": after - before, "cache": "MISS", "retries": max(0, after - before - 1)})
-            if metadata.get("errors"):
-                errors_text = str(metadata["errors"]).casefold()
-                reason = "API_FOOTBALL_PLAN_RESTRICTED" if "plan" in errors_text or "access" in errors_text else "PROVIDER_FIXTURE_QUERY_REJECTED"
-                _increment(skipped, reason)
-                if reason == "API_FOOTBALL_PLAN_RESTRICTED":
+            reports.append(_stage_report("COMPETITION_RESOLUTION", client.response_metadata()))
+            stage_request_costs.append({"stage": "COMPETITION_RESOLUTION", "actual_calls": after - before, "cache": "MISS"})
+            competitions = resolve_current_competitions(leagues_payload, observed_at=now)
+            capability_cache = CompetitionCapabilityCache.from_provider_payload(
+                leagues_payload, retrieved_at_utc=now
+            )
+            if capability_cache_path is not None:
+                capability_cache.save(capability_cache_path)
+            capability_cache_status = "REFRESHED"
+        else:
+            before = _request_count(client)
+            if not quota_already_verified:
+                await client.account_status()
+            after = _request_count(client)
+            reports.append(_stage_report("QUOTA_REFRESH_CAPABILITY_CACHE_HIT", client.response_metadata()))
+            stage_request_costs.append({"stage": "QUOTA_REFRESH_CAPABILITY_CACHE_HIT", "actual_calls": after - before, "cache": "HIT"})
+            competitions = _resolved_from_cache(capability_cache, observed_at=now)
+            capability_cache_status = "HIT"
+        catalog = _catalog_from_cache(capability_cache, now.date())
+        priority = {league_id: rank for rank, (league_id, *_rest) in enumerate(PRIORITY_COMPETITIONS)}
+        try:
+            effective_limit = _effective_call_limit(client, maximum_api_calls, daily_quota_reserve)
+        except FootballQuotaError as exc:
+            terminal = (
+                "DISCOVERY_QUOTA_INSUFFICIENT"
+                if "INSUFFICIENT" in str(exc) else str(exc)
+            )
+            return _result(
+                now, reports, competitions, skipped, None, fixture_results, 0,
+                client, terminal, maximum_candidates=maximum_candidates,
+                maximum_api_calls=maximum_api_calls, request_cost_report=request_cost_report,
+                stage_request_costs=stage_request_costs, capability_cache=capability_cache,
+                capability_cache_status=capability_cache_status,
+            )
+
+        stage_dates = (
+            ("PRIORITY_24_TO_72_HOURS", range(0, min(3, horizon_days) + 1), True),
+            ("PRIORITY_NEXT_7_DAYS", range(min(3, horizon_days) + 1, horizon_days + 1), True),
+        )
+        selected = None
+        candidates_considered = 0
+        coverage_limited = False
+        for stage_name, offsets, priority_only in stage_dates:
+            for offset in offsets:
+                if _request_count(client) >= effective_limit:
                     coverage_limited = True
                     break
-                continue
-            rows = payload.get("response") if isinstance(payload, dict) else None
-            rows = rows if isinstance(rows, list) else []
-            fixture_results += len(rows)
-            new_rows = []
-            for row in rows:
-                identity = _fixture_identity(row)
-                fixture_id = identity.get("provider_fixture_id")
-                if isinstance(fixture_id, int) and fixture_id not in all_rows:
-                    all_rows[fixture_id] = row
-                    new_rows.append(row)
-                elif isinstance(fixture_id, int):
-                    _increment(skipped, "DUPLICATE_EVENT")
-            stage_candidates = _ordered_candidates(
-                new_rows, now=now, minimum_lead_minutes=minimum_lead_minutes,
-                catalog=catalog, priority=priority, priority_only=priority_only,
+                day = (now.date() + timedelta(days=offset)).isoformat()
+                before = _request_count(client)
+                payload = await client.fixtures_by_date(day, timezone_name="UTC")
+                after = _request_count(client)
+                metadata = client.response_metadata()
+                reports.append(_stage_report(stage_name, metadata))
+                stage_request_costs.append({"stage": stage_name, "date": day, "actual_calls": after - before, "cache": "MISS", "retries": max(0, after - before - 1)})
+                if metadata.get("errors"):
+                    errors_text = str(metadata["errors"]).casefold()
+                    reason = "API_FOOTBALL_PLAN_RESTRICTED" if "plan" in errors_text or "access" in errors_text else "PROVIDER_FIXTURE_QUERY_REJECTED"
+                    _increment(skipped, reason)
+                    if reason == "API_FOOTBALL_PLAN_RESTRICTED":
+                        coverage_limited = True
+                        break
+                    continue
+                rows = payload.get("response") if isinstance(payload, dict) else None
+                rows = rows if isinstance(rows, list) else []
+                fixture_results += len(rows)
+                new_rows = []
+                for row in rows:
+                    identity = _fixture_identity(row)
+                    fixture_id = identity.get("provider_fixture_id")
+                    if isinstance(fixture_id, int) and fixture_id not in all_rows:
+                        all_rows[fixture_id] = row
+                        new_rows.append(row)
+                    elif isinstance(fixture_id, int):
+                        _increment(skipped, "DUPLICATE_EVENT")
+                stage_candidates = _ordered_candidates(
+                    new_rows, now=now, minimum_lead_minutes=minimum_lead_minutes,
+                    catalog=catalog, priority=priority, priority_only=priority_only,
+                    skipped=skipped, rejection_seen=rejection_seen,
+                )
+                for candidate in stage_candidates:
+                    candidate["fixture_list_reference"] = f"{stage_name}:{day}"
+                selected, used, traces = await _evaluate_candidates(
+                    client, stage_candidates, evaluated=evaluated, odds_requested=odds_requested,
+                    skipped=skipped, effective_limit=effective_limit,
+                    remaining_candidates=maximum_candidates - candidates_considered,
+                    data_cache=data_cache, cutoff=now,
+                    collected=collected, maximum_fixtures=maximum_fixtures,
+                    trace_sink=request_cost_report,
+                )
+                candidates_considered += used
+                reports.append({"stage": stage_name, "date": day, "provider_rows_seen": len(new_rows), "eligible_candidates_evaluated": used, "selected_fixture_id": selected.get("provider_fixture_id") if selected else None})
+                if len(collected) >= maximum_fixtures or candidates_considered >= maximum_candidates or skipped.get("API_FOOTBALL_QUOTA_INSUFFICIENT") or _request_count(client) >= effective_limit:
+                    break
+            if len(collected) >= maximum_fixtures or candidates_considered >= maximum_candidates or skipped.get("API_FOOTBALL_QUOTA_INSUFFICIENT") or coverage_limited or _request_count(client) >= effective_limit:
+                break
+
+        if len(collected) < maximum_fixtures and candidates_considered < maximum_candidates and not skipped.get("API_FOOTBALL_QUOTA_INSUFFICIENT"):
+            fallback = _ordered_candidates(
+                all_rows.values(), now=now, minimum_lead_minutes=minimum_lead_minutes,
+                catalog=catalog, priority=priority, priority_only=False,
                 skipped=skipped, rejection_seen=rejection_seen,
             )
-            for candidate in stage_candidates:
-                candidate["fixture_list_reference"] = f"{stage_name}:{day}"
+            fallback = [item for item in fallback if item["provider_fixture_id"] not in evaluated]
             selected, used, traces = await _evaluate_candidates(
-                client, stage_candidates, evaluated=evaluated, odds_requested=odds_requested,
+                client, fallback, evaluated=evaluated, odds_requested=odds_requested,
                 skipped=skipped, effective_limit=effective_limit,
                 remaining_candidates=maximum_candidates - candidates_considered,
                 data_cache=data_cache, cutoff=now,
+                collected=collected, maximum_fixtures=maximum_fixtures,
+                trace_sink=request_cost_report,
             )
-            request_cost_report.extend(traces)
             candidates_considered += used
-            reports.append({"stage": stage_name, "date": day, "provider_rows_seen": len(new_rows), "eligible_candidates_evaluated": used, "selected_fixture_id": selected.get("provider_fixture_id") if selected else None})
-            if selected or candidates_considered >= maximum_candidates or skipped.get("API_FOOTBALL_QUOTA_INSUFFICIENT") or _request_count(client) >= effective_limit:
-                break
-        if selected or candidates_considered >= maximum_candidates or skipped.get("API_FOOTBALL_QUOTA_INSUFFICIENT") or coverage_limited or _request_count(client) >= effective_limit:
-            break
+            reports.append({"stage": "ALL_SUPPORTED_PROFESSIONAL_SENIOR_NEXT_7_DAYS", "provider_rows_seen": len(all_rows), "eligible_candidates_evaluated": used, "selected_fixture_id": selected.get("provider_fixture_id") if selected else None})
 
-    if selected is None and candidates_considered < maximum_candidates and not skipped.get("API_FOOTBALL_QUOTA_INSUFFICIENT"):
-        fallback = _ordered_candidates(
-            all_rows.values(), now=now, minimum_lead_minutes=minimum_lead_minutes,
-            catalog=catalog, priority=priority, priority_only=False,
-            skipped=skipped, rejection_seen=rejection_seen,
+        selected = collected[0] if collected else None
+        terminal = "ELIGIBLE_CURRENT_FIXTURE_FOUND" if selected else (
+            "DISCOVERY_QUOTA_INSUFFICIENT" if skipped.get("API_FOOTBALL_QUOTA_INSUFFICIENT") or _request_count(client) >= effective_limit else
+            "API_FOOTBALL_PLAN_RESTRICTED" if coverage_limited and skipped.get("API_FOOTBALL_PLAN_RESTRICTED") else
+            "CURRENT_ODDS_UNAVAILABLE" if skipped.get("CURRENT_ODDS_UNAVAILABLE") else
+            "NO_ELIGIBLE_CURRENT_FIXTURE"
         )
-        fallback = [item for item in fallback if item["provider_fixture_id"] not in evaluated]
-        selected, used, traces = await _evaluate_candidates(
-            client, fallback, evaluated=evaluated, odds_requested=odds_requested,
-            skipped=skipped, effective_limit=effective_limit,
-            remaining_candidates=maximum_candidates - candidates_considered,
-            data_cache=data_cache, cutoff=now,
+        result = _result(
+            now, reports, competitions, skipped, selected, fixture_results,
+            candidates_considered, client, terminal, odds_requests=len(odds_requested),
+            maximum_candidates=maximum_candidates, maximum_api_calls=maximum_api_calls,
+            request_cost_report=request_cost_report, stage_request_costs=stage_request_costs,
+            capability_cache=capability_cache, capability_cache_status=capability_cache_status,
         )
-        request_cost_report.extend(traces)
-        candidates_considered += used
-        reports.append({"stage": "ALL_SUPPORTED_PROFESSIONAL_SENIOR_NEXT_7_DAYS", "provider_rows_seen": len(all_rows), "eligible_candidates_evaluated": used, "selected_fixture_id": selected.get("provider_fixture_id") if selected else None})
 
-    terminal = "ELIGIBLE_CURRENT_FIXTURE_FOUND" if selected else (
-        "DISCOVERY_QUOTA_INSUFFICIENT" if skipped.get("API_FOOTBALL_QUOTA_INSUFFICIENT") or _request_count(client) >= effective_limit else
-        "API_FOOTBALL_PLAN_RESTRICTED" if coverage_limited and skipped.get("API_FOOTBALL_PLAN_RESTRICTED") else
-        "CURRENT_ODDS_UNAVAILABLE" if skipped.get("CURRENT_ODDS_UNAVAILABLE") else
-        "NO_ELIGIBLE_CURRENT_FIXTURE"
-    )
-    return _result(
-        now, reports, competitions, skipped, selected, fixture_results,
-        candidates_considered, client, terminal, odds_requests=len(odds_requested),
-        maximum_candidates=maximum_candidates, maximum_api_calls=maximum_api_calls,
-        request_cost_report=request_cost_report, stage_request_costs=stage_request_costs,
-        capability_cache=capability_cache, capability_cache_status=capability_cache_status,
-    )
+        result["selected_fixtures"] = collected
+        result["fresh_odds_candidates"] = sum(bool(t.get("odds_validated")) for t in request_cost_report)
+        return result
+    except (FootballQuotaError, FootballRequestLimitError, httpx.HTTPError) as exc:
+        if isinstance(exc, FootballQuotaError):
+            terminal = str(exc)
+        elif isinstance(exc, FootballRequestLimitError):
+            terminal = "API_FOOTBALL_REQUEST_LIMIT_REACHED"
+        else:
+            terminal = "API_FOOTBALL_TRANSPORT_FAILED"
+        if request_cost_report and request_cost_report[-1]["result"] is None:
+            trace = request_cost_report[-1]
+            trace["result"] = terminal
+            active = trace.pop("active_call", None)
+            if active is not None:
+                actual = _request_count(client) - active["request_count_before"]
+                trace["calls"][active["category"]] += actual
+                trace["calls"]["retries"] += max(0, actual - 1)
+        _increment(skipped, terminal)
+        result = _result(
+            now, reports, competitions, skipped, None, fixture_results, len(evaluated),
+            client, terminal, odds_requests=len(odds_requested),
+            maximum_candidates=maximum_candidates, maximum_api_calls=maximum_api_calls,
+            request_cost_report=request_cost_report, stage_request_costs=stage_request_costs,
+            capability_cache=capability_cache, capability_cache_status=capability_cache_status,
+        )
+        result["selected_fixtures"] = []
+        result["fresh_odds_candidates"] = sum(bool(t.get("odds_validated")) for t in request_cost_report)
+        result["incomplete_discovery"] = True
+        result["quota"] = client.quota_snapshot()
+        return result
+
 
 
 async def _evaluate_candidates(
     client, candidates, *, evaluated, odds_requested, skipped, effective_limit,
-    remaining_candidates, data_cache, cutoff,
+    remaining_candidates, data_cache, cutoff, collected=None, maximum_fixtures=1,
+    trace_sink=None,
 ):
+    collected = [] if collected is None else collected
     used = 0
-    traces = []
+    traces = [] if trace_sink is None else trace_sink
     remaining = list(candidates)
     while remaining and used < max(0, remaining_candidates):
         remaining.sort(key=lambda item: _candidate_priority(item, data_cache, cutoff))
@@ -219,7 +271,7 @@ async def _evaluate_candidates(
             "calls": empty_candidate_costs(),
             "cache_hits": [],
             "cache_misses": [],
-            "required_order": ["HOME_TEAM_HISTORY", "AWAY_TEAM_HISTORY", "CURRENT_ODDS"],
+            "required_order": ["CURRENT_ODDS", "HOME_TEAM_HISTORY", "AWAY_TEAM_HISTORY"],
             "optional_calls": {
                 "standings": "NOT_REQUIRED_BY_EXISTING_BASELINE",
                 "injuries": "NOT_REQUIRED_BEFORE_BASELINE",
@@ -228,56 +280,39 @@ async def _evaluate_candidates(
             },
             "result": None,
         }
+        traces.append(trace)
         if plan.status != "CANDIDATE_EVALUATION_ALLOWED":
             _increment(skipped, "API_FOOTBALL_QUOTA_INSUFFICIENT")
             trace["result"] = "CANDIDATE_SKIPPED_QUOTA"
-            traces.append(trace)
             break
-        home_history, home_reason = await _team_history(
-            client, data_cache, fixture, fixture["home_team_id"], "HOME",
-            cutoff=cutoff, trace=trace,
-        )
-        if home_reason is not None or not isinstance(home_history, list) or not home_history:
-            reason = home_reason or "INSUFFICIENT_REQUIRED_DATA"
-            _increment(skipped, reason)
-            trace["result"] = "CANDIDATE_SKIPPED_BASELINE"
-            trace["rejection_reason"] = reason
-            traces.append(trace)
-            continue
-        away_history, away_reason = await _team_history(
-            client, data_cache, fixture, fixture["away_team_id"], "AWAY",
-            cutoff=cutoff, trace=trace,
-        )
-        if away_reason is not None or not isinstance(away_history, list) or not away_history:
-            reason = away_reason or "INSUFFICIENT_REQUIRED_DATA"
-            _increment(skipped, reason)
-            trace["result"] = "CANDIDATE_SKIPPED_BASELINE"
-            trace["rejection_reason"] = reason
-            traces.append(trace)
-            continue
         if fixture_id in odds_requested:
             _increment(skipped, "DUPLICATE_ODDS_REQUEST_BLOCKED")
             trace["result"] = "DUPLICATE_ODDS_REQUEST_BLOCKED"
-            traces.append(trace)
             continue
         odds_requested.add(fixture_id)
         source_selected = cutoff
         before = _request_count(client)
+        trace["active_call"] = {"category": "odds", "request_count_before": before}
         try:
             odds_payload = await client.current_odds(fixture_id)
         except httpx.HTTPStatusError as exc:
             actual = _request_count(client) - before
+            trace.pop("active_call", None)
             trace["calls"]["odds"] += actual
             trace["calls"]["retries"] += max(0, actual - 1)
             reason = "API_FOOTBALL_PLAN_RESTRICTED" if exc.response.status_code in {403, 429} else "CURRENT_ODDS_UNAVAILABLE"
             _increment(skipped, reason)
             trace["result"] = reason
-            traces.append(trace)
             continue
         actual = _request_count(client) - before
+        trace.pop("active_call", None)
         trace["calls"]["odds"] += actual
         trace["calls"]["retries"] += max(0, actual - 1)
         retrieved = cutoff
+        if not isinstance(odds_payload, dict) or odds_payload.get("errors"):
+            _increment(skipped, "PROVIDER_ODDS_QUERY_REJECTED")
+            trace["result"] = "PROVIDER_ODDS_QUERY_REJECTED"
+            continue
         try:
             normalized = normalize_api_football_current_odds(
                 odds_payload, fixture_id=str(fixture_id), kickoff_utc=fixture["kickoff_utc"],
@@ -288,21 +323,38 @@ async def _evaluate_candidates(
             reason = _safe_reason(exc)
             _increment(skipped, reason)
             trace["result"] = reason
-            traces.append(trace)
             continue
         if snapshot.canonical_fixture_id != str(fixture_id):
             _increment(skipped, "FIXTURE_ODDS_IDENTITY_MISMATCH")
             trace["result"] = "FIXTURE_ODDS_IDENTITY_MISMATCH"
-            traces.append(trace)
             continue
         if len(snapshot.quotes) < 3:
             _increment(skipped, "INSUFFICIENT_SUPPORTED_MARKETS")
             trace["result"] = "INSUFFICIENT_SUPPORTED_MARKETS"
-            traces.append(trace)
+            continue
+        trace["odds_validated"] = True
+        home_history, home_reason = await _team_history(
+            client, data_cache, fixture, fixture["home_team_id"], "HOME",
+            cutoff=cutoff, trace=trace,
+        )
+        if home_reason is not None or not isinstance(home_history, list) or not home_history:
+            reason = home_reason or "INSUFFICIENT_REQUIRED_DATA"
+            _increment(skipped, reason)
+            trace["result"] = "CANDIDATE_SKIPPED_BASELINE"
+            trace["rejection_reason"] = reason
+            continue
+        away_history, away_reason = await _team_history(
+            client, data_cache, fixture, fixture["away_team_id"], "AWAY",
+            cutoff=cutoff, trace=trace,
+        )
+        if away_reason is not None or not isinstance(away_history, list) or not away_history:
+            reason = away_reason or "INSUFFICIENT_REQUIRED_DATA"
+            _increment(skipped, reason)
+            trace["result"] = "CANDIDATE_SKIPPED_BASELINE"
+            trace["rejection_reason"] = reason
             continue
         trace["result"] = "REQUIRED_BASELINE_READY"
-        traces.append(trace)
-        return ({
+        candidate = {
             **fixture,
             "fixture_selected_at_utc": source_selected.isoformat(),
             "bookmaker": snapshot.bookmaker_name,
@@ -324,8 +376,11 @@ async def _evaluate_candidates(
                 "home_recent_form": _history_form(home_history, fixture["home_team_id"]),
                 "away_recent_form": _history_form(away_history, fixture["away_team_id"]),
             },
-        }, used, traces)
-    return None, used, traces
+        }
+        collected.append(candidate)
+        if len(collected) >= maximum_fixtures:
+            return candidate, used, traces
+    return (collected[0] if collected else None), used, traces
 
 
 def _history_form(rows, team_id):
@@ -369,6 +424,7 @@ async def _team_history(client, cache, fixture, team_id, side, *, cutoff, trace)
         return cached.value, None
     trace["cache_misses"].append(label)
     before = _request_count(client)
+    trace["active_call"] = {"category": "team_history", "request_count_before": before}
     try:
         value = await client.last_matches(
             int(team_id), last=5, league_id=int(fixture["competition_id"]),
@@ -376,6 +432,7 @@ async def _team_history(client, cache, fixture, team_id, side, *, cutoff, trace)
         )
     except httpx.HTTPStatusError as exc:
         actual = _request_count(client) - before
+        trace.pop("active_call", None)
         trace["calls"]["team_history"] += actual
         trace["calls"]["retries"] += max(0, actual - 1)
         return None, (
@@ -384,6 +441,7 @@ async def _team_history(client, cache, fixture, team_id, side, *, cutoff, trace)
             else "INSUFFICIENT_REQUIRED_DATA"
         )
     actual = _request_count(client) - before
+    trace.pop("active_call", None)
     trace["calls"]["team_history"] += actual
     trace["calls"]["retries"] += max(0, actual - 1)
     metadata = client.response_metadata()

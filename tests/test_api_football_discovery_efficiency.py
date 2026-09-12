@@ -153,16 +153,16 @@ class PlannerAndDiscoveryTests(unittest.TestCase):
         self.assertEqual(client.history_calls, [])
         self.assertEqual(value["terminal_result"], "DISCOVERY_QUOTA_INSUFFICIENT")
 
-    def test_home_baseline_failure_short_circuits_away_and_odds(self):
-        client = CostProvider({"2026-08-01": [fixture(1)]})
+    def test_fresh_odds_precede_home_baseline_failure(self):
+        client = CostProvider({"2026-08-01": [fixture(1)]}, {1: odds(1)})
         value = self.discover(client)
         self.assertEqual(client.history_calls, [(10, 179, 2026)])
-        self.assertEqual(client.odds_calls, [])
+        self.assertEqual(client.odds_calls, [1])
         trace = value["request_cost_report"][0]
         self.assertEqual(trace["calls"]["team_history"], 1)
-        self.assertEqual(trace["calls"]["odds"], 0)
+        self.assertEqual(trace["calls"]["odds"], 1)
         self.assertEqual(trace["result"], "CANDIDATE_SKIPPED_BASELINE")
-        self.assertTrue(all(cost == 0 for name, cost in trace["calls"].items() if name not in {"team_history", "retries"}))
+        self.assertTrue(all(cost == 0 for name, cost in trace["calls"].items() if name not in {"team_history", "odds", "retries"}))
 
     def test_provider_plan_error_is_preserved_in_candidate_cost_trace(self):
         class Restricted(CostProvider):
@@ -171,7 +171,7 @@ class PlannerAndDiscoveryTests(unittest.TestCase):
                 errors = {"plan": "Free plans do not have access to this season, try from 2022 to 2024."}
                 self._record("/fixtures", {"team": team_id}, 0, errors)
                 return []
-        value = self.discover(Restricted({"2026-08-01": [fixture(1)]}))
+        value = self.discover(Restricted({"2026-08-01": [fixture(1)]}, {1: odds(1)}))
         trace = value["request_cost_report"][0]
         self.assertEqual(trace["rejection_reason"], "API_FOOTBALL_PLAN_RESTRICTED")
         self.assertIn("2022 to 2024", trace["provider_errors"]["HOME_TEAM_HISTORY"]["plan"])
@@ -181,7 +181,7 @@ class PlannerAndDiscoveryTests(unittest.TestCase):
         second = fixture(2)
         second["teams"]["home"]["id"] = 10
         client = CostProvider(
-            {"2026-08-01": [first, second]}, {2: odds(2)},
+            {"2026-08-01": [first, second]}, {1: odds(1), 2: odds(2)},
             histories={10: history(10), 11: [], 21: history(21)},
         )
         value = self.discover(client)
