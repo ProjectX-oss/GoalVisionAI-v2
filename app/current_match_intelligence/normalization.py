@@ -102,6 +102,7 @@ def normalize_injuries(payload: object, *, identity: dict, provenance: FieldProv
     """Normalize fixture absences without assigning subjective importance."""
     fields: list[IntelligenceField] = []
     injured = {"home": set(), "away": set()}; suspended = {"home": set(), "away": set()}
+    normalized_players: set[tuple[str, str]] = set()
     team_side = {str(identity["home_team_id"]): "home", str(identity["away_team_id"]): "away"}
     for row in _rows(payload):
         team, player = _dict(row.get("team")), _dict(row.get("player"))
@@ -109,15 +110,23 @@ def normalize_injuries(payload: object, *, identity: dict, provenance: FieldProv
         if side is None or player_id is None:
             continue
         key = str(player_id); team_id = str(team["id"])
+        player_key = (side, key)
+        if player_key in normalized_players:
+            continue
+        normalized_players.add(player_key)
         reason = str(player.get("reason") or "UNKNOWN")
         provider_type = str(player.get("type") or "UNKNOWN")
+        provider_availability = {
+            "missing fixture": "UNAVAILABLE",
+            "questionable": "QUESTIONABLE",
+        }.get(provider_type.casefold(), "UNKNOWN")
         suspension_words = ("suspension", "suspended", "red card", "yellow cards")
         status = "SUSPENDED" if any(word in reason.casefold() for word in suspension_words) else "INJURED"
         (suspended if status == "SUSPENDED" else injured)[side].add(key)
         p = _with(provenance, team_id=team_id, player_id=key)
         prefix = f"{side}.availability.{key}"
         for suffix, value in (("player_id", key), ("name", str(player.get("name") or key)),
-                              ("status", status), ("availability", "UNAVAILABLE"),
+                              ("status", status), ("availability", provider_availability),
                               ("provider_type", provider_type), ("reason", reason)):
             fields.append(IntelligenceField(prefix + "." + suffix, DataClass.PRE_MATCH_DYNAMIC, value, (p,)))
     for side, team_key in (("home", "home_team_id"), ("away", "away_team_id")):

@@ -167,6 +167,30 @@ class CurrentMatchIntelligenceTests(unittest.TestCase):
         self.assertEqual(values["home.availability.1.reason"], "Knee Injury")
         self.assertEqual((injured_set["home"], suspended_set["away"]), ({"1"}, {"21"}))
 
+    def test_injury_normalization_deduplicates_provider_rows(self):
+        payload = injuries()
+        payload["response"].append(dict(payload["response"][0]))
+        payload["response"].append({
+            "team": {"id": 10, "name": "Home"},
+            "player": {"id": 2, "name": "P2", "type": "Questionable", "reason": "Injury"},
+        })
+        fields, injured_set, _ = normalize_injuries(
+            payload,
+            identity={"home_team_id": 10, "away_team_id": 20},
+            provenance=FieldProvenance("API-FOOTBALL", "/injuries", NOW, None, "500"),
+        )
+        names = [field.name for field in fields]
+        self.assertEqual(len(names), len(set(names)))
+        self.assertEqual(injured_set["home"], {"1", "2"})
+        self.assertEqual(
+            next(field.value for field in fields if field.name == "home.availability.2.availability"),
+            "QUESTIONABLE",
+        )
+        self.assertEqual(
+            next(field.value for field in fields if field.name == "home.availability.injury_count"),
+            2,
+        )
+
     def test_rest_congestion_home_away_splits_and_real_statistics(self):
         snapshot = self.collect()[0].snapshot
         self.assertEqual(snapshot.field("feature.rest_days_home").value, 5)
@@ -212,6 +236,20 @@ class CurrentMatchIntelligenceTests(unittest.TestCase):
         self.assertEqual(
             {x.name: x.value for x in first.snapshot.fields},
             {x.name: x.value for x in second.snapshot.fields},
+        )
+
+    def test_network_retrieval_after_run_start_sets_snapshot_cutoff(self):
+        retrieved = NOW + timedelta(seconds=3)
+        snapshot = self.collect(FakeProvider(retrieved), now=NOW)[0].snapshot
+        self.assertEqual(snapshot.evaluated_at, retrieved)
+        self.assertIsNotNone(snapshot.field("feature.current_odds_home_win"))
+        self.assertEqual(
+            next(item for item in snapshot.freshness if item.signal == "odds").status.value,
+            "FRESH",
+        )
+        self.assertEqual(
+            next(item for item in snapshot.freshness if item.signal == "fixture_context").status.value,
+            "FRESH",
         )
 
     def test_deterministic_replay_and_lab_bridge(self):

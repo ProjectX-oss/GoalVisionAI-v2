@@ -79,7 +79,7 @@ class CurrentMatchIntelligenceService:
         fields = normalize_fixture_fields(
             identity, self._provenance(fixture_source, str(fixture_id), "/fixtures")
         )
-        sources: dict[str, dict | None] = {}
+        sources: dict[str, dict | None] = {"fixture": fixture_source}
         required_specs = (
             ("lineup", "/fixtures/lineups", {"fixture": fixture_id}, self.freshness.confirmed_lineup, lambda: self.provider.lineup(fixture_id)),
             ("injuries", "/injuries", {"fixture": fixture_id}, self.freshness.injuries, lambda: self.provider.injuries(fixture_id)),
@@ -132,8 +132,6 @@ class CurrentMatchIntelligenceService:
                     provenance=self._provenance(history, str(fixture_id), "/fixtures"),
                 )
                 fields.extend(values)
-        self._normalize_odds(fields, sources.get("odds"), identity, now)
-
         detailed_stats: dict[int, dict] = {}
         historical_lineups: dict[int, dict] = {}
         optional_ids = []
@@ -191,6 +189,18 @@ class CurrentMatchIntelligenceService:
                     f"{side}.player_usage.{player_id}.recent_starts",
                     DataClass.LINEUP_SENSITIVE, usage[player_id], tuple(evidence),
                 ))
+        evidence_sources = [
+            item for item in (
+                *sources.values(), *detailed_stats.values(),
+                *historical_lineups.values(),
+            )
+            if item is not None
+        ]
+        evidence_at = max(
+            (item["retrieved_at"] for item in evidence_sources), default=now
+        )
+        evidence_at = max(now, evidence_at)
+        self._normalize_odds(fields, sources.get("odds"), identity, evidence_at)
         fields.extend(derive_features(
             fields, current_starters=current_starters, recent_starting_sets=prior_sets,
             injured=injured, suspended=suspended,
@@ -199,10 +209,10 @@ class CurrentMatchIntelligenceService:
         missing = self._missing(fields)
         if not current_starters["home"] or not current_starters["away"]:
             blockers.append("CONFIRMED_LINEUPS_NOT_AVAILABLE")
-        freshness = self._freshness(sources, fields, now)
+        freshness = self._freshness(sources, fields, evidence_at)
         material = {
             "schema_version": SCHEMA_VERSION, "fixture_id": str(fixture_id),
-            "kickoff_utc": kickoff.isoformat(), "evaluated_at": now.isoformat(),
+            "kickoff_utc": kickoff.isoformat(), "evaluated_at": evidence_at.isoformat(),
             "fields": [asdict(item) for item in fields],
             "freshness": [asdict(item) for item in freshness],
             "missing_data": sorted(set(missing)), "blockers": sorted(set(blockers)),
@@ -291,6 +301,7 @@ class CurrentMatchIntelligenceService:
     ) -> tuple[FreshnessEvidence, ...]:
         by_name = {item.name: item for item in fields}
         groups = {
+            "fixture_context": ((sources.get("fixture"),), self.freshness.fixture),
             "confirmed_lineups": ((sources.get("lineup"),), self.freshness.confirmed_lineup),
             "injuries": ((sources.get("injuries"),), self.freshness.injuries),
             "team_statistics": ((sources.get("home_stats"), sources.get("away_stats")), self.freshness.team_statistics),
@@ -329,6 +340,11 @@ class CurrentMatchIntelligenceService:
             return any(
                 name.startswith("market.") and name.endswith(".decimal_odds")
                 for name in fields
+            )
+        if signal == "fixture_context":
+            return all(
+                name in fields
+                for name in ("fixture.id", "fixture.kickoff_utc", "competition.id")
             )
         return False
 
