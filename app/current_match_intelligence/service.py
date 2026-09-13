@@ -250,13 +250,18 @@ class CurrentMatchIntelligenceService:
         if outcome == "PROVIDER_ERROR":
             return None
         provider_time = _provider_timestamp(payload) if endpoint == "/odds" else None
+        effective_ttl = ttl
+        if endpoint == "/fixtures/lineups":
+            rows = payload.get("response") if isinstance(payload, dict) else None
+            if not isinstance(rows, list) or not rows:
+                effective_ttl = self.freshness.unavailable_lineup
         self.repository.append_cache(
             provider="API-FOOTBALL", endpoint=endpoint, query=query,
-            retrieved_at=observed, expires_at=observed + ttl,
+            retrieved_at=observed, expires_at=observed + effective_ttl,
             provider_timestamp=provider_time, payload=payload,
         )
         return {"payload": payload, "retrieved_at": observed,
-                "expires_at": observed + ttl, "provider_timestamp": provider_time}
+                "expires_at": observed + effective_ttl, "provider_timestamp": provider_time}
 
     def _remaining(self) -> int:
         return max(0, self.budget.maximum_api_calls - self.provider.request_count)

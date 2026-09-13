@@ -1,9 +1,9 @@
 [Unit]
-Description=Daily bounded GoalVision Lab Combo discovery
+Description=GoalVision Lab experimental discovery every 30 minutes
 
 [Timer]
-OnCalendar=*-*-* 10:00:00 UTC
-Persistent=false
+OnCalendar=*:0/30
+Persistent=true
 Unit=goalvision-lab-combo-discover.service
 
 [Install]

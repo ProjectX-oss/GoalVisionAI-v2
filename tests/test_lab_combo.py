@@ -96,7 +96,8 @@ def test_all_27_settlement_outcomes_replay_backtest():
     for outcomes in product(('WON', 'LOST', 'VOID'), repeat=3):
         results = [dict(observation_id=leg['observation_id'], outcome=status) for leg, status in zip(combo['legs'], outcomes)]
         value = aggregate(combo, results, NOW)
-        assert value['status'] == ('LOST' if 'LOST' in outcomes else 'VOID' if set(outcomes) == {'VOID'} else 'WON')
+        assert value['status'] == ('LOST' if 'LOST' in outcomes else 'VOID' if set(outcomes) == {'VOID'}
+                                   else 'PARTIAL_VOID' if 'VOID' in outcomes else 'WON')
         expected_odds = Decimal('1.4') ** (3-outcomes.count('VOID'))
         assert Decimal(value['effective_combined_odds']) == expected_odds
         assert Decimal(value['unit_result']) == (-1 if 'LOST' in outcomes else expected_odds-1)
@@ -143,6 +144,7 @@ def test_send_revalidation_and_ambiguous_delivery_never_retry(ledger):
 def test_result_sweep_persists_losses_and_recovers_previews(ledger):
     combo = select_combo(legs(), NOW)[0]
     ledger.append('prediction', combo['prediction_id'], combo)
+    ledger.append('receipt', 'combo_prediction:' + combo['prediction_id'], {'sent': True})
     class Provider:
         request_count = 0
         def quota_snapshot(self):
@@ -268,8 +270,9 @@ def test_cli_bounded_discovery_persists_no_selection_without_telegram(ledger):
         result = asyncio.run(cycle(args))
     assert result['real_combo_found'] is False
     assert result['lab_telegram_sent'] is False
-    assert result['api_calls_consumed'] == 0
-    assert result['blockers'] == ['FEWER_THAN_THREE_ELIGIBLE_SINGLES']
+    assert result['api_calls_consumed'] == 1
+    assert result['policy'] == 'LAB_EXPERIMENTAL_SELECTION_V1'
+    assert result['combos'] == []
     transport.assert_not_called()
     assert len(ledger.all('run')) == 1
 

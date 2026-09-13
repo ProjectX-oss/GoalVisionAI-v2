@@ -158,6 +158,19 @@ class CurrentMatchIntelligenceTests(unittest.TestCase):
         self.assertIn("/fixtures/lineups", later.endpoints)
         self.assertNotIn("/injuries", later.endpoints)
 
+    def test_unpublished_lineup_uses_shorter_retry_ttl(self):
+        class UnpublishedLineupProvider(FakeProvider):
+            async def lineup(self, fixture_id):
+                return self._use("/fixtures/lineups", {"response": []})
+        provider = UnpublishedLineupProvider(NOW)
+        first = self.collect(provider, now=NOW)[0].snapshot
+        evidence = next(item for item in first.freshness if item.signal == "confirmed_lineups")
+        self.assertEqual(evidence.status.value, "MISSING")
+        self.assertEqual(evidence.expires_at, NOW + timedelta(minutes=15))
+        retry = UnpublishedLineupProvider(NOW + timedelta(minutes=16))
+        self.collect(retry, now=NOW + timedelta(minutes=16))
+        self.assertIn("/fixtures/lineups", retry.endpoints)
+
     def test_injury_normalization_preserves_reason_and_explicit_suspension(self):
         p = FieldProvenance("API-FOOTBALL", "/injuries", NOW, None, "500")
         fields, injured_set, suspended_set = normalize_injuries(injuries(), identity={"home_team_id": 10, "away_team_id": 20}, provenance=p)

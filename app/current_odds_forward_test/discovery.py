@@ -42,6 +42,7 @@ async def discover_current_fixture(
     capability_cache_path: Path | None = None,
     quota_already_verified: bool = False,
     maximum_fixtures: int = 1,
+    require_team_baseline: bool = True,
 ) -> dict:
     """Search staged current fixtures and odds without invoking inference."""
 
@@ -169,6 +170,7 @@ async def discover_current_fixture(
                     data_cache=data_cache, cutoff=now,
                     collected=collected, maximum_fixtures=maximum_fixtures,
                     trace_sink=request_cost_report,
+                    require_team_baseline=require_team_baseline,
                 )
                 candidates_considered += used
                 reports.append({"stage": stage_name, "date": day, "provider_rows_seen": len(new_rows), "eligible_candidates_evaluated": used, "selected_fixture_id": selected.get("provider_fixture_id") if selected else None})
@@ -191,6 +193,7 @@ async def discover_current_fixture(
                 data_cache=data_cache, cutoff=now,
                 collected=collected, maximum_fixtures=maximum_fixtures,
                 trace_sink=request_cost_report,
+                require_team_baseline=require_team_baseline,
             )
             candidates_considered += used
             reports.append({"stage": "ALL_SUPPORTED_PROFESSIONAL_SENIOR_NEXT_7_DAYS", "provider_rows_seen": len(all_rows), "eligible_candidates_evaluated": used, "selected_fixture_id": selected.get("provider_fixture_id") if selected else None})
@@ -247,7 +250,7 @@ async def discover_current_fixture(
 async def _evaluate_candidates(
     client, candidates, *, evaluated, odds_requested, skipped, effective_limit,
     remaining_candidates, data_cache, cutoff, collected=None, maximum_fixtures=1,
-    trace_sink=None,
+    trace_sink=None, require_team_baseline=True,
 ):
     collected = [] if collected is None else collected
     used = 0
@@ -345,27 +348,34 @@ async def _evaluate_candidates(
             trace["result"] = "INSUFFICIENT_SUPPORTED_MARKETS"
             continue
         trace["odds_validated"] = True
-        home_history, home_reason = await _team_history(
-            client, data_cache, fixture, fixture["home_team_id"], "HOME",
-            cutoff=cutoff, trace=trace,
-        )
-        if home_reason is not None or not isinstance(home_history, list) or not home_history:
-            reason = home_reason or "INSUFFICIENT_REQUIRED_DATA"
-            _increment(skipped, reason)
-            trace["result"] = "CANDIDATE_SKIPPED_BASELINE"
-            trace["rejection_reason"] = reason
-            continue
-        away_history, away_reason = await _team_history(
-            client, data_cache, fixture, fixture["away_team_id"], "AWAY",
-            cutoff=cutoff, trace=trace,
-        )
-        if away_reason is not None or not isinstance(away_history, list) or not away_history:
-            reason = away_reason or "INSUFFICIENT_REQUIRED_DATA"
-            _increment(skipped, reason)
-            trace["result"] = "CANDIDATE_SKIPPED_BASELINE"
-            trace["rejection_reason"] = reason
-            continue
-        trace["result"] = "REQUIRED_BASELINE_READY"
+        home_history = away_history = []
+        if require_team_baseline:
+            home_history, home_reason = await _team_history(
+                client, data_cache, fixture, fixture["home_team_id"], "HOME",
+                cutoff=cutoff, trace=trace,
+            )
+            if home_reason is not None or not isinstance(home_history, list) or not home_history:
+                reason = home_reason or "INSUFFICIENT_REQUIRED_DATA"
+                _increment(skipped, reason)
+                trace["result"] = "CANDIDATE_SKIPPED_BASELINE"
+                trace["rejection_reason"] = reason
+                continue
+            away_history, away_reason = await _team_history(
+                client, data_cache, fixture, fixture["away_team_id"], "AWAY",
+                cutoff=cutoff, trace=trace,
+            )
+            if away_reason is not None or not isinstance(away_history, list) or not away_history:
+                reason = away_reason or "INSUFFICIENT_REQUIRED_DATA"
+                _increment(skipped, reason)
+                trace["result"] = "CANDIDATE_SKIPPED_BASELINE"
+                trace["rejection_reason"] = reason
+                continue
+            trace["result"] = "REQUIRED_BASELINE_READY"
+        else:
+            trace["required_order"] = ["CURRENT_ODDS"]
+            trace["optional_calls"]["team_history"] = "DEFERRED_TO_CURRENT_MATCH_INTELLIGENCE"
+            trace["result"] = "CHEAP_ODDS_SHORTLIST_READY"
+        fixture_payload = fixture.pop("_provider_fixture_payload", None)
         candidate = {
             **fixture,
             "fixture_selected_at_utc": source_selected.isoformat(),
@@ -387,6 +397,10 @@ async def _evaluate_candidates(
                 "away_recent_matches": len(away_history),
                 "home_recent_form": _history_form(home_history, fixture["home_team_id"]),
                 "away_recent_form": _history_form(away_history, fixture["away_team_id"]),
+            },
+            "_current_match_reuse": {
+                "fixture": fixture_payload,
+                "odds": odds_payload,
             },
         }
         collected.append(candidate)
@@ -481,6 +495,7 @@ def _ordered_candidates(rows, *, now, minimum_lead_minutes, catalog, priority, p
                 _increment(skipped, reason)
                 if rejection_seen is not None: rejection_seen.add(identity)
             continue
+        fixture["_provider_fixture_payload"] = {"response": [row]}
         league_id = fixture["competition_id"]
         if priority_only and league_id not in priority:
             continue

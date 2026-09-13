@@ -1,5 +1,5 @@
 [Unit]
-Description=GoalVision Lab-only bounded combo settlement
+Description=GoalVision Lab-only bounded experimental single/combo settlement
 Wants=network-online.target
 After=network-online.target
 
