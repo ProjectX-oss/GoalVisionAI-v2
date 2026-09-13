@@ -64,14 +64,23 @@ def build_manifest(
     effective_date_start: str, effective_date_end: str,
     competitions: tuple[str, ...], seasons: tuple[str, ...], bookmakers: tuple[str, ...],
     markets: tuple[str, ...], parser_version: str,
+    file_row_counts: dict[str, int] | None = None,
 ) -> OddsSourceManifest:
     require_import_approval(review)
     if review.review_fingerprint != prepare_source_review(review).review_fingerprint:
         raise ValueError("Odds source review fingerprint is invalid.")
+    per_file_counts = file_row_counts or {}
     source_files = tuple(
-        OddsSourceFile(Path(path).name, file_sha256(path), Path(path).stat().st_size, raw_row_count)
+        OddsSourceFile(
+            Path(path).name, file_sha256(path), Path(path).stat().st_size,
+            per_file_counts.get(Path(path).name, raw_row_count),
+        )
         for path in sorted((Path(item) for item in files), key=lambda item: item.name)
     )
+    if file_row_counts is not None:
+        actual_names = {item.file_name for item in source_files}
+        if set(file_row_counts) != actual_names or sum(file_row_counts.values()) != raw_row_count:
+            raise ValueError("Per-file raw row counts do not reconcile with the manifest.")
     value = OddsSourceManifest(
         source_id=review.source_id, source_version=source_version,
         provider=review.source_owner_provider,

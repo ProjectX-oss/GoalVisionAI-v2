@@ -10,6 +10,7 @@ from app.reviewed_real_historical_data.models import SourceApprovalStatus
 
 from .fingerprint import canonical_json, file_sha256
 from .coverage_foundation import build_extended_coverage_evidence
+from .football_data_foundation import build_football_data_foundation
 from .models import OddsSourceReview
 from .pilot import run_pilot
 from .service import prepare_source_review
@@ -69,6 +70,17 @@ def build_parser() -> argparse.ArgumentParser:
     authorized = sub.add_parser("authorized-export"); authorized.add_argument("--provider", choices=("thestatsapi",), required=True)
     authorized.add_argument("--confirmation", required=True); authorized.add_argument("--destination", required=True); authorized.add_argument("--output", choices=("human", "json"), default="human")
     evidence = sub.add_parser("provider-evidence"); evidence.add_argument("--export"); evidence.add_argument("--output", choices=("human", "json"), default="json")
+    football_data = sub.add_parser(
+        "import-football-data-foundation",
+        help="offline fail-closed import of bounded Football-Data raw CSV evidence",
+    )
+    football_data.add_argument("--odds-file", action="append", required=True)
+    football_data.add_argument("--fixture-file", action="append", required=True)
+    football_data.add_argument("--review", required=True)
+    football_data.add_argument("--split-evidence", required=True)
+    football_data.add_argument("--database", required=True)
+    football_data.add_argument("--timestamp", required=True)
+    football_data.add_argument("--export")
     return parser
 
 
@@ -114,6 +126,18 @@ def main(argv: list[str] | None = None) -> int:
         evidence = build_credential_status_evidence()
         if args.export: Path(args.export).write_text(canonical_json(evidence) + "\n", encoding="utf-8")
         return _render(evidence, args.output)
+    if args.command == "import-football-data-foundation":
+        evidence = build_football_data_foundation(
+            football_data_files=tuple(args.odds_file),
+            openligadb_files=tuple(args.fixture_file),
+            source_review_path=args.review,
+            split_evidence_path=args.split_evidence,
+            isolated_database_path=args.database,
+            execution_timestamp_utc=args.timestamp,
+        )
+        if args.export:
+            Path(args.export).write_text(canonical_json(evidence) + "\n", encoding="utf-8")
+        return _render(evidence, "json")
     if args.command == "export-plan":
         return _render(build_bulk_request_plan(provider=HistoricalOddsProvider(args.provider), split_id=args.split_id, competition_query=args.competition), args.output)
     if args.command in {"provider-diagnose", "coverage-probe"}:

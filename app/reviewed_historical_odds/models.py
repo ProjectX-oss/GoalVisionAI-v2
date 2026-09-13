@@ -28,6 +28,13 @@ class QuoteTimingStatus(str, Enum):
     UNKNOWN_CAPTURE_TIME = "UNKNOWN_CAPTURE_TIME"
 
 
+class RawQuoteEvidenceStatus(str, Enum):
+    """Whether a source cell can enter the timestamped normalized quote chain."""
+
+    REJECTED_MISSING_CAPTURE_TIMESTAMP = "REJECTED_MISSING_CAPTURE_TIMESTAMP"
+    REJECTED_INVALID_DECIMAL_ODDS = "REJECTED_INVALID_DECIMAL_ODDS"
+
+
 class BacktestIntegrityStatus(str, Enum):
     BACKTEST_INTEGRITY_PASSED = "BACKTEST_INTEGRITY_PASSED"
     BACKTEST_INTEGRITY_BLOCKED = "BACKTEST_INTEGRITY_BLOCKED"
@@ -147,6 +154,30 @@ class SourceOddsQuote:
     captured_at_utc: str | None
     source_effective_timestamp_utc: str
     source_point: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class RawOddsQuoteEvidence:
+    """Immutable source-cell evidence retained even when normalization fails closed."""
+
+    raw_quote_evidence_id: str
+    source_quote_id: str
+    source_event_id: str
+    source_file_name: str
+    source_row_number: int
+    source_column_name: str
+    source_bookmaker_id: str
+    source_bookmaker_name: str
+    source_market_name: str
+    canonical_market: SupportedMarket
+    original_value: str
+    parsed_decimal_odds: Decimal | None
+    odds_semantics: str
+    captured_at_utc: str | None
+    source_timestamp_semantics: str
+    evidence_status: RawQuoteEvidenceStatus
+    rejection_reason: str
+    provenance_fingerprint: str
 
 
 @dataclass(frozen=True, slots=True)

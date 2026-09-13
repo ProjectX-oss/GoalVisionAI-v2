@@ -27,3 +27,10 @@ The credential-ready workflow is documented in
 `docs/HISTORICAL_ODDS_PROVIDER_COVERAGE_PROBE.md`. Bulk acquisition remains
 separately gated by approved terms, confirmed sampled coverage, sufficient
 provider-reported quota, and an exact operator confirmation phrase.
+
+The Football-Data CSV adapter is a separate offline, fail-closed raw-evidence
+path. It preserves source file/row/column/bookmaker/value provenance and exact
+fixture links, but never converts Football-Data cells into actionable quotes
+because the archives have no row-level capture timestamps. See
+`docs/FOOTBALL_DATA_HISTORICAL_ODDS_FOUNDATION.md` and the
+`import-football-data-foundation` CLI command.
