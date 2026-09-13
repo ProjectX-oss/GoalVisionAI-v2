@@ -64,7 +64,11 @@ class SQLiteRealMatchLabRepository:
             )
             evaluations = record.evidence.evaluations if record.evidence else ()
             for order, item in enumerate(evaluations):
-                item_fp = fingerprint(item)
+                # Evaluations are analysis-owned evidence, not globally unique values.
+                evaluation_material = {
+                    "analysis_id": record.analysis_id, "order": order, "evaluation": item,
+                }
+                item_fp = fingerprint(evaluation_material)
                 self.connection.execute(
                     """INSERT INTO real_match_lab_market_evaluations
                     VALUES (?,?,?,?,?,?,?)""",

@@ -51,10 +51,12 @@ async def cycle(args: argparse.Namespace) -> dict:
     client = FootballClient(request_limit=40 if args.command == 'discover' else 21)
     client.restrict_requests(40 if args.command == 'discover' else 21)
     output: dict = {'real_combo_found': False, 'lab_telegram_sent': False}
+    stage = 'INITIALIZE'
     try:
         singles = SQLiteForwardTestRepository(database)
         service = LabComboService(ledger, singles)
         if args.command == 'settle':
+            stage = 'SETTLEMENT'
             if any(not ledger.get('settlement', value['prediction_id']) for value in ledger.all('prediction')):
                 await client.account_status()
             output.update(await service.check_results(client))
@@ -63,6 +65,7 @@ async def cycle(args: argparse.Namespace) -> dict:
                        and not ledger.get('claim', 'settlement:' + value['prediction_id'])]
         else:
             now = datetime.now(timezone.utc)
+            stage = 'DISCOVERY'
             discovery = await discover_current_fixture(client, now=now, maximum_fixtures=50,
                                                        capability_cache_path=Path('var/lab_combo/capabilities.json'))
             output['discovery'] = discovery
@@ -72,23 +75,30 @@ async def cycle(args: argparse.Namespace) -> dict:
             for fixture in discovery.get('selected_fixtures', []):
                 identity = str(fixture['provider_fixture_id'])
                 try:
+                    stage = 'VALIDATE_ODDS'
                     clock = datetime.now(timezone.utc)
                     odds = parse_current_odds(fixture['odds_contract'], now=clock)
+                    stage = 'CAPTURE_ODDS'
                     forward.capture_odds(odds)
                     raw = _analysis_input('combo-' + odds.snapshot_id, fixture, odds)
                     raw['operator_notes'] = 'Bounded Lab Combo analysis; existing single-market gates apply.'
+                    stage = 'ANALYZE'
                     analysis = analyzer.analyze(parse_input(raw, now=clock))
+                    stage = 'CREATE_OBSERVATION'
                     observation = forward.create_observation('combo-' + analysis.analysis_id, analysis.analysis_id, odds.snapshot_id)
                     observations.append(observation.observation_id)
                     if observation.actionable:
                         from app.prediction_explainability.service import PredictionExplainabilityService
+                        stage = 'EXPLAINABILITY'
                         PredictionExplainabilityService(database).create_for_analysis(analysis.analysis_id,
                             observation_id=observation.observation_id, created_at_utc=clock.isoformat())
                 except (ValueError, KeyError) as exc:
                     failures[identity] = type(exc).__name__
             if observations:
                 from app.forward_test_governance.service import GovernanceService
+                stage = 'GOVERNANCE'
                 GovernanceService(database).evaluate(datetime.now(timezone.utc).isoformat())
+            stage = 'PREPARE_COMBO'
             prepared = service.prepare(observations)
             output.update(prepared)
             output['analysis_failures'] = failures
@@ -97,6 +107,7 @@ async def cycle(args: argparse.Namespace) -> dict:
             pending = [combo['prediction_id']] if combo else [
                 value['prediction_id'] for value in ledger.all('prediction')
                 if not ledger.get('claim', 'prediction:' + value['prediction_id'])]
+        stage = 'LAB_DELIVERY'
         if args.send and pending:
             from app.lab_telegram.service import load_lab_telegram_config, validate_lab_telegram_config
             from app.services.telegram_service import TelegramService
@@ -121,6 +132,18 @@ async def cycle(args: argparse.Namespace) -> dict:
     except Exception as exc:
         # Never serialize provider/Telegram exceptions: they may contain credentials.
         output['terminal_error'] = type(exc).__name__
+        output['terminal_stage'] = stage
+        if isinstance(exc, sqlite3.IntegrityError):
+            output['sqlite_constraint'] = {
+                sqlite3.SQLITE_CONSTRAINT_NOTNULL: 'SQLITE_CONSTRAINT_NOTNULL',
+                sqlite3.SQLITE_CONSTRAINT_UNIQUE: 'SQLITE_CONSTRAINT_UNIQUE',
+                sqlite3.SQLITE_CONSTRAINT_PRIMARYKEY: 'SQLITE_CONSTRAINT_PRIMARYKEY',
+                sqlite3.SQLITE_CONSTRAINT_FOREIGNKEY: 'SQLITE_CONSTRAINT_FOREIGNKEY',
+            }.get(getattr(exc, 'sqlite_errorcode', None), 'SQLITE_CONSTRAINT')
+            # Only this known schema message is safe to retain verbatim.
+            known = 'NOT NULL constraint failed: forward_test_governance_scope_statuses.scope_value'
+            if str(exc) == known:
+                output['sqlite_message'] = known
         return output
     finally:
         output['api_calls_consumed'] = client.request_count

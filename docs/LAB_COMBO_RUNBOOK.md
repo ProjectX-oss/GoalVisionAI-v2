@@ -119,3 +119,62 @@ result: 76 passed and 8 subtests passed. A later scheduled bounded execution wil
 provide current quota evidence; do not loosen reserve or freshness gates to force
 success. Treat continuous publication readiness as unproven until that execution
 completes with adequate quota and all individual quality gates satisfied.
+
+## Integrity failure diagnosis and replay fix (2026-09-13)
+
+A read-only SQLite backup of the existing analysis database into memory reproduced
+the latest persisted failure without provider calls. The failed runs had already
+persisted all 21 accumulated analyses and observations. The failing statement was
+`INSERT INTO forward_test_governance_scope_statuses VALUES (?,?,?,?,?,?,?,?)`,
+raising `NOT NULL constraint failed: forward_test_governance_scope_statuses.scope_value`.
+It was not a market-evaluation UNIQUE failure. Governance projected explicit null
+model/calibration IDs from blocked observations with `dict.get(key, "UNKNOWN")`;
+that default only handles absent keys. These null IDs are legitimate immutable
+evidence of an analysis that did not reach calibration.
+
+Governance now maps absent/null artifact identities to its existing `UNKNOWN`
+category consistently in collection and publication/snapshot lookups. Source
+observations retain their nulls, fingerprints and rejection reasons. No schema,
+UNIQUE/FK/NOT NULL constraint, threshold or historical record is changed. A failed
+legacy projection rolls back atomically; corrected evaluation, exact replay,
+subsequent cutoff and reproduction succeed. The existing persisted-data replay
+retains `GOVERNANCE_SAMPLE_INSUFFICIENT` and blocks publication.
+
+The separate Real Match Lab evaluation identity fix is retained: analysis ID,
+deterministic order and evaluation content identify an analysis-owned row. Two
+analyses may legitimately have identical evaluation content. Exact replay and
+immutable old rows are retained, without a migration or evidence rewrite.
+
+The 0.5-second request-start pacing is retained. Request-slot reservation and
+capacity checks now happen within its lock, with capacity rechecked after waiting,
+so concurrent callers cannot bypass the total request ceiling. Retries use the
+same paced reservation. Existing provider-origin/retrieval freshness work is
+preserved; see `API_FOOTBALL_PREMATCH_FRESHNESS.md`.
+
+Terminal diagnostics retain an application stage and allowlisted SQLite constraint
+code. Only the exact known schema failure above is retained as message text;
+arbitrary exception/trigger/provider/Telegram text is not copied into that field.
+Offline regressions cover the actual NOT NULL failure, rollback, corrected replay,
+immutable observations, repeated evaluation content, concurrent pacing and secret
+redaction. This is a persistence/transport repair, not a prediction algorithm change.
+
+The pre-rehearsal evidence also identifies a separate readiness blocker:
+`CALIBRATION_REVIEW_MISSING`. In this path `_analysis_input` does not supply
+`source_commit`, which the real engine requires before its independent activation
+audit. Before continuous Lab operation, explicitly bind the input to reviewed
+source provenance and pass the existing Lab activation/calibration, reasoning and
+governance gates in a separately authorized bounded rehearsal. Do not fabricate a
+review, weaken those gates, or enable timers as part of this repair.
+
+Validation for this repair: focused suite **157 passed, 13 subtests passed**;
+the full suite ran once, **1,553 passed, 563 subtests passed** (444.75 seconds).
+The single real `.venv/bin/python -m app.lab_combo discover` rehearsal on
+2026-09-13 consumed **38 API calls**, found **5 fresh-odds candidates**, and
+reported `ELIGIBLE_CURRENT_FIXTURE_FOUND` with **no terminal error**. All five
+analyses were immutably rejected with `CALIBRATION_REVIEW_MISSING`; governance
+persisted successfully, eligible singles were **0**, and the combo blocker was
+`FEWER_THAN_THREE_ELIGIBLE_SINGLES`. Combo **NO**, Lab send **NO**. The database
+foreign-key check returned no violations. The complete run remains in the local
+append-only ledger, with stdout at
+`var/lab_combo/integrity_rehearsal_20260913.json`. No second real discovery,
+timer enablement, model activation or historical-evidence edit was performed.

@@ -9,8 +9,7 @@ from math import prod
 
 from app.current_odds_forward_test.operations import build_publication_review
 from app.current_odds_forward_test.repository import SQLiteForwardTestRepository
-from app.market_value_assessment import DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY
-from app.market_value_assessment.calculations import classify_odds_freshness
+from app.current_odds_forward_test.freshness import current_odds_freshness
 from app.real_match_lab_analysis.fingerprint import fingerprint
 from app.real_match_lab_analysis.policy import SUPPORTED_MARKETS
 
@@ -29,10 +28,16 @@ def load_leg(repository: SQLiteForwardTestRepository, observation_id: str, now: 
     market = observation['actionable_market']
     evaluation = next(item for item in observation['market_evaluations'] if item['market'] == market)
     quote = next(item for item in odds['quotes'] if item['market'] == market)
-    origin = quote.get('provider_origin_timestamp_utc') or quote['captured_at_utc']
-    age = (now - datetime.fromisoformat(origin)).total_seconds()
-    freshness = classify_odds_freshness(int(age), DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY).value
-    if age < 0 or freshness in {'STALE', 'EXPIRED'}:
+    try:
+        origin = quote.get('provider_origin_timestamp_utc')
+        freshness = current_odds_freshness(
+            provider_type=quote.get('provider_type', ''),
+            provider_origin=datetime.fromisoformat(origin) if origin else None,
+            captured=datetime.fromisoformat(quote['captured_at_utc']),
+            retrieved=datetime.fromisoformat(quote['source_retrieval_timestamp_utc']), now=now)
+    except (ValueError, TypeError, KeyError):
+        return None, ['INVALID_CURRENT_ODDS_TIMESTAMP']
+    if freshness in {'STALE', 'EXPIRED'}:
         return None, ['STALE_CURRENT_ODDS']
     if market not in SUPPORTED_MARKETS or evaluation.get('rejection_reasons') or evaluation.get('confidence') == 'LOW':
         return None, ['SINGLE_MARKET_REJECTED']

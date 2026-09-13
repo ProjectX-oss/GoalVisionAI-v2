@@ -1,11 +1,11 @@
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
 
 from .configuration import resolve_api_football_credential
-from .quota import FootballQuotaReport
+from .quota import FootballQuotaReport, FootballQuotaError
 
 
 class FootballRequestLimitError(RuntimeError):
@@ -15,14 +15,18 @@ class FootballRequestLimitError(RuntimeError):
 class FootballClient:
 
     BASE_URL = "https://v3.football.api-sports.io"
+    MIN_REQUEST_INTERVAL_SECONDS = 0.5
 
     def __init__(self, api_key: str | None = None, *, env_file: Path | str = Path(".env"), request_limit: int | None = None):
 
         api_key = resolve_api_football_credential(api_key, env_file=env_file)
         self._quota: FootballQuotaReport | None = None
         self._last_response_metadata: dict = {}
+        self._quota_block_reason: str | None = None
         self._request_count = 0
         self._request_limit = request_limit
+        self._request_pacing_lock = asyncio.Lock()
+        self._last_request_started_monotonic = None
 
         self._client = httpx.AsyncClient(
             base_url=self.BASE_URL,
@@ -199,20 +203,46 @@ class FootballClient:
         self._request_limit = min(self._request_limit or maximum_calls, maximum_calls)
         self._daily_reserve = daily_reserve
 
+    def _require_request_capacity(self) -> None:
+        if self._request_limit is not None and self._request_count >= self._request_limit:
+            raise FootballRequestLimitError("API_FOOTBALL_REQUEST_LIMIT_REACHED")
+        if self._quota_block_reason is not None:
+            raise FootballQuotaError(self._quota_block_reason)
+        if getattr(self, "_daily_reserve", None) is not None and self._quota is not None:
+            self._quota.require_capacity(additional_calls=1, daily_reserve=self._daily_reserve)
+
+    async def _pace_request(self) -> None:
+        """Reserve a bounded request slot after pacing, including concurrent callers."""
+        async with self._request_pacing_lock:
+            self._require_request_capacity()
+            loop = asyncio.get_running_loop()
+            now = loop.time()
+            if self._last_request_started_monotonic is not None:
+                wait = self.MIN_REQUEST_INTERVAL_SECONDS - (now - self._last_request_started_monotonic)
+                if wait > 0:
+                    await asyncio.sleep(wait)
+            # A response may have changed quota state while this caller waited.
+            self._require_request_capacity()
+            self._last_request_started_monotonic = loop.time()
+            self._request_count += 1
+
     async def _get(self, path: str, *, params: dict):
         for attempt in range(3):
             try:
-                if self._request_limit is not None and self._request_count >= self._request_limit:
-                    raise FootballRequestLimitError("API_FOOTBALL_REQUEST_LIMIT_REACHED")
-                if getattr(self, "_daily_reserve", None) is not None and self._quota is not None:
-                    self._quota.require_capacity(additional_calls=1, daily_reserve=self._daily_reserve)
-                self._request_count += 1
+                await self._pace_request()
                 response = await self._client.get(path, params=params)
                 observed_quota = FootballQuotaReport.from_headers(response.headers)
-                if observed_quota.interpretation_status == "NORMALIZED" or getattr(self, "_daily_reserve", None) is not None:
+                if observed_quota.interpretation_status == "NORMALIZED":
                     self._quota = observed_quota
+                elif getattr(self, "_daily_reserve", None) is not None:
+                    # Preserve the last exact observation, but never spend against
+                    # it after an unaccounted response. No implicit retry/probe.
+                    self._quota_block_reason = "API_FOOTBALL_QUOTA_HEADERS_MISSING_OR_INVALID"
                 payload = _safe_json(response)
                 self._last_response_metadata = {
+                    "retrieved_at_utc": datetime.now(timezone.utc).isoformat(),
+                    "quota_state_preserved": observed_quota.interpretation_status != "NORMALIZED" and self._quota is not None,
+                    "quota_block_reason": self._quota_block_reason,
                     "endpoint": path,
                     "method": "GET",
                     "query": dict(sorted(params.items())),

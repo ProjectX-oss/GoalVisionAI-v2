@@ -6,8 +6,7 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 import re
 
-from app.market_value_assessment import DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY
-from app.market_value_assessment.calculations import classify_odds_freshness
+from .freshness import current_odds_freshness
 from app.real_match_lab_analysis.fingerprint import fingerprint
 from app.real_match_lab_analysis.policy import SUPPORTED_MARKETS
 
@@ -47,9 +46,10 @@ def parse_current_odds(raw: object, *, now: datetime | None = None) -> CurrentOd
         raise CurrentOddsValidationError("Exactly one provider-origin or GoalVision retrieval timestamp mode is required.")
     if provider_time is not None and provider_time > retrieved:
         raise CurrentOddsValidationError("Provider odds timestamp cannot follow retrieval.")
-    quote_time = provider_time or captured
-    age = int((now - quote_time).total_seconds())
-    freshness = classify_odds_freshness(age, DEFAULT_MARKET_VALUE_ASSESSMENT_POLICY).value
+    try:
+        freshness = current_odds_freshness(provider_type=source_type.value, provider_origin=provider_time, captured=captured, retrieved=retrieved, now=now)
+    except ValueError as exc:
+        raise CurrentOddsValidationError(str(exc)) from exc
     if freshness in {"STALE", "EXPIRED"}: raise CurrentOddsValidationError("STALE_CURRENT_ODDS")
     markets = raw.get("markets")
     if not isinstance(markets, list) or not markets: raise CurrentOddsValidationError("At least one current quote is required.")
@@ -64,7 +64,7 @@ def parse_current_odds(raw: object, *, now: datetime | None = None) -> CurrentOd
         try: odds = Decimal(str(item.get("decimal_odds")))
         except (InvalidOperation, ValueError) as exc: raise CurrentOddsValidationError("Invalid decimal odds.") from exc
         if not odds.is_finite() or odds <= 1 or odds > 1000: raise CurrentOddsValidationError("Invalid decimal odds.")
-        material = {"provider": provider, "event": event, "fixture": fixture, "bookmaker": bookmaker, "market": market, "odds": odds, "captured": captured, "retrieved": retrieved, "provenance": provenance}
+        material = {"provider": provider, "event": event, "fixture": fixture, "bookmaker": bookmaker, "market": market, "odds": odds, "captured": captured, "retrieved": retrieved, "provider_origin": provider_time, "provenance": provenance}
         quote_fp = fingerprint(material)
         quotes.append(CurrentOddsQuote(
             quote_id="current-odds-quote-" + quote_fp, provider_source_id=provider,
@@ -90,6 +90,8 @@ def parse_current_odds(raw: object, *, now: datetime | None = None) -> CurrentOd
 
 def normalize_api_football_current_odds(payload: object, *, fixture_id: str, kickoff_utc: str, retrieved_at_utc: str, source_selected_at_utc: str) -> dict:
     """Convert an API-Football `/odds?fixture=` response to the manual contract."""
+    if isinstance(payload, dict) and payload.get("errors"):
+        raise CurrentOddsValidationError("PROVIDER_ODDS_QUERY_REJECTED")
     if not isinstance(payload, dict) or not isinstance(payload.get("response"), list) or not payload["response"]:
         raise CurrentOddsValidationError("API-Football odds response is empty or incompatible.")
     root = payload["response"][0]

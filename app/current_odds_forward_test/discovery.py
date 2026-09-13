@@ -18,6 +18,7 @@ from .efficiency import (
     empty_candidate_costs,
     plan_candidate,
 )
+from .freshness import API_FOOTBALL_PREMATCH_POLICY, API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS, RETRIEVAL_MAX_AGE_SECONDS
 from .input import CurrentOddsValidationError, normalize_api_football_current_odds, parse_current_odds
 from .provider import PRIORITY_COMPETITIONS, resolve_current_competitions
 
@@ -308,16 +309,27 @@ async def _evaluate_candidates(
         trace.pop("active_call", None)
         trace["calls"]["odds"] += actual
         trace["calls"]["retries"] += max(0, actual - 1)
-        retrieved = cutoff
+        metadata = client.response_metadata()
+        retrieved = datetime.fromisoformat(metadata["retrieved_at_utc"]) if metadata.get("retrieved_at_utc") else cutoff
+        trace["odds_response"] = metadata
         if not isinstance(odds_payload, dict) or odds_payload.get("errors"):
             _increment(skipped, "PROVIDER_ODDS_QUERY_REJECTED")
             trace["result"] = "PROVIDER_ODDS_QUERY_REJECTED"
+            trace["provider_errors"] = odds_payload.get("errors") if isinstance(odds_payload, dict) else {"response": "INVALID_PAYLOAD"}
             continue
         try:
             normalized = normalize_api_football_current_odds(
                 odds_payload, fixture_id=str(fixture_id), kickoff_utc=fixture["kickoff_utc"],
                 retrieved_at_utc=retrieved.isoformat(), source_selected_at_utc=source_selected.isoformat(),
             )
+            trace["odds_timestamp_evidence"] = {
+                "policy": API_FOOTBALL_PREMATCH_POLICY,
+                "provider_origin_timestamp_utc": normalized["provider_origin_timestamp_utc"],
+                "source_retrieval_timestamp_utc": normalized["source_retrieval_timestamp_utc"],
+                "provider_max_age_seconds": API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS,
+                "retrieval_max_age_seconds": RETRIEVAL_MAX_AGE_SECONDS,
+                "bookmaker_market_timestamp": None,
+            }
             snapshot = parse_current_odds(normalized, now=retrieved)
         except CurrentOddsValidationError as exc:
             reason = _safe_reason(exc)
@@ -600,6 +612,7 @@ def _supported_markets():
     return SUPPORTED_MARKETS
 def _safe_reason(exc):
     text = str(exc)
+    if "MISSING_PROVIDER_ODDS_TIMESTAMP" in text: return "MISSING_PROVIDER_ODDS_TIMESTAMP"
     if "STALE_CURRENT_ODDS" in text: return "STALE_CURRENT_ODDS"
     if "empty" in text.lower() or "At least one current quote" in text: return "CURRENT_ODDS_UNAVAILABLE"
     if "Unsupported" in text or "Correct score" in text: return "UNSUPPORTED_MARKET_DATA"

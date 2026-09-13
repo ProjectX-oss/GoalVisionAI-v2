@@ -43,7 +43,7 @@ def fixture(identifier=1, *, league_id=179, league_name="Premiership", kickoff="
     return {"fixture": {"id": identifier, "date": kickoff, "status": {"short": status}}, "league": {"id": league_id, "name": league_name, "season": season}, "teams": {"home": {"id": identifier * 10, "name": home}, "away": {"id": identifier * 10 + 1, "name": away}}}
 
 
-def odds(identifier=1, *, updated=None, markets=3):
+def odds(identifier=1, *, updated="2026-08-01T10:00:00+00:00", markets=3):
     values = [{"value": name, "odd": odd} for name, odd in (("Home", "2.10"), ("Draw", "3.20"), ("Away", "3.10"))][:markets]
     return {"response": [{"fixture": {"id": identifier}, "update": updated, "bookmakers": [{"id": 1, "name": "Book", "bets": [{"name": "Match Winner", "values": values}]}]}]}
 
@@ -168,7 +168,7 @@ class AdaptiveDiscoveryTests(unittest.TestCase):
                 self.assertIn(reason, value["skip_reasons"])
 
     def test_stale_odds_and_fixture_identity_mismatch_are_rejected(self):
-        stale = odds(1, updated="2026-08-01T09:00:00+00:00")
+        stale = odds(1, updated="2026-08-01T06:29:59+00:00")
         value = self.run_discovery(FakeProvider({"2026-08-01": [fixture(1)]}, {1: stale})); self.assertIn("STALE_CURRENT_ODDS", value["skip_reasons"])
         with self.assertRaisesRegex(CurrentOddsValidationError, "IDENTITY_MISMATCH"):
             normalize_api_football_current_odds(odds(2), fixture_id="1", kickoff_utc="2026-08-01T18:00:00+00:00", retrieved_at_utc="2026-08-01T10:00:00+00:00", source_selected_at_utc="2026-08-01T09:59:00+00:00")
