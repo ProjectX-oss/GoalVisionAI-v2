@@ -7,6 +7,12 @@ from .models import (
     AuditStatus,
     StagingReadiness,
 )
+from .provenance import (
+    ReviewedSourceProvenance,
+    ReviewedSourceProvenanceError,
+    resolve_active_reviewed_source_provenance,
+    resolve_reviewed_source_provenance,
+)
 from .service import ModelActivationAuditService
 
 __all__ = [
@@ -15,5 +21,9 @@ __all__ = [
     "AuditSeverity",
     "AuditStatus",
     "ModelActivationAuditService",
+    "ReviewedSourceProvenance",
+    "ReviewedSourceProvenanceError",
     "StagingReadiness",
+    "resolve_active_reviewed_source_provenance",
+    "resolve_reviewed_source_provenance",
 ]

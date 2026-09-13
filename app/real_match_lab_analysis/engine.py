@@ -65,8 +65,16 @@ from app.match_data_snapshot import (
     SQLiteMatchDataSnapshotRepository,
     build_match_data_snapshot_service,
 )
-from app.model_activation import ActivationStatus, build_runtime_champion_resolver
-from app.model_activation_audit import ModelActivationAuditService
+from app.model_activation import (
+    ActivationStatus,
+    RuntimeArtifactReference,
+    build_runtime_champion_resolver,
+)
+from app.model_activation_audit import (
+    ModelActivationAuditService,
+    ReviewedSourceProvenanceError,
+    resolve_reviewed_source_provenance,
+)
 from app.model_activation_audit.repository import ReadOnlyAuditRepository
 from app.model_input_builder import build_model_input_builder
 from app.prediction_inference import (
@@ -245,20 +253,19 @@ class RealDomainAnalysisEngine:
                 "CALIBRATION_PROVENANCE_MISMATCH",
                 "Champion calibration differs from activation provenance.",
             )
-        if command.source_commit is None:
-            raise EngineRejected(
-                "CALIBRATION_REVIEW_MISSING",
-                "A source commit is required for the independent Lab audit.",
-            )
+        reviewed_source_commit = _require_reviewed_source_commit(
+            reference, command.scope, command.source_commit
+        )
         audit_repository = ReadOnlyAuditRepository(str(self.database.path))
         try:
             audit = ModelActivationAuditService(audit_repository).audit(
-                source_commit=command.source_commit,
+                source_commit=reviewed_source_commit,
                 generated_timestamp_utc=now.isoformat(timespec="seconds").replace(
                     "+00:00", "Z"
                 ),
                 environment="LAB",
                 scope=command.scope,
+                reviewed_artifact=reference,
             )
         finally:
             audit_repository.close()
@@ -444,6 +451,31 @@ class RealDomainAnalysisEngine:
             mathematical[0].market if mathematical else None,
             quality_report.send_eligible,
         )
+
+
+def _require_reviewed_source_commit(
+    reference: RuntimeArtifactReference,
+    scope: str,
+    supplied_commit: str | None,
+) -> str:
+    try:
+        reviewed = resolve_reviewed_source_provenance(reference, scope)
+    except ReviewedSourceProvenanceError as exc:
+        raise EngineRejected(
+            "CALIBRATION_REVIEW_MISSING",
+            "The activated artifact chain has no intact reviewed source provenance.",
+        ) from exc
+    if supplied_commit is None:
+        raise EngineRejected(
+            "CALIBRATION_REVIEW_MISSING",
+            "A source commit is required for the independent Lab audit.",
+        )
+    if supplied_commit != reviewed.source_commit:
+        raise EngineRejected(
+            "CALIBRATION_REVIEW_SOURCE_COMMIT_MISMATCH",
+            "The supplied source commit does not match the activated artifact chain.",
+        )
+    return reviewed.source_commit
 
 
 def _persist_historical_calibrated_assembly(

@@ -14,6 +14,7 @@ from app.current_odds_forward_test.repository import SQLiteForwardTestRepository
 from app.current_odds_forward_test.service import ForwardTestService
 from app.current_odds_forward_test.workflow import _analysis_input
 from app.football.client import FootballClient
+from app.model_activation_audit import resolve_active_reviewed_source_provenance
 from app.real_match_lab_analysis.factory import build_real_match_lab_analysis_service
 from app.real_match_lab_analysis.input import parse_input
 from app.real_match_lab_analysis.fingerprint import canonical_json
@@ -70,6 +71,12 @@ async def cycle(args: argparse.Namespace) -> dict:
                                                        capability_cache_path=Path('var/lab_combo/capabilities.json'))
             output['discovery'] = discovery
             observations, failures = [], {}
+            source_commit = None
+            if discovery.get('selected_fixtures'):
+                stage = 'REVIEW_PROVENANCE'
+                source_commit = resolve_active_reviewed_source_provenance(
+                    database, 'OFFICIAL_GLOBAL'
+                ).source_commit
             analyzer = build_real_match_lab_analysis_service(database)
             forward = ForwardTestService(singles)
             for fixture in discovery.get('selected_fixtures', []):
@@ -80,7 +87,12 @@ async def cycle(args: argparse.Namespace) -> dict:
                     odds = parse_current_odds(fixture['odds_contract'], now=clock)
                     stage = 'CAPTURE_ODDS'
                     forward.capture_odds(odds)
-                    raw = _analysis_input('combo-' + odds.snapshot_id, fixture, odds)
+                    raw = _analysis_input(
+                        'combo-' + odds.snapshot_id,
+                        fixture,
+                        odds,
+                        source_commit=source_commit,
+                    )
                     raw['operator_notes'] = 'Bounded Lab Combo analysis; existing single-market gates apply.'
                     stage = 'ANALYZE'
                     analysis = analyzer.analyze(parse_input(raw, now=clock))

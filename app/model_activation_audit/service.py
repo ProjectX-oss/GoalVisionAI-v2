@@ -7,6 +7,7 @@ import json
 import re
 from dataclasses import asdict
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .checks import run_checks
 from .models import AuditReport, AuditSeverity
@@ -17,6 +18,13 @@ from .policy import (
     assess_staging_readiness,
     overall_status,
 )
+from .provenance import (
+    ReviewedSourceProvenanceError,
+    resolve_reviewed_source_provenance,
+)
+
+if TYPE_CHECKING:
+    from app.model_activation import RuntimeArtifactReference
 
 
 class AuditInputError(ValueError):
@@ -35,6 +43,7 @@ class ModelActivationAuditService:
         generated_timestamp_utc: str,
         environment: str,
         scope: str,
+        reviewed_artifact: RuntimeArtifactReference | None = None,
     ) -> AuditReport:
         environment = environment.upper()
         if environment not in SUPPORTED_ENVIRONMENTS:
@@ -43,6 +52,21 @@ class ModelActivationAuditService:
             raise AuditInputError("Unsupported explicit model scope.")
         if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
             raise AuditInputError("Source commit must be a full lowercase SHA-1.")
+        if reviewed_artifact is not None:
+            try:
+                reviewed = resolve_reviewed_source_provenance(
+                    reviewed_artifact,
+                    scope,
+                    project_root=self._project_root,
+                )
+            except ReviewedSourceProvenanceError as exc:
+                raise AuditInputError(
+                    "Reviewed source provenance is missing or invalid."
+                ) from exc
+            if source_commit != reviewed.source_commit:
+                raise AuditInputError(
+                    "Source commit does not match reviewed artifact provenance."
+                )
         if not re.fullmatch(
             r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",
             generated_timestamp_utc,

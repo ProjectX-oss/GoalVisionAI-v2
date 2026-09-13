@@ -76,14 +76,14 @@ class FirstLabOperationalReadinessTests(unittest.TestCase):
     def run_workflow(self, *, status="PRO_PLAN_READY", controlled=True, actionable=True, captured=CAPTURE, run_id="run-1"):
         analyzer = FakeAnalyzer(self.db, controlled=controlled, actionable=actionable)
         async def discover(): return {"terminal_result": "CURRENT_FIXTURE_SELECTED", "candidate_fixture_count": 1, "api_call_count": 7, "selected_fixture": selected_fixture(captured)}
-        result = asyncio.run(FirstLabDryRunWorkflow(self.ops, self.repo, analyzer).run(run_id=run_id, readiness=readiness(status), discover=discover, parameters={"max_calls": 40}, now=NOW, mode="CONTROLLED_REHEARSAL" if controlled else "GENUINE"))
+        result = asyncio.run(FirstLabDryRunWorkflow(self.ops, self.repo, analyzer, "27fb6a2966a817dff5a3671e4b92bf87c79f05d4").run(run_id=run_id, readiness=readiness(status), discover=discover, parameters={"max_calls": 40}, now=NOW, mode="CONTROLLED_REHEARSAL" if controlled else "GENUINE"))
         return result, analyzer
 
     def test_01_free_plan_blocks_before_discovery(self):
         called = False
         async def discover():
             nonlocal called; called = True; return {}
-        result = asyncio.run(FirstLabDryRunWorkflow(self.ops, self.repo, FakeAnalyzer(self.db)).run(run_id="free", readiness=readiness("FREE_PLAN_CURRENT_SEASON_BLOCKED"), discover=discover, parameters={}, now=NOW))
+        result = asyncio.run(FirstLabDryRunWorkflow(self.ops, self.repo, FakeAnalyzer(self.db), "27fb6a2966a817dff5a3671e4b92bf87c79f05d4").run(run_id="free", readiness=readiness("FREE_PLAN_CURRENT_SEASON_BLOCKED"), discover=discover, parameters={}, now=NOW))
         self.assertFalse(called); self.assertEqual(result["status"], "FREE_PLAN_CURRENT_SEASON_BLOCKED")
 
     def test_02_pro_ready_proceeds_and_orders_fixture_odds_before_analysis(self):
@@ -197,7 +197,7 @@ class FirstLabOperationalReadinessTests(unittest.TestCase):
         async def discover():
             nonlocal calls; calls += 1; return {}
         analyzer = FakeAnalyzer(self.db)
-        result = asyncio.run(FirstLabDryRunWorkflow(self.ops, self.repo, analyzer).run(run_id=run_id, readiness=readiness(), discover=discover, parameters=parameters, now=NOW, mode="CONTROLLED_REHEARSAL"))
+        result = asyncio.run(FirstLabDryRunWorkflow(self.ops, self.repo, analyzer, "27fb6a2966a817dff5a3671e4b92bf87c79f05d4").run(run_id=run_id, readiness=readiness(), discover=discover, parameters=parameters, now=NOW, mode="CONTROLLED_REHEARSAL"))
         self.assertEqual(calls, 0); self.assertEqual(analyzer.calls, 1); self.assertEqual(result["status"], "FIRST_LAB_DRY_RUN_COMPLETED")
 
 

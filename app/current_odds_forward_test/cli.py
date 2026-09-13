@@ -150,6 +150,7 @@ async def _pro_readiness(args):
 
 async def _first_lab_dry_run(args):
     from app.football.client import FootballClient
+    from app.model_activation_audit import resolve_active_reviewed_source_provenance
     from app.real_match_lab_analysis.factory import build_real_match_lab_analysis_service
     from .discovery import discover_current_fixture
     from .operations import FirstLabOperationsRepository, build_pro_readiness
@@ -161,6 +162,9 @@ async def _first_lab_dry_run(args):
     try:
         operations = FirstLabOperationsRepository(database)
         repository = SQLiteForwardTestRepository(database, migrate=False)
+        source_commit = resolve_active_reviewed_source_provenance(
+            database, "OFFICIAL_GLOBAL"
+        ).source_commit
         try:
             client = FootballClient(env_file=args.env_file, request_limit=args.max_calls)
             status_payload = await client.account_status()
@@ -176,7 +180,12 @@ async def _first_lab_dry_run(args):
         async def discover():
             assert client is not None
             return await discover_current_fixture(client, now=now, maximum_candidates=args.max_candidates, maximum_api_calls=args.max_calls, daily_quota_reserve=args.daily_reserve, capability_cache_path=args.capability_cache, quota_already_verified=True)
-        workflow = FirstLabDryRunWorkflow(operations, repository, build_real_match_lab_analysis_service(database).analyze)
+        workflow = FirstLabDryRunWorkflow(
+            operations,
+            repository,
+            build_real_match_lab_analysis_service(database).analyze,
+            source_commit,
+        )
         value = await workflow.run(run_id=run_id, readiness=readiness, discover=discover, parameters={"max_candidates": args.max_candidates, "max_calls": args.max_calls, "daily_reserve": args.daily_reserve, "capability_cache": str(args.capability_cache)}, now=now)
         return _render(value, args.output, 0 if value["status"] == "FIRST_LAB_DRY_RUN_COMPLETED" else 4)
     finally:

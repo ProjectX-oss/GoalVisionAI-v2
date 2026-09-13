@@ -158,15 +158,26 @@ Offline regressions cover the actual NOT NULL failure, rollback, corrected repla
 immutable observations, repeated evaluation content, concurrent pacing and secret
 redaction. This is a persistence/transport repair, not a prediction algorithm change.
 
-The pre-rehearsal evidence also identifies a separate readiness blocker:
-`CALIBRATION_REVIEW_MISSING`. In this path `_analysis_input` does not supply
-`source_commit`, which the real engine requires before its independent activation
-audit. Before continuous Lab operation, explicitly bind the input to reviewed
-source provenance and pass the existing Lab activation/calibration, reasoning and
-governance gates in a separately authorized bounded rehearsal. Do not fabricate a
-review, weaken those gates, or enable timers as part of this repair.
+The former `CALIBRATION_REVIEW_MISSING` wiring defect is repaired without using
+the runtime checkout's `HEAD`. Before analyzing any selected fixture, the Lab
+Combo path resolves the active champion and verifies its exact model and
+calibration artifacts. It then matches that immutable artifact pair and activation
+generation to the allowlisted, fingerprint-verified recent-calibration review
+evidence and propagates that evidence document's full `source_commit` into the
+sealed Real Match Lab input.
+The analysis engine independently resolves the same review, rejects a missing or
+mismatched input commit, and asks `ModelActivationAuditService` to verify the
+commit against that reviewed artifact before calculating the audit fingerprint.
+Missing, ambiguous, altered, or mismatched evidence fails closed.
 
-Validation for this repair: focused suite **157 passed, 13 subtests passed**;
+The remaining verification is one separately authorized bounded Lab Combo
+discovery rehearsal through the existing activation/calibration, reasoning, and
+governance gates. Do not repeat that real API rehearsal, send Telegram, weaken a
+gate, modify Official state, or enable timers as part of the source-provenance
+repair itself.
+
+Focused provenance regression result: **93 passed, 5 subtests passed**. Earlier
+persistence/transport repair validation: **157 passed, 13 subtests passed**;
 the full suite ran once, **1,553 passed, 563 subtests passed** (444.75 seconds).
 The single real `.venv/bin/python -m app.lab_combo discover` rehearsal on
 2026-09-13 consumed **38 API calls**, found **5 fresh-odds candidates**, and

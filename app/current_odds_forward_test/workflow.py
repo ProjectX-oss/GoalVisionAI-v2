@@ -22,11 +22,13 @@ class FirstLabDryRunWorkflow:
         operations: FirstLabOperationsRepository,
         forward_tests: SQLiteForwardTestRepository,
         analyze: Callable[[object], object],
+        source_commit: str,
     ) -> None:
         self.operations = operations
         self.forward_tests = forward_tests
         self.forward_service = ForwardTestService(forward_tests)
         self.analyze = analyze
+        self.source_commit = source_commit
 
     async def run(
         self, *, run_id: str, readiness: dict,
@@ -68,7 +70,9 @@ class FirstLabDryRunWorkflow:
         odds = parse_current_odds(selected["odds_contract"], now=clock)
         self.forward_service.capture_odds(odds)
         self.operations.stage(run_id, "ODDS_CAPTURED", "PASSED", {"snapshot_id": odds.snapshot_id, "fingerprint": odds.snapshot_fingerprint, "freshness": odds.freshness_status}, occurred_at=clock, artifact_type="ODDS_SNAPSHOT", artifact_id=odds.snapshot_id)
-        raw = _analysis_input(run_id, selected, odds)
+        raw = _analysis_input(
+            run_id, selected, odds, source_commit=self.source_commit
+        )
         command = parse_input(raw, now=clock)
         self.operations.stage(run_id, "INPUT_SEALED", "PASSED", raw, occurred_at=clock, artifact_type="REAL_MATCH_LAB_INPUT", artifact_id=command.request_id)
         if "ANALYSIS_COMPLETED" in prior:
@@ -88,12 +92,13 @@ class FirstLabDryRunWorkflow:
         return {"schema_version": "goalvision-first-lab-dry-run-output-v1", "status": status, "run_id": run_id, "stages": self.operations.stages(run_id), "telegram_send_executed": False, "delivery_records_created": 0, "official_publications_created": 0, "scheduling_enabled": False}
 
 
-def _analysis_input(run_id, selected, odds) -> dict:
+def _analysis_input(run_id, selected, odds, *, source_commit: str) -> dict:
     baseline = selected["feature_baseline"]
     collected = odds.sealed_at_utc.isoformat()
     return {
         "schema_version": "goalvision-real-match-lab-input-v1", "request_id": "real-match-lab-" + run_id,
         "environment": "LAB", "scope": "OFFICIAL_GLOBAL", "operator_identity": "FIRST_LAB_OPERATOR",
+        "source_commit": source_commit,
         "match_id": str(selected["provider_fixture_id"]), "competition_id": str(selected["competition_id"]),
         "competition": selected["competition"], "season": str(selected["season"]),
         "home_team_id": str(selected["home_team_id"]), "home_team": selected["home_team"],
