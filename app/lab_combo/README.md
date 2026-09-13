@@ -9,14 +9,28 @@ The discovery command performs cheap fixture/odds filtering before bounded
 Current Match Intelligence enrichment. It publishes at most three ranked
 singles and three disjoint three-leg combinations when all evidence gates pass.
 Missing confirmed lineups remain eligible for a later near-kickoff recheck and
-can block side selections with material availability uncertainty without
-globally disabling totals or BTTS markets.
+do not prevent early quality scoring, but they prevent final publication.
+
+Every supported Lab market is currently treated as lineup-sensitive. Evidence
+may be retained as `EARLY_CANDIDATE`, but publication requires a forced final
+review beginning 60 minutes before kickoff. That review refreshes fixture
+status, odds, lineups and injuries; attempts recent-lineup continuity evidence;
+and requires a complete, non-conflicting confirmed XI before assigning
+`READY_TO_PUBLISH`. Missing unpublished lineups remain
+`FINAL_REVIEW_REQUIRED` until a later cycle rather than becoming a permanent
+rejection.
 
 Published prices, provider timestamps, retrieval timestamps, reasoning,
 provenance and fingerprints are immutable in `var/lab_combo/ledger.db`.
 Singles and combos have separate settlement records and statistics. Settlement
 only queries published, unresolved fixtures after the normal terminal-result
 window; delivery claims make both prediction and result messages exactly-once.
+Public Telegram messages use concise Latvian labels, Latvia local kickoff time
+and rounded display values. Full-precision factors, missingness, freshness,
+lineup state, experimental signal and provenance remain in the immutable audit
+record. Optional result images may be placed at
+`app/lab_combo/assets/results/{win,loss,void}.png`; absent files automatically
+fall back to text and no image path or binary is stored in the database.
 
 The discovery process has a hard 40-call ceiling. At 30-minute cadence its
 maximum is 1,920 calls/day. Settlement is capped at 21 calls per 10-minute

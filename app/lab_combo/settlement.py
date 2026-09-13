@@ -11,6 +11,7 @@ from app.real_match_lab_analysis.fingerprint import fingerprint
 
 from .repository import ComboRepository
 from .experimental import SETTLEMENT_RELEVANCE_AFTER_KICKOFF
+from .presentation import combo_result_message, single_result_message
 
 
 def resolve_leg(leg: dict, payload: dict, now: datetime) -> dict | None:
@@ -36,6 +37,7 @@ def resolve_leg(leg: dict, payload: dict, now: datetime) -> dict | None:
         return None
     return {'observation_id': leg['observation_id'], 'fixture_id': leg['fixture_id'],
             'outcome': outcome, 'market': leg['market'], 'captured_odds': leg['odds'],
+            'home_team': leg.get('home_team'), 'away_team': leg.get('away_team'),
             'provider_status': status, 'fulltime_home': home, 'fulltime_away': away,
             'retrieved_at_utc': now.isoformat(), 'provider': 'API_FOOTBALL',
             'source_fingerprint': fingerprint(payload), 'rule_version': 'lab-combo-regulation-v1'}
@@ -114,6 +116,7 @@ def resolve_single(prediction: dict, payload: dict, now: datetime) -> dict | Non
     unit = Decimal(-1) if result['outcome'] == 'LOST' else Decimal(0) if result['outcome'] == 'VOID' else odds - 1
     return {'prediction_id': prediction['prediction_id'], 'fixture_id': prediction['fixture_id'],
             'market': prediction['market'], 'captured_odds': prediction['captured_odds'],
+            'home_team': prediction.get('home_team'), 'away_team': prediction.get('away_team'),
             'status': result['outcome'], 'fulltime_home': result['fulltime_home'],
             'fulltime_away': result['fulltime_away'], 'provider_status': result['provider_status'],
             'unit_result': str(unit), 'settled_at_utc': now.isoformat(),
@@ -121,22 +124,12 @@ def resolve_single(prediction: dict, payload: dict, now: datetime) -> dict | Non
 
 
 def single_settlement_message(value: dict, stats: dict) -> str:
-    icon = {'WON': '✅ WON', 'LOST': '❌ LOST', 'VOID': '⚪ VOID'}[value['status']]
-    return (f"🧪 LAB EXPERIMENTAL SINGLE — {icon}\nFixture {value['fixture_id']} · {value['market']} @ {value['captured_odds']}\n"
-            f"Final score: {value['fulltime_home']}-{value['fulltime_away']}\nHypothetical 1-unit result: {value['unit_result']}\n"
-            f"Updated SINGLE stats: {stats['WON']} W / {stats['LOST']} L / {stats['VOID']} V · "
-            f"win rate {stats['win_rate']} · P/L {stats['hypothetical_profit_loss']} · ROI {stats['roi_yield']}")
+    return single_result_message(value, stats)
 
 
 def settlement_message(value: dict, stats: dict) -> str:
-    """Prepare transparent experimental result notification for wins and losses."""
-    lines = ['🧪 GoalVision AI Lab Combo — settlement', 'LAB / experimental', f"Prediction ID: {value['prediction_id']}"]
-    lines.extend(f"Fixture {leg['fixture_id']} · {leg['market']}: {leg['outcome']}" for leg in value['legs'])
-    lines.extend([f"Final: {value['status']} | partial void: {value['partial_void']}",
-                  f"Effective combined odds: {value['effective_combined_odds']}",
-                  f"Hypothetical unit result: {value['unit_result']}",
-                  f"Published Lab Combo: {stats['WON']} W / {stats['LOST']} L / {stats['VOID']} VOID"])
-    return '\n'.join(lines)
+    """Prepare a compact public result while retaining full ledger evidence."""
+    return combo_result_message(value, stats)
 
 
 def _ratio(numerator, denominator) -> str | None:

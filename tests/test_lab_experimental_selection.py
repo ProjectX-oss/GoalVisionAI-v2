@@ -18,6 +18,10 @@ from app.lab_combo.experimental import (
     MAX_COMBOS_PER_DISCOVERY_CYCLE, MIN_COMBINED_ODDS, MIN_SINGLE_ODDS,
     combined_odds_eligible, evaluate_snapshot, select_combo_batch, select_single_predictions,
 )
+from app.lab_combo.presentation import (
+    ResultImagePaths, combo_message, combo_result_message, public_decimal,
+    single_message, single_result_message,
+)
 from app.lab_combo.repository import ComboRepository
 from app.lab_combo.service import LabComboService
 from app.lab_combo.secure_logging import SecretRedactionFilter
@@ -31,7 +35,8 @@ from tests.test_api_football_discovery_efficiency import CostProvider
 NOW = datetime(2026, 9, 13, 12, 0, tzinfo=timezone.utc)
 
 
-def snapshot(*, fixture_id="1", home_odds="1.70", lineup=True):
+def snapshot(*, fixture_id="1", home_odds="1.70", lineup=True,
+             kickoff_minutes=180, refresh_age_minutes=0):
     provenance = FieldProvenance("API-FOOTBALL", "/fixtures", NOW, NOW, fixture_id)
     values = {
         "fixture.id": fixture_id, "home.team_id": int(fixture_id) * 10,
@@ -55,15 +60,29 @@ def snapshot(*, fixture_id="1", home_odds="1.70", lineup=True):
         "market.HOME_WIN.implied_probability": str(Decimal(1) / Decimal(home_odds)),
     }
     if lineup:
-        values.update({"home.lineup.confirmed": True, "away.lineup.confirmed": True})
+        values.update({
+            "home.lineup.confirmed": True, "away.lineup.confirmed": True,
+            "home.formation": "4-3-3", "away.formation": "4-2-3-1",
+            "feature.confirmed_starters_count_home": 11,
+            "feature.confirmed_starters_count_away": 11,
+            "feature.lineup_continuity_home": "0.73",
+            "feature.lineup_continuity_away": "0.64",
+            "feature.missing_recent_starters_count_home": 1,
+            "feature.missing_recent_starters_count_away": 2,
+            "home.lineup.starters.101.player_id": "101",
+            "away.lineup.starters.201.player_id": "201",
+            "home.lineup.substitutes.109.player_id": "109",
+            "away.lineup.substitutes.209.player_id": "209",
+        })
     fields = tuple(IntelligenceField(name, DataClass.PRE_MATCH_DYNAMIC, value, (provenance,))
                    for name, value in values.items())
-    freshness = tuple(FreshnessEvidence(signal, FreshnessStatus.FRESH, NOW, NOW, NOW + timedelta(hours=1), 3600)
+    retrieved = NOW - timedelta(minutes=refresh_age_minutes)
+    freshness = tuple(FreshnessEvidence(signal, FreshnessStatus.FRESH, NOW, retrieved, NOW + timedelta(hours=1), 3600)
                       for signal in ("fixture_context", "injuries", "team_statistics", "team_history", "odds"))
     freshness += (FreshnessEvidence("confirmed_lineups", FreshnessStatus.FRESH if lineup else FreshnessStatus.MISSING,
-                                    NOW, NOW, NOW + timedelta(minutes=15), 900),)
+                                    NOW, retrieved, NOW + timedelta(minutes=15), 900),)
     return CurrentMatchIntelligenceSnapshot("v1", "snapshot-" + fixture_id, fixture_id, 1,
-        NOW + timedelta(hours=3), NOW, fields, freshness, (), (), (), "fp-" + fixture_id)
+        NOW + timedelta(minutes=kickoff_minutes), NOW, fields, freshness, (), (), (), "fp-" + fixture_id)
 
 
 def approved(fixture_id, odds="1.70", market="HOME_WIN"):
@@ -71,6 +90,8 @@ def approved(fixture_id, odds="1.70", market="HOME_WIN"):
                  if item["market"] == "HOME_WIN")
     value["market"] = market
     value["decision"] = "APPROVED"; value["rejection_reasons"] = []
+    value["stage"] = "READY_TO_PUBLISH"
+    value["final_review_completed_at_utc"] = NOW.isoformat()
     return value
 
 
@@ -85,15 +106,39 @@ def test_single_odds_boundary_and_below_rejection():
     boundary = next(item for item in evaluate_snapshot(snapshot(home_odds="1.70"), now=NOW) if item["market"] == "HOME_WIN")
     below = next(item for item in evaluate_snapshot(snapshot(home_odds="1.69"), now=NOW) if item["market"] == "HOME_WIN")
     assert boundary["decision"] == "APPROVED"
+    assert boundary["stage"] == "EARLY_CANDIDATE"
     assert "SINGLE_ODDS_BELOW_1_70" in below["rejection_reasons"]
 
 
-def test_missing_lineup_blocks_1x2_but_not_every_market():
+def test_early_candidate_retained_but_never_selected_or_used_in_combo():
     values = evaluate_snapshot(snapshot(lineup=False), now=NOW)
     home = next(item for item in values if item["market"] == "HOME_WIN")
-    total = next(item for item in values if item["market"] == "OVER_2_5")
-    assert "LINEUP_NOT_YET_PUBLISHED" in home["rejection_reasons"]
-    assert "LINEUP_NOT_YET_PUBLISHED" not in total["rejection_reasons"]
+    assert home["decision"] == "APPROVED"
+    assert home["stage"] == "EARLY_CANDIDATE"
+    assert select_single_predictions([home], existing_keys=set(), now=NOW) == []
+    assert select_combo_batch([home, approved(2), approved(3)], used_leg_keys=set(), now=NOW) == []
+
+
+def test_lineup_sensitive_candidate_waits_then_confirmed_recheck_is_ready():
+    waiting = next(item for item in evaluate_snapshot(
+        snapshot(lineup=False, kickoff_minutes=45), now=NOW
+    ) if item["market"] == "HOME_WIN")
+    ready = next(item for item in evaluate_snapshot(
+        snapshot(lineup=True, kickoff_minutes=45), now=NOW
+    ) if item["market"] == "HOME_WIN")
+    assert waiting["stage"] == "FINAL_REVIEW_REQUIRED"
+    assert waiting["stage_reasons"] == ["LINEUP_NOT_YET_PUBLISHED"]
+    assert waiting["rejection_reasons"] == []
+    assert ready["stage"] == "READY_TO_PUBLISH"
+    assert ready["final_review_completed_at_utc"] == NOW.isoformat()
+
+
+def test_failed_final_review_rejects_stale_refresh():
+    value = next(item for item in evaluate_snapshot(
+        snapshot(kickoff_minutes=45, refresh_age_minutes=6), now=NOW
+    ) if item["market"] == "HOME_WIN")
+    assert value["stage"] == "REJECTED"
+    assert "FINAL_REVIEW_ODDS_NOT_REFRESHED" in value["rejection_reasons"]
 
 
 def test_cheap_discovery_defers_history_and_preserves_budget():
@@ -195,6 +240,141 @@ def test_lineup_recheck_and_exactly_once_experimental_delivery():
         assert asyncio.run(service.publish_experimental("single_settlement", "s1", config, transport))["sent"]
         assert not asyncio.run(service.publish_experimental("single_settlement", "s1", config, transport))["sent"]
         assert transport.calls == 2
+    finally:
+        ledger.close(); directory.cleanup()
+
+
+def test_publication_requires_recent_final_review_and_refreshed_odds():
+    directory, ledger = ledger_fixture()
+    try:
+        prediction = {
+            **approved(1), "prediction_id": "expired", "publication_key": "1:HOME_WIN",
+            "kickoff_utc": (NOW + timedelta(minutes=40)).isoformat(),
+            "final_review_completed_at_utc": (NOW - timedelta(minutes=6)).isoformat(),
+        }
+        ledger.append("single_prediction", "expired", prediction)
+        ledger.append("single_preview", "expired", {"message": "qualified"})
+        class Transport:
+            calls = 0
+            async def send_message_receipt(self, **kwargs):
+                self.calls += 1
+                return SimpleNamespace(chat_id=LAB_CHAT_ID, message_id=1)
+        transport = Transport()
+        service = LabComboService(ledger, None, clock=lambda: NOW)
+        config = LabTelegramConfig("fictional", LAB_CHAT_ID, True)
+        value = asyncio.run(service.publish_experimental(
+            "single_prediction", "expired", config, transport,
+        ))
+        assert value["status"] == "FINAL_REVIEW_EXPIRED"
+        assert transport.calls == 0
+    finally:
+        ledger.close(); directory.cleanup()
+
+
+def test_concise_latvian_single_combo_format_and_public_rounding():
+    single = {
+        **approved(1), "home_team": "Stade Brestois 29", "away_team": "PSG",
+        "market": "BTTS_YES", "captured_odds": "1.750000000000000000",
+        "kickoff_utc": "2026-09-13T18:45:00+00:00",
+        "experimental_signal": "0.7140478090772047651247758919",
+    }
+    message = single_message(single)
+    assert message == ("🧪 GoalVision AI Lab\n⚽ Mačs: Stade Brestois 29 – PSG\n"
+                       "🏆 Līga: League 1\n🎯 Likme: Abas gūs – Jā\n💰 Koef.: 1.75\n"
+                       "⏰ Starts: 21:45\n"
+                       "🔎 Pamatojums: sastāvs apstiprināts; komandas un tirgus signāli saskan.\n"
+                       "⭐ Pārliecība: HIGH")
+    assert single["experimental_signal"] not in message
+    assert "0.555555" not in message
+    assert public_decimal("2.006666666666") == "2.01"
+
+    legs = [{**approved(i), "home_team": f"Team {i}A", "away_team": f"Team {i}B",
+             "kickoff_utc": f"2026-09-13T{16+i:02d}:30:00+00:00"} for i in range(1, 4)]
+    combo = {"legs": legs, "combined_odds": "4.913000000000"}
+    combo_text = combo_message(combo, 1)
+    assert combo_text.startswith("🧪 GoalVision AI Lab Combo #1\n1️⃣")
+    assert "🔥 Kopējais koef.: 4.91" in combo_text
+    assert "⏰ Pirmais starts: 20:30" in combo_text
+    assert "reasoning" not in combo_text.casefold()
+
+
+def test_win_loss_void_public_messages_and_separate_statistics():
+    stats = {"WON": 2, "LOST": 1, "VOID": 1,
+             "hypothetical_profit_loss": "0.700000", "roi_yield": "0.233333333"}
+    base = {"fixture_id": "1", "home_team": "Home", "away_team": "Away",
+            "market": "HOME_WIN", "captured_odds": "1.7000",
+            "fulltime_home": 2, "fulltime_away": 1}
+    win = single_result_message({**base, "status": "WON"}, stats)
+    loss = single_result_message({**base, "status": "LOST"}, stats)
+    void = single_result_message({**base, "status": "VOID",
+                                  "fulltime_home": None, "fulltime_away": None}, stats)
+    assert "✅ UZVARA" in win and "📊 Rezultāts: 2:1" in win
+    assert "❌ ZAUDĒJUMS" in loss
+    assert "⚪ ATCELTS" in void and "📊 Rezultāts: —" in void
+    assert "📈 Single statistika:" in win and "Combo statistika" not in win
+    assert "💵 P/L: +0.70u" in win and "📊 ROI: 23.3%" in win
+
+    combo = {"status": "LOST", "effective_combined_odds": "2.8400",
+             "legs": [{**base, "outcome": result} for result in ("WON", "LOST", "VOID")]}
+    combo_text = combo_result_message(combo, {**stats, "PARTIAL_VOID": 0})
+    assert "📈 Combo statistika:" in combo_text and "Single statistika" not in combo_text
+
+
+def test_result_image_missing_falls_back_to_text_only():
+    directory, ledger = ledger_fixture()
+    try:
+        ledger.append("single_settlement", "s1", {"prediction_id": "s1", "status": "WON"})
+        ledger.append("single_settlement_preview", "s1", {"message": "result"})
+        class Transport:
+            text_calls = 0
+            photo_calls = 0
+            async def send_message_receipt(self, **kwargs):
+                self.text_calls += 1
+                return SimpleNamespace(chat_id=LAB_CHAT_ID, message_id=1)
+            async def send_photo_receipt(self, **kwargs):
+                self.photo_calls += 1
+                return SimpleNamespace(chat_id=LAB_CHAT_ID, message_id=2)
+        transport = Transport()
+        paths = ResultImagePaths(
+            Path("does-not-exist-win.png"), Path("does-not-exist-loss.png"),
+            Path("does-not-exist-void.png"),
+        )
+        service = LabComboService(ledger, None, clock=lambda: NOW, result_images=paths)
+        config = LabTelegramConfig("fictional", LAB_CHAT_ID, True)
+        assert asyncio.run(service.publish_experimental(
+            "single_settlement", "s1", config, transport,
+        ))["sent"]
+        assert transport.text_calls == 1 and transport.photo_calls == 0
+    finally:
+        ledger.close(); directory.cleanup()
+
+
+def test_available_result_image_uses_optional_photo_transport():
+    directory, ledger = ledger_fixture()
+    try:
+        image = Path(directory.name) / "win.png"
+        image.write_bytes(b"not-a-real-network-image")
+        ledger.append("single_settlement", "s1", {"prediction_id": "s1", "status": "WON"})
+        ledger.append("single_settlement_preview", "s1", {"message": "result"})
+        class Transport:
+            text_calls = 0
+            photo_calls = 0
+            async def send_message_receipt(self, **kwargs):
+                self.text_calls += 1
+                return SimpleNamespace(chat_id=LAB_CHAT_ID, message_id=1)
+            async def send_photo_receipt(self, **kwargs):
+                self.photo_calls += 1
+                assert kwargs["image_path"] == image
+                return SimpleNamespace(chat_id=LAB_CHAT_ID, message_id=2)
+        transport = Transport()
+        service = LabComboService(
+            ledger, None, clock=lambda: NOW, result_images=ResultImagePaths(win=image),
+        )
+        config = LabTelegramConfig("fictional", LAB_CHAT_ID, True)
+        assert asyncio.run(service.publish_experimental(
+            "single_settlement", "s1", config, transport,
+        ))["sent"]
+        assert transport.photo_calls == 1 and transport.text_calls == 0
     finally:
         ledger.close(); directory.cleanup()
 

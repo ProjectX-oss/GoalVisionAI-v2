@@ -56,9 +56,24 @@ class CurrentMatchIntelligenceService:
         self.budget = budget
         self.calls: list[ApiCallEvidence] = []
 
-    async def collect(self, fixture_id: int, *, evaluated_at: datetime) -> EnrichmentResult:
+    async def collect(
+        self,
+        fixture_id: int,
+        *,
+        evaluated_at: datetime,
+        force_refresh: frozenset[str] = frozenset(),
+    ) -> EnrichmentResult:
+        """Collect one snapshot, optionally bypassing selected source caches.
+
+        ``force_refresh`` accepts source names from the collection plan, not
+        endpoint names.  This keeps a final-review fixture refresh independent
+        from the slower team-history and team-statistics clocks.
+        """
         self.calls = []
         now = _utc(evaluated_at)
+        supported_refresh = {"fixture", "lineup", "injuries", "odds"}
+        if not force_refresh <= supported_refresh:
+            raise ValueError("UNSUPPORTED_CURRENT_INTELLIGENCE_REFRESH_SOURCE")
         if self.provider.request_count > self.budget.maximum_api_calls:
             raise ValueError("API_FOOTBALL_REQUEST_LIMIT_ALREADY_EXCEEDED")
         self.provider.restrict_requests(self.budget.maximum_api_calls, daily_reserve=20)
@@ -66,6 +81,7 @@ class CurrentMatchIntelligenceService:
         fixture_source = await self._fetch(
             "/fixtures", {"id": fixture_id}, self.freshness.fixture,
             lambda: self.provider.fixture(fixture_id), now=now, required=True,
+            force_refresh="fixture" in force_refresh,
         )
         if fixture_source is None:
             raise ValueError("CURRENT_FIXTURE_UNAVAILABLE")
@@ -89,14 +105,19 @@ class CurrentMatchIntelligenceService:
             ("away_history", "/fixtures", {"team": identity["away_team_id"], "league": identity["competition_id"], "season": identity["season"], "last": self.budget.recent_match_window}, self.freshness.team_history, lambda: self.provider.last_matches(identity["away_team_id"], last=self.budget.recent_match_window, league_id=identity["competition_id"], season=identity["season"])),
             ("odds", "/odds", {"fixture": fixture_id}, self.freshness.odds, lambda: self.provider.current_odds(fixture_id)),
         )
-        uncached = sum(self.repository.cached(endpoint, query, now=now) is None
-                       for _, endpoint, query, _, _ in required_specs)
+        uncached = sum(
+            name in force_refresh or self.repository.cached(endpoint, query, now=now) is None
+            for name, endpoint, query, _, _ in required_specs
+        )
         blockers: list[str] = []
         if self._remaining() < uncached:
             blockers.append("INTELLIGENCE_REQUIRED_STAGE_BUDGET_INSUFFICIENT")
         else:
             for name, endpoint, query, ttl, operation in required_specs:
-                sources[name] = await self._fetch(endpoint, query, ttl, operation, now=now, required=True)
+                sources[name] = await self._fetch(
+                    endpoint, query, ttl, operation, now=now, required=True,
+                    force_refresh=name in force_refresh,
+                )
 
         current_starters = {"home": set(), "away": set()}
         injured = {"home": set(), "away": set()}; suspended = {"home": set(), "away": set()}
@@ -226,8 +247,8 @@ class CurrentMatchIntelligenceService:
 
     async def _fetch(self, endpoint: str, query: dict[str, object], ttl: timedelta,
                      operation: Callable[[], Awaitable[object]], *, now: datetime,
-                     required: bool) -> dict | None:
-        cached = self.repository.cached(endpoint, query, now=now)
+                     required: bool, force_refresh: bool = False) -> dict | None:
+        cached = None if force_refresh else self.repository.cached(endpoint, query, now=now)
         query_text = "&".join(f"{key}={query[key]}" for key in sorted(query))
         if cached is not None:
             self.calls.append(ApiCallEvidence(endpoint, query_text, "HIT", 0, required, "AVAILABLE"))
@@ -235,18 +256,19 @@ class CurrentMatchIntelligenceService:
         if self._remaining() <= 0:
             self.calls.append(ApiCallEvidence(endpoint, query_text, "MISS", 0, required, "SKIPPED_BUDGET"))
             return None
+        cache_status = "REFRESH" if force_refresh else "MISS"
         before = self.provider.request_count
         try:
             payload = await operation()
         except Exception as exc:
             used = self.provider.request_count - before
-            self.calls.append(ApiCallEvidence(endpoint, query_text, "MISS", used, required,
+            self.calls.append(ApiCallEvidence(endpoint, query_text, cache_status, used, required,
                                               "FAILED_" + type(exc).__name__.upper()))
             return None
         used = self.provider.request_count - before
         observed = retrieved_at(self.provider, now)
         outcome = "PROVIDER_ERROR" if isinstance(payload, dict) and payload.get("errors") else "AVAILABLE"
-        self.calls.append(ApiCallEvidence(endpoint, query_text, "MISS", used, required, outcome))
+        self.calls.append(ApiCallEvidence(endpoint, query_text, cache_status, used, required, outcome))
         if outcome == "PROVIDER_ERROR":
             return None
         provider_time = _provider_timestamp(payload) if endpoint == "/odds" else None

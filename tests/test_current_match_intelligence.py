@@ -135,12 +135,12 @@ class CurrentMatchIntelligenceTests(unittest.TestCase):
 
     def tearDown(self): self.database.close()
 
-    def collect(self, provider=None, *, budget=40, now=NOW):
+    def collect(self, provider=None, *, budget=40, now=NOW, force_refresh=frozenset()):
         provider = provider or FakeProvider()
         result = asyncio.run(CurrentMatchIntelligenceService(
             self.repository, provider,
             budget=IntelligenceBudgetPolicy(maximum_api_calls=budget),
-        ).collect(500, evaluated_at=now))
+        ).collect(500, evaluated_at=now, force_refresh=force_refresh))
         return result, provider
 
     def test_lineup_freshness_is_independent_and_kickoff_sensitive(self):
@@ -170,6 +170,41 @@ class CurrentMatchIntelligenceTests(unittest.TestCase):
         retry = UnpublishedLineupProvider(NOW + timedelta(minutes=16))
         self.collect(retry, now=NOW + timedelta(minutes=16))
         self.assertIn("/fixtures/lineups", retry.endpoints)
+
+    def test_final_review_forces_only_dynamic_source_refreshes(self):
+        self.collect()
+        provider = FakeProvider(NOW + timedelta(minutes=1))
+        result, provider = self.collect(
+            provider, now=NOW + timedelta(minutes=1),
+            force_refresh=frozenset({"fixture", "lineup", "injuries", "odds"}),
+        )
+        self.assertEqual(provider.endpoints.count("/fixtures"), 1)
+        self.assertEqual(provider.endpoints.count("/fixtures/lineups"), 1)
+        self.assertEqual(provider.endpoints.count("/injuries"), 1)
+        self.assertEqual(provider.endpoints.count("/odds"), 1)
+        self.assertNotIn("/teams/statistics", provider.endpoints)
+        refreshed = [item for item in result.snapshot.api_calls if item.cache_status == "REFRESH"]
+        self.assertEqual(len(refreshed), 4)
+
+    def test_unpublished_final_lineup_does_not_spend_detailed_history_calls(self):
+        class UnpublishedLineupProvider(FakeProvider):
+            async def lineup(self, fixture_id):
+                return self._use("/fixtures/lineups", {"response": []})
+
+        provider = UnpublishedLineupProvider()
+        result = asyncio.run(CurrentMatchIntelligenceService(
+            self.repository, provider,
+            budget=IntelligenceBudgetPolicy(maximum_api_calls=40, detailed_match_window=0),
+        ).collect(
+            500, evaluated_at=NOW,
+            force_refresh=frozenset({"fixture", "lineup", "injuries", "odds"}),
+        ))
+        self.assertEqual(
+            next(item.status.value for item in result.snapshot.freshness
+                 if item.signal == "confirmed_lineups"),
+            "MISSING",
+        )
+        self.assertNotIn("/fixtures/statistics", provider.endpoints)
 
     def test_injury_normalization_preserves_reason_and_explicit_suspension(self):
         p = FieldProvenance("API-FOOTBALL", "/injuries", NOW, None, "500")

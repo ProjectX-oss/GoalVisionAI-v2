@@ -13,6 +13,7 @@ from math import factorial
 
 from app.current_match_intelligence.canonical import fingerprint
 from app.current_match_intelligence.models import CurrentMatchIntelligenceSnapshot
+from .presentation import combo_message, single_message
 
 
 POLICY_VERSION = "LAB_EXPERIMENTAL_SELECTION_V1"
@@ -23,12 +24,16 @@ MAX_COMBINED_ODDS = Decimal("15.00")
 MAX_COMBOS_PER_DISCOVERY_CYCLE = 3
 MAX_SINGLES_PER_DISCOVERY_CYCLE = 3
 SETTLEMENT_RELEVANCE_AFTER_KICKOFF = timedelta(minutes=90)
+FINAL_REVIEW_START = timedelta(minutes=60)
+FINAL_REVIEW_PREFERRED_END = timedelta(minutes=20)
+FINAL_REVIEW_REFRESH_MAX_AGE = timedelta(minutes=5)
 SUPPORTED_MARKETS = (
     "HOME_WIN", "DRAW", "AWAY_WIN", "OVER_1_5", "UNDER_1_5",
     "OVER_2_5", "UNDER_2_5", "OVER_3_5", "UNDER_3_5",
     "BTTS_YES", "BTTS_NO",
 )
 MARKET_ORDER = {market: index for index, market in enumerate(SUPPORTED_MARKETS)}
+LINEUP_SENSITIVE_MARKETS = frozenset(SUPPORTED_MARKETS)
 REQUIRED_FRESH_SIGNALS = (
     "fixture_context", "injuries", "team_statistics", "team_history", "odds",
 )
@@ -63,8 +68,6 @@ def evaluate_snapshot(snapshot: CurrentMatchIntelligenceSnapshot, *, now: dateti
     probabilities = _market_probabilities(values) if not missing else {}
     lineup_confirmed = all(values.get(f"{side}.lineup.confirmed") is True for side in ("home", "away"))
     lineup_state = "CONFIRMED" if lineup_confirmed else "NOT_YET_PUBLISHED"
-    absences = sum(_decimal(values.get(f"feature.{kind}_count_{side}")) or Decimal(0)
-                   for side in ("home", "away") for kind in ("injury", "suspension"))
     results = []
     for market in SUPPORTED_MARKETS:
         odds_field = fields.get(f"market.{market}.decimal_odds")
@@ -90,11 +93,16 @@ def evaluate_snapshot(snapshot: CurrentMatchIntelligenceSnapshot, *, now: dateti
             blockers.append("MODEL_MARKET_DIVERGENCE_TOO_LARGE")
         if confidence == "LOW":
             blockers.append("EXPERIMENTAL_CONFIDENCE_LOW")
-        if not lineup_confirmed and absences >= 6 and market in {"HOME_WIN", "AWAY_WIN"}:
-            blockers.append("LINEUP_REQUIRED_HIGH_AVAILABILITY_UNCERTAINTY")
-        if not lineup_confirmed and market in {"HOME_WIN", "DRAW", "AWAY_WIN"}:
-            blockers.append("LINEUP_NOT_YET_PUBLISHED")
+        lineup_context = _lineup_context(values)
+        blockers.extend(_objective_quality_blockers(market, values))
+        stage, stage_reasons, final_blockers = _timing_stage(
+            snapshot, market=market, now=now, lineup_confirmed=lineup_confirmed,
+            lineup_context=lineup_context,
+        )
+        blockers.extend(final_blockers)
         blockers = sorted(set(blockers))
+        if blockers:
+            stage = "REJECTED"
         source_names = _evidence_names(market, fields)
         evidence = _evidence(source_names, fields)
         identity = {
@@ -121,11 +129,19 @@ def evaluate_snapshot(snapshot: CurrentMatchIntelligenceSnapshot, *, now: dateti
             "implied_market_probability": str(implied) if implied is not None else None,
             "market_context_edge": str(edge) if edge is not None else None,
             "experimental_confidence": confidence,
-            "lineup_status": lineup_state,
-            "lineup_context": _lineup_context(values),
+            "lineup_status": lineup_state, "stage": stage,
+            "stage_reasons": stage_reasons,
+            "final_review_completed_at_utc": snapshot.evaluated_at.isoformat() if stage == "READY_TO_PUBLISH" else None,
+            "lineup_context": lineup_context,
             "risk": _risk(values, lineup_confirmed),
             "reasoning": _reasoning(market, values, lineup_state),
             "evidence_fields": source_names, "provenance": evidence,
+            "factors_used": source_names,
+            "freshness": {item.signal: item.status.value for item in snapshot.freshness},
+            "missing_signals": list(snapshot.missing_data),
+            "evidence_completeness": _completeness(required_features, fields, odds_field, lineup_confirmed),
+            "approval_reasons": (["OBJECTIVE_EVIDENCE_CONSISTENT", "FRESH_ODDS", "FINAL_REVIEW_COMPLETE"]
+                                 if stage == "READY_TO_PUBLISH" else []),
             "decision": "APPROVED" if not blockers else "REJECTED",
             "rejection_reasons": blockers,
             "evaluated_at_utc": now.isoformat(),
@@ -141,11 +157,21 @@ def rank_candidates(candidates: list[dict]) -> list[dict]:
     ))
 
 
-def select_single_predictions(candidates: list[dict], *, existing_keys: set[str], now: datetime) -> list[dict]:
+def select_single_predictions(
+    candidates: list[dict],
+    *,
+    existing_keys: set[str],
+    now: datetime,
+    existing_fixtures: set[str] | None = None,
+) -> list[dict]:
     selected, fixtures = [], set()
-    for candidate in rank_candidates([item for item in candidates if item["decision"] == "APPROVED"]):
+    existing_fixtures = existing_fixtures or set()
+    for candidate in rank_candidates([
+        item for item in candidates
+        if item["decision"] == "APPROVED" and item.get("stage", "READY_TO_PUBLISH") == "READY_TO_PUBLISH"
+    ]):
         key = publication_key(candidate)
-        if candidate["fixture_id"] in fixtures or key in existing_keys:
+        if candidate["fixture_id"] in fixtures or candidate["fixture_id"] in existing_fixtures or key in existing_keys:
             continue
         value = {**candidate, "prediction_id": "lab-single-" + fingerprint((POLICY_VERSION, key, candidate['candidate_id'])),
                  "publication_key": key, "prepared_at_utc": now.astimezone(timezone.utc).isoformat(),
@@ -159,7 +185,9 @@ def select_single_predictions(candidates: list[dict], *, existing_keys: set[str]
 def select_combo_batch(candidates: list[dict], *, used_leg_keys: set[str], now: datetime) -> list[dict]:
     """Greedily choose the best deterministic disjoint independent triples."""
     remaining = [item for item in rank_candidates(candidates)
-                 if item["decision"] == "APPROVED" and publication_key(item) not in used_leg_keys]
+                 if item["decision"] == "APPROVED"
+                 and item.get("stage", "READY_TO_PUBLISH") == "READY_TO_PUBLISH"
+                 and publication_key(item) not in used_leg_keys]
     selected = []
     while len(selected) < MAX_COMBOS_PER_DISCOVERY_CYCLE:
         choices = []
@@ -213,23 +241,78 @@ def combined_odds_eligible(value) -> bool:
     return MIN_COMBINED_ODDS <= _decimal(value) <= MAX_COMBINED_ODDS
 
 
-def single_message(value: dict) -> str:
-    reasons = "\n".join(f"- {line}" for line in value["reasoning"])
-    return (f"🧪 LAB EXPERIMENTAL SINGLE\n{value['home_team']} vs {value['away_team']} ({value['competition']})\n"
-            f"{value['market']} @ {value['captured_odds']} ({value['bookmaker']})\nWhy:\n{reasons}\n"
-            f"Lineup: {value['lineup_status']}\nExperimental confidence: {value['experimental_confidence']} "
-            f"(uncalibrated signal {value['experimental_signal']})\nRisk/uncertainty: {value['risk']}\n"
-            "Lab experiment only. No guaranteed profit.")
+def _timing_stage(
+    snapshot: CurrentMatchIntelligenceSnapshot,
+    *,
+    market: str,
+    now: datetime,
+    lineup_confirmed: bool,
+    lineup_context: dict,
+) -> tuple[str, list[str], list[str]]:
+    remaining = snapshot.kickoff_utc - now
+    if remaining <= timedelta(0):
+        return "REJECTED", ["FIXTURE_ALREADY_STARTED"], []
+    if market in LINEUP_SENSITIVE_MARKETS and remaining > FINAL_REVIEW_START:
+        return "EARLY_CANDIDATE", ["FINAL_REVIEW_WINDOW_NOT_OPEN"], []
+    if market in LINEUP_SENSITIVE_MARKETS and not lineup_confirmed:
+        return "FINAL_REVIEW_REQUIRED", ["LINEUP_NOT_YET_PUBLISHED"], []
+    timing = "PREFERRED_FINAL_REVIEW_WINDOW" if remaining >= FINAL_REVIEW_PREFERRED_END else "LATE_FINAL_REVIEW_WINDOW"
+    blockers = _final_review_blockers(snapshot, lineup_context)
+    return ("READY_TO_PUBLISH" if not blockers else "REJECTED"), [timing], blockers
 
 
-def combo_message(value: dict, number: int) -> str:
-    lines = [f"🧪 LAB EXPERIMENTAL COMBO #{number}", "Exactly 3 independent Lab-approved legs"]
-    for index, leg in enumerate(value["legs"], 1):
-        lines.extend((f"{index}. {leg['home_team']} vs {leg['away_team']} — {leg['market']} @ {leg['captured_odds']}",
-                      f"   {leg['reasoning'][0]} | lineup: {leg['lineup_status']}"))
-    lines.extend((f"Combined odds: {value['combined_odds']}",
-                  "Higher variance than singles. Lab experiment only. No guaranteed profit."))
-    return "\n".join(lines)
+def _final_review_blockers(snapshot: CurrentMatchIntelligenceSnapshot, lineup_context: dict) -> list[str]:
+    freshness = {item.signal: item for item in snapshot.freshness}
+    blockers = []
+    threshold = snapshot.evaluated_at - FINAL_REVIEW_REFRESH_MAX_AGE
+    for signal in ("fixture_context", "confirmed_lineups", "injuries", "odds"):
+        item = freshness.get(signal)
+        if item is None or item.status.value != "FRESH":
+            blockers.append(f"FINAL_REVIEW_{signal.upper()}_NOT_FRESH")
+        elif item.newest_retrieved_at is None or item.newest_retrieved_at < threshold:
+            blockers.append(f"FINAL_REVIEW_{signal.upper()}_NOT_REFRESHED")
+    for side in ("home", "away"):
+        if lineup_context[f"confirmed_starters_{side}"] != 11:
+            blockers.append(f"FINAL_REVIEW_{side.upper()}_STARTERS_INCOMPLETE")
+        if not lineup_context[f"formation_{side}"]:
+            blockers.append(f"FINAL_REVIEW_{side.upper()}_FORMATION_MISSING")
+        substitutes = lineup_context[f"substitutes_{side}"]
+        if substitutes is None or substitutes < 1:
+            blockers.append(f"FINAL_REVIEW_{side.upper()}_SUBSTITUTES_MISSING")
+        if (lineup_context[f"availability_overlap_{side}"] or 0) > 0:
+            blockers.append(f"CONTRADICTORY_{side.upper()}_STARTER_AVAILABILITY")
+        continuity = _decimal(lineup_context[f"continuity_{side}"])
+        if continuity is not None and continuity < Decimal("0.40"):
+            blockers.append(f"LOW_{side.upper()}_LINEUP_CONTINUITY")
+        missing = _decimal(lineup_context[f"missing_recent_starters_{side}"])
+        if missing is not None and missing > 4:
+            blockers.append(f"MATERIAL_{side.upper()}_STARTING_XI_CHANGE")
+    return blockers
+
+
+def _objective_quality_blockers(market: str, values: dict) -> list[str]:
+    """Reject only objective contradictions or material uncertainty."""
+    blockers = []
+    for side in ("home", "away"):
+        rest = _decimal(values.get(f"feature.rest_days_{side}"))
+        congestion = _decimal(values.get(f"feature.schedule_congestion_{side}"))
+        if rest is not None and congestion is not None and rest < 3 and congestion >= 2:
+            blockers.append(f"MATERIAL_{side.upper()}_SCHEDULE_LOAD_UNCERTAINTY")
+    home_form = _decimal(values.get("feature.home_form_strength"))
+    away_form = _decimal(values.get("feature.away_form_strength"))
+    if home_form is not None and away_form is not None:
+        if market == "HOME_WIN" and home_form + Decimal("0.20") < away_form:
+            blockers.append("HOME_WIN_CONTRADICTED_BY_RECENT_FORM")
+        if market == "AWAY_WIN" and away_form + Decimal("0.20") < home_form:
+            blockers.append("AWAY_WIN_CONTRADICTED_BY_RECENT_FORM")
+    return blockers
+
+
+def _completeness(required_features, fields, odds_field, lineup_confirmed: bool) -> str:
+    total = len(required_features) + 2
+    available = sum(name in fields for name in required_features)
+    available += int(odds_field is not None) + int(lineup_confirmed)
+    return str(Decimal(available) / Decimal(total))
 
 
 def _market_probabilities(values: dict) -> dict[str, Decimal]:

@@ -18,7 +18,8 @@ from app.real_match_lab_analysis.fingerprint import canonical_json
 
 from .repository import ComboRepository
 from .service import LabComboService
-from .experimental import POLICY_VERSION
+from .experimental import FINAL_REVIEW_START, POLICY_VERSION
+from .presentation import LabTelegramTransport, ResultImagePaths
 
 
 def initialize(source: Path, target: Path) -> None:
@@ -53,7 +54,10 @@ async def cycle(args: argparse.Namespace) -> dict:
     stage = 'INITIALIZE'
     try:
         intelligence_repository = SQLiteCurrentMatchIntelligenceRepository(database)
-        service = LabComboService(ledger, None)
+        image_directory = getattr(args, 'result_image_directory', Path('app/lab_combo/assets/results'))
+        service = LabComboService(
+            ledger, None, result_images=ResultImagePaths.from_directory(image_directory),
+        )
         if args.command == 'settle':
             stage = 'SETTLEMENT'
             if _settlement_work_relevant(ledger, datetime.now(timezone.utc)):
@@ -88,22 +92,56 @@ async def cycle(args: argparse.Namespace) -> dict:
             if discovery.get('selected_fixture'):
                 discovery['selected_fixture'].pop('_current_match_reuse', None)
             snapshots, failures, enrichment = [], {}, []
-            intelligence = CurrentMatchIntelligenceService(
-                intelligence_repository, ApiFootballCurrentMatchProvider(client),
-                budget=IntelligenceBudgetPolicy(maximum_api_calls=40, detailed_match_window=0,
-                                                maximum_enriched_fixtures=9),
-            )
             for identity in targets:
                 try:
                     stage = 'CURRENT_MATCH_INTELLIGENCE'
-                    result = await intelligence.collect(identity, evaluated_at=datetime.now(timezone.utc))
+                    evaluated_at = datetime.now(timezone.utc)
+                    kickoff = _known_kickoff(ledger, selected, identity)
+                    final_review = kickoff is not None and timedelta(0) < kickoff - evaluated_at <= FINAL_REVIEW_START
+                    intelligence = CurrentMatchIntelligenceService(
+                        intelligence_repository, ApiFootballCurrentMatchProvider(client),
+                        budget=IntelligenceBudgetPolicy(
+                            maximum_api_calls=40,
+                            detailed_match_window=0,
+                            maximum_enriched_fixtures=9,
+                        ),
+                    )
+                    force_refresh = (frozenset({'fixture', 'lineup', 'injuries', 'odds'})
+                                     if final_review else frozenset())
+                    result = await intelligence.collect(
+                        identity, evaluated_at=evaluated_at, force_refresh=force_refresh,
+                    )
+                    api_calls = result.api_calls_used
+                    cache_hits = result.cache_hits
+                    cache_misses = result.cache_misses
+                    lineup_fresh = any(
+                        item.signal == 'confirmed_lineups' and item.status.value == 'FRESH'
+                        for item in result.snapshot.freshness
+                    )
+                    if final_review and lineup_fresh and client.request_count < 40:
+                        detailed = CurrentMatchIntelligenceService(
+                            intelligence_repository, ApiFootballCurrentMatchProvider(client),
+                            budget=IntelligenceBudgetPolicy(
+                                maximum_api_calls=40, detailed_match_window=3,
+                                maximum_enriched_fixtures=9,
+                            ),
+                        )
+                        detailed_result = await detailed.collect(
+                            identity, evaluated_at=datetime.now(timezone.utc),
+                        )
+                        api_calls += detailed_result.api_calls_used
+                        cache_hits += detailed_result.cache_hits
+                        cache_misses += detailed_result.cache_misses
+                        result = detailed_result
                     if 'INTELLIGENCE_REQUIRED_STAGE_BUDGET_INSUFFICIENT' in result.snapshot.blockers:
                         failures[str(identity)] = 'INTELLIGENCE_REQUIRED_STAGE_BUDGET_INSUFFICIENT'
                         continue
                     snapshots.append(result.snapshot)
                     enrichment.append({'fixture_id': str(identity), 'snapshot_id': result.snapshot.snapshot_id,
-                                       'api_calls': result.api_calls_used, 'cache_hits': result.cache_hits,
-                                       'cache_misses': result.cache_misses,
+                                       'api_calls': api_calls, 'cache_hits': cache_hits,
+                                       'cache_misses': cache_misses,
+                                       'final_review_refresh': final_review,
+                                       'refreshed_sources': sorted(force_refresh),
                                        'lineup': next(x.status.value for x in result.snapshot.freshness if x.signal == 'confirmed_lineups')})
                 except (ValueError, KeyError, RuntimeError) as exc:
                     failures[str(identity)] = type(exc).__name__
@@ -123,12 +161,11 @@ async def cycle(args: argparse.Namespace) -> dict:
         stage = 'LAB_DELIVERY'
         if args.send and pending:
             from app.lab_telegram.service import load_lab_telegram_config, validate_lab_telegram_config
-            from app.services.telegram_service import TelegramService
             config = load_lab_telegram_config()
             if validate_lab_telegram_config(config) is None:
                 from .secure_logging import install_lab_secret_redaction
                 install_lab_secret_redaction(config.token)
-                transport = TelegramService(config.token)
+                transport = LabTelegramTransport(config.token)
                 async with transport.bot:
                     from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
                     if '@' + (transport.bot.username or '') != LAB_BOT_USERNAME:
@@ -176,6 +213,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--database', type=Path, default=Path('var/lab_combo/analysis.db'))
     parser.add_argument('--ledger', type=Path, default=Path('var/lab_combo/ledger.db'))
     parser.add_argument('--source-database', type=Path)
+    parser.add_argument('--result-image-directory', type=Path,
+                        default=Path('app/lab_combo/assets/results'))
     parser.add_argument('--send', action='store_true', help='Explicit Lab-only sends for qualified immutable evidence')
     args = parser.parse_args(argv)
     if args.command == 'initialize':
@@ -225,9 +264,27 @@ def _recheck_fixture_ids(ledger: ComboRepository, now: datetime) -> list[int]:
     result = []
     for watch in latest.values():
         kickoff = datetime.fromisoformat(watch['kickoff_utc'])
-        if now < kickoff <= now + timedelta(minutes=75) and watch['lineup_status'] != 'FRESH':
+        stage = watch.get('candidate_stage')
+        revisit = stage in {'EARLY_CANDIDATE', 'FINAL_REVIEW_REQUIRED'} or (
+            stage is None and watch['lineup_status'] != 'FRESH'
+        )
+        if now < kickoff <= now + timedelta(minutes=75) and revisit:
             result.append(int(watch['fixture_id']))
     return sorted(result, key=lambda fixture_id: (latest[str(fixture_id)]['kickoff_utc'], fixture_id))
+
+
+def _known_kickoff(ledger: ComboRepository, selected: list[dict], fixture_id: int) -> datetime | None:
+    for fixture in selected:
+        if str(fixture.get('provider_fixture_id')) == str(fixture_id):
+            value = fixture.get('kickoff_utc')
+            if value:
+                return datetime.fromisoformat(value)
+    watches = [value for value in ledger.all('fixture_watch')
+               if str(value['fixture_id']) == str(fixture_id)]
+    if not watches:
+        return None
+    latest = max(watches, key=lambda value: value['evaluated_at_utc'])
+    return datetime.fromisoformat(latest['kickoff_utc'])
 
 
 def _settlement_work_relevant(ledger: ComboRepository, now: datetime) -> bool:

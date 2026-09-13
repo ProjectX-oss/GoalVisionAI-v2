@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Callable
 
 from app.current_odds_forward_test.repository import SQLiteForwardTestRepository
@@ -11,14 +11,17 @@ from app.real_match_lab_analysis.models import LAB_CHAT_ID
 
 from .engine import load_leg, select_combo, prediction_message
 from .experimental import (
-    POLICY_VERSION, SETTLEMENT_RELEVANCE_AFTER_KICKOFF, combo_message,
-    evaluate_snapshot, publication_key, select_combo_batch,
-    select_single_predictions, single_message,
+    FINAL_REVIEW_REFRESH_MAX_AGE, POLICY_VERSION, SETTLEMENT_RELEVANCE_AFTER_KICKOFF,
+    evaluate_snapshot, publication_key, select_combo_batch, select_single_predictions,
+)
+from .presentation import (
+    ResultImagePaths, combo_message, combo_result_message, single_message,
+    single_result_message,
 )
 from .repository import ComboRepository
 from .settlement import (
     resolve_leg, resolve_single, aggregate, statistics, single_statistics,
-    settlement_message, single_settlement_message,
+    settlement_message,
 )
 
 
@@ -26,8 +29,10 @@ class LabComboService:
     """Compose existing single review, immutable ledger and explicit Lab delivery."""
 
     def __init__(self, ledger: ComboRepository, singles: SQLiteForwardTestRepository,
-                 *, clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc)) -> None:
+                 *, clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
+                 result_images: ResultImagePaths | None = None) -> None:
         self.ledger, self.singles, self.clock = ledger, singles, clock
+        self.result_images = result_images or ResultImagePaths()
 
     def prepare(self, observation_ids: list[str]) -> dict:
         now = self.clock()
@@ -54,7 +59,12 @@ class LabComboService:
         evaluated = [candidate for snapshot in snapshots for candidate in evaluate_snapshot(snapshot, now=now)]
         existing_single_keys = {value['publication_key'] for value in self.ledger.all('single_prediction')
                                 if self.ledger.get('receipt', 'single_prediction:' + value['prediction_id'])}
-        singles = select_single_predictions(evaluated, existing_keys=existing_single_keys, now=now)
+        existing_single_fixtures = {value['fixture_id'] for value in self.ledger.all('single_prediction')
+                                    if self.ledger.get('receipt', 'single_prediction:' + value['prediction_id'])}
+        singles = select_single_predictions(
+            evaluated, existing_keys=existing_single_keys,
+            existing_fixtures=existing_single_fixtures, now=now,
+        )
         prior_combos = [combo for combo in self.ledger.all('prediction')
                         if combo.get('policy') == POLICY_VERSION
                         and self.ledger.get('receipt', 'combo_prediction:' + combo['prediction_id'])]
@@ -68,16 +78,22 @@ class LabComboService:
         single_ids = {value['candidate_id'] for value in singles}
         combo_ids = {leg['candidate_id'] for combo in combos for leg in combo['legs']}
         for candidate in evaluated:
-            candidate['relation'] = ('BOTH' if candidate['candidate_id'] in single_ids & combo_ids else
+            candidate['relation'] = (candidate['stage'] if candidate['stage'] != 'READY_TO_PUBLISH' else
+                                     'BOTH' if candidate['candidate_id'] in single_ids & combo_ids else
                                      'SINGLE_ONLY' if candidate['candidate_id'] in single_ids else
                                      'COMBO_ELIGIBLE' if candidate['candidate_id'] in combo_ids else
                                      'REJECTED' if candidate['decision'] == 'REJECTED' else 'COMBO_ELIGIBLE')
             self.ledger.append('single_candidate', candidate['candidate_id'], candidate)
         for snapshot in snapshots:
+            fixture_candidates = [item for item in evaluated if item['fixture_id'] == snapshot.fixture_id]
+            stages = {item['stage'] for item in fixture_candidates}
+            stage = next((value for value in ('READY_TO_PUBLISH', 'FINAL_REVIEW_REQUIRED', 'EARLY_CANDIDATE')
+                          if value in stages), 'REJECTED')
             self.ledger.append('fixture_watch', snapshot.snapshot_id, {
                 'fixture_id': snapshot.fixture_id, 'snapshot_id': snapshot.snapshot_id,
                 'kickoff_utc': snapshot.kickoff_utc.isoformat(),
                 'lineup_status': next((x.status.value for x in snapshot.freshness if x.signal == 'confirmed_lineups'), 'MISSING'),
+                'candidate_stage': stage,
                 'evaluated_at_utc': snapshot.evaluated_at.isoformat(),
             })
         for value in singles:
@@ -93,9 +109,14 @@ class LabComboService:
         return {'policy': POLICY_VERSION, 'candidate_markets_evaluated': len(evaluated),
                 'approved_single_candidates': sum(item['decision'] == 'APPROVED' for item in evaluated),
                 'rejected_single_candidates': sum(item['decision'] == 'REJECTED' for item in evaluated),
+                'early_candidates': sum(item['stage'] == 'EARLY_CANDIDATE' for item in evaluated),
+                'final_review_candidates': sum(item['stage'] == 'FINAL_REVIEW_REQUIRED' for item in evaluated),
+                'ready_to_publish_candidates': sum(item['stage'] == 'READY_TO_PUBLISH' for item in evaluated),
                 'rejection_reasons': dict(sorted(rejected.items())),
                 'singles': singles, 'combos': combos,
-                'combo_eligible_legs': len({item['candidate_id'] for item in evaluated if item['decision'] == 'APPROVED'}),
+                'combo_eligible_legs': len({item['candidate_id'] for item in evaluated
+                                           if item['decision'] == 'APPROVED'
+                                           and item['stage'] == 'READY_TO_PUBLISH'}),
                 'single_statistics': single_statistics(self.ledger),
                 'combo_statistics': statistics(self.ledger, published_only=True)}
 
@@ -120,6 +141,14 @@ class LabComboService:
             if self.clock() >= kickoff:
                 return {'status': 'FIXTURE_ALREADY_STARTED', 'sent': False}
             candidates = [value] if kind == 'single_prediction' else value['legs']
+            if any(item.get('stage') != 'READY_TO_PUBLISH' for item in candidates):
+                return {'status': 'FINAL_REVIEW_REQUIRED', 'sent': False}
+            review_times = [item.get('final_review_completed_at_utc') for item in candidates]
+            if any(not review for review in review_times):
+                return {'status': 'FINAL_REVIEW_REQUIRED', 'sent': False}
+            if any(not timedelta(0) <= self.clock() - datetime.fromisoformat(review)
+                   <= FINAL_REVIEW_REFRESH_MAX_AGE for review in review_times):
+                return {'status': 'FINAL_REVIEW_EXPIRED', 'sent': False}
             if any(not _fresh_captured_odds(item, self.clock()) for item in candidates):
                 return {'status': 'STALE_CURRENT_ODDS', 'sent': False}
         identity = kind + ':' + prediction_id
@@ -129,8 +158,14 @@ class LabComboService:
         if not self.ledger.append('claim', identity, {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}):
             return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
         try:
-            receipt = await asyncio.wait_for(transport.send_message_receipt(
-                chat_id=LAB_CHAT_ID, text=message, parse_mode=None, timeout_seconds=10), timeout=11)
+            image = self.result_images.available_for(value['status']) if kind in {'single_settlement', 'combo_settlement'} else None
+            if image is not None and hasattr(transport, 'send_photo_receipt'):
+                operation = transport.send_photo_receipt(
+                    chat_id=LAB_CHAT_ID, image_path=image, caption=message, timeout_seconds=10)
+            else:
+                operation = transport.send_message_receipt(
+                    chat_id=LAB_CHAT_ID, text=message, parse_mode=None, timeout_seconds=10)
+            receipt = await asyncio.wait_for(operation, timeout=11)
             if receipt.chat_id != LAB_CHAT_ID or type(receipt.message_id) is not int or receipt.message_id <= 0:
                 raise ValueError('Invalid receipt')
         except Exception:
@@ -212,7 +247,7 @@ class LabComboService:
                 single_completed.append(identity)
                 stats = single_statistics(self.ledger)
                 self.ledger.append('single_settlement_preview', identity, {
-                    'message': single_settlement_message(result, stats), 'statistics': stats})
+                    'message': single_result_message(result, stats), 'statistics': stats})
         for combo in self.ledger.all('prediction'):
             identity = combo['prediction_id']
             if (self.ledger.get('settlement', identity)
@@ -246,7 +281,7 @@ class LabComboService:
             identity = value['prediction_id']
             if not self.ledger.get('settlement_preview', identity):
                 stats = statistics(self.ledger, published_only=True)
-                self.ledger.append('settlement_preview', identity, {'message': settlement_message(value, stats), 'statistics': stats})
+                self.ledger.append('settlement_preview', identity, {'message': combo_result_message(value, stats), 'statistics': stats})
         return {'completed': completed, 'single_completed': single_completed,
                 'api_calls': client.request_count - start,
                 'single_statistics': single_statistics(self.ledger),
