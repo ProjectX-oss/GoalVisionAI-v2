@@ -1,0 +1,233 @@
+from __future__ import annotations
+
+import asyncio
+from datetime import datetime, timedelta, timezone
+from decimal import Decimal
+import inspect
+from pathlib import Path
+
+import pytest
+
+from app.lab_v2_shadow.api_prediction import normalize_api_prediction
+from app.lab_v2_shadow.capability import CapabilityTier, LeagueCapabilityCache
+from app.lab_v2_shadow.context_signals import PlayerUsage, availability_impact, opponent_adjusted_form
+from app.lab_v2_shadow.ensemble import EnsembleSignal, evaluate_ensemble
+from app.lab_v2_shadow.market_consensus import current_market_consensus
+from app.lab_v2_shadow.pi_ratings import MatchResult, PiAvailability, PiRatingAdapter, parse_api_fixture_results
+from app.lab_v2_shadow.repository import ShadowEvidenceRepository
+from app.lab_v2_shadow.runner import LabV2ShadowRunner
+from app.lab_v2_shadow.segmentation import segment_results
+
+
+NOW = datetime(2026, 9, 15, 12, tzinfo=timezone.utc)
+
+
+def coverage(*, league_id=999, full=False, predictions=True, standings=False):
+    fixture = {"events": True, "lineups": full, "statistics_fixtures": full, "statistics_players": full}
+    return {"league": {"id": league_id, "name": "Worldwide League", "type": "League"},
+            "country": {"name": "Elsewhere"}, "seasons": [{"year": 2026, "current": True,
+            "start": "2026-01-01", "end": "2026-12-31", "coverage": {
+                "fixtures": fixture, "standings": standings, "injuries": full,
+                "predictions": predictions, "odds": True}}]}
+
+
+def test_league_capability_tiers_and_cache(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    payload = {"response": [coverage(league_id=1, full=True), coverage(league_id=2), coverage(league_id=4, standings=True),
+                            {**coverage(league_id=3), "league": {"id": 3, "name": "No odds", "type": "League"}}]}
+    payload["response"][3]["seasons"][0]["coverage"]["odds"] = False
+    cache = LeagueCapabilityCache.from_api_payload(payload, retrieved_at=NOW)
+    assert cache.current(1, 2026, day=NOW.date()).tier is CapabilityTier.TIER_A_FULL
+    assert cache.current(2, 2026, day=NOW.date()).tier is CapabilityTier.TIER_C_BASIC
+    assert cache.current(4, 2026, day=NOW.date()).tier is CapabilityTier.TIER_B_GOOD
+    assert cache.current(3, 2026, day=NOW.date()).tier is CapabilityTier.UNSUPPORTED
+    path = Path("var/capabilities.json"); cache.save(path)
+    assert LeagueCapabilityCache.load(path, now=NOW + timedelta(days=1)).content_fingerprint == cache.content_fingerprint
+
+
+def test_non_major_league_is_not_restricted():
+    cache = LeagueCapabilityCache.from_api_payload({"response": [coverage(league_id=9876)]}, retrieved_at=NOW)
+    record = cache.current(9876, 2026, day=NOW.date())
+    assert record is not None and record.tier is CapabilityTier.TIER_C_BASIC
+    assert "major" not in " ".join(record.reasons).lower()
+
+
+def results() -> tuple[MatchResult, ...]:
+    rows = []
+    for index in range(10):
+        rows.append(MatchResult(999, 2026, index + 1, NOW - timedelta(days=20-index),
+                                10 if index % 2 == 0 else 30,
+                                20 if index % 2 == 0 else 10,
+                                3 if index % 2 == 0 else 0, 0 if index % 2 == 0 else 1))
+        rows.append(MatchResult(999, 2026, index + 101, NOW - timedelta(days=20-index, hours=1),
+                                40 if index % 2 == 0 else 20,
+                                20 if index % 2 == 0 else 50,
+                                2 if index % 2 == 0 else 1, 0))
+    return tuple(rows)
+
+
+def test_pi_deterministic_replay_and_home_away_behavior():
+    first, second = PiRatingAdapter(999), PiRatingAdapter(999)
+    first.replay(results()); second.replay(reversed(results()))
+    assert first.signal(10, 20) == second.signal(10, 20)
+    signal = first.signal(10, 20)
+    assert signal.state is PiAvailability.AVAILABLE
+    assert signal.home_team_home_strength != signal.home_team_away_strength
+    assert signal.rating_difference == signal.home_team_home_strength - signal.away_team_away_strength
+
+
+def test_pi_insufficient_history_is_not_high_confidence():
+    pi = PiRatingAdapter(999); pi.replay(results()[:2])
+    assert pi.signal(10, 20).state in {PiAvailability.INSUFFICIENT, PiAvailability.UNAVAILABLE}
+    assert not pi.signal(10, 20).probabilities
+
+
+def test_pi_result_parser_ignores_odds_and_rejects_cross_league():
+    payload = {"response": [{"fixture": {"id": 1, "date": NOW.isoformat(), "status": {"short": "FT"}},
+               "league": {"id": 999, "season": 2026}, "teams": {"home": {"id": 10}, "away": {"id": 20}},
+               "goals": {"home": 2, "away": 0}, "bookmaker_odds": {"home": 1.1}}]}
+    matches = parse_api_fixture_results((payload,))
+    assert len(matches) == 1 and not hasattr(matches[0], "odds")
+    with pytest.raises(ValueError, match="CROSS_LEAGUE"):
+        PiRatingAdapter(1).update(matches[0])
+
+
+def test_no_historical_odds_dependency():
+    import app.lab_v2_shadow.pi_ratings as pi_module
+    import app.lab_v2_shadow.runner as runner_module
+    source = (inspect.getsource(pi_module) + inspect.getsource(runner_module)).lower()
+    assert "historical_odds" not in source
+    assert "bookmaker_odds" not in inspect.getsource(pi_module)
+
+
+def test_api_football_prediction_normalization():
+    value = normalize_api_prediction({"response": [{"predictions": {
+        "winner": {"id": 10, "name": "Home", "comment": "Win"}, "under_over": "Over 2.5",
+        "goals": {"home": "2.1", "away": "0.9"}, "percent": {"home": "60%", "draw": "25%", "away": "15%"}},
+        "comparison": {"att": {"home": "64%", "away": "36%"}}}]}, fixture_id=7)
+    assert value.available and value.predicted_winner_id == 10
+    assert value.probabilities["HOME_WIN"] == Decimal("0.6")
+    assert value.under_over == "OVER_2_5" and value.expected_goals_home == Decimal("2.1")
+
+
+def odds_payload(updated=NOW, fixture_id=7):
+    books = []
+    for identity, name, home, draw, away in ((1, "A", "2.20", "3.50", "4.00"), (2, "B", "2.15", "3.60", "4.10")):
+        books.append({"id": identity, "name": name, "bets": [
+            {"name": "Match Winner", "values": [{"value": "Home", "odd": home}, {"value": "Draw", "odd": draw}, {"value": "Away", "odd": away}]},
+            {"name": "Goals Over/Under", "values": [{"value": "Over 2.5", "odd": "1.90"}, {"value": "Under 2.5", "odd": "1.95"}]},
+        ]})
+    return {"results": 1, "response": [{"fixture": {"id": fixture_id}, "update": updated.isoformat(), "bookmakers": books}]}
+
+
+def test_current_market_consensus_removes_margin_and_keeps_provenance():
+    value = current_market_consensus(odds_payload(), fixture_id=7, retrieved_at=NOW, now=NOW)["1X2"]
+    assert value.status == "AVAILABLE" and value.bookmaker_count == 2
+    assert sum(value.fair_probabilities.values(), Decimal(0)) == Decimal(1)
+    assert len(value.quotes) == 6 and all(item.provenance_fingerprint for item in value.quotes)
+
+
+def test_stale_current_odds_are_rejected():
+    value = current_market_consensus(odds_payload(NOW - timedelta(hours=4)), fixture_id=7,
+                                     retrieved_at=NOW, now=NOW)["1X2"]
+    assert value.status == "STALE_CURRENT_ODDS" and not value.fair_probabilities
+
+
+def test_ensemble_agreement_approves():
+    signals = [EnsembleSignal(name, "HOME_WIN", probability, "HOME_WIN", weight, "AVAILABLE", name)
+               for name, probability, weight in (("CURRENT_MARKET_CONSENSUS", Decimal("0.56"), Decimal("0.9")),
+                                                  ("PI_RATINGS", Decimal("0.59"), Decimal("0.9")),
+                                                  ("API_FOOTBALL_PREDICTION", Decimal("0.60"), Decimal("0.75")),
+                                                  ("CURRENT_MATCH_INTELLIGENCE", Decimal("0.58"), Decimal("0.7")))]
+    decision = evaluate_ensemble("HOME_WIN", Decimal("2.00"), signals)
+    assert decision.decision == "APPROVED" and decision.confidence in {"MEDIUM", "HIGH"}
+
+
+def test_ensemble_material_disagreement_rejects():
+    signals = [
+        EnsembleSignal("CURRENT_MARKET_CONSENSUS", "HOME_WIN", Decimal("0.55"), "HOME_WIN", Decimal("0.9"), "AVAILABLE", "x"),
+        EnsembleSignal("PI_RATINGS", "HOME_WIN", Decimal("0.25"), "AWAY_WIN", Decimal("0.9"), "AVAILABLE", "x"),
+        EnsembleSignal("API_FOOTBALL_PREDICTION", "HOME_WIN", Decimal("0.22"), "AWAY_WIN", Decimal("0.75"), "AVAILABLE", "x"),
+    ]
+    assert "MATERIAL_SIGNAL_DISAGREEMENT" in evaluate_ensemble("HOME_WIN", Decimal("2.0"), signals).rejection_reasons
+
+
+def test_opponent_adjusted_form_rewards_stronger_opposition():
+    pi = PiRatingAdapter(999); pi.replay(results())
+    strong = opponent_adjusted_form(10, results(), pi)
+    weak = opponent_adjusted_form(20, results(), pi)
+    assert strong.state == weak.state == "AVAILABLE"
+    assert strong.score != weak.score
+    assert all("expected_result" in item for item in strong.components)
+
+
+def test_injury_impact_uses_safe_count_fallback_and_usage_when_present():
+    absences = [{"player_id": "1", "status": "INJURED"}, {"player_id": "2", "status": "SUSPENDED"}]
+    fallback = availability_impact(absences)
+    assert fallback.state == "COUNT_FALLBACK" and fallback.impact == Decimal("0.050")
+    weighted = availability_impact(absences, {"1": PlayerUsage("1", starts=8, minutes=700,
+                                                                 recent_start_frequency=Decimal("0.8"))})
+    assert weighted.state == "USAGE_WEIGHTED" and weighted.weighted_players[0]["player_id"] == "1"
+
+
+class Response:
+    def __init__(self, payload): self.payload = payload
+    def json(self): return self.payload
+
+
+class FakeClient:
+    def __init__(self): self.request_count = 0; self.limit = 40; self.last = {}
+    def restrict_requests(self, maximum_calls, *, daily_reserve=20): self.limit = maximum_calls
+    def _hit(self, endpoint, query, payload):
+        assert self.request_count < self.limit
+        self.request_count += 1; self.last = {"retrieved_at_utc": NOW.isoformat(), "endpoint": endpoint, "query": query}
+        return payload
+    def response_metadata(self): return self.last
+    async def account_status(self): return self._hit("/status", {}, {"response": {}})
+    async def leagues(self, *, current=True): return self._hit("/leagues", {}, {"response": [coverage(full=True)]})
+    async def fixtures_by_date(self, day, *, timezone_name="UTC"):
+        fixture = {"fixture": {"id": 7, "date": (NOW + timedelta(hours=4)).isoformat(), "status": {"short": "NS"}},
+                   "league": {"id": 999, "name": "Worldwide League", "season": 2026},
+                   "teams": {"home": {"id": 10, "name": "Home"}, "away": {"id": 20, "name": "Away"}}}
+        return self._hit("/fixtures", {"date": day}, {"results": 1, "response": [fixture]})
+    async def current_odds(self, fixture_id): return self._hit("/odds", {"fixture": fixture_id}, odds_payload(fixture_id=fixture_id))
+    async def finished_matches(self, league_id, season, last=100):
+        assert last == 99
+        rows = []
+        for item in results():
+            rows.append({"fixture": {"id": item.fixture_id, "date": item.kickoff_utc.isoformat(), "status": {"short": "FT"}},
+                         "league": {"id": item.league_id, "season": item.season},
+                         "teams": {"home": {"id": item.home_team_id}, "away": {"id": item.away_team_id}},
+                         "goals": {"home": item.home_goals, "away": item.away_goals}})
+        return self._hit("/fixtures", {"league": league_id}, rows)
+    async def _get(self, endpoint, *, params):
+        if endpoint == "/predictions":
+            payload = {"response": [{"predictions": {"winner": {"id": 10, "name": "Home"},
+                       "under_over": "Over 2.5", "goals": {"home": "2", "away": "1"},
+                       "percent": {"home": "60%", "draw": "24%", "away": "16%"}}, "comparison": {}}]}
+        elif endpoint == "/injuries": payload = {"response": []}
+        else: payload = {"response": []}
+        return Response(self._hit(endpoint, params, payload))
+
+
+def test_api_call_budget_and_shadow_comparison(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    client = FakeClient(); repository = ShadowEvidenceRepository(Path("var/shadow.db"))
+    runner = LabV2ShadowRunner(client, repository, capability_cache_path=Path("var/capabilities.json"), maximum_calls=40)
+    report = asyncio.run(runner.run(now=NOW, horizon_days=1))
+    repository.close()
+    assert report["api_calls_consumed"] <= 40
+    assert report["fixtures_discovered"] == 1 and report["number_of_leagues"] == 1
+    assert report["capability_tier_distribution"] == {"TIER_A_FULL": 1}
+    assert report["v1_candidate_count"] == 0
+    assert report["v2_candidate_count"] >= 0
+    assert report["telegram_sends"] == 0 and report["historical_bookmaker_odds_used"] is False
+
+
+def test_result_segmentation_keeps_singles_and_combos_separate():
+    result = segment_results([
+        {"kind": "SINGLE", "status": "WON", "market": "HOME_WIN", "league": "L", "odds_band": "1.70-1.99"},
+        {"kind": "COMBO", "status": "LOST", "market": "COMBO", "league": "MULTI", "odds_band": "3.50+"},
+    ])
+    assert next(item for item in result["SINGLE"] if item["dimension"] == "market")["won"] == 1
+    assert next(item for item in result["COMBO"] if item["dimension"] == "market")["lost"] == 1
