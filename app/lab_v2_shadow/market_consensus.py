@@ -17,6 +17,7 @@ class CurrentQuote:
     bookmaker_name: str
     market: str
     decimal_odds: Decimal
+    raw_implied_probability: Decimal
     provider_origin_timestamp_utc: datetime
     retrieved_at_utc: datetime
     provenance_fingerprint: str
@@ -63,6 +64,7 @@ _FAMILIES = {
 
 def current_market_consensus(
     payload: object, *, fixture_id: int, retrieved_at: datetime, now: datetime,
+    allowed_bookmaker_ids: frozenset[int] | None = None,
 ) -> dict[str, CurrentMarketConsensus]:
     """Build consensus only from complete, comparable, fresh current markets."""
     retrieved, clock = _utc(retrieved_at), _utc(now)
@@ -80,7 +82,10 @@ def current_market_consensus(
         return {}
     if not updated <= retrieved <= clock or (clock - updated).total_seconds() > API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS:
         return {family: _unavailable(fixture_id, family, "STALE_CURRENT_ODDS") for family in _FAMILIES}
-    quotes = _quotes(root, fixture_id=fixture_id, updated=updated, retrieved=retrieved)
+    quotes = _quotes(
+        root, fixture_id=fixture_id, updated=updated, retrieved=retrieved,
+        allowed_bookmaker_ids=allowed_bookmaker_ids,
+    )
     result: dict[str, CurrentMarketConsensus] = {}
     for family, outcomes in _FAMILIES.items():
         bookmaker_markets = []
@@ -150,13 +155,18 @@ def consensus_document(value: CurrentMarketConsensus) -> dict[str, object]:
     }
 
 
-def _quotes(root: dict, *, fixture_id: int, updated: datetime, retrieved: datetime) -> tuple[CurrentQuote, ...]:
+def _quotes(
+    root: dict, *, fixture_id: int, updated: datetime, retrieved: datetime,
+    allowed_bookmaker_ids: frozenset[int] | None,
+) -> tuple[CurrentQuote, ...]:
     result: list[CurrentQuote] = []
     books = root.get("bookmakers") if isinstance(root.get("bookmakers"), list) else ()
     for book in books:
         if not isinstance(book, dict):
             continue
         bookmaker_id = _integer(book.get("id"))
+        if allowed_bookmaker_ids is not None and bookmaker_id not in allowed_bookmaker_ids:
+            continue
         bookmaker_name = str(book.get("name") or bookmaker_id or "UNKNOWN")
         bets = book.get("bets") if isinstance(book.get("bets"), list) else ()
         for bet in bets:
@@ -178,7 +188,7 @@ def _quotes(root: dict, *, fixture_id: int, updated: datetime, retrieved: dateti
                     "retrieved_at": retrieved,
                 }
                 result.append(CurrentQuote(
-                    fixture_id, bookmaker_id, bookmaker_name, market, odds,
+                    fixture_id, bookmaker_id, bookmaker_name, market, odds, Decimal(1) / odds,
                     updated, retrieved, fingerprint(material),
                 ))
     unique = {(item.bookmaker_id, item.bookmaker_name, item.market): item for item in result}

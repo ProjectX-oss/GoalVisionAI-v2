@@ -1,0 +1,15 @@
+[Unit]
+Description=GoalVision Lab-only adaptive V2 broad-coverage discovery
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=arvis
+WorkingDirectory=/home/arvis/GoalVisionAI
+ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -m app.lab_v2_shadow controlled-cycle --send --max-calls 100 --daily-reserve 1500
+TimeoutStartSec=30min
+UMask=0077
+NoNewPrivileges=true
+StandardOutput=null
+StandardError=journal

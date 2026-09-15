@@ -93,6 +93,28 @@ class FootballClient:
         response = await self._get("/odds", params={"fixture": fixture_id})
         return response.json()
 
+    async def current_odds_by_date(self, date: str, *, page: int = 1):
+        """Return one current pre-match odds page for a UTC calendar date."""
+        response = await self._get("/odds", params={"date": date, "page": page})
+        return response.json()
+
+    async def odds_bookmakers(self):
+        """Return the provider's semi-static pre-match bookmaker catalogue."""
+        response = await self._get("/odds/bookmakers", params={})
+        return response.json()
+
+    async def prediction(self, fixture_id: int):
+        response = await self._get("/predictions", params={"fixture": fixture_id})
+        return response.json()
+
+    async def lineup(self, fixture_id: int):
+        response = await self._get("/fixtures/lineups", params={"fixture": fixture_id})
+        return response.json()
+
+    async def injuries(self, fixture_id: int):
+        response = await self._get("/injuries", params={"fixture": fixture_id})
+        return response.json()
+
     async def last_matches(
         self,
         team_id: int,

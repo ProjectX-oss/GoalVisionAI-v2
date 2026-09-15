@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from decimal import Decimal, localcontext
 
 
-POLICY_VERSION = "LAB_V2_SHADOW_PHASE1_V1"
+POLICY_VERSION = "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V2"
 MIN_SINGLE_ODDS = Decimal("1.70")
 MIN_COMBINED_ODDS = Decimal("2.00")
 _FAMILY = {
@@ -46,12 +46,20 @@ class EnsembleDecision:
     rejection_reasons: tuple[str, ...]
 
 
-def evaluate_ensemble(market: str, offered_odds: Decimal | None, signals: list[EnsembleSignal]) -> EnsembleDecision:
+def evaluate_ensemble(
+    market: str,
+    offered_odds: Decimal | None,
+    signals: list[EnsembleSignal],
+    *,
+    severe_current_match_contradiction: bool = False,
+) -> EnsembleDecision:
     """Evaluate independent evidence without requiring every signal to exist."""
     blockers: list[str] = []
     reasons: list[str] = []
     if market not in _FAMILY:
         blockers.append("UNSUPPORTED_MARKET")
+    if severe_current_match_contradiction:
+        blockers.append("SEVERE_CURRENT_MATCH_INTELLIGENCE_CONTRADICTION")
     if offered_odds is None:
         blockers.append("CURRENT_PRICE_UNAVAILABLE")
     elif offered_odds < MIN_SINGLE_ODDS:
@@ -72,9 +80,10 @@ def evaluate_ensemble(market: str, offered_odds: Decimal | None, signals: list[E
     else:
         with localcontext() as context:
             context.prec = 28
-            total_weight = sum((item.reliability for item in probabilities), Decimal(0))
-            ensemble = sum((item.probability * item.reliability for item in probabilities), Decimal(0)) / total_weight
-            agreement_weight = sum((item.reliability for item in probabilities
+            weighted = tuple((item, _market_weight(item, _FAMILY.get(market))) for item in probabilities)
+            total_weight = sum((weight for _, weight in weighted), Decimal(0))
+            ensemble = sum((item.probability * weight for item, weight in weighted), Decimal(0)) / total_weight
+            agreement_weight = sum((weight for item, weight in weighted
                                     if abs(item.probability - ensemble) <= Decimal("0.10")), Decimal(0))
             agreement = agreement_weight / total_weight
             implied = Decimal(1) / offered_odds if offered_odds else None
@@ -112,3 +121,17 @@ def _confidence(agreement: Decimal | None, edge: Decimal | None, count: int) -> 
     if count >= 4 and agreement >= Decimal("0.75"):
         return "MEDIUM"
     return "LOW"
+
+
+def _market_weight(signal: EnsembleSignal, family: str | None) -> Decimal:
+    """Apply reviewed relevance by market family without mutating evidence."""
+    factor = Decimal(1)
+    if signal.name == "PI_RATINGS":
+        factor = Decimal("1.15") if family == "1X2" else Decimal("0.35")
+    elif signal.name == "CURRENT_MATCH_INTELLIGENCE":
+        factor = Decimal("1.10") if family != "1X2" else Decimal("0.85")
+    elif signal.name == "API_FOOTBALL_PREDICTION":
+        factor = Decimal("0.95")
+    elif signal.name == "CURRENT_MARKET_CONSENSUS":
+        factor = Decimal("1.00")
+    return signal.reliability * factor

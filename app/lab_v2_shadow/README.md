@@ -1,17 +1,21 @@
-# LAB_V2_SHADOW
+# LAB V2 broad-coverage path
 
-This package is the manual, bounded V2 Phase 1 comparison path. It contains no
-Telegram integration and cannot publish.
+This package is the isolated Lab-only V2 selection path. It consumes only
+current/upcoming fixture data, completed football results/goals, current
+API-Football predictions and current bookmaker quotes captured during the
+run. The default `rehearse` command never constructs Telegram transport. The
+separate `controlled-cycle --send` boundary can publish only final-reviewed
+READY evidence through the existing exactly-once Lab ledger and settlement.
+
+It never retrieves historical bookmaker odds, cannot address Official, cannot
+mutate Official state and never installs or starts a timer by itself.
 
 ```bash
-python -m app.lab_v2_shadow audit
-python -m app.lab_v2_shadow rehearse --max-calls 40 --horizon-days 3
+PYTHONPATH=. python -m app.lab_v2_shadow audit
+PYTHONPATH=. python -m app.lab_v2_shadow rehearse --max-calls 100 --daily-reserve 1500
+PYTHONPATH=. python -m app.lab_v2_shadow controlled-cycle --send --max-calls 100 --daily-reserve 1500
 ```
 
-`audit` is read-only. `rehearse` performs one current/upcoming provider run,
-persists only isolated shadow evidence beneath `var/lab_v2/`, and always
-reports zero Telegram sends. There is deliberately no timer unit or `--send`
-option.
-
-See `docs/LAB_V2_PHASE1_PI_COVERAGE_SHADOW.md` for policy, evidence and the
-first bounded rehearsal.
+The launch runbook and safety report are
+`docs/LAB_V2_BROAD_COVERAGE_LAUNCH.md`. The Phase 1 baseline remains in
+`docs/LAB_V2_PHASE1_PI_COVERAGE_SHADOW.md`.

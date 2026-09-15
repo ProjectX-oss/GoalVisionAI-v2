@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
+from math import factorial
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +45,10 @@ def normalize_api_prediction(payload: object, *, fixture_id: int) -> ApiPredicti
             return _unavailable(fixture_id, "PREDICTION_PERCENTAGES_INVALID")
         probabilities = {key: value / total for key, value in probabilities.items()}
     goals = prediction.get("goals") if isinstance(prediction.get("goals"), dict) else {}
+    expected_home = _decimal(goals.get("home"))
+    expected_away = _decimal(goals.get("away"))
+    if expected_home is not None and expected_away is not None:
+        probabilities.update(_goals_market_probabilities(expected_home, expected_away))
     comparison = _comparison(root.get("comparison"))
     winner_id = _integer(winner.get("id"))
     available = bool(probabilities or winner_id is not None or prediction.get("under_over"))
@@ -55,8 +60,8 @@ def normalize_api_prediction(payload: object, *, fixture_id: int) -> ApiPredicti
         winner_comment=_text(winner.get("comment")),
         probabilities=probabilities,
         under_over=_normalize_total(prediction.get("under_over")),
-        expected_goals_home=_decimal(goals.get("home")),
-        expected_goals_away=_decimal(goals.get("away")),
+        expected_goals_home=expected_home,
+        expected_goals_away=expected_away,
         comparison=comparison,
         unavailable_reason=None if available else "PREDICTION_NOT_COVERED",
     )
@@ -74,6 +79,32 @@ def _comparison(value: object) -> dict[str, dict[str, Decimal]]:
         if sides:
             result[str(category)] = sides
     return result
+
+
+def _goals_market_probabilities(home: Decimal, away: Decimal) -> dict[str, Decimal]:
+    """Derive transparent totals/BTTS support from provider goal estimates."""
+    if not (Decimal(0) <= home <= Decimal(10) and Decimal(0) <= away <= Decimal(10)):
+        return {}
+    joint: list[tuple[int, int, Decimal]] = []
+    mass = Decimal(0)
+    for home_goals in range(13):
+        for away_goals in range(13):
+            value = _poisson(home, home_goals) * _poisson(away, away_goals)
+            joint.append((home_goals, away_goals, value))
+            mass += value
+    if mass <= 0:
+        return {}
+    btts = sum((value for h, a, value in joint if h and a), Decimal(0)) / mass
+    result = {"BTTS_YES": btts, "BTTS_NO": Decimal(1) - btts}
+    for line in (1, 2, 3):
+        over = sum((value for h, a, value in joint if h + a > line), Decimal(0)) / mass
+        result[f"OVER_{line}_5"] = over
+        result[f"UNDER_{line}_5"] = Decimal(1) - over
+    return result
+
+
+def _poisson(rate: Decimal, goals: int) -> Decimal:
+    return (-rate).exp() * (rate ** goals) / Decimal(factorial(goals))
 
 
 def _unavailable(fixture_id: int, reason: str) -> ApiPredictionSignal:

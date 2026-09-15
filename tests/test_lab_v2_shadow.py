@@ -13,9 +13,16 @@ from app.lab_v2_shadow.capability import CapabilityTier, LeagueCapabilityCache
 from app.lab_v2_shadow.context_signals import PlayerUsage, availability_impact, opponent_adjusted_form
 from app.lab_v2_shadow.ensemble import EnsembleSignal, evaluate_ensemble
 from app.lab_v2_shadow.market_consensus import current_market_consensus
+from app.lab_v2_shadow.bookmakers import review_bookmaker_catalogue
+from app.lab_v2_shadow.publication import prepare_v2_publications, v2_single_message
+from app.lab_v2_shadow.quota import (
+    DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE,
+    adaptive_quota_budget, projected_daily_usage,
+)
 from app.lab_v2_shadow.pi_ratings import MatchResult, PiAvailability, PiRatingAdapter, parse_api_fixture_results
 from app.lab_v2_shadow.repository import ShadowEvidenceRepository
 from app.lab_v2_shadow.runner import LabV2ShadowRunner
+from app.lab_v2_shadow.runner import _stage
 from app.lab_v2_shadow.segmentation import segment_results
 
 
@@ -108,11 +115,35 @@ def test_api_football_prediction_normalization():
     assert value.available and value.predicted_winner_id == 10
     assert value.probabilities["HOME_WIN"] == Decimal("0.6")
     assert value.under_over == "OVER_2_5" and value.expected_goals_home == Decimal("2.1")
+    assert set(("OVER_2_5", "UNDER_2_5", "BTTS_YES", "BTTS_NO")) <= value.probabilities.keys()
+
+
+def test_reviewed_bookmaker_catalogue_tags_only_exact_name_matches():
+    entries = review_bookmaker_catalogue({"response": [
+        {"id": 1, "name": "OlyBet"}, {"id": 2, "name": "Not OlyBet Latvia"},
+        {"id": 3, "name": "Pinnacle"},
+    ]})
+    assert entries[0].relevance == "REVIEWED_LATVIAN_FACING_NAME_MATCH"
+    assert entries[1].relevance == "OTHER_CURRENT_PROVIDER_SOURCE"
+    assert entries[2].relevance == "REPUTABLE_CURRENT_CONSENSUS_SOURCE"
+
+
+def test_adaptive_quota_preserves_1500_reserve_and_hard_maximum_100():
+    quota = {"interpretation_status": "NORMALIZED", "daily_remaining": 1550, "minute_remaining": 300}
+    budget = adaptive_quota_budget(quota, requested_maximum=100, already_consumed=1)
+    assert budget.effective_cycle_maximum == 51
+    assert budget.additional_calls_available == 50
+    assert budget.daily_safety_reserve == DAILY_SAFETY_RESERVE
+    assert MAX_DISCOVERY_CALLS_PER_CYCLE == 100
+    projection = projected_daily_usage(maximum_per_cycle=100)
+    assert projection["maximum_discovery_calls"] == 4800
+    assert projection["projected_worst_case_total"] == 6300
+    assert projection["within_daily_limit"] is True
 
 
 def odds_payload(updated=NOW, fixture_id=7):
     books = []
-    for identity, name, home, draw, away in ((1, "A", "2.20", "3.50", "4.00"), (2, "B", "2.15", "3.60", "4.10")):
+    for identity, name, home, draw, away in ((3, "Betfair", "2.20", "3.50", "4.00"), (4, "Pinnacle", "2.15", "3.60", "4.10")):
         books.append({"id": identity, "name": name, "bets": [
             {"name": "Match Winner", "values": [{"value": "Home", "odd": home}, {"value": "Draw", "odd": draw}, {"value": "Away", "odd": away}]},
             {"name": "Goals Over/Under", "values": [{"value": "Over 2.5", "odd": "1.90"}, {"value": "Under 2.5", "odd": "1.95"}]},
@@ -180,7 +211,10 @@ class FakeClient:
     def restrict_requests(self, maximum_calls, *, daily_reserve=20): self.limit = maximum_calls
     def _hit(self, endpoint, query, payload):
         assert self.request_count < self.limit
-        self.request_count += 1; self.last = {"retrieved_at_utc": NOW.isoformat(), "endpoint": endpoint, "query": query}
+        self.request_count += 1; self.last = {
+            "retrieved_at_utc": (NOW + timedelta(seconds=5)).isoformat(),
+            "endpoint": endpoint, "query": query,
+        }
         return payload
     def response_metadata(self): return self.last
     async def account_status(self): return self._hit("/status", {}, {"response": {}})
@@ -201,7 +235,11 @@ class FakeClient:
                          "goals": {"home": item.home_goals, "away": item.away_goals}})
         return self._hit("/fixtures", {"league": league_id}, rows)
     async def _get(self, endpoint, *, params):
-        if endpoint == "/predictions":
+        if endpoint == "/odds" and "date" in params:
+            payload = {**odds_payload(fixture_id=7), "paging": {"current": 1, "total": 1}}
+        elif endpoint == "/odds/bookmakers":
+            payload = {"results": 2, "response": [{"id": 3, "name": "Betfair"}, {"id": 4, "name": "Pinnacle"}]}
+        elif endpoint == "/predictions":
             payload = {"response": [{"predictions": {"winner": {"id": 10, "name": "Home"},
                        "under_over": "Over 2.5", "goals": {"home": "2", "away": "1"},
                        "percent": {"home": "60%", "draw": "24%", "away": "16%"}}, "comparison": {}}]}
@@ -222,6 +260,94 @@ def test_api_call_budget_and_shadow_comparison(tmp_path, monkeypatch):
     assert report["v1_candidate_count"] == 0
     assert report["v2_candidate_count"] >= 0
     assert report["telegram_sends"] == 0 and report["historical_bookmaker_odds_used"] is False
+    assert report["api_call_ceiling"] == 40
+    assert report["odds_pagination"]["page_calls"] == 1
+    assert report["current_odds_fixtures"] == 1
+    assert report["fixtures_with_no_current_odds"] == 0
+    assert report["fixtures_rejected_for_stale_current_odds"] == 0
+    assert sum(call["endpoint"] == "/fixtures(results)" for call in runner.calls) == 1
+
+
+def test_market_consensus_can_restrict_to_reviewed_current_sources():
+    restricted = current_market_consensus(
+        odds_payload(), fixture_id=7, retrieved_at=NOW, now=NOW,
+        allowed_bookmaker_ids=frozenset({3}),
+    )["1X2"]
+    assert restricted.status == "INSUFFICIENT_COMPARABLE_BOOKMAKERS"
+    assert {quote.bookmaker_id for quote in restricted.quotes} == {3}
+
+
+def test_near_kickoff_stage_requires_review_but_tier_c_can_finish_without_lineups():
+    from types import SimpleNamespace
+    approved = evaluate_ensemble("HOME_WIN", Decimal("2.00"), [
+        EnsembleSignal("CURRENT_MARKET_CONSENSUS", "HOME_WIN", Decimal("0.56"), "HOME_WIN", Decimal("0.9"), "AVAILABLE", "x"),
+        EnsembleSignal("PI_RATINGS", "HOME_WIN", Decimal("0.59"), "HOME_WIN", Decimal("0.9"), "AVAILABLE", "x"),
+        EnsembleSignal("API_FOOTBALL_PREDICTION", "HOME_WIN", Decimal("0.60"), "HOME_WIN", Decimal("0.75"), "AVAILABLE", "x"),
+        EnsembleSignal("CURRENT_MATCH_INTELLIGENCE", "HOME_WIN", Decimal("0.58"), "HOME_WIN", Decimal("0.8"), "AVAILABLE", "x"),
+    ])
+    fixture = {"kickoff_utc": NOW + timedelta(minutes=45), "capability": SimpleNamespace(
+        lineups=False, injuries=False, tier=CapabilityTier.TIER_C_BASIC)}
+    assert _stage(approved, fixture, NOW, {}) == "FINAL_REVIEW_REQUIRED"
+    review = {"fixture_refreshed": True, "odds_refreshed": True,
+              "lineup_status": "NOT_SUPPORTED", "injuries_status": "NOT_SUPPORTED"}
+    assert _stage(approved, fixture, NOW, review) == "READY_TO_PUBLISH"
+    fixture["kickoff_utc"] = NOW + timedelta(hours=2)
+    assert _stage(approved, fixture, NOW, review) == "EARLY_CANDIDATE"
+
+
+def test_ready_publication_handoff_is_lab_only_and_exactly_once(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    from app.lab_combo.repository import ComboRepository
+    ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
+    candidate = {
+        "candidate_id": "candidate-1", "policy": "v2", "fixture_id": 7,
+        "market": "HOME_WIN", "decision": "APPROVED", "stage": "READY_TO_PUBLISH",
+        "home_team": "Home", "away_team": "Away", "home_team_id": 10, "away_team_id": 20,
+        "kickoff_utc": (NOW + timedelta(minutes=30)).isoformat(), "captured_odds": "1.80",
+        "offered_odds": "1.80", "quote_provenance_fingerprint": "q1", "edge": "0.06",
+        "ensemble_probability": "0.62", "confidence": "HIGH", "experimental_confidence": "HIGH",
+        "provider_type": "API_FOOTBALL_CURRENT_ODDS", "provider_origin_timestamp_utc": NOW.isoformat(),
+        "goalvision_retrieved_at_utc": NOW.isoformat(), "final_review_completed_at_utc": NOW.isoformat(),
+        "league": "Small League", "capability_tier": "TIER_C_BASIC", "odds_band": "1.70-1.99",
+        "pi_available": "AVAILABLE", "pi_agreement": "AGREEMENT",
+        "api_prediction_relation": "AGREEMENT", "market_consensus_relation": "AGREEMENT",
+        "lineup_confirmed": "NOT_SUPPORTED", "ensemble_decision_class": "APPROVED",
+    }
+    report = {"candidate_markets": [candidate]}
+    first = prepare_v2_publications(report, ledger, now=NOW)
+    second = prepare_v2_publications(report, ledger, now=NOW)
+    assert len(first["singles"]) == 1 and len(second["singles"]) == 1
+    assert len(ledger.all("single_prediction")) == 1
+    message = v2_single_message(first["singles"][0])
+    assert message.startswith("🧪 GoalVision AI Lab") and "raw" not in message.casefold()
+    assert "Official" not in message and first["combos"] == []
+    ledger.close()
+
+
+def test_v2_publication_does_not_duplicate_a_published_v1_key(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    from app.lab_combo.repository import ComboRepository
+    ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
+    assert prepare_v2_publications({"candidate_markets": [{
+        "decision": "APPROVED", "stage": "EARLY_CANDIDATE",
+    }]}, ledger, now=NOW)["singles"] == []
+    ledger.append("single_prediction", "v1-single", {
+        "prediction_id": "v1-single", "publication_key": "7:HOME_WIN",
+    })
+    ledger.append("receipt", "single_prediction:v1-single", {
+        "status": "SENT", "chat_id": "-1003510920417", "message_id": 1,
+    })
+    report = {"candidate_markets": [{
+        "candidate_id": "v2-candidate", "policy": "v2", "fixture_id": 7,
+        "market": "HOME_WIN", "decision": "APPROVED", "stage": "READY_TO_PUBLISH",
+        "home_team": "Home", "away_team": "Away", "home_team_id": 10, "away_team_id": 20,
+        "kickoff_utc": (NOW + timedelta(minutes=30)).isoformat(), "captured_odds": "1.80",
+        "quote_provenance_fingerprint": "q1", "edge": "0.06",
+    }]}
+    prepared = prepare_v2_publications(report, ledger, now=NOW)
+    assert prepared["singles"] == []
+    assert [item["prediction_id"] for item in ledger.all("single_prediction")] == ["v1-single"]
+    ledger.close()
 
 
 def test_result_segmentation_keeps_singles_and_combos_separate():
