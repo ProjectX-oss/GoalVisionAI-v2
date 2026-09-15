@@ -26,20 +26,26 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         -Decimal(str(item.get("edge") or "-99")),
         item["kickoff_utc"], item["fixture_id"], item["market"],
     ))
-    published_keys = {
+    consumed_keys = {
         value.get("publication_key") for value in ledger.all("single_prediction")
-        if ledger.get("receipt", "single_prediction:" + value["prediction_id"])
+        if (
+            ledger.get("claim", "single_prediction:" + value["prediction_id"])
+            or ledger.get("receipt", "single_prediction:" + value["prediction_id"])
+        )
     }
-    published_combo_keys = {
+    consumed_combo_keys = {
         tuple(sorted(leg["publication_key"] for leg in value["legs"]))
         for value in ledger.all("prediction")
-        if ledger.get("receipt", "combo_prediction:" + value["prediction_id"])
+        if (
+            ledger.get("claim", "combo_prediction:" + value["prediction_id"])
+            or ledger.get("receipt", "combo_prediction:" + value["prediction_id"])
+        )
     }
     singles = []
     used_fixtures: set[int] = set()
     for candidate in ready:
         key = f"{candidate['fixture_id']}:{candidate['market']}"
-        if key in published_keys or int(candidate["fixture_id"]) in used_fixtures:
+        if key in consumed_keys or int(candidate["fixture_id"]) in used_fixtures:
             continue
         value = _leg(candidate, clock)
         value["prediction_id"] = "lab-v2-single-" + fingerprint((candidate["policy"], key, candidate["quote_provenance_fingerprint"]))
@@ -67,7 +73,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         if combined < Decimal("2.00"):
             continue
         key = tuple(sorted(item["publication_key"] for item in group))
-        if key in published_combo_keys:
+        if key in consumed_combo_keys:
             continue
         combo = {
             "prediction_id": "lab-v2-combo-" + fingerprint(("LAB_V2", key)),

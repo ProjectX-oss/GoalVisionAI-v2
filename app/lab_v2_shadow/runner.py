@@ -77,7 +77,19 @@ class LabV2ShadowRunner:
         if restrict:
             restrict(maximum_calls, daily_reserve=daily_safety_reserve)
 
-    async def run(self, *, now: datetime, horizon_days: int = 3) -> dict[str, object]:
+    async def run(
+        self,
+        *,
+        now: datetime,
+        horizon_days: int = 3,
+        publication_requested: bool = False,
+    ) -> dict[str, object]:
+        """Produce and persist analysis evidence without crossing the send boundary.
+
+        ``publication_requested`` records the controlling CLI intent only.  This
+        runner never constructs Telegram transport or mutates the publication
+        ledger; the outer controlled-cycle command owns that handoff.
+        """
         clock = _utc(now)
         if not 1 <= horizon_days <= 7:
             raise ValueError("LAB_V2_HORIZON_OUTSIDE_1_TO_7_DAYS")
@@ -245,6 +257,10 @@ class LabV2ShadowRunner:
         report = {
             "schema_version": SCHEMA_VERSION,
             "mode": "LAB_V2_NO_SEND",
+            "analysis_mode": "LAB_V2_NO_SEND",
+            "publication_requested": bool(publication_requested),
+            "publication_enabled": bool(publication_requested),
+            "publication_attempt_count": 0,
             "evaluated_at_utc": clock.isoformat(),
             "fixtures_discovered": len(fixtures),
             "provider_fixture_rows": fixture_rows_seen,

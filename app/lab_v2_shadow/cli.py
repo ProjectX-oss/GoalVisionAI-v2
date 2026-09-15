@@ -32,19 +32,32 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
             analysis_path=args.analysis_database, maximum_calls=args.max_calls,
             daily_safety_reserve=args.daily_reserve,
         )
-        report = await runner.run(now=clock, horizon_days=args.horizon_days)
+        report = await runner.run(
+            now=clock,
+            horizon_days=args.horizon_days,
+            publication_requested=bool(args.send),
+        )
+        report["analysis_mode"] = str(report.get("analysis_mode") or report.get("mode") or "LAB_V2_NO_SEND")
+        report["mode"] = "LAB_V2_CONTROLLED_SEND" if args.send else "LAB_V2_NO_SEND"
+        report["publication_requested"] = bool(args.send)
+        report["publication_enabled"] = bool(args.send)
+        report["publication_attempt_count"] = 0
+        report["telegram_sends"] = 0
+        report["telegram_transport_constructed"] = False
         report["controlled_publication"] = {
             "authorized_destination": "-1003510920417",
             "singles_sent": 0, "combos_sent": 0,
-            "send_attempted": False, "reason": "NO_SEND_VALIDATION" if not args.send else None,
+            "send_attempted": False,
+            "publication_attempt_count": 0,
+            "telegram_transport_constructed": False,
+            "reason": "NO_SEND_VALIDATION" if not args.send else None,
         }
         if not args.send:
-            return report
+            return _persist_cycle_evidence(repository, report, clock)
         ready = int(report.get("ready_candidate_count") or 0)
         if ready == 0:
-            report["mode"] = "LAB_V2_CONTROLLED_SEND"
             report["controlled_publication"]["reason"] = "NO_READY_SELECTIONS"
-            return report
+            return _persist_cycle_evidence(repository, report, clock)
         ledger = ComboRepository(args.ledger)
         try:
             prepared = prepare_v2_publications(report, ledger, now=datetime.now(timezone.utc))
@@ -54,41 +67,82 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
             ]
             if not pending:
                 report["controlled_publication"]["reason"] = "EXACTLY_ONCE_NO_NEW_PUBLICATIONS"
-                return report
+                return _persist_cycle_evidence(repository, report, clock)
             config = load_lab_telegram_config()
             blocker = validate_lab_telegram_config(config)
             if blocker is not None:
                 report["controlled_publication"]["reason"] = "LAB_CONFIGURATION_REJECTED"
-                return report
+                return _persist_cycle_evidence(repository, report, clock)
             from app.lab_combo.secure_logging import install_lab_secret_redaction
             install_lab_secret_redaction(config.token)
             transport = LabTelegramTransport(config.token)
+            report["telegram_transport_constructed"] = True
+            report["controlled_publication"]["telegram_transport_constructed"] = True
             service = LabComboService(ledger, None, clock=lambda: datetime.now(timezone.utc))
             deliveries = []
             async with transport.bot:
                 if "@" + (transport.bot.username or "") != LAB_BOT_USERNAME:
                     report["controlled_publication"]["reason"] = "LAB_BOT_IDENTITY_MISMATCH"
-                    return report
+                    return _persist_cycle_evidence(repository, report, clock)
                 for kind, identity in pending:
                     outcome = await service.publish_experimental(kind, identity, config, transport)
                     deliveries.append({"kind": kind, "prediction_id": identity, **outcome})
-            report["mode"] = "LAB_V2_CONTROLLED_SEND"
+            attempts = len(deliveries)
+            singles_sent = sum(
+                item["kind"] == "single_prediction" and bool(item.get("sent"))
+                for item in deliveries
+            )
+            combos_sent = sum(
+                item["kind"] == "combo_prediction" and bool(item.get("sent"))
+                for item in deliveries
+            )
+            telegram_sends = singles_sent + combos_sent
+            report["publication_attempt_count"] = attempts
+            report["telegram_sends"] = telegram_sends
             report["controlled_publication"] = {
                 "authorized_destination": "-1003510920417",
-                "send_attempted": True,
-                "singles_sent": sum(item["kind"] == "single_prediction" and item.get("sent") for item in deliveries),
-                "combos_sent": sum(item["kind"] == "combo_prediction" and item.get("sent") for item in deliveries),
+                "send_attempted": attempts > 0,
+                "publication_attempt_count": attempts,
+                "telegram_transport_constructed": True,
+                "singles_sent": singles_sent,
+                "combos_sent": combos_sent,
                 "deliveries": deliveries,
                 "reason": None,
             }
-            identity = "lab-v2-publication-cycle-" + fingerprint((clock, deliveries))
-            repository.append("publication_cycle", identity, report["controlled_publication"], created_at=datetime.now(timezone.utc))
-            return report
+            return _persist_cycle_evidence(repository, report, clock)
         finally:
             ledger.close()
     finally:
         await client.close()
         repository.close()
+
+
+def _persist_cycle_evidence(
+    repository: ShadowEvidenceRepository,
+    report: dict[str, object],
+    started_at: datetime,
+) -> dict[str, object]:
+    """Append the outer publication-boundary outcome for every controlled cycle."""
+    evidence = {
+        "schema_version": "goalvision-lab-v2-publication-cycle-v1",
+        "analysis_mode": report["analysis_mode"],
+        "mode": report["mode"],
+        "publication_requested": report["publication_requested"],
+        "publication_enabled": report["publication_enabled"],
+        "telegram_transport_constructed": report["telegram_transport_constructed"],
+        "ready_candidate_count": int(report.get("ready_candidate_count") or 0),
+        "publication_attempt_count": report["publication_attempt_count"],
+        "telegram_sends": report["telegram_sends"],
+        "controlled_publication": report["controlled_publication"],
+    }
+    identity = "lab-v2-publication-cycle-" + fingerprint((started_at, evidence))
+    repository.append(
+        "publication_cycle",
+        identity,
+        evidence,
+        created_at=datetime.now(timezone.utc),
+    )
+    return report
 
 
 def main(argv: list[str] | None = None) -> int:

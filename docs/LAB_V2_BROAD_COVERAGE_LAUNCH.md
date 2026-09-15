@@ -8,6 +8,17 @@ startup and timers are untouched. `rehearse` is always no-send. An explicit
 `controlled-cycle --send` may hand off only `READY_TO_PUBLISH` candidates to
 the existing append-only Lab ledger, exactly-once claim and settlement path.
 
+V2 persists two explicit boundaries. The immutable rehearsal document uses
+`analysis_mode = LAB_V2_NO_SEND` because analysis and candidate generation
+never construct Telegram transport; `publication_requested` and
+`publication_enabled` retain the controlling CLI intent. The immutable
+`publication_cycle` document then records whether transport was constructed,
+the READY count, publication-attempt count and successful send count. Thus a
+send-enabled cycle with no READY candidates correctly records requested and
+enabled publication alongside zero transport, attempts and sends. Any durable
+claim, including an indeterminate delivery, consumes that fixture/market key
+for V2 replay safety.
+
 Historical bookmaker odds are prohibited. V2 has no historical-odds adapter,
 query, import, archive, training or backfill path. Pi and form accept only
 completed football fixture identities, home/away teams and goals. Current

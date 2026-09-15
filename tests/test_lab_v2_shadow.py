@@ -4,10 +4,13 @@ import asyncio
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import inspect
+import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+from app.lab_telegram.models import LabTelegramConfig
 from app.lab_v2_shadow.api_prediction import normalize_api_prediction
 from app.lab_v2_shadow.capability import CapabilityTier, LeagueCapabilityCache
 from app.lab_v2_shadow.context_signals import PlayerUsage, availability_impact, opponent_adjusted_form
@@ -24,6 +27,7 @@ from app.lab_v2_shadow.repository import ShadowEvidenceRepository
 from app.lab_v2_shadow.runner import LabV2ShadowRunner
 from app.lab_v2_shadow.runner import _stage
 from app.lab_v2_shadow.segmentation import segment_results
+from app.real_match_lab_analysis.models import LAB_BOT_USERNAME, LAB_CHAT_ID
 
 
 NOW = datetime(2026, 9, 15, 12, tzinfo=timezone.utc)
@@ -263,7 +267,8 @@ def test_api_call_budget_and_shadow_comparison(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     client = FakeClient(); repository = ShadowEvidenceRepository(Path("var/shadow.db"))
     runner = LabV2ShadowRunner(client, repository, capability_cache_path=Path("var/capabilities.json"), maximum_calls=40)
-    report = asyncio.run(runner.run(now=NOW, horizon_days=1))
+    report = asyncio.run(runner.run(now=NOW, horizon_days=1, publication_requested=True))
+    persisted = repository.all("rehearsal")
     repository.close()
     assert report["api_calls_consumed"] <= 40
     assert report["fixtures_discovered"] == 1 and report["number_of_leagues"] == 1
@@ -277,6 +282,10 @@ def test_api_call_budget_and_shadow_comparison(tmp_path, monkeypatch):
     assert report["fixtures_with_no_current_odds"] == 0
     assert report["fixtures_rejected_for_stale_current_odds"] == 0
     assert sum(call["endpoint"] == "/fixtures(results)" for call in runner.calls) == 1
+    assert report["mode"] == report["analysis_mode"] == "LAB_V2_NO_SEND"
+    assert report["publication_requested"] is report["publication_enabled"] is True
+    assert report["telegram_transport_constructed"] is False
+    assert persisted == [report]
 
 
 def test_market_consensus_can_restrict_to_reviewed_current_sources():
@@ -333,6 +342,290 @@ def test_ready_publication_handoff_is_lab_only_and_exactly_once(tmp_path, monkey
     assert message.startswith("🧪 GoalVision AI Lab") and "raw" not in message.casefold()
     assert "Official" not in message and first["combos"] == []
     ledger.close()
+
+
+def _controlled_ready_candidate(clock: datetime) -> dict[str, object]:
+    signals = [
+        EnsembleSignal(name, "HOME_WIN", probability, "HOME_WIN", reliability, "AVAILABLE", name)
+        for name, probability, reliability in (
+            ("CURRENT_MARKET_CONSENSUS", Decimal("0.56"), Decimal("0.90")),
+            ("PI_RATINGS", Decimal("0.59"), Decimal("0.90")),
+            ("API_FOOTBALL_PREDICTION", Decimal("0.60"), Decimal("0.75")),
+            ("CURRENT_MATCH_INTELLIGENCE", Decimal("0.58"), Decimal("0.80")),
+        )
+    ]
+    decision = evaluate_ensemble("HOME_WIN", Decimal("1.90"), signals)
+    fixture = {
+        "kickoff_utc": clock + timedelta(minutes=30),
+        "capability": SimpleNamespace(
+            lineups=False,
+            injuries=False,
+            tier=CapabilityTier.TIER_C_BASIC,
+        ),
+    }
+    review = {
+        "fixture_refreshed": True,
+        "odds_refreshed": True,
+        "lineup_status": "NOT_SUPPORTED",
+        "injuries_status": "NOT_SUPPORTED",
+    }
+    stage = _stage(decision, fixture, clock, review)
+    assert decision.decision == "APPROVED"
+    assert decision.confidence == "MEDIUM"
+    assert stage == "READY_TO_PUBLISH"
+    return {
+        "candidate_id": "deterministic-ready-v2-candidate",
+        "policy": decision.policy,
+        "fixture_id": 7001,
+        "market": "HOME_WIN",
+        "decision": decision.decision,
+        "stage": stage,
+        "home_team": "Fixture Home",
+        "away_team": "Fixture Away",
+        "home_team_id": 701,
+        "away_team_id": 702,
+        "kickoff_utc": fixture["kickoff_utc"].isoformat(),
+        "captured_odds": "1.90",
+        "offered_odds": "1.90",
+        "quote_provenance_fingerprint": "deterministic-current-quote",
+        "edge": str(decision.edge),
+        "ensemble_probability": str(decision.ensemble_probability),
+        "confidence": decision.confidence,
+        "experimental_confidence": decision.confidence,
+        "provider_type": "API_FOOTBALL_CURRENT_ODDS",
+        "provider_origin_timestamp_utc": clock.isoformat(),
+        "goalvision_retrieved_at_utc": clock.isoformat(),
+        "final_review_completed_at_utc": clock.isoformat(),
+        "league": "Deterministic League",
+        "capability_tier": "TIER_C_BASIC",
+        "odds_band": "1.70-1.99",
+        "pi_available": "AVAILABLE",
+        "pi_agreement": "AGREEMENT",
+        "api_prediction_relation": "AGREEMENT",
+        "market_consensus_relation": "AGREEMENT",
+        "lineup_confirmed": "NOT_SUPPORTED",
+        "ensemble_decision_class": decision.decision,
+    }
+
+
+class _NoNetworkClient:
+    def __init__(self, *, request_limit: int) -> None:
+        self.request_limit = request_limit
+
+    async def close(self) -> None:
+        return None
+
+
+class _DeterministicReadyRunner:
+    def __init__(self, client, repository, **kwargs) -> None:
+        self.repository = repository
+
+    async def run(
+        self,
+        *,
+        now: datetime,
+        horizon_days: int,
+        publication_requested: bool,
+    ) -> dict[str, object]:
+        candidate = _controlled_ready_candidate(now)
+        return {
+            "schema_version": "deterministic-ready-v2-fixture",
+            "mode": "LAB_V2_NO_SEND",
+            "analysis_mode": "LAB_V2_NO_SEND",
+            "publication_requested": publication_requested,
+            "publication_enabled": publication_requested,
+            "publication_attempt_count": 0,
+            "ready_candidate_count": 1,
+            "candidate_markets": [candidate],
+            "telegram_sends": 0,
+            "telegram_transport_constructed": False,
+            "historical_bookmaker_odds_used": False,
+            "official_mutations": 0,
+        }
+
+
+class _FakeBot:
+    username = LAB_BOT_USERNAME.removeprefix("@")
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc, traceback) -> None:
+        return None
+
+
+class _RecordingTransport:
+    constructed = 0
+    calls = 0
+    fail = False
+
+    def __init__(self, token: str) -> None:
+        type(self).constructed += 1
+        self.bot = _FakeBot()
+
+    async def send_message_receipt(self, **kwargs):
+        type(self).calls += 1
+        assert kwargs["chat_id"] == LAB_CHAT_ID
+        if type(self).fail:
+            raise TimeoutError
+        return SimpleNamespace(chat_id=LAB_CHAT_ID, message_id=9001)
+
+
+def _install_controlled_cycle_fakes(monkeypatch, *, fail: bool = False) -> None:
+    import app.lab_v2_shadow.cli as cli
+
+    _RecordingTransport.constructed = 0
+    _RecordingTransport.calls = 0
+    _RecordingTransport.fail = fail
+    monkeypatch.setattr(cli, "FootballClient", _NoNetworkClient)
+    monkeypatch.setattr(cli, "LabV2ShadowRunner", _DeterministicReadyRunner)
+    monkeypatch.setattr(cli, "LabTelegramTransport", _RecordingTransport)
+    monkeypatch.setattr(
+        cli,
+        "load_lab_telegram_config",
+        lambda: LabTelegramConfig(
+            token="fictional-test-token",
+            chat_id=LAB_CHAT_ID,
+            automatic_enabled=True,
+        ),
+    )
+    monkeypatch.setattr(
+        "app.lab_combo.secure_logging.install_lab_secret_redaction",
+        lambda token: None,
+    )
+
+
+def _controlled_cycle_arguments(*, send: bool) -> list[str]:
+    values = [
+        "controlled-cycle",
+        "--shadow-database", "var/lab_v2/shadow.db",
+        "--analysis-database", "var/lab_combo/analysis.db",
+        "--ledger", "var/lab_combo/ledger.db",
+        "--capability-cache", "var/lab_v2/capabilities.json",
+        "--horizon-days", "1",
+        "--max-calls", "40",
+        "--daily-reserve", "1500",
+    ]
+    return [*values, "--send"] if send else values
+
+
+def test_controlled_cycle_send_ready_candidate_is_exactly_once_end_to_end(
+    tmp_path, monkeypatch, capsys,
+):
+    import app.lab_v2_shadow.cli as cli
+    from app.lab_combo.repository import ComboRepository
+
+    monkeypatch.chdir(tmp_path)
+    _install_controlled_cycle_fakes(monkeypatch)
+
+    assert cli.main(_controlled_cycle_arguments(send=True)) == 0
+    first = json.loads(capsys.readouterr().out)
+    assert first["analysis_mode"] == "LAB_V2_NO_SEND"
+    assert first["mode"] == "LAB_V2_CONTROLLED_SEND"
+    assert first["publication_requested"] is first["publication_enabled"] is True
+    assert first["telegram_transport_constructed"] is True
+    assert first["publication_attempt_count"] == first["telegram_sends"] == 1
+
+    assert cli.main(_controlled_cycle_arguments(send=True)) == 0
+    replay = json.loads(capsys.readouterr().out)
+    assert replay["controlled_publication"]["reason"] == "EXACTLY_ONCE_NO_NEW_PUBLICATIONS"
+    assert replay["telegram_transport_constructed"] is False
+    assert replay["publication_attempt_count"] == replay["telegram_sends"] == 0
+    assert _RecordingTransport.constructed == _RecordingTransport.calls == 1
+
+    ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
+    try:
+        assert len(ledger.all("single_prediction")) == 1
+        assert len(ledger.all("claim")) == 1
+        assert len(ledger.all("receipt")) == 1
+        assert ledger.all("delivery_unknown") == []
+    finally:
+        ledger.close()
+    shadow = ShadowEvidenceRepository(Path("var/lab_v2/shadow.db"))
+    try:
+        cycles = shadow.all("publication_cycle")
+        assert len(cycles) == 2
+        assert cycles[0]["analysis_mode"] == "LAB_V2_NO_SEND"
+        assert cycles[0]["telegram_sends"] == 1
+        assert cycles[1]["telegram_sends"] == 0
+    finally:
+        shadow.close()
+
+
+def test_controlled_cycle_without_send_never_constructs_or_mutates_delivery(
+    tmp_path, monkeypatch, capsys,
+):
+    import app.lab_v2_shadow.cli as cli
+
+    monkeypatch.chdir(tmp_path)
+    _install_controlled_cycle_fakes(monkeypatch)
+    monkeypatch.setattr(
+        cli,
+        "load_lab_telegram_config",
+        lambda: pytest.fail("no-send must not load Telegram configuration"),
+    )
+
+    assert cli.main(_controlled_cycle_arguments(send=False)) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["ready_candidate_count"] == 1
+    assert report["analysis_mode"] == report["mode"] == "LAB_V2_NO_SEND"
+    assert report["publication_requested"] is report["publication_enabled"] is False
+    assert report["telegram_transport_constructed"] is False
+    assert report["publication_attempt_count"] == report["telegram_sends"] == 0
+    assert _RecordingTransport.constructed == _RecordingTransport.calls == 0
+    assert not Path("var/lab_combo/ledger.db").exists()
+
+
+def test_indeterminate_v2_send_blocks_replay_even_after_quote_refresh(
+    tmp_path, monkeypatch, capsys,
+):
+    import app.lab_v2_shadow.cli as cli
+    from app.lab_combo.repository import ComboRepository
+
+    monkeypatch.chdir(tmp_path)
+    _install_controlled_cycle_fakes(monkeypatch, fail=True)
+
+    assert cli.main(_controlled_cycle_arguments(send=True)) == 0
+    failed = json.loads(capsys.readouterr().out)
+    assert failed["publication_attempt_count"] == 1
+    assert failed["telegram_sends"] == 0
+    assert failed["controlled_publication"]["deliveries"][0]["status"] == (
+        "DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED"
+    )
+
+    original = _controlled_ready_candidate
+
+    def refreshed(clock: datetime) -> dict[str, object]:
+        candidate = original(clock)
+        candidate["quote_provenance_fingerprint"] = "refreshed-current-quote"
+        return candidate
+
+    monkeypatch.setattr("tests.test_lab_v2_shadow._controlled_ready_candidate", refreshed)
+    assert cli.main(_controlled_cycle_arguments(send=True)) == 0
+    replay = json.loads(capsys.readouterr().out)
+    assert replay["controlled_publication"]["reason"] == "EXACTLY_ONCE_NO_NEW_PUBLICATIONS"
+    assert replay["publication_attempt_count"] == replay["telegram_sends"] == 0
+    assert _RecordingTransport.constructed == _RecordingTransport.calls == 1
+
+    ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
+    try:
+        assert len(ledger.all("single_prediction")) == 1
+        assert len(ledger.all("claim")) == 1
+        assert len(ledger.all("delivery_unknown")) == 1
+        assert ledger.all("receipt") == []
+    finally:
+        ledger.close()
+
+
+def test_shipped_v2_systemd_service_explicitly_arms_controlled_send():
+    service = (
+        Path(__file__).parents[1]
+        / "app/lab_v2_shadow/systemd/goalvision-lab-v2-discover.service"
+    ).read_text(encoding="utf-8")
+    assert (
+        "ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -m app.lab_v2_shadow "
+        "controlled-cycle --send --max-calls 100 --daily-reserve 1500"
+    ) in service
 
 
 def test_v2_publication_does_not_duplicate_a_published_v1_key(tmp_path, monkeypatch):
