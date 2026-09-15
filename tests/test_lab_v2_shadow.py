@@ -118,6 +118,17 @@ def test_api_football_prediction_normalization():
     assert set(("OVER_2_5", "UNDER_2_5", "BTTS_YES", "BTTS_NO")) <= value.probabilities.keys()
 
 
+def test_api_prediction_normalizes_real_signed_total_without_negative_goal_rate():
+    value = normalize_api_prediction({"response": [{"predictions": {
+        "winner": {"id": 70, "name": "Home"}, "under_over": "+1.5",
+        "goals": {"home": "-4.5", "away": "-2.5"},
+        "percent": {"home": "45%", "draw": "45%", "away": "10%"},
+    }, "comparison": {}}]}, fixture_id=8)
+    assert value.available and value.under_over == "OVER_1_5"
+    assert value.expected_goals_home is None and value.expected_goals_away is None
+    assert set(value.probabilities) == {"HOME_WIN", "DRAW", "AWAY_WIN"}
+
+
 def test_reviewed_bookmaker_catalogue_tags_only_exact_name_matches():
     entries = review_bookmaker_catalogue({"response": [
         {"id": 1, "name": "OlyBet"}, {"id": 2, "name": "Not OlyBet Latvia"},

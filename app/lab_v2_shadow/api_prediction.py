@@ -45,8 +45,8 @@ def normalize_api_prediction(payload: object, *, fixture_id: int) -> ApiPredicti
             return _unavailable(fixture_id, "PREDICTION_PERCENTAGES_INVALID")
         probabilities = {key: value / total for key, value in probabilities.items()}
     goals = prediction.get("goals") if isinstance(prediction.get("goals"), dict) else {}
-    expected_home = _decimal(goals.get("home"))
-    expected_away = _decimal(goals.get("away"))
+    expected_home = _expected_goals(goals.get("home"))
+    expected_away = _expected_goals(goals.get("away"))
     if expected_home is not None and expected_away is not None:
         probabilities.update(_goals_market_probabilities(expected_home, expected_away))
     comparison = _comparison(root.get("comparison"))
@@ -115,11 +115,21 @@ def _normalize_total(value: object) -> str | None:
     text = _text(value)
     if text is None:
         return None
+    signed = text.replace(" ", "")
+    if signed[:1] in {"+", "-"} and signed[1:] in {"1.5", "2.5", "3.5"}:
+        direction = "OVER" if signed[0] == "+" else "UNDER"
+        return f"{direction}_{signed[1:].replace('.', '_')}"
     normalized = text.upper().replace(" ", "_").replace(".", "_")
     return normalized if normalized in {
         "OVER_1_5", "UNDER_1_5", "OVER_2_5", "UNDER_2_5",
         "OVER_3_5", "UNDER_3_5",
     } else None
+
+
+def _expected_goals(value: object) -> Decimal | None:
+    """Accept only genuine non-negative scoring-rate estimates."""
+    number = _decimal(value)
+    return number if number is not None and Decimal(0) <= number <= Decimal(10) else None
 
 
 def _probability(value: object) -> Decimal | None:
