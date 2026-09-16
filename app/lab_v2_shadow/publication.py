@@ -24,9 +24,11 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             continue
         try:
             odds = Decimal(str(item["captured_odds"]))
+            probability = Decimal(str(item["ensemble_probability"]))
         except (KeyError, ValueError, TypeError):
             continue
-        if not odds.is_finite() or odds <= Decimal(1):
+        if (not odds.is_finite() or odds <= Decimal(1)
+                or not probability.is_finite() or not Decimal(0) <= probability <= Decimal(1)):
             continue
         ready.append(dict(item))
     ready.sort(key=lambda item: (
@@ -55,7 +57,10 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         if key in consumed_keys or int(candidate["fixture_id"]) in used_fixtures:
             continue
         value = _leg(candidate, clock)
-        value["prediction_id"] = "lab-v2-single-" + fingerprint((candidate["policy"], key, candidate["quote_provenance_fingerprint"]))
+        value["prediction_id"] = "lab-v2-single-" + fingerprint((
+            candidate["policy"], key, candidate["candidate_id"],
+            candidate["quote_provenance_fingerprint"],
+        ))
         value["accounting"] = "LAB_ONLY_HYPOTHETICAL_ONE_UNIT"
         if ledger.append("single_prediction", value["prediction_id"], value):
             ledger.append("single_preview", value["prediction_id"], {"message": v2_single_message(value)})
@@ -66,24 +71,44 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             break
 
     combos = []
-    remaining = [_leg(candidate, clock) for candidate in ready]
+    remaining = sorted(
+        (_leg(candidate, clock) for candidate in ready),
+        key=lambda item: (
+            -Decimal(str(item.get("edge") or "-99")), item["kickoff_utc"],
+            item["fixture_id"], item["market"], item["candidate_id"],
+        ),
+    )
     consumed_fixtures: set[int] = set()
     consumed_teams: set[str] = set()
-    for group in combinations(remaining, 3):
-        fixtures = {int(item["fixture_id"]) for item in group}
-        teams = {str(item[key]) for item in group for key in ("home_team_id", "away_team_id")}
-        if len(fixtures) != 3 or len(teams) != 6 or fixtures & consumed_fixtures or teams & consumed_teams:
-            continue
+    while len(combos) < MAX_COMBOS_PER_CYCLE:
+        choices = []
+        for group in combinations(remaining, 3):
+            fixtures = {int(item["fixture_id"]) for item in group}
+            teams = {str(item[key]) for item in group for key in ("home_team_id", "away_team_id")}
+            if len(fixtures) != 3 or len(teams) != 6 or fixtures & consumed_fixtures or teams & consumed_teams:
+                continue
+            publication_keys = tuple(sorted(item["publication_key"] for item in group))
+            if publication_keys in consumed_combo_keys:
+                continue
+            rank = (
+                -min(Decimal(str(item["edge"])) for item in group),
+                -sum((Decimal(str(item["edge"])) for item in group), Decimal(0)),
+                tuple(item["publication_key"] for item in group),
+            )
+            choices.append((rank, group, fixtures, teams, publication_keys))
+        if not choices:
+            break
+        _, group, fixtures, teams, key = min(choices, key=lambda item: item[0])
         combined = Decimal(1)
         for leg in group:
             combined *= Decimal(leg["odds"])
-        key = tuple(sorted(item["publication_key"] for item in group))
-        if key in consumed_combo_keys:
-            continue
         combo = {
-            "prediction_id": "lab-v2-combo-" + fingerprint(("LAB_V2", key)),
+            "prediction_id": "lab-v2-combo-" + fingerprint((
+                "LAB_V2", key, tuple(item["candidate_id"] for item in group),
+                tuple(item["quote_provenance_fingerprint"] for item in group),
+            )),
             "policy": "LAB_V2_BROAD_COVERAGE_COMBO_V2",
-            "created_at_utc": clock.isoformat(),
+            "created_at_utc": max(item["prepared_at_utc"] for item in group),
             "legs": [dict(item) for item in group],
             "combined_odds": str(combined),
             "accounting": "LAB_ONLY_HYPOTHETICAL_ONE_UNIT",
@@ -95,8 +120,9 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         combos.append(combo)
         consumed_fixtures.update(fixtures)
         consumed_teams.update(teams)
-        if len(combos) == MAX_COMBOS_PER_CYCLE:
-            break
+        remaining = [item for item in remaining
+                     if int(item["fixture_id"]) not in consumed_fixtures
+                     and not consumed_teams.intersection({str(item["home_team_id"]), str(item["away_team_id"])})]
     return {"singles": singles, "combos": combos, "ready_input_count": len(ready)}
 
 
@@ -131,14 +157,20 @@ def v2_combo_message(value: dict, number: int) -> str:
 
 def _leg(candidate: dict, now: datetime) -> dict:
     key = f"{candidate['fixture_id']}:{candidate['market']}"
+    probability = Decimal(str(candidate["ensemble_probability"]))
+    odds = Decimal(str(candidate["captured_odds"]))
     return {
         **candidate,
         "observation_id": candidate["candidate_id"],
         "publication_key": key,
         "odds": candidate["captured_odds"],
         "probability": candidate.get("ensemble_probability"),
-        "expected_value": candidate.get("edge"),
-        "prepared_at_utc": now.isoformat(),
+        "expected_value": str(probability * odds - Decimal(1)),
+        "prepared_at_utc": (
+            candidate.get("final_review_completed_at_utc")
+            or candidate.get("goalvision_retrieved_at_utc")
+            or now.isoformat()
+        ),
     }
 
 

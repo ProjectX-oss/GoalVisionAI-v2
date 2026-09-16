@@ -46,7 +46,7 @@ when their league coverage flag is true and only for a five-fixture shortlist;
 lineups are never requested outside the near-kickoff review.
 
 Final-review readiness follows the explicit
-`LAB_V2_FINAL_REVIEW_READINESS_V2` policy. `HOME_WIN`, `DRAW`, and `AWAY_WIN`
+`LAB_V2_FINAL_REVIEW_READINESS_V3` policy. `HOME_WIN`, `DRAW`, and `AWAY_WIN`
 are lineup-sensitive: when league metadata advertises lineup support, both
 teams must have confirmed starting elevens; refreshed injuries are also
 required when that endpoint is supported. A capability value of
@@ -59,9 +59,11 @@ convention and avoids recreating V1's every-market lineup dependency.
 All markets require an exact upcoming-fixture refresh, exact current-odds
 refresh and a final-review timestamp no more than five minutes from the cycle
 clock. The five-fixture shortlist orders candidates by final-review need and
-kickoff before edge. Up to four calls per near-kickoff fixture are reserved
-before optional prediction enrichment, so optional calls cannot normally
-consume the entire final-review budget. A later 30-minute cycle rebuilds the
+kickoff before edge. Four logical endpoints per fully supported near-kickoff
+fixture are reserved before optional prediction enrichment, including all
+three bounded transport attempts per endpoint. Provider errors do not satisfy
+lineup or injury freshness. Exact fixture refresh replaces a changed kickoff
+before the readiness window is evaluated. A later 30-minute cycle rebuilds the
 candidate from current data and may promote it after a prior
 `NOT_YET_PUBLISHED`; candidates within ten minutes of kickoff are rejected.
 
@@ -87,9 +89,13 @@ impact. API-Football prediction percentages, goal estimates and comparisons
 are normalized as one supporting expert; goal estimates deterministically
 produce totals/BTTS support.
 
-The ensemble applies market-specific weights: Pi has increased relevance for
+The V4 ensemble applies market-specific weights: Pi has increased relevance for
 1X2; current goals/form context has increased relevance for totals/BTTS.
-Current multi-book consensus and three usable signals are mandatory. Material
+Votes are selected only inside the candidate market family. Pi, goals/form CMI
+and the persisted CMI-derived model share one result-history/model-context
+independence group, so correlated adapters cannot manufacture a quorum or
+receive reliability weight repeatedly. Current multi-book consensus and three
+independent probability-bearing evidence groups are mandatory. Material
 signal disagreement, low agreement, insufficient edge, extreme model-market
 divergence or a severe current availability contradiction rejects the market.
 Missing evidence is never fabricated.
@@ -105,10 +111,25 @@ Official minimum-odds rules remain separate and unchanged.
 The hard per-cycle maximum is 100 and the daily safety reserve is 1,500.
 `/status` is called first, then the effective budget is reduced from exact
 daily/minute quota headers. Missing or ambiguous quota stops network expansion
-after status. Current odds are date-batched and paginated; capability,
-bookmaker, league history and prediction responses use endpoint-appropriate
+after status. Current odds are date-batched and paginated. Page one is sampled
+for every UTC date, then unfinished pages are completed earliest-date-first so
+future dates cannot consume the budget while near-day pages remain. Incomplete
+page coverage is distinct from confirmed no-odds. Capability, bookmaker,
+league history and prediction responses use endpoint-appropriate
 caches. Identical league history is fetched once per cycle and reused across
 fixtures and markets.
+
+The 15-minute full `/odds(date)` page cache is not persisted because the
+30-minute cycle cannot reuse it. Normalized per-fixture quote, consensus and
+candidate provenance remains immutable. Rehearsal summaries reference the
+individual append-only candidate documents instead of duplicating the payload.
+The read-only operator view reports coverage, stages, blockers, API allocation,
+publication counts and HOME/DRAW/AWAY diagnostics:
+
+```bash
+PYTHONPATH=. .venv/bin/python -m app.lab_v2_shadow summary
+PYTHONPATH=. .venv/bin/python -m app.lab_v2_shadow summary --fixture-id 123456
+```
 
 At a 30-minute cadence, the absolute discovery ceiling is `100 × 48 = 4,800`
 calls/day. Adding the full 1,500-call operational reserve gives a conservative

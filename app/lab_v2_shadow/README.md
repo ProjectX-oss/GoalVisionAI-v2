@@ -25,7 +25,24 @@ BTTS do not become permanently blocked merely because optional lineups or
 injuries are unpublished. Every READY candidate still requires an exact fresh
 fixture refresh, fresh current odds, and a current final-review timestamp.
 Near-kickoff review calls are reserved before optional prediction enrichment,
-and imminent kickoffs are reviewed first.
+and imminent kickoffs are reviewed first. The reserve includes all three
+bounded provider attempts for each exact refresh endpoint. Provider errors do
+not satisfy lineup/injury freshness, and a refreshed kickoff replaces the
+discovery kickoff before readiness is decided.
+
+V4 counts evidence families, not adapter rows: Pi, goals/form CMI and the
+persisted CMI-derived model share one result-history/model-context independence
+group. Every vote is selected inside the candidate's own market family, so a
+totals preference cannot be treated as a 1X2 vote. Probability edge and
+decimal expected value are retained as separate quantities.
+
+Each discovered fixture receives an explicit coverage/lifecycle status,
+including no odds, stale odds, unsupported markets, unnormalizable odds,
+incomplete page coverage, missing model context, evaluated rejection, EARLY,
+FINAL_REVIEW and READY. Full date-odds pages are not retained as a 15-minute
+cache because the operational cycle is 30 minutes; normalized current quote
+and candidate evidence remains append-only. Cycle summaries reference the
+individual candidate documents instead of duplicating their full payloads.
 
 V2 has no hard minimum decimal-odds floor for singles, individual combo legs or
 combined combo odds. Current valid prices and every existing ensemble, value,
@@ -35,6 +52,8 @@ Official odds policy is separate and unchanged.
 
 ```bash
 PYTHONPATH=. python -m app.lab_v2_shadow audit
+PYTHONPATH=. python -m app.lab_v2_shadow summary
+PYTHONPATH=. python -m app.lab_v2_shadow summary --fixture-id 123456
 PYTHONPATH=. python -m app.lab_v2_shadow rehearse --max-calls 100 --daily-reserve 1500
 PYTHONPATH=. python -m app.lab_v2_shadow controlled-cycle --send --max-calls 100 --daily-reserve 1500
 ```

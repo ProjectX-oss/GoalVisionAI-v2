@@ -277,6 +277,12 @@ class LabComboService:
                 self.ledger.append('settlement', identity, value)
                 completed.append(identity)
         # Recover a crash between settlement persistence and preview preparation.
+        for value in self.ledger.all('single_settlement'):
+            identity = value['prediction_id']
+            if not self.ledger.get('single_settlement_preview', identity):
+                stats = single_statistics(self.ledger)
+                self.ledger.append('single_settlement_preview', identity, {
+                    'message': single_result_message(value, stats), 'statistics': stats})
         for value in self.ledger.all('settlement'):
             identity = value['prediction_id']
             if not self.ledger.get('settlement_preview', identity):

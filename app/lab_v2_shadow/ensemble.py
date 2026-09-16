@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from decimal import Decimal, localcontext
 
 
-POLICY_VERSION = "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V3"
+POLICY_VERSION = "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4"
 _FAMILY = {
     "HOME_WIN": "1X2", "DRAW": "1X2", "AWAY_WIN": "1X2",
     "BTTS_YES": "BTTS", "BTTS_NO": "BTTS",
@@ -25,6 +25,7 @@ class EnsembleSignal:
     reliability: Decimal
     availability: str
     provenance: str
+    independence_group: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -67,15 +68,25 @@ def evaluate_ensemble(
         and offered_odds.is_finite()
         and offered_odds > Decimal(1)
     )
-    usable = tuple(sorted((item for item in signals if item.availability in {"AVAILABLE", "LOW_SAMPLE"}
-                           and item.reliability > 0 and (item.probability is not None or item.selection is not None)),
-                          key=lambda item: item.name))
+    raw_usable = tuple(sorted((item for item in signals if item.availability in {"AVAILABLE", "LOW_SAMPLE"}
+                               and item.reliability > 0 and (item.probability is not None or item.selection is not None)),
+                              key=lambda item: (item.name, item.provenance)))
+    duplicate_names = {item.name for item in raw_usable if sum(other.name == item.name for other in raw_usable) > 1}
+    if duplicate_names:
+        blockers.append("DUPLICATE_SIGNAL_SOURCE")
+    # A signal source may contribute at most once even if a caller accidentally
+    # supplies the same adapter twice.
+    by_name: dict[str, EnsembleSignal] = {}
+    for item in raw_usable:
+        by_name.setdefault(item.name, item)
+    usable = tuple(by_name[name] for name in sorted(by_name))
     probabilities = tuple(item for item in usable if item.probability is not None)
     names = {item.name for item in usable}
     if "CURRENT_MARKET_CONSENSUS" not in names:
         blockers.append("CURRENT_MARKET_CONSENSUS_UNAVAILABLE")
-    minimum = 3 if _FAMILY.get(market) == "1X2" else 3
-    if len(usable) < minimum:
+    minimum = 3
+    independent_groups = {_independence_group(item) for item in probabilities}
+    if len(independent_groups) < minimum:
         blockers.append("INSUFFICIENT_INDEPENDENT_SIGNALS")
     if not probabilities:
         blockers.append("ENSEMBLE_PROBABILITY_UNAVAILABLE")
@@ -83,21 +94,37 @@ def evaluate_ensemble(
     else:
         with localcontext() as context:
             context.prec = 28
-            weighted = tuple((item, _market_weight(item, _FAMILY.get(market))) for item in probabilities)
-            total_weight = sum((weight for _, weight in weighted), Decimal(0))
-            ensemble = sum((item.probability * weight for item, weight in weighted), Decimal(0)) / total_weight
-            agreement_weight = sum((weight for item, weight in weighted
-                                    if abs(item.probability - ensemble) <= Decimal("0.10")), Decimal(0))
+            grouped: dict[str, list[tuple[EnsembleSignal, Decimal]]] = {}
+            for item in probabilities:
+                grouped.setdefault(_independence_group(item), []).append(
+                    (item, _market_weight(item, _FAMILY.get(market)))
+                )
+            # Correlated implementations sharing one evidence family are first
+            # combined inside that family. The family then receives one weight,
+            # so reliability is not applied repeatedly as if the inputs were
+            # independent observations.
+            weighted_groups: list[tuple[Decimal, Decimal]] = []
+            for group in sorted(grouped):
+                members = grouped[group]
+                member_weight = sum((weight for _, weight in members), Decimal(0))
+                probability = sum(
+                    (item.probability * weight for item, weight in members), Decimal(0)
+                ) / member_weight
+                weighted_groups.append((probability, max(weight for _, weight in members)))
+            total_weight = sum((weight for _, weight in weighted_groups), Decimal(0))
+            ensemble = sum((probability * weight for probability, weight in weighted_groups), Decimal(0)) / total_weight
+            agreement_weight = sum((weight for probability, weight in weighted_groups
+                                    if abs(probability - ensemble) <= Decimal("0.10")), Decimal(0))
             agreement = agreement_weight / total_weight
             implied = Decimal(1) / offered_odds if valid_odds else None
             edge = ensemble - implied if implied is not None else None
-        trustworthy = [item for item in probabilities if item.reliability >= Decimal("0.60")]
-        spread = max((item.probability for item in trustworthy), default=ensemble) - min(
-            (item.probability for item in trustworthy), default=ensemble
+        trustworthy = [value for value in weighted_groups if value[1] >= Decimal("0.60")]
+        spread = max((value[0] for value in trustworthy), default=ensemble) - min(
+            (value[0] for value in trustworthy), default=ensemble
         )
-        opposing_votes = [item.name for item in usable if item.selection is not None
+        opposing_votes = {_independence_group(item) for item in usable if item.selection is not None
                           and _FAMILY.get(item.selection) == _FAMILY.get(market) and item.selection != market
-                          and item.reliability >= Decimal("0.75")]
+                          and item.reliability >= Decimal("0.75")}
         if spread > Decimal("0.22") or len(opposing_votes) >= 2:
             blockers.append("MATERIAL_SIGNAL_DISAGREEMENT")
         if agreement < Decimal("0.65"):
@@ -111,7 +138,7 @@ def evaluate_ensemble(
     confidence = _confidence(agreement, edge, len(usable)) if not blockers else "LOW"
     return EnsembleDecision(
         POLICY_VERSION, market, "APPROVED" if not blockers else "REJECTED", confidence,
-        ensemble, offered_odds, implied, edge, len(usable), agreement, usable,
+        ensemble, offered_odds, implied, edge, len(independent_groups), agreement, usable,
         tuple(reasons), tuple(sorted(set(blockers))),
     )
 
@@ -138,3 +165,13 @@ def _market_weight(signal: EnsembleSignal, family: str | None) -> Decimal:
     elif signal.name == "CURRENT_MARKET_CONSENSUS":
         factor = Decimal("1.00")
     return signal.reliability * factor
+
+
+def _independence_group(signal: EnsembleSignal) -> str:
+    if signal.independence_group:
+        return signal.independence_group
+    if signal.name in {
+        "PI_RATINGS", "CURRENT_MATCH_INTELLIGENCE", "GOALVISION_EXPERIMENTAL_MODEL",
+    }:
+        return "RESULT_HISTORY_MODEL_CONTEXT"
+    return signal.name

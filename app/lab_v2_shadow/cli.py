@@ -20,6 +20,7 @@ from .publication import prepare_v2_publications
 from .quota import DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE
 from .repository import ShadowEvidenceRepository
 from .runner import LabV2ShadowRunner
+from .summary import latest_cycle_summary
 
 
 async def _cycle(args: argparse.Namespace) -> dict[str, object]:
@@ -151,6 +152,9 @@ def main(argv: list[str] | None = None) -> int:
     audit = sub.add_parser("audit")
     audit.add_argument("--ledger", type=Path, default=Path("var/lab_combo/ledger.db"))
     audit.add_argument("--analysis-database", type=Path, default=Path("var/lab_combo/analysis.db"))
+    summary = sub.add_parser("summary")
+    summary.add_argument("--shadow-database", type=Path, default=Path("var/lab_v2/shadow.db"))
+    summary.add_argument("--fixture-id", type=int)
     for name in ("rehearse", "controlled-cycle"):
         cycle = sub.add_parser(name)
         cycle.add_argument("--shadow-database", type=Path, default=Path("var/lab_v2/shadow.db"))
@@ -167,6 +171,8 @@ def main(argv: list[str] | None = None) -> int:
             "bottleneck_audit": audit_recent_lab(args.ledger, args.analysis_database),
             "settled_loss_postmortems": settled_loss_postmortems(args.ledger, args.analysis_database),
         }
+    elif args.command == "summary":
+        value = latest_cycle_summary(args.shadow_database, fixture_id=args.fixture_id)
     else:
         if args.command == "rehearse" and args.send:
             parser.error("rehearse is always no-send; use controlled-cycle --send")

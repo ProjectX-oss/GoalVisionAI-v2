@@ -65,7 +65,7 @@ LOST; all void means VOID; otherwise WON with a partial-void flag where relevant
 Voided legs contribute 1.00 to effective odds. Each bounded sweep uses at most
 20 result calls (plus one quota refresh), caches fixture responses and prepares
 notifications automatically. Empty queues make no provider call. Later sweeps
-recover a missing preview after a crash. Already resolved legs are never fetched
+recover a missing single or combo preview after a crash. Already resolved legs are never fetched
 again or overwritten.
 
 Telegram delivery claims are durable before sending. A timeout, wrong receipt or

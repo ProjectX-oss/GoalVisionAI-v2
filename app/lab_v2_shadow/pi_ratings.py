@@ -206,7 +206,12 @@ def _normal_outcome_probabilities(expected_difference: Decimal, sigma: Decimal) 
         raise ValueError("PI_SIGMA_MUST_BE_POSITIVE")
     cdf_low = 0.5 * (1 + erf((-0.5 - mean) / (scale * sqrt(2))))
     cdf_high = 0.5 * (1 + erf((0.5 - mean) / (scale * sqrt(2))))
-    values = (Decimal(str(1 - cdf_high)), Decimal(str(cdf_high - cdf_low)), Decimal(str(cdf_low)))
+    home = Decimal(str(1 - cdf_high))
+    draw = Decimal(str(cdf_high - cdf_low))
+    # erf is evaluated in binary float. Close the Decimal simplex explicitly
+    # instead of retaining a small conversion residual in the away class.
+    away = Decimal(1) - home - draw
+    values = (home, draw, away)
     return dict(zip(("HOME_WIN", "DRAW", "AWAY_WIN"), values, strict=True))
 
 

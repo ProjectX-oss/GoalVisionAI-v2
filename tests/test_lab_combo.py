@@ -173,6 +173,38 @@ def test_result_sweep_persists_losses_and_recovers_previews(ledger):
     assert statistics(ledger)['units'] == '-1'
 
 
+def test_single_settlement_preview_recovers_idempotently_after_crash(ledger):
+    prediction = {
+        'prediction_id': 'single-crash', 'fixture_id': 77,
+        'kickoff_utc': (NOW - timedelta(hours=4)).isoformat(),
+        'market': 'HOME_WIN', 'captured_odds': '1.80',
+        'home_team': 'Home', 'away_team': 'Away',
+    }
+    settled = {
+        'prediction_id': 'single-crash', 'fixture_id': 77, 'market': 'HOME_WIN',
+        'captured_odds': '1.80', 'home_team': 'Home', 'away_team': 'Away',
+        'status': 'LOST', 'fulltime_home': 0, 'fulltime_away': 1,
+        'provider_status': 'FT', 'unit_result': '-1',
+        'settled_at_utc': NOW.isoformat(), 'source_fingerprint': 'result',
+    }
+    ledger.append('single_prediction', prediction['prediction_id'], prediction)
+    ledger.append('receipt', 'single_prediction:' + prediction['prediction_id'], {'sent': True})
+    ledger.append('single_settlement', prediction['prediction_id'], settled)
+
+    class Provider:
+        request_count = 0
+
+        async def fixture(self, identity):
+            raise AssertionError('settled singles must not refetch results')
+
+    service = LabComboService(ledger, None, clock=lambda: NOW)
+    first = asyncio.run(service.check_results(Provider()))
+    preview = ledger.get('single_settlement_preview', prediction['prediction_id'])
+    assert preview is not None and first['single_statistics']['LOST'] == 1
+    asyncio.run(service.check_results(Provider()))
+    assert len(ledger.all('single_settlement_preview')) == 1
+
+
 def test_existing_publication_review_cannot_be_bypassed(ledger):
     from tests.test_first_lab_operational_readiness import FirstLabOperationalReadinessTests, NOW as review_now
     from app.lab_combo.engine import load_leg

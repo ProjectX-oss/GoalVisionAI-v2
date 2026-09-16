@@ -25,7 +25,17 @@ from app.lab_v2_shadow.quota import (
 from app.lab_v2_shadow.pi_ratings import MatchResult, PiAvailability, PiRatingAdapter, parse_api_fixture_results
 from app.lab_v2_shadow.repository import ShadowEvidenceRepository
 from app.lab_v2_shadow.runner import LabV2ShadowRunner
-from app.lab_v2_shadow.runner import _final_review_call_reserve, _readiness, _stage
+from app.lab_v2_shadow.runner import (
+    _discovery_dates,
+    _combos,
+    _final_review_call_reserve,
+    _market_selection,
+    _one_x_two_diagnostics,
+    _readiness,
+    _refreshed_fixture_kickoff,
+    _stage,
+)
+from app.lab_v2_shadow.summary import latest_cycle_summary
 from app.lab_v2_shadow.segmentation import segment_results
 from app.real_match_lab_analysis.models import LAB_BOT_USERNAME, LAB_CHAT_ID
 
@@ -85,6 +95,11 @@ def test_pi_deterministic_replay_and_home_away_behavior():
     assert signal.state is PiAvailability.AVAILABLE
     assert signal.home_team_home_strength != signal.home_team_away_strength
     assert signal.rating_difference == signal.home_team_home_strength - signal.away_team_away_strength
+    if signal.rating_difference > 0:
+        assert signal.probabilities["HOME_WIN"] > signal.probabilities["AWAY_WIN"]
+    elif signal.rating_difference < 0:
+        assert signal.probabilities["AWAY_WIN"] > signal.probabilities["HOME_WIN"]
+    assert sum(signal.probabilities.values(), Decimal(0)) == Decimal(1)
 
 
 def test_pi_insufficient_history_is_not_high_confidence():
@@ -179,6 +194,29 @@ def test_stale_current_odds_are_rejected():
     assert value.status == "STALE_CURRENT_ODDS" and not value.fair_probabilities
 
 
+def test_stale_current_odds_receive_explicit_fixture_coverage_status(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    class StaleClient(FakeClient):
+        async def current_odds_by_date(self, day, *, page=1):
+            payload = odds_payload(NOW - timedelta(hours=4), fixture_id=7)
+            payload["paging"] = {"current": 1, "total": 1}
+            return self._hit("/odds", {"date": day, "page": page}, payload)
+
+    client = StaleClient()
+    repository = ShadowEvidenceRepository(Path("var/shadow.db"))
+    runner = LabV2ShadowRunner(
+        client, repository, capability_cache_path=Path("var/capabilities.json"), maximum_calls=10,
+    )
+    runner.allowed_bookmaker_ids = frozenset({3, 4})
+    _, report = asyncio.run(runner._date_odds(
+        [NOW.date().isoformat()], [{"fixture_id": 7, "kickoff_utc": NOW + timedelta(hours=2)}], NOW,
+    ))
+    repository.close()
+    assert report["fixtures_rejected_for_stale_current_odds"] == 1
+    assert report["fixture_statuses"]["7"] == "FIXTURE_DISCOVERED_ODDS_STALE"
+
+
 def test_ensemble_agreement_approves():
     signals = [EnsembleSignal(name, "HOME_WIN", probability, "HOME_WIN", weight, "AVAILABLE", name)
                for name, probability, weight in (("CURRENT_MARKET_CONSENSUS", Decimal("0.56"), Decimal("0.9")),
@@ -189,6 +227,19 @@ def test_ensemble_agreement_approves():
     assert decision.decision == "APPROVED" and decision.confidence in {"MEDIUM", "HIGH"}
 
 
+def test_refreshed_odds_move_recomputes_edge_and_can_invalidate_candidate():
+    signals = [EnsembleSignal(name, "HOME_WIN", probability, "HOME_WIN", weight, "AVAILABLE", name)
+               for name, probability, weight in (("CURRENT_MARKET_CONSENSUS", Decimal("0.56"), Decimal("0.9")),
+                                                  ("PI_RATINGS", Decimal("0.59"), Decimal("0.9")),
+                                                  ("API_FOOTBALL_PREDICTION", Decimal("0.60"), Decimal("0.75")),
+                                                  ("CURRENT_MATCH_INTELLIGENCE", Decimal("0.58"), Decimal("0.8")))]
+    before = evaluate_ensemble("HOME_WIN", Decimal("2.00"), signals)
+    after = evaluate_ensemble("HOME_WIN", Decimal("1.60"), signals)
+    assert before.decision == "APPROVED" and before.edge > 0
+    assert after.decision == "REJECTED" and after.edge < 0
+    assert "ENSEMBLE_EDGE_BELOW_0_04" in after.rejection_reasons
+
+
 def test_ensemble_material_disagreement_rejects():
     signals = [
         EnsembleSignal("CURRENT_MARKET_CONSENSUS", "HOME_WIN", Decimal("0.55"), "HOME_WIN", Decimal("0.9"), "AVAILABLE", "x"),
@@ -196,6 +247,38 @@ def test_ensemble_material_disagreement_rejects():
         EnsembleSignal("API_FOOTBALL_PREDICTION", "HOME_WIN", Decimal("0.22"), "AWAY_WIN", Decimal("0.75"), "AVAILABLE", "x"),
     ]
     assert "MATERIAL_SIGNAL_DISAGREEMENT" in evaluate_ensemble("HOME_WIN", Decimal("2.0"), signals).rejection_reasons
+
+
+def test_market_specific_selection_never_uses_another_market_family():
+    probabilities = {
+        "HOME_WIN": Decimal("0.50"), "DRAW": Decimal("0.30"), "AWAY_WIN": Decimal("0.20"),
+        "UNDER_3_5": Decimal("0.90"), "OVER_3_5": Decimal("0.10"),
+    }
+    assert _market_selection(probabilities, "HOME_WIN") == "HOME_WIN"
+    assert _market_selection(probabilities, "DRAW") == "HOME_WIN"
+    assert _market_selection(probabilities, "UNDER_3_5") == "UNDER_3_5"
+
+
+def test_correlated_and_duplicate_signals_do_not_fake_independent_quorum():
+    correlated = [
+        EnsembleSignal("CURRENT_MARKET_CONSENSUS", "HOME_WIN", Decimal("0.56"), "HOME_WIN", Decimal("0.9"), "AVAILABLE", "quotes"),
+        EnsembleSignal("PI_RATINGS", "HOME_WIN", Decimal("0.58"), "HOME_WIN", Decimal("0.9"), "AVAILABLE", "results"),
+        EnsembleSignal("CURRENT_MATCH_INTELLIGENCE", "HOME_WIN", Decimal("0.57"), "HOME_WIN", Decimal("0.8"), "AVAILABLE", "same-results"),
+    ]
+    decision = evaluate_ensemble("HOME_WIN", Decimal("2.0"), correlated)
+    assert decision.available_signals == 2
+    assert "INSUFFICIENT_INDEPENDENT_SIGNALS" in decision.rejection_reasons
+
+    duplicated = correlated + [correlated[0]]
+    decision = evaluate_ensemble("HOME_WIN", Decimal("2.0"), duplicated)
+    assert "DUPLICATE_SIGNAL_SOURCE" in decision.rejection_reasons
+
+    selection_only = correlated[:2] + [
+        EnsembleSignal("API_FOOTBALL_PREDICTION", "HOME_WIN", None, "HOME_WIN", Decimal("0.8"), "AVAILABLE", "winner-only"),
+    ]
+    decision = evaluate_ensemble("HOME_WIN", Decimal("2.0"), selection_only)
+    assert decision.available_signals == 2
+    assert "INSUFFICIENT_INDEPENDENT_SIGNALS" in decision.rejection_reasons
 
 
 def test_opponent_adjusted_form_rewards_stronger_opposition():
@@ -263,6 +346,62 @@ class FakeClient:
         return Response(self._hit(endpoint, params, payload))
 
 
+class PagedOddsClient(FakeClient):
+    def __init__(self):
+        super().__init__()
+        self.order = []
+
+    async def current_odds_by_date(self, day, *, page=1):
+        self.order.append((day, page))
+        first_day = NOW.date().isoformat()
+        second_day = (NOW.date() + timedelta(days=1)).isoformat()
+        total = 3 if day == first_day else 2
+        rows = []
+        if day == first_day and page == 1:
+            rows = odds_payload(fixture_id=1)["response"]
+        elif day == second_day and page == 2:
+            rows = odds_payload(fixture_id=2)["response"]
+        return self._hit(
+            "/odds", {"date": day, "page": page},
+            {"results": len(rows), "paging": {"current": page, "total": total}, "response": rows},
+        )
+
+
+def test_odds_pagination_prioritizes_earliest_date_and_does_not_mislabel_budget_gap(
+    tmp_path, monkeypatch,
+):
+    monkeypatch.chdir(tmp_path)
+    client = PagedOddsClient()
+    repository = ShadowEvidenceRepository(Path("var/shadow.db"))
+    runner = LabV2ShadowRunner(
+        client, repository, capability_cache_path=Path("var/capabilities.json"), maximum_calls=10,
+    )
+    runner.allowed_bookmaker_ids = frozenset({3, 4})
+    fixtures = [
+        {"fixture_id": 1, "kickoff_utc": NOW + timedelta(hours=2)},
+        {"fixture_id": 2, "kickoff_utc": NOW + timedelta(days=1, hours=2)},
+        {"fixture_id": 3, "kickoff_utc": NOW + timedelta(hours=3)},
+    ]
+    _, report = asyncio.run(runner._date_odds(
+        [NOW.date().isoformat(), (NOW.date() + timedelta(days=1)).isoformat()],
+        fixtures, NOW, reserve_calls=6,
+    ))
+    assert repository.connection.execute(
+        "SELECT COUNT(*) FROM lab_v2_provider_cache WHERE endpoint='/odds(date)'"
+    ).fetchone()[0] == 0
+    repository.close()
+    assert client.order == [
+        (NOW.date().isoformat(), 1),
+        ((NOW.date() + timedelta(days=1)).isoformat(), 1),
+        (NOW.date().isoformat(), 2),
+        (NOW.date().isoformat(), 3),
+    ]
+    assert report["fixtures_with_no_current_odds"] == 1
+    assert report["fixtures_with_incomplete_odds_page_coverage"] == 1
+    assert report["fixture_statuses"]["2"] == "FIXTURE_DISCOVERED_ODDS_COVERAGE_INCOMPLETE"
+    assert report["fixture_statuses"]["3"] == "FIXTURE_DISCOVERED_NO_CURRENT_ODDS"
+
+
 def test_api_call_budget_and_shadow_comparison(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     client = FakeClient(); repository = ShadowEvidenceRepository(Path("var/shadow.db"))
@@ -285,7 +424,61 @@ def test_api_call_budget_and_shadow_comparison(tmp_path, monkeypatch):
     assert report["mode"] == report["analysis_mode"] == "LAB_V2_NO_SEND"
     assert report["publication_requested"] is report["publication_enabled"] is True
     assert report["telegram_transport_constructed"] is False
-    assert persisted == [report]
+    assert len(persisted) == 1
+    assert persisted[0]["candidate_ids"] == [item["candidate_id"] for item in report["candidate_markets"]]
+    assert "candidate_markets" not in persisted[0]
+    assert persisted[0]["candidate_payload_storage"].startswith("INDIVIDUAL_APPEND_ONLY")
+    summary = latest_cycle_summary(Path("var/shadow.db"))
+    assert summary["fixtures_discovered"] == 1
+    assert set(summary["one_x_two_diagnostics"]) == {"HOME_WIN", "DRAW", "AWAY_WIN"}
+
+
+def test_draw_bias_diagnostics_compare_all_one_x_two_classes():
+    rows = []
+    for market, probabilities, edges in (
+        ("HOME_WIN", ("0.50", "0.60"), ("0.05", "0.08")),
+        ("DRAW", ("0.30", "0.40"), ("0.04", "0.06")),
+        ("AWAY_WIN", ("0.20", "0.25"), ("-0.01", "0.03")),
+    ):
+        for index in range(2):
+            rows.append({
+                "market": market,
+                "decision": "APPROVED" if index == 1 else "REJECTED",
+                "ensemble_probability": probabilities[index],
+                "offered_odds": "2.00",
+                "edge": edges[index],
+                "rejection_reasons": [] if index else ["TEST_REJECTION"],
+                "capability_tier": "TIER_A_FULL",
+                "signals": [{"name": "CURRENT_MARKET_CONSENSUS", "availability": "AVAILABLE"}],
+            })
+    diagnostics = _one_x_two_diagnostics(rows)
+    assert set(diagnostics) == {"HOME_WIN", "DRAW", "AWAY_WIN"}
+    assert diagnostics["DRAW"]["evaluated"] == 2
+    assert diagnostics["DRAW"]["approved"] == 1
+    assert Decimal(diagnostics["DRAW"]["ensemble_probability"]["median"]) == Decimal("0.35")
+    assert diagnostics["DRAW"]["rejection_reasons"] == {"TEST_REJECTION": 1}
+
+
+def test_read_only_operator_summary_and_fixture_not_discovered(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    path = Path("var/shadow.db")
+    repository = ShadowEvidenceRepository(path)
+    repository.append("rehearsal", "cycle", {
+        "fixtures_discovered": 1,
+        "current_odds_fixtures": 0,
+        "fixtures_with_no_current_odds": 1,
+        "candidate_markets_evaluated": 0,
+        "candidate_markets": [],
+        "rejection_reasons": {},
+        "api_calls_consumed": 4,
+    }, created_at=NOW)
+    repository.close()
+    before = path.stat().st_mtime_ns
+    summary = latest_cycle_summary(path, fixture_id=999)
+    after = path.stat().st_mtime_ns
+    assert before == after
+    assert summary["fixtures_without_current_odds"] == 1
+    assert summary["fixture"]["status"] == "FIXTURE_NOT_DISCOVERED"
 
 
 def test_market_consensus_can_restrict_to_reviewed_current_sources():
@@ -401,7 +594,45 @@ def test_near_kickoff_review_calls_are_reserved_before_optional_enrichment():
         {"kickoff_utc": NOW + timedelta(minutes=60)},
         {"kickoff_utc": NOW + timedelta(hours=3)},
     ]
-    assert _final_review_call_reserve(fixtures, NOW) == 12
+    assert _final_review_call_reserve(fixtures, NOW) == 36
+
+
+def test_final_review_reserve_accounts_for_capabilities_and_all_retry_attempts():
+    fixtures = [
+        _transition_fixture(kickoff=NOW + timedelta(minutes=30), lineups=True, injuries=True),
+        _transition_fixture(kickoff=NOW + timedelta(minutes=40), lineups=False, injuries=False),
+    ]
+    assert _final_review_call_reserve(fixtures, NOW) == (4 + 2) * 3
+
+
+def test_provider_error_cannot_satisfy_injury_refresh_readiness():
+    decision = _transition_decision("HOME_WIN")
+    fixture = _transition_fixture(kickoff=NOW + timedelta(minutes=45), lineups=True, injuries=True)
+    review = _transition_review(NOW, injuries_status="PROVIDER_ERROR")
+    stage, reasons = _readiness(decision, fixture, NOW, review)
+    assert stage == "FINAL_REVIEW_REQUIRED"
+    assert "CURRENT_INJURIES_REQUIRED_FOR_MARKET" in reasons
+
+
+def test_exact_fixture_refresh_uses_changed_kickoff_and_rejects_bad_status():
+    payload = {"response": [{"fixture": {
+        "id": 7, "date": (NOW + timedelta(hours=3)).isoformat(), "status": {"short": "NS"},
+    }}]}
+    assert _refreshed_fixture_kickoff(payload, 7, NOW) == NOW + timedelta(hours=3)
+    payload["response"][0]["fixture"]["status"]["short"] = "PST"
+    assert _refreshed_fixture_kickoff(payload, 7, NOW) is None
+    assert _refreshed_fixture_kickoff({"errors": {"provider": "down"}, "response": []}, 7, NOW) is None
+
+
+def test_utc_discovery_dates_are_host_timezone_independent_and_cross_midnight():
+    assert _discovery_dates(datetime(2026, 3, 29, 23, 30, tzinfo=timezone.utc), 2) == [
+        "2026-03-29", "2026-03-30",
+    ]
+    riga = datetime.fromisoformat("2026-03-30T02:30:00+03:00")
+    berlin = datetime.fromisoformat("2026-03-30T01:30:00+02:00")
+    assert _discovery_dates(riga, 2) == _discovery_dates(berlin, 2) == [
+        "2026-03-29", "2026-03-30",
+    ]
 
 
 def test_approved_candidate_outside_final_window_remains_early():
@@ -433,10 +664,78 @@ def test_ready_publication_handoff_is_lab_only_and_exactly_once(tmp_path, monkey
     second = prepare_v2_publications(report, ledger, now=NOW)
     assert len(first["singles"]) == 1 and len(second["singles"]) == 1
     assert len(ledger.all("single_prediction")) == 1
+    assert Decimal(first["singles"][0]["expected_value"]) == Decimal("0.116")
     message = v2_single_message(first["singles"][0])
     assert message.startswith("🧪 GoalVision AI Lab") and "raw" not in message.casefold()
     assert "Official" not in message and first["combos"] == []
     ledger.close()
+
+
+def test_unclaimed_publication_replay_is_stable_and_refreshed_evidence_gets_new_identity(
+    tmp_path, monkeypatch,
+):
+    monkeypatch.chdir(tmp_path)
+    from app.lab_combo.repository import ComboRepository
+    ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
+    base = _controlled_ready_candidate(NOW)
+    candidates = []
+    for index in range(3):
+        candidate = dict(base)
+        candidate.update({
+            "candidate_id": f"candidate-{index}",
+            "fixture_id": 7001 + index,
+            "home_team_id": 701 + index * 2,
+            "away_team_id": 702 + index * 2,
+            "home_team": f"Home {index}",
+            "away_team": f"Away {index}",
+            "quote_provenance_fingerprint": f"quote-{index}",
+        })
+        candidates.append(candidate)
+    report = {"candidate_markets": candidates}
+    first = prepare_v2_publications(report, ledger, now=NOW)
+    replay = prepare_v2_publications(report, ledger, now=NOW + timedelta(minutes=1))
+    assert [item["prediction_id"] for item in replay["singles"]] == [
+        item["prediction_id"] for item in first["singles"]
+    ]
+    assert [item["prediction_id"] for item in replay["combos"]] == [
+        item["prediction_id"] for item in first["combos"]
+    ]
+
+    refreshed = []
+    for item in candidates:
+        value = dict(item)
+        value["candidate_id"] += "-refreshed"
+        value["quote_provenance_fingerprint"] += "-refreshed"
+        value["captured_odds"] = value["offered_odds"] = "1.85"
+        refreshed.append(value)
+    next_cycle = prepare_v2_publications(
+        {"candidate_markets": refreshed}, ledger, now=NOW + timedelta(minutes=2),
+    )
+    assert set(item["prediction_id"] for item in next_cycle["singles"]).isdisjoint(
+        item["prediction_id"] for item in first["singles"]
+    )
+    assert set(item["prediction_id"] for item in next_cycle["combos"]).isdisjoint(
+        item["prediction_id"] for item in first["combos"]
+    )
+    ledger.close()
+
+
+def test_v2_combo_batches_prefer_strong_legs_and_are_cross_combo_disjoint():
+    candidates = []
+    for index in range(6):
+        candidates.append({
+            "candidate_id": f"candidate-{index}",
+            "fixture_id": 100 + index,
+            "home_team_id": 200 + index * 2,
+            "away_team_id": 201 + index * 2,
+            "offered_odds": "1.20",
+            "edge": str(Decimal("0.10") - Decimal(index) / Decimal(100)),
+        })
+    combos = _combos(candidates)
+    assert len(combos) == 2
+    assert set(combos[0]["legs"]) == {"candidate-0", "candidate-1", "candidate-2"}
+    assert set(combos[0]["legs"]).isdisjoint(combos[1]["legs"])
+    assert all(len(item["legs"]) == 3 for item in combos)
 
 
 def _controlled_ready_candidate(clock: datetime) -> dict[str, object]:

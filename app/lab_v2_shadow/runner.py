@@ -33,15 +33,23 @@ from .quota import (
 from .repository import ShadowEvidenceRepository
 
 
-SCHEMA_VERSION = "goalvision-lab-v2-broad-coverage-cycle-v3"
-READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V2"
+SCHEMA_VERSION = "goalvision-lab-v2-broad-coverage-cycle-v4"
+READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V3"
 MAXIMUM_CALLS = MAX_DISCOVERY_CALLS_PER_CYCLE
 FINAL_REVIEW_WINDOW = timedelta(minutes=75)
 FINAL_REVIEW_MAX_AGE = timedelta(minutes=5)
 MINIMUM_KICKOFF_LEAD = timedelta(minutes=10)
 FINAL_REVIEW_SHORTLIST_SIZE = 5
 MAX_FINAL_REVIEW_CALLS_PER_FIXTURE = 4
+MAX_PROVIDER_ATTEMPTS_PER_CALL = 3
 LINEUP_SENSITIVE_MARKETS = frozenset({"HOME_WIN", "DRAW", "AWAY_WIN"})
+MARKET_FAMILIES = {
+    "1X2": ("HOME_WIN", "DRAW", "AWAY_WIN"),
+    "BTTS": ("BTTS_YES", "BTTS_NO"),
+    "TOTAL_1_5": ("OVER_1_5", "UNDER_1_5"),
+    "TOTAL_2_5": ("OVER_2_5", "UNDER_2_5"),
+    "TOTAL_3_5": ("OVER_3_5", "UNDER_3_5"),
+}
 EXCLUDED = re.compile(
     r"(?i)(\byouth\b|\bu[- ]?\d{2}\b|\breserves?\b|\bacademy\b|"
     r"\bvirtual\b|\besports?\b|\bfriendly\b)"
@@ -124,27 +132,29 @@ class LabV2ShadowRunner:
         )
 
         fixtures: dict[int, dict[str, object]] = {}
+        discovery_exclusions: list[dict[str, object]] = []
         fixture_rows_seen = 0
-        days: list[str] = []
-        for offset in range(horizon_days):
+        days = _discovery_dates(clock, horizon_days)
+        for day in days:
             if self._remaining() <= 0:
                 break
-            day = (clock.date() + timedelta(days=offset)).isoformat()
-            days.append(day)
             payload, _ = await self._fetch(
                 "/fixtures", {"date": day, "timezone": "UTC"},
                 lambda value=day: self.client.fixtures_by_date(value, timezone_name="UTC"),
                 clock=clock, ttl=timedelta(minutes=5), use_cache=True,
             )
             fixture_rows_seen += _result_count(payload)
-            for item in _fixture_rows(payload, capabilities, clock):
+            accepted, excluded = _fixture_rows_with_evidence(payload, capabilities, clock)
+            discovery_exclusions.extend(excluded)
+            for item in accepted:
                 fixtures[int(item["fixture_id"])] = item
         ordered = sorted(fixtures.values(), key=lambda item: (
             item["kickoff_utc"], TIER_ORDER[item["capability_tier"]], item["fixture_id"],
         ))
 
+        odds_discovery_final_review_reserve = _final_review_call_reserve(ordered, clock)
         odds_evidence, odds_page_report = await self._date_odds(
-            days, {int(item["fixture_id"]) for item in ordered}, clock,
+            days, ordered, clock, reserve_calls=odds_discovery_final_review_reserve,
         )
         odds_fixtures = [
             item for item in ordered
@@ -187,11 +197,14 @@ class LabV2ShadowRunner:
                     lambda identity=fixture_id: self._provider("injuries", identity, "/injuries"),
                     clock=clock, ttl=timedelta(hours=4), use_cache=not near,
                 )
-                availability[fixture_id] = _availability_from_payload(
-                    payload, fixture, usage=persisted_usage.get(fixture_id, {}),
-                )
-                context["injuries_status"] = "REFRESHED" if near else "AVAILABLE"
-                cmi_enriched.add(fixture_id)
+                if _provider_payload_succeeded(payload):
+                    availability[fixture_id] = _availability_from_payload(
+                        payload, fixture, usage=persisted_usage.get(fixture_id, {}),
+                    )
+                    context["injuries_status"] = "REFRESHED" if near else "AVAILABLE"
+                    cmi_enriched.add(fixture_id)
+                else:
+                    context["injuries_status"] = "PROVIDER_ERROR"
             elif not capability.injuries:
                 context["injuries_status"] = "NOT_SUPPORTED"
 
@@ -201,7 +214,11 @@ class LabV2ShadowRunner:
                     lambda identity=fixture_id: self.client.fixture(identity),
                     clock=clock, ttl=timedelta(minutes=2), use_cache=False,
                 )
-                context["fixture_refreshed"] = _fixture_still_upcoming(fixture_payload, fixture_id, clock)
+                refreshed_kickoff = _refreshed_fixture_kickoff(fixture_payload, fixture_id, clock)
+                context["fixture_refreshed"] = refreshed_kickoff is not None
+                if refreshed_kickoff is not None:
+                    fixture["kickoff_utc"] = refreshed_kickoff
+                    context["refreshed_kickoff_utc"] = refreshed_kickoff.isoformat()
                 odds_payload, retrieved = await self._fetch(
                     "/odds", {"fixture": fixture_id},
                     lambda identity=fixture_id: self.client.current_odds(identity),
@@ -222,7 +239,9 @@ class LabV2ShadowRunner:
                         clock=clock, ttl=timedelta(minutes=5), use_cache=False,
                     )
                     context["lineup_status"] = (
-                        "CONFIRMED" if _confirmed_lineups(lineup_payload, fixture) else "NOT_YET_PUBLISHED"
+                        "PROVIDER_ERROR" if not _provider_payload_succeeded(lineup_payload) else
+                        "CONFIRMED" if _confirmed_lineups(lineup_payload, fixture) else
+                        "NOT_YET_PUBLISHED"
                     )
                 else:
                     context["lineup_status"] = "NOT_SUPPORTED"
@@ -264,6 +283,9 @@ class LabV2ShadowRunner:
         rejection_reasons = _counts(
             reason for item in candidates for reason in item["rejection_reasons"]
         )
+        fixture_coverage = _fixture_coverage(
+            ordered, candidates, odds_page_report["fixture_statuses"], discovery_exclusions,
+        )
         report = {
             "schema_version": SCHEMA_VERSION,
             "mode": "LAB_V2_NO_SEND",
@@ -285,6 +307,12 @@ class LabV2ShadowRunner:
             ],
             "fixtures_with_unreliable_market_normalization": odds_page_report[
                 "fixtures_with_unreliable_market_normalization"
+            ],
+            "fixtures_with_unsupported_current_markets": odds_page_report[
+                "fixtures_with_unsupported_current_markets"
+            ],
+            "fixtures_with_incomplete_odds_page_coverage": odds_page_report[
+                "fixtures_with_incomplete_odds_page_coverage"
             ],
             "current_odds_fixtures": len(odds_fixtures),
             "number_of_bookmakers_in_current_quotes": len({
@@ -313,9 +341,13 @@ class LabV2ShadowRunner:
             "v1_candidates_rejected_by_v2": sorted(v1_keys - v2_keys),
             "candidate_markets": candidates,
             "rejection_reasons": rejection_reasons,
+            "fixture_coverage": fixture_coverage,
+            "fixture_coverage_status_counts": _counts(item["status"] for item in fixture_coverage),
+            "one_x_two_diagnostics": _one_x_two_diagnostics(candidates),
             "readiness_policy": READINESS_POLICY_VERSION,
             "lineup_sensitive_markets": sorted(LINEUP_SENSITIVE_MARKETS),
             "final_review_call_reserve": final_review_reserve,
+            "odds_discovery_final_review_call_reserve": odds_discovery_final_review_reserve,
             "early_candidate_count": len(early),
             "final_review_candidate_count": len(final),
             "ready_candidate_count": len(ready),
@@ -357,26 +389,51 @@ class LabV2ShadowRunner:
                 )
         for candidate in candidates:
             self.repository.append("candidate", candidate["candidate_id"], candidate, created_at=clock)
-        self.repository.append("rehearsal", identity, report, created_at=clock)
+        persisted_report = {key: value for key, value in report.items() if key != "candidate_markets"}
+        persisted_report.update({
+            "candidate_document_kind": "candidate",
+            "candidate_ids": [item["candidate_id"] for item in candidates],
+            "readiness_reasons": _counts(
+                reason for item in candidates for reason in item.get("readiness_reasons", ())
+            ),
+            "candidate_payload_storage": "INDIVIDUAL_APPEND_ONLY_DOCUMENTS_NOT_DUPLICATED_IN_CYCLE",
+        })
+        self.repository.append("rehearsal", identity, persisted_report, created_at=clock)
         return _plain(report)
 
     async def _date_odds(
-        self, days: list[str], fixture_ids: set[int], clock: datetime,
+        self, days: list[str], fixtures: list[dict[str, object]], clock: datetime,
+        *, reserve_calls: int = 0,
     ) -> tuple[dict[int, tuple[object, datetime, dict[str, CurrentMarketConsensus]]], dict[str, object]]:
+        fixture_ids = {int(item["fixture_id"]) for item in fixtures}
+        fixture_days = {int(item["fixture_id"]): item["kickoff_utc"].date().isoformat() for item in fixtures}
         result: dict[int, tuple[object, datetime, dict[str, CurrentMarketConsensus]]] = {}
-        pages: list[tuple[str, int]] = [(day, 1) for day in days]
+        first_pages: list[tuple[str, int]] = [(day, 1) for day in days]
+        continuation_pages: list[tuple[str, int]] = []
         fetched: list[dict[str, object]] = []
         joined_fixture_ids: set[int] = set()
         stale_fixture_ids: set[int] = set()
         unreliable_fixture_ids: set[int] = set()
-        page_budget = max(0, int(self._effective_maximum() * 0.58) - self._request_count())
+        unsupported_market_fixture_ids: set[int] = set()
+        empty_quote_fixture_ids: set[int] = set()
+        page_budget = max(0, min(
+            int(self._effective_maximum() * Decimal("0.58")) - self._request_count(),
+            self._remaining() - reserve_calls,
+        ))
         used = 0
-        while pages and self._remaining() > 0 and used < page_budget:
-            day, page = pages.pop(0)
+        while (first_pages or continuation_pages) and self._remaining() > reserve_calls and used < page_budget:
+            if first_pages:
+                day, page = first_pages.pop(0)
+            else:
+                continuation_pages.sort()
+                day, page = continuation_pages.pop(0)
             payload, retrieved = await self._fetch(
                 "/odds(date)", {"date": day, "page": page},
                 lambda value=day, number=page: self._provider_odds_date(value, number),
-                clock=clock, ttl=timedelta(minutes=15), use_cache=True,
+                # A 15-minute page cannot be reused by the 30-minute cycle.
+                # Normalized per-fixture quote evidence is persisted below;
+                # retaining every expired unrelated page caused unbounded growth.
+                clock=clock, ttl=None, use_cache=False,
             )
             used += int(self.calls[-1]["actual_calls"])
             paging = payload.get("paging") if isinstance(payload, dict) and isinstance(payload.get("paging"), dict) else {}
@@ -399,21 +456,54 @@ class LabV2ShadowRunner:
                     result[fixture_id] = (single_payload, retrieved, consensus)
                 elif consensus and all(value.status == "STALE_CURRENT_ODDS" for value in consensus.values()):
                     stale_fixture_ids.add(fixture_id)
+                elif consensus and all(value.quote_count == 0 for value in consensus.values()):
+                    if _has_raw_bookmaker_values(row):
+                        unsupported_market_fixture_ids.add(fixture_id)
+                    else:
+                        empty_quote_fixture_ids.add(fixture_id)
                 else:
                     unreliable_fixture_ids.add(fixture_id)
             if current < total:
-                pages.append((day, current + 1))
-        unvisited_pages = len(pages)
+                continuation_pages.append((day, current + 1))
+        unvisited = [*first_pages, *continuation_pages]
+        unvisited_pages = len(unvisited)
+        incomplete_days = {day for day, _ in unvisited}
+        no_odds_ids = {
+            fixture_id for fixture_id in fixture_ids - joined_fixture_ids
+            if fixture_days.get(fixture_id) not in incomplete_days
+        }
+        incomplete_ids = {
+            fixture_id for fixture_id in fixture_ids - joined_fixture_ids
+            if fixture_days.get(fixture_id) in incomplete_days
+        }
+        fixture_statuses = {
+            str(fixture_id): (
+                "FIXTURE_DISCOVERED_WITH_CURRENT_ODDS" if fixture_id in result else
+                "FIXTURE_DISCOVERED_ODDS_STALE" if fixture_id in stale_fixture_ids else
+                "FIXTURE_DISCOVERED_MARKET_UNSUPPORTED" if fixture_id in unsupported_market_fixture_ids else
+                "FIXTURE_DISCOVERED_ODDS_UNNORMALIZABLE" if fixture_id in unreliable_fixture_ids else
+                "FIXTURE_DISCOVERED_NO_CURRENT_ODDS" if fixture_id in empty_quote_fixture_ids else
+                "FIXTURE_DISCOVERED_ODDS_COVERAGE_INCOMPLETE" if fixture_id in incomplete_ids else
+                "FIXTURE_DISCOVERED_NO_CURRENT_ODDS" if fixture_id in no_odds_ids else
+                "FIXTURE_DISCOVERED_NO_CURRENT_ODDS"
+            ) for fixture_id in sorted(fixture_ids)
+        }
         return result, {
             "pages_fetched": fetched,
             "page_calls": used,
             "pages_not_fetched_due_to_budget": unvisited_pages,
-            "fixtures_not_analyzed_due_to_budget": unvisited_pages * 10,
-            "fixtures_with_no_current_odds": len(fixture_ids - joined_fixture_ids),
+            "unvisited_pages": [{"date": day, "page": page} for day, page in sorted(unvisited)],
+            "fixtures_not_analyzed_due_to_budget": len(incomplete_ids),
+            "fixtures_with_no_current_odds": len(no_odds_ids | empty_quote_fixture_ids),
+            "fixtures_with_incomplete_odds_page_coverage": len(incomplete_ids),
             "fixtures_rejected_for_stale_current_odds": len(stale_fixture_ids - result.keys()),
             "fixtures_with_unreliable_market_normalization": len(
                 unreliable_fixture_ids - result.keys() - stale_fixture_ids
             ),
+            "fixtures_with_unsupported_current_markets": len(
+                unsupported_market_fixture_ids - result.keys() - stale_fixture_ids
+            ),
+            "fixture_statuses": fixture_statuses,
             "batching": "CURRENT_/odds?date=YYYY-MM-DD&page=N",
         }
 
@@ -625,32 +715,37 @@ class LabV2ShadowRunner:
                         continue
                     signals = [EnsembleSignal(
                         "CURRENT_MARKET_CONSENSUS", market, consensus_probability,
-                        max(consensus.fair_probabilities, key=consensus.fair_probabilities.get),
+                        _market_selection(consensus.fair_probabilities, market),
                         Decimal("0.90"), "AVAILABLE", "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+                        "CURRENT_MARKET_CONSENSUS",
                     )]
                     model_probability = persisted_models.get(fixture_id, {}).get(market)
                     if model_probability is not None:
                         signals.append(EnsembleSignal(
                             "GOALVISION_EXPERIMENTAL_MODEL", market, model_probability,
                             None, Decimal("1.00"), "AVAILABLE", "PERSISTED_CMI_SNAPSHOT",
+                            "RESULT_HISTORY_MODEL_CONTEXT",
                         ))
                     if market in pi.probabilities:
                         signals.append(EnsembleSignal(
                             "PI_RATINGS", market, pi.probabilities[market],
-                            max(pi.probabilities, key=pi.probabilities.get),
+                            _market_selection(pi.probabilities, market),
                             Decimal("0.90") if pi.state == PiAvailability.AVAILABLE else Decimal("0.50"),
                             pi.state.value, "SAME_LEAGUE_MATCH_RESULTS_AND_GOALS_ONLY",
+                            "RESULT_HISTORY_MODEL_CONTEXT",
                         ))
                     if api and market in api.probabilities:
                         signals.append(EnsembleSignal(
                             "API_FOOTBALL_PREDICTION", market, api.probabilities[market],
-                            max(api.probabilities, key=api.probabilities.get), Decimal("0.75"),
-                            "AVAILABLE", "CURRENT_/PREDICTIONS",
+                            _market_selection(api.probabilities, market), Decimal("0.75"),
+                            "AVAILABLE", "CURRENT_/PREDICTIONS", "API_FOOTBALL_PREDICTION",
                         ))
                     if market in cmi:
                         signals.append(EnsembleSignal(
-                            "CURRENT_MATCH_INTELLIGENCE", market, cmi[market], max(cmi, key=cmi.get),
+                            "CURRENT_MATCH_INTELLIGENCE", market, cmi[market],
+                            _market_selection(cmi, market),
                             Decimal("0.80"), "AVAILABLE", "RESULT_HISTORY_FORM_AVAILABILITY",
+                            "RESULT_HISTORY_MODEL_CONTEXT",
                         ))
                     veto = _availability_veto(market, impacts)
                     decision = evaluate_ensemble(
@@ -682,6 +777,10 @@ class LabV2ShadowRunner:
                         "ensemble_decision_class": decision.decision,
                         "ensemble_probability": str(decision.ensemble_probability) if decision.ensemble_probability is not None else None,
                         "edge": str(decision.edge) if decision.edge is not None else None,
+                        "expected_value": (
+                            str(decision.ensemble_probability * price.decimal_odds - Decimal(1))
+                            if decision.ensemble_probability is not None else None
+                        ),
                         "market_context_edge": str(decision.edge) if decision.edge is not None else None,
                         "weighted_agreement": str(decision.weighted_agreement) if decision.weighted_agreement is not None else None,
                         "stage": stage,
@@ -701,8 +800,21 @@ class LabV2ShadowRunner:
         return sorted(values, key=lambda item: (item["fixture_id"], item["market"]))
 
 
+def _discovery_dates(now: datetime, horizon_days: int) -> list[str]:
+    """Return UTC provider dates, independent of the VPS local timezone."""
+    clock = _utc(now)
+    return [(clock.date() + timedelta(days=offset)).isoformat() for offset in range(horizon_days)]
+
+
 def _fixture_rows(payload: object, capabilities: LeagueCapabilityCache, now: datetime) -> list[dict[str, object]]:
+    return _fixture_rows_with_evidence(payload, capabilities, now)[0]
+
+
+def _fixture_rows_with_evidence(
+    payload: object, capabilities: LeagueCapabilityCache, now: datetime,
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
     result: list[dict[str, object]] = []
+    excluded: list[dict[str, object]] = []
     for row in _response_rows(payload):
         fixture = row.get("fixture") if isinstance(row.get("fixture"), dict) else {}
         league = row.get("league") if isinstance(row.get("league"), dict) else {}
@@ -715,11 +827,34 @@ def _fixture_rows(payload: object, capabilities: LeagueCapabilityCache, now: dat
             league_id, season = int(league["id"]), int(league["season"])
             capability = capabilities.current(league_id, season, day=kickoff.date())
             identity = " ".join((str(league.get("name") or ""), str(home.get("name") or ""), str(away.get("name") or "")))
-            if (status.get("short") not in {"NS", "TBD"} or kickoff <= now + MINIMUM_KICKOFF_LEAD
-                    or capability is None or capability.tier == CapabilityTier.UNSUPPORTED or EXCLUDED.search(identity)):
+            fixture_id = int(fixture["id"])
+            reason = None
+            coverage_status = "FIXTURE_EVALUATED_REJECTED"
+            if status.get("short") not in {"NS", "TBD"}:
+                reason = "FIXTURE_STATUS_NOT_UPCOMING"
+            elif kickoff <= now + MINIMUM_KICKOFF_LEAD:
+                reason = "KICKOFF_TOO_CLOSE_OR_STARTED"
+            elif capability is None:
+                reason = "CURRENT_SEASON_CAPABILITY_NOT_FOUND"
+                coverage_status = "FIXTURE_DISCOVERED_NO_REQUIRED_MODEL_CONTEXT"
+            elif capability.tier == CapabilityTier.UNSUPPORTED:
+                reason = "FIXTURE_OR_CURRENT_ODDS_CAPABILITY_UNSUPPORTED"
+                coverage_status = "FIXTURE_DISCOVERED_NO_REQUIRED_MODEL_CONTEXT"
+            elif EXCLUDED.search(identity):
+                reason = "EXCLUDED_FIXTURE_CLASS"
+            if reason is not None:
+                excluded.append({
+                    "fixture_id": fixture_id,
+                    "kickoff_utc": kickoff.isoformat(),
+                    "league_id": league_id,
+                    "home_team": str(home.get("name") or home.get("id") or "UNKNOWN"),
+                    "away_team": str(away.get("name") or away.get("id") or "UNKNOWN"),
+                    "status": coverage_status,
+                    "reason": reason,
+                })
                 continue
             result.append({
-                "fixture_id": int(fixture["id"]), "kickoff_utc": kickoff,
+                "fixture_id": fixture_id, "kickoff_utc": kickoff,
                 "league_id": league_id, "league_name": str(league.get("name") or capability.competition_name),
                 "season": season, "home_team_id": int(home["id"]), "away_team_id": int(away["id"]),
                 "home_team": str(home.get("name") or home["id"]), "away_team": str(away.get("name") or away["id"]),
@@ -727,7 +862,97 @@ def _fixture_rows(payload: object, capabilities: LeagueCapabilityCache, now: dat
             })
         except (KeyError, TypeError, ValueError):
             continue
+    return result, excluded
+
+
+def _fixture_coverage(
+    fixtures: list[dict[str, object]], candidates: list[dict[str, object]],
+    odds_statuses: dict[str, str], exclusions: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    by_fixture: dict[int, list[dict[str, object]]] = {}
+    for candidate in candidates:
+        by_fixture.setdefault(int(candidate["fixture_id"]), []).append(candidate)
+    result = [dict(item) for item in exclusions]
+    for fixture in fixtures:
+        fixture_id = int(fixture["fixture_id"])
+        fixture_candidates = by_fixture.get(fixture_id, [])
+        odds_status = odds_statuses.get(str(fixture_id), "FIXTURE_DISCOVERED_NO_CURRENT_ODDS")
+        if odds_status != "FIXTURE_DISCOVERED_WITH_CURRENT_ODDS":
+            status = odds_status
+            reason = odds_status
+        elif any(item["stage"] == "READY_TO_PUBLISH" for item in fixture_candidates):
+            status, reason = "FIXTURE_READY", "FINAL_REVIEW_COMPLETE"
+        elif any(item["stage"] == "FINAL_REVIEW_REQUIRED" for item in fixture_candidates):
+            status, reason = "FIXTURE_FINAL_REVIEW", "FINAL_REVIEW_BLOCKED_OR_PENDING"
+        elif any(item["stage"] == "EARLY_CANDIDATE" for item in fixture_candidates):
+            status, reason = "FIXTURE_EVALUATED_EARLY", "FINAL_REVIEW_WINDOW_NOT_OPEN"
+        elif fixture_candidates and all(
+            "INSUFFICIENT_INDEPENDENT_SIGNALS" in item["rejection_reasons"]
+            for item in fixture_candidates
+        ):
+            status, reason = (
+                "FIXTURE_DISCOVERED_NO_REQUIRED_MODEL_CONTEXT",
+                "INSUFFICIENT_INDEPENDENT_SIGNALS",
+            )
+        else:
+            status, reason = "FIXTURE_EVALUATED_REJECTED", (
+                "NO_SUPPORTED_NORMALIZED_MARKET" if not fixture_candidates else "QUALITY_OR_VALUE_GATE_REJECTED"
+            )
+        result.append({
+            "fixture_id": fixture_id,
+            "kickoff_utc": fixture["kickoff_utc"].isoformat(),
+            "league_id": fixture["league_id"],
+            "home_team": fixture["home_team"],
+            "away_team": fixture["away_team"],
+            "capability_tier": fixture["capability_tier"].value,
+            "status": status,
+            "reason": reason,
+            "markets_evaluated": len(fixture_candidates),
+        })
+    unique = {(item.get("fixture_id"), item.get("kickoff_utc")): item for item in result}
+    return sorted(unique.values(), key=lambda item: (item.get("kickoff_utc", ""), item.get("fixture_id", -1)))
+
+
+def _one_x_two_diagnostics(candidates: list[dict[str, object]]) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for market in MARKET_FAMILIES["1X2"]:
+        rows = [item for item in candidates if item.get("market") == market]
+        result[market] = {
+            "evaluated": len(rows),
+            "approved": sum(item.get("decision") == "APPROVED" for item in rows),
+            "ensemble_probability": _distribution(item.get("ensemble_probability") for item in rows),
+            "implied_probability": _distribution(
+                Decimal(1) / Decimal(str(item["offered_odds"]))
+                for item in rows if item.get("offered_odds") is not None
+            ),
+            "edge": _distribution(item.get("edge") for item in rows),
+            "rejection_reasons": _counts(
+                reason for item in rows for reason in item.get("rejection_reasons", ())
+            ),
+            "capability_tiers": _counts(item.get("capability_tier", "UNKNOWN") for item in rows),
+            "signal_availability": _counts(
+                signal.get("name", "UNKNOWN")
+                for item in rows for signal in item.get("signals", ())
+                if signal.get("availability") in {"AVAILABLE", "LOW_SAMPLE"}
+            ),
+        }
     return result
+
+
+def _distribution(values) -> dict[str, str | int | None]:
+    parsed = sorted(
+        Decimal(str(value)) for value in values
+        if value is not None and Decimal(str(value)).is_finite()
+    )
+    if not parsed:
+        return {"count": 0, "mean": None, "median": None}
+    middle = len(parsed) // 2
+    median = parsed[middle] if len(parsed) % 2 else (parsed[middle - 1] + parsed[middle]) / Decimal(2)
+    return {
+        "count": len(parsed),
+        "mean": str(sum(parsed, Decimal(0)) / Decimal(len(parsed))),
+        "median": str(median),
+    }
 
 
 def _history_market_probabilities(fixture, matches, home_form, away_form, impacts) -> dict[str, Decimal]:
@@ -848,11 +1073,17 @@ def _current_review_timestamp(value: object, now: datetime, kickoff: datetime) -
 
 
 def _final_review_call_reserve(fixtures: list[dict[str, object]], now: datetime) -> int:
-    near_count = sum(
-        MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - now <= FINAL_REVIEW_WINDOW
-        for item in fixtures
-    )
-    return min(FINAL_REVIEW_SHORTLIST_SIZE, near_count) * MAX_FINAL_REVIEW_CALLS_PER_FIXTURE
+    near = sorted((item for item in fixtures
+                   if MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - now <= FINAL_REVIEW_WINDOW),
+                  key=lambda item: (item["kickoff_utc"], item.get("fixture_id", -1)))
+    total = 0
+    for item in near[:FINAL_REVIEW_SHORTLIST_SIZE]:
+        capability = item.get("capability")
+        logical_calls = 2 + int(bool(getattr(capability, "lineups", True))) + int(
+            bool(getattr(capability, "injuries", True))
+        )
+        total += logical_calls * MAX_PROVIDER_ATTEMPTS_PER_CALL
+    return total
 
 
 def _shortlist(candidates: list[dict[str, object]], *, maximum: int) -> list[int]:
@@ -871,15 +1102,36 @@ def _shortlist(candidates: list[dict[str, object]], *, maximum: int) -> list[int
 
 def _combos(candidates: list[dict]) -> list[dict[str, object]]:
     values = []
-    for group in combinations(sorted(candidates, key=lambda item: item["candidate_id"]), 3):
-        if len({item["fixture_id"] for item in group}) != 3: continue
-        teams = [item[key] for item in group for key in ("home_team_id", "away_team_id")]
-        if len(set(teams)) != 6: continue
+    remaining = sorted(candidates, key=lambda item: (
+        -Decimal(str(item.get("edge") or "-99")), item["candidate_id"],
+    ))
+    while len(values) < 3:
+        choices = []
+        for group in combinations(remaining, 3):
+            if len({item["fixture_id"] for item in group}) != 3:
+                continue
+            teams = [item[key] for item in group for key in ("home_team_id", "away_team_id")]
+            if len(set(teams)) != 6:
+                continue
+            rank = (
+                -min(Decimal(str(item["edge"])) for item in group),
+                -sum((Decimal(str(item["edge"])) for item in group), Decimal(0)),
+                tuple(item["candidate_id"] for item in group),
+            )
+            choices.append((rank, group))
+        if not choices:
+            break
+        _, group = min(choices, key=lambda item: item[0])
         combined = Decimal(1)
-        for item in group: combined *= Decimal(item["offered_odds"])
+        for item in group:
+            combined *= Decimal(item["offered_odds"])
         values.append({"legs": [item["candidate_id"] for item in group], "combined_odds": str(combined),
                        "correlation_review": "PASSED_DISTINCT_FIXTURES_AND_TEAMS"})
-        if len(values) == 3: break
+        fixtures = {item["fixture_id"] for item in group}
+        teams = {item[key] for item in group for key in ("home_team_id", "away_team_id")}
+        remaining = [item for item in remaining
+                     if item["fixture_id"] not in fixtures
+                     and not teams.intersection({item["home_team_id"], item["away_team_id"]})]
     return values
 
 
@@ -928,16 +1180,23 @@ def _confirmed_lineups(payload: object, fixture: dict) -> bool:
     return confirmed == team_ids
 
 
-def _fixture_still_upcoming(payload: object, fixture_id: int, now: datetime) -> bool:
+def _refreshed_fixture_kickoff(
+    payload: object, fixture_id: int, now: datetime,
+) -> datetime | None:
     rows = _response_rows(payload)
-    if len(rows) != 1: return False
+    if len(rows) != 1 or not _provider_payload_succeeded(payload):
+        return None
     fixture = rows[0].get("fixture") if isinstance(rows[0].get("fixture"), dict) else {}
     status = fixture.get("status") if isinstance(fixture.get("status"), dict) else {}
     try:
         kickoff = _utc(datetime.fromisoformat(str(fixture["date"]).replace("Z", "+00:00")))
-        return int(fixture["id"]) == fixture_id and status.get("short") in {"NS", "TBD"} and kickoff > now
+        return kickoff if (
+            int(fixture["id"]) == fixture_id
+            and status.get("short") in {"NS", "TBD"}
+            and kickoff > now
+        ) else None
     except (KeyError, TypeError, ValueError):
-        return False
+        return None
 
 
 def _availability_veto(market: str, impacts: dict[str, AvailabilityImpact]) -> bool:
@@ -956,7 +1215,13 @@ def _missing_pi(fixture: dict) -> PiSignal:
 
 def _relation(probabilities: dict[str, Decimal], market: str) -> str:
     if not probabilities or market not in probabilities: return "UNAVAILABLE"
-    return "AGREEMENT" if max(probabilities, key=probabilities.get) == market else "DISAGREEMENT"
+    return "AGREEMENT" if _market_selection(probabilities, market) == market else "DISAGREEMENT"
+
+
+def _market_selection(probabilities: dict[str, Decimal], market: str) -> str | None:
+    family = next((outcomes for outcomes in MARKET_FAMILIES.values() if market in outcomes), ())
+    available = {key: probabilities[key] for key in family if key in probabilities}
+    return max(available, key=available.get) if available else None
 
 
 def _odds_band(odds: Decimal) -> str:
@@ -970,6 +1235,20 @@ def _odds_band(odds: Decimal) -> str:
 def _response_rows(payload: object) -> list[dict]:
     rows = payload.get("response") if isinstance(payload, dict) else payload if isinstance(payload, list) else None
     return [row for row in rows if isinstance(row, dict)] if isinstance(rows, list) else []
+
+
+def _provider_payload_succeeded(payload: object) -> bool:
+    return isinstance(payload, dict) and not payload.get("errors") and isinstance(payload.get("response"), list)
+
+
+def _has_raw_bookmaker_values(row: dict[str, object]) -> bool:
+    books = row.get("bookmakers") if isinstance(row.get("bookmakers"), list) else ()
+    return any(
+        isinstance(raw, dict) and raw.get("odd") not in (None, "")
+        for book in books if isinstance(book, dict)
+        for bet in (book.get("bets") if isinstance(book.get("bets"), list) else ()) if isinstance(bet, dict)
+        for raw in (bet.get("values") if isinstance(bet.get("values"), list) else ())
+    )
 
 
 def _result_count(payload: object) -> int:
