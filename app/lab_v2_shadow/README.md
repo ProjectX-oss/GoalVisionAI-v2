@@ -18,6 +18,12 @@ unknown, so a later quote refresh or replay cannot create a duplicate send.
 It never retrieves historical bookmaker odds, cannot address Official, cannot
 mutate Official state and never installs or starts a timer by itself.
 
+V2 has no hard minimum decimal-odds floor for singles, individual combo legs or
+combined combo odds. Current valid prices and every existing ensemble, value,
+freshness, final-review, independence, correlation, exposure and exactly-once
+gate remain mandatory. Odds bands are retained only for transparent reporting.
+Official odds policy is separate and unchanged.
+
 ```bash
 PYTHONPATH=. python -m app.lab_v2_shadow audit
 PYTHONPATH=. python -m app.lab_v2_shadow rehearse --max-calls 100 --daily-reserve 1500

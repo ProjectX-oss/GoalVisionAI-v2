@@ -18,10 +18,17 @@ MAX_COMBOS_PER_CYCLE = 3
 def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, *, now: datetime) -> dict[str, object]:
     """Persist only final-reviewed V2 READY singles and independent triples."""
     clock = now.astimezone(timezone.utc)
-    ready = [
-        dict(item) for item in report.get("candidate_markets", [])
-        if item.get("decision") == "APPROVED" and item.get("stage") == "READY_TO_PUBLISH"
-    ]
+    ready = []
+    for item in report.get("candidate_markets", []):
+        if item.get("decision") != "APPROVED" or item.get("stage") != "READY_TO_PUBLISH":
+            continue
+        try:
+            odds = Decimal(str(item["captured_odds"]))
+        except (KeyError, ValueError, TypeError):
+            continue
+        if not odds.is_finite() or odds <= Decimal(1):
+            continue
+        ready.append(dict(item))
     ready.sort(key=lambda item: (
         -Decimal(str(item.get("edge") or "-99")),
         item["kickoff_utc"], item["fixture_id"], item["market"],
@@ -70,14 +77,12 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         combined = Decimal(1)
         for leg in group:
             combined *= Decimal(leg["odds"])
-        if combined < Decimal("2.00"):
-            continue
         key = tuple(sorted(item["publication_key"] for item in group))
         if key in consumed_combo_keys:
             continue
         combo = {
             "prediction_id": "lab-v2-combo-" + fingerprint(("LAB_V2", key)),
-            "policy": "LAB_V2_BROAD_COVERAGE_COMBO_V1",
+            "policy": "LAB_V2_BROAD_COVERAGE_COMBO_V2",
             "created_at_utc": clock.isoformat(),
             "legs": [dict(item) for item in group],
             "combined_odds": str(combined),

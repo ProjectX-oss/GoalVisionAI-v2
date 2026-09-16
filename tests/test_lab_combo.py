@@ -72,8 +72,18 @@ def test_deterministic_combo_and_correlations():
         assert select_combo(values, NOW)[0] is None
     values = legs()
     values[0]['odds'] = '4'
-    assert select_combo(values, NOW)[1] == ['COMBINED_ODDS_OUTSIDE_TARGET']
+    assert select_combo(values, NOW)[1] == ['COMBINED_ODDS_ABOVE_EXPERIMENTAL_SAFETY_LIMIT']
     assert '🧪 GoalVision AI Lab Combo' in prediction_message(outputs[0])
+
+
+def test_valid_three_leg_combo_below_two_is_allowed():
+    values = legs()
+    for leg, odds in zip(values, ('1.10', '1.15', '1.20'), strict=True):
+        leg['odds'] = odds
+    combo, blockers = select_combo(values, NOW)
+    assert blockers == []
+    assert Decimal(combo['combined_odds']) == Decimal('1.518000')
+    assert len(combo['legs']) == 3
 
 
 def test_immutable_ledger_and_atomic_claim(ledger):
@@ -271,7 +281,7 @@ def test_cli_bounded_discovery_persists_no_selection_without_telegram(ledger):
     assert result['real_combo_found'] is False
     assert result['lab_telegram_sent'] is False
     assert result['api_calls_consumed'] == 1
-    assert result['policy'] == 'LAB_EXPERIMENTAL_SELECTION_V1'
+    assert result['policy'] == 'LAB_EXPERIMENTAL_SELECTION_V2'
     assert result['combos'] == []
     transport.assert_not_called()
     assert len(ledger.all('run')) == 1

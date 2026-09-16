@@ -77,17 +77,20 @@ def select_combo(legs: list[dict], now: datetime) -> tuple[dict | None, list[str
         if not independent(group):
             continue
         independent_count += 1
-        odds = prod((Decimal(leg['odds']) for leg in group), start=Decimal(1))
-        if not Decimal('2.20') <= odds <= Decimal('3.50'):
+        prices = tuple(Decimal(leg['odds']) for leg in group)
+        if any(not price.is_finite() or price <= Decimal(1) for price in prices):
+            continue
+        odds = prod(prices, start=Decimal(1))
+        if not odds.is_finite() or odds <= Decimal(1) or odds > Decimal('3.50'):
             continue
         rank = (-min(Decimal(str(leg['probability'])) for leg in group),
                 -sum(Decimal(str(leg['expected_value'])) for leg in group),
-                abs(odds - Decimal('2.85')), tuple(leg['observation_id'] for leg in group))
+                tuple(leg['observation_id'] for leg in group))
         choices.append((rank, group, odds))
     if not choices:
-        return None, ['COMBINED_ODDS_OUTSIDE_TARGET' if independent_count else 'CORRELATION_OR_BOOKMAKER_CONFLICT']
+        return None, ['COMBINED_ODDS_ABOVE_EXPERIMENTAL_SAFETY_LIMIT' if independent_count else 'CORRELATION_OR_BOOKMAKER_CONFLICT']
     _, group, odds = min(choices, key=lambda item: item[0])
-    identity = {'policy': 'lab-combo-v1', 'legs': [leg['observation_id'] for leg in group]}
+    identity = {'policy': 'lab-combo-v2', 'legs': [leg['observation_id'] for leg in group]}
     return {'prediction_id': 'lab-combo-' + fingerprint(identity), 'policy': identity['policy'],
             'environment': 'LAB', 'created_at_utc': now.isoformat(), 'legs': list(group),
             'combined_odds': str(odds), 'accounting': 'LAB_ONLY_HYPOTHETICAL_ONE_UNIT'}, []

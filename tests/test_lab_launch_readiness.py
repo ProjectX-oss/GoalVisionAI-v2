@@ -50,7 +50,7 @@ class FinalLabLaunchReadinessTests(unittest.TestCase):
 
     def test_authorization_binding_replay_expiry_revocation_capacity(self):
         _,_,auth=self.authorized();same=self.launch.authorize(auth["approval_id"],"operator",AUTHORIZE_CONFIRMATION,authorized_at_utc=NOW+timedelta(seconds=2),expires_at_utc=NOW+timedelta(hours=72),champion_generation_id="champion-1",calibration_artifact_id="calibration-1")
-        self.assertTrue(same["replayed"]);self.assertEqual(auth["environment"],"LAB");self.assertEqual(auth["chat_id"],"-1003510920417");self.assertEqual(auth["minimum_decimal_odds"],"1.60");self.assertFalse(auth["correct_score_allowed"]);self.assertFalse(auth["combo_allowed"]);self.assertEqual(self.launch.status(auth["authorization_id"],now=NOW+timedelta(hours=1))["remaining_publications"],1)
+        self.assertTrue(same["replayed"]);self.assertEqual(auth["environment"],"LAB");self.assertEqual(auth["chat_id"],"-1003510920417");self.assertIsNone(auth["minimum_decimal_odds"]);self.assertFalse(auth["correct_score_allowed"]);self.assertFalse(auth["combo_allowed"]);self.assertEqual(self.launch.status(auth["authorization_id"],now=NOW+timedelta(hours=1))["remaining_publications"],1)
         self.launch.consume(auth["authorization_id"],"observation-1","operator",occurred_at_utc=NOW+timedelta(hours=2),send_succeeded=True);self.assertEqual(self.launch.status(auth["authorization_id"],now=NOW+timedelta(hours=3))["remaining_publications"],0)
         with self.assertRaises(LaunchConflict):self.launch.consume(auth["authorization_id"],"observation-2","operator",occurred_at_utc=NOW+timedelta(hours=4),send_succeeded=True)
 

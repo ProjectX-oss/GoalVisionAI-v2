@@ -815,9 +815,8 @@ def _combos(candidates: list[dict]) -> list[dict[str, object]]:
         if len(set(teams)) != 6: continue
         combined = Decimal(1)
         for item in group: combined *= Decimal(item["offered_odds"])
-        if combined >= Decimal("2.00"):
-            values.append({"legs": [item["candidate_id"] for item in group], "combined_odds": str(combined),
-                           "correlation_review": "PASSED_DISTINCT_FIXTURES_AND_TEAMS"})
+        values.append({"legs": [item["candidate_id"] for item in group], "combined_odds": str(combined),
+                       "correlation_review": "PASSED_DISTINCT_FIXTURES_AND_TEAMS"})
         if len(values) == 3: break
     return values
 

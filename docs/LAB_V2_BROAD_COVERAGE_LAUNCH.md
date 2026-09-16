@@ -74,6 +74,12 @@ signal disagreement, low agreement, insufficient edge, extreme model-market
 divergence or a severe current availability contradiction rejects the market.
 Missing evidence is never fabricated.
 
+There is no hard minimum decimal-odds floor for a LAB single, combo leg or
+combined combo. Low odds alone neither reject nor validate a candidate: current
+valid and fresh odds, positive edge, signal quorum/agreement, final review,
+independence, correlation and exactly-once protections remain mandatory.
+Official minimum-odds rules remain separate and unchanged.
+
 ## Quota and cadence
 
 The hard per-cycle maximum is 100 and the daily safety reserve is 1,500.

@@ -2,14 +2,10 @@
 
 from .experimental import (
     MAX_COMBOS_PER_DISCOVERY_CYCLE,
-    MIN_COMBINED_ODDS,
-    MIN_SINGLE_ODDS,
     POLICY_VERSION,
 )
 
 __all__ = [
     "MAX_COMBOS_PER_DISCOVERY_CYCLE",
-    "MIN_COMBINED_ODDS",
-    "MIN_SINGLE_ODDS",
     "POLICY_VERSION",
 ]

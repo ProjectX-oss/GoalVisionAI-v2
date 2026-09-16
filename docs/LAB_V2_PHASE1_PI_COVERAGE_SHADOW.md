@@ -130,8 +130,10 @@ Current consensus and at least three usable independent signals are required;
 weighted agreement must be at least 0.65, ensemble edge at least 0.04, and a
 trustworthy probability spread above 0.22 or two strong opposing votes rejects
 the candidate. Missing signals reduce the denominator rather than being
-invented. Single odds remain at least 1.70 and three-leg Lab combos remain at
-least 2.00 with distinct fixtures and teams.
+invented. LAB now has no hard minimum decimal-odds floor for singles, combo legs
+or combined combo odds. Three-leg combos still require distinct fixtures and
+teams, and all current-price, freshness, signal, agreement, edge, final-review
+and correlation rules remain in force.
 
 Future settlements can be segmented separately for singles and combos by
 market, league, capability tier, odds band, confidence, lineup state, Pi state,

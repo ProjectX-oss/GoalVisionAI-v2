@@ -16,10 +16,8 @@ from app.current_match_intelligence.models import CurrentMatchIntelligenceSnapsh
 from .presentation import combo_message, single_message
 
 
-POLICY_VERSION = "LAB_EXPERIMENTAL_SELECTION_V1"
-MIN_SINGLE_ODDS = Decimal("1.70")
+POLICY_VERSION = "LAB_EXPERIMENTAL_SELECTION_V2"
 MAX_SINGLE_ODDS = Decimal("5.00")
-MIN_COMBINED_ODDS = Decimal("2.00")
 MAX_COMBINED_ODDS = Decimal("15.00")
 MAX_COMBOS_PER_DISCOVERY_CYCLE = 3
 MAX_SINGLES_PER_DISCOVERY_CYCLE = 3
@@ -76,15 +74,16 @@ def evaluate_snapshot(snapshot: CurrentMatchIntelligenceSnapshot, *, now: dateti
         signal = probabilities.get(market)
         if odds is None:
             blockers.append("MARKET_ODDS_NOT_AVAILABLE")
-        elif odds < MIN_SINGLE_ODDS:
-            blockers.append("SINGLE_ODDS_BELOW_1_70")
+        elif not odds.is_finite() or odds <= Decimal(1):
+            blockers.append("INVALID_CURRENT_DECIMAL_ODDS")
         elif odds > MAX_SINGLE_ODDS:
             blockers.append("SINGLE_ODDS_ABOVE_EXPERIMENTAL_SAFETY_LIMIT")
         if signal is None:
             blockers.append("EXPERIMENTAL_SIGNAL_UNAVAILABLE")
         elif signal < Decimal("0.05") or signal > Decimal("0.85"):
             blockers.append("UNSUPPORTED_EXTREME_MODEL_SIGNAL")
-        implied = Decimal(1) / odds if odds else None
+        valid_odds = odds is not None and odds.is_finite() and odds > Decimal(1)
+        implied = Decimal(1) / odds if valid_odds else None
         edge = signal - implied if signal is not None and implied is not None else None
         confidence = _confidence(edge)
         if edge is not None and edge < Decimal("0.05"):
@@ -194,9 +193,11 @@ def select_combo_batch(candidates: list[dict], *, used_leg_keys: set[str], now: 
         for group in combinations(remaining, 3):
             if not independent(group):
                 continue
-            combined = _product(_decimal(item["captured_odds"]) for item in group)
-            if (any(not MIN_SINGLE_ODDS <= _decimal(item["captured_odds"]) <= MAX_SINGLE_ODDS for item in group)
-                    or not combined_odds_eligible(combined)):
+            leg_odds = tuple(_decimal(item["captured_odds"]) for item in group)
+            if any(not _valid_leg_odds(value) for value in leg_odds):
+                continue
+            combined = _product(leg_odds)
+            if not combined_odds_eligible(combined):
                 continue
             rank = (
                 -min(_decimal(item["market_context_edge"]) for item in group),
@@ -238,7 +239,16 @@ def publication_key(value: dict) -> str:
 
 
 def combined_odds_eligible(value) -> bool:
-    return MIN_COMBINED_ODDS <= _decimal(value) <= MAX_COMBINED_ODDS
+    odds = _decimal(value)
+    return odds is not None and odds.is_finite() and Decimal(1) < odds <= MAX_COMBINED_ODDS
+
+
+def _valid_leg_odds(value: Decimal | None) -> bool:
+    return (
+        value is not None
+        and value.is_finite()
+        and Decimal(1) < value <= MAX_SINGLE_ODDS
+    )
 
 
 def _timing_stage(

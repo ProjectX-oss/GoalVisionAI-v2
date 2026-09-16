@@ -19,12 +19,14 @@ rehearsal documents describing the former history-first ordering remain unchange
 Each leg must be the selected actionable single, pass the complete existing Lab
 publication review (including reasoning and governance), have no single-market
 rejection, and retain its captured quote. Provider-origin freshness is rechecked
-at combination and delivery. No threshold or model activation is changed.
+at combination and delivery. There is no hard minimum decimal-odds floor for a
+leg. No quality threshold or model activation is changed.
 Exactly three legs are required, from different fixtures, teams and competitions,
 and the same captured bookmaker. The competition restriction conservatively
 avoids shared standings context; it is not a claim of statistical independence.
-Combined decimal odds must be 2.20–3.50. Ranking maximizes the weakest leg's
-probability, then summed value; distance to 2.85 and immutable IDs break ties.
+There is no hard minimum combined-odds floor; the experimental 3.50 upper safety
+limit remains. Ranking maximizes the weakest leg's probability, then summed
+value, with immutable IDs breaking ties. It does not maximize combined odds.
 This is an experimental selection rule, not a validated profitability claim.
 
 `var/lab_combo/analysis.db` is an explicit copy of the selected Lab model database.

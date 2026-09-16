@@ -6,9 +6,7 @@ from dataclasses import dataclass
 from decimal import Decimal, localcontext
 
 
-POLICY_VERSION = "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V2"
-MIN_SINGLE_ODDS = Decimal("1.70")
-MIN_COMBINED_ODDS = Decimal("2.00")
+POLICY_VERSION = "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V3"
 _FAMILY = {
     "HOME_WIN": "1X2", "DRAW": "1X2", "AWAY_WIN": "1X2",
     "BTTS_YES": "BTTS", "BTTS_NO": "BTTS",
@@ -62,8 +60,13 @@ def evaluate_ensemble(
         blockers.append("SEVERE_CURRENT_MATCH_INTELLIGENCE_CONTRADICTION")
     if offered_odds is None:
         blockers.append("CURRENT_PRICE_UNAVAILABLE")
-    elif offered_odds < MIN_SINGLE_ODDS:
-        blockers.append("SINGLE_ODDS_BELOW_1_70")
+    elif not offered_odds.is_finite() or offered_odds <= Decimal(1):
+        blockers.append("INVALID_CURRENT_DECIMAL_ODDS")
+    valid_odds = (
+        offered_odds is not None
+        and offered_odds.is_finite()
+        and offered_odds > Decimal(1)
+    )
     usable = tuple(sorted((item for item in signals if item.availability in {"AVAILABLE", "LOW_SAMPLE"}
                            and item.reliability > 0 and (item.probability is not None or item.selection is not None)),
                           key=lambda item: item.name))
@@ -86,7 +89,7 @@ def evaluate_ensemble(
             agreement_weight = sum((weight for item, weight in weighted
                                     if abs(item.probability - ensemble) <= Decimal("0.10")), Decimal(0))
             agreement = agreement_weight / total_weight
-            implied = Decimal(1) / offered_odds if offered_odds else None
+            implied = Decimal(1) / offered_odds if valid_odds else None
             edge = ensemble - implied if implied is not None else None
         trustworthy = [item for item in probabilities if item.reliability >= Decimal("0.60")]
         spread = max((item.probability for item in trustworthy), default=ensemble) - min(

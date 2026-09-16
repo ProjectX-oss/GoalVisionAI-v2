@@ -11,6 +11,12 @@ singles and three disjoint three-leg combinations when all evidence gates pass.
 Missing confirmed lineups remain eligible for a later near-kickoff recheck and
 do not prevent early quality scoring, but they prevent final publication.
 
+LAB does not impose a hard minimum decimal-odds floor on singles, combo legs or
+combined combo odds. Decimal prices must still be current, fresh, finite and
+greater than 1, and low odds do not bypass value, evidence, agreement, lineup,
+final-review, independence, correlation, exposure or duplicate-publication
+checks. The experimental upper safety limits remain fail-closed safeguards.
+
 Every supported Lab market is currently treated as lineup-sensitive. Evidence
 may be retained as `EARLY_CANDIDATE`, but publication requires a forced final
 review beginning 60 minutes before kickoff. That review refreshes fixture

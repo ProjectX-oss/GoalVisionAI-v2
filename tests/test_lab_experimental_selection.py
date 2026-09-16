@@ -15,7 +15,7 @@ from app.current_match_intelligence.models import (
 from app.current_odds_forward_test.discovery import discover_current_fixture
 from app.lab_combo.cli import _recheck_fixture_ids
 from app.lab_combo.experimental import (
-    MAX_COMBOS_PER_DISCOVERY_CYCLE, MIN_COMBINED_ODDS, MIN_SINGLE_ODDS,
+    MAX_COMBOS_PER_DISCOVERY_CYCLE,
     combined_odds_eligible, evaluate_snapshot, select_combo_batch, select_single_predictions,
 )
 from app.lab_combo.presentation import (
@@ -101,13 +101,10 @@ def ledger_fixture():
     return directory, ComboRepository(Path(directory.name) / "ledger.db")
 
 
-def test_single_odds_boundary_and_below_rejection():
-    assert MIN_SINGLE_ODDS == Decimal("1.70")
-    boundary = next(item for item in evaluate_snapshot(snapshot(home_odds="1.70"), now=NOW) if item["market"] == "HOME_WIN")
-    below = next(item for item in evaluate_snapshot(snapshot(home_odds="1.69"), now=NOW) if item["market"] == "HOME_WIN")
-    assert boundary["decision"] == "APPROVED"
-    assert boundary["stage"] == "EARLY_CANDIDATE"
-    assert "SINGLE_ODDS_BELOW_1_70" in below["rejection_reasons"]
+def test_low_single_odds_are_judged_only_by_non_odds_quality_gates():
+    low = next(item for item in evaluate_snapshot(snapshot(home_odds="1.25"), now=NOW) if item["market"] == "HOME_WIN")
+    assert "SINGLE_ODDS_BELOW_1_70" not in low["rejection_reasons"]
+    assert "INSUFFICIENT_MARKET_CONTEXT_AGREEMENT" in low["rejection_reasons"]
 
 
 def test_early_candidate_retained_but_never_selected_or_used_in_combo():
@@ -155,16 +152,15 @@ def test_cheap_discovery_defers_history_and_preserves_budget():
 
 
 def test_combo_policy_multiple_disjoint_deterministic_and_not_forced():
-    assert MIN_COMBINED_ODDS == Decimal("2.00")
-    assert combined_odds_eligible("2.00")
-    assert not combined_odds_eligible("1.99")
+    assert combined_odds_eligible("1.01")
+    assert combined_odds_eligible("1.99")
     assert not combined_odds_eligible("15.01")
     values = [approved(i) for i in range(1, 10)]
     first = select_combo_batch(values, used_leg_keys=set(), now=NOW)
     reverse = select_combo_batch(list(reversed(values)), used_leg_keys=set(), now=NOW)
     assert first == reverse
     assert len(first) == MAX_COMBOS_PER_DISCOVERY_CYCLE == 3
-    assert all(len(combo["legs"]) == 3 and Decimal(combo["combined_odds"]) >= Decimal("2.00") for combo in first)
+    assert all(len(combo["legs"]) == 3 for combo in first)
     keys = [leg["candidate_id"] for combo in first for leg in combo["legs"]]
     assert len(keys) == len(set(keys))
     fixtures = [leg["fixture_id"] for combo in first for leg in combo["legs"]]
@@ -178,6 +174,11 @@ def test_combo_policy_multiple_disjoint_deterministic_and_not_forced():
     used = {f"{i}:HOME_WIN" for i in range(1, 4)}
     assert all(leg["fixture_id"] not in {"1", "2", "3"}
                for combo in select_combo_batch(values, used_leg_keys=used, now=NOW) for leg in combo["legs"])
+
+    low_odds = [approved(i, odds=value) for i, value in enumerate(("1.10", "1.15", "1.20"), 20)]
+    low_combo = select_combo_batch(low_odds, used_leg_keys=set(), now=NOW)
+    assert len(low_combo) == 1
+    assert Decimal(low_combo[0]["combined_odds"]) == Decimal("1.518000")
 
 
 def test_single_selection_no_duplicate_publication_and_one_market_per_fixture():
