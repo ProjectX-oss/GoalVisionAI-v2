@@ -18,6 +18,15 @@ unknown, so a later quote refresh or replay cannot create a duplicate send.
 It never retrieves historical bookmaker odds, cannot address Official, cannot
 mutate Official state and never installs or starts a timer by itself.
 
+Final-review readiness is market-specific. Current 1X2 selections are
+lineup-sensitive when the league capability advertises lineups; confirmed
+lineups and refreshed injuries (when supported) are then required. Totals and
+BTTS do not become permanently blocked merely because optional lineups or
+injuries are unpublished. Every READY candidate still requires an exact fresh
+fixture refresh, fresh current odds, and a current final-review timestamp.
+Near-kickoff review calls are reserved before optional prediction enrichment,
+and imminent kickoffs are reviewed first.
+
 V2 has no hard minimum decimal-odds floor for singles, individual combo legs or
 combined combo odds. Current valid prices and every existing ensemble, value,
 freshness, final-review, independence, correlation, exposure and exactly-once

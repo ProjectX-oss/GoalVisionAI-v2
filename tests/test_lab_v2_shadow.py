@@ -25,7 +25,7 @@ from app.lab_v2_shadow.quota import (
 from app.lab_v2_shadow.pi_ratings import MatchResult, PiAvailability, PiRatingAdapter, parse_api_fixture_results
 from app.lab_v2_shadow.repository import ShadowEvidenceRepository
 from app.lab_v2_shadow.runner import LabV2ShadowRunner
-from app.lab_v2_shadow.runner import _stage
+from app.lab_v2_shadow.runner import _final_review_call_reserve, _readiness, _stage
 from app.lab_v2_shadow.segmentation import segment_results
 from app.real_match_lab_analysis.models import LAB_BOT_USERNAME, LAB_CHAT_ID
 
@@ -297,22 +297,117 @@ def test_market_consensus_can_restrict_to_reviewed_current_sources():
     assert {quote.bookmaker_id for quote in restricted.quotes} == {3}
 
 
-def test_near_kickoff_stage_requires_review_but_tier_c_can_finish_without_lineups():
-    from types import SimpleNamespace
-    approved = evaluate_ensemble("HOME_WIN", Decimal("2.00"), [
-        EnsembleSignal("CURRENT_MARKET_CONSENSUS", "HOME_WIN", Decimal("0.56"), "HOME_WIN", Decimal("0.9"), "AVAILABLE", "x"),
-        EnsembleSignal("PI_RATINGS", "HOME_WIN", Decimal("0.59"), "HOME_WIN", Decimal("0.9"), "AVAILABLE", "x"),
-        EnsembleSignal("API_FOOTBALL_PREDICTION", "HOME_WIN", Decimal("0.60"), "HOME_WIN", Decimal("0.75"), "AVAILABLE", "x"),
-        EnsembleSignal("CURRENT_MATCH_INTELLIGENCE", "HOME_WIN", Decimal("0.58"), "HOME_WIN", Decimal("0.8"), "AVAILABLE", "x"),
+def _transition_decision(market: str = "HOME_WIN"):
+    return evaluate_ensemble(market, Decimal("2.00"), [
+        EnsembleSignal("CURRENT_MARKET_CONSENSUS", market, Decimal("0.56"), market, Decimal("0.9"), "AVAILABLE", "x"),
+        EnsembleSignal("PI_RATINGS", market, Decimal("0.59"), market, Decimal("0.9"), "AVAILABLE", "x"),
+        EnsembleSignal("API_FOOTBALL_PREDICTION", market, Decimal("0.60"), market, Decimal("0.75"), "AVAILABLE", "x"),
+        EnsembleSignal("CURRENT_MATCH_INTELLIGENCE", market, Decimal("0.58"), market, Decimal("0.8"), "AVAILABLE", "x"),
     ])
-    fixture = {"kickoff_utc": NOW + timedelta(minutes=45), "capability": SimpleNamespace(
-        lineups=False, injuries=False, tier=CapabilityTier.TIER_C_BASIC)}
-    assert _stage(approved, fixture, NOW, {}) == "FINAL_REVIEW_REQUIRED"
-    review = {"fixture_refreshed": True, "odds_refreshed": True,
-              "lineup_status": "NOT_SUPPORTED", "injuries_status": "NOT_SUPPORTED"}
-    assert _stage(approved, fixture, NOW, review) == "READY_TO_PUBLISH"
-    fixture["kickoff_utc"] = NOW + timedelta(hours=2)
-    assert _stage(approved, fixture, NOW, review) == "EARLY_CANDIDATE"
+
+
+def _transition_fixture(*, kickoff: datetime, lineups: bool, injuries: bool, tier=CapabilityTier.TIER_B_GOOD):
+    return {"kickoff_utc": kickoff, "capability": SimpleNamespace(
+        lineups=lineups, injuries=injuries, tier=tier,
+    )}
+
+
+def _transition_review(clock: datetime, **changes):
+    value = {
+        "fixture_refreshed": True,
+        "odds_refreshed": True,
+        "lineup_status": "CONFIRMED",
+        "injuries_status": "REFRESHED",
+        "reviewed_at_utc": clock.isoformat(),
+    }
+    value.update(changes)
+    return value
+
+
+def test_approved_fresh_final_review_with_lineup_is_ready():
+    decision = _transition_decision()
+    fixture = _transition_fixture(kickoff=NOW + timedelta(minutes=45), lineups=True, injuries=True)
+    stage, reasons = _readiness(decision, fixture, NOW, _transition_review(NOW))
+    assert decision.decision == "APPROVED"
+    assert stage == "READY_TO_PUBLISH"
+    assert reasons == ("FINAL_REVIEW_COMPLETE",)
+
+
+def test_lineup_sensitive_candidate_waits_and_can_progress_on_next_cycle():
+    first = NOW
+    second = NOW + timedelta(minutes=30)
+    fixture = _transition_fixture(kickoff=NOW + timedelta(minutes=60), lineups=True, injuries=True)
+    decision = _transition_decision("HOME_WIN")
+    waiting, blockers = _readiness(
+        decision, fixture, first,
+        _transition_review(first, lineup_status="NOT_YET_PUBLISHED"),
+    )
+    ready, reasons = _readiness(decision, fixture, second, _transition_review(second))
+    assert waiting == "FINAL_REVIEW_REQUIRED"
+    assert blockers == ("CONFIRMED_LINEUPS_REQUIRED_FOR_MARKET",)
+    assert ready == "READY_TO_PUBLISH"
+    assert reasons == ("FINAL_REVIEW_COMPLETE",)
+
+
+def test_lineup_unsupported_tier_c_can_become_ready():
+    decision = _transition_decision("DRAW")
+    fixture = _transition_fixture(
+        kickoff=NOW + timedelta(minutes=45), lineups=False, injuries=False,
+        tier=CapabilityTier.TIER_C_BASIC,
+    )
+    review = _transition_review(
+        NOW, lineup_status="NOT_SUPPORTED", injuries_status="NOT_SUPPORTED",
+    )
+    assert _stage(decision, fixture, NOW, review) == "READY_TO_PUBLISH"
+
+
+def test_non_lineup_sensitive_market_can_be_ready_without_lineup_or_injuries():
+    decision = _transition_decision("OVER_2_5")
+    fixture = _transition_fixture(kickoff=NOW + timedelta(minutes=45), lineups=True, injuries=True)
+    review = _transition_review(
+        NOW, lineup_status="NOT_YET_PUBLISHED", injuries_status="NOT_YET_PUBLISHED",
+    )
+    assert _stage(decision, fixture, NOW, review) == "READY_TO_PUBLISH"
+
+
+def test_failed_or_stale_final_review_cannot_become_ready():
+    decision = _transition_decision()
+    fixture = _transition_fixture(kickoff=NOW + timedelta(minutes=45), lineups=True, injuries=True)
+    missing_odds = _transition_review(NOW, odds_refreshed=False)
+    stale_review = _transition_review(NOW - timedelta(minutes=6))
+    assert _stage(decision, fixture, NOW, missing_odds) == "FINAL_REVIEW_REQUIRED"
+    assert "CURRENT_ODDS_REFRESH_REQUIRED" in _readiness(decision, fixture, NOW, missing_odds)[1]
+    assert _stage(decision, fixture, NOW, stale_review) == "FINAL_REVIEW_REQUIRED"
+    assert "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED" in _readiness(decision, fixture, NOW, stale_review)[1]
+
+
+def test_new_disagreement_after_refresh_remains_rejected():
+    market = "HOME_WIN"
+    rejected = evaluate_ensemble(market, Decimal("2.00"), [
+        EnsembleSignal("CURRENT_MARKET_CONSENSUS", market, Decimal("0.55"), market, Decimal("0.9"), "AVAILABLE", "x"),
+        EnsembleSignal("PI_RATINGS", market, Decimal("0.25"), "AWAY_WIN", Decimal("0.9"), "AVAILABLE", "x"),
+        EnsembleSignal("API_FOOTBALL_PREDICTION", market, Decimal("0.22"), "AWAY_WIN", Decimal("0.75"), "AVAILABLE", "x"),
+    ])
+    fixture = _transition_fixture(kickoff=NOW + timedelta(minutes=45), lineups=True, injuries=True)
+    assert rejected.decision == "REJECTED"
+    assert _stage(rejected, fixture, NOW, _transition_review(NOW)) == "REJECTED"
+    assert "MATERIAL_SIGNAL_DISAGREEMENT" in rejected.rejection_reasons
+
+
+def test_near_kickoff_review_calls_are_reserved_before_optional_enrichment():
+    fixtures = [
+        {"kickoff_utc": NOW + timedelta(minutes=30)},
+        {"kickoff_utc": NOW + timedelta(minutes=45)},
+        {"kickoff_utc": NOW + timedelta(minutes=60)},
+        {"kickoff_utc": NOW + timedelta(hours=3)},
+    ]
+    assert _final_review_call_reserve(fixtures, NOW) == 12
+
+
+def test_approved_candidate_outside_final_window_remains_early():
+    decision = _transition_decision()
+    fixture = _transition_fixture(kickoff=NOW + timedelta(hours=2), lineups=False, injuries=False)
+    assert _stage(decision, fixture, NOW, {}) == "EARLY_CANDIDATE"
 
 
 def test_ready_publication_handoff_is_lab_only_and_exactly_once(tmp_path, monkeypatch):
@@ -368,6 +463,7 @@ def _controlled_ready_candidate(clock: datetime) -> dict[str, object]:
         "odds_refreshed": True,
         "lineup_status": "NOT_SUPPORTED",
         "injuries_status": "NOT_SUPPORTED",
+        "reviewed_at_utc": clock.isoformat(),
     }
     stage = _stage(decision, fixture, clock, review)
     assert decision.decision == "APPROVED"

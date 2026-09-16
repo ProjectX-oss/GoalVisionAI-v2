@@ -45,6 +45,26 @@ Unsupported endpoints are not called. Injuries and lineups are requested only
 when their league coverage flag is true and only for a five-fixture shortlist;
 lineups are never requested outside the near-kickoff review.
 
+Final-review readiness follows the explicit
+`LAB_V2_FINAL_REVIEW_READINESS_V2` policy. `HOME_WIN`, `DRAW`, and `AWAY_WIN`
+are lineup-sensitive: when league metadata advertises lineup support, both
+teams must have confirmed starting elevens; refreshed injuries are also
+required when that endpoint is supported. A capability value of
+`NOT_SUPPORTED` is an honest optional-data limitation and does not by itself
+block a Tier B/C 1X2 candidate. Totals and BTTS are not lineup-sensitive and
+may become READY with unavailable/unpublished optional lineup and injury data.
+This is consistent with the existing market-specific publication-gate
+convention and avoids recreating V1's every-market lineup dependency.
+
+All markets require an exact upcoming-fixture refresh, exact current-odds
+refresh and a final-review timestamp no more than five minutes from the cycle
+clock. The five-fixture shortlist orders candidates by final-review need and
+kickoff before edge. Up to four calls per near-kickoff fixture are reserved
+before optional prediction enrichment, so optional calls cannot normally
+consume the entire final-review budget. A later 30-minute cycle rebuilds the
+candidate from current data and may promote it after a prior
+`NOT_YET_PUBLISHED`; candidates within ten minutes of kickoff are rejected.
+
 ## Bookmaker relevance
 
 `/odds/bookmakers` is cached for seven days. Exact normalized catalogue matches

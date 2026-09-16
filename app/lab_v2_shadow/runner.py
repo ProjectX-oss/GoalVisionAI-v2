@@ -33,10 +33,15 @@ from .quota import (
 from .repository import ShadowEvidenceRepository
 
 
-SCHEMA_VERSION = "goalvision-lab-v2-broad-coverage-cycle-v2"
+SCHEMA_VERSION = "goalvision-lab-v2-broad-coverage-cycle-v3"
+READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V2"
 MAXIMUM_CALLS = MAX_DISCOVERY_CALLS_PER_CYCLE
 FINAL_REVIEW_WINDOW = timedelta(minutes=75)
+FINAL_REVIEW_MAX_AGE = timedelta(minutes=5)
 MINIMUM_KICKOFF_LEAD = timedelta(minutes=10)
+FINAL_REVIEW_SHORTLIST_SIZE = 5
+MAX_FINAL_REVIEW_CALLS_PER_FIXTURE = 4
+LINEUP_SENSITIVE_MARKETS = frozenset({"HOME_WIN", "DRAW", "AWAY_WIN"})
 EXCLUDED = re.compile(
     r"(?i)(\byouth\b|\bu[- ]?\d{2}\b|\breserves?\b|\bacademy\b|"
     r"\bvirtual\b|\besports?\b|\bfriendly\b)"
@@ -147,15 +152,20 @@ class LabV2ShadowRunner:
             and any(value.status == "AVAILABLE" for value in odds_evidence[item["fixture_id"]][2].values())
         ]
 
-        histories, adapters, history_budget_skips = await self._histories(odds_fixtures, clock)
-        api_predictions, prediction_budget_skips = await self._predictions(odds_fixtures, clock)
+        final_review_reserve = _final_review_call_reserve(odds_fixtures, clock)
+        histories, adapters, history_budget_skips = await self._histories(
+            odds_fixtures, clock, reserve_calls=final_review_reserve,
+        )
+        api_predictions, prediction_budget_skips = await self._predictions(
+            odds_fixtures, clock, reserve_calls=final_review_reserve,
+        )
         persisted_models, v1_keys, persisted_usage = self._persisted_v1(odds_fixtures, clock)
 
         preliminary = self._evaluate(
             odds_fixtures, odds_evidence, histories, adapters, api_predictions,
             persisted_models, {}, {}, clock,
         )
-        shortlist_ids = _shortlist(preliminary, maximum=5)
+        shortlist_ids = _shortlist(preliminary, maximum=FINAL_REVIEW_SHORTLIST_SIZE)
         availability: dict[int, dict[str, AvailabilityImpact]] = {}
         final_reviews: dict[int, dict[str, object]] = {}
         cmi_enriched: set[int] = set()
@@ -303,6 +313,9 @@ class LabV2ShadowRunner:
             "v1_candidates_rejected_by_v2": sorted(v1_keys - v2_keys),
             "candidate_markets": candidates,
             "rejection_reasons": rejection_reasons,
+            "readiness_policy": READINESS_POLICY_VERSION,
+            "lineup_sensitive_markets": sorted(LINEUP_SENSITIVE_MARKETS),
+            "final_review_call_reserve": final_review_reserve,
             "early_candidate_count": len(early),
             "final_review_candidate_count": len(final),
             "ready_candidate_count": len(ready),
@@ -405,7 +418,7 @@ class LabV2ShadowRunner:
         }
 
     async def _histories(
-        self, fixtures: list[dict[str, object]], clock: datetime,
+        self, fixtures: list[dict[str, object]], clock: datetime, *, reserve_calls: int = 0,
     ) -> tuple[dict[int, tuple[MatchResult, ...]], dict[int, PiRatingAdapter], int]:
         histories: dict[int, tuple[MatchResult, ...]] = {}
         adapters: dict[int, PiRatingAdapter] = {}
@@ -414,7 +427,7 @@ class LabV2ShadowRunner:
         for fixture in fixtures:
             grouped.setdefault(int(fixture["league_id"]), []).append(fixture)
         for league_id, targets in sorted(grouped.items(), key=lambda item: min(x["kickoff_utc"] for x in item[1])):
-            if self._remaining() <= 12:
+            if self._remaining() <= max(12, reserve_calls):
                 skipped += len(targets)
                 continue
             season = int(targets[0]["season"])
@@ -431,7 +444,7 @@ class LabV2ShadowRunner:
                 in {PiAvailability.INSUFFICIENT, PiAvailability.UNAVAILABLE}
                 for item in targets
             )
-            if needs_previous and season > 1 and self._remaining() > 16:
+            if needs_previous and season > 1 and self._remaining() > max(16, reserve_calls):
                 previous, _ = await self._fetch(
                     "/fixtures(results)", {"league": league_id, "season": season - 1, "status": "FT", "last": 99},
                     lambda lid=league_id, value=season - 1: self.client.finished_matches(lid, value, last=99),
@@ -445,7 +458,7 @@ class LabV2ShadowRunner:
         return histories, adapters, skipped
 
     async def _predictions(
-        self, fixtures: list[dict[str, object]], clock: datetime,
+        self, fixtures: list[dict[str, object]], clock: datetime, *, reserve_calls: int = 0,
     ) -> tuple[dict[int, ApiPredictionSignal], int]:
         result: dict[int, ApiPredictionSignal] = {}
         skipped = 0
@@ -453,7 +466,7 @@ class LabV2ShadowRunner:
             capability: LeagueCapability = fixture["capability"]
             if not capability.predictions:
                 continue
-            if self._remaining() <= 8:
+            if self._remaining() <= max(8, reserve_calls):
                 skipped += 1
                 continue
             fixture_id = int(fixture["fixture_id"])
@@ -644,9 +657,10 @@ class LabV2ShadowRunner:
                         market, price.decimal_odds, signals,
                         severe_current_match_contradiction=veto,
                     )
-                    stage = _stage(decision, fixture, now, review)
+                    stage, readiness_reasons = _readiness(decision, fixture, now, review)
                     material = {
                         "policy": decision.policy, "fixture_id": fixture_id,
+                        "readiness_policy": READINESS_POLICY_VERSION,
                         "league_id": league_id, "league": fixture["league_name"],
                         "capability_tier": fixture["capability_tier"].value,
                         "home_team_id": fixture["home_team_id"], "away_team_id": fixture["away_team_id"],
@@ -671,6 +685,7 @@ class LabV2ShadowRunner:
                         "market_context_edge": str(decision.edge) if decision.edge is not None else None,
                         "weighted_agreement": str(decision.weighted_agreement) if decision.weighted_agreement is not None else None,
                         "stage": stage,
+                        "readiness_reasons": list(readiness_reasons),
                         "final_review_completed_at_utc": review.get("reviewed_at_utc") if stage == "READY_TO_PUBLISH" else None,
                         "approval_reasons": list(decision.approval_reasons),
                         "rejection_reasons": list(decision.rejection_reasons),
@@ -780,24 +795,71 @@ def _poisson(rate: Decimal, goals: int) -> Decimal:
 
 
 def _stage(decision: EnsembleDecision, fixture: dict, now: datetime, review: dict[str, object]) -> str:
-    if decision.decision != "APPROVED": return "REJECTED"
-    if fixture["kickoff_utc"] - now > FINAL_REVIEW_WINDOW: return "EARLY_CANDIDATE"
-    if not review.get("fixture_refreshed") or not review.get("odds_refreshed"): return "FINAL_REVIEW_REQUIRED"
+    """Return the public stage while `_readiness` retains auditable reasons."""
+    return _readiness(decision, fixture, now, review)[0]
+
+
+def _readiness(
+    decision: EnsembleDecision,
+    fixture: dict,
+    now: datetime,
+    review: dict[str, object],
+) -> tuple[str, tuple[str, ...]]:
+    if decision.decision != "APPROVED":
+        return "REJECTED", ("ENSEMBLE_NOT_APPROVED",)
+    remaining = fixture["kickoff_utc"] - now
+    if remaining <= MINIMUM_KICKOFF_LEAD:
+        return "REJECTED", ("MINIMUM_KICKOFF_LEAD_NOT_MET",)
+    if remaining > FINAL_REVIEW_WINDOW:
+        return "EARLY_CANDIDATE", ("FINAL_REVIEW_WINDOW_NOT_OPEN",)
+    blockers: list[str] = []
+    if not review.get("fixture_refreshed"):
+        blockers.append("FIXTURE_REFRESH_REQUIRED")
+    if not review.get("odds_refreshed"):
+        blockers.append("CURRENT_ODDS_REFRESH_REQUIRED")
+    if not _current_review_timestamp(review.get("reviewed_at_utc"), now, fixture["kickoff_utc"]):
+        blockers.append("CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED")
     capability: LeagueCapability = fixture["capability"]
-    if capability.lineups and review.get("lineup_status") != "CONFIRMED": return "FINAL_REVIEW_REQUIRED"
-    if capability.injuries and review.get("injuries_status") != "REFRESHED": return "FINAL_REVIEW_REQUIRED"
+    if decision.market in LINEUP_SENSITIVE_MARKETS:
+        if capability.lineups and review.get("lineup_status") != "CONFIRMED":
+            blockers.append("CONFIRMED_LINEUPS_REQUIRED_FOR_MARKET")
+        if capability.injuries and review.get("injuries_status") != "REFRESHED":
+            blockers.append("CURRENT_INJURIES_REQUIRED_FOR_MARKET")
     if capability.tier == CapabilityTier.TIER_C_BASIC and (
         decision.confidence not in {"MEDIUM", "HIGH"} or decision.available_signals < 3
         or (decision.weighted_agreement or Decimal(0)) < Decimal("0.75")
     ):
-        return "FINAL_REVIEW_REQUIRED"
-    return "READY_TO_PUBLISH"
+        blockers.append("TIER_C_READINESS_QUALITY_REQUIRED")
+    return (
+        ("FINAL_REVIEW_REQUIRED", tuple(blockers))
+        if blockers else
+        ("READY_TO_PUBLISH", ("FINAL_REVIEW_COMPLETE",))
+    )
+
+
+def _current_review_timestamp(value: object, now: datetime, kickoff: datetime) -> bool:
+    if not isinstance(value, str):
+        return False
+    try:
+        reviewed = _utc(datetime.fromisoformat(value.replace("Z", "+00:00")))
+    except ValueError:
+        return False
+    return now - FINAL_REVIEW_MAX_AGE <= reviewed <= now + FINAL_REVIEW_MAX_AGE and reviewed < kickoff
+
+
+def _final_review_call_reserve(fixtures: list[dict[str, object]], now: datetime) -> int:
+    near_count = sum(
+        MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - now <= FINAL_REVIEW_WINDOW
+        for item in fixtures
+    )
+    return min(FINAL_REVIEW_SHORTLIST_SIZE, near_count) * MAX_FINAL_REVIEW_CALLS_PER_FIXTURE
 
 
 def _shortlist(candidates: list[dict[str, object]], *, maximum: int) -> list[int]:
     ordered = sorted(candidates, key=lambda item: (
         item["decision"] != "APPROVED", item["stage"] != "FINAL_REVIEW_REQUIRED",
-        -Decimal(str(item.get("edge") or "-99")), item["kickoff_utc"], item["fixture_id"], item["market"],
+        item["kickoff_utc"], -Decimal(str(item.get("edge") or "-99")),
+        item["fixture_id"], item["market"],
     ))
     result: list[int] = []
     for item in ordered:
