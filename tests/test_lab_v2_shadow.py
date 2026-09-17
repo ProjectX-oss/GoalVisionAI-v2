@@ -1264,15 +1264,18 @@ def test_indeterminate_v2_send_blocks_replay_even_after_quote_refresh(
         ledger.close()
 
 
-def test_shipped_v2_systemd_service_explicitly_arms_controlled_send():
+def test_shipped_v2_systemd_service_selects_adaptive_code_and_bounded_quota():
     service = (
         Path(__file__).parents[1]
         / "app/lab_v2_shadow/systemd/goalvision-lab-v2-discover.service"
     ).read_text(encoding="utf-8")
     assert (
-        "ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -m app.lab_v2_shadow "
-        "controlled-cycle --send --max-calls 100 --daily-reserve 1500"
+        "ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_v2_shadow "
+        "controlled-cycle --send --max-calls 400 --daily-reserve 1500"
     ) in service
+    assert "Environment=PYTHONPATH=/home/arvis/GoalVisionAI-throughput" in service
+    assert "WorkingDirectory=/home/arvis/GoalVisionAI\n" in service
+    assert "--max-calls 100" not in service
 
 
 def test_v2_publication_does_not_duplicate_a_published_v1_key(tmp_path, monkeypatch):

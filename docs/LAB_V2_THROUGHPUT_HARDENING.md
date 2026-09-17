@@ -136,3 +136,50 @@ retrieval. Exact retrieval is not evidence of a newly updated bookmaker price.
 Daily remaining headers varied across endpoints (4,420 during pagination and
 4,481 on the final response); actual request counts are recorded separately.
 See `/home/arvis/goalvision_lab_v2_throughput_review.txt` for the complete review.
+
+## Discovery timer wiring check
+
+The accepted implementation base is `32655cdd791acc10122c292a417ecdbd1b75be9a`.
+The installed discovery service still points at the original snapshot checkout.
+Its ExecStart before and after this inspection is unchanged:
+
+```
+/home/arvis/GoalVisionAI/.venv/bin/python -m app.lab_v2_shadow controlled-cycle --send --max-calls 100 --daily-reserve 1500
+```
+
+The repository service now specifies `Environment=PYTHONPATH=/home/arvis/GoalVisionAI-throughput`
+and this intended ExecStart:
+
+```
+/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_v2_shadow controlled-cycle --send --max-calls 400 --daily-reserve 1500
+```
+
+Python's `-P` prevents the old working-directory package from taking precedence.
+The existing working directory and virtualenv remain in use, preserving credential
+and database locations. A read-only import probe from that working directory
+resolved both the entry module and `LAB_ADAPTIVE_QUOTA_V2` to the accepted worktree.
+The worktree must remain available for this unit to operate.
+
+The 400-call argument is an operator ceiling, not a spending target. Existing
+adaptive daily/minute bounds, 1500 daily safety reserve, settlement reserve,
+final-review reserve and retry guards are unchanged. Five focused tests passed:
+unit wiring, adaptive reserves, pagination beyond 100, due exact-review priority,
+and approaching tracked-fixture priority. Current-date pagination ordering and
+current-odds-only behavior use the unchanged accepted runner. No prediction or
+evidence policy changed. `systemd-analyze verify` passed for service and timer.
+
+Installation is BLOCKED: the installed service is root-owned and `sudo -n true`
+returns `sudo: a password is required`. No unit was installed or daemon reloaded.
+A privileged operator must install only the discovery service and reload:
+
+```
+sudo install -m 0644 /home/arvis/GoalVisionAI-throughput/app/lab_v2_shadow/systemd/goalvision-lab-v2-discover.service /etc/systemd/system/goalvision-lab-v2-discover.service
+sudo systemctl daemon-reload
+```
+
+Then inspect the loaded ExecStart, Environment and WorkingDirectory and confirm
+the timer is still disabled/inactive before considering enablement separately.
+Neither timer nor service was started. The existing `--send` setting remains
+in the dormant definition; no Telegram transport was invoked. Official state,
+.env and the settlement service/timer were not modified. Installed adaptive
+wiring is not ready until the privileged installation is completed.

@@ -7,7 +7,9 @@ After=network-online.target
 Type=oneshot
 User=arvis
 WorkingDirectory=/home/arvis/GoalVisionAI
-ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -m app.lab_v2_shadow controlled-cycle --send --max-calls 100 --daily-reserve 1500
+# Keep existing runtime data/credentials; import only the accepted implementation.
+Environment=PYTHONPATH=/home/arvis/GoalVisionAI-throughput
+ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_v2_shadow controlled-cycle --send --max-calls 400 --daily-reserve 1500
 TimeoutStartSec=30min
 UMask=0077
 NoNewPrivileges=true

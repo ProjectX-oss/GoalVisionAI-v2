@@ -1374,3 +1374,11 @@ Review after completing the current priority.
 - Freeze full ready-candidate evidence; retain terminal markets and append-only protection.
 - Verify focused, regression, full-suite, schema, replay and bounded no-send paths.
 - See `docs/LAB_V2_THROUGHPUT_HARDENING.md` and the external throughput review report.
+
+## Lab V2 discovery timer wiring
+
+- Point the discovery service at the accepted throughput worktree using Python safe-path mode.
+- Raise only the obsolete operator cap from 100 to the existing bounded 400 maximum.
+- Verify five focused tests, import resolution and systemd dry validation.
+- Installed unit update remains blocked by unavailable passwordless sudo; keep discovery disabled/inactive.
+- See the wiring check in `docs/LAB_V2_THROUGHPUT_HARDENING.md`.
