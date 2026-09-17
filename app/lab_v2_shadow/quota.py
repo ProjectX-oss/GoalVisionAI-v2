@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from decimal import Decimal
 
 
-MAX_DISCOVERY_CALLS_PER_CYCLE = 100
+QUOTA_POLICY_VERSION = "LAB_ADAPTIVE_QUOTA_V2"
+MAX_DISCOVERY_CALLS_PER_CYCLE = 400
+SETTLEMENT_RESERVE = 100
 DAILY_SAFETY_RESERVE = 1500
-ODDS_BASE_CYCLE_FRACTION = Decimal("0.58")
-ODDS_RELEASED_RESERVE_CYCLE_FRACTION = Decimal("0.70")
 MINIMUM_ENRICHMENT_CALLS = 12
 DISCOVERY_CYCLES_PER_DAY_30_MINUTES = 48
 
@@ -25,6 +24,10 @@ class AdaptiveQuotaBudget:
     daily_safety_reserve: int
     reserve_headroom: int | None
     status: str
+    policy_version: str = QUOTA_POLICY_VERSION
+    settlement_reserve: int = 0
+    final_review_reserve: int = 0
+    demand_calls: int | None = None
 
     def document(self) -> dict[str, object]:
         return asdict(self)
@@ -33,10 +36,12 @@ class AdaptiveQuotaBudget:
 def adaptive_quota_budget(
     quota: dict[str, object], *, requested_maximum: int,
     already_consumed: int, daily_safety_reserve: int = DAILY_SAFETY_RESERVE,
+    settlement_reserve: int = 0, final_review_reserve: int = 0,
+    tracked_demand: int = 0, remaining_odds_pages: int | None = None, discovery_days: int = 3,
 ) -> AdaptiveQuotaBudget:
     """Bound a cycle by exact provider quota without spending into reserve."""
     if not 1 <= requested_maximum <= MAX_DISCOVERY_CALLS_PER_CYCLE:
-        raise ValueError("LAB_V2_MAXIMUM_CALLS_MUST_BE_BETWEEN_1_AND_100")
+        raise ValueError("LAB_V2_MAXIMUM_CALLS_MUST_BE_BETWEEN_1_AND_400")
     if daily_safety_reserve < DAILY_SAFETY_RESERVE:
         raise ValueError("LAB_V2_DAILY_SAFETY_RESERVE_CANNOT_BE_LOWERED")
     daily = _integer(quota.get("daily_remaining"))
@@ -48,13 +53,24 @@ def adaptive_quota_budget(
             daily, minute, daily_safety_reserve, None,
             "QUOTA_UNAVAILABLE_STOP_AFTER_STATUS",
         )
-    reserve_headroom = max(0, daily - daily_safety_reserve)
+    if min(settlement_reserve, final_review_reserve, tracked_demand, already_consumed) < 0 or not 1 <= discovery_days <= 7:
+        raise ValueError('INVALID_QUOTA_DEMAND')
+    reserve_headroom = max(0, daily - daily_safety_reserve - settlement_reserve)
+    demand = None if remaining_odds_pages is None else (
+        max(0, remaining_odds_pages) + final_review_reserve + tracked_demand + discovery_days * 16)
+
     hard_remaining = max(0, requested_maximum - already_consumed)
     additional = min(hard_remaining, reserve_headroom, minute)
+    if requested_maximum > 100:
+        # At most one quarter of safely spendable daily capacity in one cycle.
+        additional = min(additional, max(0, (reserve_headroom + already_consumed) // 4 - already_consumed))
+    if demand is not None:
+        additional = min(additional, demand)
     status = "FULL_MAXIMUM_SAFE" if already_consumed + additional == requested_maximum else "REDUCED_TO_PRESERVE_QUOTA"
     return AdaptiveQuotaBudget(
         requested_maximum, already_consumed + additional, already_consumed,
         additional, daily, minute, daily_safety_reserve, reserve_headroom, status,
+        QUOTA_POLICY_VERSION, settlement_reserve, final_review_reserve, demand,
     )
 
 

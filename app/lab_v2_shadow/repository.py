@@ -136,6 +136,19 @@ class ShadowEvidenceRepository:
         )
         return [json.loads(row[0]) for row in rows]
 
+    def review(self, fixture_id: int, market: str) -> dict | None:
+        """Read one current market projection, including terminal decisions."""
+        row = self.connection.execute(
+            'SELECT document_json FROM lab_v2_final_review_pending WHERE fixture_id=? AND market=?',
+            (fixture_id, market)).fetchone()
+        return json.loads(row[0]) if row else None
+
+    def terminal_review_keys(self) -> set[tuple[int, str]]:
+        """Return completed market identities without loading historic documents."""
+        return {(int(row[0]), str(row[1])) for row in self.connection.execute(
+            "SELECT fixture_id, market FROM lab_v2_final_review_pending WHERE state IN ('REJECTED','FIXTURE_INVALID','EXPIRED')"
+        )}
+
     def tracked_reviews(self) -> list[dict]:
         """Read active review projections without loading accumulated terminal history."""
         return [json.loads(row[0]) for row in self.connection.execute(

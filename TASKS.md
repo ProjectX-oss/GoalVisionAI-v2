@@ -1364,3 +1364,13 @@ Review after completing the current priority.
   scheduling, background work, automatic sends, settlement, Official
   publication, production wiring, High Risk, Combo, Live, AutoTrader, and web
   dashboard work.
+
+## Lab V2 throughput, classification and current odds (2026-09-17)
+
+- Add versioned, country-guarded provider league registry and auditable fingerprints.
+- Replace fixed discovery ceiling with bounded adaptive quota and durable page accounting.
+- Preserve retriable current-odds states and serve due exact reviews before broad scans.
+- Add independent single-model Experimental evidence and explicit readiness lanes.
+- Freeze full ready-candidate evidence; retain terminal markets and append-only protection.
+- Verify focused, regression, full-suite, schema, replay and bounded no-send paths.
+- See `docs/LAB_V2_THROUGHPUT_HARDENING.md` and the external throughput review report.

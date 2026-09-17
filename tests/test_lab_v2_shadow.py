@@ -158,13 +158,13 @@ def test_reviewed_bookmaker_catalogue_tags_only_exact_name_matches():
     assert entries[2].relevance == "REPUTABLE_CURRENT_CONSENSUS_SOURCE"
 
 
-def test_adaptive_quota_preserves_1500_reserve_and_hard_maximum_100():
+def test_adaptive_quota_preserves_1500_reserve_and_explicit_operator_limit():
     quota = {"interpretation_status": "NORMALIZED", "daily_remaining": 1550, "minute_remaining": 300}
     budget = adaptive_quota_budget(quota, requested_maximum=100, already_consumed=1)
     assert budget.effective_cycle_maximum == 51
     assert budget.additional_calls_available == 50
     assert budget.daily_safety_reserve == DAILY_SAFETY_RESERVE
-    assert MAX_DISCOVERY_CALLS_PER_CYCLE == 100
+    assert MAX_DISCOVERY_CALLS_PER_CYCLE == 400
     projection = projected_daily_usage(maximum_per_cycle=100)
     assert projection["maximum_discovery_calls"] == 4800
     assert projection["projected_worst_case_total"] == 6300
@@ -471,7 +471,7 @@ def test_tracked_early_exact_odds_failure_is_visible_and_retryable(lifecycle_cyc
     assert ("/odds", {"fixture": 7}) in client.requests
     assert {item["state"] for item in report["tracked_final_reviews"]} == {state}
     recovered, _ = cycle(kickoff - timedelta(minutes=30), broad="missing")
-    assert recovered["ready_candidate_count"] == 1
+    assert recovered["ready_candidate_count"] == 2
 
 
 def test_tracked_review_crosses_riga_midnight_on_previous_utc_date(lifecycle_cycles):
@@ -482,7 +482,7 @@ def test_tracked_review_crosses_riga_midnight_on_previous_utc_date(lifecycle_cyc
     assert clock.date().isoformat() == "2026-09-17"
     assert kickoff.date().isoformat() == "2026-09-16"
     report, client = cycle(clock, broad="missing")
-    assert report["ready_candidate_count"] == 1
+    assert report["ready_candidate_count"] == 2
     assert ("/odds", {"date": "2026-09-16", "page": 1}) in client.requests
 
 
@@ -509,8 +509,8 @@ def test_tracked_review_rejects_refreshed_value_without_disappearing(lifecycle_c
     assert home["state"] == "REJECTED"
     assert "ENSEMBLE_EDGE_BELOW_0_04" in home["reasons"]
     later, _ = cycle(kickoff - timedelta(minutes=30), broad="missing")
-    assert later["candidate_markets"] == []
-    assert latest_cycle_summary(path, fixture_id=7)["tracked_final_reviews"][0]["state"] == "REJECTED"
+    assert next(c for c in later["candidate_markets"] if c["market"] == "HOME_WIN")["rejection_reasons"] == ["MARKET_REVIEW_TERMINAL"]
+    assert next(r for r in latest_cycle_summary(path, fixture_id=7)["tracked_final_reviews"] if r["market"] == "HOME_WIN")["state"] == "REJECTED"
 
 
 @pytest.mark.parametrize("status", ["PST", "CANC", "1H"])
@@ -538,14 +538,14 @@ def test_tracked_review_does_not_require_broad_fixture_rediscovery(lifecycle_cyc
     monkeypatch.setattr(LifecycleClient, "fixtures_by_date", missing)
     report, client = cycle(kickoff - timedelta(hours=1), broad="missing")
     assert report["provider_fixture_rows"] == 0
-    assert report["ready_candidate_count"] == 1
+    assert report["ready_candidate_count"] == 2
     assert ("/fixtures", {"id": 7}) in client.requests
 
 
 def test_exact_refresh_bypasses_unexpired_cache_and_supersedes_broad_quotes(lifecycle_cycles):
     cycle, kickoff, _, _ = lifecycle_cycles
     first, _ = cycle(kickoff - timedelta(hours=1))
-    assert first["ready_candidate_count"] == 1
+    assert first["ready_candidate_count"] == 2
     report, client = cycle(kickoff - timedelta(minutes=59), exact="missing")
     assert ("/odds", {"fixture": 7}) in client.requests
     assert report["candidate_markets"] == []
@@ -564,7 +564,7 @@ def test_upgrade_recovers_old_individual_early_candidate_without_season(lifecycl
     runner = LabV2ShadowRunner(client, repository, capability_cache_path=Path("var/capabilities.json"), maximum_calls=40)
     try:
         report = asyncio.run(runner.run(now=client.clock, horizon_days=1))
-        assert report["ready_candidate_count"] == 1
+        assert report["ready_candidate_count"] == 2
         assert report["tracked_final_reviews"][0]["origin_candidate_id"] == early["candidate_id"]
         assert len(repository.early_candidates(now=client.clock)) == 0
     finally:
@@ -586,14 +586,14 @@ def test_tracked_ready_replay_sends_once_with_fake_transport(lifecycle_cycles):
     service = LabComboService(ledger, None, clock=lambda: clock)
     try:
         prepared = prepare_v2_publications(report, ledger, now=clock)
-        identity = prepared["singles"][0]["prediction_id"]
-        sent = asyncio.run(service.publish_experimental("single_prediction", identity, config, transport))
-        assert sent["sent"] is True
+        for item in prepared['singles']:
+            sent = asyncio.run(service.publish_experimental('single_prediction', item['prediction_id'], config, transport))
+            assert sent['sent'] is True
         refreshed, _ = cycle(clock + timedelta(minutes=1), broad="missing")
         replay = prepare_v2_publications(refreshed, ledger, now=clock + timedelta(minutes=1))
-        assert replay["singles"] == []
-        assert _RecordingTransport.calls == 1
-        assert len(ledger.all("receipt")) == 1
+        assert not ({i["publication_key"] for i in replay["singles"]} & {i["publication_key"] for i in prepared["singles"]})
+        assert _RecordingTransport.calls == len(prepared["singles"])
+        assert len(ledger.all("receipt")) == len(prepared["singles"])
     finally:
         ledger.close()
 
@@ -644,9 +644,9 @@ def test_odds_pagination_prioritizes_earliest_date_and_does_not_mislabel_budget_
     repository.close()
     assert client.order == [
         (NOW.date().isoformat(), 1),
-        ((NOW.date() + timedelta(days=1)).isoformat(), 1),
         (NOW.date().isoformat(), 2),
         (NOW.date().isoformat(), 3),
+        ((NOW.date() + timedelta(days=1)).isoformat(), 1),
     ]
     assert report["fixtures_with_no_current_odds"] == 1
     assert report["fixtures_with_incomplete_odds_page_coverage"] == 1

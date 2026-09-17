@@ -240,6 +240,16 @@ def run_checks(repository, scope: str, project_root: Path) -> tuple[AuditCheck, 
 
 
 def _activation_checks(repository, scope, add) -> None:
+    activity_count = _operation_activity_count(
+        repository,
+        request_table="model_activation_requests",
+        plan_table="model_activation_plans",
+        execution_table="model_activation_executions",
+        request_key="activation_request_id",
+        plan_key="activation_plan_id",
+        scope=scope,
+    )
+    no_activity = activity_count == 0
     executions = repository.rows(
         """
         SELECT e.*, p.activation_request_id,p.expected_generation_number,
@@ -263,17 +273,32 @@ def _activation_checks(repository, scope, add) -> None:
     add(
         "activation.plan_execution_chain",
         "ACTIVATION",
-        bool(executions) and references_ok,
-        "Each activation execution links to one immutable request and plan.",
+        no_activity or (bool(executions) and references_ok),
+        (
+            "No activation was performed and no partial activation evidence exists."
+            if no_activity
+            else "Each activation execution links to one immutable request and plan."
+        ),
         "Activation execution evidence chain is missing or inconsistent.",
         tuple(row["activation_plan_id"] for row in executions),
     )
     plan_ids = tuple(row["activation_plan_id"] for row in executions)
-    validations_ok = bool(plan_ids)
-    evidence_ok = bool(plan_ids)
-    promotion_ok = bool(plan_ids)
-    stale_ok = bool(plan_ids)
-    artifact_ok = bool(plan_ids)
+    validations_ok = no_activity or bool(plan_ids)
+    evidence_ok = no_activity or bool(plan_ids)
+    promotion_ok = no_activity or bool(plan_ids)
+    stale_ok = no_activity or bool(plan_ids)
+    artifact_ok = no_activity or bool(plan_ids)
+    if no_activity:
+        current = repository.rows(
+            """
+            SELECT generation_snapshot FROM model_champion_generations
+            WHERE model_scope=? ORDER BY generation_number DESC LIMIT 1
+            """,
+            (scope,),
+        )
+        artifact_ok = len(current) == 1 and _artifact_references_exist(
+            repository, json.loads(current[0]["generation_snapshot"])["artifact"]
+        )
     for row in executions:
         request = json.loads(row["request_snapshot"])
         validations = repository.rows(
@@ -368,7 +393,7 @@ def _activation_checks(repository, scope, add) -> None:
         "activation.validations",
         "ACTIVATION",
         validations_ok,
-        "Activation validations are complete, deterministic, and PASS.",
+        "Activation validations are complete for every performed activation.",
         "Activation validations are missing, non-deterministic, or not PASS.",
         plan_ids,
     )
@@ -376,7 +401,7 @@ def _activation_checks(repository, scope, add) -> None:
         "activation.shadow_evidence",
         "ACTIVATION",
         evidence_ok,
-        "Settled shadow evidence links and fingerprints match exactly.",
+        "Settled shadow evidence is exact for every performed activation.",
         "Required settled shadow evidence is missing or mismatched.",
         plan_ids,
     )
@@ -384,7 +409,7 @@ def _activation_checks(repository, scope, add) -> None:
         "activation.promotion",
         "ACTIVATION",
         promotion_ok,
-        "Promotion evidence is the exact PROMOTE_CHALLENGER recommendation.",
+        "Promotion evidence is exact for every performed activation.",
         "Promotion recommendation is missing, mismatched, or not PROMOTE_CHALLENGER.",
         plan_ids,
     )
@@ -392,7 +417,7 @@ def _activation_checks(repository, scope, add) -> None:
         "activation.not_stale",
         "ACTIVATION",
         stale_ok,
-        "Executed plans matched the replaced registry generation.",
+        "Every performed activation matched the replaced registry generation.",
         "An executed activation plan was stale against its replaced generation.",
         plan_ids,
     )
@@ -400,7 +425,7 @@ def _activation_checks(repository, scope, add) -> None:
         "activation.artifact_provenance",
         "ACTIVATION",
         artifact_ok,
-        "Activated model and calibration artifact references exist.",
+        "Current and activated model/calibration references exist exactly.",
         "Activated artifact provenance is incomplete.",
         plan_ids,
     )
@@ -425,6 +450,16 @@ def _activation_checks(repository, scope, add) -> None:
 
 
 def _rollback_checks(repository, scope, add) -> None:
+    activity_count = _operation_activity_count(
+        repository,
+        request_table="model_rollback_requests",
+        plan_table="model_rollback_plans",
+        execution_table="model_rollback_executions",
+        request_key="rollback_request_id",
+        plan_key="rollback_plan_id",
+        scope=scope,
+    )
+    no_activity = activity_count == 0
     rows = repository.rows(
         """
         SELECT e.*,p.rollback_request_id,p.target_champion_generation_id,
@@ -439,11 +474,11 @@ def _rollback_checks(repository, scope, add) -> None:
         """,
         (scope,),
     )
-    chain_ok = bool(rows)
-    semantics_ok = bool(rows)
-    reason_ok = bool(rows)
-    target_ok = bool(rows)
-    validations_ok = bool(rows)
+    chain_ok = no_activity or bool(rows)
+    semantics_ok = no_activity or bool(rows)
+    reason_ok = no_activity or bool(rows)
+    target_ok = no_activity or bool(rows)
+    validations_ok = no_activity or bool(rows)
     for row in rows:
         request = json.loads(row["request_snapshot"])
         chain_ok &= bool(row["rollback_request_id"] and row["plan_snapshot"])
@@ -492,7 +527,7 @@ def _rollback_checks(repository, scope, add) -> None:
         "rollback.plan_execution_chain",
         "ROLLBACK",
         chain_ok,
-        "Each rollback execution links to one immutable request and plan.",
+        "Rollback evidence is complete for every performed rollback.",
         "Rollback request, plan, or execution evidence is missing.",
         tuple(row["rollback_plan_id"] for row in rows),
     )
@@ -500,7 +535,7 @@ def _rollback_checks(repository, scope, add) -> None:
         "rollback.target_validity",
         "ROLLBACK",
         target_ok,
-        "Rollback targets were previously active and retained compatible artifacts.",
+        "Rollback targets are valid for every performed rollback.",
         "Rollback target history or artifact compatibility is invalid.",
         tuple(row["target_champion_generation_id"] for row in rows),
     )
@@ -508,7 +543,7 @@ def _rollback_checks(repository, scope, add) -> None:
         "rollback.generation_semantics",
         "ROLLBACK",
         semantics_ok,
-        "Rollback appended a new generation linked to the replaced champion.",
+        "Generation semantics are valid for every performed rollback.",
         "Rollback reused/mutated a target or has invalid previous linkage.",
         tuple(row["champion_generation_id"] for row in rows),
     )
@@ -516,7 +551,7 @@ def _rollback_checks(repository, scope, add) -> None:
         "rollback.incident_evidence",
         "ROLLBACK",
         reason_ok,
-        "Rollback incident reference, reason, and operator are present.",
+        "Operational justification exists for every performed rollback.",
         "Rollback operational justification is incomplete.",
         tuple(row["rollback_request_id"] for row in rows),
     )
@@ -534,7 +569,7 @@ def _rollback_checks(repository, scope, add) -> None:
         "rollback.validations",
         "ROLLBACK",
         validations_ok,
-        "Rollback validations are complete, deterministic, and PASS.",
+        "Rollback validations are complete for every performed rollback.",
         "Rollback validations are missing, non-deterministic, or not PASS.",
         tuple(row["rollback_plan_id"] for row in rows),
     )
@@ -844,9 +879,38 @@ def _artifact_references_exist(repository, artifact: dict) -> bool:
     )
 
 
-def _safe_scalar(repository, sql: str, default):
+def _operation_activity_count(
+    repository,
+    *,
+    request_table: str,
+    plan_table: str,
+    execution_table: str,
+    request_key: str,
+    plan_key: str,
+    scope: str,
+) -> int:
+    value = _safe_scalar(
+        repository,
+        f"""
+        SELECT
+          (SELECT COUNT(*) FROM {request_table} WHERE model_scope=?)
+          + (SELECT COUNT(*) FROM {plan_table} p
+             JOIN {request_table} r ON r.{request_key}=p.{request_key}
+             WHERE r.model_scope=?)
+          + (SELECT COUNT(*) FROM {execution_table} e
+             JOIN {plan_table} p ON p.{plan_key}=e.{plan_key}
+             JOIN {request_table} r ON r.{request_key}=p.{request_key}
+             WHERE r.model_scope=?)
+        """,
+        default=-1,
+        parameters=(scope, scope, scope),
+    )
+    return int(value)
+
+
+def _safe_scalar(repository, sql: str, default, parameters: tuple = ()):
     try:
-        return repository.scalar(sql)
+        return repository.scalar(sql, parameters)
     except Exception:
         return default
 

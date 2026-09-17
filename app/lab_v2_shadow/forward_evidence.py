@@ -24,6 +24,9 @@ def capture_selection(repository: ShadowEvidenceRepository, candidate: dict, *, 
     row = {k: candidate[k] for k in ('candidate_id', 'fixture_id', 'league_id', 'competition_profile',
                                     'market', 'candidate_lane', 'ensemble_probability', 'captured_odds',
                                     'quote_provenance_fingerprint', 'kickoff_utc', 'profile_policy_version')}
+    # Preserve the complete immutable candidate, including bookmaker/quote identity,
+    # family count, classifier, model provenance, uncertainty and exact-review evidence.
+    row.update(candidate)
     row.update(selection_key=key, captured_at=now.isoformat(), accounting='LAB_HYPOTHETICAL_FLAT_ONE_UNIT')
     return repository.append('forward_selection', key, row, created_at=now)
 

@@ -10,8 +10,10 @@ from typing import Mapping
 from app.real_match_lab_analysis.fingerprint import fingerprint
 from .capability import CapabilityTier, LeagueCapability
 
-CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V3'
-POLICY_VERSION = 'LAB_COMPETITION_POLICY_V1'
+from .competition_registry import REGISTRY_VERSION, REGISTRY_FINGERPRINT, reviewed_competition
+
+CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V4'
+POLICY_VERSION = 'LAB_COMPETITION_POLICY_V2'
 
 
 class CompetitionProfile(StrEnum):
@@ -28,19 +30,6 @@ class CompetitionProfile(StrEnum):
     INTERNATIONAL_YOUTH = 'INTERNATIONAL_YOUTH'
     FRIENDLY = 'FRIENDLY'
     UNKNOWN = 'UNKNOWN'
-
-
-# Classification hints verified against the local provider capability catalogue.
-# This is never an admission list: every other ID is classified or UNKNOWN.
-REVIEWED_IDS = {
-    **{i: CompetitionProfile.SENIOR_MEN_PRO for i in (39, 61, 78, 88, 94, 135, 140, 144, 253)},
-    **{i: CompetitionProfile.LOWER_DIVISION_OR_SEMIPRO for i in (40, 41, 42, 43, 62, 79, 80, 136, 141)},
-    44: CompetitionProfile.SENIOR_WOMEN_PRO,
-    **{i: CompetitionProfile.DOMESTIC_CUP for i in (45, 46, 47, 48, 81)},
-    **{i: CompetitionProfile.INTERNATIONAL_CLUB for i in (2, 3, 11, 15, 17, 20, 848)},
-    **{i: CompetitionProfile.INTERNATIONAL_SENIOR for i in (1, 4, 5, 6, 7, 8, 9, 22, 23, 32, 33)},
-    10: CompetitionProfile.FRIENDLY,
-}
 
 
 @dataclass(frozen=True)
@@ -72,8 +61,14 @@ def classify(league: Mapping, teams: Mapping, fixture: Mapping, capability: Leag
     international = 'club world cup' not in name and bool(re.search(r'\b(world cup|euro(?:pean)? championship|nations league|international|africa cup of nations|copa america)\b', name))
     women = bool(re.search(r'\bwomen(?:s|\x27s)?\b|\b(?:femenina|femenil|feminin|feminine|feminina|frauen(?:liga)?|feminino)\b', name)) or league.get('gender') == 'women'
     profile, reason = CompetitionProfile.UNKNOWN, 'UNRECOGNIZED_METADATA'
-    overrides = REVIEWED_IDS if overrides is None else overrides
-    if overrides and capability.league_id in overrides:
+    reviewed = reviewed_competition(str(league.get("provider", "API_FOOTBALL")), capability.league_id,
+                                    str(league.get("country") or capability.country))
+    # Explicit caller overrides are separate from the immutable reviewed registry.
+    if reviewed is not None:
+        profile, reason = CompetitionProfile(reviewed.profile), "REVIEWED_REGISTRY:" + REGISTRY_VERSION
+        women = reviewed.gender == "women"
+        category = reviewed.age_group
+    elif overrides and capability.league_id in overrides:
         profile, reason = CompetitionProfile(overrides[capability.league_id]), 'REVIEWED_LEAGUE_ID_OVERRIDE'
     elif league.get('competition_profile') in CompetitionProfile._value2member_map_:
         profile, reason = CompetitionProfile(league['competition_profile']), 'EXPLICIT_COMPETITION_METADATA'
@@ -117,7 +112,7 @@ def classify(league: Mapping, teams: Mapping, fixture: Mapping, capability: Leag
     ):
         if enabled:
             flags.append(flag)
-    material = (CLASSIFIER_VERSION, dict(league), team_names, profile, reason, sorted(flags), category)
+    material = (CLASSIFIER_VERSION, REGISTRY_VERSION, REGISTRY_FINGERPRINT, dict(league), team_names, profile, reason, sorted(flags), category)
     return Classification(profile, CLASSIFIER_VERSION, reason, fingerprint(material), tuple(sorted(flags)), category)
 
 
@@ -168,8 +163,10 @@ class ProfilePolicy:
     experimental_edge: Decimal = Decimal('0.01')
     standard_edge: Decimal = Decimal('0.04')
     minimum_standard_agreement: Decimal = Decimal('0.75')
-    standard_independent_families: int = 3
-    experimental_independent_families: int = 2
+    standard_independent_families: int = 2
+    strong_independent_families: int = 3
+    home_advantage_basis: str = "SAME_COMPETITION_VENUE_RESULTS_ONLY"
+    experimental_independent_families: int = 1
     scheduling_weight: int = 1
     history_days: int = 365
     half_life_days: int = 120
@@ -207,9 +204,10 @@ def policy_for(profile: str) -> ProfilePolicy:
         priorities.update(advanced_stats='IGNORE', lineup='MEDIUM', home_away='HIGH')
     if unknown:
         priorities.update(advanced_stats='IGNORE', long_term_strength='LOW', home_away='LOW')
-    return ProfilePolicy(p, uncertainty=Decimal('0.025') if volatile or unknown else Decimal('0.015'),
+    return ProfilePolicy(p, home_advantage_basis="WOMEN_SAME_COMPETITION_VENUE_RESULTS_ONLY" if p == CompetitionProfile.SENIOR_WOMEN_PRO else "SAME_COMPETITION_VENUE_RESULTS_ONLY", uncertainty=Decimal('0.025') if volatile or unknown else Decimal('0.020') if p in {CompetitionProfile.LOWER_DIVISION_OR_SEMIPRO, CompetitionProfile.SENIOR_WOMEN_PRO} else Decimal('0.015'),
+                         experimental_edge=Decimal('0.015') if volatile or unknown else Decimal('0.01'),
                          history_days=120 if youth else 180 if volatile else 365,
-                         half_life_days=30 if youth else 60 if volatile else 120,
+                         half_life_days=45 if p == CompetitionProfile.YOUTH_U21_U23 else 30 if youth else 60 if volatile else 120,
                          refresh_minutes=(1440, 360, 75, 45, 20, 10) if volatile else (1440, 360, 75, 30, 10),
-                         market_preference=('BTTS', 'TOTAL_2_5', '1X2') if youth else ('1X2', 'BTTS', 'TOTAL_2_5'),
+                         market_preference=('BTTS', 'TOTAL_2_5', '1X2') if volatile else ('1X2', 'BTTS', 'TOTAL_2_5'),
                          priorities=tuple(sorted(priorities.items())))

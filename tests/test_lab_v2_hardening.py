@@ -132,7 +132,7 @@ def test_nonfinite_vig_input_fails_closed():
     assert remove_margin_multiplicative({'BTTS_YES': Decimal('NaN'), 'BTTS_NO': Decimal('2')}) is None
 
 
-def test_adaptive_sweep_releases_only_unused_reserve(tmp_path, monkeypatch):
+def test_adaptive_sweep_preserves_due_reserve_despite_broad_absence(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     days = [(NOW + timedelta(days=i)).date().isoformat() for i in range(3)]
     class Client(FakeClient):
@@ -147,12 +147,12 @@ def test_adaptive_sweep_releases_only_unused_reserve(tmp_path, monkeypatch):
     fixtures += [{'fixture_id': i, 'kickoff_utc': NOW + timedelta(days=2, hours=4)} for i in range(2, 202)]
     fixtures += [{'fixture_id': 203, 'kickoff_utc': NOW + timedelta(days=1, hours=4)}]
     _, report = asyncio.run(runner._date_odds(days, fixtures, NOW, reserve_calls=45))
-    assert client.order[:4] == [(days[0], 1), (days[1], 1), (days[2], 1), (days[2], 2)]
-    assert report['coverage_by_date'][days[2]]['stable_complete_sweep']
-    assert report['fixtures_with_incomplete_odds_page_coverage'] == 1
+    assert client.order[:4] == [(days[0], 1), (days[1], 1), (days[1], 2), (days[1], 3)]
+    assert report['coverage_by_date'][days[1]]['stable_complete_sweep']
+    assert report['fixtures_with_incomplete_odds_page_coverage'] == 200
     assert report['initial_final_review_reserve'] == 45
-    assert report['remaining_final_review_reserve'] == 0
-    assert client.request_count == 70 and runner._remaining() == 30
+    assert report['remaining_final_review_reserve'] == 45
+    assert client.request_count == 55 and runner._remaining() == 45
     repo.close()
 
 

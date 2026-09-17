@@ -83,7 +83,7 @@ def test_correlated_sources_never_supply_two_independent_nonmarket_votes():
     rows=signals()[1:]
     rows.append(replace(rows[0],name='PI_RATINGS'))
     d,e=evaluate_profile('HOME_WIN',Decimal('2'),rows,policy_for('UNKNOWN'),())
-    assert d.decision=='REJECTED' and 'NO_INDEPENDENT_NON_MARKET_EVIDENCE' in e['hard_failures']
+    assert d.decision=='REJECTED' and 'CURRENT_MARKET_CONSENSUS_UNAVAILABLE' in e['hard_failures'] and e['predictive_family_count'] == 1
 
 
 def test_profile_ready_without_lineups_and_requires_exact_refresh():

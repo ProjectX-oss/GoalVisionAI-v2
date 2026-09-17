@@ -85,9 +85,9 @@ class ForwardTestFoundationTests(unittest.TestCase):
         with self.assertRaisesRegex(CurrentOddsValidationError, "ODDS_PROVENANCE_INCOMPLETE"): parse_current_odds(odds_raw(provenance="Bearer secret-value"), now=NOW)
 
     def test_api_football_normalization(self):
-        payload = {"response": [{"fixture": {"id": "fixture-1"}, "update": None, "bookmakers": [{"name": "Bet365", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}]}, {"name": "Goals Over/Under", "values": [{"value": "Over 2.5", "odd": "1.90"}]}]}]}]}
+        payload = {"response": [{"fixture": {"id": "fixture-1"}, "update": "2026-08-01T12:00:00+00:00", "bookmakers": [{"name": "Bet365", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}]}, {"name": "Goals Over/Under", "values": [{"value": "Over 2.5", "odd": "1.90"}]}]}]}]}
         raw = normalize_api_football_current_odds(payload, fixture_id="fixture-1", kickoff_utc=KICKOFF, retrieved_at_utc="2026-08-01T12:01:00+00:00", source_selected_at_utc="2026-08-01T11:59:00+00:00")
-        value = parse_current_odds(raw, now=datetime(2026, 8, 1, 12, 1, tzinfo=timezone.utc)); self.assertEqual({q.market for q in value.quotes}, {"HOME_WIN", "DRAW", "OVER_2_5"}); self.assertTrue(all(q.captured_at_by_goalvision for q in value.quotes))
+        value = parse_current_odds(raw, now=datetime(2026, 8, 1, 12, 1, tzinfo=timezone.utc)); self.assertEqual({q.market for q in value.quotes}, {"HOME_WIN", "DRAW", "OVER_2_5"}); self.assertTrue(all(not q.captured_at_by_goalvision for q in value.quotes))
 
     def test_api_provider_timestamp_is_distinct_from_goalvision_capture(self):
         payload = {"response": [{"fixture": {"id": "fixture-1"}, "update": "2026-08-01T12:00:00+00:00", "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}]}]}]}]}
@@ -150,7 +150,7 @@ class ForwardTestFoundationTests(unittest.TestCase):
             async def last_matches(self, *_ , **__): self.calls += 1; return [{"fixture": {"id": i}} for i in range(5)]
             async def current_odds(self, *_):
                 self.calls += 1
-                return {"response": [{"fixture": {"id": 7}, "update": None, "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}, {"value": "Away", "odd": "3.10"}]}]}]}]}
+                return {"response": [{"fixture": {"id": 7}, "update": "2026-08-01T12:00:00+00:00", "bookmakers": [{"name": "Book", "bets": [{"name": "Match Winner", "values": [{"value": "Home", "odd": "2.10"}, {"value": "Draw", "odd": "3.20"}, {"value": "Away", "odd": "3.10"}]}]}]}]}
         client = FakeClient(); value = asyncio.run(discover_current_fixture(client, now=NOW, maximum_api_calls=6, horizon_days=1))
         self.assertEqual(value["terminal_result"], "ELIGIBLE_CURRENT_FIXTURE_FOUND"); self.assertEqual(value["api_call_count"], 5); self.assertFalse(value["inference_executed"]); self.assertEqual(value["telegram_sends"], 0)
 

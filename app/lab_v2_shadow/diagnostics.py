@@ -44,9 +44,25 @@ def global_diagnostic(fixtures: list[dict], candidates: list[dict], odds_statuse
         if not rows and coverage_reason and not review.get('odds_status') and state not in {'REJECTED', 'EXPIRED'}:
             reason = coverage_reason
         refresh = next_refresh(fixture['kickoff_utc'], now, policy_for(profile))
+        odds_retry_state = None
+        if review.get('odds_retrieved_at_utc') and review.get('odds_status') != 'AVAILABLE':
+            odds_retry_state = review.get('odds_retry_state', 'ODDS_FINAL_MARKET_UNAVAILABLE')
+        elif reason == 'ODDS_STALE':
+            odds_retry_state = 'ODDS_STALE_WAITING_REFRESH'
+        elif reason == 'ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD' or reason == 'NO_CURRENT_ODDS':
+            odds_retry_state = 'ODDS_NOT_PUBLISHED_YET_POSSIBLE'
+        elif 'PAGINATION' in reason or 'COVERAGE' in reason or 'RESTART' in reason:
+            odds_retry_state = 'ODDS_PAGINATION_PENDING'
+        elif not rows:
+            odds_retry_state = 'ODDS_PROVIDER_NONCOVERAGE_POSSIBLE'
+        if odds_retry_state and refresh and not odds_retry_state.startswith('ODDS_FINAL') and state not in {'REJECTED', 'EXPIRED'}:
+            state = 'TRACKING'
+
         states.append({**metadata, 'state': state, 'reason': reason,
                        'kickoff_utc': fixture['kickoff_utc'].isoformat(),
                        'next_refresh_at': refresh.isoformat() if refresh else None,
+                       'odds_retry_state': odds_retry_state,
+                       'odds_retryable': bool(refresh and odds_retry_state and not odds_retry_state.startswith('ODDS_FINAL')),
                        'evaluated_at_utc': now.isoformat(), 'markets_evaluated': len(rows)})
         gate_metadata = {key: value for key, value in metadata.items() if key != 'provider_metadata'}
         if not rows:

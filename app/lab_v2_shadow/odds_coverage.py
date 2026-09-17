@@ -3,14 +3,30 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any
+from enum import StrEnum
 
 from .market_consensus import _market
+
+
+class OddsCoverageStatus(StrEnum):
+    """Stable external vocabulary; detailed legacy reasons remain available."""
+    COMPLETE = 'ODDS_COMPLETE'
+    BUDGET_LIMITED = 'ODDS_BUDGET_LIMITED'
+    PROVIDER_ERROR = 'ODDS_PROVIDER_ERROR'
+    TIMEOUT = 'ODDS_TIMEOUT'
+    RATE_LIMIT = 'ODDS_RATE_LIMIT'
+    MALFORMED_PAGE = 'ODDS_MALFORMED_PAGE'
+    PAGE_TOTAL_DRIFT = 'ODDS_PAGE_TOTAL_DRIFT'
+    RESTART_GAP = 'ODDS_RESTART_GAP'
+    UNKNOWN_INCOMPLETE = 'ODDS_UNKNOWN_INCOMPLETE'
 
 
 @dataclass
 class DateOddsCoverage:
     """Per-cycle mutable request ledger, never a cache of reusable quotes."""
 
+    previous_maximum: int = 1
+    restart_gap: bool = False
     attempted: set[int] = field(default_factory=set)
     totals: set[int] = field(default_factory=set)
     pages: set[int] = field(default_factory=set)
@@ -39,7 +55,7 @@ class DateOddsCoverage:
 
     @property
     def maximum(self) -> int:
-        return max(self.totals, default=1)
+        return max(self.previous_maximum, max(self.totals, default=1))
 
     def reason(self, *, reserve_limited: bool = False) -> str | None:
         if self.errors:
@@ -52,7 +68,17 @@ class DateOddsCoverage:
         return None
 
     def document(self) -> dict:
-        return {'advertised_totals': sorted(self.totals), 'requested_pages': sorted(self.attempted), 'valid_pages': sorted(self.pages),
+        reason = self.reason()
+        canonical = ('ODDS_COMPLETE' if reason is None else
+                     'ODDS_PAGE_TOTAL_DRIFT' if len(self.totals) > 1 else
+                     'ODDS_TIMEOUT' if 'ODDS_API_TIMEOUT' in self.errors else
+                     'ODDS_RATE_LIMIT' if 'ODDS_QUOTA_OR_REQUEST_LIMIT' in self.errors else
+                     'ODDS_MALFORMED_PAGE' if any('MALFORMED' in r or 'METADATA' in r or 'MISMATCH' in r for r in self.errors) else
+                     'ODDS_PROVIDER_ERROR' if self.errors else
+                     'ODDS_RESTART_GAP' if self.restart_gap else 'ODDS_BUDGET_LIMITED')
+        return {'maximum_advertised_total': self.maximum, 'coverage_status': OddsCoverageStatus(canonical).value,
+                'incomplete_reason': reason, 'failed_pages': sorted(self.attempted - self.pages),
+                'advertised_totals': sorted(self.totals), 'requested_pages': sorted(self.attempted), 'valid_pages': sorted(self.pages),
                 'unrequested_pages': sorted(set(range(1, self.maximum + 1)) - self.attempted),
                 'errors': sorted(self.errors), 'stable_complete_sweep': self.reason() is None}
 
