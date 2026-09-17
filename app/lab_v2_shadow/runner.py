@@ -12,7 +12,11 @@ from pathlib import Path
 import re
 import sqlite3
 
+import httpx
+
 from app.current_match_intelligence.serialization import snapshot_from_document
+from app.football.client import FootballRequestLimitError
+from app.football.quota import FootballQuotaError
 from app.lab_combo.experimental import evaluate_snapshot
 from app.real_match_lab_analysis.fingerprint import fingerprint
 
@@ -31,9 +35,10 @@ from .quota import (
     projected_daily_usage,
 )
 from .repository import ShadowEvidenceRepository
+from .tracking import load_reviews, new_review, restore_fixture
 
 
-SCHEMA_VERSION = "goalvision-lab-v2-broad-coverage-cycle-v4"
+SCHEMA_VERSION = "goalvision-lab-v2-broad-coverage-cycle-v5"
 READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V3"
 MAXIMUM_CALLS = MAX_DISCOVERY_CALLS_PER_CYCLE
 FINAL_REVIEW_WINDOW = timedelta(minutes=75)
@@ -125,6 +130,8 @@ class LabV2ShadowRunner:
             )
 
         capabilities, capability_cache_status = await self._capabilities(clock)
+        tracked = load_reviews(self.repository, clock)
+        tracked_ids = {key[0] for key in tracked}
         bookmaker_catalogue, bookmaker_cache_status = await self._bookmakers(clock)
         self.allowed_bookmaker_ids = frozenset(
             item.bookmaker_id for item in bookmaker_catalogue
@@ -148,6 +155,11 @@ class LabV2ShadowRunner:
             discovery_exclusions.extend(excluded)
             for item in accepted:
                 fixtures[int(item["fixture_id"])] = item
+        # Broad fixture/odds coverage is discovery, not the pending-review queue.
+        for record in tracked.values():
+            restored = restore_fixture(record, capabilities)
+            if restored is not None:
+                fixtures.setdefault(record["fixture_id"], restored)
         ordered = sorted(fixtures.values(), key=lambda item: (
             item["kickoff_utc"], TIER_ORDER[item["capability_tier"]], item["fixture_id"],
         ))
@@ -155,12 +167,17 @@ class LabV2ShadowRunner:
         odds_discovery_final_review_reserve = _final_review_call_reserve(ordered, clock)
         odds_evidence, odds_page_report = await self._date_odds(
             days, ordered, clock, reserve_calls=odds_discovery_final_review_reserve,
+            tracked_fixture_ids=frozenset(tracked_ids),
         )
         odds_fixtures = [
             item for item in ordered
-            if item["fixture_id"] in odds_evidence
-            and any(value.status == "AVAILABLE" for value in odds_evidence[item["fixture_id"]][2].values())
+            if (item["fixture_id"] in odds_evidence
+                and any(value.status == "AVAILABLE" for value in odds_evidence[item["fixture_id"]][2].values()))
+            or (item["fixture_id"] in tracked_ids
+                and item["kickoff_utc"] > clock + MINIMUM_KICKOFF_LEAD)
         ]
+        for fixture in odds_fixtures:
+            odds_evidence.setdefault(fixture["fixture_id"], ({}, clock, {}))
 
         final_review_reserve = _final_review_call_reserve(odds_fixtures, clock)
         histories, adapters, history_budget_skips = await self._histories(
@@ -176,6 +193,10 @@ class LabV2ShadowRunner:
             persisted_models, {}, {}, clock,
         )
         shortlist_ids = _shortlist(preliminary, maximum=FINAL_REVIEW_SHORTLIST_SIZE)
+        tracked_due = [item["fixture_id"] for item in ordered
+                       if item["fixture_id"] in tracked_ids
+                       and MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW]
+        shortlist_ids = list(dict.fromkeys([*tracked_due, *shortlist_ids]))[:FINAL_REVIEW_SHORTLIST_SIZE]
         availability: dict[int, dict[str, AvailabilityImpact]] = {}
         final_reviews: dict[int, dict[str, object]] = {}
         cmi_enriched: set[int] = set()
@@ -190,6 +211,8 @@ class LabV2ShadowRunner:
                 "lineup_status": "NOT_REQUESTED",
                 "injuries_status": "NOT_REQUESTED",
                 "reviewed_at_utc": None,
+                "status": "FINAL_REVIEW_REQUIRED",
+                "reason": "FINAL_REVIEW_BUDGET_UNAVAILABLE" if near else "FINAL_REVIEW_WINDOW_NOT_OPEN",
             }
             if capability.injuries and self._remaining() > (3 if near else 0):
                 payload, _ = await self._fetch(
@@ -216,9 +239,32 @@ class LabV2ShadowRunner:
                 )
                 refreshed_kickoff = _refreshed_fixture_kickoff(fixture_payload, fixture_id, clock)
                 context["fixture_refreshed"] = refreshed_kickoff is not None
+                refreshed_rows = [row for row in _response_rows(fixture_payload)
+                                  if str((row.get("fixture") or {}).get("id")) == str(fixture_id)]
+                refreshed_status = (
+                    ((refreshed_rows[0].get("fixture") or {}).get("status") or {}).get("short")
+                    if refreshed_rows and _provider_payload_succeeded(fixture_payload) else None
+                )
+                context["fixture_status"] = refreshed_status
+                if refreshed_status is not None and refreshed_status not in {"NS", "TBD"}:
+                    context.update(status="FIXTURE_INVALID", reason="FIXTURE_STATUS_NOT_UPCOMING")
+                elif refreshed_kickoff is None:
+                    context.update(reason="FIXTURE_REFRESH_UNAVAILABLE")
+                    if refreshed_status in {"NS", "TBD"}:
+                        try:
+                            changed = _utc(datetime.fromisoformat(
+                                str(refreshed_rows[0]["fixture"]["date"]).replace("Z", "+00:00")
+                            ))
+                        except (KeyError, TypeError, ValueError):
+                            pass
+                        else:
+                            if changed <= clock:
+                                fixture["kickoff_utc"] = changed
+                                context["refreshed_kickoff_utc"] = changed.isoformat()
                 if refreshed_kickoff is not None:
                     fixture["kickoff_utc"] = refreshed_kickoff
                     context["refreshed_kickoff_utc"] = refreshed_kickoff.isoformat()
+                    context.update(status="FIXTURE_REFRESHED", reason="EXACT_FIXTURE_REFRESH_COMPLETE")
                 odds_payload, retrieved = await self._fetch(
                     "/odds", {"fixture": fixture_id},
                     lambda identity=fixture_id: self.client.current_odds(identity),
@@ -228,9 +274,20 @@ class LabV2ShadowRunner:
                     odds_payload, fixture_id=fixture_id, retrieved_at=retrieved,
                     now=max(clock, retrieved),
                     allowed_bookmaker_ids=self.allowed_bookmaker_ids,
+                ) if _provider_payload_succeeded(odds_payload) else {}
+                # The exact response supersedes broad quotes, including missing markets.
+                odds_evidence[fixture_id] = (odds_payload, retrieved, exact_consensus)
+                context["odds_retrieved_at_utc"] = retrieved.isoformat()
+                context["odds_provider_timestamp_utc"] = next((
+                    row.get("update") for row in _response_rows(odds_payload)
+                    if str((row.get("fixture") or {}).get("id")) == str(fixture_id)
+                ), None)
+                context["odds_status"] = (
+                    "AVAILABLE" if any(value.status == "AVAILABLE" for value in exact_consensus.values()) else
+                    "ODDS_STALE" if any(value.status == "STALE_CURRENT_ODDS" for value in exact_consensus.values()) else
+                    "CURRENT_ODDS_UNAVAILABLE"
                 )
-                if any(value.status == "AVAILABLE" for value in exact_consensus.values()):
-                    odds_evidence[fixture_id] = (odds_payload, retrieved, exact_consensus)
+                if context["odds_status"] == "AVAILABLE":
                     context["odds_refreshed"] = True
                 if capability.lineups:
                     lineup_payload, _ = await self._fetch(
@@ -254,6 +311,11 @@ class LabV2ShadowRunner:
         candidates = self._evaluate(
             odds_fixtures, odds_evidence, histories, adapters, api_predictions,
             persisted_models, availability, final_reviews, clock,
+        )
+        lifecycle = self._track_reviews(tracked, candidates, fixtures, final_reviews, clock)
+        current_odds_fixture_count = sum(
+            any(value.status == "AVAILABLE" for value in families.values())
+            for _, _, families in odds_evidence.values()
         )
         approved = [item for item in candidates if item["decision"] == "APPROVED"]
         v2_keys = {f"{item['fixture_id']}:{item['market']}" for item in approved}
@@ -314,7 +376,8 @@ class LabV2ShadowRunner:
             "fixtures_with_incomplete_odds_page_coverage": odds_page_report[
                 "fixtures_with_incomplete_odds_page_coverage"
             ],
-            "current_odds_fixtures": len(odds_fixtures),
+            "current_odds_fixtures": current_odds_fixture_count,
+            "fixtures_considered_for_evaluation": len(odds_fixtures),
             "number_of_bookmakers_in_current_quotes": len({
                 quote.bookmaker_name for _, _, families in odds_evidence.values()
                 for family in families.values() for quote in family.quotes
@@ -340,6 +403,9 @@ class LabV2ShadowRunner:
             "new_v2_candidates": sorted(v2_keys - v1_keys),
             "v1_candidates_rejected_by_v2": sorted(v1_keys - v2_keys),
             "candidate_markets": candidates,
+            "tracked_final_reviews": lifecycle,
+            "tracked_final_review_state_counts": _counts(item["state"] for item in lifecycle),
+            "tracked_final_review_shortlist": [value for value in shortlist_ids if value in tracked_due],
             "rejection_reasons": rejection_reasons,
             "fixture_coverage": fixture_coverage,
             "fixture_coverage_status_counts": _counts(item["status"] for item in fixture_coverage),
@@ -363,7 +429,7 @@ class LabV2ShadowRunner:
             "projected_worst_case_daily_usage": projected_daily_usage(maximum_per_cycle=self.maximum_calls),
             "call_efficiency": {
                 "v2_current_odds_fixtures_per_call": (
-                    str(Decimal(len(odds_fixtures)) / Decimal(self._request_count()))
+                    str(Decimal(current_odds_fixture_count) / Decimal(self._request_count()))
                     if self._request_count() else None
                 ),
                 "v1_observed_current_odds_fixtures_per_call": "0.2006335797254487856388595565",
@@ -401,9 +467,51 @@ class LabV2ShadowRunner:
         self.repository.append("rehearsal", identity, persisted_report, created_at=clock)
         return _plain(report)
 
+    def _track_reviews(
+        self, tracked: dict, candidates: list[dict], fixtures: dict,
+        reviews: dict, clock: datetime,
+    ) -> list[dict]:
+        """Record every pending market's outcome without recycling its old price."""
+        by_key = {(item["fixture_id"], item["market"]): item for item in candidates}
+        for key, candidate in by_key.items():
+            if candidate["stage"] in {"EARLY_CANDIDATE", "FINAL_REVIEW_REQUIRED", "READY_TO_PUBLISH"}:
+                tracked.setdefault(key, new_review(candidate, clock))
+        result = []
+        for key, previous in sorted(tracked.items()):
+            fixture_id, _ = key
+            fixture = fixtures.get(fixture_id)
+            review = reviews.get(fixture_id, {})
+            candidate = by_key.get(key)
+            record = {**previous, "evaluated_at_utc": clock.isoformat(), "final_review": review}
+            kickoff = fixture["kickoff_utc"] if fixture else datetime.fromisoformat(record["kickoff_utc"])
+            record["kickoff_utc"] = kickoff.isoformat()
+            remaining = kickoff - clock
+            if remaining <= MINIMUM_KICKOFF_LEAD:
+                state, reasons = "EXPIRED", ["MINIMUM_KICKOFF_LEAD_NOT_MET"]
+            elif fixture is None:
+                state, reasons = "FIXTURE_INVALID", ["CURRENT_SEASON_CAPABILITY_NOT_FOUND"]
+            elif review.get("status") == "FIXTURE_INVALID":
+                state, reasons = "FIXTURE_INVALID", [review["reason"]]
+            elif remaining > FINAL_REVIEW_WINDOW:
+                state, reasons = "EARLY_CANDIDATE", ["FINAL_REVIEW_WINDOW_NOT_OPEN"]
+            elif not review.get("fixture_refreshed"):
+                state, reasons = "FINAL_REVIEW_REQUIRED", [review.get("reason", "FINAL_REVIEW_SHORTLIST_OR_BUDGET_PENDING")]
+            elif review.get("odds_status") in {"ODDS_STALE", "CURRENT_ODDS_UNAVAILABLE"}:
+                state, reasons = review["odds_status"], [review["odds_status"]]
+            elif candidate is None:
+                state, reasons = "CURRENT_ODDS_UNAVAILABLE", ["TRACKED_MARKET_CURRENT_ODDS_UNAVAILABLE"]
+            else:
+                state = candidate["stage"]
+                reasons = candidate["rejection_reasons"] or candidate["readiness_reasons"]
+            record.update(state=state, reasons=list(reasons),
+                          candidate_id=candidate["candidate_id"] if candidate else None)
+            self.repository.save_tracked_review(record, now=clock)
+            result.append(record)
+        return result
+
     async def _date_odds(
         self, days: list[str], fixtures: list[dict[str, object]], clock: datetime,
-        *, reserve_calls: int = 0,
+        *, reserve_calls: int = 0, tracked_fixture_ids: frozenset[int] = frozenset(),
     ) -> tuple[dict[int, tuple[object, datetime, dict[str, CurrentMarketConsensus]]], dict[str, object]]:
         fixture_ids = {int(item["fixture_id"]) for item in fixtures}
         fixture_days = {int(item["fixture_id"]): item["kickoff_utc"].date().isoformat() for item in fixtures}
@@ -416,6 +524,7 @@ class LabV2ShadowRunner:
         unreliable_fixture_ids: set[int] = set()
         unsupported_market_fixture_ids: set[int] = set()
         empty_quote_fixture_ids: set[int] = set()
+        tracked_quote_times: dict[str, dict[str, object]] = {}
         page_budget = max(0, min(
             int(self._effective_maximum() * Decimal("0.58")) - self._request_count(),
             self._remaining() - reserve_calls,
@@ -446,6 +555,12 @@ class LabV2ShadowRunner:
                 if fixture_id not in fixture_ids:
                     continue
                 joined_fixture_ids.add(fixture_id)
+                if fixture_id in tracked_fixture_ids:
+                    tracked_quote_times[str(fixture_id)] = {
+                        "provider_timestamp_utc": row.get("update"),
+                        "retrieved_at_utc": retrieved.isoformat(),
+                        "date": day, "page": current,
+                    }
                 single_payload = {"results": 1, "response": [row]}
                 consensus = current_market_consensus(
                     single_payload, fixture_id=fixture_id,
@@ -504,6 +619,7 @@ class LabV2ShadowRunner:
                 unsupported_market_fixture_ids - result.keys() - stale_fixture_ids
             ),
             "fixture_statuses": fixture_statuses,
+            "tracked_fixture_quote_times": tracked_quote_times,
             "batching": "CURRENT_/odds?date=YYYY-MM-DD&page=N",
         }
 
@@ -524,7 +640,10 @@ class LabV2ShadowRunner:
             payload, _ = await self._fetch(
                 "/fixtures(results)", {"league": league_id, "season": season, "status": "FT", "last": 99},
                 lambda lid=league_id, value=season: self.client.finished_matches(lid, value, last=99),
-                clock=clock, ttl=timedelta(hours=6), use_cache=True,
+                clock=clock, ttl=timedelta(hours=6), use_cache=not any(
+                    MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW
+                    for item in targets
+                ),
             )
             matches = list(parse_api_fixture_results((payload,)))
             adapter = PiRatingAdapter(league_id)
@@ -563,7 +682,9 @@ class LabV2ShadowRunner:
             payload, _ = await self._fetch(
                 "/predictions", {"fixture": fixture_id},
                 lambda identity=fixture_id: self._provider("prediction", identity, "/predictions"),
-                clock=clock, ttl=timedelta(hours=1), use_cache=True,
+                clock=clock, ttl=timedelta(hours=1), use_cache=not (
+                    MINIMUM_KICKOFF_LEAD < fixture["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW
+                ),
             )
             result[fixture_id] = normalize_api_prediction(payload, fixture_id=fixture_id)
         return result, skipped
@@ -607,9 +728,17 @@ class LabV2ShadowRunner:
                                    "result_count": _result_count(cached["payload"])})
                 return cached["payload"], cached["retrieved_at"]
         if self._remaining() <= 0:
-            raise ValueError("LAB_V2_API_CALL_BUDGET_EXHAUSTED")
+            self.calls.append({"endpoint": endpoint, "query": query, "cache": "SKIPPED_BUDGET",
+                               "actual_calls": 0, "result_count": 0})
+            return {"errors": {"request": "LAB_V2_API_CALL_BUDGET_EXHAUSTED"}, "response": []}, clock
         before = self._request_count()
-        payload = await operation()
+        try:
+            payload = await operation()
+        except (httpx.HTTPError, OSError, TimeoutError, json.JSONDecodeError,
+                FootballRequestLimitError, FootballQuotaError):
+            # The client owns bounded retries. Never log exception text or cache
+            # failure as fresh data; pending reviews must still receive evidence.
+            payload = {"errors": {"request": "PROVIDER_REQUEST_FAILED"}, "response": []}
         actual = self._request_count() - before
         metadata = getattr(self.client, "response_metadata", lambda: {})()
         retrieved = _metadata_time(metadata, clock)
@@ -756,7 +885,7 @@ class LabV2ShadowRunner:
                     material = {
                         "policy": decision.policy, "fixture_id": fixture_id,
                         "readiness_policy": READINESS_POLICY_VERSION,
-                        "league_id": league_id, "league": fixture["league_name"],
+                        "league_id": league_id, "league": fixture["league_name"], "season": fixture["season"],
                         "capability_tier": fixture["capability_tier"].value,
                         "home_team_id": fixture["home_team_id"], "away_team_id": fixture["away_team_id"],
                         "home_team": fixture["home_team"], "away_team": fixture["away_team"],
@@ -877,7 +1006,7 @@ def _fixture_coverage(
         fixture_id = int(fixture["fixture_id"])
         fixture_candidates = by_fixture.get(fixture_id, [])
         odds_status = odds_statuses.get(str(fixture_id), "FIXTURE_DISCOVERED_NO_CURRENT_ODDS")
-        if odds_status != "FIXTURE_DISCOVERED_WITH_CURRENT_ODDS":
+        if odds_status != "FIXTURE_DISCOVERED_WITH_CURRENT_ODDS" and not fixture_candidates:
             status = odds_status
             reason = odds_status
         elif any(item["stage"] == "READY_TO_PUBLISH" for item in fixture_candidates):
@@ -1030,6 +1159,8 @@ def _readiness(
     now: datetime,
     review: dict[str, object],
 ) -> tuple[str, tuple[str, ...]]:
+    if review.get("status") == "FIXTURE_INVALID":
+        return "REJECTED", ("FIXTURE_STATUS_NOT_UPCOMING",)
     if decision.decision != "APPROVED":
         return "REJECTED", ("ENSEMBLE_NOT_APPROVED",)
     remaining = fixture["kickoff_utc"] - now

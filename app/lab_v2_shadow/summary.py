@@ -58,6 +58,7 @@ def latest_cycle_summary(path: Path, *, fixture_id: int | None = None) -> dict[s
             "top_rejection_reasons": dict(rejections.most_common(10)),
             "readiness_blockers": dict(readiness.most_common()),
             "fixture_coverage_status_counts": report.get("fixture_coverage_status_counts") or {},
+            "tracked_final_review_state_counts": report.get("tracked_final_review_state_counts") or {},
             "api_calls_used": int(report.get("api_calls_consumed") or 0),
             "api_call_allocation": report.get("api_call_allocation") or {},
             "publication_attempts": int(publication_document.get("publication_attempt_count") or 0),
@@ -79,6 +80,30 @@ def latest_cycle_summary(path: Path, *, fixture_id: int | None = None) -> dict[s
                     "markets_evaluated": 0,
                 })
             result["fixture"] = coverage
+            result["tracked_final_reviews"] = [
+                item for item in report.get("tracked_final_reviews", ())
+                if str(item.get("fixture_id")) == str(fixture_id)
+            ]
+            if not result["tracked_final_reviews"] and connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='lab_v2_final_review_pending'"
+            ).fetchone():
+                result["tracked_final_reviews"] = [json.loads(item[0]) for item in connection.execute(
+                    "SELECT document_json FROM lab_v2_final_review_pending WHERE fixture_id=? ORDER BY market",
+                    (fixture_id,),
+                )]
+            # Cycle payloads refer to individual immutable candidate documents.
+            if not candidates:
+                candidates = [json.loads(item[0]) for item in connection.execute(
+                    """SELECT c.document_json FROM json_each(?, '$.candidate_ids') ids
+                    JOIN lab_v2_shadow_evidence c ON c.kind='candidate' AND c.identity=ids.value
+                    WHERE json_extract(c.document_json, '$.fixture_id')=?""",
+                    (row[2], fixture_id),
+                )]
+            result["candidate_markets"] = [
+                {key: item.get(key) for key in ("candidate_id", "fixture_id", "market", "stage",
+                                               "rejection_reasons", "readiness_reasons")}
+                for item in candidates if str(item.get("fixture_id")) == str(fixture_id)
+            ]
         return result
     finally:
         connection.close()

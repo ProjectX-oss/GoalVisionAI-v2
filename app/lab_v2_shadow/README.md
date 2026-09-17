@@ -44,6 +44,29 @@ cache because the operational cycle is 30 minutes; normalized current quote
 and candidate evidence remains append-only. Cycle summaries reference the
 individual candidate documents instead of duplicating their full payloads.
 
+EARLY fixture/market identities now survive discovery cycles in the small
+`lab_v2_final_review_pending` projection, backed by immutable
+`final_review_tracking` evidence. Upcoming legacy EARLY candidate documents
+are recovered through an indexed kickoff-range query. Previously captured
+odds are never copied into a new evaluation. Tracked fixtures enter the
+reserved final-review shortlist even if broad fixture or odds discovery
+omits them or rejects their odds as stale. Exact fixture/current-odds,
+lineup and injury requests bypass cache near kickoff; current-season result
+context and supported predictions are also refreshed within the call budget.
+
+`tracked_final_reviews` retains explicit READY, rejection, pending budget,
+unavailable odds, stale odds, invalid fixture and expiry outcomes. The current
+window remains T-75 through T-10, using the refreshed UTC kickoff. A failed
+exact quote response supersedes broad quotes; it cannot reuse an older price.
+Terminal outcomes remain inspectable with `summary --fixture-id`, which also
+resolves `candidate_ids` to concise per-market evidence. Quotes and candidate
+fingerprints may change while the tracked identity remains fixture ID/market.
+
+The incident evidence and regression results are documented in
+`docs/LAB_V2_EARLY_CANDIDATE_AUDIT_2026-09-17.md`. No service-unit changes are
+needed; the new Lab-only table/index are created on the next authorized run.
+The discovery timer remains stopped for operator review.
+
 V2 has no hard minimum decimal-odds floor for singles, individual combo legs or
 combined combo odds. Current valid prices and every existing ensemble, value,
 freshness, final-review, independence, correlation, exposure and exactly-once

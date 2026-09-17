@@ -39,6 +39,17 @@ class ShadowEvidenceRepository:
                 );
                 CREATE INDEX IF NOT EXISTS lab_v2_provider_cache_lookup
                 ON lab_v2_provider_cache(endpoint, query_fingerprint, expires_at_utc, retrieved_at_utc);
+                CREATE TABLE IF NOT EXISTS lab_v2_final_review_pending (
+                    fixture_id INTEGER NOT NULL,
+                    market TEXT NOT NULL,
+                    state TEXT NOT NULL,
+                    updated_at_utc TEXT NOT NULL,
+                    document_json TEXT NOT NULL,
+                    PRIMARY KEY (fixture_id, market)
+                );
+                CREATE INDEX IF NOT EXISTS lab_v2_early_candidate_kickoff
+                ON lab_v2_shadow_evidence(json_extract(document_json, '$.kickoff_utc'))
+                WHERE kind='candidate' AND json_extract(document_json, '$.stage')='EARLY_CANDIDATE';
                 CREATE TRIGGER IF NOT EXISTS lab_v2_shadow_no_update
                 BEFORE UPDATE ON lab_v2_shadow_evidence
                 BEGIN SELECT RAISE(ABORT, 'LAB V2 shadow evidence is immutable'); END;
@@ -107,3 +118,42 @@ class ShadowEvidenceRepository:
 
     def close(self) -> None:
         self.connection.close()
+
+    def early_candidates(self, *, now: datetime) -> list[dict]:
+        """Bounded upgrade recovery from individual candidates, never rehearsal JSON."""
+        rows = self.connection.execute(
+            """SELECT document_json FROM lab_v2_shadow_evidence e
+            WHERE kind='candidate' AND json_extract(document_json, '$.stage')='EARLY_CANDIDATE'
+            AND json_extract(document_json, '$.kickoff_utc')>=?
+            AND json_extract(document_json, '$.kickoff_utc')<=?
+            AND created_at_utc<=?
+            AND NOT EXISTS (SELECT 1 FROM lab_v2_final_review_pending p
+                WHERE p.fixture_id=json_extract(e.document_json, '$.fixture_id')
+                AND p.market=json_extract(e.document_json, '$.market'))
+            ORDER BY created_at_utc, identity""",
+            (now.isoformat(), (now + timedelta(days=7)).isoformat(), now.isoformat()),
+        )
+        return [json.loads(row[0]) for row in rows]
+
+    def tracked_reviews(self) -> list[dict]:
+        """Read active review projections without loading accumulated terminal history."""
+        return [json.loads(row[0]) for row in self.connection.execute(
+            """SELECT document_json FROM lab_v2_final_review_pending
+            WHERE state NOT IN ('REJECTED','FIXTURE_INVALID','EXPIRED') ORDER BY fixture_id, market"""
+        )]
+
+    def save_tracked_review(self, document: dict, *, now: datetime) -> None:
+        """Append immutable evidence and atomically update its disposable projection."""
+        with self.connection:
+            identity = "lab-v2-review-" + fingerprint(document)
+            self.connection.execute(
+                "INSERT OR IGNORE INTO lab_v2_shadow_evidence VALUES (?,?,?,?,?)",
+                ("final_review_tracking", identity, now.isoformat(), fingerprint(document), canonical_json(document)),
+            )
+            self.connection.execute(
+                """INSERT INTO lab_v2_final_review_pending VALUES (?,?,?,?,?)
+                ON CONFLICT(fixture_id,market) DO UPDATE SET state=excluded.state,
+                updated_at_utc=excluded.updated_at_utc, document_json=excluded.document_json
+                WHERE excluded.updated_at_utc>=lab_v2_final_review_pending.updated_at_utc""",
+                (document["fixture_id"], document["market"], document["state"], now.isoformat(), canonical_json(document)),
+            )

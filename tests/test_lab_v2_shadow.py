@@ -346,6 +346,258 @@ class FakeClient:
         return Response(self._hit(endpoint, params, payload))
 
 
+class LifecycleClient(FakeClient):
+    """Synthetic provider with independent broad and exact current coverage."""
+
+    def __init__(self, clock, kickoff, *, broad="fresh", exact="fresh", status="NS", moved=None):
+        super().__init__()
+        self.clock, self.kickoff = clock, kickoff
+        self.broad, self.exact, self.status, self.moved = broad, exact, status, moved
+        self.requests = []
+
+    def _hit(self, endpoint, query, payload):
+        result = super()._hit(endpoint, query, payload)
+        self.last["retrieved_at_utc"] = self.clock.isoformat()
+        self.requests.append((endpoint, query))
+        return result
+
+    def fixture_row(self, *, exact=False):
+        return {"fixture": {"id": 7, "date": ((self.moved or self.kickoff) if exact else self.kickoff).isoformat(),
+                            "status": {"short": self.status if exact else "NS"}},
+                "league": {"id": 999, "name": "Synthetic League", "season": 2026},
+                "teams": {"home": {"id": 10, "name": "Home"}, "away": {"id": 20, "name": "Away"}}}
+
+    async def fixtures_by_date(self, day, *, timezone_name="UTC"):
+        assert timezone_name == "UTC" and day == self.clock.astimezone(timezone.utc).date().isoformat()
+        return self._hit("/fixtures", {"date": day}, {"response": [self.fixture_row()]})
+
+    async def fixture(self, identity):
+        assert identity == 7
+        return self._hit("/fixtures", {"id": identity}, {"response": [self.fixture_row(exact=True)]})
+
+    def quotes(self, mode):
+        if mode == "missing":
+            return {"response": []}
+        payload = odds_payload(self.clock - (timedelta(hours=4) if mode == "stale" else timedelta()))
+        if mode == "bad_value":
+            for book in payload["response"][0]["bookmakers"]:
+                book["bets"][0]["values"] = [
+                    {"value": "Home", "odd": "1.60"}, {"value": "Draw", "odd": "4.50"},
+                    {"value": "Away", "odd": "6.00"},
+                ]
+        return payload
+
+    async def current_odds_by_date(self, day, *, page=1):
+        return self._hit("/odds", {"date": day, "page": page},
+                         {**self.quotes(self.broad), "paging": {"current": 1, "total": 1}})
+
+    async def current_odds(self, identity):
+        assert identity == 7
+        if self.exact == "timeout":
+            self._hit("/odds", {"fixture": identity}, {})
+            raise TimeoutError("fictional provider failure")
+        return self._hit("/odds", {"fixture": identity}, self.quotes(self.exact))
+
+    async def lineup(self, identity):
+        return self._hit("/fixtures/lineups", {"fixture": identity}, {"response": [
+            {"team": {"id": team}, "formation": "4-4-2", "startXI": [{"player": {"id": team * 100 + n}} for n in range(11)]}
+            for team in (10, 20)
+        ]})
+
+
+@pytest.fixture
+def lifecycle_cycles(tmp_path, monkeypatch):
+    """Use real normalization, ensemble, readiness and persistence with synthetic signals."""
+    from dataclasses import replace
+    import app.lab_v2_shadow.runner as runner_module
+
+    monkeypatch.chdir(tmp_path)
+    probabilities = {"HOME_WIN": Decimal("0.60"), "DRAW": Decimal("0.24"), "AWAY_WIN": Decimal("0.16")}
+    monkeypatch.setattr(runner_module, "_history_market_probabilities", lambda *args: probabilities)
+    original_signal = PiRatingAdapter.signal
+    monkeypatch.setattr(PiRatingAdapter, "signal", lambda self, home, away: replace(
+        original_signal(self, home, away), state=PiAvailability.AVAILABLE, probabilities=probabilities,
+    ))
+    kickoff = datetime(2026, 9, 16, 22, tzinfo=timezone.utc)
+    path = Path("var/shadow.db")
+
+    def cycle(clock, **kwargs):
+        maximum = kwargs.pop("maximum", 40)
+        client = LifecycleClient(clock.astimezone(timezone.utc), kickoff, **kwargs)
+        repository = ShadowEvidenceRepository(path)
+        runner = LabV2ShadowRunner(client, repository, capability_cache_path=Path("var/capabilities.json"),
+                                   maximum_calls=maximum)
+        try:
+            report = asyncio.run(runner.run(now=clock, horizon_days=1))
+        finally:
+            repository.close()
+        assert report["historical_bookmaker_odds_used"] is False
+        assert report["telegram_sends"] == report["official_mutations"] == 0
+        assert report["api_calls_consumed"] <= maximum
+        return report, client
+
+    early, _ = cycle(kickoff - timedelta(hours=6))
+    home = next(item for item in early["candidate_markets"] if item["market"] == "HOME_WIN")
+    assert home["stage"] == "EARLY_CANDIDATE"
+    return cycle, kickoff, path, home
+
+
+@pytest.mark.parametrize("broad", ["missing", "stale"])
+def test_tracked_early_exact_refresh_survives_broad_coverage_loss(lifecycle_cycles, broad):
+    cycle, kickoff, path, early = lifecycle_cycles
+    report, client = cycle(kickoff - timedelta(hours=1), broad=broad)
+    home = next(item for item in report["candidate_markets"] if item["market"] == "HOME_WIN")
+    assert home["stage"] == "READY_TO_PUBLISH"
+    assert home["candidate_id"] != early["candidate_id"]
+    assert report["tracked_final_review_shortlist"] == [7]
+    assert report["final_review_call_reserve"] == 12
+    assert client.requests.count(("/odds", {"fixture": 7})) == 1
+    assert ("/fixtures", {"id": 7}) in client.requests
+    tracking = next(item for item in report["tracked_final_reviews"] if item["market"] == "HOME_WIN")
+    assert tracking["state"] == "READY_TO_PUBLISH"
+    assert tracking["origin_candidate_id"] == early["candidate_id"]
+    summary = latest_cycle_summary(path, fixture_id=7)
+    assert any(item["stage"] == "READY_TO_PUBLISH" for item in summary["candidate_markets"])
+    assert summary["tracked_final_reviews"] == report["tracked_final_reviews"]
+
+
+@pytest.mark.parametrize("exact,state", [("missing", "CURRENT_ODDS_UNAVAILABLE"), ("stale", "ODDS_STALE"),
+                                        ("timeout", "CURRENT_ODDS_UNAVAILABLE")])
+def test_tracked_early_exact_odds_failure_is_visible_and_retryable(lifecycle_cycles, exact, state):
+    cycle, kickoff, path, _ = lifecycle_cycles
+    report, client = cycle(kickoff - timedelta(hours=1), broad="missing", exact=exact)
+    assert report["ready_candidate_count"] == 0
+    assert report["candidate_markets"] == []
+    assert ("/odds", {"fixture": 7}) in client.requests
+    assert {item["state"] for item in report["tracked_final_reviews"]} == {state}
+    recovered, _ = cycle(kickoff - timedelta(minutes=30), broad="missing")
+    assert recovered["ready_candidate_count"] == 1
+
+
+def test_tracked_review_crosses_riga_midnight_on_previous_utc_date(lifecycle_cycles):
+    from zoneinfo import ZoneInfo
+
+    cycle, kickoff, _, _ = lifecycle_cycles
+    clock = (kickoff - timedelta(hours=1)).astimezone(ZoneInfo("Europe/Riga"))
+    assert clock.date().isoformat() == "2026-09-17"
+    assert kickoff.date().isoformat() == "2026-09-16"
+    report, client = cycle(clock, broad="missing")
+    assert report["ready_candidate_count"] == 1
+    assert ("/odds", {"date": "2026-09-16", "page": 1}) in client.requests
+
+
+def test_tracked_review_uses_refreshed_kickoff_and_revisits(lifecycle_cycles):
+    cycle, kickoff, _, _ = lifecycle_cycles
+    report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", moved=kickoff + timedelta(hours=2))
+    assert report["ready_candidate_count"] == 0
+    record = report["tracked_final_reviews"][0]
+    assert record["state"] == "EARLY_CANDIDATE"
+    assert record["kickoff_utc"] == (kickoff + timedelta(hours=2)).isoformat()
+
+
+def test_refreshed_kickoff_already_started_expires_tracked_review(lifecycle_cycles):
+    cycle, kickoff, _, _ = lifecycle_cycles
+    report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", moved=kickoff - timedelta(hours=2))
+    assert report["ready_candidate_count"] == 0
+    assert {item["state"] for item in report["tracked_final_reviews"]} == {"EXPIRED"}
+
+
+def test_tracked_review_rejects_refreshed_value_without_disappearing(lifecycle_cycles):
+    cycle, kickoff, path, _ = lifecycle_cycles
+    report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", exact="bad_value")
+    home = next(item for item in report["tracked_final_reviews"] if item["market"] == "HOME_WIN")
+    assert home["state"] == "REJECTED"
+    assert "ENSEMBLE_EDGE_BELOW_0_04" in home["reasons"]
+    later, _ = cycle(kickoff - timedelta(minutes=30), broad="missing")
+    assert later["candidate_markets"] == []
+    assert latest_cycle_summary(path, fixture_id=7)["tracked_final_reviews"][0]["state"] == "REJECTED"
+
+
+@pytest.mark.parametrize("status", ["PST", "CANC", "1H"])
+def test_tracked_review_invalid_status_is_explicit(lifecycle_cycles, status):
+    cycle, kickoff, _, _ = lifecycle_cycles
+    report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", status=status)
+    assert report["ready_candidate_count"] == 0
+    assert {item["state"] for item in report["tracked_final_reviews"]} == {"FIXTURE_INVALID"}
+
+
+def test_tracked_review_budget_and_expiry_are_visible(lifecycle_cycles):
+    cycle, kickoff, _, _ = lifecycle_cycles
+    report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", maximum=3)
+    assert {item["state"] for item in report["tracked_final_reviews"]} == {"FINAL_REVIEW_REQUIRED"}
+    expired, _ = cycle(kickoff, broad="missing")
+    assert {item["state"] for item in expired["tracked_final_reviews"]} == {"EXPIRED"}
+
+
+def test_tracked_review_does_not_require_broad_fixture_rediscovery(lifecycle_cycles, monkeypatch):
+    cycle, kickoff, _, _ = lifecycle_cycles
+
+    async def missing(self, day, *, timezone_name="UTC"):
+        return self._hit("/fixtures", {"date": day}, {"response": []})
+
+    monkeypatch.setattr(LifecycleClient, "fixtures_by_date", missing)
+    report, client = cycle(kickoff - timedelta(hours=1), broad="missing")
+    assert report["provider_fixture_rows"] == 0
+    assert report["ready_candidate_count"] == 1
+    assert ("/fixtures", {"id": 7}) in client.requests
+
+
+def test_exact_refresh_bypasses_unexpired_cache_and_supersedes_broad_quotes(lifecycle_cycles):
+    cycle, kickoff, _, _ = lifecycle_cycles
+    first, _ = cycle(kickoff - timedelta(hours=1))
+    assert first["ready_candidate_count"] == 1
+    report, client = cycle(kickoff - timedelta(minutes=59), exact="missing")
+    assert ("/odds", {"fixture": 7}) in client.requests
+    assert report["candidate_markets"] == []
+    assert report["ready_candidate_count"] == report["current_odds_fixtures"] == 0
+    assert report["tracked_final_reviews"][0]["state"] == "CURRENT_ODDS_UNAVAILABLE"
+
+
+def test_upgrade_recovers_old_individual_early_candidate_without_season(lifecycle_cycles):
+    cycle, kickoff, _, early = lifecycle_cycles
+    # A different temporary database represents pre-tracker individual evidence.
+    path = Path("var/upgrade.db")
+    repository = ShadowEvidenceRepository(path)
+    legacy = {key: value for key, value in early.items() if key != "season"}
+    repository.append("candidate", legacy["candidate_id"], legacy, created_at=kickoff - timedelta(hours=6))
+    client = LifecycleClient(kickoff - timedelta(hours=1), kickoff, broad="missing")
+    runner = LabV2ShadowRunner(client, repository, capability_cache_path=Path("var/capabilities.json"), maximum_calls=40)
+    try:
+        report = asyncio.run(runner.run(now=client.clock, horizon_days=1))
+        assert report["ready_candidate_count"] == 1
+        assert report["tracked_final_reviews"][0]["origin_candidate_id"] == early["candidate_id"]
+        assert len(repository.early_candidates(now=client.clock)) == 0
+    finally:
+        repository.close()
+
+
+def test_tracked_ready_replay_sends_once_with_fake_transport(lifecycle_cycles):
+    from app.lab_combo.repository import ComboRepository
+    from app.lab_combo.service import LabComboService
+
+    cycle, kickoff, _, _ = lifecycle_cycles
+    clock = kickoff - timedelta(hours=1)
+    report, _ = cycle(clock, broad="missing")
+    ledger = ComboRepository(Path("var/lab_combo/fake-publication.db"))
+    _RecordingTransport.calls = 0
+    _RecordingTransport.fail = False
+    transport = _RecordingTransport("fictional")
+    config = LabTelegramConfig(token="fictional-test-token", chat_id=LAB_CHAT_ID, automatic_enabled=True)
+    service = LabComboService(ledger, None, clock=lambda: clock)
+    try:
+        prepared = prepare_v2_publications(report, ledger, now=clock)
+        identity = prepared["singles"][0]["prediction_id"]
+        sent = asyncio.run(service.publish_experimental("single_prediction", identity, config, transport))
+        assert sent["sent"] is True
+        refreshed, _ = cycle(clock + timedelta(minutes=1), broad="missing")
+        replay = prepare_v2_publications(refreshed, ledger, now=clock + timedelta(minutes=1))
+        assert replay["singles"] == []
+        assert _RecordingTransport.calls == 1
+        assert len(ledger.all("receipt")) == 1
+    finally:
+        ledger.close()
+
+
 class PagedOddsClient(FakeClient):
     def __init__(self):
         super().__init__()
