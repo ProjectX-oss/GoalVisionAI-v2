@@ -15,7 +15,7 @@ ODDS_REASONS = {
 
 
 def global_diagnostic(fixtures: list[dict], candidates: list[dict], odds_statuses: dict,
-                      now: datetime, *, reviews: dict | None = None) -> dict:
+                      now: datetime, *, reviews: dict | None = None, odds_reasons: dict | None = None) -> dict:
     """One current state per legitimate fixture; detailed independent market gates."""
     states, gates = [], []
     for fixture in fixtures:
@@ -40,6 +40,9 @@ def global_diagnostic(fixtures: list[dict], candidates: list[dict], odds_statuse
             state, reason = 'REJECTED', rows[0]['hard_failures'][0]
         elif not rows and reason in {'NO_CURRENT_ODDS', 'MARKET_NOT_AVAILABLE', 'ODDS_STALE'}:
             state = 'UNAVAILABLE'
+        coverage_reason = (odds_reasons or {}).get(str(fixture['fixture_id']))
+        if not rows and coverage_reason and not review.get('odds_status') and state not in {'REJECTED', 'EXPIRED'}:
+            reason = coverage_reason
         refresh = next_refresh(fixture['kickoff_utc'], now, policy_for(profile))
         states.append({**metadata, 'state': state, 'reason': reason,
                        'kickoff_utc': fixture['kickoff_utc'].isoformat(),
@@ -78,6 +81,7 @@ def global_diagnostic(fixtures: list[dict], candidates: list[dict], odds_statuse
     odds_count = sum(s == 'FIXTURE_DISCOVERED_WITH_CURRENT_ODDS' for s in odds_statuses.values())
     counts = {'fixtures_discovered': len(fixtures), 'fixtures_with_current_odds': odds_count,
               'fixtures_scored': len({c['fixture_id'] for c in candidates}),
+              'fixtures_with_independent_probability': len({c['fixture_id'] for c in candidates if c.get('independent_probability_available')}),
               'fixtures_tracking': sum(s['state'] in {'TRACKING', 'UNAVAILABLE'} for s in states),
               'strong_candidates': lanes['STRONG'], 'standard_candidates': lanes['STANDARD'],
               'experimental_candidates': lanes['EXPERIMENTAL'], 'rejected_candidates': lanes['REJECTED'],
@@ -100,7 +104,15 @@ def global_diagnostic(fixtures: list[dict], candidates: list[dict], odds_statuse
     grouped['market'] = {market: {'evaluated': sum(c['market'] == market for c in candidates),
                                  'lanes': dict(Counter(c['candidate_lane'] for c in candidates if c['market'] == market))}
                          for market in sorted({c['market'] for c in candidates})}
-    return {'grouped_throughput': grouped, 'global_fixture_states': states, 'rejection_funnel': funnel, 'gate_evidence': gates,
+    rejection_percentages = {
+        reason: {'decisions': count, 'percent_of_failed_gate_observations': round(count * 100 / sum(reasons.values()), 3)}
+        for reason, count in reasons.most_common()
+    }
+    fixture_reasons = Counter(s['reason'] for s in states)
+    return {'rejection_reason_percentages': rejection_percentages,
+            'fixture_reason_counts': {reason: {'fixtures': count, 'percent_of_discovered': round(count * 100 / len(states), 3)}
+                                     for reason, count in sorted(fixture_reasons.items())},
+            'grouped_throughput' : grouped, 'global_fixture_states': states, 'rejection_funnel': funnel, 'gate_evidence': gates,
             'throughput': counts, 'competition_profile_counts': dict(Counter(s['competition_profile'] for s in states)),
             'global_state_counts': dict(Counter(s['state'] for s in states)),
             'top_global_rejection_reasons': dict(reasons.most_common(15)),
@@ -118,6 +130,8 @@ def human_diagnostic(report: dict) -> str:
     lines.extend(f'{key}: {value}' for key, value in report.get('throughput', {}).items())
     lines.append('By profile:')
     lines.extend(f'  {key}: {value}' for key, value in report.get('competition_profile_counts', {}).items())
+    lines.append('Odds coverage reasons:')
+    lines.extend(f'  {key}: {value}' for key, value in report.get('odds_coverage_reason_counts', {}).items())
     lines.append('Top rejection/deferral reasons:')
     lines.extend(f'  {key}: {value}' for key, value in report.get('top_global_rejection_reasons', {}).items())
     for key in ('api_calls_used', 'current_remaining_daily_quota', 'fixtures_awaiting_near_kickoff_review', 'throughput_warnings'):

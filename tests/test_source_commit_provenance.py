@@ -12,7 +12,7 @@ from unittest.mock import patch
 import pytest
 
 from app.database import Database
-from app.lab_combo.cli import _analysis_input as lab_combo_analysis_input
+from app.current_odds_forward_test.workflow import _analysis_input as forward_analysis_input
 from app.model_activation import RuntimeArtifactReference
 from app.model_activation.repository import SQLiteModelActivationRepository
 from app.model_activation_audit import (
@@ -124,7 +124,7 @@ def test_engine_accepts_only_the_reviewed_commit() -> None:
         )
 
 
-def test_lab_combo_input_propagates_reviewed_commit_deterministically() -> None:
+def test_current_odds_workflow_input_propagates_reviewed_commit_deterministically() -> None:
     captured = datetime(2026, 9, 13, 9, 0, tzinfo=timezone.utc)
     quote = SimpleNamespace(
         quote_id="quote-1",
@@ -153,10 +153,10 @@ def test_lab_combo_input_propagates_reviewed_commit_deterministically() -> None:
         },
     }
 
-    first = lab_combo_analysis_input(
+    first = forward_analysis_input(
         "combo-run", selected, odds, source_commit=REVIEWED_COMMIT
     )
-    replay = lab_combo_analysis_input(
+    replay = forward_analysis_input(
         "combo-run", selected, odds, source_commit=REVIEWED_COMMIT
     )
 

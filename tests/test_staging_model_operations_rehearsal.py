@@ -197,7 +197,7 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
             statuses["execute-activation-conflict"], ("ACTIVATION_CONFLICT", 6)
         )
 
-    def test_rolled_back_legacy_champion_is_stale_without_delivery(self):
+    def test_unreviewed_legacy_champion_rejects_before_stale_evidence_without_delivery(self):
         disposable = (
             self.destination
             / f"goalvision_staging_activation_rollback_{TIMESTAMP}.db"
@@ -230,14 +230,27 @@ class ControlledStagingRehearsalTests(unittest.TestCase):
                     service.engine.analyze(command, command.collected_at)
                 except Exception as exc:
                     diagnostic = str(exc)
+            from app.model_activation import build_runtime_champion_resolver
+            from app.historical_probability_calibration import SQLiteHistoricalProbabilityCalibrationRepository
+            from app.calibration_freshness import assess_calibration_freshness, CalibrationActionabilityStatus, DEFAULT_CALIBRATION_FRESHNESS_POLICY
+            reference = build_runtime_champion_resolver(database, migrate=False).resolve(command.scope).champion_generation.artifact
+            calibration = SQLiteHistoricalProbabilityCalibrationRepository(database, migrate=False).load_calibration_artifact_set(reference.calibration_artifact_set_id)
+            freshness = assess_calibration_freshness(
+                database, calibration, environment="LAB", assessment_timestamp=now,
+                review_timestamp=now, policy=DEFAULT_CALIBRATION_FRESHNESS_POLICY,
+            )
+            self.assertIn("CALIBRATION_EVIDENCE_STALE", freshness.ordered_reason_codes)
+            self.assertEqual(freshness.actionability_status, CalibrationActionabilityStatus.NON_ACTIONABLE)
             deliveries = database.connection.execute(
                 "SELECT COUNT(*) FROM real_match_lab_deliveries"
             ).fetchone()[0]
         finally:
             database.close()
         self.assertEqual(record.status, AnalysisStatus.REJECTED)
-        self.assertIn("CALIBRATION_EVIDENCE_STALE", record.rejection_reasons)
-        self.assertIn("CALIBRATION_EVIDENCE_STALE", diagnostic)
+        # Reviewed-source provenance is intentionally checked before freshness.
+        # This generated staging artifact is not the reviewed deployed artifact.
+        self.assertEqual(record.rejection_reasons, ("CALIBRATION_REVIEW_MISSING",))
+        self.assertIn("no intact reviewed source provenance", diagnostic)
         self.assertIsNone(record.evidence)
         self.assertEqual(deliveries, 0)
         statuses = {

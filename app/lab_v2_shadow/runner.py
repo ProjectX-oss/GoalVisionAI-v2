@@ -27,7 +27,7 @@ from .ensemble import EnsembleDecision, EnsembleSignal
 from .market_consensus import CurrentMarketConsensus, best_current_price, current_market_consensus
 from .pi_ratings import MatchResult, PiAvailability, PiRatingAdapter, PiSignal, parse_api_fixture_results
 from .quota import (
-    DAILY_SAFETY_RESERVE,
+    DAILY_SAFETY_RESERVE, ODDS_BASE_CYCLE_FRACTION, ODDS_RELEASED_RESERVE_CYCLE_FRACTION, MINIMUM_ENRICHMENT_CALLS,
     MAX_DISCOVERY_CALLS_PER_CYCLE,
     AdaptiveQuotaBudget,
     adaptive_quota_budget,
@@ -37,12 +37,14 @@ from .repository import ShadowEvidenceRepository
 from .tracking import load_reviews, new_review, restore_fixture
 from .profiles import classify, fallback_capability, policy_for
 from .global_evaluation import evaluate_profile
+from .signal_evidence import signal_requirements
 from .scheduling import fair_order, record_service
 from .diagnostics import global_diagnostic
+from .odds_coverage import DateOddsCoverage, quote_absence_reason
 from .forward_evidence import capture_selection
 
 
-SCHEMA_VERSION = "goalvision-lab-v2-global-cycle-v6"
+SCHEMA_VERSION = "goalvision-lab-v2-global-cycle-v7"
 READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V4"
 MAXIMUM_CALLS = MAX_DISCOVERY_CALLS_PER_CYCLE
 FINAL_REVIEW_WINDOW = timedelta(minutes=75)
@@ -489,7 +491,8 @@ class LabV2ShadowRunner:
                     "ODDS_STALE": "FIXTURE_DISCOVERED_ODDS_STALE",
                     "CURRENT_ODDS_UNAVAILABLE": "FIXTURE_DISCOVERED_NO_CURRENT_ODDS",
                 }[review["odds_status"]]
-        diagnostic = global_diagnostic(ordered, candidates, effective_odds_statuses, clock, reviews=final_reviews)
+        diagnostic = global_diagnostic(ordered, candidates, effective_odds_statuses, clock, reviews=final_reviews,
+                                       odds_reasons=odds_page_report["fixture_coverage_reasons"])
         report.update(diagnostic)
         for item in diagnostic["global_fixture_states"]:
             self.repository.append("global_fixture_state", f"{clock.isoformat()}:{item['fixture_id']}", item, created_at=clock)
@@ -578,6 +581,9 @@ class LabV2ShadowRunner:
         continuation_pages: list[tuple[str, int]] = []
         cursor_by_day = {row["date"]: row["next_page"] for row in self.repository.all("odds_page_cursor")}
         skipped_prefix_days: set[str] = set()
+        coverage = {day: DateOddsCoverage() for day in days}
+        details: dict[int, str] = {}
+        initial_reserve = reserve_calls
         fetched: list[dict[str, object]] = []
         joined_fixture_ids: set[int] = set()
         stale_fixture_ids: set[int] = set()
@@ -585,8 +591,9 @@ class LabV2ShadowRunner:
         unsupported_market_fixture_ids: set[int] = set()
         empty_quote_fixture_ids: set[int] = set()
         tracked_quote_times: dict[str, dict[str, object]] = {}
+        quote_ages: dict[str, float | None] = {}
         page_budget = max(0, min(
-            int(self._effective_maximum() * Decimal("0.58")) - self._request_count(),
+            int(self._effective_maximum() * ODDS_BASE_CYCLE_FRACTION) - self._request_count(),
             self._remaining() - reserve_calls,
         ))
         used = 0
@@ -594,7 +601,11 @@ class LabV2ShadowRunner:
             if first_pages:
                 day, page = first_pages.pop(0)
             else:
-                continuation_pages.sort()
+                # Complete today first; then favor the largest uncovered universe per page.
+                continuation_pages.sort(key=lambda item: (
+                    item[0] != clock.date().isoformat(),
+                    -sum(d == item[0] for i, d in fixture_days.items() if i not in joined_fixture_ids)
+                    / max(1, coverage[item[0]].maximum - len(coverage[item[0]].pages)), item[0], item[1]))
                 day, page = continuation_pages.pop(0)
             payload, retrieved = await self._fetch(
                 "/odds(date)", {"date": day, "page": page},
@@ -606,27 +617,50 @@ class LabV2ShadowRunner:
             )
             used += int(self.calls[-1]["actual_calls"])
             paging = payload.get("paging") if isinstance(payload, dict) and isinstance(payload.get("paging"), dict) else {}
-            current = _safe_int(paging.get("current"), page)
-            total = _safe_int(paging.get("total"), current)
-            fetched.append({"date": day, "page": current, "total_pages": total, "rows": _result_count(payload)})
+            valid_page = coverage[day].observe(page, payload)
+            current = page
+            total = coverage[day].maximum
+            fetched.append({"date": day, "page": current, "total_pages": _safe_int(paging.get("total"), 0),
+                            "maximum_total_observed": total, "rows": _result_count(payload),
+                            "response_fingerprint": fingerprint(payload),
+                            "provider_fixture_ids": [_safe_int(r["fixture"].get("id"), -1) for r in _response_rows(payload) if isinstance(r.get("fixture"), dict)]})
+            if not valid_page:
+                continue
             for row in _response_rows(payload):
                 fixture = row.get("fixture") if isinstance(row.get("fixture"), dict) else {}
                 fixture_id = _safe_int(fixture.get("id"), -1)
                 if fixture_id not in fixture_ids:
                     continue
                 joined_fixture_ids.add(fixture_id)
+                expected = next(item for item in fixtures if int(item["fixture_id"]) == fixture_id)
+                row_league = row.get("league") if isinstance(row.get("league"), dict) else {}
+                if ((row_league.get("id") is not None and expected.get("league_id") is not None
+                     and row_league["id"] != expected["league_id"]) or fixture_days[fixture_id] != day):
+                    details[fixture_id] = "ODDS_FIXTURE_LEAGUE_OR_DATE_MISMATCH"
+                    unreliable_fixture_ids.add(fixture_id)
+                    result.pop(fixture_id, None)
+                    continue
                 if fixture_id in tracked_fixture_ids:
                     tracked_quote_times[str(fixture_id)] = {
                         "provider_timestamp_utc": row.get("update"),
                         "retrieved_at_utc": retrieved.isoformat(),
                         "date": day, "page": current,
                     }
+                try:
+                    updated = datetime.fromisoformat(str(row.get('update')).replace('Z', '+00:00'))
+                    quote_ages[str(fixture_id)] = (max(clock, retrieved) - updated).total_seconds()
+                except (ValueError, TypeError):
+                    quote_ages[str(fixture_id)] = None
                 single_payload = {"results": 1, "response": [row]}
                 consensus = current_market_consensus(
                     single_payload, fixture_id=fixture_id,
                     retrieved_at=retrieved, now=max(clock, retrieved),
                     allowed_bookmaker_ids=self.allowed_bookmaker_ids,
                 )
+                details[fixture_id] = ("CURRENT_ODDS_AVAILABLE" if any(v.status == "AVAILABLE" for v in consensus.values()) else
+                    "ODDS_STALE" if consensus and all(v.status == "STALE_CURRENT_ODDS" for v in consensus.values()) else
+                    "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS" if any(v.quote_count for v in consensus.values()) else
+                    quote_absence_reason(row, self.allowed_bookmaker_ids))
                 if any(value.status == "AVAILABLE" for value in consensus.values()):
                     result[fixture_id] = (single_payload, retrieved, consensus)
                 elif consensus and all(value.status == "STALE_CURRENT_ODDS" for value in consensus.values()):
@@ -646,9 +680,25 @@ class LabV2ShadowRunner:
                 continuation_pages.append((day, next_page))
             self.repository.append("odds_page_cursor", f"{clock.isoformat()}:{day}:{current}",
                                    {"date": day, "next_page": next_page if current < total else 2}, created_at=clock)
+            # Release only reserve for near-kickoff fixtures proven to have no usable odds.
+            # Daily reserve and the cycle ceiling remain unchanged; enrichment keeps capacity.
+            if initial_reserve and coverage[day].reason() is None:
+                potential = [item for item in fixtures if item['fixture_id'] in result
+                             or item['fixture_id'] in tracked_fixture_ids
+                             or coverage.get(fixture_days[item['fixture_id']], DateOddsCoverage()).reason() is not None]
+                reserve_calls = min(reserve_calls, _final_review_call_reserve(potential, clock))
+                if reserve_calls < initial_reserve:
+                    page_budget = max(page_budget, min(
+                        int(self._effective_maximum() * ODDS_RELEASED_RESERVE_CYCLE_FRACTION) - self._request_count() + used,
+                        self._remaining() - max(MINIMUM_ENRICHMENT_CALLS, reserve_calls) + used))
         unvisited = [*first_pages, *continuation_pages]
-        unvisited_pages = len(unvisited)
-        incomplete_days = {day for day, _ in unvisited} | skipped_prefix_days
+        unvisited_pages = sum(len(set(range(1, c.maximum + 1)) - c.pages) for c in coverage.values())
+        incomplete_days = ({day for day, c in coverage.items() if c.reason() is not None}
+                           | skipped_prefix_days | (set(fixture_days.values()) - set(coverage)))
+        for fixture_id in fixture_ids - joined_fixture_ids:
+            day = fixture_days[fixture_id]
+            details[fixture_id] = (coverage.get(day, DateOddsCoverage()).reason(reserve_limited=self._remaining() <= reserve_calls)
+                or ('ODDS_RESTART_PREFIX_NOT_REFRESHED' if day in skipped_prefix_days else 'ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD'))
         no_odds_ids = {
             fixture_id for fixture_id in fixture_ids - joined_fixture_ids
             if fixture_days.get(fixture_id) not in incomplete_days
@@ -671,8 +721,15 @@ class LabV2ShadowRunner:
         }
         return result, {
             "pages_fetched": fetched,
+            "coverage_by_date": {day: value.document() for day, value in coverage.items()},
+            "fixture_coverage_reasons": {str(k): v for k, v in sorted(details.items())},
+            "coverage_reason_counts": {reason: list(details.values()).count(reason) for reason in sorted(set(details.values()))},
+            "fixtures_with_complete_odds_coverage": len(fixture_ids) - len(incomplete_ids),
+            "initial_final_review_reserve": initial_reserve,
+            "remaining_final_review_reserve": reserve_calls,
             "page_calls": used,
-            "pages_not_fetched_due_to_budget": unvisited_pages,
+            "pages_not_fetched_due_to_budget": sum(len(set(range(1, c.maximum + 1)) - c.attempted) for c in coverage.values() if not c.errors),
+            "pages_missing_valid_response": unvisited_pages,
             "unvisited_pages": [{"date": day, "page": page} for day, page in sorted(unvisited)],
             "fixtures_not_analyzed_due_to_budget": len(incomplete_ids),
             "fixtures_with_no_current_odds": len(no_odds_ids | empty_quote_fixture_ids),
@@ -686,6 +743,7 @@ class LabV2ShadowRunner:
             ),
             "fixture_statuses": fixture_statuses,
             "tracked_fixture_quote_times": tracked_quote_times,
+            "provider_quote_age_seconds_by_fixture": quote_ages,
             "batching": "CURRENT_/odds?date=YYYY-MM-DD&page=N",
         }
 
@@ -810,10 +868,13 @@ class LabV2ShadowRunner:
         try:
             payload = await operation()
         except (httpx.HTTPError, OSError, TimeoutError, json.JSONDecodeError,
-                FootballRequestLimitError, FootballQuotaError):
+                FootballRequestLimitError, FootballQuotaError) as exc:
             # The client owns bounded retries. Never log exception text or cache
             # failure as fresh data; pending reviews must still receive evidence.
-            payload = {"errors": {"request": "PROVIDER_REQUEST_FAILED"}, "response": []}
+            code = ("ODDS_QUOTA_OR_REQUEST_LIMIT" if isinstance(exc, (FootballRequestLimitError, FootballQuotaError)) else
+                    "ODDS_API_TIMEOUT" if isinstance(exc, (TimeoutError, httpx.TimeoutException)) else
+                    "ODDS_RESPONSE_MALFORMED" if isinstance(exc, json.JSONDecodeError) else "ODDS_API_ERROR")
+            payload = {"errors": {"request": code}, "response": []}
         actual = self._request_count() - before
         metadata = getattr(self.client, "response_metadata", lambda: {})()
         retrieved = _metadata_time(metadata, clock)
@@ -973,9 +1034,20 @@ class LabV2ShadowRunner:
                         profile_evidence["hard_failures"] = [reason]
                         profile_evidence["candidate_lane"] = "REJECTED"
                     stage, readiness_reasons = _readiness(decision, fixture, now, review)
+                    independent_probability = (decision.available_signals >= profile_policy.experimental_independent_families
+                                               and 'CURRENT_MARKET_CONSENSUS_UNAVAILABLE' not in decision.rejection_reasons)
+                    requirements = signal_requirements(missing, fixture['capability'], independent_probability=independent_probability)
                     material = {
                         **profile_evidence,
+                        "signal_requirements": requirements,
+                        "independent_probability_available": independent_probability,
+                        "probability_kind": "MARKET_INCLUSIVE_UNCALIBRATED_ENSEMBLE",
+                        "offered_implied_probability": str(decision.offered_implied_probability) if decision.offered_implied_probability is not None else None,
+                        "calculated_fair_odds": str(Decimal(1) / decision.ensemble_probability) if decision.ensemble_probability is not None and decision.ensemble_probability > 0 else None,
+                        "vig_method": "PER_BOOKMAKER_MULTIPLICATIVE_NORMALIZATION",
+                        "market_fair_probability": str(consensus.fair_probabilities[market]),
                         "optional_data_reasons": [
+                            *sorted({r["reason_code"] for r in requirements if r["gate_type"] == "SOFT"}),
                             *( ["LINEUPS_NOT_SUPPORTED_BY_PROVIDER" if not fixture["capability"].lineups else "LINEUPS_NOT_YET_AVAILABLE"] if "lineup" in missing else []),
                             *( ["INSUFFICIENT_RECENT_MATCHES"] if "recent_form" in missing else []),
                             *( ["ADVANCED_STATISTICS_UNAVAILABLE"] if "advanced_stats" in missing else []),

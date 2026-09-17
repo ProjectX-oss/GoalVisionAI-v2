@@ -1,0 +1,2057 @@
+{
+  "date": "2026-09-17",
+  "starting_commit": "902e96b7bc3b3b4ec33ecd987aaa5df642ae9bec",
+  "scope": "LAB_ONLY_ONE_BOUNDED_CURRENT_DATA_NO_SEND_CYCLE",
+  "phase1": {
+    "classification": "Both failures were obsolete test expectations predating the global overhaul. No production safety guards relaxed.",
+    "full_suite_passed": 1704,
+    "subtests_passed": 563,
+    "failures": 0,
+    "collection_errors": 0
+  },
+  "tests": {
+    "new_hardening": 78,
+    "focused_global_shadow_hardening": 178,
+    "adjacent": 267,
+    "full_suite": 1782,
+    "subtests": 563,
+    "failures": 0,
+    "collection_errors": 0
+  },
+  "verification": {
+    "fresh": {
+      "schema": 42,
+      "foreign_key_check": [],
+      "integrity": "ok"
+    },
+    "upgrade_41_to_42": {
+      "schema": 42,
+      "foreign_key_check": [],
+      "integrity": "ok"
+    },
+    "controlled_runner_startup": {
+      "api_calls": 0,
+      "telegram_transports": 0
+    },
+    "append_only_guards": [
+      "BLOCKED",
+      "BLOCKED"
+    ],
+    "idempotent_append": true,
+    "lab_foreign_key_check": [],
+    "controlled_imports": "PASS"
+  },
+  "safety": {
+    "env_unchanged": true,
+    "protected_tables_unchanged": true,
+    "protected_tables_checked": [
+      "bankroll_accounts",
+      "bankroll_transactions",
+      "predictions",
+      "published_predictions",
+      "result_publications"
+    ],
+    "official_publications_by_task": 0,
+    "official_bankroll_changes_by_task": 0,
+    "official_statistics_changes_by_task": 0,
+    "telegram_sends_by_task": 0,
+    "timer_enablements_by_task": 0,
+    "lab_timer_enabled": "disabled",
+    "lab_timer_active": "inactive",
+    "preexisting_settlement_timer_enabled": "enabled",
+    "note": "The pre-existing settlement timer was not changed; this task only runs isolated no-send discovery."
+  },
+  "baseline_odds_audit": {
+    "recorded_incomplete": 1441,
+    "reason_counts": {
+      "FINAL_REVIEW_RESERVE_LIMITED_PAGINATION": 1441
+    },
+    "date": "2026-09-19",
+    "pages_requested": 11,
+    "pages_advertised": 40,
+    "unrequested_pages": 29,
+    "cycle_calls_at_stop": 55,
+    "reserved_review_calls": 45,
+    "additional_unresolved_due_to_september18_page_count_drift": 193,
+    "corrected_unresolved_baseline": 1634,
+    "retrospective_limit": "Old raw bookmaker pages were not retained; unavailable versus unpublished odds cannot be inferred for unobserved fixtures."
+  },
+  "same_input_classifier_comparison": {
+    "before_unknown": 1304,
+    "after_unknown": 619,
+    "after_profile_counts": {
+      "SENIOR_MEN_PRO": 48,
+      "UNKNOWN": 619,
+      "LOWER_DIVISION_OR_SEMIPRO": 819,
+      "RESERVE_OR_B_TEAM": 144,
+      "SENIOR_WOMEN_PRO": 81,
+      "YOUTH_U19_U20": 110,
+      "YOUTH_U21_U23": 43,
+      "INTERNATIONAL_CLUB": 12,
+      "DOMESTIC_CUP": 121,
+      "YOUTH_U17_U18": 15,
+      "FRIENDLY": 2,
+      "INTERNATIONAL_YOUTH": 2
+    },
+    "transitions": [
+      {
+        "from": "DOMESTIC_CUP",
+        "to": "INTERNATIONAL_CLUB",
+        "fixtures": 1
+      },
+      {
+        "from": "RESERVE_OR_B_TEAM",
+        "to": "LOWER_DIVISION_OR_SEMIPRO",
+        "fixtures": 1
+      },
+      {
+        "from": "RESERVE_OR_B_TEAM",
+        "to": "UNKNOWN",
+        "fixtures": 1
+      },
+      {
+        "from": "UNKNOWN",
+        "to": "INTERNATIONAL_CLUB",
+        "fixtures": 1
+      },
+      {
+        "from": "UNKNOWN",
+        "to": "LOWER_DIVISION_OR_SEMIPRO",
+        "fixtures": 666
+      },
+      {
+        "from": "UNKNOWN",
+        "to": "RESERVE_OR_B_TEAM",
+        "fixtures": 1
+      },
+      {
+        "from": "UNKNOWN",
+        "to": "SENIOR_WOMEN_PRO",
+        "fixtures": 18
+      }
+    ]
+  },
+  "baseline_value_audit": {
+    "markets": 1818,
+    "arithmetic_mismatches": 0,
+    "quote_mapping_mismatches": 0,
+    "normalization_mismatches": 0,
+    "nonpositive_ev": 1588,
+    "missing_independent_probability": 1506,
+    "markets_without_independent_probability_and_nonpositive_ev": 1390
+  },
+  "same_input_replay": {
+    "api_calls": 0,
+    "candidate_lanes": {
+      "EXPERIMENTAL": 12,
+      "REJECTED": 1806
+    },
+    "candidate_stages": {
+      "EARLY_CANDIDATE": 12,
+      "REJECTED": 1806
+    },
+    "capture_clock": "2026-09-17T17:10:14.951572+00:00",
+    "classifier_version": "LAB_COMPETITION_CLASSIFIER_V3",
+    "competition_profile_counts": {
+      "DOMESTIC_CUP": 121,
+      "FRIENDLY": 2,
+      "INTERNATIONAL_CLUB": 12,
+      "INTERNATIONAL_YOUTH": 2,
+      "LOWER_DIVISION_OR_SEMIPRO": 819,
+      "RESERVE_OR_B_TEAM": 144,
+      "SENIOR_MEN_PRO": 48,
+      "SENIOR_WOMEN_PRO": 81,
+      "UNKNOWN": 619,
+      "YOUTH_U17_U18": 15,
+      "YOUTH_U19_U20": 110,
+      "YOUTH_U21_U23": 43
+    },
+    "deterministic_replay": true,
+    "evaluation_fingerprint": "fc61fdb8f61653c65750ee99f14332952a8454aad166a7c6d13264c0052677ed",
+    "experimental_candidates": [
+      {
+        "fixture_id": 1499639,
+        "market": "BTTS_NO",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1528715,
+        "market": "OVER_2_5",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1552481,
+        "market": "BTTS_NO",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1552481,
+        "market": "UNDER_2_5",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1552484,
+        "market": "OVER_2_5",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1558635,
+        "market": "BTTS_YES",
+        "profile": "SENIOR_MEN_PRO"
+      },
+      {
+        "fixture_id": 1558635,
+        "market": "OVER_2_5",
+        "profile": "SENIOR_MEN_PRO"
+      },
+      {
+        "fixture_id": 1568491,
+        "market": "OVER_2_5",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1576187,
+        "market": "DRAW",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1622773,
+        "market": "BTTS_NO",
+        "profile": "UNKNOWN"
+      },
+      {
+        "fixture_id": 1622773,
+        "market": "HOME_WIN",
+        "profile": "UNKNOWN"
+      },
+      {
+        "fixture_id": 1636695,
+        "market": "BTTS_NO",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      }
+    ],
+    "fixture_count": 2016,
+    "markets_evaluated": 1818,
+    "mode": "OFFLINE_CAPTURED_INPUT_POLICY_REPLAY",
+    "scope": "Same captured current quotes and results, original clock; no final-result or later data inputs. Availability/prediction calls absent in captured run."
+  },
+  "before_after_live": {
+    "capture_clock": {
+      "before": "2026-09-17T17:10:14.951572+00:00",
+      "after": "2026-09-17T18:08:24.995394+00:00"
+    },
+    "discovered": {
+      "before": 2016,
+      "after": 1997
+    },
+    "unknown": {
+      "before": 1304,
+      "after": 612
+    },
+    "incomplete_odds_coverage": {
+      "before_recorded": 1441,
+      "before_audit_corrected": 1634,
+      "after": 329
+    },
+    "complete_odds_coverage": {
+      "before_recorded": 575,
+      "after": 1668
+    },
+    "fixtures_scored": {
+      "before": 190,
+      "after": 94
+    },
+    "fixtures_with_independent_probability": {
+      "before": 46,
+      "after": 32
+    },
+    "candidates": {
+      "before": 10,
+      "after": 6
+    },
+    "caveat": "Live snapshots differ in clock, fixture status and provider pages; use same-input replay to isolate classifier effects."
+  },
+  "rehearsal": {
+    "clock": "2026-09-17T18:08:24.995394+00:00",
+    "dates": [
+      "2026-09-17",
+      "2026-09-18",
+      "2026-09-19"
+    ],
+    "provider_fixture_rows": 2177,
+    "non_upcoming_or_invalid_records": 180,
+    "all_discovered_fixtures_have_persisted_state": true,
+    "throughput": {
+      "experimental_candidates": 6,
+      "fixtures_discovered": 1997,
+      "fixtures_scored": 94,
+      "fixtures_tracking": 1925,
+      "fixtures_with_current_odds": 94,
+      "fixtures_with_independent_probability": 32,
+      "published_candidates": 0,
+      "rejected_candidates": 946,
+      "standard_candidates": 0,
+      "strong_candidates": 0
+    },
+    "profiles": {
+      "SENIOR_MEN_PRO": 48,
+      "SENIOR_WOMEN_PRO": 81,
+      "YOUTH_U17_U18": 15,
+      "YOUTH_U19_U20": 108,
+      "YOUTH_U21_U23": 43,
+      "RESERVE_OR_B_TEAM": 138,
+      "LOWER_DIVISION_OR_SEMIPRO": 815,
+      "DOMESTIC_CUP": 121,
+      "INTERNATIONAL_CLUB": 12,
+      "INTERNATIONAL_SENIOR": 0,
+      "INTERNATIONAL_YOUTH": 2,
+      "FRIENDLY": 2,
+      "UNKNOWN": 612
+    },
+    "profile_funnel": {
+      "SENIOR_MEN_PRO": {
+        "discovered": 48,
+        "with_current_odds": 5,
+        "examined": 5,
+        "odds_reasons": {
+          "ODDS_STALE": 40,
+          "CURRENT_ODDS_AVAILABLE": 5,
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 3
+        }
+      },
+      "SENIOR_WOMEN_PRO": {
+        "discovered": 81,
+        "with_current_odds": 0,
+        "examined": 0,
+        "odds_reasons": {
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 20,
+          "ODDS_STALE": 5,
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 56
+        }
+      },
+      "YOUTH_U17_U18": {
+        "discovered": 15,
+        "with_current_odds": 0,
+        "examined": 0,
+        "odds_reasons": {
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 15
+        }
+      },
+      "YOUTH_U19_U20": {
+        "discovered": 108,
+        "with_current_odds": 0,
+        "examined": 0,
+        "odds_reasons": {
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 15,
+          "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": 6,
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 87
+        }
+      },
+      "YOUTH_U21_U23": {
+        "discovered": 43,
+        "with_current_odds": 1,
+        "examined": 1,
+        "odds_reasons": {
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 20,
+          "CURRENT_ODDS_AVAILABLE": 1,
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 21,
+          "ODDS_STALE": 1
+        }
+      },
+      "RESERVE_OR_B_TEAM": {
+        "discovered": 138,
+        "with_current_odds": 3,
+        "examined": 3,
+        "odds_reasons": {
+          "CURRENT_ODDS_AVAILABLE": 3,
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 99,
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 23,
+          "ODDS_STALE": 12,
+          "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": 1
+        }
+      },
+      "LOWER_DIVISION_OR_SEMIPRO": {
+        "discovered": 815,
+        "with_current_odds": 32,
+        "examined": 32,
+        "odds_reasons": {
+          "ODDS_STALE": 165,
+          "CURRENT_ODDS_AVAILABLE": 32,
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 125,
+          "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": 1,
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 491,
+          "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": 1
+        }
+      },
+      "DOMESTIC_CUP": {
+        "discovered": 121,
+        "with_current_odds": 0,
+        "examined": 0,
+        "odds_reasons": {
+          "ODDS_STALE": 3,
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 8,
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 110
+        }
+      },
+      "INTERNATIONAL_CLUB": {
+        "discovered": 12,
+        "with_current_odds": 0,
+        "examined": 0,
+        "odds_reasons": {
+          "ODDS_STALE": 9,
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 2,
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 1
+        }
+      },
+      "INTERNATIONAL_SENIOR": {
+        "discovered": 0,
+        "with_current_odds": 0,
+        "examined": 0,
+        "odds_reasons": {}
+      },
+      "INTERNATIONAL_YOUTH": {
+        "discovered": 2,
+        "with_current_odds": 0,
+        "examined": 0,
+        "odds_reasons": {
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 2
+        }
+      },
+      "FRIENDLY": {
+        "discovered": 2,
+        "with_current_odds": 0,
+        "examined": 0,
+        "odds_reasons": {
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 2
+        }
+      },
+      "UNKNOWN": {
+        "discovered": 612,
+        "with_current_odds": 53,
+        "examined": 53,
+        "odds_reasons": {
+          "ODDS_STALE": 168,
+          "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 275,
+          "CURRENT_ODDS_AVAILABLE": 53,
+          "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 113,
+          "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": 3
+        }
+      }
+    },
+    "states": {
+      "REJECTED": 72,
+      "TRACKING": 356,
+      "UNAVAILABLE": 1569
+    },
+    "candidate_lanes": {
+      "EXPERIMENTAL": 6,
+      "REJECTED": 946
+    },
+    "ready_to_publish": 0,
+    "complete_odds_coverage": 1668,
+    "incomplete_odds_coverage": 329,
+    "odds_reason_counts": {
+      "CURRENT_ODDS_AVAILABLE": 94,
+      "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": 7,
+      "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": 1159,
+      "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": 329,
+      "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": 5,
+      "ODDS_STALE": 403
+    },
+    "coverage_by_date": {
+      "2026-09-17": {
+        "advertised_totals": [
+          14
+        ],
+        "errors": [],
+        "requested_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "stable_complete_sweep": true,
+        "unrequested_pages": [],
+        "valid_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ]
+      },
+      "2026-09-18": {
+        "advertised_totals": [
+          28
+        ],
+        "errors": [],
+        "requested_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "stable_complete_sweep": false,
+        "unrequested_pages": [
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "valid_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "2026-09-19": {
+        "advertised_totals": [
+          40
+        ],
+        "errors": [],
+        "requested_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ],
+        "stable_complete_sweep": true,
+        "unrequested_pages": [],
+        "valid_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40
+        ]
+      }
+    },
+    "fixture_reason_counts": {
+      "MATERIAL_SIGNAL_DISAGREEMENT": {
+        "fixtures": 8,
+        "percent_of_discovered": 0.401
+      },
+      "NEEDS_NEAR_KICKOFF_REFRESH": {
+        "fixtures": 22,
+        "percent_of_discovered": 1.102
+      },
+      "NON_POSITIVE_VALUE": {
+        "fixtures": 61,
+        "percent_of_discovered": 3.055
+      },
+      "NO_INDEPENDENT_NON_MARKET_EVIDENCE": {
+        "fixtures": 3,
+        "percent_of_discovered": 0.15
+      },
+      "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+        "fixtures": 7,
+        "percent_of_discovered": 0.351
+      },
+      "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+        "fixtures": 1159,
+        "percent_of_discovered": 58.037
+      },
+      "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION": {
+        "fixtures": 329,
+        "percent_of_discovered": 16.475
+      },
+      "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+        "fixtures": 5,
+        "percent_of_discovered": 0.25
+      },
+      "ODDS_STALE": {
+        "fixtures": 403,
+        "percent_of_discovered": 20.18
+      }
+    },
+    "market_rejection_reasons": {
+      "INSUFFICIENT_INDEPENDENT_SIGNALS": {
+        "markets": 935,
+        "percent_of_evaluated_markets": 98.214
+      },
+      "VALUE_BELOW_PROFILE_THRESHOLD": {
+        "markets": 922,
+        "percent_of_evaluated_markets": 96.849
+      },
+      "ENSEMBLE_EDGE_BELOW_0_04": {
+        "markets": 916,
+        "percent_of_evaluated_markets": 96.218
+      },
+      "NON_POSITIVE_VALUE": {
+        "markets": 820,
+        "percent_of_evaluated_markets": 86.134
+      },
+      "NO_INDEPENDENT_NON_MARKET_EVIDENCE": {
+        "markets": 696,
+        "percent_of_evaluated_markets": 73.109
+      },
+      "MATERIAL_SIGNAL_DISAGREEMENT": {
+        "markets": 133,
+        "percent_of_evaluated_markets": 13.971
+      },
+      "WEIGHTED_AGREEMENT_BELOW_0_65": {
+        "markets": 38,
+        "percent_of_evaluated_markets": 3.992
+      }
+    },
+    "api_calls": 93,
+    "api_call_allocation": {
+      "/fixtures": 3,
+      "/fixtures(results)": 18,
+      "/injuries": 1,
+      "/leagues": 1,
+      "/odds(date)": 63,
+      "/odds/bookmakers": 2,
+      "/predictions": 4,
+      "/status": 1
+    },
+    "http_responses_logged": 92,
+    "attempts_without_response_log": 1,
+    "exact_fixture_odds_refresh_calls": 0,
+    "cycle_budget": {
+      "additional_calls_available": 99,
+      "already_consumed": 1,
+      "daily_remaining_observed": 4611,
+      "daily_safety_reserve": 1500,
+      "effective_cycle_maximum": 100,
+      "minute_remaining_observed": 299,
+      "requested_maximum": 100,
+      "reserve_headroom": 3111,
+      "status": "FULL_MAXIMUM_SAFE"
+    },
+    "cycle_budget_remaining": 7,
+    "daily_quota_remaining": 4519,
+    "provider_odds_age_distribution": {
+      "60_TO_210_MINUTES": 106,
+      "OVER_210_MINUTES_STALE": 403
+    },
+    "provider_origin_max_age_seconds": 12600,
+    "awaiting_near_kickoff": 1925,
+    "foreign_key_check": [],
+    "integrity_check": "ok"
+  },
+  "category_coverage": {
+    "SENIOR_MEN_PRO": {
+      "provider_records": 49,
+      "valid_upcoming": 48,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "SENIOR_WOMEN_PRO": {
+      "provider_records": 90,
+      "valid_upcoming": 81,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "YOUTH_U17_U18": {
+      "provider_records": 15,
+      "valid_upcoming": 15,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "YOUTH_U19_U20": {
+      "provider_records": 114,
+      "valid_upcoming": 108,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "YOUTH_U21_U23": {
+      "provider_records": 44,
+      "valid_upcoming": 43,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "RESERVE_OR_B_TEAM": {
+      "provider_records": 147,
+      "valid_upcoming": 138,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "LOWER_DIVISION_OR_SEMIPRO": {
+      "provider_records": 852,
+      "valid_upcoming": 815,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "DOMESTIC_CUP": {
+      "provider_records": 132,
+      "valid_upcoming": 121,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "INTERNATIONAL_CLUB": {
+      "provider_records": 21,
+      "valid_upcoming": 12,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "INTERNATIONAL_SENIOR": {
+      "provider_records": 0,
+      "valid_upcoming": 0,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": "ZERO_RETURNED_BY_PROVIDER"
+    },
+    "INTERNATIONAL_YOUTH": {
+      "provider_records": 6,
+      "valid_upcoming": 2,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "FRIENDLY": {
+      "provider_records": 4,
+      "valid_upcoming": 2,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    },
+    "UNKNOWN": {
+      "provider_records": 703,
+      "valid_upcoming": 612,
+      "legitimate_fixtures_filtered_by_category": 0,
+      "zero_reason": null
+    }
+  },
+  "september17_only": {
+    "SENIOR_MEN_PRO": {
+      "provider_records": 2,
+      "valid_upcoming": 1,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "SENIOR_WOMEN_PRO": {
+      "provider_records": 9,
+      "valid_upcoming": 0,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "YOUTH_U17_U18": {
+      "provider_records": 0,
+      "valid_upcoming": 0,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "YOUTH_U19_U20": {
+      "provider_records": 6,
+      "valid_upcoming": 0,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "YOUTH_U21_U23": {
+      "provider_records": 1,
+      "valid_upcoming": 0,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "RESERVE_OR_B_TEAM": {
+      "provider_records": 11,
+      "valid_upcoming": 2,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "LOWER_DIVISION_OR_SEMIPRO": {
+      "provider_records": 38,
+      "valid_upcoming": 9,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "DOMESTIC_CUP": {
+      "provider_records": 14,
+      "valid_upcoming": 3,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "INTERNATIONAL_CLUB": {
+      "provider_records": 18,
+      "valid_upcoming": 9,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "INTERNATIONAL_SENIOR": {
+      "provider_records": 0,
+      "valid_upcoming": 0,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "INTERNATIONAL_YOUTH": {
+      "provider_records": 4,
+      "valid_upcoming": 0,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "FRIENDLY": {
+      "provider_records": 2,
+      "valid_upcoming": 0,
+      "legitimate_fixtures_filtered_by_category": 0
+    },
+    "UNKNOWN": {
+      "provider_records": 77,
+      "valid_upcoming": 3,
+      "legitimate_fixtures_filtered_by_category": 0
+    }
+  },
+  "remaining_unknown_leagues": [
+    {
+      "league_id": 71,
+      "league": "Serie A",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 98,
+      "league": "J1 League",
+      "country": "Japan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 8
+    },
+    {
+      "league_id": 103,
+      "league": "Eliteserien",
+      "country": "Norway",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 104,
+      "league": "1. Division",
+      "country": "Norway",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 106,
+      "league": "Ekstraklasa",
+      "country": "Poland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 107,
+      "league": "I Liga",
+      "country": "Poland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 7
+    },
+    {
+      "league_id": 110,
+      "league": "Premier League",
+      "country": "Wales",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 8
+    },
+    {
+      "league_id": 113,
+      "league": "Allsvenskan",
+      "country": "Sweden",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 116,
+      "league": "Premier League",
+      "country": "Belarus",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 117,
+      "league": "1. Division",
+      "country": "Belarus",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 119,
+      "league": "Superliga",
+      "country": "Denmark",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 120,
+      "league": "1. Division",
+      "country": "Denmark",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 128,
+      "league": "Liga Profesional Argentina",
+      "country": "Argentina",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 145,
+      "league": "Challenger Pro League",
+      "country": "Belgium",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 162,
+      "league": "Primera Divisi\u00f3n",
+      "country": "Costa-Rica",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 163,
+      "league": "Liga de Ascenso",
+      "country": "Costa-Rica",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 164,
+      "league": "\u00darvalsdeild",
+      "country": "Iceland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 165,
+      "league": "1. Deild",
+      "country": "Iceland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 169,
+      "league": "Super League",
+      "country": "China",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 172,
+      "league": "First League",
+      "country": "Bulgaria",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 175,
+      "league": "Third League - Northeast",
+      "country": "Bulgaria",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 176,
+      "league": "Third League - Northwest",
+      "country": "Bulgaria",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 177,
+      "league": "Third League - Southeast",
+      "country": "Bulgaria",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 7
+    },
+    {
+      "league_id": 178,
+      "league": "Third League - Southwest",
+      "country": "Bulgaria",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 179,
+      "league": "Premiership",
+      "country": "Scotland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 180,
+      "league": "Championship",
+      "country": "Scotland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 183,
+      "league": "League One",
+      "country": "Scotland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 184,
+      "league": "League Two",
+      "country": "Scotland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 186,
+      "league": "Ligue 1",
+      "country": "Algeria",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 7
+    },
+    {
+      "league_id": 195,
+      "league": "Victoria NPL",
+      "country": "Australia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 196,
+      "league": "Western Australia NPL",
+      "country": "Australia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 197,
+      "league": "Super League 1",
+      "country": "Greece",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 203,
+      "league": "S\u00fcper Lig",
+      "country": "Turkey",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 207,
+      "league": "Super League",
+      "country": "Switzerland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 208,
+      "league": "Challenge League",
+      "country": "Switzerland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 210,
+      "league": "HNL",
+      "country": "Croatia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 211,
+      "league": "First NL",
+      "country": "Croatia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 218,
+      "league": "Bundesliga",
+      "country": "Austria",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 234,
+      "league": "Liga Nacional",
+      "country": "Honduras",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 236,
+      "league": "First League",
+      "country": "Russia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 239,
+      "league": "Primera A",
+      "country": "Colombia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 240,
+      "league": "Primera B",
+      "country": "Colombia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 242,
+      "league": "Liga Pro",
+      "country": "Ecuador",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 244,
+      "league": "Veikkausliiga",
+      "country": "Finland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 245,
+      "league": "Ykk\u00f6nen",
+      "country": "Finland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 247,
+      "league": "Kakkonen - Lohko A",
+      "country": "Finland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 248,
+      "league": "Kakkonen - Lohko B",
+      "country": "Finland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 249,
+      "league": "Kakkonen - Lohko C",
+      "country": "Finland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 252,
+      "league": "Division Profesional - Clausura",
+      "country": "Paraguay",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 262,
+      "league": "Liga MX",
+      "country": "Mexico",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 263,
+      "league": "Liga de Expansi\u00f3n MX",
+      "country": "Mexico",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 268,
+      "league": "Primera Divisi\u00f3n",
+      "country": "Uruguay",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 271,
+      "league": "NB I",
+      "country": "Hungary",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 274,
+      "league": "Liga 1",
+      "country": "Indonesia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 276,
+      "league": "FKF Premier League",
+      "country": "Kenya",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 281,
+      "league": "Primera Divisi\u00f3n",
+      "country": "Peru",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 283,
+      "league": "Liga I",
+      "country": "Romania",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 286,
+      "league": "Super Liga",
+      "country": "Serbia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 288,
+      "league": "Premier Soccer League",
+      "country": "South-Africa",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 289,
+      "league": "1st Division",
+      "country": "South-Africa",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 7
+    },
+    {
+      "league_id": 292,
+      "league": "K League 1",
+      "country": "South-Korea",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 293,
+      "league": "K League 2",
+      "country": "South-Korea",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 296,
+      "league": "Thai League 1",
+      "country": "Thailand",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 299,
+      "league": "Primera Divisi\u00f3n",
+      "country": "Venezuela",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 303,
+      "league": "Division 1",
+      "country": "United-Arab-Emirates",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 7
+    },
+    {
+      "league_id": 304,
+      "league": "Liga Paname\u00f1a de F\u00fatbol",
+      "country": "Panama",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 308,
+      "league": "Division 1",
+      "country": "Saudi-Arabia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 310,
+      "league": "Superliga",
+      "country": "Albania",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 312,
+      "league": "1a Divisi\u00f3",
+      "country": "Andorra",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 315,
+      "league": "Premijer Liga",
+      "country": "Bosnia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 316,
+      "league": "1st League - FBiH",
+      "country": "Bosnia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 317,
+      "league": "1st League - RS",
+      "country": "Bosnia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 318,
+      "league": "1. Division",
+      "country": "Cyprus",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 327,
+      "league": "Erovnuli Liga",
+      "country": "Georgia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 328,
+      "league": "Esiliiga A",
+      "country": "Estonia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 329,
+      "league": "Meistriliiga",
+      "country": "Estonia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 332,
+      "league": "Super Liga",
+      "country": "Slovakia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 333,
+      "league": "Premier League",
+      "country": "Ukraine",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 336,
+      "league": "Druha Liga",
+      "country": "Ukraine",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 339,
+      "league": "Liga Nacional",
+      "country": "Guatemala",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 342,
+      "league": "Premier League",
+      "country": "Armenia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 344,
+      "league": "Primera Divisi\u00f3n",
+      "country": "Bolivia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 345,
+      "league": "Czech Liga",
+      "country": "Czech-Republic",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 346,
+      "league": "FNL",
+      "country": "Czech-Republic",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 355,
+      "league": "First League",
+      "country": "Montenegro",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 357,
+      "league": "Premier Division",
+      "country": "Ireland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 358,
+      "league": "First Division",
+      "country": "Ireland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 361,
+      "league": "1 Lyga",
+      "country": "Lithuania",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 362,
+      "league": "A Lyga",
+      "country": "Lithuania",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 364,
+      "league": "1. Liga",
+      "country": "Latvia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 365,
+      "league": "Virsliga",
+      "country": "Latvia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 366,
+      "league": "1. Deild",
+      "country": "Faroe-Islands",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 367,
+      "league": "Meistaradeildin",
+      "country": "Faroe-Islands",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 368,
+      "league": "Premier League",
+      "country": "Singapore",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 369,
+      "league": "Super League",
+      "country": "Uzbekistan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 370,
+      "league": "Primera Division",
+      "country": "El-Salvador",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 371,
+      "league": "First League",
+      "country": "Macedonia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 373,
+      "league": "1. SNL",
+      "country": "Slovenia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 383,
+      "league": "Ligat Ha'al",
+      "country": "Israel",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 7
+    },
+    {
+      "league_id": 387,
+      "league": "League",
+      "country": "Jordan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 388,
+      "league": "1. Division",
+      "country": "Kazakhstan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 389,
+      "league": "Premier League",
+      "country": "Kazakhstan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 391,
+      "league": "Super League",
+      "country": "Malawi",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 392,
+      "league": "Challenge League",
+      "country": "Malta",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 393,
+      "league": "Premier League",
+      "country": "Malta",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 394,
+      "league": "Super Liga",
+      "country": "Moldova",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 395,
+      "league": "Liga 1",
+      "country": "Moldova",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 397,
+      "league": "Girabola",
+      "country": "Angola",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 398,
+      "league": "Premier League",
+      "country": "Bangladesh",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 399,
+      "league": "NPFL",
+      "country": "Nigeria",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 401,
+      "league": "Premier Soccer League",
+      "country": "Zimbabwe",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 7
+    },
+    {
+      "league_id": 404,
+      "league": "Campionato",
+      "country": "San-Marino",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 405,
+      "league": "National Soccer League",
+      "country": "Rwanda",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 407,
+      "league": "Championship",
+      "country": "Northern-Ireland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 8
+    },
+    {
+      "league_id": 408,
+      "league": "Premiership",
+      "country": "Northern-Ireland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 410,
+      "league": "C-League",
+      "country": "Cambodia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 412,
+      "league": "Premier League",
+      "country": "Botswana",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 418,
+      "league": "Birinci Dasta",
+      "country": "Azerbaijan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 419,
+      "league": "Premyer Liqa",
+      "country": "Azerbaijan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 479,
+      "league": "Canadian Premier League",
+      "country": "Canada",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 494,
+      "league": "Super League 2",
+      "country": "Greece",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 496,
+      "league": "Liga Alef",
+      "country": "Israel",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 14
+    },
+    {
+      "league_id": 510,
+      "league": "1. Liga Promotion",
+      "country": "Switzerland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 542,
+      "league": "Iraqi League",
+      "country": "Iraq",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 8
+    },
+    {
+      "league_id": 549,
+      "league": "Damallsvenskan",
+      "country": "Sweden",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 569,
+      "league": "Premier League",
+      "country": "Kyrgyzstan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 570,
+      "league": "Premier League",
+      "country": "Ghana",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 585,
+      "league": "Premier League",
+      "country": "Uganda",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 599,
+      "league": "1. Liga Classic - Group 1",
+      "country": "Switzerland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 600,
+      "league": "1. Liga Classic - Group 2",
+      "country": "Switzerland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 601,
+      "league": "1. Liga Classic - Group 3",
+      "country": "Switzerland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 625,
+      "league": "Carioca - 2",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 6
+    },
+    {
+      "league_id": 636,
+      "league": "\u00ddokary Liga",
+      "country": "Turkmenistan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 638,
+      "league": "Kvindeliga",
+      "country": "Denmark",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 640,
+      "league": "Kansallinen Liiga",
+      "country": "Finland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 664,
+      "league": "Superliga",
+      "country": "Kosovo",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 725,
+      "league": "Toppserien",
+      "country": "Norway",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 736,
+      "league": "Elitettan",
+      "country": "Sweden",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 758,
+      "league": "Premier Division",
+      "country": "Gibraltar",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 759,
+      "league": "Liga Mayor",
+      "country": "Dominican-Republic",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 1020,
+      "league": "Calcutta Premier Division",
+      "country": "India",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 1030,
+      "league": "Goiano - 2",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 1031,
+      "league": "Premier League",
+      "country": "Bhutan",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1037,
+      "league": "Paraibano 2",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 4
+    },
+    {
+      "league_id": 1087,
+      "league": "Ykk\u00f6sliiga",
+      "country": "Finland",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 1094,
+      "league": "Western Australia State League 1",
+      "country": "Australia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1115,
+      "league": "Paraense A3",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1124,
+      "league": "Cearense - 3",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1126,
+      "league": "Esiliiga B",
+      "country": "Estonia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1130,
+      "league": "USL Super League",
+      "country": "USA",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 3
+    },
+    {
+      "league_id": 1138,
+      "league": "Paranaense - 3",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1141,
+      "league": "Brasiliense B",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1142,
+      "league": "Mineiro - 3",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    },
+    {
+      "league_id": 1147,
+      "league": "Capixaba B",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1150,
+      "league": "Ga\u00facho - 3",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 1182,
+      "league": "Northern Super League",
+      "country": "Canada",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 1195,
+      "league": "Liga E Pare",
+      "country": "Kosovo",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 8
+    },
+    {
+      "league_id": 1196,
+      "league": "Division One League",
+      "country": "Ghana",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 24
+    },
+    {
+      "league_id": 1203,
+      "league": "Piauiense - 2",
+      "country": "Brazil",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 2
+    },
+    {
+      "league_id": 1226,
+      "league": "Victoria Premier League 2",
+      "country": "Australia",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1234,
+      "league": "K4 League",
+      "country": "South-Korea",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 1
+    },
+    {
+      "league_id": 1242,
+      "league": "Primera Premier",
+      "country": "Mexico",
+      "reason": "UNRECOGNIZED_METADATA",
+      "fixtures": 5
+    }
+  ],
+  "limitations": [
+    "UNKNOWN remains for ambiguous league metadata; no professional/gender/age status is fabricated.",
+    "A finite cycle can leave date odds sweeps incomplete; current quotes cannot prove absence across changing pagination.",
+    "No independent probability can be manufactured from market consensus or missing optional context.",
+    "Ensemble remains uncalibrated Lab evidence; no Official promotion or activation.",
+    "No timer re-enable is authorized by this report.",
+    "Women and U17-U20 fixtures survived discovery but had no usable current odds in this live snapshot; their real end-to-end scoring is not demonstrated.",
+    "This live snapshot produced only early candidates and did not exercise exact near-kickoff odds refresh; deterministic tests cover that contract."
+  ],
+  "files_changed": [
+    "app/lab_v2_shadow/diagnostics.py",
+    "app/lab_v2_shadow/market_consensus.py",
+    "app/lab_v2_shadow/odds_coverage.py",
+    "app/lab_v2_shadow/profiles.py",
+    "app/lab_v2_shadow/quota.py",
+    "app/lab_v2_shadow/runner.py",
+    "app/lab_v2_shadow/signal_evidence.py",
+    "app/lab_v2_shadow/summary.py",
+    "docs/LAB_V2_GLOBAL_COMPETITION_POLICY.md",
+    "docs/audits/lab_v2_global_hardening_2026-09-17.json",
+    "docs/audits/lab_v2_global_hardening_2026-09-17.md",
+    "tests/test_lab_v2_hardening.py",
+    "tests/test_source_commit_provenance.py",
+    "tests/test_staging_model_operations_rehearsal.py"
+  ]
+}

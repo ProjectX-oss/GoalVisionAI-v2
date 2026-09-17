@@ -70,6 +70,12 @@ def latest_cycle_summary(path: Path, *, fixture_id: int | None = None) -> dict[s
                     "top_candidate_competitions", "top_candidate_markets", "current_remaining_daily_quota",
                     "fixtures_awaiting_near_kickoff_review"):
             result[key] = report.get(key)
+        pagination = report.get("odds_pagination") or {}
+        result["odds_coverage_reason_counts"] = pagination.get("coverage_reason_counts", {})
+        result["fixtures_with_complete_odds_coverage"] = pagination.get("fixtures_with_complete_odds_coverage")
+        result["odds_coverage_by_date"] = pagination.get("coverage_by_date", {})
+        result["fixture_reason_counts"] = report.get("fixture_reason_counts", {})
+        result["rejection_reason_percentages"] = report.get("rejection_reason_percentages", {})
         if fixture_id is not None:
             coverage = next((item for item in report.get("fixture_coverage") or ()
                              if str(item.get("fixture_id")) == str(fixture_id)), None)

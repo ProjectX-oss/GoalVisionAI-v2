@@ -125,7 +125,7 @@ def current_market_consensus(
 
 def remove_margin_multiplicative(odds: dict[str, Decimal]) -> tuple[dict[str, Decimal], Decimal] | None:
     """Transparent normalization equivalent to penaltyblog's multiplicative method."""
-    if len(odds) < 2 or any(value <= 1 or not value.is_finite() for value in odds.values()):
+    if len(odds) < 2 or any(not value.is_finite() or value <= 1 for value in odds.values()):
         return None
     with localcontext() as context:
         context.prec = 28

@@ -133,3 +133,76 @@ intentional when reliable metadata is absent. The default profiles need
 prospective validation; synthetic tests establish invariants, not profitability.
 No automatic final-result provider job is added; the explicit forward-result
 service is ready for audited integration with the existing Lab settlement path.
+
+## September 17 hardening: coverage and evidence accounting
+
+Classifier `LAB_COMPETITION_CLASSIFIER_V3` adds explicit lower-division numbering,
+country-scoped lower-tier names, and multilingual women's competition names.
+Team suffixes `B` and `II` must be terminal; a club named `Junior` is not evidence
+of an age group. Ambiguous metadata remains UNKNOWN. Classification changes
+neither discovery admission nor Official policy. Initial profile thresholds and
+positive-value requirements are unchanged.
+
+Cycle evidence format `goalvision-lab-v2-global-cycle-v7` extends the existing
+append-only JSON records. SQLite remains schema 42; no new tables or migration
+are needed. Old cycle documents remain readable.
+
+Date-odds discovery requests the first page of each search date, completes today
+first, then orders later dates by uncovered fixture count per remaining page.
+The highest advertised page total is retained. A shrinking total does not end
+the sweep early, and any total drift keeps unobserved fixtures unresolved even
+if all advertised page numbers were requested. Malformed pagination, API errors,
+quota failures, timeouts, skipped restart prefixes, and budget limits are explicit
+coverage reasons. Each page records its response fingerprint and fixture IDs.
+Previously observed quotes are not treated as new exact-review quotes after a
+failed refresh.
+
+The existing 58% discovery allocation may expand to 70% **only after** a stable,
+completed sweep proves some near-kickoff review reserve unnecessary. The cycle
+ceiling remains 100, the daily reserve remains 1,500, and at least 12 calls remain
+allocated for enrichment when reserve is reassigned. Tracked fixtures retain
+review reserve. Provider pacing, quota checks, retries, fair profile enrichment,
+and settlement reserve remain in force. This is bounded partial coverage; it
+does not claim every date's odds pages fit into every cycle.
+
+`fixture_coverage_reasons` distinguishes completed sweeps with no fixture record
+from bookmaker filtering, market filtering, insufficient comparable bookmakers,
+stale quotes, malformed data, and identity mismatches. A completed sweep without
+a record cannot distinguish unpublished odds from permanent provider
+noncoverage, so the report makes neither claim. “Complete odds coverage” means
+that a fixture's record was observed or its date sweep completed stably; it does
+**not** mean usable odds exist. Detailed per-date pagination remains available.
+
+Each candidate now records `signal_requirements`. Optional features use
+`OPTIONAL_SIGNAL_MISSING`, `PROVIDER_DOES_NOT_SUPPORT_SIGNAL`, or
+`SIGNAL_NOT_YET_AVAILABLE`; their profile penalties remain soft. A missing
+independent non-market probability is `MANDATORY_SIGNAL_MISSING`, with the
+existing `NO_INDEPENDENT_NON_MARKET_EVIDENCE` gate preserved. Market consensus
+alone is not an independent value prediction. `fixtures_scored` includes markets
+examined using odds alone; `fixtures_with_independent_probability` explicitly
+identifies fixtures with independent model evidence.
+
+Value evidence includes the exact market and quote fingerprint, offered odds,
+offered implied probability, calculated fair odds, edge, EV, calibration state,
+and `MARKET_INCLUSIVE_UNCALIBRATED_ENSEMBLE` probability kind. Bookmaker vig is
+removed per complete bookmaker market before averaging; offered implied
+probability remains `1 / offered_odds`. Edge is `p - 1 / odds`; EV is
+`p * odds - 1`. No negative-value selection is admitted to increase volume.
+
+Read-only diagnostics:
+
+```bash
+.venv/bin/python -m app.lab_v2_shadow.cli summary \
+  --shadow-database var/global_lab_hardening/rehearsal.db --human
+.venv/bin/python -m app.lab_v2_shadow.cli summary \
+  --shadow-database var/global_lab_hardening/rehearsal.db
+```
+
+The JSON summary includes precise odds coverage counts and date coverage,
+fixture-level reason percentages, and failed-gate percentages. Gate reasons can
+overlap across markets and stages; their percentages must not be interpreted as
+mutually exclusive fixture rejection rates. Forward evidence remains frozen at
+first eligible selection, grouped by competition/profile/market/lane, with no
+automatic tuning or promotion. No timer, Telegram, Official, bankroll, statistics,
+`.env`, historical bookmaker odds, or production activation changes are part of
+this hardening.

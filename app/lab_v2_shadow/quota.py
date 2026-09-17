@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from decimal import Decimal
 
 
 MAX_DISCOVERY_CALLS_PER_CYCLE = 100
 DAILY_SAFETY_RESERVE = 1500
+ODDS_BASE_CYCLE_FRACTION = Decimal("0.58")
+ODDS_RELEASED_RESERVE_CYCLE_FRACTION = Decimal("0.70")
+MINIMUM_ENRICHMENT_CALLS = 12
 DISCOVERY_CYCLES_PER_DAY_30_MINUTES = 48
 
 

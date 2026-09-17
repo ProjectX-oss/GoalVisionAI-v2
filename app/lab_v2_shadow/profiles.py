@@ -10,7 +10,7 @@ from typing import Mapping
 from app.real_match_lab_analysis.fingerprint import fingerprint
 from .capability import CapabilityTier, LeagueCapability
 
-CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V2'
+CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V3'
 POLICY_VERSION = 'LAB_COMPETITION_POLICY_V1'
 
 
@@ -64,11 +64,13 @@ def classify(league: Mapping, teams: Mapping, fixture: Mapping, capability: Leag
     venue, professional status, or first/second leg without supporting metadata.
     """
     name = str(league.get('name') or capability.competition_name).casefold()
-    team_names = ' '.join(str((teams.get(side) or {}).get('name', '')) for side in ('home', 'away')).casefold()
+    individual_names = tuple(str((teams.get(side) or {}).get('name', '')).casefold() for side in ('home', 'away'))
+    team_names = ' '.join(individual_names)
     text = name + ' ' + team_names
     age = re.search(r'\b(?:u[ -]?|under[ -]?)(17|18|19|20|21|23)\b', text)
     category = 'U' + age[1] if age else 'UNSPECIFIED'
     international = 'club world cup' not in name and bool(re.search(r'\b(world cup|euro(?:pean)? championship|nations league|international|africa cup of nations|copa america)\b', name))
+    women = bool(re.search(r'\bwomen(?:s|\x27s)?\b|\b(?:femenina|femenil|feminin|feminine|feminina|frauen(?:liga)?|feminino)\b', name)) or league.get('gender') == 'women'
     profile, reason = CompetitionProfile.UNKNOWN, 'UNRECOGNIZED_METADATA'
     overrides = REVIEWED_IDS if overrides is None else overrides
     if overrides and capability.league_id in overrides:
@@ -83,17 +85,17 @@ def classify(league: Mapping, teams: Mapping, fixture: Mapping, capability: Leag
         profile = (CompetitionProfile.YOUTH_U17_U18 if int(age[1]) <= 18 else
                    CompetitionProfile.YOUTH_U19_U20 if int(age[1]) <= 20 else CompetitionProfile.YOUTH_U21_U23)
         reason = 'NAME_EXPLICIT_AGE_GROUP'
-    elif re.search(r'\b(reserves?|b team)\b', text) or re.search(r'\b\w+ (?:b|ii)(?:\s|$)', team_names):
+    elif re.search(r'\b(reserves?|b team)\b', text) or any(re.search(r'\s(?:b|ii)$', team) for team in individual_names):
         profile, reason = CompetitionProfile.RESERVE_OR_B_TEAM, 'NAME_RESERVE_OR_B_TEAM'
-    elif re.search(r'\b(youth|academy|junior)\b', text):
+    elif re.search(r'\b(youth|academy|junior)\b', name):
         category, reason = 'YOUTH_UNSPECIFIED', 'YOUTH_WITHOUT_RELIABLE_AGE'
     elif international:
         profile, reason = CompetitionProfile.INTERNATIONAL_SENIOR, 'NAME_NATIONAL_TEAM_COMPETITION'
-    elif re.search(r'\b(champions league|europa league|conference league|libertadores|sudamericana|club world cup)\b', name):
+    elif re.search(r'\b(champions league|europa league|conference league|libertadores|sudamericana|club world cup|caribbean club championship)\b', name):
         profile, reason = CompetitionProfile.INTERNATIONAL_CLUB, 'NAME_INTERNATIONAL_CLUB'
-    elif re.search(r'\bwomen(?:s|\x27s)?\b|\bfemin(?:ine|ina)\b', name):
+    elif women:
         profile, reason = CompetitionProfile.SENIOR_WOMEN_PRO, 'NAME_WOMEN_COMPETITION'
-    elif re.search(r'\b(semi[ -]?pro|regional|amateur|division [3-9]|[3-9]\. liga)\b', name):
+    elif _lower_division(name, str(league.get('country') or capability.country)):
         profile, reason = CompetitionProfile.LOWER_DIVISION_OR_SEMIPRO, 'NAME_LOWER_OR_SEMIPRO'
     elif str(league.get('type') or capability.competition_type).casefold() == 'cup':
         profile, reason = CompetitionProfile.DOMESTIC_CUP, 'PROVIDER_CUP_TYPE'
@@ -103,7 +105,7 @@ def classify(league: Mapping, teams: Mapping, fixture: Mapping, capability: Leag
     round_name = str(league.get('round', '')).casefold()
     for enabled, flag in (
         (bool(fixture.get('neutral')), 'IS_NEUTRAL_VENUE'),
-        (bool(re.search(r'\bwomen\b', name)), 'IS_WOMEN'),
+        (women, 'IS_WOMEN'),
         ('2nd leg' in round_name or 'second leg' in round_name, 'IS_SECOND_LEG'),
         ('qualif' in name + round_name, 'IS_QUALIFIER'),
         ('playoff' in round_name or 'play-off' in round_name, 'IS_PLAYOFF'),
@@ -117,6 +119,37 @@ def classify(league: Mapping, teams: Mapping, fixture: Mapping, capability: Leag
             flags.append(flag)
     material = (CLASSIFIER_VERSION, dict(league), team_names, profile, reason, sorted(flags), category)
     return Classification(profile, CLASSIFIER_VERSION, reason, fingerprint(material), tuple(sorted(flags)), category)
+
+
+def _lower_division(name: str, country: str) -> bool:
+    """Explicit lower-tier numbering/names; ambiguous Division One remains unknown.
+
+    Country-scoped terms avoid treating a nation's top-flight '1. Liga' as lower.
+    No team or fixture is admitted/excluded by this classification.
+    """
+    explicit = r"\b(semi[ -]?pro|regional|amateur|oberliga|regionalliga|non league premier|division [2-9]|[2-9]\. (?:liga|lig|division)|ligue [23]|liga (?:ii|iii|2)|serie [bc]|second league|second nl|tercera divisi[oó]n|segunda divisi[oó]n rfef|primera divisi[oó]n rfef|national [23])\b"
+    if re.search(explicit, name):
+        return True
+    scoped = {
+        'Japan': r'j[23] league',
+        'China': r'league (?:one|two)',
+        'Netherlands': r'(?:eerste|tweede|derde) divisie',
+        'Poland': r'(?:ii|iii) liga',
+        'Argentina': r'primera (?:b metropolitana|nacional|c)',
+        'USA': r'usl championship|usl league (?:one|two)',
+        'Turkey': r'[123]\. lig',
+        'Sweden': r'superettan|ettan',
+        'Hungary': r'nb (?:ii|iii)',
+        'Thailand': r'thai league [23]',
+        'Mexico': r'liga expansi[oó]n mx|liga premier serie [ab]',
+        'Paraguay': r'division intermedia',
+        'Uruguay': r'segunda divisi[oó]n',
+        'Venezuela': r'segunda divisi[oó]n',
+        'Slovenia': r'[23]\. snl',
+        'Scotland': r'football league - (?:lowland|highland) league',
+    }
+    pattern = scoped.get(country)
+    return bool(pattern and re.search(r'\b(?:' + pattern + r')\b', name))
 
 
 def fallback_capability(league: Mapping) -> LeagueCapability:
