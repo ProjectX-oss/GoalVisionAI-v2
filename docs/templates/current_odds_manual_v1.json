@@ -1,0 +1,20 @@
+{
+  "schema_version": "goalvision-current-odds-snapshot-v1",
+  "fixture_id": "REPLACE_WITH_CANONICAL_FIXTURE_ID",
+  "kickoff_utc": "REPLACE_WITH_UTC_ISO_8601",
+  "fixture_status": "SCHEDULED",
+  "provider_source_id": "MANUAL_OPERATOR_SOURCE",
+  "source_type": "OPERATOR_SUPPLIED_CURRENT_ODDS",
+  "bookmaker": "REPLACE_WITH_BOOKMAKER",
+  "provider_event_id": "REPLACE_WITH_PROVIDER_EVENT_ID",
+  "source_selected_at_utc": "REPLACE_BEFORE_CAPTURE_UTC",
+  "captured_at_utc": "REPLACE_WITH_CAPTURE_UTC",
+  "source_retrieval_timestamp_utc": "REPLACE_WITH_RETRIEVAL_UTC",
+  "provider_origin_timestamp_utc": null,
+  "captured_at_by_goalvision": true,
+  "direct_bookmaker": true,
+  "provenance": "Describe exactly where and how the current price was observed before inference.",
+  "markets": [
+    {"market": "HOME_WIN", "decimal_odds": "2.10"}
+  ]
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "matchID": 1,
+    "leagueName": "Bundesliga",
+    "leagueSeason": "2024",
+    "matchDateTimeUTC": "2024-08-01T18:30:00Z",
+    "matchIsFinished": true,
+    "team1": {"teamId": 1, "teamName": "Alpha"},
+    "team2": {"teamId": 2, "teamName": "Bravo"},
+    "group": {"groupOrderID": 1, "groupName": "1. Spieltag"},
+    "matchResults": [{"resultTypeID": 2, "pointsTeam1": 2, "pointsTeam2": 1}]
+  },
+  {
+    "matchID": 1,
+    "leagueName": "Bundesliga",
+    "leagueSeason": "2024",
+    "matchDateTimeUTC": "2024-08-01T18:30:00Z",
+    "matchIsFinished": true,
+    "team1": {"teamId": 1, "teamName": "Alpha"},
+    "team2": {"teamId": 2, "teamName": "Bravo"},
+    "group": {"groupOrderID": 1, "groupName": "1. Spieltag"},
+    "matchResults": [{"resultTypeID": 2, "pointsTeam1": 2, "pointsTeam2": 1}]
+  }
+]

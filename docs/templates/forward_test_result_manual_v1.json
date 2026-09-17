@@ -1,0 +1,10 @@
+{
+  "schema_version": "goalvision-forward-test-result-v1",
+  "fixture_id": "REPLACE_WITH_CANONICAL_FIXTURE_ID",
+  "final_home_score": 0,
+  "final_away_score": 0,
+  "final_status": "FT",
+  "result_source": "OPERATOR_VERIFIED_FINAL_RESULT",
+  "result_retrieval_timestamp_utc": "REPLACE_WITH_POST_MATCH_UTC_ISO_8601",
+  "provenance": "Describe exactly where the completed score was verified."
+}

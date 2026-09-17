@@ -1,0 +1,153 @@
+{
+  "bankroll": {
+    "available_bankroll": "10000.00",
+    "currency": "EUR",
+    "current_bankroll": "10000.00",
+    "effective_timestamp": "2026-08-01T12:05:00Z",
+    "fingerprint": "6f91e6dda0391a7dd9d90a00aa43a0a4c7afe4b3dc0ee3686f84c8c8d359671c",
+    "scope": "OFFICIAL",
+    "snapshot_id": "fixture-bankroll-500100-v1"
+  },
+  "calibration": {
+    "brier_score": "0.15",
+    "calibrated_assembly_fingerprint": "622a4d397bcdbcb22314b54ec35f4e9b9faa20b2073bb4479412f75064a7b8e3",
+    "calibrated_assembly_id": "expected-derived-calibrated-assembly",
+    "calibrated_probabilities": {
+      "AWAY_WIN": "0.200000",
+      "BTTS_NO": "0.420000",
+      "BTTS_YES": "0.580000",
+      "DRAW": "0.200000",
+      "HOME_WIN": "0.600000",
+      "OVER_1_5": "0.800000",
+      "OVER_2_5": "0.550000",
+      "OVER_3_5": "0.300000",
+      "UNDER_1_5": "0.200000",
+      "UNDER_2_5": "0.450000",
+      "UNDER_3_5": "0.700000"
+    },
+    "calibration_set_id": "fixture-official-identity-set-v1",
+    "expected_calibration_error": "0.03",
+    "log_loss": "0.50",
+    "maximum_calibration_error": "0.08",
+    "sample_size": 200
+  },
+  "candidate": {
+    "expected_candidate_fingerprint": "669407678c7cc68e5eb1a3f14fc6cc0e63017fbe2ea2ecc346e79236d6462e0a",
+    "expected_candidate_id": "expected-derived-candidate",
+    "expected_lifecycle": "READY",
+    "expected_version": 1
+  },
+  "exposure": {
+    "correlated_exposure_facts": [],
+    "current_market_exposure": "0.00",
+    "current_match_exposure": "0.00",
+    "effective_timestamp": "2026-08-01T12:05:00Z",
+    "fingerprint": "a94bc7a2ba587c6891417bc44f6c1fa57672ddd51310dcb232b933b5730a9154",
+    "snapshot_id": "fixture-exposure-500100-v1"
+  },
+  "inference": {
+    "inference_id": "expected-derived-inference",
+    "model_artifact_id": "fixture-reference-artifact-v1",
+    "model_name": "fixture-deterministic-reference-model",
+    "model_version": "1.0.0",
+    "raw_probabilities": {
+      "AWAY_WIN": "0.200000",
+      "BTTS_NO": "0.420000",
+      "BTTS_YES": "0.580000",
+      "DRAW": "0.200000",
+      "HOME_WIN": "0.600000",
+      "OVER_1_5": "0.800000",
+      "OVER_2_5": "0.550000",
+      "OVER_3_5": "0.300000",
+      "UNDER_1_5": "0.200000",
+      "UNDER_2_5": "0.450000",
+      "UNDER_3_5": "0.700000"
+    },
+    "raw_probability_fingerprint": "d5dc8243929543559232b22a612e1d9e400ba678cd70bdb24b9a71a5e219f370"
+  },
+  "match": {
+    "away_team_id": "fictional-away-1",
+    "away_team_name": "Southport Athletic",
+    "competition_id": "fictional-league-1",
+    "competition_name": "Fictional Premier Division",
+    "home_team_id": "fictional-home-1",
+    "home_team_name": "Northbridge FC",
+    "kickoff_utc": "2026-08-01T15:00:00Z",
+    "match_id": "500100",
+    "snapshot_effective_time": "2026-08-01T11:00:00Z",
+    "source_event_id": "fictional-event-500100",
+    "source_provider": "fictional-fixture-provider",
+    "source_snapshot_identity": "fictional-snapshot-500100-v1"
+  },
+  "metadata": {
+    "description": "Fictional deterministic Official single-bet fixture for controlled operations.",
+    "expected_outcome": "STALE_ODDS_REJECTED",
+    "fixture_fingerprint": "e00c3c15149b964dce68d847280205059adb4477cc2ea0ccd5152e604215343b",
+    "fixture_id": "fictional-official-stale-odds-v1",
+    "metadata_version": "v1",
+    "non_production": true,
+    "schema_version": "goalvision_official_fixture_v1"
+  },
+  "model_input": {
+    "completeness": "COMPLETE",
+    "feature_set_id": "expected-derived-feature-set",
+    "model_input_id": "expected-derived-model-input",
+    "provenance_reference": "fixture-controlled-source-v1",
+    "schema_version": "goalvision_model_input_v1",
+    "snapshot_id": "expected-derived-snapshot"
+  },
+  "odds": {
+    "available": true,
+    "bookmaker": "Fictional Book A",
+    "decimal_odds": "1.80",
+    "is_live": false,
+    "line": null,
+    "market": "MATCH_WINNER",
+    "odds_effective_timestamp": "2026-08-01T11:30:00Z",
+    "odds_fingerprint": "f0486304e2d79a67f3c2c81c13996542a2dcfee2c84dd56f4182a0c1d89cca34",
+    "odds_snapshot_identity": "fictional-odds-500100-v1",
+    "provider": "Fictional Odds Provider",
+    "selection": "HOME",
+    "source_event_id": "fictional-event-500100"
+  },
+  "publication": {
+    "destination_type": "TELEGRAM_CHANNEL",
+    "expected_destination_identity": "fixture-official-channel",
+    "expected_dry_run_outcome": "DRY_RUN_COMPLETED",
+    "expected_message_fingerprint": null,
+    "expected_publish_outcome": "PUBLISHED",
+    "initial_state": "NOT_PUBLISHED"
+  },
+  "risk": {
+    "confidence_level": "HIGH",
+    "expected_risk_fingerprint": "41a3714e6e4663ca8e5c4db2e2fdb6c8fbe89ffaf1d4f4e401d851960b51c98b",
+    "expected_risk_outcome": "ELIGIBLE",
+    "expected_stake_amount": "100.00",
+    "expected_stake_percentage": "0.01",
+    "injury_status": "AVAILABLE",
+    "lineup_status": "CONFIRMED",
+    "market_availability": "AVAILABLE",
+    "model_health_status": "HEALTHY",
+    "supporting_data_status": "AVAILABLE"
+  },
+  "selection": {
+    "expected_eligible_count": 1,
+    "expected_rank": 1,
+    "selected_assessment_identity": "expected-derived-assessment",
+    "selected_market": "MATCH_WINNER:HOME",
+    "selection_decision_id": "expected-derived-selection",
+    "selection_fingerprint": "45ea1a6c64b5d4203cfff00bca279275242a71523c2c70f415989cd8f0cea4a7"
+  },
+  "value_assessment": {
+    "absolute_probability_edge": "0.0444444444",
+    "actionability": "ACTIONABLE",
+    "assessment_fingerprint": "fe749d34b98263eadf7d053020dc5c83f123d6c75fe335ad203ae8e0d9d439cc",
+    "assessment_id": "expected-derived-assessment",
+    "expected_value": "0.080000",
+    "fair_odds": "1.6666666667",
+    "fair_probability": "0.600000",
+    "freshness": "FRESH",
+    "implied_probability": "0.5555555556",
+    "relative_probability_edge": "0.0800000000"
+  }
+}

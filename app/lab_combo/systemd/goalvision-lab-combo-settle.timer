@@ -1,0 +1,10 @@
+[Unit]
+Description=Check GoalVision Lab experimental results every ten minutes
+
+[Timer]
+OnCalendar=*:0/10
+Persistent=true
+Unit=goalvision-lab-combo-settle.service
+
+[Install]
+WantedBy=timers.target

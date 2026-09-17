@@ -1,0 +1,133 @@
+{
+  "artifact_type": "CONTROLLED_FICTIONAL_FORWARD_TEST_GOVERNANCE_REHEARSAL",
+  "source_branch": "goalvision/live-78-fresh-calibration",
+  "source_commit": "9716cf70824536d37831a5e8bc8e8472369667ae",
+  "final_commit": "PENDING",
+  "schema_version": 41,
+  "governance_policy_version": "goalvision-forward-test-governance-policy-v1",
+  "sample_thresholds": {
+    "warm_up": 10,
+    "recent_window": 20,
+    "total_settled": 30,
+    "scope": 10,
+    "calibration_bin": 5,
+    "explanation": 10
+  },
+  "evaluation_windows": {
+    "lifetime": 60,
+    "rolling_7_settled": 7,
+    "rolling_20_settled": 20,
+    "rolling_50_settled": 50,
+    "rolling_7_days": 5,
+    "rolling_30_days": 28,
+    "current_week": 1,
+    "previous_week": 7
+  },
+  "sample_maturity": "POLICY_MINIMUM_MET",
+  "predictive_metrics": {
+    "sample_size": 60,
+    "brier_score": "0.3910666666666666666666666666666666666667",
+    "log_loss": "1.077875584880985075682438474416073068128",
+    "accuracy": "0.3833333333333333333333333333",
+    "probability_bias": "0.2966666666666666666666666667",
+    "status": "PREDICTIVE_PERFORMANCE_BLOCKED"
+  },
+  "calibration_drift_metrics": {
+    "ece": "0.2966666666666666666666666666",
+    "mce": "0.73",
+    "bias": "0.2966666666666666666666666667",
+    "extreme_probability_failure_rate": "0.2833333333333333333333333333",
+    "status": "CALIBRATION_DRIFT_BLOCKED"
+  },
+  "input_drift_metrics": {
+    "status": "INPUT_DRIFT_BLOCKED",
+    "features_exercised": ["home_recent_points_per_match", "snapshot_completeness_score"]
+  },
+  "data_completeness_metrics": {
+    "required_missing_rate": "0",
+    "optional_missing_rate": "0.3333333333333333333333333333",
+    "lineup_availability_rate": "0.6666666666666666666666666667",
+    "status": "DATA_COMPLETENESS_WARNING"
+  },
+  "odds_drift_metrics": {
+    "quote_count": 60,
+    "bookmaker_coverage": 2,
+    "market_coverage": 7,
+    "stale_rate": "0.1666666666666666666666666667",
+    "status": "ODDS_DRIFT_WARNING"
+  },
+  "market_governance": {"canonical_scopes": 11, "controlled_populated_markets": 7},
+  "competition_governance": {"controlled_scopes": 2},
+  "bookmaker_governance": {"controlled_scopes": 2},
+  "explanation_drift": {
+    "sample_size": 60,
+    "fragile_rate": "0.3333333333333333333333333333",
+    "audit_failure_rate": "0.08333333333333333333333333333",
+    "status": "EXPLANATION_DRIFT_WARNING"
+  },
+  "generation_comparison": {
+    "current": "controlled-generation-v2",
+    "previous": "controlled-generation-v1",
+    "brier_delta": "0.2693333333333333333333333333",
+    "status": "GENERATION_DEGRADED"
+  },
+  "hysteresis_rules": {"warning_consecutive": 2, "blocking_consecutive": 2, "recovery_consecutive": 3},
+  "decision_outcomes": ["GOVERNANCE_REVIEW_REQUIRED", "GOVERNANCE_PUBLICATION_PAUSED"],
+  "recommendation_outcomes": ["RETRAINING_RECOMMENDED", "RECALIBRATION_RECOMMENDED", "ROLLBACK_REVIEW_REQUIRED"],
+  "publication_integration": {
+    "missing_evidence": "PUBLICATION_GOVERNANCE_REQUIRED",
+    "warning_requires_acknowledgement": true,
+    "blocked_send_readiness": true,
+    "observation_time_snapshot": true
+  },
+  "controlled_rehearsal_status": "PASSED",
+  "controlled_fixture_scenarios": 38,
+  "controlled_model_generations": ["controlled-generation-v1", "controlled-generation-v2"],
+  "controlled_calibration_artifacts": ["controlled-calibration-v1", "controlled-calibration-v2"],
+  "controlled_observations": 60,
+  "controlled_markets": ["AWAY_WIN", "BTTS_NO", "BTTS_YES", "DRAW", "HOME_WIN", "OVER_2_5", "UNDER_2_5"],
+  "controlled_competitions": ["Fictional Baltic", "Fictional Premier"],
+  "controlled_bookmakers": ["FICTIONAL_BOOK_A", "FICTIONAL_BOOK_B"],
+  "controlled_governance_decision": "GOVERNANCE_PUBLICATION_PAUSED",
+  "controlled_recommendations": ["RETRAINING_RECOMMENDED", "RECALIBRATION_RECOMMENDED", "ROLLBACK_REVIEW_REQUIRED"],
+  "controlled_incidents": 10,
+  "evaluation_fingerprint": "860031737e6ff8c6c34c9a66a6117f62a139e8ae54646da9d25c5303a7c87be5",
+  "reproduction_result": "GOVERNANCE_REPRODUCED",
+  "report_fingerprint": "69abd2f3b0f26b182b49367accc14c011b59230a6644186cc8e42b687e92c9bb",
+  "console_smoke": {"pages": 21, "all_http_200": true, "csrf_rejection_covered_by_tests": true},
+  "focused_test_counts": {"governance": 14, "adjacent": 168, "migration_regressions": 219},
+  "full_test_count": 1490,
+  "full_test_status": "PASSED",
+  "compilation": "PASSED",
+  "module_import_count": 673,
+  "module_import_failures": 0,
+  "migration_results": {"fresh": 41, "v40_upgrade": 41},
+  "foreign_key_status": "PASSED_ZERO_VIOLATIONS",
+  "append_only_status": "PASSED_20_GOVERNANCE_TRIGGERS",
+  "atomic_rollback": "PASSED",
+  "exact_replay": "PASSED",
+  "request_conflict": "PASSED",
+  "cli_smoke": {"help": 0, "human": 0, "json": 0, "terminal_safe": true},
+  "source_database_hash_before": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0",
+  "source_database_hash_after": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0",
+  "isolated_database_hash": "b239eec67801515307996413721f7c5d47c67656e9ab8bd065c92223beb46c42",
+  "safety_counters": {
+    "genuine_observations_created": 0,
+    "real_provider_calls": 0,
+    "real_telegram_sends": 0,
+    "delivery_records": 0,
+    "official_publications": 0,
+    "official_bankroll_mutations": 0,
+    "official_statistics_mutations": 0,
+    "production_activation_mutations": 0,
+    "rollback_executions": 0,
+    "retraining_executions": 0,
+    "recalibration_executions": 0,
+    "scheduling_changes": 0,
+    "startup_network_calls": 0,
+    "thestatsapi_calls": 0,
+    "paid_historical_odds_probes": 0,
+    "bookmaker_transactions": 0
+  },
+  "evidence_fingerprint": "38ff5ceaf34d16bb35e11e5d74df37c6cfc7b55a7abbfb90eb654f162ca4bed2"
+}

@@ -1,0 +1,137 @@
+{
+  "schema_version": "goalvision-calibration-freshness-genuine-lab-evidence-v1",
+  "execution_date_utc": "2026-07-31",
+  "source_commit": "00f1de626a79701b38cb8b9c22e43b87add36f52",
+  "branch": "goalvision/live-78-fresh-calibration",
+  "policy_review": {
+    "finding": "The 7200-second limit was an implementation default from commit 67260ba5140f65ee683b8970f1d5109674f2b633, not a documented product requirement.",
+    "old_semantics": "calibration artifact fit time was reused as rapidly expiring market data",
+    "new_semantics": "immutable VALIDATION evidence time, artifact creation time, audit review, features, lineups, and odds are separate clocks",
+    "policy_version": "calibration-freshness-policy-v2",
+    "lab_evidence_max_age_seconds": 31622400,
+    "lab_review_validity_seconds": 86400,
+    "feature_snapshot_max_age_seconds": 900,
+    "lineup_snapshot_max_age_seconds": 3600,
+    "odds_fresh_seconds": 300,
+    "odds_aging_seconds": 900,
+    "odds_stale_seconds": 1800,
+    "official_status": "FAIL_CLOSED_POLICY_UNSET",
+    "migration": "NONE",
+    "legacy_behavior": "readable and inspectable; missing or inconsistent evidence links are non-actionable without fabricated metadata"
+  },
+  "regression": {
+    "original_failure_reproduced": true,
+    "artifact_older_than_7200_seconds_is_not_alone_a_rejection": true,
+    "activation_or_refit_cannot_refresh_validation_evidence": true,
+    "downstream_legacy_adapter_leak_detected_and_corrected": true
+  },
+  "staging_chain": {
+    "execution_anchor": "2026-07-31T16:26:16Z",
+    "status": "STAGING_REHEARSAL_COMPLETED",
+    "chain_evidence_fingerprint": "76b9742ca2f0529141aa6f11f5f2ce456bcc3553df8065eecf6f60d07f2166cd",
+    "champion_generation_id": "champion-generation-27671080ef83a14fe924691706482ee93cd296be4a935fd4e42540f6cf33c296",
+    "generation_number": 4,
+    "audit_status": "AUDIT_PASSED",
+    "audit_pass_count": 35,
+    "audit_fingerprint": "1f0f750954bc34e4e9d14bcadd88522ed6310d727a1e9bf67c46a16e394bade4",
+    "model_artifact_id": "historical-model-artifact-9fdc23d6b765999059901340eb38b2d83e91211fa53bbb975c63e3e071ec05a2",
+    "model_artifact_fingerprint": "9fdc23d6b765999059901340eb38b2d83e91211fa53bbb975c63e3e071ec05a2",
+    "calibration_artifact_set_id": "historical-calibration-artifact-set-61af22adf33246b8406e3d191b34c0dccb763145ac5535f3f35a6f269cb733a7",
+    "calibration_artifact_set_fingerprint": "61af22adf33246b8406e3d191b34c0dccb763145ac5535f3f35a6f269cb733a7",
+    "schema_id": "goalvision_model_input_v1",
+    "schema_version": "v1",
+    "feature_count": 78,
+    "schema_fingerprint": "048405d961c2752d492819479788274942cd65c3397f9c9120c83c1a93e5be8a"
+  },
+  "calibration_freshness": {
+    "integrity_status": "VALID",
+    "artifact_created_timestamp": "2026-07-31T16:11:16Z",
+    "evidence_timestamp": "2025-10-02T16:16:16Z",
+    "evidence_age_seconds": 26093734,
+    "evidence_status": "FRESH",
+    "review_timestamp": "2026-07-31T16:31:50Z",
+    "review_expiry_timestamp": "2026-08-01T16:31:50Z",
+    "review_status": "VALID",
+    "market_actionability_status": "ACTIONABLE_FOR_LAB",
+    "assessment_fingerprint": "dc0d5211b9dc5a18b71aad741c6db2d83a1b451c412f9a8652dd1c0fac20a579",
+    "controlled_synthetic_evidence": true
+  },
+  "fixture": {
+    "selection_timestamp_utc": "2026-07-31T16:31:50Z",
+    "match_id": "scottish-premiership-2026-08-01-aberdeen-hearts",
+    "competition": "Scottish Premiership",
+    "home_team": "Aberdeen",
+    "away_team": "Heart of Midlothian",
+    "kickoff_utc": "2026-08-01T16:30:00Z",
+    "upcoming_at_selection": true,
+    "upcoming_at_validation": true,
+    "venue": "Pittodrie Stadium",
+    "fixture_sources": [
+      "https://www.theguardian.com/football/fixtures/2026/Aug/01",
+      "https://www.skysports.com/football-scores-fixtures/2026-08-01",
+      "https://www.oddschecker.com/us/soccer/scottish-premiership/aberdeen-v-hearts"
+    ]
+  },
+  "operator_data": {
+    "source": "https://thedailypunt.com/football-predictions/aberdeen-vs-heart-of-midlothian-2026-08-01",
+    "capture_timestamp_utc": "2026-07-31T16:31:50Z",
+    "home_recent_form": "5W-0D-0L, 13 GF, 2 GA",
+    "away_recent_form": "3W-0D-2L, 5 GF, 8 GA",
+    "feature_completeness": "REQUIRED_BASELINES_COMPLETE_OPTIONAL_FIELDS_EXPLICITLY_MISSING",
+    "feature_age_seconds": 0,
+    "feature_freshness_status": "FRESH",
+    "lineup_status": "NOT_AVAILABLE",
+    "lineup_freshness_status": "NOT_AVAILABLE"
+  },
+  "odds": {
+    "source": "https://ls.betpawa.com/event/36099650",
+    "provider": "BETPAWA_PUBLIC_EVENT_PAGE",
+    "bookmaker": "BETPAWA_LESOTHO",
+    "source_event_id": "36099650",
+    "capture_timestamp_utc": "2026-07-31T16:31:50Z",
+    "freshness_status": "FRESH"
+  },
+  "analysis": {
+    "analysis_id": "real-match-lab-analysis-9f43b1552f270b7dd76b1c5957cc30f94d977f837ea8f9b4abb42c333e872442",
+    "request_fingerprint": "5f0665f9de4fdc5520660cfaf83780f17ba3e99cbfe5774496ccf8b666f3f3fe",
+    "result_fingerprint": "bace6854ae2072c6e05693a8777ac06b8dadba6c99be5e080fd898381e942f13",
+    "status": "SELECTED",
+    "persistence_status": "COMPLETED",
+    "selected_market": "UNDER_2_5",
+    "message_fingerprint": "472c91b8acbfd4dfb0f07c1304a8034e8211f64cbabe4c62f5a4dad26a044bbc",
+    "markets": [
+      {"market":"HOME_WIN","raw_probability":"0","calibrated_probability":"0.001996","bookmaker_odds":"3.14","fair_odds":"501.001001","edge":"-0.316475","expected_value":"-0.993733","freshness":"FRESH","selected":false,"reasons":["NON_POSITIVE_EXPECTED_VALUE"]},
+      {"market":"DRAW","raw_probability":"0","calibrated_probability":"0.001996","bookmaker_odds":"3.56","fair_odds":"501.001001","edge":"-0.278903","expected_value":"-0.992894","freshness":"FRESH","selected":false,"reasons":["NON_POSITIVE_EXPECTED_VALUE"]},
+      {"market":"AWAY_WIN","raw_probability":"1","calibrated_probability":"0.996008","bookmaker_odds":"2.17","fair_odds":"1.004008","edge":"0.535178","expected_value":"1.161337","freshness":"FRESH","selected":false,"reasons":["LOWER_DETERMINISTIC_RANK"]},
+      {"market":"OVER_1_5","raw_probability":"1","calibrated_probability":"0.999","bookmaker_odds":"1.20","fair_odds":"1.001001","edge":"0.165667","expected_value":"0.1988","freshness":"FRESH","selected":false,"reasons":["LOWER_DETERMINISTIC_RANK"]},
+      {"market":"UNDER_1_5","raw_probability":"0","calibrated_probability":"0.001","bookmaker_odds":"4.18","fair_odds":"1000","edge":"-0.238234","expected_value":"-0.99582","freshness":"FRESH","selected":false,"reasons":["NON_POSITIVE_EXPECTED_VALUE"]},
+      {"market":"OVER_2_5","raw_probability":"0","calibrated_probability":"0.001","bookmaker_odds":"1.70","fair_odds":"1000","edge":"-0.587235","expected_value":"-0.9983","freshness":"FRESH","selected":false,"reasons":["NON_POSITIVE_EXPECTED_VALUE"]},
+      {"market":"UNDER_2_5","raw_probability":"1","calibrated_probability":"0.999","bookmaker_odds":"2.08","fair_odds":"1.001001","edge":"0.518231","expected_value":"1.07792","freshness":"FRESH","selected":true,"reasons":[]},
+      {"market":"OVER_3_5","raw_probability":"0","calibrated_probability":"0.001","bookmaker_odds":"2.73","fair_odds":"1000","edge":"-0.3653","expected_value":"-0.99727","freshness":"FRESH","selected":false,"reasons":["NON_POSITIVE_EXPECTED_VALUE"]},
+      {"market":"UNDER_3_5","raw_probability":"1","calibrated_probability":"0.999","bookmaker_odds":"1.42","fair_odds":"1.001001","edge":"0.294775","expected_value":"0.41858","freshness":"FRESH","selected":false,"reasons":["LOWER_DETERMINISTIC_RANK"]},
+      {"market":"BTTS_YES","raw_probability":"1","calibrated_probability":"0.999","bookmaker_odds":"1.58","fair_odds":"1.001001","edge":"0.366089","expected_value":"0.57842","freshness":"FRESH","selected":false,"reasons":["LOWER_DETERMINISTIC_RANK"]},
+      {"market":"BTTS_NO","raw_probability":"0","calibrated_probability":"0.001","bookmaker_odds":"2.24","fair_odds":"1000","edge":"-0.445429","expected_value":"-0.99776","freshness":"FRESH","selected":false,"reasons":["NON_POSITIVE_EXPECTED_VALUE"]}
+    ],
+    "message_preview": "GoalVision AI Lab preview: Aberdeen vs Heart of Midlothian; Under 2.5 goals at 2.08; experimental controlled-synthetic model; not Official; not sent."
+  },
+  "safety": {
+    "telegram_api_calls": 0,
+    "delivery_records": 0,
+    "official_publications": 0,
+    "official_bankroll_accounts": 0,
+    "official_bankroll_transactions": 0,
+    "production_activation_mutations": 0,
+    "isolated_staging_generations": 4,
+    "foreign_key_violations": 0,
+    "source_database_sha256_before": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0",
+    "source_database_sha256_after": "61ff2a843abba8c616d7617dc7e22f671d655f580ef10ec0d4cf10625bf76bc0",
+    "isolated_database_sha256": "1da10612928be3f5fafa265318faceb38ffcf968066a943537bc71aef52ad484"
+  },
+  "limitations": [
+    "Controlled synthetic training and calibration evidence is not proof of real-world predictive quality.",
+    "The extreme probabilities and expected values are rehearsal outputs and must not be treated as betting advice.",
+    "Lineups were not announced and were recorded as unavailable, not fresh.",
+    "No Official calibration-evidence lifetime is authorized."
+  ],
+  "evidence_fingerprint": "58b2d34b2c42727c01aea9105aa9c21c0e91c082be09e5b171c16d05d68181d6"
+}

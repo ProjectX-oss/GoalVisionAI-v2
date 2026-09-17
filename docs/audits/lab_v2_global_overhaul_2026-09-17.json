@@ -1,0 +1,528 @@
+{
+  "corrected_offline_replay": {
+    "api_calls": 0,
+    "candidate_lanes": {
+      "EXPERIMENTAL": 10,
+      "REJECTED": 1808
+    },
+    "candidate_stages": {
+      "EARLY_CANDIDATE": 10,
+      "REJECTED": 1808
+    },
+    "capture_clock": "2026-09-17T17:10:14.951572+00:00",
+    "classifier_version": "LAB_COMPETITION_CLASSIFIER_V2",
+    "competition_profile_counts": {
+      "DOMESTIC_CUP": 122,
+      "FRIENDLY": 2,
+      "INTERNATIONAL_CLUB": 10,
+      "INTERNATIONAL_YOUTH": 2,
+      "LOWER_DIVISION_OR_SEMIPRO": 152,
+      "RESERVE_OR_B_TEAM": 145,
+      "SENIOR_MEN_PRO": 48,
+      "SENIOR_WOMEN_PRO": 63,
+      "UNKNOWN": 1304,
+      "YOUTH_U17_U18": 15,
+      "YOUTH_U19_U20": 110,
+      "YOUTH_U21_U23": 43
+    },
+    "deterministic_replay": true,
+    "evaluation_fingerprint": "176adf42640a47600665c0fc33260e3f5cdf800a17a0a3c655a6f7fbbfb34d82",
+    "experimental_candidates": [
+      {
+        "fixture_id": 1528715,
+        "market": "OVER_2_5",
+        "profile": "UNKNOWN"
+      },
+      {
+        "fixture_id": 1552481,
+        "market": "BTTS_NO",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1552481,
+        "market": "UNDER_2_5",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1552484,
+        "market": "OVER_2_5",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1558635,
+        "market": "BTTS_YES",
+        "profile": "SENIOR_MEN_PRO"
+      },
+      {
+        "fixture_id": 1558635,
+        "market": "OVER_2_5",
+        "profile": "SENIOR_MEN_PRO"
+      },
+      {
+        "fixture_id": 1576187,
+        "market": "DRAW",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO"
+      },
+      {
+        "fixture_id": 1622773,
+        "market": "BTTS_NO",
+        "profile": "UNKNOWN"
+      },
+      {
+        "fixture_id": 1622773,
+        "market": "HOME_WIN",
+        "profile": "UNKNOWN"
+      },
+      {
+        "fixture_id": 1636695,
+        "market": "BTTS_NO",
+        "profile": "UNKNOWN"
+      }
+    ],
+    "fixture_count": 2016,
+    "markets_evaluated": 1818,
+    "mode": "OFFLINE_CAPTURED_INPUT_POLICY_REPLAY",
+    "scope": "Same captured current quotes and results, original clock; no final-result or later data inputs. Availability/prediction calls absent in captured run."
+  },
+  "files_changed": [
+    "app/lab_v2_shadow/cli.py",
+    "app/lab_v2_shadow/diagnostics.py",
+    "app/lab_v2_shadow/ensemble.py",
+    "app/lab_v2_shadow/forward_evidence.py",
+    "app/lab_v2_shadow/global_evaluation.py",
+    "app/lab_v2_shadow/profiles.py",
+    "app/lab_v2_shadow/publication.py",
+    "app/lab_v2_shadow/repository.py",
+    "app/lab_v2_shadow/runner.py",
+    "app/lab_v2_shadow/scheduling.py",
+    "app/lab_v2_shadow/segmentation.py",
+    "app/lab_v2_shadow/summary.py",
+    "app/lab_v2_shadow/tracking.py",
+    "app/lab_v2_shadow/README.md",
+    "tests/test_lab_v2_global.py",
+    "docs/LAB_V2_GLOBAL_COMPETITION_POLICY.md",
+    "docs/audits/lab_v2_global_baseline_2026-09-17.json",
+    "docs/audits/lab_v2_global_overhaul_2026-09-17.md",
+    "docs/audits/lab_v2_global_overhaul_2026-09-17.json"
+  ],
+  "limitations": [
+    "One bounded run proves fixture inclusion, not complete enrichment or profitability.",
+    "Classifier V2 was checked offline after a V1 fallback bug was discovered; original immutable evidence is preserved.",
+    "Forward result capture is explicit; settlement worker integration is not installed.",
+    "Initial profile settings are experimental and uncalibrated; no production activation or automatic tuning.",
+    "Two unrelated repository-wide test problems remain."
+  ],
+  "migrations": {
+    "fresh": {
+      "foreign_key_check": [],
+      "schema_version": 42
+    },
+    "previous_schema_upgrade": {
+      "foreign_key_check": [],
+      "schema_version": 42
+    }
+  },
+  "raw_live_rehearsal": {
+    "api_call_allocation": {
+      "/fixtures": 6,
+      "/fixtures(results)": 27,
+      "/leagues": 1,
+      "/odds": 3,
+      "/odds(date)": 49,
+      "/odds/bookmakers": 1,
+      "/status": 1
+    },
+    "api_calls_consumed": 88,
+    "competition_profile_counts": {
+      "DOMESTIC_CUP": 122,
+      "FRIENDLY": 2,
+      "INTERNATIONAL_CLUB": 10,
+      "INTERNATIONAL_YOUTH": 2,
+      "LOWER_DIVISION_OR_SEMIPRO": 141,
+      "RESERVE_OR_B_TEAM": 206,
+      "SENIOR_MEN_PRO": 48,
+      "SENIOR_WOMEN_PRO": 62,
+      "UNKNOWN": 1255,
+      "YOUTH_U17_U18": 15,
+      "YOUTH_U19_U20": 110,
+      "YOUTH_U21_U23": 43
+    },
+    "current_remaining_daily_quota": 4689,
+    "discovery_dates_failed": [],
+    "discovery_dates_fetched": [
+      "2026-09-17",
+      "2026-09-18",
+      "2026-09-19"
+    ],
+    "discovery_dates_requested": [
+      "2026-09-17",
+      "2026-09-18",
+      "2026-09-19"
+    ],
+    "discovery_dates_unvisited": [],
+    "discovery_window_complete": true,
+    "evaluated_at_utc": "2026-09-17T17:10:14.951572+00:00",
+    "fixtures_awaiting_near_kickoff_review": 1860,
+    "fixtures_discovered": 2016,
+    "foreign_key_check": [],
+    "global_state_counts": {
+      "REJECTED": 156,
+      "TRACKING": 1485,
+      "UNAVAILABLE": 375
+    },
+    "historical_bookmaker_odds_used": false,
+    "official_mutations": 0,
+    "provider_fixture_rows": 2177,
+    "rejection_funnel": [
+      {
+        "fixtures_entering": 1826,
+        "fixtures_leaving_without_failure": 0,
+        "fixtures_with_any_failure": 1826,
+        "rejected_or_deferred_decisions": 1826,
+        "stage": "CURRENT_ODDS"
+      },
+      {
+        "fixtures_entering": 190,
+        "fixtures_leaving_without_failure": 0,
+        "fixtures_with_any_failure": 190,
+        "rejected_or_deferred_decisions": 1818,
+        "stage": "FINAL_REVIEW"
+      },
+      {
+        "fixtures_entering": 190,
+        "fixtures_leaving_without_failure": 0,
+        "fixtures_with_any_failure": 190,
+        "rejected_or_deferred_decisions": 3274,
+        "stage": "INTEGRITY_VALUE"
+      },
+      {
+        "fixtures_entering": 190,
+        "fixtures_leaving_without_failure": 0,
+        "fixtures_with_any_failure": 190,
+        "rejected_or_deferred_decisions": 5555,
+        "stage": "PROFILE_QUALITY"
+      }
+    ],
+    "reserve_headroom_remaining": 3189,
+    "telegram_sends": 0,
+    "throughput": {
+      "experimental_candidates": 10,
+      "fixtures_discovered": 2016,
+      "fixtures_scored": 190,
+      "fixtures_tracking": 1860,
+      "fixtures_with_current_odds": 190,
+      "published_candidates": 0,
+      "rejected_candidates": 1808,
+      "standard_candidates": 0,
+      "strong_candidates": 0
+    },
+    "timers_started": 0,
+    "top_candidate_competitions": {
+      "2. Bundesliga": 1,
+      "Jupiler Pro League": 2,
+      "League One": 1,
+      "Liga 1": 2,
+      "Ligue 2": 3,
+      "Primera B Metropolitana": 1
+    },
+    "top_candidate_markets": {
+      "BTTS_NO": 3,
+      "BTTS_YES": 1,
+      "DRAW": 1,
+      "HOME_WIN": 1,
+      "OVER_2_5": 3,
+      "UNDER_2_5": 1
+    },
+    "top_global_rejection_reasons": {
+      "ENSEMBLE_EDGE_BELOW_0_04": 1775,
+      "ENSEMBLE_NOT_APPROVED": 1808,
+      "FINAL_REVIEW_WINDOW_NOT_OPEN": 10,
+      "INSUFFICIENT_INDEPENDENT_SIGNALS": 1818,
+      "INVALID_MARKET_MAPPING": 10,
+      "MARKET_NOT_AVAILABLE": 7,
+      "MATERIAL_SIGNAL_DISAGREEMENT": 288,
+      "NON_POSITIVE_VALUE": 1588,
+      "NO_CURRENT_ODDS": 203,
+      "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 1506,
+      "ODDS_COVERAGE_BUDGET_PENDING": 1441,
+      "ODDS_STALE": 165,
+      "VALUE_BELOW_PROFILE_THRESHOLD": 1782,
+      "WEIGHTED_AGREEMENT_BELOW_0_65": 72
+    }
+  },
+  "rehearsal_count": 1,
+  "results_only_backtest": {
+    "fixtures_scored": 493,
+    "fixtures_without_minimum_prior_venue_history": 1355,
+    "limitations": "Sparse captured result window, descriptive only; no calibration or profitability claim. Compares profile decay with prior linear recency on identical available past results, not full production models.",
+    "lookahead": "Only results strictly earlier than each target kickoff; frozen policy, no fitting or tuning. Current competition metadata used for descriptive grouping only.",
+    "metrics": [
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.215023093772336821188894324",
+        "market": "AWAY_WIN",
+        "n": 17,
+        "profile_brier": "0.2304142714148360380106849771"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2741331615361575622025878175",
+        "market": "BTTS_NO",
+        "n": 17,
+        "profile_brier": "0.2752487174851296758446005502"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2741331615361575622025878175",
+        "market": "BTTS_YES",
+        "n": 17,
+        "profile_brier": "0.2752487174851296758446005502"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2234000245256717525659556884",
+        "market": "DRAW",
+        "n": 17,
+        "profile_brier": "0.2204833324720217129783101781"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2391031194277609700696344425",
+        "market": "HOME_WIN",
+        "n": 17,
+        "profile_brier": "0.2573530507414855943339428544"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2573391274685510786275283748",
+        "market": "OVER_1_5",
+        "n": 17,
+        "profile_brier": "0.2639066669513728628512470122"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2987669523162872826349967175",
+        "market": "OVER_2_5",
+        "n": 17,
+        "profile_brier": "0.3108304122505147623888319645"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2351490091742818178323448766",
+        "market": "OVER_3_5",
+        "n": 17,
+        "profile_brier": "0.2415099302775682609447668378"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2573391274685510786275283748",
+        "market": "UNDER_1_5",
+        "n": 17,
+        "profile_brier": "0.2639066669513728628512470122"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2987669523162872826349967175",
+        "market": "UNDER_2_5",
+        "n": 17,
+        "profile_brier": "0.3108304122505147623888319645"
+      },
+      {
+        "competition_profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "legacy_recency_brier": "0.2351490091742818178323448766",
+        "market": "UNDER_3_5",
+        "n": 17,
+        "profile_brier": "0.2415099302775682609447668378"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.1882775848205493004435683754",
+        "market": "AWAY_WIN",
+        "n": 57,
+        "profile_brier": "0.1905490830950275447352306937"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.2095891365515752445606666488",
+        "market": "BTTS_NO",
+        "n": 57,
+        "profile_brier": "0.2136591179094777503379717711"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.2095891365515752445606666488",
+        "market": "BTTS_YES",
+        "n": 57,
+        "profile_brier": "0.2136591179094777503379717711"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.1690490467434258184700102825",
+        "market": "DRAW",
+        "n": 57,
+        "profile_brier": "0.1690389040862227635372547337"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.2189921320061067991013779953",
+        "market": "HOME_WIN",
+        "n": 57,
+        "profile_brier": "0.2187646926605580372381532872"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.08959967566345224632824486461",
+        "market": "OVER_1_5",
+        "n": 57,
+        "profile_brier": "0.08990808912554348087718970335"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.2119999609718109823146817135",
+        "market": "OVER_2_5",
+        "n": 57,
+        "profile_brier": "0.2149854792723397776983304539"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.2898058603655002369233464577",
+        "market": "OVER_3_5",
+        "n": 57,
+        "profile_brier": "0.2926548479800006975112678186"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.08959967566345224632824486461",
+        "market": "UNDER_1_5",
+        "n": 57,
+        "profile_brier": "0.08990808912554348087718970335"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.2119999609718109823146817135",
+        "market": "UNDER_2_5",
+        "n": 57,
+        "profile_brier": "0.2149854792723397776983304539"
+      },
+      {
+        "competition_profile": "SENIOR_MEN_PRO",
+        "legacy_recency_brier": "0.2898058603655002369233464577",
+        "market": "UNDER_3_5",
+        "n": 57,
+        "profile_brier": "0.2926548479800006975112678186"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.2055346926321001397867516147",
+        "market": "AWAY_WIN",
+        "n": 419,
+        "profile_brier": "0.2035828529799565544508795215"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.2372335329767407731968485621",
+        "market": "BTTS_NO",
+        "n": 419,
+        "profile_brier": "0.2368891453579133049539978876"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.2372335329767407731968485621",
+        "market": "BTTS_YES",
+        "n": 419,
+        "profile_brier": "0.2368891453579133049539978876"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.1757932369584848922078273891",
+        "market": "DRAW",
+        "n": 419,
+        "profile_brier": "0.1747873525269811347479239716"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.2456606754835340922754036021",
+        "market": "HOME_WIN",
+        "n": 419,
+        "profile_brier": "0.2453062144043040058297950833"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.1964041489609371587447883193",
+        "market": "OVER_1_5",
+        "n": 419,
+        "profile_brier": "0.1930292047913856989064961372"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.2409517169809322716828887668",
+        "market": "OVER_2_5",
+        "n": 419,
+        "profile_brier": "0.2372692663639222288730365456"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.2139362896187092436435491028",
+        "market": "OVER_3_5",
+        "n": 419,
+        "profile_brier": "0.2129545901246183076184641925"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.1964041489609371587447883193",
+        "market": "UNDER_1_5",
+        "n": 419,
+        "profile_brier": "0.1930292047913856989064961372"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.2409517169809322716828887668",
+        "market": "UNDER_2_5",
+        "n": 419,
+        "profile_brier": "0.2372692663639222288730365456"
+      },
+      {
+        "competition_profile": "UNKNOWN",
+        "legacy_recency_brier": "0.2139362896187092436435491028",
+        "market": "UNDER_3_5",
+        "n": 419,
+        "profile_brier": "0.2129545901246183076184641925"
+      }
+    ],
+    "mode": "CHRONOLOGICAL_RESULTS_ONLY_BACKTEST",
+    "odds_used": false,
+    "result_rows": 1848,
+    "roi": null
+  },
+  "safety": {
+    "env_files_unchanged": true,
+    "lab_timer_active": "inactive",
+    "lab_timer_enabled": "disabled",
+    "official_mutations_by_task": 0,
+    "protected_tables_checked": [
+      "bankroll_accounts",
+      "bankroll_transactions",
+      "predictions",
+      "published_predictions",
+      "result_publications"
+    ],
+    "protected_tables_unchanged": true,
+    "telegram_sends_by_task": 0
+  },
+  "source_artifacts": {
+    "append_only_database": "var/global_lab_audit/rehearsal.db",
+    "baseline": "docs/audits/lab_v2_global_baseline_2026-09-17.json",
+    "raw_rehearsal": "var/global_lab_audit/rehearsal.json",
+    "raw_rehearsal_sha256": "f4c2cf2798ee7e5194e2b316eb720291accef21a96ae3ca70cf24de5d4ae551b"
+  },
+  "starting_commit": "aa6c234cf7aedefbad38b033d13dd4fbfe4ad974",
+  "tests": {
+    "adjacent_latest": "142 passed in 9.49s",
+    "collection_error": "tests/test_source_commit_provenance.py imports absent _analysis_input from app.lab_combo.cli",
+    "compile_import_smoke": "PASSED; socket connections blocked during import",
+    "full_suite": "1697 passed, 563 subtests passed, 1 failed, 1 collection error in 524.14s",
+    "full_suite_failure": "tests/test_staging_model_operations_rehearsal.py::ControlledStagingRehearsalTests::test_rolled_back_legacy_champion_is_stale_without_delivery",
+    "new_global_tests_collected": 37,
+    "prior_full_suite_excluding_collection_error": "1692 passed, 563 subtests passed, 1 failed"
+  }
+}

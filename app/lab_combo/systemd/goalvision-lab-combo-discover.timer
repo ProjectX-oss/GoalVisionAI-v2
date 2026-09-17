@@ -1,0 +1,10 @@
+[Unit]
+Description=GoalVision Lab experimental discovery every 30 minutes
+
+[Timer]
+OnCalendar=*:0/30
+Persistent=true
+Unit=goalvision-lab-combo-discover.service
+
+[Install]
+WantedBy=timers.target

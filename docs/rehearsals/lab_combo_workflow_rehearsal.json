@@ -1,0 +1,39 @@
+{
+  "analysis_failures": {},
+  "api_calls_consumed": 22,
+  "candidates_considered": null,
+  "combined_odds": null,
+  "combo_blockers": [],
+  "exit_code": 1,
+  "focused_tests": {
+    "passed": 76,
+    "subtests_passed": 8
+  },
+  "fresh_odds_candidates": null,
+  "full_suite": {
+    "before_final_discovery_diagnostic_hardening": true,
+    "passed": 1529,
+    "runs": 1,
+    "seconds": 448.88,
+    "subtests_passed": 563
+  },
+  "individually_eligible_selections": 0,
+  "lab_telegram_sent": false,
+  "limitations": [
+    "The one real rehearsal stopped on FootballQuotaError after 22 calls. Partial candidate and fresh-odds counts were not retained; they are unknown, not zero.",
+    "An offline-tested follow-up now preserves partial counters, request costs, quota state and typed terminal reason on discovery interruption. Real discovery was not repeated.",
+    "The full suite passed before the final discovery diagnostic hardening; focused tests were rerun afterwards."
+  ],
+  "partial_counters_available": false,
+  "quota_error_subcode": "NOT_RETAINED_BY_INITIAL_REHEARSAL_ERROR_HANDLER",
+  "real_combo_found": false,
+  "schema_version": "goalvision-lab-combo-rehearsal-v1",
+  "services_installed_or_enabled": false,
+  "single_rejections": {},
+  "skip_reasons": {},
+  "source_and_official_database_unchanged": true,
+  "team_history_calls": null,
+  "terminal_error": "FootballQuotaError",
+  "terminal_result": null,
+  "timestamp_utc": null
+}

@@ -1,0 +1,100 @@
+{
+  "source": "read-only latest persisted pre-change cycle",
+  "baseline": {
+    "evaluated_at_utc": "2026-09-17T16:30:01.334190+00:00",
+    "fixtures_discovered": 1267,
+    "provider_fixture_rows": 2177,
+    "fixtures_excluded_before_odds": 910,
+    "fixture_coverage_status_counts": {
+      "FIXTURE_DISCOVERED_MARKET_UNSUPPORTED": 1,
+      "FIXTURE_DISCOVERED_NO_CURRENT_ODDS": 71,
+      "FIXTURE_DISCOVERED_NO_REQUIRED_MODEL_CONTEXT": 849,
+      "FIXTURE_DISCOVERED_ODDS_COVERAGE_INCOMPLETE": 880,
+      "FIXTURE_DISCOVERED_ODDS_STALE": 116,
+      "FIXTURE_DISCOVERED_ODDS_UNNORMALIZABLE": 8,
+      "FIXTURE_EVALUATED_REJECTED": 252
+    },
+    "rejection_reasons": {
+      "ENSEMBLE_EDGE_BELOW_0_04": 1825,
+      "INSUFFICIENT_INDEPENDENT_SIGNALS": 1835,
+      "MATERIAL_SIGNAL_DISAGREEMENT": 53,
+      "WEIGHTED_AGREEMENT_BELOW_0_65": 12
+    },
+    "readiness_reasons": {
+      "ENSEMBLE_NOT_APPROVED": 1835
+    },
+    "current_odds_fixtures": 191,
+    "candidate_markets_evaluated": 1835,
+    "ready_candidate_count": 0,
+    "api_calls_consumed": 69
+  },
+  "stage_audit": [
+    {
+      "stage": "fixture_discovery",
+      "implementation": "runner._fixture_rows_with_evidence",
+      "gate_type": "HARD",
+      "finding": "Invalid status/kickoff/identity; previously capability and youth/friendly exclusion"
+    },
+    {
+      "stage": "market_discovery",
+      "implementation": "runner._date_odds",
+      "gate_type": "HARD",
+      "finding": "Current quote pages only; incomplete budget coverage retained"
+    },
+    {
+      "stage": "odds_validation",
+      "implementation": "market_consensus.current_market_consensus",
+      "gate_type": "HARD",
+      "finding": "Missing/stale/current normalization and bookmaker quorum"
+    },
+    {
+      "stage": "team_history_context",
+      "implementation": "runner._histories / _persisted_v1",
+      "gate_type": "SOFT",
+      "finding": "History budget, team depth and missing optional context"
+    },
+    {
+      "stage": "model_inference",
+      "implementation": "runner._evaluate / ensemble.evaluate_ensemble",
+      "gate_type": "HARD",
+      "finding": "Finite probability/market contract; correlated family aggregation"
+    },
+    {
+      "stage": "calibration",
+      "implementation": "global_evaluation.evaluate_profile",
+      "gate_type": "SOFT",
+      "finding": "No fitted calibration in this V2 path; explicit uncalibrated Lab label"
+    },
+    {
+      "stage": "value",
+      "implementation": "global_evaluation.evaluate_profile",
+      "gate_type": "HARD_AND_SOFT",
+      "finding": "Positive value mandatory; profile minimum edge plus uncertainty"
+    },
+    {
+      "stage": "candidate_tracking",
+      "implementation": "tracking / runner._track_reviews",
+      "gate_type": "SOFT",
+      "finding": "Pending final window, incomplete current context, exact refresh retry"
+    },
+    {
+      "stage": "quality",
+      "implementation": "global_evaluation.evaluate_profile",
+      "gate_type": "HARD_AND_SOFT",
+      "finding": "Separate integrity and uncertainty/evidence lane rules"
+    },
+    {
+      "stage": "selection",
+      "implementation": "runner._shortlist / _combos",
+      "gate_type": "HARD_AND_SOFT",
+      "finding": "Fair category review; distinct fixtures/teams and finite review quota"
+    },
+    {
+      "stage": "publication_eligibility",
+      "implementation": "runner._readiness / publication.prepare_v2_publications",
+      "gate_type": "HARD",
+      "finding": "Exact fixture/current odds freshness, current review, deduplication; no send"
+    }
+  ],
+  "baseline_limitations": "Earlier records do not contain per-stage entering/leaving counts; missing measurements are not inferred."
+}
