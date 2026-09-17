@@ -6,6 +6,7 @@ from datetime import datetime
 
 from .capability import CapabilityTier, LeagueCapabilityCache
 from .repository import ShadowEvidenceRepository
+from .profiles import fallback_capability, classify
 
 
 TERMINAL_STATES = frozenset({"REJECTED", "FIXTURE_INVALID", "EXPIRED"})
@@ -24,7 +25,9 @@ def load_reviews(repository: ShadowEvidenceRepository, now: datetime) -> dict[tu
 def new_review(candidate: dict, now: datetime) -> dict:
     """Retain identity and fixture context only; old quotes cannot become new inputs."""
     fields = ("fixture_id", "market", "kickoff_utc", "home_team_id", "away_team_id",
-              "home_team", "away_team", "league_id", "league", "season")
+              "home_team", "away_team", "league_id", "league", "season", "competition_profile",
+              "classifier_version", "classification_reason", "classification_fingerprint", "country",
+              "age_category", "flags", "provider_metadata")
     return {
         **{key: candidate[key] for key in fields if key in candidate},
         "origin_candidate_id": candidate["candidate_id"],
@@ -39,10 +42,13 @@ def restore_fixture(record: dict, capabilities: LeagueCapabilityCache) -> dict |
     matches = [item for item in capabilities.records
                if item.league_id == record["league_id"] and item.covers(kickoff.date())
                and (record.get("season") is None or item.season == record["season"])]
-    if len(matches) != 1 or matches[0].tier == CapabilityTier.UNSUPPORTED:
-        return None
-    capability = matches[0]
+    metadata = record.get("provider_metadata") or {}
+    league = metadata.get("league") or {"id": record["league_id"], "season": record.get("season", kickoff.year),
+                                        "name": record.get("league", "UNKNOWN")}
+    capability = matches[0] if len(matches) == 1 else fallback_capability(league)
+    classification = classify(league, metadata.get("teams", {}), metadata.get("fixture", {}), capability)
     return {
+        **classification.document(), "country": capability.country, "provider_metadata": metadata,
         **{key: record[key] for key in ("fixture_id", "league_id", "home_team_id",
                                       "away_team_id", "home_team", "away_team")},
         "kickoff_utc": kickoff, "league_name": record["league"], "season": capability.season,

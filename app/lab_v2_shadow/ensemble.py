@@ -63,6 +63,15 @@ def evaluate_ensemble(
         blockers.append("CURRENT_PRICE_UNAVAILABLE")
     elif not offered_odds.is_finite() or offered_odds <= Decimal(1):
         blockers.append("INVALID_CURRENT_DECIMAL_ODDS")
+    invalid = any(
+        item.market != market or not item.reliability.is_finite() or item.reliability < 0
+        or (item.probability is not None and (not item.probability.is_finite()
+            or not Decimal(0) <= item.probability <= Decimal(1))) for item in signals
+    )
+    if invalid:
+        return EnsembleDecision(POLICY_VERSION, market, "REJECTED", "LOW", None,
+                                offered_odds, None, None, 0, None, (), (),
+                                ("INVALID_SIGNAL_PROBABILITY_OR_CONTRACT",))
     valid_odds = (
         offered_odds is not None
         and offered_odds.is_finite()

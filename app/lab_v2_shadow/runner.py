@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, localcontext
 from itertools import combinations
 from math import factorial
 import json
 from pathlib import Path
-import re
 import sqlite3
 
 import httpx
@@ -24,7 +23,7 @@ from .api_prediction import ApiPredictionSignal, normalize_api_prediction
 from .bookmakers import CATALOGUE_CACHE_DAYS, catalogue_summary, review_bookmaker_catalogue
 from .capability import CapabilityTier, LeagueCapability, LeagueCapabilityCache
 from .context_signals import PlayerUsage, AvailabilityImpact, availability_impact, opponent_adjusted_form
-from .ensemble import EnsembleDecision, EnsembleSignal, evaluate_ensemble
+from .ensemble import EnsembleDecision, EnsembleSignal
 from .market_consensus import CurrentMarketConsensus, best_current_price, current_market_consensus
 from .pi_ratings import MatchResult, PiAvailability, PiRatingAdapter, PiSignal, parse_api_fixture_results
 from .quota import (
@@ -36,10 +35,15 @@ from .quota import (
 )
 from .repository import ShadowEvidenceRepository
 from .tracking import load_reviews, new_review, restore_fixture
+from .profiles import classify, fallback_capability, policy_for
+from .global_evaluation import evaluate_profile
+from .scheduling import fair_order, record_service
+from .diagnostics import global_diagnostic
+from .forward_evidence import capture_selection
 
 
-SCHEMA_VERSION = "goalvision-lab-v2-broad-coverage-cycle-v5"
-READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V3"
+SCHEMA_VERSION = "goalvision-lab-v2-global-cycle-v6"
+READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V4"
 MAXIMUM_CALLS = MAX_DISCOVERY_CALLS_PER_CYCLE
 FINAL_REVIEW_WINDOW = timedelta(minutes=75)
 FINAL_REVIEW_MAX_AGE = timedelta(minutes=5)
@@ -55,14 +59,11 @@ MARKET_FAMILIES = {
     "TOTAL_2_5": ("OVER_2_5", "UNDER_2_5"),
     "TOTAL_3_5": ("OVER_3_5", "UNDER_3_5"),
 }
-EXCLUDED = re.compile(
-    r"(?i)(\byouth\b|\bu[- ]?\d{2}\b|\breserves?\b|\bacademy\b|"
-    r"\bvirtual\b|\besports?\b|\bfriendly\b)"
-)
 TIER_ORDER = {
     CapabilityTier.TIER_A_FULL: 0,
     CapabilityTier.TIER_B_GOOD: 1,
     CapabilityTier.TIER_C_BASIC: 2,
+    CapabilityTier.UNSUPPORTED: 3,
 }
 
 
@@ -142,6 +143,8 @@ class LabV2ShadowRunner:
         discovery_exclusions: list[dict[str, object]] = []
         fixture_rows_seen = 0
         days = _discovery_dates(clock, horizon_days)
+        dates_fetched: list[str] = []
+        dates_failed: list[str] = []
         for day in days:
             if self._remaining() <= 0:
                 break
@@ -150,11 +153,30 @@ class LabV2ShadowRunner:
                 lambda value=day: self.client.fixtures_by_date(value, timezone_name="UTC"),
                 clock=clock, ttl=timedelta(minutes=5), use_cache=True,
             )
+            dates_fetched.append(day)
+            if not _provider_payload_succeeded(payload):
+                dates_failed.append(day)
             fixture_rows_seen += _result_count(payload)
             accepted, excluded = _fixture_rows_with_evidence(payload, capabilities, clock)
             discovery_exclusions.extend(excluded)
+            for item in excluded:
+                self.repository.append("discovery_rejection", fingerprint((clock, item)), item, created_at=clock)
             for item in accepted:
                 fixtures[int(item["fixture_id"])] = item
+                self.repository.append("global_discovery", f"{clock.isoformat()}:{item['fixture_id']}",
+                                       {**_plain(item), "state": "DISCOVERED", "reason": "PROVIDER_DATE_FIXTURE"}, created_at=clock)
+        for item in self.repository.latest_global_fixtures(now=clock, include_expired=True):
+            if datetime.fromisoformat(item["kickoff_utc"]) <= clock:
+                expired = {**item, "state": "EXPIRED", "reason": "FIXTURE_STARTED",
+                           "evaluated_at_utc": clock.isoformat(), "next_refresh_at": None}
+                self.repository.append("global_fixture_state", f"{clock.isoformat()}:{item['fixture_id']}", expired, created_at=clock)
+                continue
+            if item["fixture_id"] not in fixtures:
+                metadata = item.get("provider_metadata")
+                if metadata:
+                    accepted, _ = _fixture_rows_with_evidence({"response": [metadata]}, capabilities, clock)
+                    for restored in accepted:
+                        fixtures[restored["fixture_id"]] = restored
         # Broad fixture/odds coverage is discovery, not the pending-review queue.
         for record in tracked.values():
             restored = restore_fixture(record, capabilities)
@@ -192,11 +214,15 @@ class LabV2ShadowRunner:
             odds_fixtures, odds_evidence, histories, adapters, api_predictions,
             persisted_models, {}, {}, clock,
         )
-        shortlist_ids = _shortlist(preliminary, maximum=FINAL_REVIEW_SHORTLIST_SIZE)
+        shortlist_ids = _shortlist(preliminary, maximum=max(1, len(odds_fixtures)))
         tracked_due = [item["fixture_id"] for item in ordered
                        if item["fixture_id"] in tracked_ids
                        and MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW]
-        shortlist_ids = list(dict.fromkeys([*tracked_due, *shortlist_ids]))[:FINAL_REVIEW_SHORTLIST_SIZE]
+        review_pool = list(dict.fromkeys([*tracked_due, *shortlist_ids]))
+        near_pool = [i for i in review_pool if MINIMUM_KICKOFF_LEAD < fixtures[i]["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW]
+        review_pool = near_pool or review_pool
+        shortlist_ids = [item["fixture_id"] for item in fair_order(
+            [fixtures[i] for i in review_pool], self.repository, phase="review")][:FINAL_REVIEW_SHORTLIST_SIZE]
         availability: dict[int, dict[str, AvailabilityImpact]] = {}
         final_reviews: dict[int, dict[str, object]] = {}
         cmi_enriched: set[int] = set()
@@ -232,6 +258,7 @@ class LabV2ShadowRunner:
                 context["injuries_status"] = "NOT_SUPPORTED"
 
             if near and self._remaining() >= 2 + int(capability.lineups):
+                record_service(self.repository, fixture, clock, "review")
                 fixture_payload, _ = await self._fetch(
                     "/fixtures", {"id": fixture_id},
                     lambda identity=fixture_id: self.client.fixture(identity),
@@ -246,7 +273,15 @@ class LabV2ShadowRunner:
                     if refreshed_rows and _provider_payload_succeeded(fixture_payload) else None
                 )
                 context["fixture_status"] = refreshed_status
-                if refreshed_status is not None and refreshed_status not in {"NS", "TBD"}:
+                exact_teams = refreshed_rows[0].get("teams", {}) if refreshed_rows else {}
+                identity_conflict = bool(exact_teams) and any(
+                    str((exact_teams.get(side) or {}).get("id")) != str(fixture[f"{side}_team_id"])
+                    for side in ("home", "away")
+                )
+                if identity_conflict:
+                    context.update(status="FIXTURE_INVALID", reason="CONTRADICTORY_FIXTURE_IDENTITY")
+                    refreshed_kickoff = None
+                elif refreshed_status is not None and refreshed_status not in {"NS", "TBD"}:
                     context.update(status="FIXTURE_INVALID", reason="FIXTURE_STATUS_NOT_UPCOMING")
                 elif refreshed_kickoff is None:
                     context.update(reason="FIXTURE_REFRESH_UNAVAILABLE")
@@ -358,6 +393,11 @@ class LabV2ShadowRunner:
             "evaluated_at_utc": clock.isoformat(),
             "fixtures_discovered": len(fixtures),
             "provider_fixture_rows": fixture_rows_seen,
+            "discovery_dates_requested": days,
+            "discovery_dates_fetched": dates_fetched,
+            "discovery_dates_failed": dates_failed,
+            "discovery_dates_unvisited": sorted(set(days) - set(dates_fetched)),
+            "discovery_window_complete": not dates_failed and len(dates_fetched) == len(days),
             "number_of_leagues": len({item["league_id"] for item in ordered}),
             "league_distribution": _counts(f"{item['league_id']}:{item['league_name']}" for item in ordered),
             "capability_cache": capability_cache_status,
@@ -440,6 +480,21 @@ class LabV2ShadowRunner:
             "official_mutations": 0,
             "timers_started": 0,
         }
+        # Exact refresh status supersedes broad-discovery coverage in diagnostics too.
+        effective_odds_statuses = dict(odds_page_report["fixture_statuses"])
+        for fixture_id, review in final_reviews.items():
+            if review.get("odds_status"):
+                effective_odds_statuses[str(fixture_id)] = {
+                    "AVAILABLE": "FIXTURE_DISCOVERED_WITH_CURRENT_ODDS",
+                    "ODDS_STALE": "FIXTURE_DISCOVERED_ODDS_STALE",
+                    "CURRENT_ODDS_UNAVAILABLE": "FIXTURE_DISCOVERED_NO_CURRENT_ODDS",
+                }[review["odds_status"]]
+        diagnostic = global_diagnostic(ordered, candidates, effective_odds_statuses, clock, reviews=final_reviews)
+        report.update(diagnostic)
+        for item in diagnostic["global_fixture_states"]:
+            self.repository.append("global_fixture_state", f"{clock.isoformat()}:{item['fixture_id']}", item, created_at=clock)
+        for item in discovery_exclusions:
+            self.repository.append("discovery_rejection", fingerprint((clock, item)), item, created_at=clock)
         identity = "lab-v2-cycle-" + fingerprint((clock, report["fixtures_discovered"], report["api_calls_consumed"]))
         for fixture_id, (_, retrieved, families) in sorted(odds_evidence.items()):
             for family, consensus in sorted(families.items()):
@@ -455,6 +510,7 @@ class LabV2ShadowRunner:
                 )
         for candidate in candidates:
             self.repository.append("candidate", candidate["candidate_id"], candidate, created_at=clock)
+            capture_selection(self.repository, candidate, now=clock)
         persisted_report = {key: value for key, value in report.items() if key != "candidate_markets"}
         persisted_report.update({
             "candidate_document_kind": "candidate",
@@ -474,7 +530,9 @@ class LabV2ShadowRunner:
         """Record every pending market's outcome without recycling its old price."""
         by_key = {(item["fixture_id"], item["market"]): item for item in candidates}
         for key, candidate in by_key.items():
-            if candidate["stage"] in {"EARLY_CANDIDATE", "FINAL_REVIEW_REQUIRED", "READY_TO_PUBLISH"}:
+            if candidate["stage"] in {"EARLY_CANDIDATE", "FINAL_REVIEW_REQUIRED", "READY_TO_PUBLISH"} or (
+                not candidate.get("hard_failures") and candidate.get("soft_findings")
+            ):
                 tracked.setdefault(key, new_review(candidate, clock))
         result = []
         for key, previous in sorted(tracked.items()):
@@ -518,6 +576,8 @@ class LabV2ShadowRunner:
         result: dict[int, tuple[object, datetime, dict[str, CurrentMarketConsensus]]] = {}
         first_pages: list[tuple[str, int]] = [(day, 1) for day in days]
         continuation_pages: list[tuple[str, int]] = []
+        cursor_by_day = {row["date"]: row["next_page"] for row in self.repository.all("odds_page_cursor")}
+        skipped_prefix_days: set[str] = set()
         fetched: list[dict[str, object]] = []
         joined_fixture_ids: set[int] = set()
         stale_fixture_ids: set[int] = set()
@@ -578,11 +638,17 @@ class LabV2ShadowRunner:
                         empty_quote_fixture_ids.add(fixture_id)
                 else:
                     unreliable_fixture_ids.add(fixture_id)
+            next_page = current + 1
+            if current == 1 and 2 < cursor_by_day.get(day, 2) <= total:
+                next_page = cursor_by_day[day]
+                skipped_prefix_days.add(day)
             if current < total:
-                continuation_pages.append((day, current + 1))
+                continuation_pages.append((day, next_page))
+            self.repository.append("odds_page_cursor", f"{clock.isoformat()}:{day}:{current}",
+                                   {"date": day, "next_page": next_page if current < total else 2}, created_at=clock)
         unvisited = [*first_pages, *continuation_pages]
         unvisited_pages = len(unvisited)
-        incomplete_days = {day for day, _ in unvisited}
+        incomplete_days = {day for day, _ in unvisited} | skipped_prefix_days
         no_odds_ids = {
             fixture_id for fixture_id in fixture_ids - joined_fixture_ids
             if fixture_days.get(fixture_id) not in incomplete_days
@@ -632,10 +698,15 @@ class LabV2ShadowRunner:
         grouped: dict[int, list[dict[str, object]]] = {}
         for fixture in fixtures:
             grouped.setdefault(int(fixture["league_id"]), []).append(fixture)
-        for league_id, targets in sorted(grouped.items(), key=lambda item: min(x["kickoff_utc"] for x in item[1])):
+        league_order = fair_order([targets[0] for targets in grouped.values()], self.repository, phase="history")
+        for target in league_order:
+            league_id = int(target["league_id"])
+            targets = grouped[league_id]
             if self._remaining() <= max(12, reserve_calls):
                 skipped += len(targets)
                 continue
+            record_service(self.repository, targets[0], clock, "history")
+            policy = policy_for(targets[0].get("competition_profile", "UNKNOWN"))
             season = int(targets[0]["season"])
             payload, _ = await self._fetch(
                 "/fixtures(results)", {"league": league_id, "season": season, "status": "FT", "last": 99},
@@ -653,7 +724,7 @@ class LabV2ShadowRunner:
                 in {PiAvailability.INSUFFICIENT, PiAvailability.UNAVAILABLE}
                 for item in targets
             )
-            if needs_previous and season > 1 and self._remaining() > max(16, reserve_calls):
+            if needs_previous and policy.history_days >= 365 and season > 1 and self._remaining() > max(16, reserve_calls):
                 previous, _ = await self._fetch(
                     "/fixtures(results)", {"league": league_id, "season": season - 1, "status": "FT", "last": 99},
                     lambda lid=league_id, value=season - 1: self.client.finished_matches(lid, value, last=99),
@@ -662,6 +733,9 @@ class LabV2ShadowRunner:
                 matches = list(parse_api_fixture_results((previous, payload)))
                 adapter = PiRatingAdapter(league_id)
                 adapter.replay(matches, before=clock)
+            matches = [m for m in matches if clock - timedelta(days=policy.history_days) <= m.kickoff_utc < clock]
+            adapter = PiRatingAdapter(league_id)
+            adapter.replay(matches, before=clock)
             histories[league_id] = tuple(matches)
             adapters[league_id] = adapter
         return histories, adapters, skipped
@@ -671,7 +745,7 @@ class LabV2ShadowRunner:
     ) -> tuple[dict[int, ApiPredictionSignal], int]:
         result: dict[int, ApiPredictionSignal] = {}
         skipped = 0
-        for fixture in fixtures:
+        for fixture in fair_order(fixtures, self.repository, phase="prediction"):
             capability: LeagueCapability = fixture["capability"]
             if not capability.predictions:
                 continue
@@ -686,6 +760,7 @@ class LabV2ShadowRunner:
                     MINIMUM_KICKOFF_LEAD < fixture["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW
                 ),
             )
+            record_service(self.repository, fixture, clock, "prediction")
             result[fixture_id] = normalize_api_prediction(payload, fixture_id=fixture_id)
         return result, skipped
 
@@ -828,6 +903,9 @@ class LabV2ShadowRunner:
             adapter = adapters.get(league_id)
             matches = histories.get(league_id, ())
             pi = adapter.signal(fixture["home_team_id"], fixture["away_team_id"]) if adapter else _missing_pi(fixture)
+            # Venue-specific Pi evidence is not portable to explicitly neutral games.
+            if "IS_NEUTRAL_VENUE" in fixture.get("flags", ()):
+                pi = _missing_pi(fixture)
             home_form = opponent_adjusted_form(fixture["home_team_id"], matches, adapter) if adapter else None
             away_form = opponent_adjusted_form(fixture["away_team_id"], matches, adapter) if adapter else None
             impacts = availability.get(fixture_id, {})
@@ -877,12 +955,36 @@ class LabV2ShadowRunner:
                             "RESULT_HISTORY_MODEL_CONTEXT",
                         ))
                     veto = _availability_veto(market, impacts)
-                    decision = evaluate_ensemble(
-                        market, price.decimal_odds, signals,
-                        severe_current_match_contradiction=veto,
-                    )
+                    profile_policy = policy_for(fixture.get("competition_profile", "UNKNOWN"))
+                    missing = tuple(name for name, present in (
+                        ("lineup", review.get("lineup_status") == "CONFIRMED"),
+                        ("injuries", review.get("injuries_status") in {"REFRESHED", "AVAILABLE"}),
+                        ("advanced_stats", False),
+                        ("standings", False),
+                        ("recent_form", bool(cmi)),
+                        ("competition_state", not any(flag in fixture.get("flags", ()) for flag in ("IS_SECOND_LEG", "IS_KNOCKOUT"))),
+                    ) if not present)
+                    decision, profile_evidence = evaluate_profile(
+                        market, price.decimal_odds, signals, profile_policy, missing, contradiction=veto)
+
+                    if review.get("status") == "FIXTURE_INVALID":
+                        reason = str(review.get("reason") or "FIXTURE_STATUS_NOT_UPCOMING")
+                        decision = replace(decision, decision="REJECTED", rejection_reasons=(reason,))
+                        profile_evidence["hard_failures"] = [reason]
+                        profile_evidence["candidate_lane"] = "REJECTED"
                     stage, readiness_reasons = _readiness(decision, fixture, now, review)
                     material = {
+                        **profile_evidence,
+                        "optional_data_reasons": [
+                            *( ["LINEUPS_NOT_SUPPORTED_BY_PROVIDER" if not fixture["capability"].lineups else "LINEUPS_NOT_YET_AVAILABLE"] if "lineup" in missing else []),
+                            *( ["INSUFFICIENT_RECENT_MATCHES"] if "recent_form" in missing else []),
+                            *( ["ADVANCED_STATISTICS_UNAVAILABLE"] if "advanced_stats" in missing else []),
+                            "CALIBRATION_UNAVAILABLE",
+                        ],
+                        "market_preference_rank": next((i for i, family in enumerate(profile_policy.market_preference)
+                            if market in MARKET_FAMILIES[family]), len(profile_policy.market_preference)),
+                        **{key: fixture.get(key) for key in ("competition_profile", "classifier_version",
+                            "classification_reason", "classification_fingerprint", "flags", "age_category", "country", "provider_metadata")},
                         "policy": decision.policy, "fixture_id": fixture_id,
                         "readiness_policy": READINESS_POLICY_VERSION,
                         "league_id": league_id, "league": fixture["league_name"], "season": fixture["season"],
@@ -955,24 +1057,21 @@ def _fixture_rows_with_evidence(
             kickoff = _utc(datetime.fromisoformat(str(fixture["date"]).replace("Z", "+00:00")))
             league_id, season = int(league["id"]), int(league["season"])
             capability = capabilities.current(league_id, season, day=kickoff.date())
-            identity = " ".join((str(league.get("name") or ""), str(home.get("name") or ""), str(away.get("name") or "")))
+            capability = capability or fallback_capability(league)
+            classification = classify(league, teams, fixture, capability)
             fixture_id = int(fixture["id"])
+            if fixture_id <= 0 or league_id <= 0 or season <= 0:
+                raise ValueError("INVALID_PROVIDER_IDENTITY")
             reason = None
             coverage_status = "FIXTURE_EVALUATED_REJECTED"
             if status.get("short") not in {"NS", "TBD"}:
                 reason = "FIXTURE_STATUS_NOT_UPCOMING"
-            elif kickoff <= now + MINIMUM_KICKOFF_LEAD:
+            elif kickoff <= now:
                 reason = "KICKOFF_TOO_CLOSE_OR_STARTED"
-            elif capability is None:
-                reason = "CURRENT_SEASON_CAPABILITY_NOT_FOUND"
-                coverage_status = "FIXTURE_DISCOVERED_NO_REQUIRED_MODEL_CONTEXT"
-            elif capability.tier == CapabilityTier.UNSUPPORTED:
-                reason = "FIXTURE_OR_CURRENT_ODDS_CAPABILITY_UNSUPPORTED"
-                coverage_status = "FIXTURE_DISCOVERED_NO_REQUIRED_MODEL_CONTEXT"
-            elif EXCLUDED.search(identity):
-                reason = "EXCLUDED_FIXTURE_CLASS"
             if reason is not None:
                 excluded.append({
+                    **classification.document(), "country": str(league.get("country") or capability.country),
+                    "league_name": str(league.get("name") or capability.competition_name), "state": "REJECTED",
                     "fixture_id": fixture_id,
                     "kickoff_utc": kickoff.isoformat(),
                     "league_id": league_id,
@@ -982,7 +1081,11 @@ def _fixture_rows_with_evidence(
                     "reason": reason,
                 })
                 continue
+            if int(home["id"]) <= 0 or int(away["id"]) <= 0 or int(home["id"]) == int(away["id"]):
+                raise ValueError("CONTRADICTORY_TEAM_IDENTITY")
             result.append({
+                **classification.document(), "country": str(league.get("country") or capability.country),
+                "provider_metadata": {"league": league, "fixture": fixture, "teams": teams},
                 "fixture_id": fixture_id, "kickoff_utc": kickoff,
                 "league_id": league_id, "league_name": str(league.get("name") or capability.competition_name),
                 "season": season, "home_team_id": int(home["id"]), "away_team_id": int(away["id"]),
@@ -990,7 +1093,11 @@ def _fixture_rows_with_evidence(
                 "capability_tier": capability.tier, "capability": capability,
             })
         except (KeyError, TypeError, ValueError):
-            continue
+            excluded.append({"fixture_id": _safe_int(fixture.get("id"), -1),
+                             "kickoff_utc": str(fixture.get("date") or ""),
+                             "league_id": league.get("id"), "country": league.get("country", "UNKNOWN"),
+                             "competition_profile": "UNKNOWN", "status": "REJECTED",
+                             "reason": "FIXTURE_IDENTITY_OR_DATE_INVALID", "row_fingerprint": fingerprint(row)})
     return result, excluded
 
 
@@ -1025,7 +1132,8 @@ def _fixture_coverage(
             )
         else:
             status, reason = "FIXTURE_EVALUATED_REJECTED", (
-                "NO_SUPPORTED_NORMALIZED_MARKET" if not fixture_candidates else "QUALITY_OR_VALUE_GATE_REJECTED"
+                "NO_SUPPORTED_NORMALIZED_MARKET" if not fixture_candidates else
+                ";".join(sorted({r for c in fixture_candidates for r in c["rejection_reasons"]}))
             )
         result.append({
             "fixture_id": fixture_id,
@@ -1086,8 +1194,8 @@ def _distribution(values) -> dict[str, str | int | None]:
 
 def _history_market_probabilities(fixture, matches, home_form, away_form, impacts) -> dict[str, Decimal]:
     home_id, away_id = int(fixture["home_team_id"]), int(fixture["away_team_id"])
-    home_rates = _team_goal_rates(home_id, matches, home_venue=True)
-    away_rates = _team_goal_rates(away_id, matches, home_venue=False)
+    home_rates = _team_goal_rates(home_id, matches, home_venue=None if "IS_NEUTRAL_VENUE" in fixture.get("flags", ()) else True, policy=policy_for(fixture.get("competition_profile", "UNKNOWN")))
+    away_rates = _team_goal_rates(away_id, matches, home_venue=None if "IS_NEUTRAL_VENUE" in fixture.get("flags", ()) else False, policy=policy_for(fixture.get("competition_profile", "UNKNOWN")))
     if home_rates is None or away_rates is None:
         return {}
     home_rate = (home_rates[0] + away_rates[1]) / Decimal(2)
@@ -1102,19 +1210,22 @@ def _history_market_probabilities(fixture, matches, home_form, away_form, impact
     return _poisson_markets(max(Decimal("0.15"), home_rate), max(Decimal("0.15"), away_rate))
 
 
-def _team_goal_rates(team_id: int, matches: tuple[MatchResult, ...], *, home_venue: bool) -> tuple[Decimal, Decimal] | None:
+def _team_goal_rates(team_id: int, matches: tuple[MatchResult, ...], *, home_venue: bool | None, policy=None) -> tuple[Decimal, Decimal] | None:
     selected = []
+    dates = []
     for match in sorted(matches, key=lambda item: (item.kickoff_utc, item.fixture_id), reverse=True):
         is_home = match.home_team_id == team_id
         is_away = match.away_team_id == team_id
-        if not (is_home or is_away) or (home_venue and not is_home) or (not home_venue and not is_away):
+        if not (is_home or is_away) or (home_venue is True and not is_home) or (home_venue is False and not is_away):
             continue
+        dates.append(match.kickoff_utc)
         selected.append((match.home_goals, match.away_goals) if is_home else (match.away_goals, match.home_goals))
         if len(selected) == 8:
             break
     if len(selected) < 3:
         return None
-    weights = [Decimal(len(selected) - index) for index in range(len(selected))]
+    weights = [(Decimal(2) ** (-Decimal(str((dates[0] - date).total_seconds() / 86400)) / Decimal(policy.half_life_days)))
+               for date in dates] if policy else [Decimal(len(selected) - index) for index in range(len(selected))]
     total = sum(weights, Decimal(0))
     return (
         sum((Decimal(score[0]) * weight for score, weight in zip(selected, weights, strict=True)), Decimal(0)) / total,
@@ -1160,7 +1271,7 @@ def _readiness(
     review: dict[str, object],
 ) -> tuple[str, tuple[str, ...]]:
     if review.get("status") == "FIXTURE_INVALID":
-        return "REJECTED", ("FIXTURE_STATUS_NOT_UPCOMING",)
+        return "REJECTED", (str(review.get("reason") or "FIXTURE_STATUS_NOT_UPCOMING"),)
     if decision.decision != "APPROVED":
         return "REJECTED", ("ENSEMBLE_NOT_APPROVED",)
     remaining = fixture["kickoff_utc"] - now
@@ -1176,12 +1287,12 @@ def _readiness(
     if not _current_review_timestamp(review.get("reviewed_at_utc"), now, fixture["kickoff_utc"]):
         blockers.append("CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED")
     capability: LeagueCapability = fixture["capability"]
-    if decision.market in LINEUP_SENSITIVE_MARKETS:
+    if "competition_profile" not in fixture and decision.market in LINEUP_SENSITIVE_MARKETS:
         if capability.lineups and review.get("lineup_status") != "CONFIRMED":
             blockers.append("CONFIRMED_LINEUPS_REQUIRED_FOR_MARKET")
         if capability.injuries and review.get("injuries_status") != "REFRESHED":
             blockers.append("CURRENT_INJURIES_REQUIRED_FOR_MARKET")
-    if capability.tier == CapabilityTier.TIER_C_BASIC and (
+    if "competition_profile" not in fixture and capability.tier == CapabilityTier.TIER_C_BASIC and (
         decision.confidence not in {"MEDIUM", "HIGH"} or decision.available_signals < 3
         or (decision.weighted_agreement or Decimal(0)) < Decimal("0.75")
     ):
@@ -1220,7 +1331,7 @@ def _final_review_call_reserve(fixtures: list[dict[str, object]], now: datetime)
 def _shortlist(candidates: list[dict[str, object]], *, maximum: int) -> list[int]:
     ordered = sorted(candidates, key=lambda item: (
         item["decision"] != "APPROVED", item["stage"] != "FINAL_REVIEW_REQUIRED",
-        item["kickoff_utc"], -Decimal(str(item.get("edge") or "-99")),
+        item["kickoff_utc"], item.get("market_preference_rank", 0), -Decimal(str(item.get("edge") or "-99")),
         item["fixture_id"], item["market"],
     ))
     result: list[int] = []

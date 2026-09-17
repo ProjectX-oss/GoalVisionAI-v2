@@ -1,0 +1,182 @@
+"""Versioned, deterministic Lab competition policies; never discovery permissions."""
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from decimal import Decimal
+from enum import StrEnum
+import re
+from typing import Mapping
+
+from app.real_match_lab_analysis.fingerprint import fingerprint
+from .capability import CapabilityTier, LeagueCapability
+
+CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V2'
+POLICY_VERSION = 'LAB_COMPETITION_POLICY_V1'
+
+
+class CompetitionProfile(StrEnum):
+    SENIOR_MEN_PRO = 'SENIOR_MEN_PRO'
+    SENIOR_WOMEN_PRO = 'SENIOR_WOMEN_PRO'
+    YOUTH_U17_U18 = 'YOUTH_U17_U18'
+    YOUTH_U19_U20 = 'YOUTH_U19_U20'
+    YOUTH_U21_U23 = 'YOUTH_U21_U23'
+    RESERVE_OR_B_TEAM = 'RESERVE_OR_B_TEAM'
+    LOWER_DIVISION_OR_SEMIPRO = 'LOWER_DIVISION_OR_SEMIPRO'
+    DOMESTIC_CUP = 'DOMESTIC_CUP'
+    INTERNATIONAL_CLUB = 'INTERNATIONAL_CLUB'
+    INTERNATIONAL_SENIOR = 'INTERNATIONAL_SENIOR'
+    INTERNATIONAL_YOUTH = 'INTERNATIONAL_YOUTH'
+    FRIENDLY = 'FRIENDLY'
+    UNKNOWN = 'UNKNOWN'
+
+
+# Classification hints verified against the local provider capability catalogue.
+# This is never an admission list: every other ID is classified or UNKNOWN.
+REVIEWED_IDS = {
+    **{i: CompetitionProfile.SENIOR_MEN_PRO for i in (39, 61, 78, 88, 94, 135, 140, 144, 253)},
+    **{i: CompetitionProfile.LOWER_DIVISION_OR_SEMIPRO for i in (40, 41, 42, 43, 62, 79, 80, 136, 141)},
+    44: CompetitionProfile.SENIOR_WOMEN_PRO,
+    **{i: CompetitionProfile.DOMESTIC_CUP for i in (45, 46, 47, 48, 81)},
+    **{i: CompetitionProfile.INTERNATIONAL_CLUB for i in (2, 3, 11, 15, 17, 20, 848)},
+    **{i: CompetitionProfile.INTERNATIONAL_SENIOR for i in (1, 4, 5, 6, 7, 8, 9, 22, 23, 32, 33)},
+    10: CompetitionProfile.FRIENDLY,
+}
+
+
+@dataclass(frozen=True)
+class Classification:
+    competition_profile: CompetitionProfile
+    classifier_version: str
+    classification_reason: str
+    classification_fingerprint: str
+    flags: tuple[str, ...]
+    age_category: str
+
+    def document(self) -> dict:
+        return asdict(self)
+
+
+def classify(league: Mapping, teams: Mapping, fixture: Mapping, capability: LeagueCapability,
+             *, overrides: Mapping[int, CompetitionProfile] | None = None) -> Classification:
+    """Use reviewed ID overrides/explicit metadata, then narrow auditable patterns.
+
+    Geography alone does not identify national teams. No inferred derby, neutral
+    venue, professional status, or first/second leg without supporting metadata.
+    """
+    name = str(league.get('name') or capability.competition_name).casefold()
+    team_names = ' '.join(str((teams.get(side) or {}).get('name', '')) for side in ('home', 'away')).casefold()
+    text = name + ' ' + team_names
+    age = re.search(r'\b(?:u[ -]?|under[ -]?)(17|18|19|20|21|23)\b', text)
+    category = 'U' + age[1] if age else 'UNSPECIFIED'
+    international = 'club world cup' not in name and bool(re.search(r'\b(world cup|euro(?:pean)? championship|nations league|international|africa cup of nations|copa america)\b', name))
+    profile, reason = CompetitionProfile.UNKNOWN, 'UNRECOGNIZED_METADATA'
+    overrides = REVIEWED_IDS if overrides is None else overrides
+    if overrides and capability.league_id in overrides:
+        profile, reason = CompetitionProfile(overrides[capability.league_id]), 'REVIEWED_LEAGUE_ID_OVERRIDE'
+    elif league.get('competition_profile') in CompetitionProfile._value2member_map_:
+        profile, reason = CompetitionProfile(league['competition_profile']), 'EXPLICIT_COMPETITION_METADATA'
+    elif re.search(r'\bfriendl(?:y|ies)\b', name):
+        profile, reason = CompetitionProfile.FRIENDLY, 'NAME_FRIENDLY'
+    elif age and international:
+        profile, reason = CompetitionProfile.INTERNATIONAL_YOUTH, 'NAME_INTERNATIONAL_AND_AGE'
+    elif age:
+        profile = (CompetitionProfile.YOUTH_U17_U18 if int(age[1]) <= 18 else
+                   CompetitionProfile.YOUTH_U19_U20 if int(age[1]) <= 20 else CompetitionProfile.YOUTH_U21_U23)
+        reason = 'NAME_EXPLICIT_AGE_GROUP'
+    elif re.search(r'\b(reserves?|b team)\b', text) or re.search(r'\b\w+ (?:b|ii)(?:\s|$)', team_names):
+        profile, reason = CompetitionProfile.RESERVE_OR_B_TEAM, 'NAME_RESERVE_OR_B_TEAM'
+    elif re.search(r'\b(youth|academy|junior)\b', text):
+        category, reason = 'YOUTH_UNSPECIFIED', 'YOUTH_WITHOUT_RELIABLE_AGE'
+    elif international:
+        profile, reason = CompetitionProfile.INTERNATIONAL_SENIOR, 'NAME_NATIONAL_TEAM_COMPETITION'
+    elif re.search(r'\b(champions league|europa league|conference league|libertadores|sudamericana|club world cup)\b', name):
+        profile, reason = CompetitionProfile.INTERNATIONAL_CLUB, 'NAME_INTERNATIONAL_CLUB'
+    elif re.search(r'\bwomen(?:s|\x27s)?\b|\bfemin(?:ine|ina)\b', name):
+        profile, reason = CompetitionProfile.SENIOR_WOMEN_PRO, 'NAME_WOMEN_COMPETITION'
+    elif re.search(r'\b(semi[ -]?pro|regional|amateur|division [3-9]|[3-9]\. liga)\b', name):
+        profile, reason = CompetitionProfile.LOWER_DIVISION_OR_SEMIPRO, 'NAME_LOWER_OR_SEMIPRO'
+    elif str(league.get('type') or capability.competition_type).casefold() == 'cup':
+        profile, reason = CompetitionProfile.DOMESTIC_CUP, 'PROVIDER_CUP_TYPE'
+    elif league.get('gender') == 'men' and league.get('level') == 'professional':
+        profile, reason = CompetitionProfile.SENIOR_MEN_PRO, 'EXPLICIT_MEN_PRO_METADATA'
+    flags = []
+    round_name = str(league.get('round', '')).casefold()
+    for enabled, flag in (
+        (bool(fixture.get('neutral')), 'IS_NEUTRAL_VENUE'),
+        (bool(re.search(r'\bwomen\b', name)), 'IS_WOMEN'),
+        ('2nd leg' in round_name or 'second leg' in round_name, 'IS_SECOND_LEG'),
+        ('qualif' in name + round_name, 'IS_QUALIFIER'),
+        ('playoff' in round_name or 'play-off' in round_name, 'IS_PLAYOFF'),
+        (any(x in round_name for x in ('final', 'round of', 'leg')), 'IS_KNOCKOUT'),
+        (capability.lineups, 'LINEUPS_SUPPORTED'),
+        (capability.fixture_statistics, 'STATS_SUPPORTED'),
+        (capability.injuries, 'INJURIES_SUPPORTED'),
+        (capability.odds, 'CURRENT_ODDS_SUPPORTED'),
+    ):
+        if enabled:
+            flags.append(flag)
+    material = (CLASSIFIER_VERSION, dict(league), team_names, profile, reason, sorted(flags), category)
+    return Classification(profile, CLASSIFIER_VERSION, reason, fingerprint(material), tuple(sorted(flags)), category)
+
+
+def fallback_capability(league: Mapping) -> LeagueCapability:
+    """Unknown coverage is optional-data uncertainty, never fixture exclusion."""
+    return LeagueCapability(int(league['id']), int(league['season']), str(league.get('country') or 'UNKNOWN'),
+                            str(league.get('name') or 'UNKNOWN'), str(league.get('type') or 'UNKNOWN'),
+                            '', '', True, False, False, False, False, False, False, False,
+                            CapabilityTier.TIER_C_BASIC, ('PROVIDER_COVERAGE_UNKNOWN',))
+
+
+@dataclass(frozen=True)
+class ProfilePolicy:
+    profile: CompetitionProfile
+    version: str = POLICY_VERSION
+    uncertainty: Decimal = Decimal('0.015')
+    experimental_edge: Decimal = Decimal('0.01')
+    standard_edge: Decimal = Decimal('0.04')
+    minimum_standard_agreement: Decimal = Decimal('0.75')
+    standard_independent_families: int = 3
+    experimental_independent_families: int = 2
+    scheduling_weight: int = 1
+    history_days: int = 365
+    half_life_days: int = 120
+    refresh_minutes: tuple[int, ...] = (1440, 360, 75, 30, 10)
+    market_preference: tuple[str, ...] = ('1X2', 'BTTS', 'TOTAL_2_5')
+    priorities: tuple[tuple[str, str], ...] = ()
+    minimum_tuning_selections: int = 200
+    minimum_tuning_days: int = 90
+
+    def weight(self, feature: str) -> Decimal:
+        priority = dict(self.priorities).get(feature, 'LOW')
+        return {'HIGH': Decimal('1'), 'MEDIUM': Decimal('0.65'), 'LOW': Decimal('0.25'), 'IGNORE': Decimal(0)}[priority]
+
+
+def policy_for(profile: str) -> ProfilePolicy:
+    """Initial experimental defaults, not empirically fitted competition claims."""
+    p = CompetitionProfile(profile)
+    youth = p in {CompetitionProfile.YOUTH_U17_U18, CompetitionProfile.YOUTH_U19_U20,
+                  CompetitionProfile.YOUTH_U21_U23, CompetitionProfile.INTERNATIONAL_YOUTH}
+    volatile = youth or p in {CompetitionProfile.RESERVE_OR_B_TEAM, CompetitionProfile.FRIENDLY}
+    unknown = p == CompetitionProfile.UNKNOWN
+    priorities = dict(current_odds='HIGH', recent_form='HIGH', scoring='HIGH', lineup='HIGH',
+                      opponent_strength='HIGH', home_away='MEDIUM', injuries='MEDIUM',
+                      standings='MEDIUM', advanced_stats='LOW', long_term_strength='MEDIUM',
+                      old_h2h='LOW', senior_strength='IGNORE', competition_state='MEDIUM', travel_rest='MEDIUM')
+    if p == CompetitionProfile.SENIOR_MEN_PRO:
+        priorities.update(advanced_stats='HIGH', home_away='HIGH')
+    if volatile:
+        priorities.update(long_term_strength='LOW', standings='LOW', competition_state='HIGH')
+    if p in {CompetitionProfile.DOMESTIC_CUP, CompetitionProfile.INTERNATIONAL_CLUB}:
+        priorities.update(competition_state='HIGH', lineup='HIGH', long_term_strength='HIGH')
+    if p == CompetitionProfile.INTERNATIONAL_SENIOR:
+        priorities.update(long_term_strength='HIGH', competition_state='HIGH', home_away='LOW')
+    if p == CompetitionProfile.LOWER_DIVISION_OR_SEMIPRO:
+        priorities.update(advanced_stats='IGNORE', lineup='MEDIUM', home_away='HIGH')
+    if unknown:
+        priorities.update(advanced_stats='IGNORE', long_term_strength='LOW', home_away='LOW')
+    return ProfilePolicy(p, uncertainty=Decimal('0.025') if volatile or unknown else Decimal('0.015'),
+                         history_days=120 if youth else 180 if volatile else 365,
+                         half_life_days=30 if youth else 60 if volatile else 120,
+                         refresh_minutes=(1440, 360, 75, 45, 20, 10) if volatile else (1440, 360, 75, 30, 10),
+                         market_preference=('BTTS', 'TOTAL_2_5', '1X2') if youth else ('1X2', 'BTTS', 'TOTAL_2_5'),
+                         priorities=tuple(sorted(priorities.items())))

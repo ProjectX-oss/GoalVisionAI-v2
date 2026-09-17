@@ -7,7 +7,7 @@ from typing import Iterable
 
 
 SEGMENT_FIELDS = (
-    "market", "league", "capability_tier", "odds_band", "confidence",
+    "competition_profile", "candidate_lane", "market", "league", "capability_tier", "odds_band", "confidence",
     "lineup_confirmed", "pi_available", "api_prediction_relation",
     "pi_agreement", "market_consensus_relation", "ensemble_decision_class",
 )

@@ -65,6 +65,11 @@ def latest_cycle_summary(path: Path, *, fixture_id: int | None = None) -> dict[s
             "telegram_sends": int(publication_document.get("telegram_sends") or 0),
             "one_x_two_diagnostics": report.get("one_x_two_diagnostics") or _one_x_two_diagnostics(candidates),
         }
+        for key in ("throughput", "competition_profile_counts", "global_state_counts", "rejection_funnel",
+                    "top_global_rejection_reasons", "largest_rejection_bottleneck", "throughput_warnings",
+                    "top_candidate_competitions", "top_candidate_markets", "current_remaining_daily_quota",
+                    "fixtures_awaiting_near_kickoff_review"):
+            result[key] = report.get(key)
         if fixture_id is not None:
             coverage = next((item for item in report.get("fixture_coverage") or ()
                              if str(item.get("fixture_id")) == str(fixture_id)), None)

@@ -134,6 +134,10 @@ def v2_single_message(value: dict) -> str:
         f"💰 Koef.: {public_decimal(value['captured_odds'])}",
         f"⏰ Starts: {latvia_time(value['kickoff_utc'])}",
     ]
+    if value.get("candidate_lane"):
+        lines.append(f"Lab lane: {value['candidate_lane']}")
+        lines.append(f"Profile: {value.get('competition_profile', 'UNKNOWN')}")
+        lines.append("Experimental uncalibrated estimate; no guaranteed outcome.")
     if value.get("confidence") == "HIGH":
         lines.append("⭐ Confidence: HIGH")
     return "\n".join(lines)
@@ -177,6 +181,7 @@ def _leg(candidate: dict, now: datetime) -> dict:
 def _segmentation(value: dict, kind: str) -> dict[str, object]:
     return {
         "kind": kind, "market": value.get("market"), "league": value.get("league"),
+        "competition_profile": value.get("competition_profile"), "candidate_lane": value.get("candidate_lane"),
         "capability_tier": value.get("capability_tier"), "odds_band": value.get("odds_band"),
         "confidence": value.get("confidence"), "pi_available": value.get("pi_available"),
         "pi_agreement": value.get("pi_agreement"),

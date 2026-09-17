@@ -155,6 +155,7 @@ def main(argv: list[str] | None = None) -> int:
     summary = sub.add_parser("summary")
     summary.add_argument("--shadow-database", type=Path, default=Path("var/lab_v2/shadow.db"))
     summary.add_argument("--fixture-id", type=int)
+    summary.add_argument("--human", action="store_true")
     for name in ("rehearse", "controlled-cycle"):
         cycle = sub.add_parser(name)
         cycle.add_argument("--shadow-database", type=Path, default=Path("var/lab_v2/shadow.db"))
@@ -177,7 +178,11 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "rehearse" and args.send:
             parser.error("rehearse is always no-send; use controlled-cycle --send")
         value = asyncio.run(_cycle(args))
-    print(canonical_json(value))
+    if args.command == "summary" and args.human:
+        from .diagnostics import human_diagnostic
+        print(human_diagnostic(value))
+    else:
+        print(canonical_json(value))
     return 1 if value.get("terminal_error") else 0
 
 

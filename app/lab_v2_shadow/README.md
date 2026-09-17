@@ -1,4 +1,4 @@
-# LAB V2 broad-coverage path
+# LAB V2 competition-aware global discovery
 
 This package is the isolated Lab-only V2 selection path. It consumes only
 current/upcoming fixture data, completed football results/goals, current
@@ -18,12 +18,10 @@ unknown, so a later quote refresh or replay cannot create a duplicate send.
 It never retrieves historical bookmaker odds, cannot address Official, cannot
 mutate Official state and never installs or starts a timer by itself.
 
-Final-review readiness is market-specific. Current 1X2 selections are
-lineup-sensitive when the league capability advertises lineups; confirmed
-lineups and refreshed injuries (when supported) are then required. Totals and
-BTTS do not become permanently blocked merely because optional lineups or
-injuries are unpublished. Every READY candidate still requires an exact fresh
-fixture refresh, fresh current odds, and a current final-review timestamp.
+For newly classified candidates, optional lineups, injuries, standings and
+advanced statistics contribute profile-specific uncertainty instead of global
+rejection. All markets still require exact current fixture and quote refresh
+before readiness. Legacy unprofiled evidence retains its historical rules.
 Near-kickoff review calls are reserved before optional prediction enrichment,
 and imminent kickoffs are reviewed first. The reserve includes all three
 bounded provider attempts for each exact refresh endpoint. Provider errors do
@@ -84,3 +82,9 @@ PYTHONPATH=. python -m app.lab_v2_shadow controlled-cycle --send --max-calls 100
 The launch runbook and safety report are
 `docs/LAB_V2_BROAD_COVERAGE_LAUNCH.md`. The Phase 1 baseline remains in
 `docs/LAB_V2_PHASE1_PI_COVERAGE_SHADOW.md`.
+
+The global redesign, thirteen competition profiles, candidate lanes, immutable
+forward evidence, fair enrichment and no-send diagnostic commands are described
+in `docs/LAB_V2_GLOBAL_COMPETITION_POLICY.md`. The measured baseline, one real
+rehearsal, offline correction replay and verification limitations are in
+`docs/audits/lab_v2_global_overhaul_2026-09-17.md`.

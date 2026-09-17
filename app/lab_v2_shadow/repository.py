@@ -15,6 +15,7 @@ class ShadowEvidenceRepository:
         path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(path)
         self.connection.row_factory = sqlite3.Row
+        self.connection.execute("PRAGMA foreign_keys=ON")
         with self.connection:
             self.connection.executescript(
                 """
@@ -157,3 +158,17 @@ class ShadowEvidenceRepository:
                 WHERE excluded.updated_at_utc>=lab_v2_final_review_pending.updated_at_utc""",
                 (document["fixture_id"], document["market"], document["state"], now.isoformat(), canonical_json(document)),
             )
+
+    def latest_global_fixtures(self, *, now: datetime, include_expired: bool = False) -> list[dict]:
+        """Recover upcoming discovery records without reusing captured prices."""
+        rows = self.connection.execute(
+            """SELECT document_json FROM (
+                SELECT document_json, row_number() OVER (
+                    PARTITION BY json_extract(document_json, '$.fixture_id')
+                    ORDER BY created_at_utc DESC, CASE kind WHEN 'global_fixture_state' THEN 0 ELSE 1 END, identity DESC) AS rank
+                FROM lab_v2_shadow_evidence WHERE kind IN ('global_fixture_state','global_discovery')
+                AND created_at_utc<=?) WHERE rank=1
+                AND (? OR json_extract(document_json, '$.kickoff_utc')>?)
+                AND json_extract(document_json, '$.state') NOT IN ('EXPIRED')""",
+            (now.isoformat(), int(include_expired), now.isoformat()))
+        return [json.loads(row[0]) for row in rows]
