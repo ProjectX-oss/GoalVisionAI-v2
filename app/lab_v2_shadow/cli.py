@@ -46,11 +46,14 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
             publication_requested=bool(args.send),
         )
         if coordinator is not None:
-            shadow_inputs = [{**item, 'prepared_at_utc':item.get('final_review_completed_at_utc')
-                              or datetime.now(timezone.utc).isoformat()}
+            from .publication import _leg
+            shadow_now=datetime.now(timezone.utc)
+            shadow_inputs = [_leg(item, shadow_now)
                              for item in report.get('candidate_markets', [])
                              if item.get('quote_provenance_fingerprint') and item.get('ensemble_probability')
-                             and item.get('stage') in {'READY_TO_PUBLISH', 'FINAL_REVIEW'}]
+                             and item.get('predictive_family_count',0)>0
+                             and datetime.fromisoformat(item['kickoff_utc'])>shadow_now
+                             and 'ODDS_STALE_WAITING_REFRESH' not in item.get('rejection_reasons',[])]
             coordinator.shadow(shadow_inputs, stream='PREMATCH', now=datetime.now(timezone.utc))
         report["analysis_mode"] = str(report.get("analysis_mode") or report.get("mode") or "LAB_V2_NO_SEND")
         report["mode"] = "LAB_V2_CONTROLLED_SEND" if args.send else "LAB_V2_NO_SEND"
@@ -76,12 +79,15 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
         ledger = ComboRepository(args.ledger)
         try:
             prepared = prepare_v2_publications(report, ledger, now=datetime.now(timezone.utc))
+            report['controlled_publication']['publication_blockers']=prepared['publication_blockers']
             pending = [
                 *[("single_prediction", item["prediction_id"]) for item in prepared["singles"]],
                 *[("combo_prediction", item["prediction_id"]) for item in prepared["combos"]],
             ]
             if not pending:
-                report["controlled_publication"]["reason"] = "EXACTLY_ONCE_NO_NEW_PUBLICATIONS"
+                reasons=set(prepared['publication_blockers'].values())
+                report["controlled_publication"]["reason"] = (next(iter(reasons)) if len(reasons)==1 else
+                    'LAB_PUBLICATION_RULE_BLOCKED' if reasons else 'EXACTLY_ONCE_NO_NEW_PUBLICATIONS')
                 return _persist_cycle_evidence(repository, report, clock)
             config = load_lab_telegram_config()
             blocker = validate_lab_telegram_config(config)
@@ -131,6 +137,13 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
         await client.close()
         repository.close()
         if adaptive_repository is not None:
+            from app.adaptive_lab.health import persist_health
+            import sys
+            error=sys.exc_info()[0]
+            health_report=locals().get('report',{})
+            if error:
+                health_report={**health_report,'terminal_error':error.__name__}
+            persist_health(adaptive_repository,health_report,started=clock,completed=datetime.now(timezone.utc))
             adaptive_repository.close()
 
 

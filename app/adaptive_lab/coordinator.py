@@ -38,7 +38,7 @@ class LearningCoordinator:
         self.repository=repository
         self.governance=Governance(repository)
 
-    def after_settlement(self, stream: str, *, now: datetime) -> dict:
+    def after_settlement(self, stream: str, *, now: datetime, train: bool = True) -> dict:
         rows=self.repository.all('learning_observations',stream)
         for row in rows:
             self.governance.settle_shadow(row)
@@ -46,12 +46,12 @@ class LearningCoordinator:
         promotions=[]
         for run in self.repository.all('shadow_runs',stream):
             promotions.append(self.governance.promote(run['shadow_id'],now=now))
-        research=AutoLearner(self.repository).run(stream,now=now)
+        research=AutoLearner(self.repository).run(stream,now=now) if train else {'status':'DAILY_LEARNING_JOB_ONLY'}
         return {'eligibility':eligibility(rows,stream,now),'research':research,'promotions':promotions,'rollback':rollback}
 
-    def sync_prematch(self, ledger: object, *, now: datetime) -> dict:
+    def sync_prematch(self, ledger: object, *, now: datetime, train: bool = True) -> dict:
         linkage=import_prematch(ledger,self.repository,now=utc(now).isoformat())
-        return {'linkage':linkage,**self.after_settlement('PREMATCH',now=now)}
+        return {'linkage':linkage,**self.after_settlement('PREMATCH',now=now,train=train)}
 
     def shadow(self, predictions: list[dict], *, stream: str, now: datetime) -> None:
         for prediction in predictions:
@@ -60,7 +60,8 @@ class LearningCoordinator:
             self.governance.observe(stream,opportunity(prediction,stream),now=now)
 
     def prematch_signals(self, signals: list, baseline: object, profile_evidence: dict,
-                         fixture: dict, market: str, odds: Decimal, *, now: datetime, quote_fingerprint: str) -> tuple[list,dict]:
+                         fixture: dict, market: str, odds: Decimal, *, now: datetime, quote_fingerprint: str, missing: tuple = (),
+                         contradiction: bool = False) -> tuple[list,dict]:
         """Replace only predictive family; existing profile/EV/quote/readiness gates rerun."""
         champion=self.repository.champion('PREMATCH')
         if champion is None or baseline.ensemble_probability is None:
@@ -68,6 +69,9 @@ class LearningCoordinator:
         from dataclasses import asdict
         captured = captured_features({'signals':[asdict(s) for s in signals], 'market':market})
         captured['baseline_probability']=float(baseline.ensemble_probability)
+        from .baseline import context
+        captured['baseline_context']=context(signals,fixture.get('competition_profile','UNKNOWN'),
+                                             missing,market,odds,contradiction=contradiction)
         row={'stream':'PREMATCH','frozen_model_probability':float(baseline.ensemble_probability),
              'implied_probability':1/float(odds),'uncertainty':profile_evidence['uncertainty_penalty'],
              'evidence_family_count':profile_evidence['predictive_family_count'],
@@ -76,6 +80,13 @@ class LearningCoordinator:
         p,champion=self.governance.safe_resolve('PREMATCH',row,now=now)
         self.governance.monitor_opportunity('PREMATCH',row,p,
             opportunity_key=digest([fixture['fixture_id'],market,quote_fingerprint]),now=now)
+        registered=self.repository.get('model_artifacts',champion['artifact_id'])
+        provenance={'model_generation':champion['generation_id'],
+                    'model_artifact_identity':champion['artifact_id'],
+                    'baseline_probability':str(baseline.ensemble_probability),'adaptive_features':captured}
+        if registered.get('family')=='EXISTING_PREMATCH_BASELINE_V1':
+            # Preserve every original family, reliability, lane and readiness gate.
+            return signals,provenance
         from app.lab_v2_shadow.ensemble import EnsembleSignal
         market_signals=[s for s in signals if s.name=='CURRENT_MARKET_CONSENSUS']
         adapted=EnsembleSignal('LAB_ADAPTIVE_MODEL',market,Decimal(str(p)),None,Decimal(1),'AVAILABLE',

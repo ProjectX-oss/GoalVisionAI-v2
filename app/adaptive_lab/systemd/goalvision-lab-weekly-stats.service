@@ -1,0 +1,11 @@
+[Unit]
+Description=GoalVision Lab weekly SINGLE and COMBO statistics (no provider API)
+[Service]
+Type=oneshot
+User=arvis
+WorkingDirectory=/home/arvis/GoalVisionAI
+EnvironmentFile=/etc/goalvision-prematch-release.conf
+ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.adaptive_lab.weekly_cli --database /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db --send
+TimeoutStartSec=2min
+UMask=0077
+NoNewPrivileges=true

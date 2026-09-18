@@ -1,0 +1,11 @@
+[Unit]
+Description=GoalVision PREMATCH immutable learning observer (no send, no API, no training)
+[Service]
+Type=oneshot
+User=arvis
+WorkingDirectory=/home/arvis/GoalVisionAI
+EnvironmentFile=/etc/goalvision-prematch-release.conf
+ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.adaptive_lab.prematch observe --database /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db --json
+TimeoutStartSec=10min
+UMask=0077
+NoNewPrivileges=true

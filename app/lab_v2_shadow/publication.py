@@ -8,6 +8,7 @@ from itertools import combinations
 
 from app.lab_combo.presentation import latvia_time, market_label, public_decimal
 from app.lab_combo.repository import ComboRepository
+from app.lab_combo.publication_window import publication_blocker
 from app.real_match_lab_analysis.fingerprint import fingerprint
 
 
@@ -19,6 +20,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     """Persist only final-reviewed V2 READY singles and independent triples."""
     clock = now.astimezone(timezone.utc)
     ready = []
+    publication_blockers = {}
     for item in report.get("candidate_markets", []):
         if item.get("decision") != "APPROVED" or item.get("stage") != "READY_TO_PUBLISH":
             continue
@@ -29,6 +31,10 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             continue
         if (not odds.is_finite() or odds <= Decimal(1)
                 or not probability.is_finite() or not Decimal(0) <= probability <= Decimal(1)):
+            continue
+        blocker=publication_blocker(clock,[item['kickoff_utc']])
+        if blocker:
+            publication_blockers[str(item.get('candidate_id',item['fixture_id']))]=blocker
             continue
         ready.append(dict(item))
     ready.sort(key=lambda item: (
@@ -123,7 +129,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         remaining = [item for item in remaining
                      if int(item["fixture_id"]) not in consumed_fixtures
                      and not consumed_teams.intersection({str(item["home_team_id"]), str(item["away_team_id"])})]
-    return {"singles": singles, "combos": combos, "ready_input_count": len(ready)}
+    return {"publication_blockers":publication_blockers,"singles": singles, "combos": combos, "ready_input_count": len(ready)}
 
 
 def v2_single_message(value: dict) -> str:

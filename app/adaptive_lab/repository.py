@@ -12,9 +12,12 @@ import sqlite3
 from typing import Iterator
 from .contracts import canonical, digest, stream_name
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 4
 # Every parent is a real foreign key. Stream equality is enforced by composite keys.
 PARENTS = {
+    'weekly_claims': ('weekly_reports','report_id'),
+    'weekly_receipts': ('weekly_claims','claim_id'),
+    'weekly_delivery_unknown': ('weekly_claims','claim_id'),
     'learning_observations': ('source_records', 'source_id'),
     'learning_datasets': ('learning_cycles', 'cycle_id'),
     'split_assignments': ('learning_datasets', 'dataset_id'),
@@ -41,7 +44,8 @@ PARENTS = {
     'live_result_receipts': ('live_result_claims', 'claim_id'),
 }
 ROOTS = ('source_records', 'learning_cycles', 'linkage_diagnostics', 'combo_analytics',
-         'live_snapshots', 'live_diagnostics', 'quota_claims', 'quota_observations')
+         'live_snapshots', 'live_diagnostics', 'quota_claims', 'quota_observations',
+         'cycle_health', 'observer_runs', 'weekly_reports')
 TABLES = (*ROOTS, *PARENTS)
 
 
@@ -118,6 +122,7 @@ class AuditRepository:
             self.connection.execute('''CREATE UNIQUE INDEX IF NOT EXISTS live_publication_once ON live_publications(claim_id)''')
             self.connection.execute('INSERT OR IGNORE INTO adaptive_schema VALUES (1)')
             self.connection.execute('INSERT OR IGNORE INTO adaptive_schema VALUES (2)')
+            self.connection.execute('INSERT OR IGNORE INTO adaptive_schema VALUES (4)')
 
     def append(self, table: str, identity: str, stream: str, document: dict,
                created_at: str, **links: str) -> bool:

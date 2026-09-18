@@ -173,6 +173,7 @@ class PiRatingAdapter:
 def parse_api_fixture_results(payloads: Iterable[object]) -> tuple[MatchResult, ...]:
     """Normalize only finished fixture identity and goals; ignore every odds field."""
     matches: dict[int, MatchResult] = {}
+    conflicting: set[int] = set()
     for payload in payloads:
         rows = payload if isinstance(payload, list) else payload.get("response") if isinstance(payload, dict) else ()
         for row in rows if isinstance(rows, list) else ():
@@ -187,6 +188,13 @@ def parse_api_fixture_results(payloads: Iterable[object]) -> tuple[MatchResult, 
             status = fixture.get("status") if isinstance(fixture.get("status"), dict) else {}
             if status.get("short") not in {"FT", "AET", "PEN"}:
                 continue
+            fulltime=(row.get('score') or {}).get('fulltime') or {}
+            if status.get('short') in {'AET','PEN'}:
+                goals=fulltime
+            elif fulltime.get('home') is not None and fulltime.get('away') is not None:
+                goals=fulltime
+            if not all(type(goals.get(side)) is int and 0<=goals[side]<=30 for side in ('home','away')):
+                continue
             try:
                 item = MatchResult(
                     league_id=int(league["id"]), season=int(league["season"]),
@@ -196,8 +204,12 @@ def parse_api_fixture_results(payloads: Iterable[object]) -> tuple[MatchResult, 
                 )
             except (KeyError, TypeError, ValueError):
                 continue
+            if item.home_team_id==item.away_team_id or min(item.fixture_id,item.league_id,item.home_team_id,item.away_team_id)<=0:
+                continue
+            if item.fixture_id in matches and matches[item.fixture_id]!=item:
+                conflicting.add(item.fixture_id)
             matches[item.fixture_id] = item
-    return tuple(matches[key] for key in sorted(matches, key=lambda key: (matches[key].kickoff_utc, key)))
+    return tuple(matches[key] for key in sorted(matches, key=lambda key: (matches[key].kickoff_utc, key)) if key not in conflicting)
 
 
 def _normal_outcome_probabilities(expected_difference: Decimal, sigma: Decimal) -> dict[str, Decimal]:

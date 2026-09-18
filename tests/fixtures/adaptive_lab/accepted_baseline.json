@@ -1,0 +1,1293 @@
+{
+  "source_commit": "0c4f316248e55f504b780cdef4e25165b800a779",
+  "source": "SYNTHETIC_ACCEPTED_BASELINE_GOLDEN",
+  "cases": [
+    {
+      "market": "HOME_WIN",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "DRAW",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "SENIOR_MEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.025"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "DRAW",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "SENIOR_WOMEN_PRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02625"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "YOUTH_U17_U18",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "YOUTH_U19_U20",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "YOUTH_U21_U23",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "RESERVE_OR_B_TEAM",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "DRAW",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02325"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "DOMESTIC_CUP",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "INTERNATIONAL_CLUB",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "INTERNATIONAL_SENIOR",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.02125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "INTERNATIONAL_YOUTH",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "DRAW",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "FRIENDLY",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.03125"
+    },
+    {
+      "market": "HOME_WIN",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "DRAW",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "AWAY_WIN",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "BTTS_YES",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "BTTS_NO",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "OVER_1_5",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "UNDER_1_5",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "OVER_2_5",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "UNDER_2_5",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "OVER_3_5",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    },
+    {
+      "market": "UNDER_3_5",
+      "profile": "UNKNOWN",
+      "probability": "0.6",
+      "edge": "0.1",
+      "decision": "APPROVED",
+      "lane": "EXPERIMENTAL",
+      "uncertainty": "0.030"
+    }
+  ]
+}

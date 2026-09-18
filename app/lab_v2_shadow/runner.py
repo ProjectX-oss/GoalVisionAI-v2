@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from app.lab_combo.publication_window import publication_blocker
+
 from dataclasses import asdict, replace
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, localcontext
@@ -118,14 +120,14 @@ class LabV2ShadowRunner:
         if not 1 <= horizon_days <= 7:
             raise ValueError("LAB_V2_HORIZON_OUTSIDE_1_TO_7_DAYS")
 
+        if self.adaptive_learning is not None:
+            from app.adaptive_lab.quota import SharedQuota
+            SharedQuota(self.adaptive_learning.repository).bind(
+                self.client, lambda: datetime.now(timezone.utc), allow_status_preflight=True)
         await self._fetch(
             "/status", {}, lambda: self.client.account_status(),
             clock=clock, ttl=None, use_cache=False,
         )
-        if self.adaptive_learning is not None:
-            from app.adaptive_lab.quota import SharedQuota
-            SharedQuota(self.adaptive_learning.repository).bind(
-                self.client, lambda: datetime.now(timezone.utc))
         quota = getattr(self.client, "quota_snapshot", lambda: {})()
         self.quota_budget = adaptive_quota_budget(
             quota, requested_maximum=self.maximum_calls,
@@ -196,11 +198,14 @@ class LabV2ShadowRunner:
             item["kickoff_utc"], TIER_ORDER[item["capability_tier"]], item["fixture_id"],
         ))
 
+        for fixture in ordered:
+            fixture['publication_blocker']=publication_blocker(clock,[fixture['kickoff_utc']])
         if near_only:
             ordered = [f for f in ordered if MINIMUM_KICKOFF_LEAD < f['kickoff_utc'] - clock <= FINAL_REVIEW_WINDOW]
             fixtures = {f['fixture_id']: f for f in ordered}
         due = [f for f in fair_order(ordered, self.repository, phase='review')
-               if MINIMUM_KICKOFF_LEAD < f['kickoff_utc'] - clock <= FINAL_REVIEW_WINDOW]
+               if MINIMUM_KICKOFF_LEAD < f['kickoff_utc'] - clock <= FINAL_REVIEW_WINDOW
+               and publication_blocker(clock,[f['kickoff_utc']]) is None]
         due.sort(key=lambda f: (f['fixture_id'] not in tracked_ids, f['kickoff_utc']))
         exact_evidence, early_reviews = {}, {}
         for index, fixture in enumerate(due[:FINAL_REVIEW_SHORTLIST_SIZE]):
@@ -213,7 +218,8 @@ class LabV2ShadowRunner:
                 fixture, clock, exact_evidence, context,
                 optional_reserve=2 * (min(len(due), FINAL_REVIEW_SHORTLIST_SIZE) - index - 1))
         approaching = [f for f in ordered if f['fixture_id'] in tracked_ids
-                       and FINAL_REVIEW_WINDOW < f['kickoff_utc'] - clock <= timedelta(hours=3)]
+                       and FINAL_REVIEW_WINDOW < f['kickoff_utc'] - clock <= timedelta(hours=3)
+                       and publication_blocker(clock,[f['kickoff_utc']]) is None]
         approaching.sort(key=lambda f: (f['kickoff_utc'], f['fixture_id']))
         for fixture in approaching[:FINAL_REVIEW_SHORTLIST_SIZE]:
             if self._remaining() < 1:
@@ -278,6 +284,8 @@ class LabV2ShadowRunner:
         cmi_enriched: set[int] = set()
         for fixture_id in shortlist_ids:
             fixture = fixtures[fixture_id]
+            if publication_blocker(clock,[fixture['kickoff_utc']]) is not None:
+                continue
             capability: LeagueCapability = fixture["capability"]
             near = timedelta(0) < fixture["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW
             if fixture_id in early_reviews:
@@ -844,12 +852,15 @@ class LabV2ShadowRunner:
         for target in league_order:
             league_id = int(target["league_id"])
             targets = grouped[league_id]
-            if self._remaining() <= max(12, reserve_calls):
+            policy = policy_for(targets[0].get("competition_profile", "UNKNOWN"))
+            season = int(targets[0]["season"])
+            near=any(MINIMUM_KICKOFF_LEAD < item["kickoff_utc"]-clock <= FINAL_REVIEW_WINDOW for item in targets)
+            history_query={"league":league_id,"season":season,"status":"FT","last":99}
+            cached_history=None if near else self.repository.cached("/fixtures(results)",history_query,now=clock)
+            if self._remaining() <= max(12, reserve_calls) and cached_history is None:
                 skipped += len(targets)
                 continue
             record_service(self.repository, targets[0], clock, "history")
-            policy = policy_for(targets[0].get("competition_profile", "UNKNOWN"))
-            season = int(targets[0]["season"])
             payload, _ = await self._fetch(
                 "/fixtures(results)", {"league": league_id, "season": season, "status": "FT", "last": 99},
                 lambda lid=league_id, value=season: self.client.finished_matches(lid, value, last=99),
@@ -875,7 +886,9 @@ class LabV2ShadowRunner:
                 matches = list(parse_api_fixture_results((previous, payload)))
                 adapter = PiRatingAdapter(league_id)
                 adapter.replay(matches, before=clock)
-            matches = [m for m in matches if clock - timedelta(days=policy.history_days) <= m.kickoff_utc < clock]
+            matches = [m for m in matches if m.league_id==league_id
+                       and m.fixture_id not in {int(t['fixture_id']) for t in targets}
+                       and clock - timedelta(days=policy.history_days) <= m.kickoff_utc < clock]
             adapter = PiRatingAdapter(league_id)
             adapter.replay(matches, before=clock)
             histories[league_id] = tuple(matches)
@@ -892,10 +905,12 @@ class LabV2ShadowRunner:
             capability: LeagueCapability = fixture["capability"]
             if not capability.predictions:
                 continue
-            if self._remaining() <= max(8, reserve_calls):
+            fixture_id = int(fixture["fixture_id"])
+            near=MINIMUM_KICKOFF_LEAD < fixture['kickoff_utc']-clock <= FINAL_REVIEW_WINDOW
+            cached=None if near else self.repository.cached('/predictions',{'fixture':fixture_id},now=clock)
+            if self._remaining() <= max(8, reserve_calls) and cached is None:
                 skipped += 1
                 continue
-            fixture_id = int(fixture["fixture_id"])
             payload, _ = await self._fetch(
                 "/predictions", {"fixture": fixture_id},
                 lambda identity=fixture_id: self._provider("prediction", identity, "/predictions"),
@@ -953,7 +968,7 @@ class LabV2ShadowRunner:
         try:
             if self.adaptive_learning is not None:
                 from app.adaptive_lab.quota import CATEGORY
-                token = CATEGORY.set('PREMATCH_REVIEW' if 'fixture' in query else 'PREMATCH_DISCOVERY')
+                token = CATEGORY.set('STATUS' if endpoint=='/status' else 'PREMATCH_REVIEW' if 'fixture' in query else 'PREMATCH_DISCOVERY')
                 try:
                     payload = await operation()
                 finally:
@@ -1030,6 +1045,8 @@ class LabV2ShadowRunner:
                 if row is None:
                     continue
                 snapshot = snapshot_from_document(json.loads(row[0]))
+                if not _persisted_context_current(snapshot, fixture, now):
+                    continue
                 fields = {item.name: item.value for item in snapshot.fields}
                 usage[int(fixture["fixture_id"])] = {
                     side: _player_usage(fields, side) for side in ("home", "away")
@@ -1127,7 +1144,7 @@ class LabV2ShadowRunner:
                     if self.adaptive_learning is not None:
                         adapted, adaptive_provenance = self.adaptive_learning.prematch_signals(
                             signals, decision, profile_evidence, fixture, market, price.decimal_odds,
-                            now=now, quote_fingerprint=price.provenance_fingerprint)
+                            now=now, quote_fingerprint=price.provenance_fingerprint, missing=missing, contradiction=veto)
                         if adaptive_provenance:
                             decision, profile_evidence = evaluate_profile(
                                 market, price.decimal_odds, adapted, profile_policy, missing, contradiction=veto)
@@ -1208,6 +1225,7 @@ class LabV2ShadowRunner:
                         "market_consensus_dispersion": _plain(consensus.dispersion),
                         "availability_impact": _plain({key: asdict(value) for key, value in impacts.items()}),
                         "final_review": _plain(review), "historical_bookmaker_odds_used": False,
+                        "publication_blocker": publication_blocker(now,[fixture['kickoff_utc']]),
                     }
                     material.update(adaptive_provenance)
                     material["candidate_id"] = "lab-v2-candidate-" + fingerprint(material)
@@ -1448,6 +1466,29 @@ def _stage(decision: EnsembleDecision, fixture: dict, now: datetime, review: dic
     return _readiness(decision, fixture, now, review)[0]
 
 
+def _persisted_context_current(snapshot: object, fixture: dict, now: datetime) -> bool:
+    """A stored FRESH label is not proof that predictive context is still current."""
+    fields = {item.name: item.value for item in snapshot.fields}
+    if (str(snapshot.fixture_id) != str(fixture['fixture_id'])
+            or snapshot.kickoff_utc != fixture['kickoff_utc']
+            or not snapshot.evaluated_at <= now < snapshot.kickoff_utc
+            or any(str(fields.get(side + '.team_id')) != str(fixture[side + '_team_id'])
+                   for side in ('home', 'away'))):
+        return False
+    freshness = {item.signal: item for item in snapshot.freshness}
+    # These are inputs of the persisted probability model. Current odds are
+    # independently acquired/validated by V2 and are not reused from this snapshot.
+    for name in ('fixture_context', 'team_statistics', 'team_history', 'injuries'):
+        item = freshness.get(name)
+        if (item is None or item.status.value != 'FRESH' or item.expires_at is None
+                or item.newest_retrieved_at is None
+                or not item.newest_retrieved_at <= snapshot.evaluated_at <= now <= item.expires_at):
+            return False
+    return all(p.retrieved_at <= snapshot.evaluated_at
+               and (p.provider_timestamp is None or p.provider_timestamp <= snapshot.evaluated_at)
+               for field in snapshot.fields for p in field.provenance)
+
+
 def _readiness(
     decision: EnsembleDecision,
     fixture: dict,
@@ -1500,7 +1541,8 @@ def _current_review_timestamp(value: object, now: datetime, kickoff: datetime) -
 
 def _final_review_call_reserve(fixtures: list[dict[str, object]], now: datetime) -> int:
     near = sorted((item for item in fixtures
-                   if MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - now <= FINAL_REVIEW_WINDOW),
+                   if MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - now <= FINAL_REVIEW_WINDOW
+                   and publication_blocker(now,[item['kickoff_utc']]) is None),
                   key=lambda item: (item["kickoff_utc"], item.get("fixture_id", -1)))
     total = 0
     for item in near[:FINAL_REVIEW_SHORTLIST_SIZE]:

@@ -12,7 +12,7 @@ from .capability import CapabilityTier, LeagueCapability
 
 from .competition_registry import REGISTRY_VERSION, REGISTRY_FINGERPRINT, reviewed_competition
 
-CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V4'
+CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V5'
 POLICY_VERSION = 'LAB_COMPETITION_POLICY_V2'
 
 

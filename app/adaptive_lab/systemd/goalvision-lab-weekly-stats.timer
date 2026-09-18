@@ -1,0 +1,8 @@
+[Unit]
+Description=GoalVision Lab weekly results Sunday 22:30 Europe/Riga
+[Timer]
+OnCalendar=Sun *-*-* 22:30:00 Europe/Riga
+Persistent=true
+AccuracySec=1s
+[Install]
+WantedBy=timers.target

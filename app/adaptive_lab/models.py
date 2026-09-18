@@ -163,6 +163,10 @@ def train(spec: dict, rows: list[dict]) -> dict:
 
 
 def validate_artifact(artifact: dict) -> None:
+    if artifact.get('family') == 'EXISTING_PREMATCH_BASELINE_V1':
+        from .baseline import validate
+        validate(artifact)
+        return
     validate_spec(artifact['spec'])
     material={k:v for k,v in artifact.items() if k!='artifact_fingerprint'}
     if digest(material)!=artifact.get('artifact_fingerprint'):
@@ -198,6 +202,9 @@ def validate_artifact(artifact: dict) -> None:
 
 def predict(artifact: dict, row: dict) -> float:
     """One full predictive model per stream; no transport or threshold logic."""
+    if artifact.get('family') == 'EXISTING_PREMATCH_BASELINE_V1':
+        from .baseline import predict as baseline_predict
+        return baseline_predict(artifact,row)
     if 'artifact_fingerprint' in artifact:
         validate_artifact(artifact)
     if row['stream']!=artifact['stream']:
@@ -208,7 +215,7 @@ def predict(artifact: dict, row: dict) -> float:
     else:
         p=_sigmoid(artifact['bias']+sum(a*b for a,b in zip(x,artifact['coefficients'],strict=True)))
         if artifact['spec']['family']=='CALIBRATED_ENSEMBLE':
-            p=(p+number(row['frozen_model_probability'],low=0,high=1))/2
+            p=(p+features(row)['prior_probability'])/2
     offset=artifact['specialists'].get(scope_key(row,artifact['spec']['scope']),0)
     result=_sigmoid(_logit(p)+offset)
     if not 0<result<1:

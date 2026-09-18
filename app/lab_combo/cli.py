@@ -51,6 +51,12 @@ async def cycle(args: argparse.Namespace) -> dict:
     client = FootballClient(request_limit=40 if args.command == 'discover' else 21)
     client.restrict_requests(40 if args.command == 'discover' else 21)
     output: dict = {'real_combo_found': False, 'lab_telegram_sent': False}
+    adaptive=None
+    if getattr(args,'adaptive_database',None):
+        from app.adaptive_lab.repository import AuditRepository
+        from app.adaptive_lab.quota import SharedQuota,CATEGORY
+        adaptive=AuditRepository(args.adaptive_database)
+        SharedQuota(adaptive).bind(client,lambda:datetime.now(timezone.utc),allow_status_preflight=True)
     stage = 'INITIALIZE'
     try:
         intelligence_repository = SQLiteCurrentMatchIntelligenceRepository(database)
@@ -60,9 +66,27 @@ async def cycle(args: argparse.Namespace) -> dict:
         )
         if args.command == 'settle':
             stage = 'SETTLEMENT'
-            if _settlement_work_relevant(ledger, datetime.now(timezone.utc)):
-                await client.account_status()
-            output.update(await service.check_results(client))
+            shadow_pending=bool(adaptive and any(not adaptive.get('shadow_settlements',p['prediction_id'])
+                              for p in adaptive.all('shadow_predictions','PREMATCH')))
+            if _settlement_work_relevant(ledger, datetime.now(timezone.utc)) or shadow_pending:
+                if adaptive:
+                    token=CATEGORY.set('STATUS')
+                    try: await client.account_status()
+                    finally: CATEGORY.reset(token)
+                else:
+                    await client.account_status()
+            if adaptive:
+                token=CATEGORY.set('SETTLEMENT')
+                try:
+                    from app.adaptive_lab.coordinator import LearningCoordinator
+                    from app.adaptive_lab.observer import settle_pending_shadow
+                    output.update(await service.check_results(client,adaptive_learning=LearningCoordinator(adaptive)))
+                    remaining=max(0,21-client.request_count)
+                    if remaining and shadow_pending:
+                        output['shadow']=await settle_pending_shadow(adaptive,client,now=datetime.now(timezone.utc),maximum_calls=min(5,remaining))
+                finally: CATEGORY.reset(token)
+            else:
+                output.update(await service.check_results(client))
             pending = [
                 *[('single_settlement', value['prediction_id']) for value in ledger.all('single_settlement')
                   if ledger.get('receipt', 'single_prediction:' + value['prediction_id'])
@@ -205,6 +229,8 @@ async def cycle(args: argparse.Namespace) -> dict:
         await client.close()
         ledger.close()
         database.close()
+        if adaptive is not None:
+            adaptive.close()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -213,6 +239,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--database', type=Path, default=Path('var/lab_combo/analysis.db'))
     parser.add_argument('--ledger', type=Path, default=Path('var/lab_combo/ledger.db'))
     parser.add_argument('--source-database', type=Path)
+    parser.add_argument('--adaptive-database', type=Path)
     parser.add_argument('--result-image-directory', type=Path,
                         default=Path('app/lab_combo/assets/results'))
     parser.add_argument('--send', action='store_true', help='Explicit Lab-only sends for qualified immutable evidence')

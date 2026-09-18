@@ -19,6 +19,7 @@ from .presentation import (
     single_result_message,
 )
 from .repository import ComboRepository
+from .publication_window import publication_blocker
 from .settlement import (
     resolve_leg, resolve_single, aggregate, statistics, single_statistics,
     settlement_message,
@@ -136,6 +137,9 @@ class LabComboService:
         if value is None or preview is None:
             return {'status': 'LAB_EVIDENCE_NOT_READY', 'sent': False}
         if kind in {'single_prediction', 'combo_prediction'}:
+            candidates = [value] if kind == 'single_prediction' else value['legs']
+            blocker=publication_blocker(self.clock(),[item['kickoff_utc'] for item in candidates])
+            if blocker:return {'status':blocker,'sent':False}
             kickoff = (datetime.fromisoformat(value['kickoff_utc']) if kind == 'single_prediction'
                        else min(datetime.fromisoformat(leg['kickoff_utc']) for leg in value['legs']))
             if self.clock() >= kickoff:
@@ -158,6 +162,11 @@ class LabComboService:
         if not self.ledger.append('claim', identity, {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}):
             return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
         try:
+            if kind in {'single_prediction','combo_prediction'}:
+                blocker=publication_blocker(self.clock(),[item['kickoff_utc'] for item in candidates])
+                if blocker:
+                    self.ledger.append('publication_blocked',identity,{'status':blocker,'sent':False})
+                    return {'status':blocker,'sent':False}
             image = self.result_images.available_for(value['status']) if kind in {'single_settlement', 'combo_settlement'} else None
             if image is not None and hasattr(transport, 'send_photo_receipt'):
                 operation = transport.send_photo_receipt(
@@ -194,6 +203,8 @@ class LabComboService:
             if preview['message'] != settlement_message(settled, preview['statistics']):
                 return {'status': 'SETTLEMENT_MESSAGE_CONFLICT', 'sent': False}
         else:
+            blocker=publication_blocker(self.clock(),[leg['kickoff_utc'] for leg in combo['legs']])
+            if blocker:return {'status':blocker,'sent':False}
             for leg in combo['legs']:
                 current, blockers = load_leg(self.singles, leg['observation_id'], self.clock())
                 if blockers or {k: v for k, v in (current or {}).items() if k != 'review'} != {k: v for k, v in leg.items() if k != 'review'}:
@@ -208,6 +219,11 @@ class LabComboService:
         if not self.ledger.append('claim', identity, {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}):
             return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
         try:
+            if not settlement:
+                blocker=publication_blocker(self.clock(),[leg['kickoff_utc'] for leg in combo['legs']])
+                if blocker:
+                    self.ledger.append('publication_blocked',identity,{'status':blocker,'sent':False})
+                    return {'status':blocker,'sent':False}
             receipt = await asyncio.wait_for(transport.send_message_receipt(
                 chat_id=LAB_CHAT_ID, text=message, parse_mode=None, timeout_seconds=10), timeout=11)
             if receipt.chat_id != LAB_CHAT_ID or type(receipt.message_id) is not int or receipt.message_id <= 0:
@@ -215,7 +231,8 @@ class LabComboService:
         except Exception:
             self.ledger.append('delivery_unknown', identity, {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED'})
             return {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED', 'sent': False}
-        value = {'status': 'SENT', 'sent': True, 'chat_id': receipt.chat_id, 'message_id': receipt.message_id}
+        value = {'status': 'SENT', 'sent': True, 'chat_id': receipt.chat_id, 'message_id': receipt.message_id,
+                 'sent_at_utc':self.clock().isoformat()}
         self.ledger.append('receipt', identity, value)
         return value
 
@@ -289,7 +306,7 @@ class LabComboService:
                 stats = statistics(self.ledger, published_only=True)
                 self.ledger.append('settlement_preview', identity, {'message': combo_result_message(value, stats), 'statistics': stats})
         if adaptive_learning is not None:
-            adaptive_learning.sync_prematch(self.ledger, now=self.clock())
+            adaptive_learning.sync_prematch(self.ledger, now=self.clock(), train=False)
         return {'completed': completed, 'single_completed': single_completed,
                 'api_calls': client.request_count - start,
                 'single_statistics': single_statistics(self.ledger),

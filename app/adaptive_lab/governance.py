@@ -28,7 +28,7 @@ class Governance:
             cid='bootstrap-'+digest(artifact)
             repo.append('learning_cycles',cid,stream,{'created_at':stamp,'kind':'REVIEWED_BOOTSTRAP'},stamp)
             sid='bootstrap-spec-'+digest(artifact)
-            repo.append('model_specs',sid,stream,artifact['spec'],stamp,cycle_id=cid)
+            repo.append('model_specs',sid,stream,artifact.get('spec') or {'family':artifact['family']},stamp,cycle_id=cid)
             rid='bootstrap-run-'+digest(artifact)
             repo.append('training_runs',rid,stream,{'status':'REVIEWED_BOOTSTRAP','created_at':stamp},stamp,spec_id=sid)
             aid='bootstrap-artifact-'+digest(artifact)
@@ -194,7 +194,8 @@ class Governance:
             holds=[h for h in repo.all('holdout_results',stream) if h['artifact_id']==run['artifact_id']]
             eligible=eligibility(repo.all('learning_observations',stream),stream,now)
             gates={'global_evidence':eligible['automatic_eligible'],
-                   'research_was_eligible':run['automatic_eligible'],
+                   'research_was_eligible':bool(len(holds)==1 and
+                       (repo.get('learning_cycles',holds[0]['cycle_id']) or {}).get('eligibility',{}).get('resolved',0)>=POLICY.research_min),
                    'shadow_evidence':evidence['passed'],
                    'verified_previous_champion':current is not None,
                    'champion_unchanged':bool(current and current['generation_id']==run['champion_generation']),

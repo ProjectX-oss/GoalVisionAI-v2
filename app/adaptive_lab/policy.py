@@ -7,7 +7,7 @@ from .contracts import digest, stream_name, utc
 
 @dataclass(frozen=True)
 class LearningPolicy:
-    version: str = 'LAB_ADAPTIVE_V1'
+    version: str = 'LAB_ADAPTIVE_V2'
     observe_min: int = 100
     research_min: int = 200
     automatic_min: int = 500
@@ -60,10 +60,13 @@ def eligibility(rows: list[dict], stream: str, now: datetime, *, previous: dict 
     new = [r for r in resolved if previous is None or utc(r['settled_at']) > utc(previous['created_at'])]
     due = previous is None or (utc(now) - utc(previous['created_at'])).days >= POLICY.cycle_days
     reason = status
-    if n >= POLICY.research_min and (len(new) < POLICY.new_resolved_min or not due):
+    if n >= POLICY.observe_min and (len(new) < POLICY.new_resolved_min or not due):
         reason = 'NOT_ENOUGH_NEW_DATA' if len(new) < POLICY.new_resolved_min else 'CYCLE_COOLDOWN'
-    return {'stream': stream, 'resolved': n, 'days_covered': days, 'status': status,
+    stage=('LEARNING_AND_OBSERVING' if n<POLICY.observe_min else 'EARLY_RESEARCH' if n<POLICY.research_min else
+           'CHALLENGER_RESEARCH' if not (n>=POLICY.automatic_min and days>=POLICY.automatic_days) else 'FULL_AUTO_LEARNING_ELIGIBLE')
+    return {'next_threshold':{'resolved':POLICY.observe_min if n<POLICY.observe_min else POLICY.research_min if n<POLICY.research_min else POLICY.automatic_min, 'calendar_days':POLICY.automatic_days},
+            'stage':stage,'stream': stream, 'resolved': n, 'days_covered': days, 'status': status,
             'reason': reason, 'new_resolved': len(new), 'cycle_due': due,
-            'research_due': n >= POLICY.research_min and len(new) >= POLICY.new_resolved_min and due,
+            'research_due': n >= POLICY.observe_min and len(new) >= POLICY.new_resolved_min and due,
             'automatic_eligible': status == 'AUTO_LEARNING_ELIGIBLE', 'policy_version': POLICY.version,
             'policy_fingerprint': POLICY.fingerprint}

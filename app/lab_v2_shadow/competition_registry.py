@@ -9,7 +9,7 @@ from typing import Mapping
 
 from app.real_match_lab_analysis.fingerprint import fingerprint
 
-REGISTRY_VERSION = 'LAB_REVIEWED_COMPETITIONS_V1'
+REGISTRY_VERSION = 'LAB_REVIEWED_COMPETITIONS_V2'
 
 
 @dataclass(frozen=True)
