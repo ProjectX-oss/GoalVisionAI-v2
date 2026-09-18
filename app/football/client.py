@@ -23,6 +23,7 @@ class FootballClient:
         self._quota: FootballQuotaReport | None = None
         self._last_response_metadata: dict = {}
         self._quota_block_reason: str | None = None
+        self.request_authorizer = None  # Optional shared LAB quota guard, invoked for every retry.
         self._request_count = 0
         self._request_limit = request_limit
         self._request_pacing_lock = asyncio.Lock()
@@ -87,6 +88,26 @@ class FootballClient:
 
     async def fixture(self, fixture_id: int):
         response = await self._get("/fixtures", params={"id": fixture_id})
+        return response.json()
+
+    async def live_fixtures(self) -> dict:
+        """Current in-play fixtures; never inferred from a prematch schedule."""
+        response = await self._get("/fixtures", params={"live": "all"})
+        return response.json()
+
+    async def live_odds(self, fixture_id: int) -> dict:
+        """Genuine current in-play odds, distinct from /odds."""
+        response = await self._get("/odds/live", params={"fixture": fixture_id})
+        return response.json()
+
+    async def live_bets(self) -> dict:
+        """Live-only market catalog; IDs are not interchangeable with prematch IDs."""
+        response = await self._get("/odds/live/bets", params={})
+        return response.json()
+
+    async def events(self, fixture_id: int) -> dict:
+        """Current fixture events for final LIVE state verification."""
+        response = await self._get("/fixtures/events", params={"fixture": fixture_id})
         return response.json()
 
     async def current_odds(self, fixture_id: int):
@@ -245,6 +266,8 @@ class FootballClient:
                     await asyncio.sleep(wait)
             # A response may have changed quota state while this caller waited.
             self._require_request_capacity()
+            if self.request_authorizer is not None:
+                self.request_authorizer()
             self._last_request_started_monotonic = loop.time()
             self._request_count += 1
 

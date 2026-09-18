@@ -219,7 +219,7 @@ class LabComboService:
         self.ledger.append('receipt', identity, value)
         return value
 
-    async def check_results(self, client: object, *, maximum_calls: int = 20) -> dict:
+    async def check_results(self, client: object, *, maximum_calls: int = 20, adaptive_learning: object | None = None) -> dict:
         """One bounded result sweep, caching fixture responses across combos."""
         from app.current_odds_forward_test.provider import _require
         if not 1 <= maximum_calls <= 20:
@@ -288,6 +288,8 @@ class LabComboService:
             if not self.ledger.get('settlement_preview', identity):
                 stats = statistics(self.ledger, published_only=True)
                 self.ledger.append('settlement_preview', identity, {'message': combo_result_message(value, stats), 'statistics': stats})
+        if adaptive_learning is not None:
+            adaptive_learning.sync_prematch(self.ledger, now=self.clock())
         return {'completed': completed, 'single_completed': single_completed,
                 'api_calls': client.request_count - start,
                 'single_statistics': single_statistics(self.ledger),

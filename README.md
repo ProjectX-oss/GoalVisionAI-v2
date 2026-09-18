@@ -267,3 +267,10 @@ It does not authorize production activation or change runtime inference,
 Official publication, Telegram, bankroll, settlements, statistics,
 scheduling, or workers. See `docs/model_operations_runbook.md` and
 `docs/rehearsals/staging_model_operations_rehearsal.md`.
+
+### Isolated adaptive Lab and LIVE research
+
+The opt-in PREMATCH/LIVE forward-learning, reviewed model search, shadow,
+promotion/rollback and LIVE single architecture is documented in
+[the operator runbook](docs/runbooks/adaptive_lab_live.md). Imports and reporting
+are inert; this foundation is not deployed or enabled by default.

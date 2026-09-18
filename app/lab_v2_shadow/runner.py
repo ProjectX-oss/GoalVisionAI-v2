@@ -81,11 +81,13 @@ class LabV2ShadowRunner:
         analysis_path: Path | None = None,
         maximum_calls: int = MAXIMUM_CALLS,
         daily_safety_reserve: int = DAILY_SAFETY_RESERVE,
+        adaptive_learning: object | None = None,
     ) -> None:
         if not 1 <= maximum_calls <= MAXIMUM_CALLS:
             raise ValueError("LAB_V2_MAXIMUM_CALLS_MUST_BE_BETWEEN_1_AND_400")
         if daily_safety_reserve < DAILY_SAFETY_RESERVE:
             raise ValueError("LAB_V2_DAILY_SAFETY_RESERVE_CANNOT_BE_LOWERED")
+        self.adaptive_learning = adaptive_learning
         self.client = client
         self.repository = repository
         self.capability_cache_path = capability_cache_path
@@ -120,6 +122,10 @@ class LabV2ShadowRunner:
             "/status", {}, lambda: self.client.account_status(),
             clock=clock, ttl=None, use_cache=False,
         )
+        if self.adaptive_learning is not None:
+            from app.adaptive_lab.quota import SharedQuota
+            SharedQuota(self.adaptive_learning.repository).bind(
+                self.client, lambda: datetime.now(timezone.utc))
         quota = getattr(self.client, "quota_snapshot", lambda: {})()
         self.quota_budget = adaptive_quota_budget(
             quota, requested_maximum=self.maximum_calls,
@@ -945,7 +951,15 @@ class LabV2ShadowRunner:
             return {"errors": {"request": "LAB_V2_API_CALL_BUDGET_EXHAUSTED"}, "response": []}, clock
         before = self._request_count()
         try:
-            payload = await operation()
+            if self.adaptive_learning is not None:
+                from app.adaptive_lab.quota import CATEGORY
+                token = CATEGORY.set('PREMATCH_REVIEW' if 'fixture' in query else 'PREMATCH_DISCOVERY')
+                try:
+                    payload = await operation()
+                finally:
+                    CATEGORY.reset(token)
+            else:
+                payload = await operation()
         except (httpx.HTTPError, OSError, TimeoutError, json.JSONDecodeError,
                 FootballRequestLimitError, FootballQuotaError) as exc:
             # The client owns bounded retries. Never log exception text or cache
@@ -1109,6 +1123,14 @@ class LabV2ShadowRunner:
                     ) if not present)
                     decision, profile_evidence = evaluate_profile(
                         market, price.decimal_odds, signals, profile_policy, missing, contradiction=veto)
+                    adaptive_provenance = {}
+                    if self.adaptive_learning is not None:
+                        adapted, adaptive_provenance = self.adaptive_learning.prematch_signals(
+                            signals, decision, profile_evidence, fixture, market, price.decimal_odds,
+                            now=now, quote_fingerprint=price.provenance_fingerprint)
+                        if adaptive_provenance:
+                            decision, profile_evidence = evaluate_profile(
+                                market, price.decimal_odds, adapted, profile_policy, missing, contradiction=veto)
 
                     if (fixture_id, market) in terminal_keys:
                         decision = replace(decision, decision='REJECTED', rejection_reasons=('MARKET_REVIEW_TERMINAL',))
@@ -1187,6 +1209,7 @@ class LabV2ShadowRunner:
                         "availability_impact": _plain({key: asdict(value) for key, value in impacts.items()}),
                         "final_review": _plain(review), "historical_bookmaker_odds_used": False,
                     }
+                    material.update(adaptive_provenance)
                     material["candidate_id"] = "lab-v2-candidate-" + fingerprint(material)
                     values.append(material)
         return sorted(values, key=lambda item: (item["fixture_id"], item["market"]))

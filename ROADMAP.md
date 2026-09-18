@@ -351,3 +351,9 @@ System can operate without manual intervention.
 GoalVision AI becomes
 
 the most transparent AI-powered football analytics platform.
+## 2026-09-18 Lab research milestone
+
+The adaptive forward-learning and regulation-time LIVE single foundation is
+implemented for isolated Test/Lab evaluation. Production deployment, provider
+LIVE provenance verification and initial reviewed champion bootstrap remain
+separate operator tasks. See `docs/runbooks/adaptive_lab_live.md`.

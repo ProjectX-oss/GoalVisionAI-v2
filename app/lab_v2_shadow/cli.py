@@ -27,17 +27,31 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
     client = FootballClient(request_limit=args.max_calls)
     repository = ShadowEvidenceRepository(args.shadow_database)
     clock = datetime.now(timezone.utc)
+    adaptive_repository = None
+    coordinator = None
+    if getattr(args, 'adaptive_database', None):
+        from app.adaptive_lab.repository import AuditRepository
+        from app.adaptive_lab.coordinator import LearningCoordinator
+        adaptive_repository = AuditRepository(args.adaptive_database)
+        coordinator = LearningCoordinator(adaptive_repository)
     try:
         runner = LabV2ShadowRunner(
             client, repository, capability_cache_path=args.capability_cache,
             analysis_path=args.analysis_database, maximum_calls=args.max_calls,
-            daily_safety_reserve=args.daily_reserve,
+            daily_safety_reserve=args.daily_reserve, adaptive_learning=coordinator,
         )
         report = await runner.run(
             now=clock,
             horizon_days=args.horizon_days,
             publication_requested=bool(args.send),
         )
+        if coordinator is not None:
+            shadow_inputs = [{**item, 'prepared_at_utc':item.get('final_review_completed_at_utc')
+                              or datetime.now(timezone.utc).isoformat()}
+                             for item in report.get('candidate_markets', [])
+                             if item.get('quote_provenance_fingerprint') and item.get('ensemble_probability')
+                             and item.get('stage') in {'READY_TO_PUBLISH', 'FINAL_REVIEW'}]
+            coordinator.shadow(shadow_inputs, stream='PREMATCH', now=datetime.now(timezone.utc))
         report["analysis_mode"] = str(report.get("analysis_mode") or report.get("mode") or "LAB_V2_NO_SEND")
         report["mode"] = "LAB_V2_CONTROLLED_SEND" if args.send else "LAB_V2_NO_SEND"
         report["publication_requested"] = bool(args.send)
@@ -116,6 +130,8 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
     finally:
         await client.close()
         repository.close()
+        if adaptive_repository is not None:
+            adaptive_repository.close()
 
 
 def _persist_cycle_evidence(
@@ -165,6 +181,7 @@ def main(argv: list[str] | None = None) -> int:
         cycle.add_argument("--horizon-days", type=int, default=3)
         cycle.add_argument("--max-calls", type=int, default=MAX_DISCOVERY_CALLS_PER_CYCLE)
         cycle.add_argument("--daily-reserve", type=int, default=DAILY_SAFETY_RESERVE)
+        cycle.add_argument("--adaptive-database", type=Path, help="Opt-in LAB adaptive registry; omitted preserves accepted behavior")
         cycle.add_argument("--send", action="store_true", help="Explicitly publish genuine READY picks to the fixed Lab chat")
     args = parser.parse_args(argv)
     if args.command == "audit":

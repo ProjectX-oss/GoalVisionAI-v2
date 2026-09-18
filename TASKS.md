@@ -1382,3 +1382,12 @@ Review after completing the current priority.
 - Verify five focused tests, import resolution and systemd dry validation.
 - Installed unit update remains blocked by unavailable passwordless sudo; keep discovery disabled/inactive.
 - See the wiring check in `docs/LAB_V2_THROUGHPUT_HARDENING.md`.
+
+## Adaptive Lab forward learning and LIVE foundation (2026-09-18)
+
+- Add isolated append-only PREMATCH/LIVE learning evidence, strict publication/result linkage, combo deduplication, metrics and symmetric diagnostics.
+- Add bounded reviewed JSON model registry/search, chronological embargoed splits, sealed holdout, future shadow, independent LAB generations and rollback.
+- Add separate regulation-time LIVE single engine, current in-play odds adapter, final refresh, Lab-only durable delivery and settlement.
+- Add explicit opt-in runtime composition, read-only operator views, shared per-attempt quota governance and synthetic forward rehearsal.
+- Preserve accepted live checkout, installed units, credentials, source ledgers and Official state. No deployment or timer enablement.
+- Operator architecture, provenance gaps, limits and future Test deployment procedure: `docs/runbooks/adaptive_lab_live.md`.
