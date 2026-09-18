@@ -16,7 +16,7 @@ def riga(value):return datetime.fromisoformat(value).replace(tzinfo=RIGA)
 
 
 @pytest.mark.parametrize('month',[1,7])
-@pytest.mark.parametrize('minute,reason',[(22*60+59,None),(23*60,'LAB_PUBLICATION_TIME_CUTOFF'),(23*60+1,'LAB_PUBLICATION_TIME_CUTOFF')])
+@pytest.mark.parametrize('minute,reason',[(8*60+59,'LAB_PUBLICATION_WINDOW_CLOSED'),(9*60,None),(0,'LAB_PUBLICATION_WINDOW_CLOSED'),(30,'LAB_PUBLICATION_WINDOW_CLOSED'),(3*60,'LAB_PUBLICATION_WINDOW_CLOSED'),(5*60,'LAB_PUBLICATION_WINDOW_CLOSED'),(22*60+59,None),(23*60,'LAB_PUBLICATION_WINDOW_CLOSED'),(23*60+1,'LAB_PUBLICATION_WINDOW_CLOSED')])
 def test_publication_clock_dst_and_boundary(month,minute,reason):
     clock=datetime(2026,month,10,minute//60,minute%60,tzinfo=RIGA)
     assert publication_blocker(clock.astimezone(timezone.utc),[])==reason
@@ -28,10 +28,10 @@ def test_fixture_clock(kickoff,reason):
     assert publication_blocker(riga('2026-07-10T21:00'),[riga('2026-07-10T'+kickoff)])==reason
 
 
-def test_utc_date_boundary_and_no_invented_morning_threshold():
+def test_utc_date_boundary_remains_closed():
     clock=datetime(2026,7,10,21,5,tzinfo=timezone.utc)
     assert clock.astimezone(RIGA).day==11
-    assert publication_blocker(clock,[]) is None
+    assert publication_blocker(clock,[]) == 'LAB_PUBLICATION_WINDOW_CLOSED'
     assert window_status(riga('2026-07-10T23:00'))['next_cutoff'].startswith('2026-07-11T23:00')
     with pytest.raises(ValueError):publication_blocker(datetime(2026,1,1),[])
 
@@ -128,13 +128,14 @@ def test_weekly_invalid_config_can_retry_before_transport_claim(repo):
     assert asyncio.run(deliver(repo,report,config(),t,now=due))['sent']
 
 
-def test_cutoff_blocks_send_not_settlement_and_never_counts_unpublished():
+@pytest.mark.parametrize('hour',[0,3,5,8,23])
+def test_cutoff_blocks_send_not_settlement_and_never_counts_unpublished(hour):
     from app.lab_combo.service import LabComboService
-    clock=riga('2026-09-20T23:00');ledger=Ledger();transport=Transport()
+    clock=riga('2026-09-20T23:00').replace(hour=hour);ledger=Ledger();transport=Transport()
     ledger.append('single_prediction','p',{'prediction_id':'p','kickoff_utc':(clock+timedelta(hours=1)).isoformat()})
     ledger.append('single_preview','p',{'message':'synthetic preview'})
     service=LabComboService(ledger,None,clock=lambda:clock)
-    assert asyncio.run(service.publish_experimental('single_prediction','p',config(),transport))['status']=='LAB_PUBLICATION_TIME_CUTOFF'
+    assert asyncio.run(service.publish_experimental('single_prediction','p',config(),transport))['status']=='LAB_PUBLICATION_WINDOW_CLOSED'
     assert not transport.calls
     assert statistics(ledger,week_start=week_bounds(clock)[0],as_of=clock)['SINGLE']['published']==0
     ledger.append('single_settlement','p',{'status':'WON'})
@@ -167,9 +168,9 @@ def test_send_boundary_rechecked_after_durable_claim(monkeypatch):
     l.append('single_preview','p',{'message':'synthetic'})
     monkeypatch.setattr(module,'_fresh_captured_odds',lambda *_:True)
     t=Transport();service=module.LabComboService(l,None,clock=lambda:clock[0])
-    assert asyncio.run(service.publish_experimental('single_prediction','p',config(),t))['status']=='LAB_PUBLICATION_TIME_CUTOFF'
+    assert asyncio.run(service.publish_experimental('single_prediction','p',config(),t))['status']=='LAB_PUBLICATION_WINDOW_CLOSED'
     assert not t.calls and not l.all('receipt')
-    assert l.get('publication_blocked','single_prediction:p')['status']=='LAB_PUBLICATION_TIME_CUTOFF'
+    assert l.get('publication_blocked','single_prediction:p')['status']=='LAB_PUBLICATION_WINDOW_CLOSED'
 
 
 def test_combo_leg_cutoff_and_preparation_reason():
@@ -187,14 +188,15 @@ def test_combo_leg_cutoff_and_preparation_reason():
     assert not prepared['singles'] and not prepared['combos'] and not t.calls
 
 
-def test_real_observer_ingestion_and_shadow_run_after_23(repo):
+@pytest.mark.parametrize('night',['2026-09-20T23:59','2026-09-21T00:00','2026-09-21T03:00','2026-09-21T08:59'])
+def test_real_observer_ingestion_and_shadow_run_after_23(repo,night):
     from .conftest import frozen
     from .test_governance_rehearsal import baseline
     from app.adaptive_lab.governance import Governance
     from app.adaptive_lab.coordinator import opportunity
     from app.adaptive_lab.observer import observe
     l=Ledger();p,receipt,result=frozen()
-    created=riga('2026-09-20T22:00');now=riga('2026-09-20T23:59')
+    created=riga('2026-09-20T22:00');now=riga(night)
     p.update(prepared_at_utc=created.isoformat(),kickoff_utc=(created+timedelta(minutes=30)).isoformat(),
       provider_origin_timestamp_utc=(created-timedelta(seconds=5)).isoformat(),goalvision_retrieved_at_utc=created.isoformat())
     receipt['sent_at_utc']=(created+timedelta(seconds=1)).isoformat();result['settled_at_utc']=now.isoformat()
@@ -283,3 +285,34 @@ def test_current_cutoff_never_erases_historical_published_losses():
     stats=statistics(ledger,week_start=riga('2026-09-14T00:00'),as_of=riga('2026-09-20T22:30'))
     assert stats['SINGLE']['published']==stats['SINGLE']['LOST']==1
     assert stats['SINGLE']['flat_unit_pnl']=='-1'
+
+
+@pytest.mark.parametrize('kickoff',['2026-07-11T00:30','2026-07-11T03:00','2026-07-11T08:59'])
+def test_next_day_night_fixture_cannot_bypass_cutoff(kickoff):
+    assert publication_blocker(riga('2026-07-10T22:00'),[riga(kickoff)])=='FIXTURE_AFTER_LAB_CUTOFF'
+
+
+@pytest.mark.parametrize('day',['2026-03-28','2026-10-24'])
+def test_next_window_across_dst(day):
+    clock=riga(day+'T23:30');status=window_status(clock)
+    opening=datetime.fromisoformat(status['next_open'])
+    assert opening.astimezone(RIGA).hour==9
+    assert opening.date()==(clock+timedelta(days=1)).date()
+    assert status['window']=='09:00–23:00 Europe/Riga'
+    assert status['state']=='CLOSED'
+    assert datetime.fromisoformat(status['next_close']).astimezone(RIGA).hour==23
+    assert publication_blocker(opening,[]) is None
+
+
+@pytest.mark.parametrize('time,state,next_open,next_close',[
+    ('08:59','CLOSED',18,18),('09:00','OPEN',19,18),
+    ('22:59:59','OPEN',19,18),('23:00','CLOSED',19,19),('00:00','CLOSED',18,18)])
+def test_status_window_boundaries(time,state,next_open,next_close):
+    status=window_status(riga('2026-09-18T'+time))
+    assert status['state']==state
+    assert datetime.fromisoformat(status['next_open']).day==next_open
+    assert datetime.fromisoformat(status['next_close']).day==next_close
+
+
+def test_sunday_report_time_inside_publication_window():
+    assert publication_blocker(riga('2026-09-20T22:30'),[]) is None

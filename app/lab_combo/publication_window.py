@@ -4,7 +4,7 @@ from datetime import datetime,timedelta
 from zoneinfo import ZoneInfo
 
 RIGA=ZoneInfo('Europe/Riga')
-POLICY_VERSION='LAB_RIGA_PUBLICATION_V1'
+POLICY_VERSION='LAB_RIGA_PUBLICATION_V2'
 
 
 def local(value: datetime | str) -> datetime:
@@ -16,16 +16,22 @@ def local(value: datetime | str) -> datetime:
 
 
 def publication_blocker(now: datetime, kickoffs: list[datetime | str]) -> str | None:
-    """Daily 23:00 cutoff; no unrequested morning opening threshold is inferred."""
-    if local(now).hour>=23:
-        return 'LAB_PUBLICATION_TIME_CUTOFF'
-    if any(local(k).hour>=23 for k in kickoffs):
+    """Allow decisions and fixture kickoffs only within the Riga daytime window."""
+    if not 9 <= local(now).hour < 23:
+        return 'LAB_PUBLICATION_WINDOW_CLOSED'
+    if any(not 9 <= local(k).hour < 23 for k in kickoffs):
         return 'FIXTURE_AFTER_LAB_CUTOFF'
     return None
 
 
 def window_status(now: datetime) -> dict:
-    clock=local(now);cutoff=clock.replace(hour=23,minute=0,second=0,microsecond=0)
-    if clock>=cutoff:cutoff+=timedelta(days=1)
-    return {'state':'CLOSED' if clock.hour>=23 else 'OPEN','timezone':'Europe/Riga',
-            'next_cutoff':cutoff.isoformat(),'policy_version':POLICY_VERSION}
+    clock=local(now)
+    opening=clock.replace(hour=9,minute=0,second=0,microsecond=0)
+    closing=clock.replace(hour=23,minute=0,second=0,microsecond=0)
+    if clock>=opening:opening+=timedelta(days=1)
+    if clock>=closing:closing+=timedelta(days=1)
+    return {'window':'09:00–23:00 Europe/Riga',
+            'state':'OPEN' if 9 <= clock.hour < 23 else 'CLOSED',
+            'timezone':'Europe/Riga','next_open':opening.isoformat(),
+            'next_close':closing.isoformat(),'next_cutoff':closing.isoformat(),
+            'policy_version':POLICY_VERSION}

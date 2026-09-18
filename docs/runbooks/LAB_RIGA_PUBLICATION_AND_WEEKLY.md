@@ -4,9 +4,9 @@ These are Lab product rules, not model features. They affect new PREMATCH single
 
 ## Publication cutoff
 
-`ZoneInfo("Europe/Riga")` supplies the clock; there is no fixed UTC offset. A publication decision at 23:00 or later on its Riga local date returns `LAB_PUBLICATION_TIME_CUTOFF`. Any selection/leg with scheduled kickoff at 23:00 or later on its own Riga local date returns `FIXTURE_AFTER_LAB_CUTOFF`. A 22:59 kickoff is eligible subject to the existing lead-time, value, evidence and freshness requirements. Naive timestamps are rejected.
+`ZoneInfo("Europe/Riga")` supplies the DST-safe clock. New betting publications require a decision time >=09:00 and <23:00. Outside that window return `LAB_PUBLICATION_WINDOW_CLOSED`. Selection/leg kickoffs outside the same local 09:00–23:00 horizon return `FIXTURE_AFTER_LAB_CUTOFF`, including next-day 00:30 or 03:00 kickoffs. A 22:59 kickoff remains eligible subject to all existing requirements. Naive timestamps are rejected.
 
-No morning opening time was specified. The literal daily rule is implemented: closed 23:00–23:59, open again at the next local midnight. A different overnight reopening time requires an explicit product decision; do not invent it or encode a host/UTC offset. This limitation is visible in the audit report.
+Policy `LAB_RIGA_PUBLICATION_V2` supersedes the midnight reopening rule. Status exposes the window, OPEN/CLOSED, NEXT OPEN and NEXT CLOSE as timezone-aware timestamps. NEXT OPEN/CLOSE are the next transitions strictly after the status timestamp; during an open window NEXT OPEN is tomorrow at 09:00. Discovery, settlement, learning, shadow and monitoring continue overnight. Weekly statistics remain Sunday 22:30 Europe/Riga. This change is not deployed by the implementation task.
 
 The rule is checked before preparation and again in both Lab new-prediction send paths. The send-boundary check occurs after durable claim acquisition and directly before invoking the transport. A claim that crosses the boundary is retained with an immutable cutoff diagnostic and no publication receipt. It cannot become a published W/L observation. An already-dispatched request cannot be recalled if Telegram completes delivery after the boundary: the controlled time is the publication decision/dispatch, as requested.
 

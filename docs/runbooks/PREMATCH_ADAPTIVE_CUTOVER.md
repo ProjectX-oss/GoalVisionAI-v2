@@ -129,7 +129,7 @@ systemctl show goalvision-live-lab.timer -p LoadState -p UnitFileState -p Active
 "$PY" -P -m app.adaptive_lab.prematch status --database "$DB" --json
 ```
 
-Verify PUBLICATION WINDOW and NEXT CUTOFF in Europe/Riga, both new-bet cutoff reasons, and the weekly timer's next Sunday 22:30 Europe/Riga trigger. Do not manually start the sending weekly service as a test. Observe the next natural discovery/settlement/observer triggers and immutable receipts. No test pick, no forced selection. Observer cadence `*:0/30`, daily research `04:15`, system timezone. If no ready market exists, silence is correct only with explicit healthy or degraded coverage diagnostics. Once deployed and these checks pass, ordinary learning needs no manual research/settlement/promotion command; infrastructure failures still require operational repair.
+Verify PUBLICATION WINDOW 09:00–23:00 Europe/Riga, CURRENT WINDOW, NEXT OPEN and NEXT CLOSE, both new-bet blockers (LAB_PUBLICATION_WINDOW_CLOSED and FIXTURE_AFTER_LAB_CUTOFF), and the weekly timer's next Sunday 22:30 Europe/Riga trigger. Do not manually start the sending weekly service as a test. Observe the next natural discovery/settlement/observer triggers and immutable receipts. No test pick, no forced selection. Observer cadence `*:0/30`, daily research `04:15`, system timezone. If no ready market exists, silence is correct only with explicit healthy or degraded coverage diagnostics. Once deployed and these checks pass, ordinary learning needs no manual research/settlement/promotion command; infrastructure failures still require operational repair.
 
 ## Exact emergency rollback
 

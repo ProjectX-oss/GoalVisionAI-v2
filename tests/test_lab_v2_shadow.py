@@ -406,7 +406,7 @@ class LifecycleClient(FakeClient):
 
 
 @pytest.fixture
-def lifecycle_cycles(tmp_path, monkeypatch):
+def lifecycle_cycles(tmp_path, monkeypatch, request):
     """Use real normalization, ensemble, readiness and persistence with synthetic signals."""
     from dataclasses import replace
     import app.lab_v2_shadow.runner as runner_module
@@ -418,7 +418,8 @@ def lifecycle_cycles(tmp_path, monkeypatch):
     monkeypatch.setattr(PiRatingAdapter, "signal", lambda self, home, away: replace(
         original_signal(self, home, away), state=PiAvailability.AVAILABLE, probabilities=probabilities,
     ))
-    kickoff = datetime(2026, 9, 16, 22, tzinfo=timezone.utc)
+    # Keep publication lifecycle scenarios inside the reviewed Riga daytime window.
+    kickoff = datetime(2026, 9, 16, getattr(request, "param", 18), tzinfo=timezone.utc)
     path = Path("var/shadow.db")
 
     def cycle(clock, **kwargs):
@@ -474,6 +475,7 @@ def test_tracked_early_exact_odds_failure_is_visible_and_retryable(lifecycle_cyc
     assert recovered["ready_candidate_count"] == 2
 
 
+@pytest.mark.parametrize("lifecycle_cycles", [22], indirect=True)
 def test_tracked_review_crosses_riga_midnight_on_previous_utc_date(lifecycle_cycles):
     from zoneinfo import ZoneInfo
 
@@ -482,7 +484,9 @@ def test_tracked_review_crosses_riga_midnight_on_previous_utc_date(lifecycle_cyc
     assert clock.date().isoformat() == "2026-09-17"
     assert kickoff.date().isoformat() == "2026-09-16"
     report, client = cycle(clock, broad="missing")
-    assert report["ready_candidate_count"] == 2
+    assert report["ready_candidate_count"] == 0
+    assert ("/odds", {"fixture": 7}) not in client.requests
+    assert report["telegram_sends"] == 0
     assert ("/odds", {"date": "2026-09-16", "page": 1}) in client.requests
 
 
