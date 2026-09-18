@@ -147,3 +147,64 @@ def test_rate_retrieval_must_precede_prediction_not_initial_live_snapshot():
     with pytest.raises(ValueError,match='PROVENANCE'):
         remaining_goal_probabilities(state,rates)
     assert remaining_goal_probabilities(state,rates,as_of=START+timedelta(seconds=3))['OVER_1_5']>0
+
+
+def test_runner_refresh_accepts_real_client_history_list(repo):
+    """Exercise FootballClient's actual list-returning history API, without HTTP."""
+    import httpx
+    from app.football.client import FootballClient
+    from app.adaptive_lab.quota import SharedQuota
+    from app.live_lab.runner import LiveRunner
+
+    requests=[]
+    fixture={'fixture':{'id':7,'date':(START-timedelta(hours=1)).isoformat(),
+                        'status':{'short':'2H','elapsed':60}},
+             'goals':{'home':0,'away':0},'league':{'id':39},
+             'teams':{'home':{'id':1,'name':'Home'},'away':{'id':2,'name':'Away'}}}
+
+    def response(request):
+        path=request.url.path
+        params=dict(request.url.params)
+        requests.append((path,params))
+        rows=[]
+        if path=='/fixtures' and 'team' in params:
+            team=int(params['team'])
+            rows=[{'fixture':{'id':100+team*10+i,'date':(START-timedelta(days=i+2)).isoformat(),
+                             'status':{'short':'FT'}},
+                   'teams':{'home':{'id':team},'away':{'id':99}},
+                   'score':{'fulltime':{'home':2,'away':1}}} for i in range(10)]
+        elif path=='/fixtures':
+            rows=[fixture]
+        elif path=='/odds/live/bets':
+            rows=[{'id':59,'name':'Fulltime Result'}]
+        elif path=='/odds/live':
+            # Missing genuine bookmaker/origin evidence must remain fail-closed.
+            rows=[{'fixture':{'id':7,'status':{'elapsed':60}},
+                   'teams':{'home':{'goals':0},'away':{'goals':0}},'odds':[]}]
+        return httpx.Response(200,json={'response':rows,'errors':[]},headers={
+            'x-ratelimit-requests-limit':'7500','x-ratelimit-requests-remaining':'7400',
+            'x-ratelimit-limit':'300','x-ratelimit-remaining':'299'})
+
+    async def run():
+        client=FootballClient(api_key='synthetic-test-key',request_limit=7)
+        await client._client.aclose()
+        client._client=httpx.AsyncClient(base_url=client.BASE_URL,transport=httpx.MockTransport(response))
+        try:
+            await client.account_status()
+            service=LiveService(repo,clock=lambda:START)
+            state,quotes,rates=await LiveRunner(service,client,SharedQuota(repo),clock=lambda:START).refresh(7)
+            assert state['fixture_id']==7 and state['events']==[]
+            assert rates['home_sample']==rates['away_sample']==10
+            assert rates['home_goal_rate']==rates['away_goal_rate']==1.5
+            assert len(rates['frozen_history_payloads'][0]['response'])==10
+            assert remaining_goal_probabilities(state,rates)['OVER_1_5']>0
+            assert quotes==[]
+            assert repo.all('live_diagnostics','LIVE')[0]['reasons']==['LIVE_BOOKMAKER_OR_ORIGIN_UNAVAILABLE']
+            assert len(repo.all('quota_claims'))==6
+            assert client.request_count==7
+            assert not repo.all('live_publications')
+        finally:
+            await client.close()
+
+    asyncio.run(run())
+    assert requests[-2:]==[('/odds/live/bets',{}),('/odds/live',{'fixture':'7'})]

@@ -27,6 +27,10 @@ class LiveRunner:
         # Existing client/cache governs requests; no historical bookmaker prices.
         home=await self.quota.call('LIVE_STATE',self.client.last_matches,state['home_team_id'],last=10)
         away=await self.quota.call('LIVE_STATE',self.client.last_matches,state['away_team_id'],last=10)
+        # FootballClient.last_matches returns the response list, unlike fixture
+        # and events. Preserve its observed rows in the history adapter envelope.
+        home={'response':home} if isinstance(home,list) else home
+        away={'response':away} if isinstance(away,list) else away
         rates=history_rates(state,home,away,retrieved_at=self.clock())
         catalog=await self.quota.call('LIVE_ODDS',self.client.live_bets)
         catalog={**catalog,'endpoint':'/odds/live/bets'}
