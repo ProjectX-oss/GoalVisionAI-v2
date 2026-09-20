@@ -57,6 +57,20 @@ class LearningCoordinator:
         for prediction in predictions:
             if not prediction.get('ensemble_probability') or not prediction.get('captured_odds'):
                 continue
+            if stream == 'PREMATCH':
+                from app.lab_v2_shadow.forward_evidence import current_quote
+                p, odds = number(prediction['ensemble_probability']), number(prediction['captured_odds'])
+                from .contracts import MARKETS
+                if (not 0 < p < 1 or odds <= 1 or prediction['market'] not in MARKETS
+                        or not current_quote(prediction, now) or utc(now) >= utc(prediction['kickoff_utc']) or p * odds <= 1):
+                    continue
+                key = str(prediction['fixture_id']) + ':' + prediction['market']
+                with self.repository.transaction():
+                    frozen = self.repository.get('canonical_opportunities', key)
+                    if frozen is None:
+                        frozen = dict(prediction, prepared_at_utc=utc(now).isoformat())
+                        self.repository.append('canonical_opportunities', key, stream, frozen, utc(now).isoformat())
+                prediction = frozen
             self.governance.observe(stream,opportunity(prediction,stream),now=now)
 
     def prematch_signals(self, signals: list, baseline: object, profile_evidence: dict,

@@ -34,7 +34,9 @@ class SharedQuota:
             today=[r for r in claims if utc(r['created_at']).date()==clock.date()]
             recent=[r for r in claims if clock-timedelta(seconds=60)<utc(r['created_at'])<=clock]
             live=sum(r['category'].startswith('LIVE_') for r in today)
-            reserve=sum(v for k,v in RESERVES.items() if k!=category)
+            reserve = (100 if category in {'PREMATCH_DISCOVERY', 'PREMATCH_REVIEW', 'STATUS'}
+                       else 0 if category == 'SETTLEMENT'
+                       else sum(v for k, v in RESERVES.items() if k != category))
             if category.startswith('LIVE_') and live>=LIVE_DAILY_CAP:
                 raise FootballQuotaError('LIVE_DAILY_CAP')
             available=min(self.daily_limit-len(today),provider['daily_remaining'])

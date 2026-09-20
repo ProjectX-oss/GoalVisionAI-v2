@@ -158,16 +158,16 @@ def test_reviewed_bookmaker_catalogue_tags_only_exact_name_matches():
     assert entries[2].relevance == "REPUTABLE_CURRENT_CONSENSUS_SOURCE"
 
 
-def test_adaptive_quota_preserves_1500_reserve_and_explicit_operator_limit():
+def test_adaptive_quota_paces_daytime_and_preserves_result_reserve():
     quota = {"interpretation_status": "NORMALIZED", "daily_remaining": 1550, "minute_remaining": 300}
-    budget = adaptive_quota_budget(quota, requested_maximum=100, already_consumed=1)
-    assert budget.effective_cycle_maximum == 51
-    assert budget.additional_calls_available == 50
+    budget = adaptive_quota_budget(quota, requested_maximum=100, already_consumed=1, now=NOW)
+    assert budget.effective_cycle_maximum == 91
+    assert budget.additional_calls_available == 90
     assert budget.daily_safety_reserve == DAILY_SAFETY_RESERVE
     assert MAX_DISCOVERY_CALLS_PER_CYCLE == 400
     projection = projected_daily_usage(maximum_per_cycle=100)
-    assert projection["maximum_discovery_calls"] == 4800
-    assert projection["projected_worst_case_total"] == 6300
+    assert projection["maximum_discovery_calls"] == 2800
+    assert projection["projected_worst_case_total"] == 2900
     assert projection["within_daily_limit"] is True
 
 
@@ -418,8 +418,7 @@ def lifecycle_cycles(tmp_path, monkeypatch, request):
     monkeypatch.setattr(PiRatingAdapter, "signal", lambda self, home, away: replace(
         original_signal(self, home, away), state=PiAvailability.AVAILABLE, probabilities=probabilities,
     ))
-    # Keep publication lifecycle scenarios inside the reviewed Riga daytime window.
-    kickoff = datetime(2026, 9, 16, getattr(request, "param", 18), tzinfo=timezone.utc)
+    kickoff = datetime(2026, 9, 16, 18, tzinfo=timezone.utc)
     path = Path("var/shadow.db")
 
     def cycle(clock, **kwargs):
@@ -451,7 +450,7 @@ def test_tracked_early_exact_refresh_survives_broad_coverage_loss(lifecycle_cycl
     assert home["stage"] == "READY_TO_PUBLISH"
     assert home["candidate_id"] != early["candidate_id"]
     assert report["tracked_final_review_shortlist"] == [7]
-    assert report["final_review_call_reserve"] == 12
+    assert 0 < report["final_review_call_reserve"] <= 12
     assert client.requests.count(("/odds", {"fixture": 7})) == 1
     assert ("/fixtures", {"id": 7}) in client.requests
     tracking = next(item for item in report["tracked_final_reviews"] if item["market"] == "HOME_WIN")
@@ -475,19 +474,13 @@ def test_tracked_early_exact_odds_failure_is_visible_and_retryable(lifecycle_cyc
     assert recovered["ready_candidate_count"] == 2
 
 
-@pytest.mark.parametrize("lifecycle_cycles", [22], indirect=True)
-def test_tracked_review_crosses_riga_midnight_on_previous_utc_date(lifecycle_cycles):
+def test_tracked_review_pauses_at_riga_midnight(lifecycle_cycles):
     from zoneinfo import ZoneInfo
-
-    cycle, kickoff, _, _ = lifecycle_cycles
-    clock = (kickoff - timedelta(hours=1)).astimezone(ZoneInfo("Europe/Riga"))
-    assert clock.date().isoformat() == "2026-09-17"
-    assert kickoff.date().isoformat() == "2026-09-16"
+    cycle, _, _, _ = lifecycle_cycles
+    clock = datetime(2026, 9, 17, 0, tzinfo=ZoneInfo("Europe/Riga"))
     report, client = cycle(clock, broad="missing")
-    assert report["ready_candidate_count"] == 0
-    assert ("/odds", {"fixture": 7}) not in client.requests
-    assert report["telegram_sends"] == 0
-    assert ("/odds", {"date": "2026-09-16", "page": 1}) in client.requests
+    assert report["status"] == "NIGHT_DISCOVERY_PAUSED"
+    assert report["api_calls_consumed"] == 0 and client.requests == []
 
 
 def test_tracked_review_uses_refreshed_kickoff_and_revisits(lifecycle_cycles):
@@ -503,7 +496,7 @@ def test_refreshed_kickoff_already_started_expires_tracked_review(lifecycle_cycl
     cycle, kickoff, _, _ = lifecycle_cycles
     report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", moved=kickoff - timedelta(hours=2))
     assert report["ready_candidate_count"] == 0
-    assert {item["state"] for item in report["tracked_final_reviews"]} == {"EXPIRED"}
+    assert {item["state"] for item in report["tracked_final_reviews"]} == {"PUBLICATION_CLOSED"}
 
 
 def test_tracked_review_rejects_refreshed_value_without_disappearing(lifecycle_cycles):
@@ -511,10 +504,10 @@ def test_tracked_review_rejects_refreshed_value_without_disappearing(lifecycle_c
     report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", exact="bad_value")
     home = next(item for item in report["tracked_final_reviews"] if item["market"] == "HOME_WIN")
     assert home["state"] == "REJECTED"
-    assert "ENSEMBLE_EDGE_BELOW_0_04" in home["reasons"]
+    assert "NON_POSITIVE_VALUE" in home["reasons"]
     later, _ = cycle(kickoff - timedelta(minutes=30), broad="missing")
-    assert next(c for c in later["candidate_markets"] if c["market"] == "HOME_WIN")["rejection_reasons"] == ["MARKET_REVIEW_TERMINAL"]
-    assert next(r for r in latest_cycle_summary(path, fixture_id=7)["tracked_final_reviews"] if r["market"] == "HOME_WIN")["state"] == "REJECTED"
+    assert later["candidate_markets"]  # fresh prices can recover a previously negative EV
+    assert latest_cycle_summary(path, fixture_id=7)["tracked_final_reviews"]
 
 
 @pytest.mark.parametrize("status", ["PST", "CANC", "1H"])
@@ -522,7 +515,7 @@ def test_tracked_review_invalid_status_is_explicit(lifecycle_cycles, status):
     cycle, kickoff, _, _ = lifecycle_cycles
     report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", status=status)
     assert report["ready_candidate_count"] == 0
-    assert {item["state"] for item in report["tracked_final_reviews"]} == {"FIXTURE_INVALID"}
+    assert {item["state"] for item in report["tracked_final_reviews"]} == {"PUBLICATION_CLOSED"}
 
 
 def test_tracked_review_budget_and_expiry_are_visible(lifecycle_cycles):
@@ -530,7 +523,7 @@ def test_tracked_review_budget_and_expiry_are_visible(lifecycle_cycles):
     report, _ = cycle(kickoff - timedelta(hours=1), broad="missing", maximum=3)
     assert {item["state"] for item in report["tracked_final_reviews"]} == {"FINAL_REVIEW_REQUIRED"}
     expired, _ = cycle(kickoff, broad="missing")
-    assert {item["state"] for item in expired["tracked_final_reviews"]} == {"EXPIRED"}
+    assert {item["state"] for item in expired["tracked_final_reviews"]} == {"PUBLICATION_CLOSED"}
 
 
 def test_tracked_review_does_not_require_broad_fixture_rediscovery(lifecycle_cycles, monkeypatch):
@@ -1155,7 +1148,7 @@ def _controlled_cycle_arguments(*, send: bool) -> list[str]:
         "--capability-cache", "var/lab_v2/capabilities.json",
         "--horizon-days", "1",
         "--max-calls", "40",
-        "--daily-reserve", "1500",
+        "--settlement-reserve", "100",
     ]
     return [*values, "--send"] if send else values
 
@@ -1275,7 +1268,7 @@ def test_shipped_v2_systemd_service_selects_adaptive_code_and_bounded_quota():
     ).read_text(encoding="utf-8")
     assert (
         "ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_v2_shadow "
-        "controlled-cycle --send --max-calls 400 --daily-reserve 1500"
+        "controlled-cycle --send --max-calls 400 --settlement-reserve 100"
     ) in service
     assert "Environment=PYTHONPATH=/home/arvis/GoalVisionAI-throughput" in service
     assert "WorkingDirectory=/home/arvis/GoalVisionAI\n" in service

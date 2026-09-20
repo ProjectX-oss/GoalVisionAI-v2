@@ -132,7 +132,7 @@ def test_nonfinite_vig_input_fails_closed():
     assert remove_margin_multiplicative({'BTTS_YES': Decimal('NaN'), 'BTTS_NO': Decimal('2')}) is None
 
 
-def test_adaptive_sweep_preserves_due_reserve_despite_broad_absence(tmp_path, monkeypatch):
+def test_adaptive_sweep_releases_unused_reserve_after_complete_absence(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     days = [(NOW + timedelta(days=i)).date().isoformat() for i in range(3)]
     class Client(FakeClient):
@@ -151,8 +151,8 @@ def test_adaptive_sweep_preserves_due_reserve_despite_broad_absence(tmp_path, mo
     assert report['coverage_by_date'][days[1]]['stable_complete_sweep']
     assert report['fixtures_with_incomplete_odds_page_coverage'] == 200
     assert report['initial_final_review_reserve'] == 45
-    assert report['remaining_final_review_reserve'] == 45
-    assert client.request_count == 55 and runner._remaining() == 45
+    assert report['remaining_final_review_reserve'] == 0
+    assert client.request_count == 70 and runner._remaining() == 30
     repo.close()
 
 

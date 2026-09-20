@@ -15,7 +15,7 @@ def quota(daily=7500,minute=300):
 @pytest.mark.parametrize('category',list(RESERVES)+['PREMATCH_DISCOVERY'])
 def test_protected_reserves(repo,category):
     shared=SharedQuota(repo)
-    reserve=sum(v for k,v in RESERVES.items() if k!=category)
+    reserve = 100 if category in {'PREMATCH_DISCOVERY', 'PREMATCH_REVIEW', 'STATUS'} else 0 if category == 'SETTLEMENT' else sum(v for k,v in RESERVES.items() if k!=category)
     with pytest.raises(FootballQuotaError): shared.claim(category,now=START,provider=quota(daily=reserve))
     assert shared.claim(category,now=START,provider=quota(daily=reserve+1))['protected_reserve']==reserve
 

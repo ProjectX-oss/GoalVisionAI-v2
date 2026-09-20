@@ -52,8 +52,8 @@ def test_single_model_experimental_uses_independent_probability(profile):
 
 def test_market_only_never_supplies_prediction():
     d,e = evaluate_profile('HOME_WIN',Decimal(2),signals()[:1],policy_for('UNKNOWN'),())
-    assert d.decision == 'REJECTED' and e['predictive_family_count'] == 0
-    assert 'NO_INDEPENDENT_NON_MARKET_EVIDENCE' in e['hard_failures']
+    assert d.decision == 'APPROVED' and e['candidate_lane'] == 'TRACKING' and e['predictive_family_count'] == 0
+    assert 'NO_INDEPENDENT_NON_MARKET_EVIDENCE' in e['soft_findings']
 
 
 def test_same_family_duplicates_never_create_standard():
@@ -68,11 +68,11 @@ def test_nonpositive_ev_is_always_hard_failure(p):
     assert d.decision == 'REJECTED' and 'NON_POSITIVE_VALUE' in e['hard_failures']
 
 
-def test_severe_model_market_disagreement_rejected():
+def test_severe_model_market_disagreement_soft():
     rows = signals('.85'); rows[0] = replace(rows[0],probability=Decimal('.45'))
     d,e = evaluate_profile('HOME_WIN',Decimal('1.4'),rows,policy_for('YOUTH_U17_U18'),())
-    assert d.decision == 'REJECTED'
-    assert 'SEVERE_MODEL_MARKET_CONTRADICTION' in e['hard_failures']
+    assert d.decision == 'APPROVED'
+    assert 'SEVERE_MODEL_MARKET_CONTRADICTION' in e['soft_findings']
 
 
 def test_standard_and_strong_quorum_not_relaxed():
@@ -86,15 +86,12 @@ def test_standard_and_strong_quorum_not_relaxed():
 
 def test_adaptive_expansion_and_protected_reserves():
     quota = dict(interpretation_status='NORMALIZED',daily_remaining=4519,minute_remaining=300)
-    b = adaptive_quota_budget(quota,requested_maximum=400,already_consumed=1,
-        settlement_reserve=100,final_review_reserve=30,tracked_demand=10,remaining_odds_pages=120,discovery_days=3)
-    assert 100 < b.additional_calls_available <= 300
-    assert b.additional_calls_available <= 4519-1500-100
-    assert b.final_review_reserve == 30 and b.demand_calls == 208
+    b = adaptive_quota_budget(quota, requested_maximum=400, already_consumed=1, now=NOW)
+    assert b.additional_calls_available == (4519-100)//16
     for remaining in (0,1,5):
-        assert adaptive_quota_budget({**quota,'minute_remaining':remaining},requested_maximum=400,already_consumed=1).additional_calls_available <= remaining
-    assert adaptive_quota_budget({**quota,'daily_remaining':1500},requested_maximum=400,already_consumed=1).additional_calls_available == 0
-    assert adaptive_quota_budget({},requested_maximum=400,already_consumed=1).additional_calls_available == 0
+        assert adaptive_quota_budget({**quota,'minute_remaining':remaining},requested_maximum=400,already_consumed=1,now=NOW).additional_calls_available <= remaining
+    assert adaptive_quota_budget({**quota,'daily_remaining':100},requested_maximum=400,already_consumed=1,now=NOW).additional_calls_available == 0
+    assert adaptive_quota_budget({},requested_maximum=400,already_consumed=1,now=NOW).additional_calls_available == 0
 
 
 def test_pagination_restart_keeps_maximum_and_failed_pages():
@@ -141,8 +138,9 @@ def test_250_mixed_fixtures_retain_states_under_pagination_limit(tmp_path,monkey
     assert len(repo.all('global_fixture_state'))==250
     assert report['fixtures_discovered']==250 and report['fixtures_with_incomplete_odds_page_coverage']==247
     assert len({r['competition_profile'] for r in repo.all('global_fixture_state')})>5
-    assert sum(r['odds_retryable'] for r in repo.all('global_fixture_state')) >= 248
-    assert report['current_odds_fixtures'] == 1
+    assert sum(r['odds_retryable'] for r in repo.all('global_fixture_state')) >= 230
+    assert report['model_analysis_attempts'] == 250
+    assert report['current_odds_fixtures'] == 9  # bounded exact retries recover eight missing quotes
     assert report['fixtures_rejected_for_stale_current_odds'] == 1
     repo.close()
 

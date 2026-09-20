@@ -6,6 +6,7 @@ from contextlib import redirect_stdout
 from dataclasses import replace
 from decimal import Decimal
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from app.database import Database, MigrationManager
 from app.historical_backtesting.models import SupportedMarket
@@ -347,17 +348,23 @@ class ReviewedHistoricalOddsTests(unittest.TestCase):
         self.assertEqual(caught.exception.code, 0)
 
     def test_extended_foundation_is_deterministic_and_source_database_read_only(self):
+        temporary = TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        source = Path(temporary.name) / "protected-source.db"
+        with sqlite3.connect(source) as connection:
+            connection.execute("CREATE TABLE sentinel(value TEXT)")
+            connection.execute("INSERT INTO sentinel VALUES ('unchanged')")
         root = Path(__file__).parent.parent
         reviews = tuple(root / "docs" / "data_sources" / name for name in (
             "the_odds_api_historical_archive_review_v1.json",
             "sportmonks_premium_historical_odds_review_v1.json",
             "betfair_historical_exchange_review_v1.json",
         ))
-        isolated = root / "var" / "test_extended_reviewed_historical_odds.db"
+        isolated = Path(temporary.name) / "isolated.db"
         kwargs = dict(
             prior_real_evidence_path=root / "docs" / "rehearsals" / "live_78_reviewed_real_historical_foundation_2026-07-31.json",
             prior_odds_evidence_path=root / "docs" / "rehearsals" / "live_78_reviewed_historical_odds_backtest_2026-07-31.json",
-            source_review_paths=reviews, protected_database_path=root / "data" / "goalvision.db",
+            source_review_paths=reviews, protected_database_path=source,
             isolated_database_path=isolated, branch="goalvision/live-78-fresh-calibration",
             starting_commit="5679346", execution_timestamp_utc="2026-08-01T00:00:00Z",
         )

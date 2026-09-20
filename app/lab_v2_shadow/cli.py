@@ -17,16 +17,23 @@ from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
 
 from .audit import audit_recent_lab, settled_loss_postmortems
 from .publication import prepare_v2_publications
-from .quota import DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE
+from .quota import DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE, discovery_state
 from .repository import ShadowEvidenceRepository
-from .runner import LabV2ShadowRunner
+from .runner import LabV2ShadowRunner, night_report
 from .summary import latest_cycle_summary
 
 
 async def _cycle(args: argparse.Namespace) -> dict[str, object]:
-    client = FootballClient(request_limit=args.max_calls)
-    repository = ShadowEvidenceRepository(args.shadow_database)
     clock = datetime.now(timezone.utc)
+    repository = ShadowEvidenceRepository(args.shadow_database)
+    if discovery_state(clock) == "NIGHT_DISCOVERY_PAUSED":
+        try:
+            report = night_report(clock)
+            repository.append("rehearsal", "lab-v2-night-" + fingerprint(clock), report, created_at=clock)
+            return report
+        finally:
+            repository.close()
+    client = FootballClient(request_limit=args.max_calls)
     adaptive_repository = None
     coordinator = None
     if getattr(args, 'adaptive_database', None):
@@ -38,7 +45,7 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
         runner = LabV2ShadowRunner(
             client, repository, capability_cache_path=args.capability_cache,
             analysis_path=args.analysis_database, maximum_calls=args.max_calls,
-            daily_safety_reserve=args.daily_reserve, adaptive_learning=coordinator,
+            daily_safety_reserve=args.daily_reserve, adaptive_learning=coordinator, runtime_clock=lambda: datetime.now(timezone.utc),
         )
         report = await runner.run(
             now=clock,
@@ -50,7 +57,7 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
             shadow_now=datetime.now(timezone.utc)
             shadow_inputs = [_leg(item, shadow_now)
                              for item in report.get('candidate_markets', [])
-                             if item.get('quote_provenance_fingerprint') and item.get('ensemble_probability')
+                             if item.get('decision') == 'APPROVED' and item.get('quote_provenance_fingerprint') and item.get('ensemble_probability')
                              and item.get('predictive_family_count',0)>0
                              and datetime.fromisoformat(item['kickoff_utc'])>shadow_now
                              and 'ODDS_STALE_WAITING_REFRESH' not in item.get('rejection_reasons',[])]
@@ -193,8 +200,10 @@ def main(argv: list[str] | None = None) -> int:
         cycle.add_argument("--capability-cache", type=Path, default=Path("var/lab_v2/capabilities.json"))
         cycle.add_argument("--horizon-days", type=int, default=3)
         cycle.add_argument("--max-calls", type=int, default=MAX_DISCOVERY_CALLS_PER_CYCLE)
-        cycle.add_argument("--daily-reserve", type=int, default=DAILY_SAFETY_RESERVE)
-        cycle.add_argument("--adaptive-database", type=Path, help="Opt-in LAB adaptive registry; omitted preserves accepted behavior")
+        cycle.add_argument("--settlement-reserve", "--daily-reserve", dest="daily_reserve", type=int,
+                           choices=[DAILY_SAFETY_RESERVE], default=DAILY_SAFETY_RESERVE,
+                           help="Result reserve; discovery uses time-aware Riga daytime pacing")
+        cycle.add_argument("--adaptive-database", type=Path, help="Opt-in LAB adaptive registry")
         cycle.add_argument("--send", action="store_true", help="Explicitly publish genuine READY picks to the fixed Lab chat")
     args = parser.parse_args(argv)
     if args.command == "audit":

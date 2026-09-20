@@ -56,7 +56,7 @@ def _ready_candidate(fixture_id: int, odds: str) -> dict[str, object]:
         "offered_odds": odds,
         "quote_provenance_fingerprint": f"current-quote-{fixture_id}",
         "edge": "0.06",
-        "ensemble_probability": "0.86",
+        "ensemble_probability": str(Decimal(1) / Decimal(odds) + Decimal("0.06")),
         "confidence": "MEDIUM",
         "experimental_confidence": "MEDIUM",
         "provider_type": "API_FOOTBALL_CURRENT_ODDS",

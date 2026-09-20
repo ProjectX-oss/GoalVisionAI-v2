@@ -1391,3 +1391,12 @@ Review after completing the current priority.
 - Add explicit opt-in runtime composition, read-only operator views, shared per-attempt quota governance and synthetic forward rehearsal.
 - Preserve accepted live checkout, installed units, credentials, source ledgers and Official state. No deployment or timer enablement.
 - Operator architecture, provenance gaps, limits and future Test deployment procedure: `docs/runbooks/adaptive_lab_live.md`.
+
+## 2026-09-20 — PREMATCH production-lineage integration
+
+- Port PREMATCH light safety onto exact ce028907, preserving production adaptive capabilities.
+- Pace daytime discovery with 100 result calls reserved; analyze missing-odds fixtures locally.
+- Preserve exact refresh, publication isolation and Official policy; prioritize reviewed major competitions.
+- Integrate canonical non-public evidence into existing adaptive settlement/learning with deduplication.
+- Add deterministic 958-fixture incident regression; see docs/LAB_V2_PREMATCH_SIMPLIFICATION.md.
+- No deployment or production state changes.

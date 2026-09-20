@@ -67,7 +67,10 @@ async def cycle(args: argparse.Namespace) -> dict:
         if args.command == 'settle':
             stage = 'SETTLEMENT'
             shadow_pending=bool(adaptive and any(not adaptive.get('shadow_settlements',p['prediction_id'])
-                              for p in adaptive.all('shadow_predictions','PREMATCH')))
+                              for p in adaptive.all('shadow_predictions','PREMATCH')) or adaptive and any(
+                not adaptive.get('canonical_results', str(p['fixture_id']) + ':' + p['market'])
+                and (datetime.now(timezone.utc) - datetime.fromisoformat(p['kickoff_utc'])).total_seconds() >= 7200
+                for p in adaptive.all('canonical_opportunities', 'PREMATCH')))
             if _settlement_work_relevant(ledger, datetime.now(timezone.utc)) or shadow_pending:
                 if adaptive:
                     token=CATEGORY.set('STATUS')
@@ -83,7 +86,7 @@ async def cycle(args: argparse.Namespace) -> dict:
                     output.update(await service.check_results(client,adaptive_learning=LearningCoordinator(adaptive)))
                     remaining=max(0,21-client.request_count)
                     if remaining and shadow_pending:
-                        output['shadow']=await settle_pending_shadow(adaptive,client,now=datetime.now(timezone.utc),maximum_calls=min(5,remaining))
+                        output['shadow']=await settle_pending_shadow(adaptive,client,now=datetime.now(timezone.utc),maximum_calls=min(5,remaining),ledger=ledger)
                 finally: CATEGORY.reset(token)
             else:
                 output.update(await service.check_results(client))

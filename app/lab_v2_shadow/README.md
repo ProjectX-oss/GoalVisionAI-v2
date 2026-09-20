@@ -1,90 +1,147 @@
-# LAB V2 competition-aware global discovery
+# Lab V2 PREMATCH
 
-This package is the isolated Lab-only V2 selection path. It consumes only
-current/upcoming fixture data, completed football results/goals, current
-API-Football predictions and current bookmaker quotes captured during the
-run. The default `rehearse` command never constructs Telegram transport. The
-separate `controlled-cycle --send` boundary can publish only final-reviewed
-READY evidence through the existing exactly-once Lab ledger and settlement.
+This isolated Lab path analyzes valid upcoming fixtures first, scores quality
+and risk, then ranks selected opportunities for publication. Official policy,
+bankroll, statistics, activation and rollback are separate. LIVE is disabled.
+No historical bookmaker odds are used. Importing this package never schedules
+work or sends Telegram.
 
-Persisted analysis records intentionally retain `analysis_mode =
-LAB_V2_NO_SEND` because candidate generation itself cannot send. They also
-record `publication_requested` and `publication_enabled`, while a separate
-`publication_cycle` record captures transport construction, READY count,
-publication attempts and successful Telegram sends for the outer controlled
-handoff. A claimed delivery is treated as consumed even when its outcome is
-unknown, so a later quote refresh or replay cannot create a duplicate send.
+## Discovery window and quota
 
-It never retrieves historical bookmaker odds, cannot address Official, cannot
-mutate Official state and never installs or starts a timer by itself.
+Europe/Riga is authoritative, including DST. Discovery runs every 30 minutes
+from **09:00 through 22:30**. At 23:00–08:59 both CLI entry points and the runner
+return `NIGHT_DISCOVERY_PAUSED` before provider access. The CLI does not even
+construct the provider at night. The live CLI also supplies a runtime clock to
+stop new provider operations if a daytime cycle crosses 23:00. Existing in-flight
+provider requests may finish. The repository timer has `Persistent=false` to
+avoid catch-up discovery outside the window. Result processing and local learning
+are independent of this discovery guard.
 
-For newly classified candidates, optional lineups, injuries, standings and
-advanced statistics contribute profile-specific uncertainty instead of global
-rejection. All markets still require exact current fixture and quote refresh
-before readiness. Legacy unprofiled evidence retains its historical rules.
-Near-kickoff review calls are reserved before optional prediction enrichment,
-and imminent kickoffs are reviewed first. The reserve includes all three
-bounded provider attempts for each exact refresh endpoint. Provider errors do
-not satisfy lineup/injury freshness, and a refreshed kickoff replaces the
-discovery kickoff before readiness is decided.
+After `/status`, provider-reported remaining daily and minute quotas control:
 
-V4 counts evidence families, not adapter rows: Pi, goals/form CMI and the
-persisted CMI-derived model share one result-history/model-context independence
-group. Every vote is selected inside the candidate's own market family, so a
-totals preference cannot be treated as a 1X2 vote. Probability edge and
-decimal expected value are retained as separate quantities.
-
-Each discovered fixture receives an explicit coverage/lifecycle status,
-including no odds, stale odds, unsupported markets, unnormalizable odds,
-incomplete page coverage, missing model context, evaluated rejection, EARLY,
-FINAL_REVIEW and READY. Full date-odds pages are not retained as a 15-minute
-cache because the operational cycle is 30 minutes; normalized current quote
-and candidate evidence remains append-only. Cycle summaries reference the
-individual candidate documents instead of duplicating their full payloads.
-
-EARLY fixture/market identities now survive discovery cycles in the small
-`lab_v2_final_review_pending` projection, backed by immutable
-`final_review_tracking` evidence. Upcoming legacy EARLY candidate documents
-are recovered through an indexed kickoff-range query. Previously captured
-odds are never copied into a new evaluation. Tracked fixtures enter the
-reserved final-review shortlist even if broad fixture or odds discovery
-omits them or rejects their odds as stale. Exact fixture/current-odds,
-lineup and injury requests bypass cache near kickoff; current-season result
-context and supported predictions are also refreshed within the call budget.
-
-`tracked_final_reviews` retains explicit READY, rejection, pending budget,
-unavailable odds, stale odds, invalid fixture and expiry outcomes. The current
-window remains T-75 through T-10, using the refreshed UTC kickoff. A failed
-exact quote response supersedes broad quotes; it cannot reuse an older price.
-Terminal outcomes remain inspectable with `summary --fixture-id`, which also
-resolves `candidate_ids` to concise per-market evidence. Quotes and candidate
-fingerprints may change while the tracked identity remains fixture ID/market.
-
-The incident evidence and regression results are documented in
-`docs/LAB_V2_EARLY_CANDIDATE_AUDIT_2026-09-17.md`. No service-unit changes are
-needed; the new Lab-only table/index are created on the next authorized run.
-The discovery timer remains stopped for operator review.
-
-V2 has no hard minimum decimal-odds floor for singles, individual combo legs or
-combined combo odds. Current valid prices and every existing ensemble, value,
-freshness, final-review, independence, correlation, exposure and exactly-once
-gate remain mandatory. Odds bands are retained only for transparent reporting.
-Official odds policy is separate and unchanged.
-
-```bash
-PYTHONPATH=. python -m app.lab_v2_shadow audit
-PYTHONPATH=. python -m app.lab_v2_shadow summary
-PYTHONPATH=. python -m app.lab_v2_shadow summary --fixture-id 123456
-PYTHONPATH=. python -m app.lab_v2_shadow rehearse --max-calls 100 --daily-reserve 1500
-PYTHONPATH=. python -m app.lab_v2_shadow controlled-cycle --send --max-calls 100 --daily-reserve 1500
+```
+usable = max(0, daily_remaining - 100)
+cycles = remaining half-hour daytime slots, including the current slot
+additional_calls = min(usable // cycles, minute_remaining,
+                       configured_cycle_maximum - calls_already_used)
 ```
 
-The launch runbook and safety report are
-`docs/LAB_V2_BROAD_COVERAGE_LAUNCH.md`. The Phase 1 baseline remains in
-`docs/LAB_V2_PHASE1_PI_COVERAGE_SHADOW.md`.
+At 09:00 there are 28 slots; at 22:30 there is one. The maximum is 400 calls,
+including bootstrap and retries. Work only consumes calls when needed. The
+provider client enforces the paced ceiling for retries too; unknown quota stops
+provider work after status. The explicit 100-call reserve is for settlement and
+results, not a fixed 1,500-call discovery buffer. `--daily-reserve` is a deprecated
+alias for `--settlement-reserve`; 1500 is rejected, not silently retained.
 
-The global redesign, thirteen competition profiles, candidate lanes, immutable
-forward evidence, fair enrichment and no-send diagnostic commands are described
-in `docs/LAB_V2_GLOBAL_COMPETITION_POLICY.md`. The measured baseline, one real
-rehearsal, offline correction replay and verification limitations are in
-`docs/audits/lab_v2_global_overhaul_2026-09-17.md`.
+## Coverage and analysis
+
+Priority uses the existing competition classifier: senior men's professional,
+international club, international senior, and full provider-coverage tier A
+fixtures. There are no new league-ID admission lists. A reserved priority phase
+finishes each fixture's exact-odds retry, league history and supported provider
+prediction before ordinary fixture enrichment consumes the remainder. Broad date
+pages remain shared discovery. All other profiles retain global discovery and
+fair enrichment ordering when quota permits. Priority means first access to
+analysis resources, never a required bet or a promise of provider availability.
+
+`ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD` means no matching fixture ID occurred
+on any valid page of a completed date sweep. It is assigned before bookmaker
+filtering can matter. The implementation retains this diagnostic. Up to 20
+priority fixtures per cycle can get one exact current-odds request when broad
+coverage is missing/stale, subject to the cycle quota; bounded provider retries
+remain inside the same cap. Persisted least-served ordering rotates bounded
+retries across cycles and restarts. A same-cycle exact response is reused by final
+review, avoiding a duplicate odds request. Ordinary misses wait for a later
+cycle. Existing bookmaker matching, timestamp and normalization rules remain.
+
+Every legitimate upcoming fixture reaches local context/model evaluation,
+including missing and stale prices. Append-only `model_analysis` documents
+retain available history, Pi, API and persisted-model probabilities without
+inventing a price or EV. No-price fixtures remain `TRACKING` with
+`WAITING_FOR_REFRESH` analysis evidence. New quotes trigger a fresh assessment.
+
+A started fixture is valid result/audit/learning evidence. Global state becomes
+`RESULT_TRACKING`, and its publication review becomes `PUBLICATION_CLOSED`.
+Discovery does not enrich it as a new PREMATCH selection. Existing captured
+observations remain settleable. Cancellation/postponement also closes new
+publication without corrupting the fixture identity.
+
+## Light safety and publication
+
+Lab V2 has no 1.60 odds floor for singles or combo legs. Decimal prices must be
+finite and greater than 1. Positive EV at 1.40 is allowed. Official's 1.60 rule
+is untouched.
+
+The profile policy retains these as visible soft findings rather than vetoes:
+
+- `ENSEMBLE_EDGE_BELOW_0_04`, `VALUE_BELOW_PROFILE_THRESHOLD`
+- `INSUFFICIENT_INDEPENDENT_SIGNALS`, `NO_INDEPENDENT_NON_MARKET_EVIDENCE`
+- `MATERIAL_SIGNAL_DISAGREEMENT`, `WEIGHTED_AGREEMENT_BELOW_0_65`
+- `ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE`, `SEVERE_MODEL_MARKET_CONTRADICTION`
+- The existing provider-context equivalent
+  `SEVERE_CURRENT_MATCH_INTELLIGENCE_CONTRADICTION`, and unavailable consensus.
+
+Existing profile uncertainty, feature weights, probability calculations and
+independence grouping are reused. No new numeric confidence penalty is added.
+Quality findings cap confidence at LOW and the lane at EXPERIMENTAL. A positive
+edge below the existing experimental edge-plus-uncertainty margin, or inadequate
+independent evidence, keeps the market in TRACKING. The field
+`experimental_lane_edge` describes a lane threshold, not a rejection threshold.
+Stronger evidence can reach STANDARD or STRONG using the existing thresholds.
+The internal ensemble still emits its original diagnostics; `evaluate_profile`
+is the authoritative Lab PREMATCH decision boundary.
+
+Hard non-actionable outcomes are non-positive EV and invalid/corrupt contracts,
+identities, prices, probabilities, duplicate signal sources or unsupported market
+mappings. Missing data is deferred, not represented as trusted EV. A previously
+negative-EV tracked selection can be reconsidered with new current evidence.
+
+Only ranked READY candidates can enter the separate publication handoff.
+TRACKING never becomes READY. Exact fixture/quote review, kickoff restrictions,
+immutable captured quotes, distinct combo fixtures/teams, destination isolation,
+and delivery claims remain enforced. The handoff rechecks current quote age,
+positive EV and kickoff at preparation time. Ranking prefers lanes, then edge
+and stable tie-breaks. There is no minimum publication count. A claimed or
+indeterminate delivery cannot be resent under a refreshed quote identity.
+
+## Canonical shadow learning
+
+The existing append-only `forward_selection` / `forward_result` path now freezes
+the first fresh, pre-kickoff, positive-EV observation per fixture/market even if
+it is EARLY or TRACKING and never sent. It records identity, competition,
+kickoff, selection, probability, odds, implied probability, edge, EV,
+confidence/lane, evidence quality, model/policy generation, capture/retrieval
+and provider timestamps, and quote provenance. Refreshed quotes and subsequent
+cycles cannot replace or multiply the observation.
+
+Production adaptive observer, research/AutoML, champion registry, governance,
+health and weekly schedules remain in place. With the existing adaptive database
+configured, the coordinator freezes one canonical fresh positive-EV observation
+per fixture/market. The existing settlement worker resolves pending canonical
+samples within its current call limit; the observer imports them into the same
+adaptive learning evidence. Published copies are deduplicated. No separate
+shadow worker or Telegram destination is introduced. Public SINGLE/COMBO statistics
+and bankroll are unaffected. Audit schema 5 adds append-only canonical tables.
+
+## Commands and status
+
+```bash
+.venv/bin/python -m app.lab_v2_shadow summary --human
+.venv/bin/python -m app.lab_v2_shadow summary --fixture-id 123456
+.venv/bin/python -m app.lab_v2_shadow rehearse --max-calls 400 --settlement-reserve 100
+```
+
+`rehearse` never constructs Telegram transport. The explicitly armed
+`controlled-cycle --send` command uses the existing Lab ledger. The repository
+service template preserves that existing arming; updating a template does not
+deploy it.
+
+Status distinguishes discovery, model-analysis attempts, fixtures with model
+probabilities, current-odds market scoring, waiting refresh, priority discovered
+and analyzed, soft confidence findings, actual hard rejections, new shadow
+observations, READY, sends, provider calls and remaining quota. A current
+nighttime pause is intentional and has no DEGRADED warning. Last-cycle counters
+remain visible separately from the current discovery clock state.
+
+No schema migration is needed. Historical rows and losing results are unchanged.
+See [implementation and validation report](../../docs/LAB_V2_PREMATCH_SIMPLIFICATION.md).

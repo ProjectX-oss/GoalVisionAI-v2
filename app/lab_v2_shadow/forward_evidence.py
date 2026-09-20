@@ -7,16 +7,17 @@ from math import sqrt
 
 from .repository import ShadowEvidenceRepository
 from .profiles import policy_for
+from app.current_odds_forward_test.freshness import API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS, RETRIEVAL_MAX_AGE_SECONDS
 
 
 def capture_selection(repository: ShadowEvidenceRepository, candidate: dict, *, now: datetime) -> bool:
-    """Freeze the first ready fixture/market quote; refreshed prices cannot replace it."""
-    if candidate['stage'] != 'READY_TO_PUBLISH' or candidate['decision'] != 'APPROVED':
+    """Freeze the first fresh positive-EV fixture/market, independent of publication."""
+    if candidate['decision'] != 'APPROVED' or not current_quote(candidate, now):
         return False
     if datetime.fromisoformat(candidate['kickoff_utc']) <= now:
-        raise ValueError('FORWARD_CAPTURE_MUST_PRECEDE_KICKOFF')
+        return False
     key = f"{candidate['fixture_id']}:{candidate['market']}"
-    if any(row['selection_key'] == key for row in repository.all('forward_selection')):
+    if repository.get('forward_selection', key) is not None:
         return False
     p, odds = Decimal(candidate['ensemble_probability']), Decimal(candidate['captured_odds'])
     if not p.is_finite() or not odds.is_finite() or not 0 < p < 1 or odds <= 1 or p * odds <= 1:
@@ -24,20 +25,20 @@ def capture_selection(repository: ShadowEvidenceRepository, candidate: dict, *, 
     row = {k: candidate[k] for k in ('candidate_id', 'fixture_id', 'league_id', 'competition_profile',
                                     'market', 'candidate_lane', 'ensemble_probability', 'captured_odds',
                                     'quote_provenance_fingerprint', 'kickoff_utc', 'profile_policy_version')}
-    # Preserve the complete immutable candidate, including bookmaker/quote identity,
-    # family count, classifier, model provenance, uncertainty and exact-review evidence.
     row.update(candidate)
-    row.update(selection_key=key, captured_at=now.isoformat(), accounting='LAB_HYPOTHETICAL_FLAT_ONE_UNIT')
+    row.update(selection_key=key, captured_at=now.isoformat(), accounting='SHADOW_LEARNING_ONLY',
+               implied_probability=str(1 / odds), edge=str(p - 1 / odds), expected_value=str(p * odds - 1),
+               telegram_publication=False, bankroll_transaction=False)
     return repository.append('forward_selection', key, row, created_at=now)
 
 
 def capture_result(repository: ShadowEvidenceRepository, selection_key: str, *, outcome: str,
                    source_fingerprint: str, now: datetime) -> bool:
     """Record explicit final-result evidence without any provider or send operation."""
-    rows = [r for r in repository.all('forward_selection') if r['selection_key'] == selection_key]
-    if len(rows) != 1 or outcome not in {'WON', 'LOST', 'VOID'} or not source_fingerprint:
+    row = repository.get('forward_selection', selection_key)
+    if row is None or outcome not in {'WON', 'LOST', 'VOID'} or not source_fingerprint:
         raise ValueError('INVALID_FORWARD_RESULT_REFERENCE')
-    if datetime.fromisoformat(rows[0]['kickoff_utc']) >= now:
+    if datetime.fromisoformat(row['kickoff_utc']) >= now:
         raise ValueError('RESULT_BEFORE_KICKOFF')
     return repository.append('forward_result', selection_key,
                              {'selection_key': selection_key, 'outcome': outcome,
@@ -81,3 +82,16 @@ def performance(repository: ShadowEvidenceRepository) -> list[dict]:
             'eligible_for_manual_policy_review': n >= policy.minimum_tuning_selections and age >= policy.minimum_tuning_days,
             'automatic_tuning_enabled': False})
     return result
+
+
+def current_quote(candidate: dict, now: datetime) -> bool:
+    """Reuse existing source/retrieval age limits at capture and publication."""
+    try:
+        origin = datetime.fromisoformat(candidate['provider_origin_timestamp_utc'])
+        retrieved = datetime.fromisoformat(candidate['goalvision_retrieved_at_utc'])
+        return (origin <= retrieved <= now
+                and (now - origin).total_seconds() <= API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS
+                and (now - retrieved).total_seconds() <= RETRIEVAL_MAX_AGE_SECONDS
+                and bool(candidate.get('quote_provenance_fingerprint')))
+    except (KeyError, TypeError, ValueError):
+        return False

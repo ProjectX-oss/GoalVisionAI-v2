@@ -85,6 +85,14 @@ class ShadowEvidenceRepository:
             )
         return True
 
+    def get(self, kind: str, identity: str) -> dict | None:
+        """Read one canonical observation by its existing primary key."""
+        row = self.connection.execute(
+            "SELECT document_json FROM lab_v2_shadow_evidence WHERE kind=? AND identity=?",
+            (kind, identity),
+        ).fetchone()
+        return json.loads(row[0]) if row else None
+
     def all(self, kind: str) -> list[dict]:
         rows = self.connection.execute(
             "SELECT document_json FROM lab_v2_shadow_evidence WHERE kind=? ORDER BY created_at_utc, identity",
@@ -153,7 +161,7 @@ class ShadowEvidenceRepository:
         """Read active review projections without loading accumulated terminal history."""
         return [json.loads(row[0]) for row in self.connection.execute(
             """SELECT document_json FROM lab_v2_final_review_pending
-            WHERE state NOT IN ('REJECTED','FIXTURE_INVALID','EXPIRED') ORDER BY fixture_id, market"""
+            WHERE state NOT IN ('FIXTURE_INVALID','EXPIRED','PUBLICATION_CLOSED') ORDER BY fixture_id, market"""
         )]
 
     def save_tracked_review(self, document: dict, *, now: datetime) -> None:

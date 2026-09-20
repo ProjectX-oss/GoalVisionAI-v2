@@ -13,7 +13,7 @@ from .capability import CapabilityTier, LeagueCapability
 from .competition_registry import REGISTRY_VERSION, REGISTRY_FINGERPRINT, reviewed_competition
 
 CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V5'
-POLICY_VERSION = 'LAB_COMPETITION_POLICY_V2'
+POLICY_VERSION = 'LAB_PREMATCH_LIGHT_SAFETY_V2'
 
 
 class CompetitionProfile(StrEnum):
@@ -211,3 +211,21 @@ def policy_for(profile: str) -> ProfilePolicy:
                          refresh_minutes=(1440, 360, 75, 45, 20, 10) if volatile else (1440, 360, 75, 30, 10),
                          market_preference=('BTTS', 'TOTAL_2_5', '1X2') if volatile else ('1X2', 'BTTS', 'TOTAL_2_5'),
                          priorities=tuple(sorted(priorities.items())))
+
+
+PRIORITY_PROFILES = frozenset({CompetitionProfile.SENIOR_MEN_PRO,
+    CompetitionProfile.INTERNATIONAL_CLUB, CompetitionProfile.INTERNATIONAL_SENIOR})
+
+
+def is_priority(fixture: Mapping) -> bool:
+    """Reuse competition classification and full coverage, never an admission list."""
+    return (fixture.get('competition_profile') in PRIORITY_PROFILES
+            or fixture.get('capability_tier') == CapabilityTier.TIER_A_FULL)
+
+
+def resource_priority(fixture: Mapping) -> int:
+    """Reviewed provider/country identities put major competitions first."""
+    row = reviewed_competition('API_FOOTBALL', fixture.get('league_id'), fixture.get('country', ''))
+    if row and row.league_id in {39, 140, 78, 135, 61, 2, 3, 848}:
+        return 0
+    return 1 if is_priority(fixture) else 2

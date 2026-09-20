@@ -1,17 +1,16 @@
-"""Persistent weighted fair ordering, independent of league prestige."""
+"""Priority analysis first, persistent fair ordering within each priority class."""
 from __future__ import annotations
 from collections import defaultdict
 from datetime import datetime
 from .repository import ShadowEvidenceRepository
-from .profiles import policy_for
+from .profiles import policy_for, is_priority, resource_priority
 
 
 def fair_order(fixtures: list[dict], repository: ShadowEvidenceRepository, *, phase: str) -> list[dict]:
-    """Least-served category first, then round robin; work is recorded on use.
+    """Priority class first, then least-served category and round robin.
 
-    Counts survive restart. Equal initial category weights prevent a stream of
-    senior fixtures starving any other active profile. Near kickoff affects
-    order within a category, never category inclusion.
+    Counts survive restart. Categories share the remaining ordinary budget.
+    Near kickoff affects order within a category, never category inclusion.
     """
     served: dict[str, int] = defaultdict(int)
     last: dict[int, str] = {}
@@ -29,7 +28,7 @@ def fair_order(fixtures: list[dict], repository: ShadowEvidenceRepository, *, ph
         served[profile] += 1
         if not queues[profile]:
             del queues[profile]
-    return result
+    return sorted(result, key=resource_priority)
 
 
 def record_service(repository: ShadowEvidenceRepository, fixture: dict, now: datetime, phase: str) -> None:

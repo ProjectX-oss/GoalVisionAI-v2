@@ -46,14 +46,15 @@ def freeze_observation(prediction: dict, receipt: dict, settlement: dict, *, str
     required = ('fixture_id', 'kickoff_utc', 'market', 'captured_odds', 'ensemble_probability',
                 'quote_provenance_fingerprint', 'provider_origin_timestamp_utc',
                 'goalvision_retrieved_at_utc', 'prepared_at_utc')
-    if any(prediction.get(k) is None for k in required) or not receipt or receipt.get('status') != 'SENT':
+    shadow = source_product == 'SHADOW'
+    if any(prediction.get(k) is None for k in required) or (not shadow and (not receipt or receipt.get('status') != 'SENT')):
         raise ValueError('MISSING_FROZEN_EVIDENCE')
     p = number(prediction['ensemble_probability'], low=0, high=1)
     odds = number(prediction['captured_odds'], low=1, high=10000)
     if not 0 < p < 1 or odds <= 1 or prediction['market'] not in MARKETS:
         raise ValueError('MISSING_FROZEN_EVIDENCE')
     created, kickoff = utc(prediction['prepared_at_utc']), utc(prediction['kickoff_utc'])
-    published = utc(receipt['sent_at_utc']) if receipt.get('sent_at_utc') else None
+    published = created if shadow else utc(receipt['sent_at_utc']) if receipt.get('sent_at_utc') else None
     settled = utc(settlement.get('settled_at_utc') or settlement['retrieved_at_utc'])
     if published is None:
         raise ValueError('MISSING_FROZEN_EVIDENCE')
@@ -101,7 +102,7 @@ def freeze_observation(prediction: dict, receipt: dict, settlement: dict, *, str
         quote_origin_timestamp=prediction['provider_origin_timestamp_utc'],
         quote_retrieved_timestamp=prediction['goalvision_retrieved_at_utc'],
         bookmaker=prediction.get('bookmaker'), bookmaker_id=prediction.get('bookmaker_id'),
-        prediction_created_at=created.isoformat(), published_at=published.isoformat(), settled_at=settled.isoformat(),
+        prediction_created_at=created.isoformat(), published_at=None if shadow else published.isoformat(), settled_at=settled.isoformat(),
         final_score=[home, away], outcome=outcome, target=None if outcome == 'VOID' else int(outcome == 'WON'),
         flat_unit_pnl=odds - 1 if outcome == 'WON' else -1 if outcome == 'LOST' else 0,
         missing_provenance=sorted(k for k, v in fields.items() if v is None),
@@ -122,24 +123,32 @@ def freeze_observation(prediction: dict, receipt: dict, settlement: dict, *, str
 def ingest(repository: AuditRepository, prediction: dict, receipt: dict, settlement: dict, *,
            stream: str, publication_id: str, source_product: str = 'SINGLE') -> dict:
     """Atomic evidence reference plus observation; idempotent across combo/single copies."""
-    value = freeze_observation(prediction, receipt, settlement, stream=stream,
-                               publication_id=publication_id, source_product=source_product)
-    existing = repository.get('learning_observations', value['observation_id'])
-    if existing:
-        keys = ('outcome', 'final_score', 'frozen_model_probability', 'offered_decimal_odds', 'fixture_id', 'market')
-        if any(existing[k] != value[k] for k in keys):
-            raise ValueError('CONFLICTING_SETTLEMENT')
-        if existing['publication_id'] == publication_id and existing != value:
-            raise ValueError('CONFLICTING_SETTLEMENT')
-        return existing
-    source = {'prediction': prediction, 'publication': receipt, 'settlement': settlement,
-              'publication_id': publication_id, 'source_product': source_product}
-    source_id = 'source-' + digest(source)
     with repository.transaction():
-        repository.append('source_records', source_id, stream, source, value['settled_at'])
-        repository.append('learning_observations', value['observation_id'], stream, value,
-                          value['settled_at'], source_id=source_id)
-    return value
+        value = freeze_observation(prediction, receipt, settlement, stream=stream,
+                                   publication_id=publication_id, source_product=source_product)
+        # Canonical shadow and published copies of a fixture/market are one sample.
+        for old in repository.all('learning_observations', stream):
+            if (old['fixture_id'], old['market']) == (value['fixture_id'], value['market']) and (
+                    old.get('source_product') == 'SHADOW' or source_product == 'SHADOW'):
+                if old['outcome'] != value['outcome'] or old['final_score'] != value['final_score']:
+                    raise ValueError('CONFLICTING_SETTLEMENT')
+                return old
+        existing = repository.get('learning_observations', value['observation_id'])
+        if existing:
+            keys = ('outcome', 'final_score', 'frozen_model_probability', 'offered_decimal_odds', 'fixture_id', 'market')
+            if any(existing[k] != value[k] for k in keys):
+                raise ValueError('CONFLICTING_SETTLEMENT')
+            if existing['publication_id'] == publication_id and existing != value:
+                raise ValueError('CONFLICTING_SETTLEMENT')
+            return existing
+        source = {'prediction': prediction, 'publication': receipt, 'settlement': settlement,
+                  'publication_id': publication_id, 'source_product': source_product}
+        source_id = 'source-' + digest(source)
+        with repository.transaction():
+            repository.append('source_records', source_id, stream, source, value['settled_at'])
+            repository.append('learning_observations', value['observation_id'], stream, value,
+                              value['settled_at'], source_id=source_id)
+        return value
 
 
 def import_prematch(ledger: EvidenceReader, repository: AuditRepository, *, now: str) -> dict:
