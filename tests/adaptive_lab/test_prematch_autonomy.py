@@ -50,6 +50,34 @@ def test_baseline_context_required_and_artifact_tamper(repo):
         predict(artifact(),observation(stream='LIVE'))
 
 
+def test_existing_prematch_bootstrap_survives_light_safety_integration(repo) -> None:
+    """Keep the pre-integration artifact compatible through publication resolution."""
+    from app.adaptive_lab.contracts import digest
+
+    accepted = {
+        'family': 'EXISTING_PREMATCH_BASELINE_V1', 'stream': 'PREMATCH',
+        'accepted_commit': '0c4f316248e55f504b780cdef4e25165b800a779',
+        'ensemble_policy': 'LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4',
+        'profile_policy': 'LAB_COMPETITION_POLICY_V2',
+        'probability_contract': 'FINITE_OPEN_UNIT_INTERVAL',
+        'rollback_identity': 'EXISTING_PREMATCH_BASELINE_V1',
+        'registry_version': 'LAB_MODEL_REGISTRY_V1',
+    }
+    accepted['artifact_fingerprint'] = digest(accepted)
+    generation = Governance(repo).bootstrap(accepted, now=START)
+    raw = signals('HOME_WIN')
+    policy = policy_for('SENIOR_MEN_PRO')
+    baseline, evidence = evaluate_profile('HOME_WIN', Decimal('2'), raw, policy, ())
+    adapted, provenance = LearningCoordinator(repo).prematch_signals(
+        raw, baseline, evidence, {'fixture_id': 1, 'competition_profile': policy.profile},
+        'HOME_WIN', Decimal('2'), now=START, quote_fingerprint='existing-baseline',
+    )
+    assert evaluate_profile('HOME_WIN', Decimal('2'), adapted, policy, ()) == (baseline, evidence)
+    assert provenance['model_generation'] == generation['generation_id']
+    assert repo.champion('PREMATCH') == generation
+    assert repo.get('model_artifacts', generation['artifact_id']) == accepted
+
+
 @pytest.mark.parametrize('n,stage',[(0,'LEARNING_AND_OBSERVING'),(99,'LEARNING_AND_OBSERVING'),
   (100,'EARLY_RESEARCH'),(199,'EARLY_RESEARCH'),(200,'CHALLENGER_RESEARCH'),
   (499,'CHALLENGER_RESEARCH'),(500,'FULL_AUTO_LEARNING_ELIGIBLE')])

@@ -29,6 +29,15 @@ bounded, replace failed/stale broad quotes and share the cycle ceiling.
 
 ## Adaptive integration
 
+The profile policy identifier remains `LAB_COMPETITION_POLICY_V2`: resource
+priority helpers do not change `policy_for()` semantics. This preserves validation
+and PREMATCH champion resolution for existing bootstrap baseline artifacts without
+rewriting artifacts or adaptive state. A focused regression pins the original
+artifact contract and checks unchanged inference and champion identity.
+Compatibility-fix verification: **212 passed** across
+`tests/adaptive_lab/test_prematch_autonomy.py`, `tests/test_lab_v2_prematch.py`,
+and `tests/test_prematch_production_integration.py`; no full-suite run.
+
 Production observer, research/AutoML schedule, champion/bootstrap/rollback,
 governance, health/status/why-no-picks and Sunday 22:30 Riga weekly statistics
 are retained. The existing configured adaptive database receives the first

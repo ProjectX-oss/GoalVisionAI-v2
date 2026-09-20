@@ -13,7 +13,7 @@ from .capability import CapabilityTier, LeagueCapability
 from .competition_registry import REGISTRY_VERSION, REGISTRY_FINGERPRINT, reviewed_competition
 
 CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V5'
-POLICY_VERSION = 'LAB_PREMATCH_LIGHT_SAFETY_V2'
+POLICY_VERSION = 'LAB_COMPETITION_POLICY_V2'
 
 
 class CompetitionProfile(StrEnum):
