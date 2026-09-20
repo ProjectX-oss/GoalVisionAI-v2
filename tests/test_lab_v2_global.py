@@ -83,7 +83,8 @@ def test_correlated_sources_never_supply_two_independent_nonmarket_votes():
     rows=signals()[1:]
     rows.append(replace(rows[0],name='PI_RATINGS'))
     d,e=evaluate_profile('HOME_WIN',Decimal('2'),rows,policy_for('UNKNOWN'),())
-    assert d.decision=='REJECTED' and 'NO_INDEPENDENT_NON_MARKET_EVIDENCE' in e['hard_failures']
+    assert d.decision=='APPROVED' and 'NO_INDEPENDENT_NON_MARKET_EVIDENCE' in e['soft_findings']
+    assert e['candidate_lane']=='TRACKING' and not e['hard_failures']
 
 
 def test_profile_ready_without_lineups_and_requires_exact_refresh():
@@ -100,7 +101,7 @@ def test_fair_scheduling_youth_women_restart(tmp_path):
     path=tmp_path/'shadow.db'; repo=ShadowEvidenceRepository(path)
     rows=[]
     for i in range(100):
-        rows.append({'fixture_id':i+1,'competition_profile':'SENIOR_MEN_PRO','kickoff_utc':NOW})
+        rows.append({'fixture_id':i+1,'competition_profile':'LOWER_DIVISION_OR_SEMIPRO','kickoff_utc':NOW})
     rows.extend([{'fixture_id':101,'competition_profile':'YOUTH_U17_U18','kickoff_utc':NOW},
                  {'fixture_id':102,'competition_profile':'SENIOR_WOMEN_PRO','kickoff_utc':NOW}])
     assert len({r['competition_profile'] for r in fair_order(rows,repo,phase='history')[:3]})==3
@@ -157,7 +158,8 @@ def test_forward_freezes_first_current_price_and_small_samples(tmp_path):
     row={'stage':'READY_TO_PUBLISH','decision':'APPROVED','candidate_id':'c1','fixture_id':1,'league_id':2,
          'competition_profile':'YOUTH_U17_U18','market':'HOME_WIN','candidate_lane':'EXPERIMENTAL',
          'ensemble_probability':'.65','captured_odds':'2','quote_provenance_fingerprint':'q1',
-         'kickoff_utc':(NOW+timedelta(hours=1)).isoformat(),'profile_policy_version':'V1'}
+         'kickoff_utc':(NOW+timedelta(hours=1)).isoformat(),'profile_policy_version':'V1',
+         'provider_origin_timestamp_utc':NOW.isoformat(),'goalvision_retrieved_at_utc':NOW.isoformat()}
     assert capture_selection(repo,row,now=NOW)
     assert not capture_selection(repo,{**row,'captured_odds':'3'},now=NOW)
     assert capture_result(repo,'1:HOME_WIN',outcome='WON',source_fingerprint='final-result',now=NOW+timedelta(hours=3))

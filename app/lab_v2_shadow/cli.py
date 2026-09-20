@@ -17,21 +17,28 @@ from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
 
 from .audit import audit_recent_lab, settled_loss_postmortems
 from .publication import prepare_v2_publications
-from .quota import DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE
+from .quota import DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE, discovery_state
 from .repository import ShadowEvidenceRepository
-from .runner import LabV2ShadowRunner
+from .runner import LabV2ShadowRunner, night_report
 from .summary import latest_cycle_summary
 
 
 async def _cycle(args: argparse.Namespace) -> dict[str, object]:
-    client = FootballClient(request_limit=args.max_calls)
-    repository = ShadowEvidenceRepository(args.shadow_database)
     clock = datetime.now(timezone.utc)
+    repository = ShadowEvidenceRepository(args.shadow_database)
+    if discovery_state(clock) == "NIGHT_DISCOVERY_PAUSED":
+        try:
+            report = night_report(clock)
+            repository.append("rehearsal", "lab-v2-night-" + fingerprint(clock), report, created_at=clock)
+            return report
+        finally:
+            repository.close()
+    client = FootballClient(request_limit=args.max_calls)
     try:
         runner = LabV2ShadowRunner(
             client, repository, capability_cache_path=args.capability_cache,
             analysis_path=args.analysis_database, maximum_calls=args.max_calls,
-            daily_safety_reserve=args.daily_reserve,
+            daily_safety_reserve=args.daily_reserve, runtime_clock=lambda: datetime.now(timezone.utc),
         )
         report = await runner.run(
             now=clock,
@@ -146,9 +153,24 @@ def _persist_cycle_evidence(
     return report
 
 
+async def _settle_shadow(args: argparse.Namespace) -> dict:
+    """Result-only companion to daytime discovery; never sends Telegram."""
+    from .forward_evidence import settle_forward
+    client = FootballClient(request_limit=args.max_calls)
+    repository = ShadowEvidenceRepository(args.shadow_database)
+    try:
+        return await settle_forward(repository, client, now=datetime.now(timezone.utc), maximum_calls=args.max_calls)
+    finally:
+        await client.close()
+        repository.close()
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    settle = sub.add_parser("settle-shadow")
+    settle.add_argument("--shadow-database", type=Path, default=Path("var/lab_v2/shadow.db"))
+    settle.add_argument("--max-calls", type=int, choices=range(1, 101), default=20)
     audit = sub.add_parser("audit")
     audit.add_argument("--ledger", type=Path, default=Path("var/lab_combo/ledger.db"))
     audit.add_argument("--analysis-database", type=Path, default=Path("var/lab_combo/analysis.db"))
@@ -164,7 +186,9 @@ def main(argv: list[str] | None = None) -> int:
         cycle.add_argument("--capability-cache", type=Path, default=Path("var/lab_v2/capabilities.json"))
         cycle.add_argument("--horizon-days", type=int, default=3)
         cycle.add_argument("--max-calls", type=int, default=MAX_DISCOVERY_CALLS_PER_CYCLE)
-        cycle.add_argument("--daily-reserve", type=int, default=DAILY_SAFETY_RESERVE)
+        cycle.add_argument("--settlement-reserve", "--daily-reserve", dest="daily_reserve", type=int,
+                           choices=[DAILY_SAFETY_RESERVE], default=DAILY_SAFETY_RESERVE,
+                           help="Result reserve; discovery uses time-aware Riga daytime pacing")
         cycle.add_argument("--send", action="store_true", help="Explicitly publish genuine READY picks to the fixed Lab chat")
     args = parser.parse_args(argv)
     if args.command == "audit":
@@ -172,6 +196,8 @@ def main(argv: list[str] | None = None) -> int:
             "bottleneck_audit": audit_recent_lab(args.ledger, args.analysis_database),
             "settled_loss_postmortems": settled_loss_postmortems(args.ledger, args.analysis_database),
         }
+    elif args.command == "settle-shadow":
+        value = asyncio.run(_settle_shadow(args))
     elif args.command == "summary":
         value = latest_cycle_summary(args.shadow_database, fixture_id=args.fixture_id)
     else:

@@ -9,7 +9,7 @@ from .repository import ShadowEvidenceRepository
 from .profiles import fallback_capability, classify
 
 
-TERMINAL_STATES = frozenset({"REJECTED", "FIXTURE_INVALID", "EXPIRED"})
+TERMINAL_STATES = frozenset({"FIXTURE_INVALID", "EXPIRED", "PUBLICATION_CLOSED"})
 
 
 def load_reviews(repository: ShadowEvidenceRepository, now: datetime) -> dict[tuple[int, str], dict]:

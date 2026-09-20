@@ -4,19 +4,23 @@ from collections import defaultdict
 from datetime import datetime
 from decimal import Decimal
 from math import sqrt
+from json import JSONDecodeError
 
 from .repository import ShadowEvidenceRepository
 from .profiles import policy_for
+from app.current_odds_forward_test.freshness import API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS, RETRIEVAL_MAX_AGE_SECONDS
+from app.lab_combo.settlement import resolve_leg
+from app.lab_combo.experimental import SETTLEMENT_RELEVANCE_AFTER_KICKOFF
 
 
 def capture_selection(repository: ShadowEvidenceRepository, candidate: dict, *, now: datetime) -> bool:
-    """Freeze the first ready fixture/market quote; refreshed prices cannot replace it."""
-    if candidate['stage'] != 'READY_TO_PUBLISH' or candidate['decision'] != 'APPROVED':
+    """Freeze the first fresh positive-EV fixture/market, independent of publication."""
+    if candidate['decision'] != 'APPROVED' or not current_quote(candidate, now):
         return False
     if datetime.fromisoformat(candidate['kickoff_utc']) <= now:
-        raise ValueError('FORWARD_CAPTURE_MUST_PRECEDE_KICKOFF')
+        return False
     key = f"{candidate['fixture_id']}:{candidate['market']}"
-    if any(row['selection_key'] == key for row in repository.all('forward_selection')):
+    if repository.get('forward_selection', key) is not None:
         return False
     p, odds = Decimal(candidate['ensemble_probability']), Decimal(candidate['captured_odds'])
     if not p.is_finite() or not odds.is_finite() or not 0 < p < 1 or odds <= 1 or p * odds <= 1:
@@ -24,17 +28,23 @@ def capture_selection(repository: ShadowEvidenceRepository, candidate: dict, *, 
     row = {k: candidate[k] for k in ('candidate_id', 'fixture_id', 'league_id', 'competition_profile',
                                     'market', 'candidate_lane', 'ensemble_probability', 'captured_odds',
                                     'quote_provenance_fingerprint', 'kickoff_utc', 'profile_policy_version')}
-    row.update(selection_key=key, captured_at=now.isoformat(), accounting='LAB_HYPOTHETICAL_FLAT_ONE_UNIT')
+    row.update({k: candidate.get(k) for k in ('confidence', 'soft_findings', 'soft_penalties',
+        'missing_features', 'model_generation', 'policy', 'provider_origin_timestamp_utc',
+        'goalvision_retrieved_at_utc', 'bookmaker_id', 'bookmaker', 'home_team', 'away_team',
+        'home_team_id', 'away_team_id', 'league')})
+    row.update(selection_key=key, captured_at=now.isoformat(), accounting='SHADOW_LEARNING_ONLY',
+               implied_probability=str(1 / odds), edge=str(p - 1 / odds), expected_value=str(p * odds - 1),
+               telegram_publication=False, bankroll_transaction=False)
     return repository.append('forward_selection', key, row, created_at=now)
 
 
 def capture_result(repository: ShadowEvidenceRepository, selection_key: str, *, outcome: str,
                    source_fingerprint: str, now: datetime) -> bool:
     """Record explicit final-result evidence without any provider or send operation."""
-    rows = [r for r in repository.all('forward_selection') if r['selection_key'] == selection_key]
-    if len(rows) != 1 or outcome not in {'WON', 'LOST', 'VOID'} or not source_fingerprint:
+    row = repository.get('forward_selection', selection_key)
+    if row is None or outcome not in {'WON', 'LOST', 'VOID'} or not source_fingerprint:
         raise ValueError('INVALID_FORWARD_RESULT_REFERENCE')
-    if datetime.fromisoformat(rows[0]['kickoff_utc']) >= now:
+    if datetime.fromisoformat(row['kickoff_utc']) >= now:
         raise ValueError('RESULT_BEFORE_KICKOFF')
     return repository.append('forward_result', selection_key,
                              {'selection_key': selection_key, 'outcome': outcome,
@@ -78,3 +88,68 @@ def performance(repository: ShadowEvidenceRepository) -> list[dict]:
             'eligible_for_manual_policy_review': n >= policy.minimum_tuning_selections and age >= policy.minimum_tuning_days,
             'automatic_tuning_enabled': False})
     return result
+
+
+def current_quote(candidate: dict, now: datetime) -> bool:
+    """Reuse existing source/retrieval age limits at capture and publication."""
+    try:
+        origin = datetime.fromisoformat(candidate['provider_origin_timestamp_utc'])
+        retrieved = datetime.fromisoformat(candidate['goalvision_retrieved_at_utc'])
+        return (origin <= retrieved <= now
+                and (now - origin).total_seconds() <= API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS
+                and (now - retrieved).total_seconds() <= RETRIEVAL_MAX_AGE_SECONDS
+                and bool(candidate.get('quote_provenance_fingerprint')))
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
+async def settle_forward(repository: ShadowEvidenceRepository, client: object, *, now: datetime,
+                         maximum_calls: int = 20) -> dict[str, int]:
+    """Settle canonical shadow observations using existing regulation-time rules.
+
+    This result-only operation is allowed at night. One exact result request per
+    due fixture, no odds/discovery/enrichment, no ledger or Telegram writes.
+    """
+    from app.football.client import FootballRequestLimitError
+    from app.football.quota import FootballQuotaError
+    import httpx
+    if not 1 <= maximum_calls <= 100:
+        raise ValueError('SHADOW_RESULT_CALL_LIMIT_OUTSIDE_1_TO_100')
+    settled = {r['selection_key'] for r in repository.all('forward_result')}
+    captured = 0
+    # Recover a crash after immutable source capture without refetching or
+    # replacing that source with a different retrieval timestamp.
+    for source in repository.all('forward_result_source'):
+        key = source['observation_id']
+        if key not in settled:
+            captured += int(capture_result(repository, key, outcome=source['outcome'],
+                            source_fingerprint=source['source_fingerprint'], now=now))
+            settled.add(key)
+    pending: dict[int, list[dict]] = {}
+    for row in repository.all('forward_selection'):
+        if row['selection_key'] not in settled and datetime.fromisoformat(row['kickoff_utc']) + SETTLEMENT_RELEVANCE_AFTER_KICKOFF <= now:
+            pending.setdefault(row['fixture_id'], []).append(row)
+    calls = 0
+    for fixture_id, rows in sorted(pending.items()):
+        if calls >= maximum_calls:
+            break
+        calls += 1
+        try:
+            payload = await client.fixture(fixture_id)
+        except (httpx.HTTPError, OSError, TimeoutError, JSONDecodeError, FootballRequestLimitError, FootballQuotaError):
+            continue
+        if not isinstance(payload, dict):
+            continue
+        for row in rows:
+            leg = {**row, 'observation_id': row['selection_key'], 'odds': row['captured_odds']}
+            try:
+                result = resolve_leg(leg, payload, now)
+            except (TypeError, ValueError, AttributeError):
+                # Malformed provider result rows cannot become settled evidence.
+                continue
+            if result:
+                # Preserve the full immutable result source beside the canonical outcome.
+                repository.append('forward_result_source', row['selection_key'], result, created_at=now)
+                captured += int(capture_result(repository, row['selection_key'], outcome=result['outcome'],
+                                source_fingerprint=result['source_fingerprint'], now=now))
+    return {'fixtures_requested': calls, 'shadow_results_captured': captured}

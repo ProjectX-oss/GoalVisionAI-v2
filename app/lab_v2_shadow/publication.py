@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from itertools import combinations
 
 from app.lab_combo.presentation import latvia_time, market_label, public_decimal
 from app.lab_combo.repository import ComboRepository
 from app.real_match_lab_analysis.fingerprint import fingerprint
+
+
+from .forward_evidence import current_quote
 
 
 MAX_SINGLES_PER_CYCLE = 3
@@ -23,15 +26,19 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         if item.get("decision") != "APPROVED" or item.get("stage") != "READY_TO_PUBLISH":
             continue
         try:
+            if datetime.fromisoformat(item['kickoff_utc']) <= clock or not current_quote(item, clock):
+                continue
             odds = Decimal(str(item["captured_odds"]))
             probability = Decimal(str(item["ensemble_probability"]))
-        except (KeyError, ValueError, TypeError):
+        except (KeyError, ValueError, TypeError, InvalidOperation):
             continue
         if (not odds.is_finite() or odds <= Decimal(1)
-                or not probability.is_finite() or not Decimal(0) <= probability <= Decimal(1)):
+                or not probability.is_finite() or not Decimal(0) <= probability <= Decimal(1)
+                or probability * odds <= 1):
             continue
         ready.append(dict(item))
     ready.sort(key=lambda item: (
+        {"STRONG": 0, "STANDARD": 1, "EXPERIMENTAL": 2}.get(item.get("candidate_lane"), 3),
         -Decimal(str(item.get("edge") or "-99")),
         item["kickoff_utc"], item["fixture_id"], item["market"],
     ))

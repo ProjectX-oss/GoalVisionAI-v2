@@ -10,6 +10,7 @@ from math import factorial
 import json
 from pathlib import Path
 import sqlite3
+from typing import Callable
 
 import httpx
 
@@ -31,11 +32,11 @@ from .quota import (
     MAX_DISCOVERY_CALLS_PER_CYCLE,
     AdaptiveQuotaBudget,
     adaptive_quota_budget,
-    projected_daily_usage,
+    projected_daily_usage, discovery_state, PRIORITY_EXACT_RETRIES_PER_CYCLE,
 )
 from .repository import ShadowEvidenceRepository
 from .tracking import load_reviews, new_review, restore_fixture
-from .profiles import classify, fallback_capability, policy_for
+from .profiles import classify, fallback_capability, policy_for, is_priority
 from .global_evaluation import evaluate_profile
 from .signal_evidence import signal_requirements
 from .scheduling import fair_order, record_service
@@ -44,8 +45,8 @@ from .odds_coverage import DateOddsCoverage, quote_absence_reason
 from .forward_evidence import capture_selection
 
 
-SCHEMA_VERSION = "goalvision-lab-v2-global-cycle-v7"
-READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V4"
+SCHEMA_VERSION = "goalvision-lab-v2-global-cycle-v8"
+READINESS_POLICY_VERSION = "LAB_V2_FINAL_REVIEW_READINESS_V5"
 MAXIMUM_CALLS = MAX_DISCOVERY_CALLS_PER_CYCLE
 FINAL_REVIEW_WINDOW = timedelta(minutes=75)
 FINAL_REVIEW_MAX_AGE = timedelta(minutes=5)
@@ -81,17 +82,20 @@ class LabV2ShadowRunner:
         analysis_path: Path | None = None,
         maximum_calls: int = MAXIMUM_CALLS,
         daily_safety_reserve: int = DAILY_SAFETY_RESERVE,
+        runtime_clock: Callable[[], datetime] | None = None,
     ) -> None:
         if not 1 <= maximum_calls <= MAXIMUM_CALLS:
-            raise ValueError("LAB_V2_MAXIMUM_CALLS_MUST_BE_BETWEEN_1_AND_100")
-        if daily_safety_reserve < DAILY_SAFETY_RESERVE:
-            raise ValueError("LAB_V2_DAILY_SAFETY_RESERVE_CANNOT_BE_LOWERED")
+            raise ValueError("LAB_V2_MAXIMUM_CALLS_MUST_BE_BETWEEN_1_AND_400")
+        if daily_safety_reserve != DAILY_SAFETY_RESERVE:
+            raise ValueError("LAB_V2_USE_SETTLEMENT_RESULT_RESERVE_100")
+        self.runtime_clock = runtime_clock
         self.client = client
         self.repository = repository
         self.capability_cache_path = capability_cache_path
         self.analysis_path = analysis_path
         self.maximum_calls = maximum_calls
         self.daily_safety_reserve = daily_safety_reserve
+        self.analysis_evidence: dict[int, dict] = {}
         self.calls: list[dict[str, object]] = []
         self.quota_budget: AdaptiveQuotaBudget | None = None
         restrict = getattr(client, "restrict_requests", None)
@@ -115,6 +119,9 @@ class LabV2ShadowRunner:
         if not 1 <= horizon_days <= 7:
             raise ValueError("LAB_V2_HORIZON_OUTSIDE_1_TO_7_DAYS")
 
+        if discovery_state(clock) == "NIGHT_DISCOVERY_PAUSED":
+            return self.pause_report(clock)
+
         await self._fetch(
             "/status", {}, lambda: self.client.account_status(),
             clock=clock, ttl=None, use_cache=False,
@@ -122,7 +129,7 @@ class LabV2ShadowRunner:
         quota = getattr(self.client, "quota_snapshot", lambda: {})()
         self.quota_budget = adaptive_quota_budget(
             quota, requested_maximum=self.maximum_calls,
-            already_consumed=self._request_count(),
+            already_consumed=self._request_count(), now=clock,
             daily_safety_reserve=self.daily_safety_reserve,
         )
         if self.quota_budget.additional_calls_available == 0 and not hasattr(self.client, "quota_snapshot"):
@@ -131,6 +138,11 @@ class LabV2ShadowRunner:
                 self.maximum_calls - self._request_count(), None, None,
                 self.daily_safety_reserve, None, "TEST_DOUBLE_EXPLICIT_LIMIT",
             )
+
+        # Enforce the paced ceiling inside the provider too, including retries.
+        restrict = getattr(self.client, "restrict_requests", None)
+        if restrict:
+            restrict(max(1, self._effective_maximum()), daily_reserve=self.daily_safety_reserve)
 
         capabilities, capability_cache_status = await self._capabilities(clock)
         tracked = load_reviews(self.repository, clock)
@@ -169,9 +181,10 @@ class LabV2ShadowRunner:
                                        {**_plain(item), "state": "DISCOVERED", "reason": "PROVIDER_DATE_FIXTURE"}, created_at=clock)
         for item in self.repository.latest_global_fixtures(now=clock, include_expired=True):
             if datetime.fromisoformat(item["kickoff_utc"]) <= clock:
-                expired = {**item, "state": "EXPIRED", "reason": "FIXTURE_STARTED",
+                expired = {**item, "state": "RESULT_TRACKING", "reason": "PREMATCH_PUBLICATION_CLOSED",
                            "evaluated_at_utc": clock.isoformat(), "next_refresh_at": None}
-                self.repository.append("global_fixture_state", f"{clock.isoformat()}:{item['fixture_id']}", expired, created_at=clock)
+                if item["fixture_id"] not in fixtures and item.get("state") != "RESULT_TRACKING":
+                    self.repository.append("global_fixture_state", f"{clock.isoformat()}:{item['fixture_id']}", expired, created_at=clock)
                 continue
             if item["fixture_id"] not in fixtures:
                 metadata = item.get("provider_metadata")
@@ -185,31 +198,68 @@ class LabV2ShadowRunner:
             if restored is not None:
                 fixtures.setdefault(record["fixture_id"], restored)
         ordered = sorted(fixtures.values(), key=lambda item: (
-            item["kickoff_utc"], TIER_ORDER[item["capability_tier"]], item["fixture_id"],
+            not is_priority(item), item["kickoff_utc"], TIER_ORDER[item["capability_tier"]], item["fixture_id"],
         ))
 
-        odds_discovery_final_review_reserve = _final_review_call_reserve(ordered, clock)
+        # Started fixtures remain audit/result evidence, never new PREMATCH work.
+        upcoming = [item for item in ordered if item.get("prematch_eligible", True)
+                    and item["kickoff_utc"] > clock]
+        priority = fair_order([item for item in upcoming if is_priority(item)],
+                              self.repository, phase="priority_odds")
+        # Reserve analysis before date pagination can exhaust the cycle. Shared
+        # league history and provider prediction each cost at most one first call;
+        # exact misses are bounded separately and provider retries share the cap.
+        priority_reserve = min(max(0, self._remaining() - len(days)), len(priority) * 3)
+        odds_discovery_final_review_reserve = min(
+            _final_review_call_reserve(upcoming, clock), self._remaining() // 4)
         odds_evidence, odds_page_report = await self._date_odds(
-            days, ordered, clock, reserve_calls=odds_discovery_final_review_reserve,
-            tracked_fixture_ids=frozenset(tracked_ids),
+            days, upcoming, clock, reserve_calls=max(priority_reserve, odds_discovery_final_review_reserve),
+            tracked_fixture_ids=frozenset(tracked_ids), priority_reserve=priority_reserve,
         )
-        odds_fixtures = [
-            item for item in ordered
-            if (item["fixture_id"] in odds_evidence
-                and any(value.status == "AVAILABLE" for value in odds_evidence[item["fixture_id"]][2].values()))
-            or (item["fixture_id"] in tracked_ids
-                and item["kickoff_utc"] > clock + MINIMUM_KICKOFF_LEAD)
-        ]
+        histories, adapters, api_predictions = {}, {}, {}
+        history_budget_skips = prediction_budget_skips = 0
+        exact_retries = []
+        priority_exact_evidence = {}
+        # Finish a priority fixture's odds/context/model inputs before spending
+        # quota on an ordinary fixture. Failed/absent prices still get analysis.
+        for fixture in priority:
+            fixture_id, league_id = fixture["fixture_id"], fixture["league_id"]
+            if fixture_id not in odds_evidence and self._remaining() > 0 and len(exact_retries) < PRIORITY_EXACT_RETRIES_PER_CYCLE:
+                record_service(self.repository, fixture, clock, "priority_odds")
+                before_reason = odds_page_report["fixture_coverage_reasons"].get(str(fixture_id))
+                payload, retrieved = await self._fetch(
+                    "/odds", {"fixture": fixture_id},
+                    lambda identity=fixture_id: self.client.current_odds(identity),
+                    clock=clock, ttl=timedelta(minutes=5), use_cache=False)
+                priority_exact_evidence[fixture_id] = (payload, retrieved)
+                consensus = current_market_consensus(payload, fixture_id=fixture_id,
+                    retrieved_at=retrieved, now=max(clock, retrieved),
+                    allowed_bookmaker_ids=self.allowed_bookmaker_ids) if _provider_payload_succeeded(payload) else {}
+                recovered = any(value.status == "AVAILABLE" for value in consensus.values())
+                if recovered:
+                    odds_evidence[fixture_id] = (payload, retrieved, consensus)
+                    odds_page_report["fixture_statuses"][str(fixture_id)] = "FIXTURE_DISCOVERED_WITH_CURRENT_ODDS"
+                exact_retries.append({"fixture_id": fixture_id, "broad_reason": before_reason,
+                                      "recovered": recovered})
+            if league_id not in histories:
+                h, a, skipped = await self._histories([fixture], clock)
+                histories.update(h); adapters.update(a); history_budget_skips += skipped
+            predictions, skipped = await self._predictions([fixture], clock)
+            api_predictions.update(predictions); prediction_budget_skips += skipped
+        odds_page_report["priority_exact_retries"] = exact_retries
+        # Every valid upcoming fixture reaches local model/context evaluation,
+        # even when the current quote is missing. Never synthesize a price or EV.
+        odds_fixtures = upcoming
         for fixture in odds_fixtures:
             odds_evidence.setdefault(fixture["fixture_id"], ({}, clock, {}))
-
-        final_review_reserve = _final_review_call_reserve(odds_fixtures, clock)
-        histories, adapters, history_budget_skips = await self._histories(
-            odds_fixtures, clock, reserve_calls=final_review_reserve,
-        )
-        api_predictions, prediction_budget_skips = await self._predictions(
-            odds_fixtures, clock, reserve_calls=final_review_reserve,
-        )
+        final_review_reserve = min(_final_review_call_reserve(odds_fixtures, clock), self._remaining() // 4)
+        ordinary = [item for item in upcoming if not is_priority(item)]
+        h, a, skipped = await self._histories(
+            [item for item in ordinary if item["league_id"] not in histories], clock,
+            reserve_calls=final_review_reserve)
+        histories.update(h); adapters.update(a); history_budget_skips += skipped
+        predictions, skipped = await self._predictions(ordinary, clock, reserve_calls=final_review_reserve)
+        api_predictions.update(predictions); prediction_budget_skips += skipped
         persisted_models, v1_keys, persisted_usage = self._persisted_v1(odds_fixtures, clock)
 
         preliminary = self._evaluate(
@@ -284,7 +334,7 @@ class LabV2ShadowRunner:
                     context.update(status="FIXTURE_INVALID", reason="CONTRADICTORY_FIXTURE_IDENTITY")
                     refreshed_kickoff = None
                 elif refreshed_status is not None and refreshed_status not in {"NS", "TBD"}:
-                    context.update(status="FIXTURE_INVALID", reason="FIXTURE_STATUS_NOT_UPCOMING")
+                    context.update(status="PREMATCH_CLOSED", reason="FIXTURE_STATUS_NOT_UPCOMING")
                 elif refreshed_kickoff is None:
                     context.update(reason="FIXTURE_REFRESH_UNAVAILABLE")
                     if refreshed_status in {"NS", "TBD"}:
@@ -302,11 +352,14 @@ class LabV2ShadowRunner:
                     fixture["kickoff_utc"] = refreshed_kickoff
                     context["refreshed_kickoff_utc"] = refreshed_kickoff.isoformat()
                     context.update(status="FIXTURE_REFRESHED", reason="EXACT_FIXTURE_REFRESH_COMPLETE")
-                odds_payload, retrieved = await self._fetch(
-                    "/odds", {"fixture": fixture_id},
-                    lambda identity=fixture_id: self.client.current_odds(identity),
-                    clock=clock, ttl=timedelta(minutes=5), use_cache=False,
-                )
+                if fixture_id in priority_exact_evidence:
+                    odds_payload, retrieved = priority_exact_evidence[fixture_id]
+                else:
+                    odds_payload, retrieved = await self._fetch(
+                        "/odds", {"fixture": fixture_id},
+                        lambda identity=fixture_id: self.client.current_odds(identity),
+                        clock=clock, ttl=timedelta(minutes=5), use_cache=False,
+                    )
                 exact_consensus = current_market_consensus(
                     odds_payload, fixture_id=fixture_id, retrieved_at=retrieved,
                     now=max(clock, retrieved),
@@ -386,6 +439,7 @@ class LabV2ShadowRunner:
             ordered, candidates, odds_page_report["fixture_statuses"], discovery_exclusions,
         )
         report = {
+            "discovery_state": discovery_state(clock),
             "schema_version": SCHEMA_VERSION,
             "mode": "LAB_V2_NO_SEND",
             "analysis_mode": "LAB_V2_NO_SEND",
@@ -511,9 +565,25 @@ class LabV2ShadowRunner:
                     "market_consensus", f"{fixture_id}:{family}:{fingerprint(document)}",
                     document, created_at=clock,
                 )
+        shadow_captures = 0
+        for analysis in self.analysis_evidence.values():
+            self.repository.append("model_analysis", fingerprint(analysis), analysis, created_at=clock)
         for candidate in candidates:
             self.repository.append("candidate", candidate["candidate_id"], candidate, created_at=clock)
-            capture_selection(self.repository, candidate, now=clock)
+            capture_clock = max(clock, datetime.fromisoformat(candidate["goalvision_retrieved_at_utc"]),
+                                self.runtime_clock() if self.runtime_clock else clock)
+            shadow_captures += int(capture_selection(self.repository, candidate, now=capture_clock))
+        report.update(
+            priority_fixtures_discovered=len(priority),
+            priority_fixtures_analyzed=sum(i["fixture_id"] in self.analysis_evidence and
+                self.analysis_evidence[i["fixture_id"]]["probability_available"] for i in priority),
+            total_analyzed=sum(i["probability_available"] for i in self.analysis_evidence.values()),
+            model_analysis_attempts=len(self.analysis_evidence),
+            waiting_odds_refresh=len(upcoming) - current_odds_fixture_count,
+            soft_confidence_penalties=sum(bool(i.get("soft_findings") or i.get("soft_penalties")) for i in candidates),
+            actual_hard_rejects=sum(bool(i.get("hard_failures")) for i in candidates),
+            positive_ev_shadow_observations=shadow_captures,
+        )
         persisted_report = {key: value for key, value in report.items() if key != "candidate_markets"}
         persisted_report.update({
             "candidate_document_kind": "candidate",
@@ -525,6 +595,12 @@ class LabV2ShadowRunner:
         })
         self.repository.append("rehearsal", identity, persisted_report, created_at=clock)
         return _plain(report)
+
+    def pause_report(self, clock: datetime) -> dict[str, object]:
+        """Persist an intentional pause without any provider operation."""
+        report = night_report(clock)
+        self.repository.append("rehearsal", "lab-v2-night-" + fingerprint(clock), report, created_at=clock)
+        return report
 
     def _track_reviews(
         self, tracked: dict, candidates: list[dict], fixtures: dict,
@@ -548,7 +624,9 @@ class LabV2ShadowRunner:
             record["kickoff_utc"] = kickoff.isoformat()
             remaining = kickoff - clock
             if remaining <= MINIMUM_KICKOFF_LEAD:
-                state, reasons = "EXPIRED", ["MINIMUM_KICKOFF_LEAD_NOT_MET"]
+                state, reasons = "PUBLICATION_CLOSED", ["PREMATCH_PUBLICATION_CLOSED"]
+            elif review.get("status") == "PREMATCH_CLOSED":
+                state, reasons = "PUBLICATION_CLOSED", ["PREMATCH_PUBLICATION_CLOSED"]
             elif fixture is None:
                 state, reasons = "FIXTURE_INVALID", ["CURRENT_SEASON_CAPABILITY_NOT_FOUND"]
             elif review.get("status") == "FIXTURE_INVALID":
@@ -573,6 +651,7 @@ class LabV2ShadowRunner:
     async def _date_odds(
         self, days: list[str], fixtures: list[dict[str, object]], clock: datetime,
         *, reserve_calls: int = 0, tracked_fixture_ids: frozenset[int] = frozenset(),
+        priority_reserve: int = 0,
     ) -> tuple[dict[int, tuple[object, datetime, dict[str, CurrentMarketConsensus]]], dict[str, object]]:
         fixture_ids = {int(item["fixture_id"]) for item in fixtures}
         fixture_days = {int(item["fixture_id"]): item["kickoff_utc"].date().isoformat() for item in fixtures}
@@ -686,7 +765,7 @@ class LabV2ShadowRunner:
                 potential = [item for item in fixtures if item['fixture_id'] in result
                              or item['fixture_id'] in tracked_fixture_ids
                              or coverage.get(fixture_days[item['fixture_id']], DateOddsCoverage()).reason() is not None]
-                reserve_calls = min(reserve_calls, _final_review_call_reserve(potential, clock))
+                reserve_calls = max(priority_reserve, min(reserve_calls, _final_review_call_reserve(potential, clock)))
                 if reserve_calls < initial_reserve:
                     page_budget = max(page_budget, min(
                         int(self._effective_maximum() * ODDS_RELEASED_RESERVE_CYCLE_FRACTION) - self._request_count() + used,
@@ -760,7 +839,7 @@ class LabV2ShadowRunner:
         for target in league_order:
             league_id = int(target["league_id"])
             targets = grouped[league_id]
-            if self._remaining() <= max(12, reserve_calls):
+            if self._remaining() <= reserve_calls:
                 skipped += len(targets)
                 continue
             record_service(self.repository, targets[0], clock, "history")
@@ -782,7 +861,7 @@ class LabV2ShadowRunner:
                 in {PiAvailability.INSUFFICIENT, PiAvailability.UNAVAILABLE}
                 for item in targets
             )
-            if needs_previous and policy.history_days >= 365 and season > 1 and self._remaining() > max(16, reserve_calls):
+            if needs_previous and policy.history_days >= 365 and season > 1 and self._remaining() > max(16, reserve_calls) and not is_priority(targets[0]):
                 previous, _ = await self._fetch(
                     "/fixtures(results)", {"league": league_id, "season": season - 1, "status": "FT", "last": 99},
                     lambda lid=league_id, value=season - 1: self.client.finished_matches(lid, value, last=99),
@@ -807,7 +886,7 @@ class LabV2ShadowRunner:
             capability: LeagueCapability = fixture["capability"]
             if not capability.predictions:
                 continue
-            if self._remaining() <= max(8, reserve_calls):
+            if self._remaining() <= reserve_calls:
                 skipped += 1
                 continue
             fixture_id = int(fixture["fixture_id"])
@@ -864,6 +943,10 @@ class LabV2ShadowRunner:
             self.calls.append({"endpoint": endpoint, "query": query, "cache": "SKIPPED_BUDGET",
                                "actual_calls": 0, "result_count": 0})
             return {"errors": {"request": "LAB_V2_API_CALL_BUDGET_EXHAUSTED"}, "response": []}, clock
+        if discovery_state(self.runtime_clock() if self.runtime_clock else clock) == "NIGHT_DISCOVERY_PAUSED":
+            self.calls.append({"endpoint": endpoint, "query": query, "cache": "NIGHT_DISCOVERY_PAUSED",
+                               "actual_calls": 0, "result_count": 0})
+            return {"errors": {"request": "NIGHT_DISCOVERY_PAUSED"}, "response": []}, clock
         before = self._request_count()
         try:
             payload = await operation()
@@ -974,6 +1057,19 @@ class LabV2ShadowRunner:
             api = api_predictions.get(fixture_id)
             _, _, consensus_by_family = odds_evidence[fixture_id]
             review = final_reviews.get(fixture_id, {})
+            self.analysis_evidence[fixture_id] = {
+                "fixture_id": fixture_id, "league_id": league_id,
+                "competition_profile": fixture.get("competition_profile", "UNKNOWN"),
+                "kickoff_utc": fixture["kickoff_utc"].isoformat(), "evaluated_at_utc": now.isoformat(),
+                "history_probabilities": _plain(cmi), "pi_probabilities": _plain(pi.probabilities),
+                "api_probabilities": _plain(api.probabilities if api else {}),
+                "persisted_model_probabilities": _plain(persisted_models.get(fixture_id, {})),
+                "probability_available": bool(cmi or pi.probabilities or (api and api.probabilities)
+                                              or persisted_models.get(fixture_id)),
+                "state": "ANALYZED" if any(c.status == "AVAILABLE" for c in consensus_by_family.values())
+                         else "WAITING_FOR_REFRESH",
+                "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:" + policy_for(fixture.get("competition_profile", "UNKNOWN")).version,
+            }
             for consensus in consensus_by_family.values():
                 if consensus.status != "AVAILABLE":
                     continue
@@ -1034,6 +1130,8 @@ class LabV2ShadowRunner:
                         profile_evidence["hard_failures"] = [reason]
                         profile_evidence["candidate_lane"] = "REJECTED"
                     stage, readiness_reasons = _readiness(decision, fixture, now, review)
+                    if profile_evidence["candidate_lane"] == "TRACKING" and stage not in {"REJECTED", "RESULT_TRACKING"}:
+                        stage, readiness_reasons = "TRACKING", ("QUALITY_RISK_TRACKING",)
                     independent_probability = (decision.available_signals >= profile_policy.experimental_independent_families
                                                and 'CURRENT_MARKET_CONSENSUS_UNAVAILABLE' not in decision.rejection_reasons)
                     requirements = signal_requirements(missing, fixture['capability'], independent_probability=independent_probability)
@@ -1057,6 +1155,7 @@ class LabV2ShadowRunner:
                             if market in MARKET_FAMILIES[family]), len(profile_policy.market_preference)),
                         **{key: fixture.get(key) for key in ("competition_profile", "classifier_version",
                             "classification_reason", "classification_fingerprint", "flags", "age_category", "country", "provider_metadata")},
+                        "model_generation": self.analysis_evidence[fixture_id]["model_generation"],
                         "policy": decision.policy, "fixture_id": fixture_id,
                         "readiness_policy": READINESS_POLICY_VERSION,
                         "league_id": league_id, "league": fixture["league_name"], "season": fixture["season"],
@@ -1134,31 +1233,13 @@ def _fixture_rows_with_evidence(
             fixture_id = int(fixture["id"])
             if fixture_id <= 0 or league_id <= 0 or season <= 0:
                 raise ValueError("INVALID_PROVIDER_IDENTITY")
-            reason = None
-            coverage_status = "FIXTURE_EVALUATED_REJECTED"
-            if status.get("short") not in {"NS", "TBD"}:
-                reason = "FIXTURE_STATUS_NOT_UPCOMING"
-            elif kickoff <= now:
-                reason = "KICKOFF_TOO_CLOSE_OR_STARTED"
-            if reason is not None:
-                excluded.append({
-                    **classification.document(), "country": str(league.get("country") or capability.country),
-                    "league_name": str(league.get("name") or capability.competition_name), "state": "REJECTED",
-                    "fixture_id": fixture_id,
-                    "kickoff_utc": kickoff.isoformat(),
-                    "league_id": league_id,
-                    "home_team": str(home.get("name") or home.get("id") or "UNKNOWN"),
-                    "away_team": str(away.get("name") or away.get("id") or "UNKNOWN"),
-                    "status": coverage_status,
-                    "reason": reason,
-                })
-                continue
             if int(home["id"]) <= 0 or int(away["id"]) <= 0 or int(home["id"]) == int(away["id"]):
                 raise ValueError("CONTRADICTORY_TEAM_IDENTITY")
             result.append({
                 **classification.document(), "country": str(league.get("country") or capability.country),
                 "provider_metadata": {"league": league, "fixture": fixture, "teams": teams},
                 "fixture_id": fixture_id, "kickoff_utc": kickoff,
+                "prematch_eligible": kickoff > now and status.get("short") in {"NS", "TBD"},
                 "league_id": league_id, "league_name": str(league.get("name") or capability.competition_name),
                 "season": season, "home_team_id": int(home["id"]), "away_team_id": int(away["id"]),
                 "home_team": str(home.get("name") or home["id"]), "away_team": str(away.get("name") or away["id"]),
@@ -1342,13 +1423,15 @@ def _readiness(
     now: datetime,
     review: dict[str, object],
 ) -> tuple[str, tuple[str, ...]]:
+    if fixture["kickoff_utc"] <= now or review.get("status") == "PREMATCH_CLOSED" or not fixture.get("prematch_eligible", True):
+        return "RESULT_TRACKING", ("PREMATCH_PUBLICATION_CLOSED",)
     if review.get("status") == "FIXTURE_INVALID":
         return "REJECTED", (str(review.get("reason") or "FIXTURE_STATUS_NOT_UPCOMING"),)
     if decision.decision != "APPROVED":
         return "REJECTED", ("ENSEMBLE_NOT_APPROVED",)
     remaining = fixture["kickoff_utc"] - now
     if remaining <= MINIMUM_KICKOFF_LEAD:
-        return "REJECTED", ("MINIMUM_KICKOFF_LEAD_NOT_MET",)
+        return "TRACKING", ("MINIMUM_KICKOFF_LEAD_NOT_MET",)
     if remaining > FINAL_REVIEW_WINDOW:
         return "EARLY_CANDIDATE", ("FINAL_REVIEW_WINDOW_NOT_OPEN",)
     blockers: list[str] = []
@@ -1599,3 +1682,17 @@ def _safe_int(value: object, default: int) -> int:
 def _utc(value: datetime) -> datetime:
     if value.tzinfo is None or value.utcoffset() is None: raise ValueError("LAB_V2_TIME_REQUIRES_OFFSET")
     return value.astimezone(timezone.utc)
+
+
+def night_report(now: datetime) -> dict[str, object]:
+    """Network-free status shared by CLI and direct runner entrypoints."""
+    return {"schema_version": SCHEMA_VERSION, "status": "NIGHT_DISCOVERY_PAUSED",
+            "discovery_state": "NIGHT_DISCOVERY_PAUSED", "mode": "LAB_V2_NO_SEND",
+            "analysis_mode": "LAB_V2_NO_SEND", "evaluated_at_utc": now.isoformat(),
+            "api_calls_consumed": 0, "candidate_markets": [], "fixtures_discovered": 0,
+            "ready_candidate_count": 0, "telegram_sends": 0, "official_mutations": 0,
+            "historical_bookmaker_odds_used": False, "throughput": {},
+            "competition_profile_counts": {}, "global_state_counts": {},
+            "throughput_warnings": [], "publication_requested": False,
+            "publication_enabled": False, "publication_attempt_count": 0,
+            "telegram_transport_constructed": False}

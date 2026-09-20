@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from collections import Counter
+from datetime import datetime, timezone
+from .quota import discovery_state
 import json
 from pathlib import Path
 import sqlite3
@@ -10,7 +12,7 @@ import sqlite3
 from .runner import _one_x_two_diagnostics
 
 
-def latest_cycle_summary(path: Path, *, fixture_id: int | None = None) -> dict[str, object]:
+def latest_cycle_summary(path: Path, *, fixture_id: int | None = None, now: datetime | None = None) -> dict[str, object]:
     """Inspect the latest cycle without creating, migrating or mutating a database."""
     connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
     try:
@@ -41,7 +43,7 @@ def latest_cycle_summary(path: Path, *, fixture_id: int | None = None) -> dict[s
         ).fetchone()
         publication_document = json.loads(publication[0]) if publication else {}
         result: dict[str, object] = {
-            "status": "AVAILABLE",
+            "status": report.get("discovery_state", "AVAILABLE"),
             "cycle_id": row[0],
             "created_at_utc": row[1],
             "fixtures_discovered": int(report.get("fixtures_discovered") or 0),
@@ -65,7 +67,9 @@ def latest_cycle_summary(path: Path, *, fixture_id: int | None = None) -> dict[s
             "telegram_sends": int(publication_document.get("telegram_sends") or 0),
             "one_x_two_diagnostics": report.get("one_x_two_diagnostics") or _one_x_two_diagnostics(candidates),
         }
-        for key in ("throughput", "competition_profile_counts", "global_state_counts", "rejection_funnel",
+        for key in ("discovery_state", "priority_fixtures_discovered", "priority_fixtures_analyzed",
+                    "total_analyzed", "model_analysis_attempts", "waiting_odds_refresh", "soft_confidence_penalties",
+                    "actual_hard_rejects", "positive_ev_shadow_observations", "adaptive_quota_budget", "throughput", "competition_profile_counts", "global_state_counts", "rejection_funnel",
                     "top_global_rejection_reasons", "largest_rejection_bottleneck", "throughput_warnings",
                     "top_candidate_competitions", "top_candidate_markets", "current_remaining_daily_quota",
                     "fixtures_awaiting_near_kickoff_review"):
@@ -76,6 +80,11 @@ def latest_cycle_summary(path: Path, *, fixture_id: int | None = None) -> dict[s
         result["odds_coverage_by_date"] = pagination.get("coverage_by_date", {})
         result["fixture_reason_counts"] = report.get("fixture_reason_counts", {})
         result["rejection_reason_percentages"] = report.get("rejection_reason_percentages", {})
+        result['last_cycle_discovery_state'] = report.get('discovery_state')
+        result['discovery_state'] = discovery_state(now or datetime.now(timezone.utc))
+        result['status'] = result['discovery_state']
+        if result['discovery_state'] == 'NIGHT_DISCOVERY_PAUSED':
+            result['throughput_warnings'] = []
         if fixture_id is not None:
             coverage = next((item for item in report.get("fixture_coverage") or ()
                              if str(item.get("fixture_id")) == str(fixture_id)), None)

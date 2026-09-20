@@ -11,7 +11,7 @@ from app.real_match_lab_analysis.fingerprint import fingerprint
 from .capability import CapabilityTier, LeagueCapability
 
 CLASSIFIER_VERSION = 'LAB_COMPETITION_CLASSIFIER_V3'
-POLICY_VERSION = 'LAB_COMPETITION_POLICY_V1'
+POLICY_VERSION = 'LAB_PREMATCH_LIGHT_SAFETY_V2'
 
 
 class CompetitionProfile(StrEnum):
@@ -213,3 +213,13 @@ def policy_for(profile: str) -> ProfilePolicy:
                          refresh_minutes=(1440, 360, 75, 45, 20, 10) if volatile else (1440, 360, 75, 30, 10),
                          market_preference=('BTTS', 'TOTAL_2_5', '1X2') if youth else ('1X2', 'BTTS', 'TOTAL_2_5'),
                          priorities=tuple(sorted(priorities.items())))
+
+
+PRIORITY_PROFILES = frozenset({CompetitionProfile.SENIOR_MEN_PRO,
+    CompetitionProfile.INTERNATIONAL_CLUB, CompetitionProfile.INTERNATIONAL_SENIOR})
+
+
+def is_priority(fixture: Mapping) -> bool:
+    """Reuse competition classification and full coverage, never an admission list."""
+    return (fixture.get('competition_profile') in PRIORITY_PROFILES
+            or fixture.get('capability_tier') == CapabilityTier.TIER_A_FULL)

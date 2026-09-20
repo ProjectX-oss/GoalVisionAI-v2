@@ -2,8 +2,8 @@
 Description=GoalVision Lab V2 adaptive discovery every 30 minutes
 
 [Timer]
-OnCalendar=*:0/30
-Persistent=true
+OnCalendar=*-*-* 09..22:00,30:00 Europe/Riga
+Persistent=false
 Unit=goalvision-lab-v2-discover.service
 
 [Install]

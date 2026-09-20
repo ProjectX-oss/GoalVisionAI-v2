@@ -31,17 +31,17 @@ def global_diagnostic(fixtures: list[dict], candidates: list[dict], odds_statuse
         review = (reviews or {}).get(fixture['fixture_id'], {})
         if review.get('status') == 'FIXTURE_INVALID':
             state, reason = 'REJECTED', str(review.get('reason') or 'FIXTURE_STATUS_INVALID')
-        elif fixture['kickoff_utc'] <= now:
-            state, reason = 'EXPIRED', 'FIXTURE_STARTED'
+        elif fixture['kickoff_utc'] <= now or not fixture.get('prematch_eligible', True) or review.get('status') == 'PREMATCH_CLOSED':
+            state, reason = 'RESULT_TRACKING', 'PREMATCH_PUBLICATION_CLOSED'
         elif ready:
             state = 'READY' if any(c['candidate_lane'] != 'EXPERIMENTAL' for c in ready) else 'EXPERIMENTAL_READY'
             reason = 'FINAL_REVIEW_COMPLETE'
         elif rows and all(c.get('hard_failures') for c in rows):
             state, reason = 'REJECTED', rows[0]['hard_failures'][0]
         elif not rows and reason in {'NO_CURRENT_ODDS', 'MARKET_NOT_AVAILABLE', 'ODDS_STALE'}:
-            state = 'UNAVAILABLE'
+            state = 'TRACKING'
         coverage_reason = (odds_reasons or {}).get(str(fixture['fixture_id']))
-        if not rows and coverage_reason and not review.get('odds_status') and state not in {'REJECTED', 'EXPIRED'}:
+        if not rows and coverage_reason and not review.get('odds_status') and state not in {'REJECTED', 'RESULT_TRACKING'}:
             reason = coverage_reason
         refresh = next_refresh(fixture['kickoff_utc'], now, policy_for(profile))
         states.append({**metadata, 'state': state, 'reason': reason,
@@ -51,14 +51,14 @@ def global_diagnostic(fixtures: list[dict], candidates: list[dict], odds_statuse
         gate_metadata = {key: value for key, value in metadata.items() if key != 'provider_metadata'}
         if not rows:
             gates.append({**gate_metadata, 'stage': 'CURRENT_ODDS', 'market': None, 'reason_code': reason,
-                          'gate_type': 'HARD', 'passed': False, 'retryable': refresh is not None,
+                          'gate_type': 'DEFERRED', 'passed': False, 'retryable': refresh is not None,
                           'missing_data': ['current_market_quotes']})
         for c in rows:
             for stage, reasons, gate_type in (
                 ('INTEGRITY_VALUE', c.get('hard_failures', []), 'HARD'),
                 ('PROFILE_QUALITY', c.get('soft_findings', []), 'SOFT'),
                 ('OPTIONAL_DATA', c.get('optional_data_reasons', []), 'SOFT'),
-                ('FINAL_REVIEW', c.get('readiness_reasons', []), 'HARD'),
+                ('FINAL_REVIEW', c.get('readiness_reasons', []), 'DEFERRED'),
             ):
                 for reason_code in reasons or ['PASSED']:
                     passed = reason_code in {'PASSED', 'FINAL_REVIEW_COMPLETE'} or (gate_type == 'SOFT' and c['decision'] == 'APPROVED')
@@ -126,14 +126,18 @@ def global_diagnostic(fixtures: list[dict], candidates: list[dict], odds_statuse
 
 def human_diagnostic(report: dict) -> str:
     """Render only persisted counts, never estimated fixture or selection totals."""
-    lines = ['GLOBAL DISCOVERY']
-    lines.extend(f'{key}: {value}' for key, value in report.get('throughput', {}).items())
+    lines = [str(report.get('discovery_state') or 'GLOBAL DISCOVERY')]
+    for key in ('priority_fixtures_discovered', 'priority_fixtures_analyzed', 'total_analyzed',
+                'waiting_odds_refresh', 'soft_confidence_penalties', 'actual_hard_rejects',
+                'positive_ev_shadow_observations', 'ready', 'telegram_sends'):
+        lines.append(f'{key}: {report.get(key, 0)}')
+    lines.extend(f'{key}: {value}' for key, value in (report.get('throughput') or {}).items())
     lines.append('By profile:')
-    lines.extend(f'  {key}: {value}' for key, value in report.get('competition_profile_counts', {}).items())
+    lines.extend(f'  {key}: {value}' for key, value in (report.get('competition_profile_counts') or {}).items())
     lines.append('Odds coverage reasons:')
     lines.extend(f'  {key}: {value}' for key, value in report.get('odds_coverage_reason_counts', {}).items())
     lines.append('Top rejection/deferral reasons:')
-    lines.extend(f'  {key}: {value}' for key, value in report.get('top_global_rejection_reasons', {}).items())
+    lines.extend(f'  {key}: {value}' for key, value in (report.get('top_global_rejection_reasons') or {}).items())
     for key in ('api_calls_used', 'current_remaining_daily_quota', 'fixtures_awaiting_near_kickoff_review', 'throughput_warnings'):
         lines.append(f'{key}: {report.get(key)}')
     return '\n'.join(lines)
