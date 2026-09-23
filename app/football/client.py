@@ -1,6 +1,8 @@
 import asyncio
 from datetime import datetime, timezone
 from pathlib import Path
+import logging
+from typing import Callable, Mapping
 
 import httpx
 
@@ -17,7 +19,9 @@ class FootballClient:
     BASE_URL = "https://v3.football.api-sports.io"
     MIN_REQUEST_INTERVAL_SECONDS = 0.5
 
-    def __init__(self, api_key: str | None = None, *, env_file: Path | str = Path(".env"), request_limit: int | None = None):
+    def __init__(self, api_key: str | None = None, *, env_file: Path | str = Path(".env"), request_limit: int | None = None,
+                 response_observer: Callable[[str, Mapping[str, object], object, datetime], object] | None = None,
+                 completion_clock: Callable[[], datetime] | None = None):
 
         api_key = resolve_api_football_credential(api_key, env_file=env_file)
         self._quota: FootballQuotaReport | None = None
@@ -28,6 +32,10 @@ class FootballClient:
         self._request_limit = request_limit
         self._request_pacing_lock = asyncio.Lock()
         self._last_request_started_monotonic = None
+        # Opt-in evidence only; no store creation or production composition here.
+        self._response_observer = response_observer
+        self._completion_clock = completion_clock or (lambda: datetime.now(timezone.utc))
+        self.evidence_capture_failures = 0
 
         self._client = httpx.AsyncClient(
             base_url=self.BASE_URL,
@@ -276,6 +284,9 @@ class FootballClient:
             try:
                 await self._pace_request()
                 response = await self._client.get(path, params=params)
+                # Non-streaming get has received the complete body at this point.
+                # Sample before quota handling, parsing, or downstream mutation.
+                completed_at = self._observe_completion()
                 observed_quota = FootballQuotaReport.from_headers(response.headers)
                 if observed_quota.interpretation_status == "NORMALIZED":
                     self._quota = observed_quota
@@ -300,6 +311,11 @@ class FootballClient:
                     "retries": attempt,
                 }
                 response.raise_for_status()
+                if self._response_observer is not None and completed_at is not None:
+                    try:
+                        self._response_observer(path, dict(params), payload, completed_at)
+                    except Exception:
+                        self._capture_failed()
                 return response
             except httpx.HTTPStatusError as exc:
                 if exc.response.status_code not in {408, 425, 500, 502, 503, 504} or attempt == 2:
@@ -308,6 +324,28 @@ class FootballClient:
                 if attempt == 2: raise
             await asyncio.sleep(2 ** attempt)
         raise AssertionError("unreachable")
+
+    def _observe_completion(self) -> datetime | None:
+        """Sample an injected UTC clock; sidecar clock failure cannot retry HTTP."""
+        if self._response_observer is None:
+            return None
+        try:
+            stamp = self._completion_clock()
+            if not isinstance(stamp, datetime) or stamp.tzinfo is None or stamp.utcoffset() is None:
+                raise ValueError("UTC_COMPLETION_REQUIRED")
+            return stamp.astimezone(timezone.utc)
+        except Exception:
+            self._capture_failed()
+            return None
+
+    def _capture_failed(self) -> None:
+        """Keep failure auditable without recording payload/exception secrets."""
+        self.evidence_capture_failures += 1
+        try:
+            logging.getLogger(__name__).warning("FC_EVIDENCE_CAPTURE_UNAVAILABLE")
+        except Exception:
+            # Even a broken diagnostic handler must not fail/retry the response.
+            pass
 
 
 def _safe_json(response: httpx.Response) -> object:
