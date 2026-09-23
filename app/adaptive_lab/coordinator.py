@@ -54,7 +54,11 @@ class LearningCoordinator:
         return {'linkage':linkage,**self.after_settlement('PREMATCH',now=now,train=train)}
 
     def shadow(self, predictions: list[dict], *, stream: str, now: datetime) -> None:
+        """Observe eligible frozen inputs; diagnose expired PREMATCH replays only."""
         for prediction in predictions:
+            if stream == 'PREMATCH' and utc(prediction['prepared_at_utc']) > utc(now):
+                # Validate source time before first capture or canonical substitution.
+                raise ValueError('SHADOW_CHRONOLOGY_INVALID')
             if not prediction.get('ensemble_probability') or not prediction.get('captured_odds'):
                 continue
             if stream == 'PREMATCH':
@@ -70,8 +74,29 @@ class LearningCoordinator:
                     if frozen is None:
                         frozen = dict(prediction, prepared_at_utc=utc(now).isoformat())
                         self.repository.append('canonical_opportunities', key, stream, frozen, utc(now).isoformat())
+                if utc(frozen['prepared_at_utc']) > utc(now):
+                    # Expiry must never hide a future preparation integrity failure.
+                    raise ValueError('SHADOW_CHRONOLOGY_INVALID')
+                if utc(now) >= utc(frozen['kickoff_utc']):
+                    self._record_expired_prematch(key, prediction, frozen, now=now)
+                    continue
                 prediction = frozen
             self.governance.observe(stream,opportunity(prediction,stream),now=now)
+
+    def _record_expired_prematch(self, key: str, incoming: dict, frozen: dict, *, now: datetime) -> None:
+        """Append idempotent skip evidence without changing canonical history."""
+        stamp = utc(now).isoformat()
+        diagnostic = {
+            'status': 'EXPIRED_CANONICAL_PREMATCH', 'canonical_key': key,
+            'fixture_id': frozen['fixture_id'], 'market': frozen['market'],
+            'incoming_candidate_id': incoming.get('candidate_id', incoming.get('observation_id')),
+            'canonical_candidate_id': frozen.get('candidate_id', frozen.get('observation_id')),
+            'incoming_kickoff_utc': incoming['kickoff_utc'],
+            'canonical_kickoff_utc': frozen['kickoff_utc'],
+            'prepared_at_utc': frozen['prepared_at_utc'], 'observed_at_utc': stamp,
+        }
+        self.repository.append('linkage_diagnostics', 'expired-prematch-' + digest(diagnostic),
+                               'PREMATCH', diagnostic, stamp)
 
     def prematch_signals(self, signals: list, baseline: object, profile_evidence: dict,
                          fixture: dict, market: str, odds: Decimal, *, now: datetime, quote_fingerprint: str, missing: tuple = (),

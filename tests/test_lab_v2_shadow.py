@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, tzinfo
 from decimal import Decimal
 import inspect
 import json
@@ -1118,6 +1118,14 @@ class _RecordingTransport:
 def _install_controlled_cycle_fakes(monkeypatch, *, fail: bool = False) -> None:
     import app.lab_v2_shadow.cli as cli
 
+    ticks = iter(NOW + timedelta(seconds=i) for i in range(100))
+
+    class DaytimeClock(datetime):
+        @classmethod
+        def now(cls, tz: tzinfo | None = None) -> datetime:
+            return next(ticks).astimezone(tz)
+
+    monkeypatch.setattr(cli, "datetime", DaytimeClock)
     _RecordingTransport.constructed = 0
     _RecordingTransport.calls = 0
     _RecordingTransport.fail = fail
@@ -1244,7 +1252,7 @@ def test_indeterminate_v2_send_blocks_replay_even_after_quote_refresh(
         candidate["quote_provenance_fingerprint"] = "refreshed-current-quote"
         return candidate
 
-    monkeypatch.setattr("tests.test_lab_v2_shadow._controlled_ready_candidate", refreshed)
+    monkeypatch.setitem(globals(), "_controlled_ready_candidate", refreshed)
     assert cli.main(_controlled_cycle_arguments(send=True)) == 0
     replay = json.loads(capsys.readouterr().out)
     assert replay["controlled_publication"]["reason"] == "EXACTLY_ONCE_NO_NEW_PUBLICATIONS"

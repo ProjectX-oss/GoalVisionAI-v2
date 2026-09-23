@@ -1,5 +1,17 @@
 # TASKS.md
 
+## 2026-09-23 — PREMATCH adaptive shadow chronology hardening
+
+- Audit the complete incoming/canonical/governance shadow path on exact `50a73ce`.
+- Diagnose and skip expired immutable canonical PREMATCH records before governance,
+  retaining structured, idempotent evidence and processing later candidates.
+- Reject future incoming preparation before canonical substitution can hide it;
+  future frozen preparation and unrelated integrity errors remain fail-closed.
+- Preserve the invalid-baseline hotfix, canonical identities/history and governance.
+- Add focused synthetic chronology, continuation, replay and integrity regressions.
+- Audit and validation record: `docs/PREMATCH_SHADOW_HARDENING_2026-09-23.md`.
+- No deployment, production-state changes, external API calls or Telegram sends.
+
 ## Final LAB launch readiness foundation (2026-08-02)
 
 - [x] Add independent governance policy review and append-only operator approval/revocation.
