@@ -78,7 +78,9 @@ class LearningCoordinator:
                          contradiction: bool = False) -> tuple[list,dict]:
         """Replace only predictive family; existing profile/EV/quote/readiness gates rerun."""
         champion=self.repository.champion('PREMATCH')
-        if champion is None or baseline.ensemble_probability is None:
+        probability=baseline.ensemble_probability
+        # Preserve the baseline rejection; invalid probabilities cannot be replayed.
+        if champion is None or probability is None or not probability.is_finite() or not 0 < probability < 1:
             return signals,{}
         from dataclasses import asdict
         captured = captured_features({'signals':[asdict(s) for s in signals], 'market':market})
