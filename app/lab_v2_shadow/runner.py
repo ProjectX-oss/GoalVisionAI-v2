@@ -228,6 +228,18 @@ class LabV2ShadowRunner:
         if near_only:
             upcoming = [f for f in upcoming if MINIMUM_KICKOFF_LEAD < f['kickoff_utc'] - clock <= FINAL_REVIEW_WINDOW]
         first_resource_class = min((resource_priority(x) for x in upcoming), default=2)
+        # Optional observation plan from existing immutable classification scalars.
+        # This hook neither discovers fixtures nor returns prediction inputs.
+        if self.football_context_observer is not None:
+            try:
+                prepare_context = getattr(self.football_context_observer, 'prepare', None)
+                if prepare_context is not None:
+                    prepare_context(tuple(tuple(f.get(k) for k in (
+                        'fixture_id', 'league_id', 'season', 'competition_profile', 'classifier_version',
+                        'classification_reason', 'classification_fingerprint', 'age_category'))
+                        + (tuple(f.get('flags', ())),) for f in upcoming))
+            except Exception:
+                self.football_context_observer_failures += 1
         early_reviews, exact_evidence, priority_exact_evidence = {}, {}, {}
         due = [f for f in fair_order(upcoming, self.repository, phase='review')
                if MINIMUM_KICKOFF_LEAD < f['kickoff_utc'] - clock <= FINAL_REVIEW_WINDOW

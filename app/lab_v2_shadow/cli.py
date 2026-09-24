@@ -23,7 +23,7 @@ from .runner import LabV2ShadowRunner, night_report
 from .summary import latest_cycle_summary
 
 
-async def _cycle(args: argparse.Namespace) -> dict[str, object]:
+async def _cycle(args: argparse.Namespace, *, football_context: object | None = None) -> dict[str, object]:
     clock = datetime.now(timezone.utc)
     repository = ShadowEvidenceRepository(args.shadow_database)
     if discovery_state(clock) == "NIGHT_DISCOVERY_PAUSED":
@@ -33,19 +33,21 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
             return report
         finally:
             repository.close()
-    client = FootballClient(request_limit=args.max_calls)
+    client = FootballClient(request_limit=args.max_calls, **(
+        {'response_observer': football_context.capture} if football_context is not None else {}))
     adaptive_repository = None
     coordinator = None
     if getattr(args, 'adaptive_database', None):
         from app.adaptive_lab.repository import AuditRepository
         from app.adaptive_lab.coordinator import LearningCoordinator
         adaptive_repository = AuditRepository(args.adaptive_database)
-        coordinator = LearningCoordinator(adaptive_repository)
+        coordinator = LearningCoordinator(adaptive_repository, football_context_observer=football_context)
     try:
         runner = LabV2ShadowRunner(
             client, repository, capability_cache_path=args.capability_cache,
             analysis_path=args.analysis_database, maximum_calls=args.max_calls,
             daily_safety_reserve=args.daily_reserve, adaptive_learning=coordinator, runtime_clock=lambda: datetime.now(timezone.utc),
+            football_context_observer=football_context,
         )
         report = await runner.run(
             now=clock,
@@ -141,6 +143,11 @@ async def _cycle(args: argparse.Namespace) -> dict[str, object]:
         finally:
             ledger.close()
     finally:
+        if football_context is not None:
+            try:
+                football_context.client_diagnostics(client.evidence_capture_failures)
+            except Exception:
+                pass
         await client.close()
         repository.close()
         if adaptive_repository is not None:
