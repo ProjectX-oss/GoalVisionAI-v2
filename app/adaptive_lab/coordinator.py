@@ -34,7 +34,9 @@ def opportunity(prediction: dict, stream: str) -> dict:
 
 class LearningCoordinator:
     """Call after durable settlements. Replays also recover an interrupted learning step."""
-    def __init__(self, repository: AuditRepository) -> None:
+    def __init__(self, repository: AuditRepository, *, football_context_observer: object | None = None) -> None:
+        self.football_context_observer = football_context_observer
+        self.football_context_observer_failures = 0
         self.repository=repository
         self.governance=Governance(repository)
 
@@ -67,10 +69,17 @@ class LearningCoordinator:
                 key = str(prediction['fixture_id']) + ':' + prediction['market']
                 with self.repository.transaction():
                     frozen = self.repository.get('canonical_opportunities', key)
-                    if frozen is None:
+                    new_opportunity = frozen is None
+                    if new_opportunity:
                         frozen = dict(prediction, prepared_at_utc=utc(now).isoformat())
                         self.repository.append('canonical_opportunities', key, stream, frozen, utc(now).isoformat())
                 prediction = frozen
+                if self.football_context_observer is not None:
+                    try:
+                        from app.prematch_football_context.snapshot.observer import identity
+                        self.football_context_observer.observe(identity(frozen), new_opportunity=new_opportunity)
+                    except Exception:
+                        self.football_context_observer_failures += 1
             self.governance.observe(stream,opportunity(prediction,stream),now=now)
 
     def prematch_signals(self, signals: list, baseline: object, profile_evidence: dict,

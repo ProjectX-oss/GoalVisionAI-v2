@@ -86,11 +86,14 @@ class LabV2ShadowRunner:
         daily_safety_reserve: int = DAILY_SAFETY_RESERVE,
         adaptive_learning: object | None = None,
         runtime_clock: Callable[[], datetime] | None = None,
+        football_context_observer: object | None = None,
     ) -> None:
         if not 1 <= maximum_calls <= MAXIMUM_CALLS:
             raise ValueError("LAB_V2_MAXIMUM_CALLS_MUST_BE_BETWEEN_1_AND_400")
         if daily_safety_reserve != DAILY_SAFETY_RESERVE:
             raise ValueError("LAB_V2_USE_SETTLEMENT_RESULT_RESERVE_100")
+        self.football_context_observer = football_context_observer
+        self.football_context_observer_failures = 0
         self.adaptive_learning = adaptive_learning
         self.runtime_clock = runtime_clock
         self.client = client
@@ -371,10 +374,23 @@ class LabV2ShadowRunner:
             final_reviews[fixture_id] = context
 
         evaluation_clock = max(clock, _metadata_time(getattr(self.client, 'response_metadata', lambda: {})(), clock))
+        # Observation-only input boundary: after collection, before FINAL evaluation.
+        context_receipt = None
+        if self.football_context_observer is not None:
+            try:
+                context_receipt = self.football_context_observer.begin()
+            except Exception:
+                self.football_context_observer_failures += 1
         candidates = self._evaluate(
             odds_fixtures, odds_evidence, histories, adapters, api_predictions,
             persisted_models, availability, final_reviews, evaluation_clock,
         )
+        if self.football_context_observer is not None:
+            try:
+                from app.prematch_football_context.snapshot.observer import identity
+                self.football_context_observer.bind(context_receipt, tuple(identity(c) for c in candidates))
+            except Exception:
+                self.football_context_observer_failures += 1
         lifecycle = self._track_reviews(tracked, candidates, fixtures, final_reviews, clock)
         current_odds_fixture_count = sum(
             any(value.status == "AVAILABLE" for value in families.values())
