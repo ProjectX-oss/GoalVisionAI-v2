@@ -50,12 +50,36 @@ def feature_coverage(projections: tuple[Projection, ...]) -> tuple[dict[str, int
     return histogram, features
 
 
+def run_state(run: dict, end: dict | None, *, linked_events: bool) -> tuple[str, str]:
+    """Classify only positive immutable completion/zero-activity proof.
+
+    V1 always counted every response callback and every attempted observation in
+    END diagnostics, including persistence failures. Its *exactly empty* durable
+    END, together with no linked events, proves zero observations. Missing END,
+    omitted diagnostics, unknown versions and mere absence of rows prove nothing.
+    V2 additionally requires the typed credential failure and explicit zero hook
+    counts. No exception text or credentials are retained.
+    """
+    if end is not None and end.get('completed') is True:
+        return 'COMPLETED_OBSERVATION', 'COMPLETED_END'
+    if end is not None and end.get('completed') is False and not linked_events and end.get('diagnostics') == {}:
+        if run.get('version') == 'FC_READINESS_1':
+            return 'PREFLIGHT_FAILURE', 'LEGACY_ZERO_OBSERVATION_END'
+        activity = end.get('activity')
+        expected = {'responses', 'preparations', 'decisions', 'opportunities', 'attempts'}
+        if (run.get('version') == 'FC_READINESS_2' and end.get('credential_failure') is True
+                and type(activity) is dict and set(activity) == expected
+                and all(type(v) is int and v == 0 for v in activity.values())):
+            return 'PREFLIGHT_FAILURE', 'CREDENTIAL_FAILURE_ZERO_ACTIVITY'
+    return 'INCOMPLETE_EVIDENCE_WINDOW', 'ZERO_ACTIVITY_NOT_PROVEN'
+
+
 def coverage(root: Path) -> dict[str, object]:
     """Open all three stores read-only, verify every row, report corruption explicitly.
 
-    Reports describe persisted observation only. A RUN without a completed END
-    makes denominator completeness unproven and blocks readiness. A total storage
-    failure can only be diagnosed by the command's bounded stderr diagnostics.
+    Reports describe persisted observation only. An incomplete RUN blocks unless
+    its immutable END proves a preflight failure with zero observations. A total
+    storage failure can only be diagnosed by bounded stderr diagnostics.
     """
     try:
         with ExitStack() as stack:
@@ -67,7 +91,7 @@ def coverage(root: Path) -> dict[str, object]:
             stack.callback(ledger.close)
             return analyze(e, s, ledger)
     except Exception:
-        return {'version': 'FC_READINESS_1', 'readiness': 'CAPTURE_BLOCKED',
+        return {'version': 'FC_READINESS_2', 'readiness': 'CAPTURE_BLOCKED',
                 'integrity_failures': {'STORE_OR_REPORT_UNAVAILABLE': 1},
                 'denominator_completeness': 'UNPROVEN', 'phase_e_authorized': False}
 
@@ -82,6 +106,20 @@ def analyze(e: EvidenceRepository, s: SnapshotRepository, ledger: Ledger) -> dic
     results = {key: doc for kind, key, doc in events if kind == 'RESULT'}
     attempts = {key: doc for key, doc in opportunities.items() if doc['attempted'] is True}
     incomplete = sum(key not in ends or ends[key].get('completed') is not True for key in runs)
+    # V1 did not count successful begin() calls. An unassociated decision marker
+    # could belong to its failed run, so legacy zero-counter proof is insufficient
+    # in that case. V2 has an explicit decision-boundary activity count.
+    unlinked_receipts = {r[0] for r in e.connection.execute(
+        "SELECT receipt_hash FROM fc_receipts WHERE event='DECISION'")} - {
+            doc.get('receipt') for doc in opportunities.values()}
+    run_details = []
+    for key, run in sorted(runs.items()):
+        linked = any(doc.get('run_id') == key for doc in (*opportunities.values(), *results.values()))
+        state, proof = run_state(run, ends.get(key), linked_events=(
+            linked or (run.get('version') == 'FC_READINESS_1' and bool(unlinked_receipts))))
+        run_details.append({'run_id': key, 'state': state, 'proof': proof})
+    states = Counter(row['state'] for row in run_details)
+    window_incomplete = states['INCOMPLETE_EVIDENCE_WINDOW']
     if set(ends) - set(runs) or any(doc['run_id'] not in runs for doc in opportunities.values()):
         integrity['RUN_LINKAGE'] += 1
     if set(results) - set(attempts):
@@ -172,9 +210,9 @@ def analyze(e: EvidenceRepository, s: SnapshotRepository, ledger: Ledger) -> dic
                 len(values), 'group_successful_immutable_snapshots') for i, name in enumerate(FEATURE_NAMES)}
         breakdown.append(row)
     return {
-        'version': 'FC_READINESS_1',
+        'version': 'FC_READINESS_2',
         'readiness': readiness(attempts=len(attempts), snapshots=n, competitions=len(competitions), days=len(days),
-                               failures=sum(integrity.values()), incomplete=incomplete),
+                               failures=sum(integrity.values()), incomplete=window_incomplete),
         'phase_e_authorized': False,
         'thresholds': {'snapshots': 100, 'competitions': 5, 'distinct_utc_decision_dates': 7,
                        'reproduction_fraction': '1.000000', 'integrity_failures': 0, 'group_minimum': 10},
@@ -186,9 +224,14 @@ def analyze(e: EvidenceRepository, s: SnapshotRepository, ledger: Ledger) -> dic
             'feature_missing_reasons': 'One count per missing feature/reason; multiple reasons may apply.',
             'sources': 'Phase B source-selection verdict per eligible attempt; SELECTED proves query/as-of payload availability, not regulation/support.',
             'regulation_and_profiles': 'Successful immutable snapshots; current target regulation counted once per snapshot.',
+            'runs': 'All persisted runs remain visible; incomplete_runs includes preflight failures. Only evidence_window_incomplete_runs blocks completeness, alongside integrity failures.',
         },
-        'denominator_completeness': 'UNPROVEN' if incomplete or integrity else 'VERIFIED_PERSISTED_RUNS',
+        'denominator_completeness': 'UNPROVEN' if window_incomplete or integrity else 'VERIFIED_PERSISTED_RUNS',
         'runs': len(runs), 'incomplete_runs': incomplete,
+        'historical_preflight_failures': states['PREFLIGHT_FAILURE'],
+        'evidence_window_incomplete_runs': window_incomplete,
+        'completed_observation_runs': states['COMPLETED_OBSERVATION'],
+        'run_classification': run_details,
         'observed_canonical_prematch_opportunities': len({v['key'] for v in opportunities.values()}),
         'old_canonical_observations_not_attempted': sum(not v['attempted'] for v in opportunities.values()),
         'final_evaluated_candidates': diagnostics.get('FINAL_EVALUATED_CANDIDATES', 0),

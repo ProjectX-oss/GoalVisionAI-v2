@@ -49,12 +49,14 @@ def main(argv: list[str] | None = None) -> int:
         parser.error('bounded calls 1..400 and horizon 1..3 required')
     # Runtime imports and existing database constructors occur only for this action.
     from app.lab_v2_shadow.cli import _cycle
+    from app.football.configuration import FootballCredentialError
     from app.lab_v2_shadow.quota import DAILY_SAFETY_RESERVE
     runtime = argparse.Namespace(shadow_database=root/'shadow.db', analysis_database=root/'analysis.db',
         adaptive_database=root/'adaptive.db', ledger=root/'lab-ledger.db', capability_cache=root/'var/capabilities.json',
         max_calls=args.max_calls, horizon_days=args.horizon_days, daily_reserve=DAILY_SAFETY_RESERVE, send=False)
     observation = ProspectiveObservation(root, environment=args.environment, clock=lambda: datetime.now(timezone.utc))
     completed = False
+    credential_failure = False
     try:
         result = asyncio.run(_cycle(runtime, football_context=observation))
         completed = not bool(result.get('terminal_error'))
@@ -62,8 +64,12 @@ def main(argv: list[str] | None = None) -> int:
         from app.real_match_lab_analysis.fingerprint import canonical_json
         print(canonical_json(result))
         return int(not completed)
+    except FootballCredentialError:
+        credential_failure = True
+        raise
     finally:
-        print(canonical_bytes({'v2_readiness_diagnostics': observation.finish(completed=completed)}).decode(), file=sys.stderr)
+        print(canonical_bytes({'v2_readiness_diagnostics': observation.finish(
+            completed=completed, credential_failure=credential_failure)}).decode(), file=sys.stderr)
 
 
 if __name__ == '__main__':

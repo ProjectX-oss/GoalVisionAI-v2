@@ -11,7 +11,7 @@ from ..contracts import Classification
 from ..evidence import Binding
 from ..policy import Profile
 from ..source_adapter import FormatEvidence
-from ..sources import SourceKind, history_query, select_source, target_query
+from ..sources import SourceKind, diagnostics, history_query, select_source, target_query
 from ..snapshot.observer import DecisionIdentity, SnapshotObserver
 from ..snapshot.repository import SnapshotRepository
 from ..snapshot.service import available_pins, KINDS
@@ -52,6 +52,7 @@ class ProspectiveObservation:
         self.clock = clock
         self.run_id = uuid4().hex  # Operational only; never part of A/B/C/D hashes.
         self.counts: Counter[str] = Counter()
+        self.activity = dict.fromkeys(('responses', 'preparations', 'decisions', 'opportunities', 'attempts'), 0)
         self.evidence = self._open('EVIDENCE_STORE_UNAVAILABLE', lambda: EvidenceRepository(root/'sources.db', writable=True, clock=clock))
         self.snapshots = self._open('SNAPSHOT_STORE_UNAVAILABLE', lambda: SnapshotRepository(root/'snapshots.db', writable=True))
         self.ledger = self._open('LEDGER_UNAVAILABLE', lambda: Ledger(root/'attempts.db', writable=True))
@@ -60,7 +61,7 @@ class ProspectiveObservation:
         self.scopes: dict[int, Binding] = {}
         self.receipt: DecisionReceipt | None = None
         self.seen: set[str] = set()
-        self._event('RUN', self.run_id, {'environment': environment, 'version': 'FC_READINESS_1'})
+        self._event('RUN', self.run_id, {'environment': environment, 'version': 'FC_READINESS_2'})
 
     def _open(self, code: str, factory: Callable[[], Repository]) -> Repository | None:
         try:
@@ -79,6 +80,7 @@ class ProspectiveObservation:
 
     def prepare(self, rows: tuple[tuple, ...]) -> None:
         """Plan only queries already implied by discovered runtime scope, never fetch."""
+        self.activity['preparations'] += 1
         self.scopes.clear()
         plans: dict[object, set[CaptureScope]] = {}
         for row in rows:
@@ -101,18 +103,34 @@ class ProspectiveObservation:
             self.observer = SnapshotObserver(self.evidence, self.snapshots, tuple(self.scopes.values()))
 
     def capture(self, endpoint: str, query: Mapping[str, object], payload: object, completed: datetime) -> None:
-        """Accepted response boundary only; date discovery never becomes TARGET."""
+        """Persist exact responses immediately, even before classification is planned.
+
+        An exact integer ID request is self-scoping; history roles still require
+        prepare(). No discovery row or cache data is turned into an exact response.
+        All reuse goes through the unchanged durable receipt and Phase B selector.
+        """
+        self.activity['responses'] += 1
         try:
-            if self.adapter is None:
+            adapter = self.adapter
+            if endpoint == '/fixtures' and 'id' in query and not (
+                    set(query) == {'id'} and type(query['id']) is int and query['id'] > 0):
+                self.counts['SOURCE_UNAVAILABLE_UNSCOPED_QUERY'] += 1
+                return
+            if (self.evidence is not None and endpoint == '/fixtures' and set(query) == {'id'}
+                    and type(query['id']) is int and query['id'] > 0):
+                scope = CaptureScope(target_query(query['id']), SourceKind.TARGET, timedelta(minutes=2))
+                adapter = CaptureAdapter(self.evidence, (scope,))
+            if adapter is None:
                 self.counts['CAPTURE_NOT_SCOPED'] += 1
                 return
-            status = self.adapter(endpoint, query, payload, completed)
+            status = adapter(endpoint, query, payload, completed)
             self.counts['SOURCE_' + status.status] += 1
         except Exception:
             self.counts['SOURCE_CAPTURE_EXCEPTION'] += 1
 
     def begin(self) -> DecisionReceipt | None:
         """Reuse Phase D's precise final evaluation cutoff hook."""
+        self.activity['decisions'] += 1
         self.receipt = None
         try:
             if self.observer is not None:
@@ -131,22 +149,26 @@ class ProspectiveObservation:
         if self.observer is not None:
             self.observer.bind(receipt, decisions)
 
-    def _sources(self, scope: Binding) -> dict[str, str]:
+    def _sources(self, scope: Binding) -> tuple[dict[str, str], dict[str, dict[str, int]]]:
         if self.evidence is None or self.receipt is None:
-            return {k.value: 'DECISION_UNAVAILABLE' for k in KINDS}
+            return {k.value: 'DECISION_UNAVAILABLE' for k in KINDS}, {}
         pins = available_pins(self.evidence, self.receipt, scope)
         queries = (target_query(scope.fixture_id), history_query(scope.competition_id, scope.season),
                    history_query(scope.competition_id, scope.season-1))
-        return {kind.value: select_source(tuple(self.evidence.load(i, decision=self.receipt) for i in ids),
-                query, cutoff=self.receipt.cutoff, source_kind=kind).verdict
+        selections = {kind.value: select_source(tuple(self.evidence.load(i, decision=self.receipt) for i in ids),
+                query, cutoff=self.receipt.cutoff, source_kind=kind)
                 for kind, query, ids in zip(KINDS, queries, pins)}
+        return ({k: s.verdict for k, s in selections.items()},
+                {k: dict(diagnostics(s)) for k, s in selections.items()})
 
     def observe(self, decision: DecisionIdentity, *, new_opportunity: bool) -> None:
         """Count a canonical opportunity once; never snapshot historical canonical rows."""
+        self.activity['opportunities'] += 1
         key = f'{decision.fixture_id}:{decision.market}'
         if key in self.seen:
             return
         self.seen.add(key)
+        self.activity['attempts'] += int(new_opportunity is True)
         scope = self.scopes.get(decision.fixture_id)
         record = {'run_id': self.run_id, 'key': key, 'candidate_id': decision.candidate_id,
                   'fixture_id': decision.fixture_id, 'competition_id': decision.competition_id,
@@ -159,10 +181,11 @@ class ProspectiveObservation:
             self.counts['OLD_CANONICAL_NOT_ATTEMPTED'] += 1
             return
         sources = {k.value: 'SCOPE_UNAVAILABLE' for k in KINDS}
+        source_diagnostics = {}
         status, snapshot_id = 'SNAPSHOT_UNAVAILABLE', None
         try:
             if scope is not None:
-                sources = self._sources(scope)
+                sources, source_diagnostics = self._sources(scope)
             if self.observer is not None:
                 self.observer.observe(decision, new_opportunity=True)
             stored = self.snapshots.load(key) if self.snapshots is not None else None
@@ -174,15 +197,19 @@ class ProspectiveObservation:
             status = 'SNAPSHOT_EXCEPTION'
         self.counts[status] += 1
         self._event('RESULT', event_id, {'run_id': self.run_id, 'key': key, 'status': status,
-                                       'sources': sources, 'snapshot_id': snapshot_id})
+                                       'sources': sources, 'source_diagnostics': source_diagnostics,
+                                       'snapshot_id': snapshot_id})
 
-    def finish(self, *, completed: bool, client_failures: int = 0) -> dict[str, int]:
+    def finish(self, *, completed: bool, client_failures: int = 0,
+               credential_failure: bool = False) -> dict[str, int]:
         """Persist bounded counters; return them for stderr even when stores fail."""
         self.counts['CLIENT_CAPTURE_FAILURE'] += client_failures
         if self.observer is not None:
             self.counts.update({'SNAPSHOT_' + k: v for k, v in self.observer.diagnostics().items()})
         counters = {k: v for k, v in sorted(self.counts.items()) if v}
-        self._event('END', self.run_id, {'completed': completed, 'diagnostics': counters})
+        self._event('END', self.run_id, {'completed': completed, 'diagnostics': counters,
+                                       'activity': self.activity,
+                                       'credential_failure': credential_failure})
         counters = {k: v for k, v in sorted(self.counts.items()) if v}
         for repository in (self.evidence, self.snapshots, self.ledger):
             if repository is not None:
