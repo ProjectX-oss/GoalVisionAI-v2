@@ -11,6 +11,8 @@ from ..contracts import positive_id, require_hash
 from ..fingerprint import canonical_bytes, utc
 
 VERSION = 'FC_V2_REVIEWED_REGULATION_V1'
+INCORPORATED_VERSION = 'FC_V2_INCORPORATED_REGULATION_V1'
+LINK_VERSION = 'FC_V2_INCORPORATION_V1'
 # Deliberately small admission policy, not a claim that any document proves format.
 # Adding an organizer requires a separately reviewed code/policy change.
 AUTHORITIES = (('UEFA', 'uefa.com'), ('FIFA', 'fifa.com'), ('IFAB', 'theifab.com'),
@@ -73,7 +75,7 @@ class ReviewedCompetitionRegulation:
     provider: str
     competition_id: int
     season: int
-    regulation_minutes: int
+    regulation_minutes: int | None
     organizer: str
     competition_name: str
     source_type: SourceType
@@ -96,10 +98,13 @@ class ReviewedCompetitionRegulation:
         for name in ('review_id', 'organizer', 'competition_name', 'source_title', 'source_url',
                      'source_edition', 'reviewed_statement', 'reviewer'):
             bounded(getattr(self, name))
-        if self.provider != 'API_FOOTBALL' or self.evidence_version != VERSION:
+        expected = INCORPORATED_VERSION if isinstance(self, IncorporatedCompetitionRegulation) else VERSION
+        if self.provider != 'API_FOOTBALL' or self.evidence_version != expected:
             raise ValueError('UNSUPPORTED_PROVIDER_OR_VERSION')
-        for number in (self.competition_id, self.season, self.regulation_minutes):
+        for number in (self.competition_id, self.season):
             positive_id(number)
+        if self.regulation_minutes is not None or expected == VERSION:
+            positive_id(self.regulation_minutes)
         if not isinstance(self.source_type, SourceType) or not isinstance(self.retained_source_content, RetainedSource):
             raise ValueError('INVALID_REVIEW_CONTRACT')
         if (self.validity_start is None) != (self.validity_end is None):
@@ -118,7 +123,7 @@ class ReviewedCompetitionRegulation:
         require_hash(self.evidence_fingerprint)
         if self.source_content_sha256 != digest('FC_V2_REGULATION_SOURCE_V1', self.retained_source_content):
             raise ValueError('SOURCE_CONTENT_INTEGRITY')
-        if self.evidence_fingerprint != digest(VERSION, self.fingerprint_material()):
+        if self.evidence_fingerprint != digest(self.evidence_version, self.fingerprint_material()):
             raise ValueError('EVIDENCE_FINGERPRINT_INTEGRITY')
 
     def _authority(self) -> None:
@@ -143,6 +148,45 @@ class ReviewedCompetitionRegulation:
                 and self.reviewed_at < cutoff and self.source_effective_from <= cutoff < self.source_effective_until)
 
 
+@dataclass(frozen=True, slots=True)
+class Incorporation:
+    """Explicit edge owned by a competition review, pinned to one reviewed law.
+
+    The owner supplies retained provenance, review time and effective interval.
+    Its immutable review_id identifies this single relationship.
+    """
+    competition_review_id: str
+    base_review_id: str
+    base_evidence_fingerprint: str
+    reviewed_statement: str
+    relationship: str
+    fingerprint: str
+
+    def __post_init__(self) -> None:
+        for name in ('competition_review_id', 'base_review_id', 'reviewed_statement'):
+            bounded(getattr(self, name))
+        require_hash(self.base_evidence_fingerprint)
+        require_hash(self.fingerprint)
+        if self.relationship != 'INCORPORATES' or self.competition_review_id == self.base_review_id:
+            raise ValueError('INVALID_INCORPORATION')
+        material = {f.name: getattr(self, f.name) for f in fields(self) if f.name != 'fingerprint'}
+        if self.fingerprint != digest(LINK_VERSION, material):
+            raise ValueError('INCORPORATION_INTEGRITY')
+
+
+@dataclass(frozen=True, slots=True)
+class IncorporatedCompetitionRegulation(ReviewedCompetitionRegulation):
+    """Null duration avoids falsely attributing base-law duration to the organizer."""
+    incorporation: Incorporation
+
+    def __post_init__(self) -> None:
+        ReviewedCompetitionRegulation.__post_init__(self)
+        if (self.source_type != SourceType.ORGANIZER_REGULATIONS
+                or not isinstance(self.incorporation, Incorporation)
+                or self.incorporation.competition_review_id != self.review_id):
+            raise ValueError('INVALID_INCORPORATION_OWNER')
+
+
 def decode(document: str) -> ReviewedCompetitionRegulation:
     """Strict JSON import: complete keys, no duplicate keys, verified supplied hashes."""
     def unique(pairs: list[tuple[str, object]]) -> dict[str, object]:
@@ -158,12 +202,19 @@ def decode(document: str) -> ReviewedCompetitionRegulation:
         raise ValueError('RECORD_TOO_LARGE')
     try:
         doc = json.loads(document, object_pairs_hook=unique)
-        if set(doc) != {f.name for f in fields(ReviewedCompetitionRegulation)}:
+        if not isinstance(doc, dict):
+            raise ValueError('INVALID_REVIEW_DOCUMENT')
+        kind = (IncorporatedCompetitionRegulation
+                if doc.get('evidence_version') == INCORPORATED_VERSION
+                else ReviewedCompetitionRegulation)
+        if set(doc) != {f.name for f in fields(kind)}:
             raise ValueError('INCOMPLETE_REVIEW')
+        if kind is IncorporatedCompetitionRegulation:
+            doc['incorporation'] = Incorporation(**doc['incorporation'])
         doc['source_type'] = SourceType(doc['source_type'])
         doc['retained_source_content'] = RetainedSource(**doc['retained_source_content'])
         for name in ('source_effective_from', 'source_effective_until', 'reviewed_at'):
             doc[name] = datetime.fromisoformat(doc[name].replace('Z', '+00:00'))
-        return ReviewedCompetitionRegulation(**doc)
+        return kind(**doc)
     except (TypeError, KeyError, AttributeError, RecursionError) as exc:
         raise ValueError('INVALID_REVIEW_DOCUMENT') from exc

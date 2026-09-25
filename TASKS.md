@@ -1415,3 +1415,17 @@ Review after completing the current priority.
   Phase E remains unauthorized. Next: manually review one genuine authoritative
   document and exact provider-ID mapping in an isolated Test registry.
 - Report: `docs/audits/PREMATCH_FOOTBALL_CONTEXT_V2_REGULATION_REGISTRY_REPORT.md`.
+
+## 2026-09-25 — PREMATCH V2 authoritative incorporated-law evidence
+
+- Added a mandatory fingerprinted incorporation relationship inside a versioned
+  immutable competition review, with independently reviewed base-law provenance.
+- Added exact-scope, strict as-of, conflict-aware offline resolution and complete
+  chain FormatEvidence proof hashing without attributing law duration to organizer text.
+- Preserved old registry records/schema, IFAB-alone rejection, append-only import,
+  runtime isolation, V1/V2/model semantics and provider request parity.
+- Added synthetic chain, immutability, replay, timing, conflict, CLI, AET/PEN and
+  snapshot regressions; no real evidence imported and UCL 2026/27 stays unverified.
+- Phase E remains unauthorized. Next: operator review/import of a complete genuine
+  mapping + competition incorporation + base-law chain in an isolated Test registry.
+- Report: `docs/audits/PREMATCH_FOOTBALL_CONTEXT_V2_INCORPORATED_LAW_REPORT.md`.
