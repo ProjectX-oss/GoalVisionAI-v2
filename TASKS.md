@@ -1451,3 +1451,15 @@ Review after completing the current priority.
 - Offline affected-path regression: 1,287 passed and 42 subtests; deployed isolated baseline: 764 passed and 8 subtests. No operational training or synthetic live sends.
 - Prepared service-specific reversible rollout; installation blocked by unavailable sudo. No production unit/release/champion changes.
 - Full evidence and remaining limitations: docs/operations/PREMATCH_FULL_AUDIT_V2_ENABLEMENT.md.
+
+## 2026-09-25 — PREMATCH installer-only rollout hardening
+
+- Preserve the completed audit and exact tested application tree from `e120f1b`.
+- Make disable controls monotonic/idempotent with exact current-state validation.
+- Serialize installer actions; gate new starts, drain, then fence rollback with
+  a decisive ledger check that conservatively refuses unresolved labelled sends.
+- Add focused disposable regressions and rerun only installer and directly
+  related publication/settlement tests; prepare a distinct clean release/package.
+- Old `prematch-v2-release-e120f1b` package MUST NOT be applied.
+- Report: `docs/operations/PREMATCH_INSTALLER_HARDENING_2026-09-25.md`.
+- Installation BLOCKED pending review/operator execution; no deployment/push/merge.

@@ -186,6 +186,15 @@ The final code-health result is not predictive-performance success. Genuine publ
 
 ## Pinned release, operator action and read-only verification
 
+**Superseded installer handoff — do not apply the old `e120f1b` package.**
+The application audit and tested application fixes below remain valid. Two
+independently reproduced installer defects are fixed in the focused installer
+hardening release. Use [the replacement operator handoff](PREMATCH_INSTALLER_HARDENING_2026-09-25.md)
+and [reviewable package fields/previews](PREMATCH_INSTALLER_V2_PACKAGE_REVIEW.json).
+The old package path and command below are retained only as historical evidence;
+they are not an installation instruction. Current installation status is
+**BLOCKED pending review/operator execution**; this hardening task authorizes no deployment.
+
 Reviewed source/tests/report commit: `e120f1b81f37c8774291e82c952378ce467fb139`, branch `codex/prematch-full-audit-v2-enablement`. Clean detached release: `/home/arvis/GoalVisionAI-prematch-release-e120f1b`. This report's final handoff documentation is committed separately; it does not change the tested source release. Prepared import verification resolved eight affected modules to that release using the existing service interpreter, `-P`, and actual service working directory. This was an isolated environment check, not evidence of installed systemd imports.
 
 Concrete operator package: `/home/arvis/goalvision-operations/prematch-v2-release-e120f1b`. Its `manifest.json` pins the commit, original installed configuration fingerprints, exact unchanged quota arguments and affected services. Four `*.service.dropin-preview` files expose the proposed configuration for review; `import-verification.json` records prepared module paths/hashes. `pre-enable-observation-report.json` records NO_PROSPECTIVE_EVIDENCE with zero snapshots. No production configuration references this package yet.

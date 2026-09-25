@@ -1,0 +1,70 @@
+{
+  "package": "/home/arvis/goalvision-operations/prematch-v2-installer-v2-20260925",
+  "release_commit_binding": "manifest.json commit must be the focused commit containing this review; exact SHA and package hashes are recorded in PACKAGE_VERIFICATION.json after commit",
+  "original_package": "/home/arvis/goalvision-operations/prematch-v2-release-e120f1b",
+  "original_manifest_sha256": "3999306b7a4f2e3670b14067c6743b12240f4661584bd0cba5e3ce5843376ebd",
+  "rejected_original_installer_git_blob": "bceafa342d3672080fb35f370d2322cb00658ade",
+  "preserved_application_commit": "e120f1b81f37c8774291e82c952378ce467fb139",
+  "installer_sha256": "97535e9c0c1888cc4b9f2c0a9656111ee87499dfc0c34d1ef842543efa6603d5",
+  "manifest_fields_except_commit": {
+    "release": "/home/arvis/GoalVisionAI-prematch-release-installer-v2-20260925",
+    "regression_status": "PASSED",
+    "installed_fingerprints": {
+      "/etc/goalvision-prematch-release.conf": "da5cc256f8399ec7822076496e1c699d10db0548e52b4fd136f9f977ba59a5af",
+      "/etc/systemd/system/goalvision-lab-v2-discover.service": "6eb6693d878bf0bdf75149250615f7bb409b4437b7ac8f19691285174d48e2d3",
+      "/etc/systemd/system/goalvision-lab-v2-discover.timer": "ba40f22f5157720ded06527849ec4cfefd737756905386fb815d0bccb8f5055c",
+      "/etc/systemd/system/goalvision-lab-combo-settle.service": "bb0c1d71cd510b83a4d87230a246b82e83886c882fdcbd086e0ab9b64c5a363e",
+      "/etc/systemd/system/goalvision-lab-combo-settle.timer": "cb07e8fa9591abfdae04d10143d7edf7f74fb71d62867ebf5c3acee72427a620",
+      "/etc/systemd/system/goalvision-adaptive-learning-observer.service": "a628c35482ebab376b82f348feffa6b2e8f542ca522c9fa57704525dd83a2393",
+      "/etc/systemd/system/goalvision-adaptive-learning-observer.timer": "72daf0281538ab3570b3081dac7493c0252092fa86140860c1114a035398c09a",
+      "/etc/systemd/system/goalvision-adaptive-learning.service": "a2e9081eb083665f17b32c8a3ff7a05c8f1073e2f1501de6f87ad00e755c2aed",
+      "/etc/systemd/system/goalvision-adaptive-learning.timer": "190c203ea7b19776829fb97ee76fec62e0f9cf328a46760b34685d057fac456e",
+      "/etc/systemd/system/goalvision-lab-weekly-stats.service": "ee64b9126e15128800ca6b5e9372e23cd1faf74edc959a04ed742341b3c32225",
+      "/etc/systemd/system/goalvision-lab-weekly-stats.timer": "f0e27207d0b367cf275d762f7e7624013dba568df95f5762905010e0d5bd4aca"
+    },
+    "services": [
+      "goalvision-lab-v2-discover.service",
+      "goalvision-lab-combo-settle.service",
+      "goalvision-adaptive-learning-observer.service",
+      "goalvision-lab-weekly-stats.service"
+    ],
+    "discovery_service": "goalvision-lab-v2-discover.service",
+    "release_environment_file": "/home/arvis/goalvision-operations/prematch-v2-installer-v2-20260925/release.env",
+    "ledger": "/home/arvis/GoalVisionAI/var/lab_combo/ledger.db",
+    "discovery_command": [
+      "/home/arvis/GoalVisionAI/.venv/bin/python",
+      "-P",
+      "-m",
+      "app.lab_v2_shadow",
+      "controlled-cycle",
+      "--send",
+      "--max-calls",
+      "400",
+      "--settlement-reserve",
+      "100",
+      "--adaptive-database",
+      "/home/arvis/GoalVisionAI/var/adaptive_lab/audit.db"
+    ],
+    "observation_arguments": [
+      "--football-context-root",
+      "/home/arvis/goalvision-operations/football-context-v2",
+      "--football-context-registry",
+      "/home/arvis/goalvision-operations/football-context-v2/reviewed-regulations.sqlite"
+    ],
+    "release_environment_sha256": "9043412ca15dbdbfd1228d02ec717b5e046a70316d6e3b6acddde32d1678f672"
+  },
+  "release_environment_preview": "PYTHONPATH=/home/arvis/GoalVisionAI-prematch-release-installer-v2-20260925\n",
+  "dropin_previews": {
+    "goalvision-lab-v2-discover.service.dropin-preview": "[Service]\nEnvironmentFile=\nEnvironmentFile=/home/arvis/goalvision-operations/prematch-v2-installer-v2-20260925/release.env\nExecStart=\nExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_v2_shadow controlled-cycle --send --max-calls 400 --settlement-reserve 100 --adaptive-database /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db --football-context-root /home/arvis/goalvision-operations/football-context-v2 --football-context-registry /home/arvis/goalvision-operations/football-context-v2/reviewed-regulations.sqlite --label-v2-selections\n",
+    "goalvision-lab-combo-settle.service.dropin-preview": "[Service]\nEnvironmentFile=\nEnvironmentFile=/home/arvis/goalvision-operations/prematch-v2-installer-v2-20260925/release.env\n",
+    "goalvision-adaptive-learning-observer.service.dropin-preview": "[Service]\nEnvironmentFile=\nEnvironmentFile=/home/arvis/goalvision-operations/prematch-v2-installer-v2-20260925/release.env\n",
+    "goalvision-lab-weekly-stats.service.dropin-preview": "[Service]\nEnvironmentFile=\nEnvironmentFile=/home/arvis/goalvision-operations/prematch-v2-installer-v2-20260925/release.env\n"
+  },
+  "dropin_preview_sha256": {
+    "goalvision-lab-v2-discover.service.dropin-preview": "53b95e12fdf52d07e04c0f65c71c47130f806ae3ba05bd13cebe05d1203e49a4",
+    "goalvision-lab-combo-settle.service.dropin-preview": "3939a0c4e8dcd82bc56d34ba7c12d21b8b21afb22da359d9e1790419300a42ca",
+    "goalvision-adaptive-learning-observer.service.dropin-preview": "3939a0c4e8dcd82bc56d34ba7c12d21b8b21afb22da359d9e1790419300a42ca",
+    "goalvision-lab-weekly-stats.service.dropin-preview": "3939a0c4e8dcd82bc56d34ba7c12d21b8b21afb22da359d9e1790419300a42ca"
+  },
+  "status": "BLOCKED pending review/operator execution; old e120f1b package MUST NOT be applied"
+}
