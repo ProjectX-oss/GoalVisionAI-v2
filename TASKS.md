@@ -1400,3 +1400,18 @@ Review after completing the current priority.
 - Integrate canonical non-public evidence into existing adaptive settlement/learning with deduplication.
 - Add deterministic 958-fixture incident regression; see docs/LAB_V2_PREMATCH_SIMPLIFICATION.md.
 - No deployment or production state changes.
+
+## 2026-09-25 — PREMATCH V2 reviewed competition regulation registry foundation
+
+- Added dormant V2-only immutable reviewed-source contracts, bounded retained
+  content, explicit authority hierarchy, exact/declared season scope and strict
+  review-before-cutoff resolution.
+- Added explicit isolated SQLite initialization, append-only import, integrity
+  verification, offline operator CLI and a decision-bound Phase B FormatEvidence
+  bridge without runtime wiring or feature/model changes.
+- Added synthetic conflict, timing, immutability, tampering, IFAB, AET/PEN,
+  historical snapshot and zero-additional-provider-request regressions.
+- No real entries added; accepted audit remains NO_ACCEPTABLE_EXISTING_PROOF.
+  Phase E remains unauthorized. Next: manually review one genuine authoritative
+  document and exact provider-ID mapping in an isolated Test registry.
+- Report: `docs/audits/PREMATCH_FOOTBALL_CONTEXT_V2_REGULATION_REGISTRY_REPORT.md`.
