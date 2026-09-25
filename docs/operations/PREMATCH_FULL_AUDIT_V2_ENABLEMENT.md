@@ -183,3 +183,31 @@ Next naturally scheduled post-install cycle must verify imported release paths, 
 - `git diff --check` passed. Service interpreter/dependencies unchanged. Quota timestamp-column/document consistency: 0 mismatches among retained claims. Read-only final live ledger count remains 114 receipts and 0 new attributed predictions; prepared observation ledger remains 0 events.
 
 The final code-health result is not predictive-performance success. Genuine published outcome metrics remain those reported above, including every loss.
+
+## Pinned release, operator action and read-only verification
+
+Reviewed source/tests/report commit: `e120f1b81f37c8774291e82c952378ce467fb139`, branch `codex/prematch-full-audit-v2-enablement`. Clean detached release: `/home/arvis/GoalVisionAI-prematch-release-e120f1b`. This report's final handoff documentation is committed separately; it does not change the tested source release. Prepared import verification resolved eight affected modules to that release using the existing service interpreter, `-P`, and actual service working directory. This was an isolated environment check, not evidence of installed systemd imports.
+
+Concrete operator package: `/home/arvis/goalvision-operations/prematch-v2-release-e120f1b`. Its `manifest.json` pins the commit, original installed configuration fingerprints, exact unchanged quota arguments and affected services. Four `*.service.dropin-preview` files expose the proposed configuration for review; `import-verification.json` records prepared module paths/hashes. `pre-enable-observation-report.json` records NO_PROSPECTIVE_EVIDENCE with zero snapshots. No production configuration references this package yet.
+
+Minimal operator action (requires root; this session's `sudo -n true` was denied because a password is required):
+
+```bash
+sudo /home/arvis/GoalVisionAI/.venv/bin/python /home/arvis/goalvision-operations/prematch-v2-release-e120f1b/install_prematch_v2.py /home/arvis/goalvision-operations/prematch-v2-release-e120f1b/manifest.json apply
+```
+
+Authorization has already been supplied; unavailable Unix privileges are the blocker. The installer must reject changed release/configuration fingerprints rather than overwrite intervening operational work. After installation, observe the next normally scheduled allowed tick; do not manually invoke discovery or readiness `cycle`. Installation alone does not prove successful capture or publication. Any later expired registry evidence remains unavailable rather than automatically renewed.
+
+Use the same command with final argument `disable-data-labels` to stop new observation/labels while retaining compatible code; `disable-new-picks` to stop new public picks while settlement continues; or `rollback` to restore original service-specific configuration before any new labelled receipt. The installer refuses full rollback after confirmed new attributed publications. These commands preserve all evidence and never roll back the champion.
+
+Read-only checks, without exposing process environments or credentials:
+
+```bash
+systemctl show goalvision-lab-v2-discover.service goalvision-lab-combo-settle.service goalvision-adaptive-learning-observer.service goalvision-lab-weekly-stats.service -p ActiveState -p Result -p ExecMainStatus -p ExecMainStartTimestamp -p ExecMainExitTimestamp -p EnvironmentFiles -p DropInPaths
+systemctl list-timers 'goalvision-*' --all --no-pager
+env PYTHONPATH=/home/arvis/GoalVisionAI-prematch-release-e120f1b /home/arvis/GoalVisionAI/.venv/bin/python -P -m app.prematch_football_context.readiness --root /home/arvis/goalvision-operations/football-context-v2 verify
+```
+
+Final installed observation: original `/etc/goalvision-prematch-release.conf`, no service drop-ins, production release still `363f567a5b9d74e4b8da152a5139d0726c64bea6`. Existing services continue; the most recently inspected discovery result remains exit-code 1. New context capture and labelled publication are NOT_ENABLED. Actual new Telegram sends by this work: **0**. Independent Football Context V2 model publications: **0**. First post-rollout tick, actual installed imports, capture/quota behavior, genuine receipt and result/report execution remain pending privileged rollout. Root-only journal evidence remains UNVERIFIED. Automated append-only terminal correction handling remains an explicitly unimplemented improvement, not a completed feature.
+
+Stable secret-free operator summary: `/home/arvis/goalvision-operations/PREMATCH_V2_OPERATOR_SUMMARY.md`. Private retained evidence and exact test output remain under `/home/arvis/goalvision-operations/prematch-audit-20260925`; database copies and logs are excluded from Git. No push or merge into unrelated branches was performed.
