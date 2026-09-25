@@ -1,0 +1,194 @@
+{
+  "environment": "ISOLATED_TEST",
+  "registry_path": "/tmp/goalvision-ucl-2026-test-g43j0wkj/registry.sqlite",
+  "executed_at": "2026-09-25T10:49:04.220255Z",
+  "verification": {
+    "records": 2,
+    "status": "VERIFIED"
+  },
+  "resolution": {
+    "provider": "API_FOOTBALL",
+    "competition_id": 2,
+    "season": 2026,
+    "cutoff": "2026-09-25T10:49:04.203446Z",
+    "verdict": "VERIFIED_90",
+    "records": [
+      {
+        "review_id": "IFAB_2026_27_UCL_2_2026_CODEX_20260925",
+        "provider": "API_FOOTBALL",
+        "competition_id": 2,
+        "season": 2026,
+        "regulation_minutes": 90,
+        "organizer": "IFAB",
+        "competition_name": "UEFA Champions League 2026/27",
+        "source_type": "IFAB_BASE_LAW",
+        "source_title": "Laws of the Game 2026/27 (English, single pages)",
+        "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages",
+        "source_edition": "2026/27; effective 1 July 2026; English PDF SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+        "source_effective_from": "2026-09-25T10:48:14.001943Z",
+        "source_effective_until": "2026-09-26T00:00:00.000000Z",
+        "reviewed_statement": "Law 7.1 establishes the standard scheduled 90 regulation minutes (2 x 45), excluding interval, extra time and shoot-outs. Reduction requires prior referee/team agreement and competition-rule permission. Added time and penalty completion can extend play; abandonment can prevent completion. This is not a guarantee of any individual match duration. Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+        "retained_source_content": {
+          "document_identity": "IFAB catalogue-linked Laws of the Game 2026/27, English single-page PDF; 23437157 bytes; SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+          "section": "Printed pp. 4 (effective date), 20-21 (modifications), 93-94 (Law 7.1-7.5)",
+          "excerpt": "A match lasts for two equal halves of 45 minutes",
+          "applicability_statement": "Reviewed only for API_FOOTBALL/2/2026 via the separate UEFA Article 13.01 incorporation. IFAB alone cannot establish competition applicability. General modifications allow duration changes for youth, veterans, disability and grassroots football; no reviewed provision changes the standard schedule for this UEFA club competition. Edition effective 1 July 2026 (p. 4). Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+          "provider_mapping_evidence": "API-Football official beginners guide, https://www.api-football.com/news/post/how-to-get-started-with-api-football-the-complete-beginners-guide, /leagues/seasons and practical tips: Champions League ID is 2, IDs persist across seasons, and season uses its starting year. Thus UEFA 2026/27 maps to API_FOOTBALL competition_id=2, season=2026. Public guide reviewed; no API coverage or fixture availability claim."
+        },
+        "source_content_sha256": "cd424097c9e4baa279558e038a29657c6c137aa79181905f69ca907f81e94a10",
+        "reviewer": "OpenAI Codex AI assistant; primary-document review in this authorized TEST task; no personal human/operator review asserted",
+        "reviewed_at": "2026-09-25T10:48:14.001943Z",
+        "validity_start": null,
+        "validity_end": null,
+        "evidence_version": "FC_V2_REVIEWED_REGULATION_V1",
+        "evidence_fingerprint": "018d2f66f301441c3be0dac4e5c9bd6791249da70d0cf6b6b5fd64fe76e2c217"
+      },
+      {
+        "review_id": "UEFA_UCL_2026_27_2_2026_CODEX_20260925",
+        "provider": "API_FOOTBALL",
+        "competition_id": 2,
+        "season": 2026,
+        "regulation_minutes": null,
+        "organizer": "UEFA",
+        "competition_name": "UEFA Champions League 2026/27",
+        "source_type": "ORGANIZER_REGULATIONS",
+        "source_title": "Regulations of the UEFA Champions League 2026/27",
+        "source_url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-13-Competition-stages-Online",
+        "source_edition": "2026/27; displayed enforcement date 29 July 2026",
+        "source_effective_from": "2026-09-25T10:48:14.003016Z",
+        "source_effective_until": "2026-09-26T00:00:00.000000Z",
+        "reviewed_statement": "Article 13.01 incorporates IFAB Laws; it does not itself state 90 minutes. Article 1.01 covers the 2026/27 competition including qualifying and play-offs. Article 96.01: adopted 11 February, effective 1 March 2026; amendments effective 20 May and 29 July 2026. Scope is the standard scheduled format, with IFAB qualifications preserved. Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+        "retained_source_content": {
+          "document_identity": "UEFA Champions League Regulations 2026/27, English online edition; enforcement metadata 29 July 2026; Articles 1.01, 13.01-13.02, 28 and 96.01 inspected",
+          "section": "Article 13.01 incorporation; Article 1.01 scope; Article 96.01 adoption/amendments",
+          "excerpt": "All matches in the competition are played in conformity with the IFAB Laws of the Game.",
+          "applicability_statement": "Article 1.01 expressly covers UEFA Champions League 2026/27 including qualifying and play-offs; Article 13 applies across stages. Article 28 provides for completion of suspended matches. Neither exceptional completion nor IFAB permitted reductions proves that every match actually lasts 90 minutes. The linked base law proves the standard schedule only. Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+          "provider_mapping_evidence": "API-Football official beginners guide, https://www.api-football.com/news/post/how-to-get-started-with-api-football-the-complete-beginners-guide, /leagues/seasons and practical tips: Champions League ID is 2, IDs persist across seasons, and season uses its starting year. Thus UEFA 2026/27 maps to API_FOOTBALL competition_id=2, season=2026. Public guide reviewed; no API coverage or fixture availability claim."
+        },
+        "source_content_sha256": "e4e855c0c8547d6b686ecbb756256fd2d80db81557d361aac42a80ee4e38313a",
+        "reviewer": "OpenAI Codex AI assistant; primary-document review in this authorized TEST task; no personal human/operator review asserted",
+        "reviewed_at": "2026-09-25T10:48:14.003016Z",
+        "validity_start": null,
+        "validity_end": null,
+        "evidence_version": "FC_V2_INCORPORATED_REGULATION_V1",
+        "evidence_fingerprint": "731a37d43eaad8ee5d0ed0f4913cc23c4f979b3404e5f91b42c34ec9827eb566",
+        "incorporation": {
+          "competition_review_id": "UEFA_UCL_2026_27_2_2026_CODEX_20260925",
+          "base_review_id": "IFAB_2026_27_UCL_2_2026_CODEX_20260925",
+          "base_evidence_fingerprint": "018d2f66f301441c3be0dac4e5c9bd6791249da70d0cf6b6b5fd64fe76e2c217",
+          "reviewed_statement": "Article 13.01 expressly incorporates IFAB Laws for every competition match. The reviewer pins the catalogue-identified 2026/27 edition, effective 1 July 2026, as the applicable current edition at this review; UEFA does not name that edition number in Article 13.01. Duration is supplied only by the linked IFAB review.",
+          "relationship": "INCORPORATES",
+          "fingerprint": "419bc8c564d2787a9e307bc0ceb51e60bdf47628bb7ec0c27665a370e260eb71"
+        }
+      }
+    ],
+    "reason": "REVIEWED_INCORPORATED_LAW"
+  },
+  "resolution_fingerprint": "df43ee514e22b710a79eb8e6faff60addf3b7bc5b3830ac86d95a4b5b1aa4207",
+  "format_evidence": {
+    "competition_id": 2,
+    "season": 2026,
+    "minutes": 90,
+    "proof_id": "FC_V2_REGISTRY.df43ee514e22b710a79eb8e6faff60addf3b7bc5b3830ac86d95a4b5b1aa4207",
+    "proof_hash": "df43ee514e22b710a79eb8e6faff60addf3b7bc5b3830ac86d95a4b5b1aa4207",
+    "known_at": "2026-09-25T10:48:14.003016Z",
+    "version": "FC_REGULATION_EVIDENCE_V1"
+  },
+  "cli_commands": [
+    {
+      "command": [
+        "init",
+        "--db",
+        "/tmp/goalvision-ucl-2026-test-g43j0wkj/registry.sqlite"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "validate",
+        "docs/rehearsals/ucl_2026_regulation/ifab.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "import",
+        "--db",
+        "/tmp/goalvision-ucl-2026-test-g43j0wkj/registry.sqlite",
+        "docs/rehearsals/ucl_2026_regulation/ifab.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "validate",
+        "docs/rehearsals/ucl_2026_regulation/uefa.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "import",
+        "--db",
+        "/tmp/goalvision-ucl-2026-test-g43j0wkj/registry.sqlite",
+        "docs/rehearsals/ucl_2026_regulation/uefa.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "verify",
+        "--db",
+        "/tmp/goalvision-ucl-2026-test-g43j0wkj/registry.sqlite"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "resolve",
+        "--db",
+        "/tmp/goalvision-ucl-2026-test-g43j0wkj/registry.sqlite",
+        "--provider",
+        "API_FOOTBALL",
+        "--competition-id",
+        "2",
+        "--season",
+        "2026",
+        "--cutoff",
+        "2026-09-25T10:49:04.203446+00:00"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "import",
+        "--db",
+        "/tmp/goalvision-ucl-2026-test-g43j0wkj/registry.sqlite",
+        "docs/rehearsals/ucl_2026_regulation/ifab.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "import",
+        "--db",
+        "/tmp/goalvision-ucl-2026-test-g43j0wkj/registry.sqlite",
+        "docs/rehearsals/ucl_2026_regulation/uefa.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "checks": {
+    "exact_import_replay_byte_identical": true,
+    "closed_reopened_resolution_byte_identical": true,
+    "closed_reopened_format_identical": true,
+    "network_blocked": true
+  },
+  "proof_hashes": {
+    "IFAB_record": "018d2f66f301441c3be0dac4e5c9bd6791249da70d0cf6b6b5fd64fe76e2c217",
+    "UEFA_record": "731a37d43eaad8ee5d0ed0f4913cc23c4f979b3404e5f91b42c34ec9827eb566",
+    "incorporation": "419bc8c564d2787a9e307bc0ceb51e60bdf47628bb7ec0c27665a370e260eb71",
+    "complete_resolution": "df43ee514e22b710a79eb8e6faff60addf3b7bc5b3830ac86d95a4b5b1aa4207",
+    "FormatEvidence_proof_hash": "df43ee514e22b710a79eb8e6faff60addf3b7bc5b3830ac86d95a4b5b1aa4207"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "starting_commit": "e93b8072ad3ac2d902c17b548e58beef5c70e60a",
+  "starting_worktree": "/tmp/goalvision-regulation-evidence",
+  "starting_branch": "codex/prematch-football-context-v2-incorporated-law",
+  "starting_worktree_clean": true,
+  "reviewer": "OpenAI Codex AI assistant; primary-document review in this authorized TEST task; no personal human/operator review asserted",
+  "records_reviewed_at": [
+    "2026-09-25T10:48:14.001943Z",
+    "2026-09-25T10:48:14.003016Z"
+  ],
+  "source_preparation_completed_at": "2026-09-25T10:48:14.003731Z",
+  "source_access": [
+    {
+      "url": "https://www.api-football.com/news/post/how-to-get-started-with-api-football-the-complete-beginners-guide",
+      "access_interval_utc": [
+        "2026-09-25T10:44:54Z",
+        "2026-09-25T10:44:57Z"
+      ],
+      "retained": "Mapping paraphrase in both records: ID 2 and starting-year convention; relevant sections /leagues/seasons and practical tips."
+    },
+    {
+      "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-13-Competition-stages-Online",
+      "access_interval_utc": [
+        "2026-09-25T10:44:54Z",
+        "2026-09-25T10:44:57Z"
+      ],
+      "retained": "UEFA record excerpt and applicability summary."
+    },
+    {
+      "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-96-Adoption-and-entry-into-force-Online?contentId=Xb72NoiAqwnadXykMvZmlA",
+      "access_interval_utc": [
+        "2026-09-25T10:44:54Z",
+        "2026-09-25T10:44:57Z"
+      ],
+      "retained": "Adoption/amendment dates paraphrased in UEFA record. Bare URL failed twice; Article 13 linked URL succeeded."
+    },
+    {
+      "url": "https://www.theifab.com/laws-of-the-game-documents/",
+      "access_interval_utc": [
+        "2026-09-25T10:44:54Z",
+        "2026-09-25T10:44:57Z"
+      ],
+      "retained": "Catalogue identifies English single/double-page 2026/27 editions. Single-page link: https://www.theifab.com/downloads/laws-of-the-game-202627-single-pages?l=en"
+    },
+    {
+      "url": "https://www.theifab.com/laws/latest/the-duration-of-the-match/",
+      "access_interval_utc": [
+        "2026-09-25T10:40:44Z",
+        "2026-09-25T10:44:54Z"
+      ],
+      "retained": "Orientation only; not the pinned authority. Edition PDF independently inspected."
+    },
+    {
+      "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-1-Scope-of-application-Online?contentId=AWNVKC73_Ud10i2HCbMr4g",
+      "access_interval_utc": [
+        "2026-09-25T10:38:59Z",
+        "2026-09-25T10:40:44Z"
+      ],
+      "retained": "Edition/competition scope paraphrased in UEFA record."
+    },
+    {
+      "url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-28-Completion-of-suspended-matches-Online?contentId=JPk7Ltwo5tad5wvXjGvc~Q",
+      "access_interval_utc": [
+        "2026-09-25T10:38:59Z",
+        "2026-09-25T10:40:44Z"
+      ],
+      "retained": "Suspended-match completion qualification paraphrased in UEFA record."
+    },
+    {
+      "url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages",
+      "final_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages",
+      "started_at": "2026-09-25T10:46:25.555376+00:00",
+      "completed_at": "2026-09-25T10:46:26.173657+00:00",
+      "status": 200,
+      "bytes": 23437157,
+      "sha256": "89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d"
+    }
+  ],
+  "pdf_first_success": {
+    "started_at": "2026-09-25T10:40:44.429592Z",
+    "completed_at": "2026-09-25T10:40:44.951221Z",
+    "requested_url": "https://www.theifab.com/downloads/laws-of-the-game-202627-single-pages?l=en",
+    "final_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages?l=en",
+    "sha256": "89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d"
+  },
+  "retrieval_counts": {
+    "web_open_or_click_operations": 20,
+    "web_find_operations": 4,
+    "direct_public_document_download_attempts": 3,
+    "direct_successes": 2,
+    "direct_failures": 1,
+    "api_football_api_calls": 0,
+    "web_backend_http_count": "Not exposed by web tool; do not interpret tool operations as exact HTTP request count."
+  },
+  "access_failures": [
+    "Bare UEFA Article 96 URL: two web-tool internal errors; linked contentId URL succeeded.",
+    "IFAB single-page PDF web reader: two size-limit errors (www and downloads URLs); double-page PDF: one size-limit error.",
+    "Initial urllib PDF request: HTTP 403; standard browser User-Agent retry succeeded."
+  ],
+  "validity_rationale": "Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+  "qualifications": "Scheduled format only. Law 7.1 permitted reduction requires both pre-match agreement and competition permission; 7.3 adds lost time, 7.4 extends for penalty completion, 7.5 allows organiser-specific abandonment outcomes. IFAB pp.20-21 category modifications are retained; no evidence found here displacing the standard UCL schedule. Article 13 does not explicitly name the IFAB edition: edition selection is a dated reviewer inference from the official catalogue and PDF effective date.",
+  "retention": "Only bounded quotes, paraphrases, identities and hashes committed. Full PDF and temporary local extraction remain outside repository. PDF body text was decoded locally using embedded font mappings; relevant printed pages 4, 20-21, 93-94 were inspected. Registry source hashes commit to retained objects, not the PDF bytes."
+}

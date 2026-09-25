@@ -1,0 +1,30 @@
+{
+  "review_id": "IFAB_2026_27_UCL_2_2026_CODEX_20260925",
+  "provider": "API_FOOTBALL",
+  "competition_id": 2,
+  "season": 2026,
+  "regulation_minutes": 90,
+  "organizer": "IFAB",
+  "competition_name": "UEFA Champions League 2026/27",
+  "source_type": "IFAB_BASE_LAW",
+  "source_title": "Laws of the Game 2026/27 (English, single pages)",
+  "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages",
+  "source_edition": "2026/27; effective 1 July 2026; English PDF SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+  "source_effective_from": "2026-09-25T10:48:14.001943Z",
+  "source_effective_until": "2026-09-26T00:00:00.000000Z",
+  "reviewed_statement": "Law 7.1 establishes the standard scheduled 90 regulation minutes (2 x 45), excluding interval, extra time and shoot-outs. Reduction requires prior referee/team agreement and competition-rule permission. Added time and penalty completion can extend play; abandonment can prevent completion. This is not a guarantee of any individual match duration. Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+  "retained_source_content": {
+    "document_identity": "IFAB catalogue-linked Laws of the Game 2026/27, English single-page PDF; 23437157 bytes; SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+    "section": "Printed pp. 4 (effective date), 20-21 (modifications), 93-94 (Law 7.1-7.5)",
+    "excerpt": "A match lasts for two equal halves of 45 minutes",
+    "applicability_statement": "Reviewed only for API_FOOTBALL/2/2026 via the separate UEFA Article 13.01 incorporation. IFAB alone cannot establish competition applicability. General modifications allow duration changes for youth, veterans, disability and grassroots football; no reviewed provision changes the standard schedule for this UEFA club competition. Edition effective 1 July 2026 (p. 4). Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+    "provider_mapping_evidence": "API-Football official beginners guide, https://www.api-football.com/news/post/how-to-get-started-with-api-football-the-complete-beginners-guide, /leagues/seasons and practical tips: Champions League ID is 2, IDs persist across seasons, and season uses its starting year. Thus UEFA 2026/27 maps to API_FOOTBALL competition_id=2, season=2026. Public guide reviewed; no API coverage or fixture availability claim."
+  },
+  "reviewer": "OpenAI Codex AI assistant; primary-document review in this authorized TEST task; no personal human/operator review asserted",
+  "reviewed_at": "2026-09-25T10:48:14.001943Z",
+  "validity_start": null,
+  "validity_end": null,
+  "evidence_version": "FC_V2_REVIEWED_REGULATION_V1",
+  "source_content_sha256": "cd424097c9e4baa279558e038a29657c6c137aa79181905f69ca907f81e94a10",
+  "evidence_fingerprint": "018d2f66f301441c3be0dac4e5c9bd6791249da70d0cf6b6b5fd64fe76e2c217"
+}

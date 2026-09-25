@@ -1,0 +1,38 @@
+{
+  "review_id": "UEFA_UCL_2026_27_2_2026_CODEX_20260925",
+  "provider": "API_FOOTBALL",
+  "competition_id": 2,
+  "season": 2026,
+  "regulation_minutes": null,
+  "organizer": "UEFA",
+  "competition_name": "UEFA Champions League 2026/27",
+  "source_type": "ORGANIZER_REGULATIONS",
+  "source_title": "Regulations of the UEFA Champions League 2026/27",
+  "source_url": "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-13-Competition-stages-Online",
+  "source_edition": "2026/27; displayed enforcement date 29 July 2026",
+  "source_effective_from": "2026-09-25T10:48:14.003016Z",
+  "source_effective_until": "2026-09-26T00:00:00.000000Z",
+  "reviewed_statement": "Article 13.01 incorporates IFAB Laws; it does not itself state 90 minutes. Article 1.01 covers the 2026/27 competition including qualifying and play-offs. Article 96.01: adopted 11 February, effective 1 March 2026; amendments effective 20 May and 29 July 2026. Scope is the standard scheduled format, with IFAB qualifications preserved. Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+  "retained_source_content": {
+    "document_identity": "UEFA Champions League Regulations 2026/27, English online edition; enforcement metadata 29 July 2026; Articles 1.01, 13.01-13.02, 28 and 96.01 inspected",
+    "section": "Article 13.01 incorporation; Article 1.01 scope; Article 96.01 adoption/amendments",
+    "excerpt": "All matches in the competition are played in conformity with the IFAB Laws of the Game.",
+    "applicability_statement": "Article 1.01 expressly covers UEFA Champions League 2026/27 including qualifying and play-offs; Article 13 applies across stages. Article 28 provides for completion of suspended matches. Neither exceptional completion nor IFAB permitted reductions proves that every match actually lasts 90 minutes. The linked base law proves the standard schedule only. Local TEST decision window only: from this review until 2026-09-26T00:00:00Z; conservative next-UTC-day re-review cap, NOT an official expiry. Official edition is already in force. No historical or next-season validity asserted.",
+    "provider_mapping_evidence": "API-Football official beginners guide, https://www.api-football.com/news/post/how-to-get-started-with-api-football-the-complete-beginners-guide, /leagues/seasons and practical tips: Champions League ID is 2, IDs persist across seasons, and season uses its starting year. Thus UEFA 2026/27 maps to API_FOOTBALL competition_id=2, season=2026. Public guide reviewed; no API coverage or fixture availability claim."
+  },
+  "reviewer": "OpenAI Codex AI assistant; primary-document review in this authorized TEST task; no personal human/operator review asserted",
+  "reviewed_at": "2026-09-25T10:48:14.003016Z",
+  "validity_start": null,
+  "validity_end": null,
+  "evidence_version": "FC_V2_INCORPORATED_REGULATION_V1",
+  "source_content_sha256": "e4e855c0c8547d6b686ecbb756256fd2d80db81557d361aac42a80ee4e38313a",
+  "incorporation": {
+    "competition_review_id": "UEFA_UCL_2026_27_2_2026_CODEX_20260925",
+    "base_review_id": "IFAB_2026_27_UCL_2_2026_CODEX_20260925",
+    "base_evidence_fingerprint": "018d2f66f301441c3be0dac4e5c9bd6791249da70d0cf6b6b5fd64fe76e2c217",
+    "reviewed_statement": "Article 13.01 expressly incorporates IFAB Laws for every competition match. The reviewer pins the catalogue-identified 2026/27 edition, effective 1 July 2026, as the applicable current edition at this review; UEFA does not name that edition number in Article 13.01. Duration is supplied only by the linked IFAB review.",
+    "relationship": "INCORPORATES",
+    "fingerprint": "419bc8c564d2787a9e307bc0ceb51e60bdf47628bb7ec0c27665a370e260eb71"
+  },
+  "evidence_fingerprint": "731a37d43eaad8ee5d0ed0f4913cc23c4f979b3404e5f91b42c34ec9827eb566"
+}
