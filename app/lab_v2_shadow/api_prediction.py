@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-from math import factorial
+import re
+
+from app.real_match_lab_analysis.fingerprint import fingerprint
+
+NORMALIZATION_VERSION = "API_FOOTBALL_PERCENT_UNITS_V2"
+# Existing rounding allowance, not a provider calibration claim.
+DISTRIBUTION_SUM_TOLERANCE = Decimal("0.02")
 
 
 @dataclass(frozen=True, slots=True)
@@ -20,15 +26,39 @@ class ApiPredictionSignal:
     expected_goals_away: Decimal | None
     comparison: dict[str, dict[str, Decimal]]
     unavailable_reason: str | None
+    normalization_version: str = NORMALIZATION_VERSION
+    source_fingerprint: str | None = None
+    home_team_id: int | None = None
+    away_team_id: int | None = None
 
 
-def normalize_api_prediction(payload: object, *, fixture_id: int) -> ApiPredictionSignal:
+def normalize_api_prediction(payload: object, *, fixture_id: int,
+                             home_team_id: int | None = None, away_team_id: int | None = None,
+                             league_id: int | None = None, season: int | None = None) -> ApiPredictionSignal:
     if not isinstance(payload, dict) or payload.get("errors"):
         return _unavailable(fixture_id, "PROVIDER_PREDICTION_ERROR")
     rows = payload.get("response")
     if not isinstance(rows, list) or len(rows) != 1 or not isinstance(rows[0], dict):
         return _unavailable(fixture_id, "PREDICTION_NOT_COVERED")
     root = rows[0]
+    parameters = payload.get("parameters") or {}
+    if not isinstance(parameters, dict):
+        return _unavailable(fixture_id, "PREDICTION_IDENTITY_MISMATCH")
+    if "fixture" in parameters and _integer(parameters["fixture"]) != fixture_id:
+        return _unavailable(fixture_id, "PREDICTION_FIXTURE_MISMATCH")
+    teams = root.get("teams") or {}
+    if not isinstance(teams, dict) or any(not isinstance(teams.get(side, {}), dict) for side in ("home", "away")):
+        return _unavailable(fixture_id, "PREDICTION_IDENTITY_MISMATCH")
+    actual_home = _integer((teams.get("home") or {}).get("id"))
+    actual_away = _integer((teams.get("away") or {}).get("id"))
+    league = root.get("league") or {}
+    if not isinstance(league, dict):
+        return _unavailable(fixture_id, "PREDICTION_IDENTITY_MISMATCH")
+    if any(expected is not None and actual != expected for expected, actual in (
+        (home_team_id, actual_home), (away_team_id, actual_away),
+        (league_id, _integer(league.get("id"))), (season, _integer(league.get("season"))),
+    )):
+        return _unavailable(fixture_id, "PREDICTION_IDENTITY_MISMATCH")
     prediction = root.get("predictions") if isinstance(root.get("predictions"), dict) else {}
     winner = prediction.get("winner") if isinstance(prediction.get("winner"), dict) else {}
     percent = prediction.get("percent") if isinstance(prediction.get("percent"), dict) else {}
@@ -37,18 +67,17 @@ def normalize_api_prediction(payload: object, *, fixture_id: int) -> ApiPredicti
             ("HOME_WIN", percent.get("home")),
             ("DRAW", percent.get("draw")),
             ("AWAY_WIN", percent.get("away")),
-        ) if (value := _probability(raw)) is not None
+        ) if (value := _provider_percentage(raw)) is not None
     }
-    if len(probabilities) == 3:
-        total = sum(probabilities.values(), Decimal(0))
-        if not Decimal("0.98") <= total <= Decimal("1.02"):
-            return _unavailable(fixture_id, "PREDICTION_PERCENTAGES_INVALID")
-        probabilities = {key: value / total for key, value in probabilities.items()}
-    goals = prediction.get("goals") if isinstance(prediction.get("goals"), dict) else {}
-    expected_home = _expected_goals(goals.get("home"))
-    expected_away = _expected_goals(goals.get("away"))
-    if expected_home is not None and expected_away is not None:
-        probabilities.update(_goals_market_probabilities(expected_home, expected_away))
+    if len(probabilities) != 3:
+        return _unavailable(fixture_id, "PREDICTION_PERCENTAGES_INCOMPLETE_OR_INVALID")
+    total = sum(probabilities.values(), Decimal(0))
+    if abs(total - Decimal(1)) > DISTRIBUTION_SUM_TOLERANCE:
+        return _unavailable(fixture_id, "PREDICTION_PERCENTAGES_INVALID")
+    # Only the existing small rounding allowance may be rescaled; never fill an outcome.
+    probabilities = {key: value / total for key, value in probabilities.items()}
+    # Provider goals/under_over are recommendations/bounds, not documented Poisson rates.
+    expected_home = expected_away = None
     comparison = _comparison(root.get("comparison"))
     winner_id = _integer(winner.get("id"))
     available = bool(probabilities or winner_id is not None or prediction.get("under_over"))
@@ -64,6 +93,7 @@ def normalize_api_prediction(payload: object, *, fixture_id: int) -> ApiPredicti
         expected_goals_away=expected_away,
         comparison=comparison,
         unavailable_reason=None if available else "PREDICTION_NOT_COVERED",
+        source_fingerprint=fingerprint(payload), home_team_id=actual_home, away_team_id=actual_away,
     )
 
 
@@ -75,36 +105,10 @@ def _comparison(value: object) -> dict[str, dict[str, Decimal]]:
         if not isinstance(raw, dict):
             continue
         sides = {side: parsed for side in ("home", "away")
-                 if (parsed := _probability(raw.get(side))) is not None}
-        if sides:
+                 if (parsed := _provider_percentage(raw.get(side))) is not None}
+        if len(sides) == 2:
             result[str(category)] = sides
     return result
-
-
-def _goals_market_probabilities(home: Decimal, away: Decimal) -> dict[str, Decimal]:
-    """Derive transparent totals/BTTS support from provider goal estimates."""
-    if not (Decimal(0) <= home <= Decimal(10) and Decimal(0) <= away <= Decimal(10)):
-        return {}
-    joint: list[tuple[int, int, Decimal]] = []
-    mass = Decimal(0)
-    for home_goals in range(13):
-        for away_goals in range(13):
-            value = _poisson(home, home_goals) * _poisson(away, away_goals)
-            joint.append((home_goals, away_goals, value))
-            mass += value
-    if mass <= 0:
-        return {}
-    btts = sum((value for h, a, value in joint if h and a), Decimal(0)) / mass
-    result = {"BTTS_YES": btts, "BTTS_NO": Decimal(1) - btts}
-    for line in (1, 2, 3):
-        over = sum((value for h, a, value in joint if h + a > line), Decimal(0)) / mass
-        result[f"OVER_{line}_5"] = over
-        result[f"UNDER_{line}_5"] = Decimal(1) - over
-    return result
-
-
-def _poisson(rate: Decimal, goals: int) -> Decimal:
-    return (-rate).exp() * (rate ** goals) / Decimal(factorial(goals))
 
 
 def _unavailable(fixture_id: int, reason: str) -> ApiPredictionSignal:
@@ -126,23 +130,41 @@ def _normalize_total(value: object) -> str | None:
     } else None
 
 
-def _expected_goals(value: object) -> Decimal | None:
-    """Accept only genuine non-negative scoring-rate estimates."""
-    number = _decimal(value)
-    return number if number is not None and Decimal(0) <= number <= Decimal(10) else None
-
-
-def _probability(value: object) -> Decimal | None:
-    number = _decimal(str(value).replace("%", "").strip())
-    if number is None:
+def _provider_percentage(value: object) -> Decimal | None:
+    """Accept the percent-string wire representation; unverified bare formats fail closed."""
+    if not isinstance(value, str) or not value.strip().endswith("%"):
         return None
-    if number > 1:
-        number /= Decimal(100)
-    return number if Decimal(0) <= number <= Decimal(1) else None
+    return _probability(value, unit="percentage")
+
+
+def _probability(value: object, *, unit: str = "percentage") -> Decimal | None:
+    """Explicit percent-field or normalized-internal contract; never infer from magnitude.
+
+    Bare numbers require a percentage or normalized-internal unit contract;
+    provider wire validation is separate. Internal callers select unit='probability'. A percent
+    suffix always means percent and is forbidden in a normalized-internal field.
+    """
+    if isinstance(value, bool) or not isinstance(value, (str, int, float, Decimal)):
+        return None
+    text = str(value).strip()
+    marked = text.endswith("%")
+    if unit not in {"percentage", "probability"} or (marked and unit == "probability"):
+        return None
+    text = text[:-1] if marked else text
+    pattern = r"[0-9]+(?:\.[0-9]+)?"
+    if unit == "probability":
+        pattern = r"(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?"
+    if re.fullmatch(pattern, text) is None:
+        return None
+    number = _decimal(text)
+    limit = Decimal(100) if unit == "percentage" else Decimal(1)
+    if number is None or not Decimal(0) <= number <= limit:
+        return None
+    return number / Decimal(100) if unit == "percentage" else number
 
 
 def _decimal(value: object) -> Decimal | None:
-    if value in (None, ""):
+    if isinstance(value, bool) or value in (None, ""):
         return None
     try:
         result = Decimal(str(value))
@@ -152,10 +174,9 @@ def _decimal(value: object) -> Decimal | None:
 
 
 def _integer(value: object) -> int | None:
-    try:
-        return int(value) if value is not None else None
-    except (TypeError, ValueError):
+    if isinstance(value, bool) or not isinstance(value, (str, int)):
         return None
+    return int(value) if re.fullmatch(r"[0-9]+", str(value)) else None
 
 
 def _text(value: object) -> str | None:

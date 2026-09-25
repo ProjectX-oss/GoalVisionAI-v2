@@ -166,6 +166,13 @@ class LabComboService:
                         or preview['message'] != v2_single_message(value)):
                     return {'status': 'SELECTION_ORIGIN_OR_APPROVAL_INVALID', 'sent': False}
             candidates = [value] if kind == 'single_prediction' else value['legs']
+            # Only the existing Lab V2 composition; settlements bypass new-pick policy.
+            if prediction_id.startswith('lab-v2-'):
+                from app.lab_v2_shadow.publication_policy import review_publication
+                reviews = [review_publication(item, now=self.clock()) for item in candidates]
+                if any(not review['eligible'] for review in reviews):
+                    return {'status': 'LAB_PUBLICATION_POLICY_REJECTED', 'sent': False,
+                            'publication_reviews': reviews}
             blocker=publication_blocker(self.clock(),[item['kickoff_utc'] for item in candidates])
             if blocker:return {'status':blocker,'sent':False}
             kickoff = (datetime.fromisoformat(value['kickoff_utc']) if kind == 'single_prediction'

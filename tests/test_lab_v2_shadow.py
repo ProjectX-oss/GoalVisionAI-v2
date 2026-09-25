@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import asdict
 from datetime import datetime, timedelta, timezone, tzinfo
 from decimal import Decimal
 import inspect
@@ -133,8 +134,8 @@ def test_api_football_prediction_normalization():
         "comparison": {"att": {"home": "64%", "away": "36%"}}}]}, fixture_id=7)
     assert value.available and value.predicted_winner_id == 10
     assert value.probabilities["HOME_WIN"] == Decimal("0.6")
-    assert value.under_over == "OVER_2_5" and value.expected_goals_home == Decimal("2.1")
-    assert set(("OVER_2_5", "UNDER_2_5", "BTTS_YES", "BTTS_NO")) <= value.probabilities.keys()
+    assert value.under_over == "OVER_2_5" and value.expected_goals_home is None
+    assert set(value.probabilities) == {"HOME_WIN", "DRAW", "AWAY_WIN"}
 
 
 def test_api_prediction_normalizes_real_signed_total_without_negative_goal_rate():
@@ -338,7 +339,7 @@ class FakeClient:
         elif endpoint == "/odds/bookmakers":
             payload = {"results": 2, "response": [{"id": 3, "name": "Betfair"}, {"id": 4, "name": "Pinnacle"}]}
         elif endpoint == "/predictions":
-            payload = {"response": [{"predictions": {"winner": {"id": 10, "name": "Home"},
+            payload = {"response": [{"teams": {"home": {"id": 10}, "away": {"id": 20}}, "league": {"id": 999, "season": 2026}, "predictions": {"winner": {"id": 10, "name": "Home"},
                        "under_over": "Over 2.5", "goals": {"home": "2", "away": "1"},
                        "percent": {"home": "60%", "draw": "24%", "away": "16%"}}, "comparison": {}}]}
         elif endpoint == "/injuries": payload = {"response": []}
@@ -471,7 +472,7 @@ def test_tracked_early_exact_odds_failure_is_visible_and_retryable(lifecycle_cyc
     assert ("/odds", {"fixture": 7}) in client.requests
     assert {item["state"] for item in report["tracked_final_reviews"]} == {state}
     recovered, _ = cycle(kickoff - timedelta(minutes=30), broad="missing")
-    assert recovered["ready_candidate_count"] == 2
+    assert recovered["ready_candidate_count"] == 1
 
 
 def test_tracked_review_pauses_at_riga_midnight(lifecycle_cycles):
@@ -535,14 +536,14 @@ def test_tracked_review_does_not_require_broad_fixture_rediscovery(lifecycle_cyc
     monkeypatch.setattr(LifecycleClient, "fixtures_by_date", missing)
     report, client = cycle(kickoff - timedelta(hours=1), broad="missing")
     assert report["provider_fixture_rows"] == 0
-    assert report["ready_candidate_count"] == 2
+    assert report["ready_candidate_count"] == 1
     assert ("/fixtures", {"id": 7}) in client.requests
 
 
 def test_exact_refresh_bypasses_unexpired_cache_and_supersedes_broad_quotes(lifecycle_cycles):
     cycle, kickoff, _, _ = lifecycle_cycles
     first, _ = cycle(kickoff - timedelta(hours=1))
-    assert first["ready_candidate_count"] == 2
+    assert first["ready_candidate_count"] == 1
     report, client = cycle(kickoff - timedelta(minutes=59), exact="missing")
     assert ("/odds", {"fixture": 7}) in client.requests
     assert report["candidate_markets"] == []
@@ -561,7 +562,7 @@ def test_upgrade_recovers_old_individual_early_candidate_without_season(lifecycl
     runner = LabV2ShadowRunner(client, repository, capability_cache_path=Path("var/capabilities.json"), maximum_calls=40)
     try:
         report = asyncio.run(runner.run(now=client.clock, horizon_days=1))
-        assert report["ready_candidate_count"] == 2
+        assert report["ready_candidate_count"] == 1
         assert report["tracked_final_reviews"][0]["origin_candidate_id"] == early["candidate_id"]
         assert len(repository.early_candidates(now=client.clock)) == 0
     finally:
@@ -894,26 +895,13 @@ def test_ready_publication_handoff_is_lab_only_and_exactly_once(tmp_path, monkey
     monkeypatch.chdir(tmp_path)
     from app.lab_combo.repository import ComboRepository
     ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
-    candidate = {
-        "candidate_id": "candidate-1", "policy": "v2", "fixture_id": 7,
-        "market": "HOME_WIN", "decision": "APPROVED", "stage": "READY_TO_PUBLISH",
-        "home_team": "Home", "away_team": "Away", "home_team_id": 10, "away_team_id": 20,
-        "kickoff_utc": (NOW + timedelta(minutes=30)).isoformat(), "captured_odds": "1.80",
-        "offered_odds": "1.80", "quote_provenance_fingerprint": "q1", "edge": "0.06",
-        "ensemble_probability": "0.62", "confidence": "HIGH", "experimental_confidence": "HIGH",
-        "provider_type": "API_FOOTBALL_CURRENT_ODDS", "provider_origin_timestamp_utc": NOW.isoformat(),
-        "goalvision_retrieved_at_utc": NOW.isoformat(), "final_review_completed_at_utc": NOW.isoformat(),
-        "league": "Small League", "capability_tier": "TIER_C_BASIC", "odds_band": "1.70-1.99",
-        "pi_available": "AVAILABLE", "pi_agreement": "AGREEMENT",
-        "api_prediction_relation": "AGREEMENT", "market_consensus_relation": "AGREEMENT",
-        "lineup_confirmed": "NOT_SUPPORTED", "ensemble_decision_class": "APPROVED",
-    }
+    candidate = _controlled_ready_candidate(NOW)
     report = {"candidate_markets": [candidate]}
     first = prepare_v2_publications(report, ledger, now=NOW)
     second = prepare_v2_publications(report, ledger, now=NOW)
     assert len(first["singles"]) == 1 and len(second["singles"]) == 1
     assert len(ledger.all("single_prediction")) == 1
-    assert Decimal(first["singles"][0]["expected_value"]) == Decimal("0.116")
+    assert Decimal(first["singles"][0]["expected_value"]) == Decimal(candidate["ensemble_probability"]) * Decimal(candidate["captured_odds"]) - 1
     message = v2_single_message(first["singles"][0])
     assert message.startswith("🧪 GoalVision AI Lab") and "raw" not in message.casefold()
     assert "Official" not in message and first["combos"] == []
@@ -939,6 +927,7 @@ def test_unclaimed_publication_replay_is_stable_and_refreshed_evidence_gets_new_
             "away_team": f"Away {index}",
             "quote_provenance_fingerprint": f"quote-{index}",
         })
+        bind_candidate_evidence(candidate)
         candidates.append(candidate)
     report = {"candidate_markets": candidates}
     first = prepare_v2_publications(report, ledger, now=NOW)
@@ -956,6 +945,7 @@ def test_unclaimed_publication_replay_is_stable_and_refreshed_evidence_gets_new_
         value["candidate_id"] += "-refreshed"
         value["quote_provenance_fingerprint"] += "-refreshed"
         value["captured_odds"] = value["offered_odds"] = "1.85"
+        bind_candidate_evidence(value)
         refreshed.append(value)
     next_cycle = prepare_v2_publications(
         {"candidate_markets": refreshed}, ledger, now=NOW + timedelta(minutes=2),
@@ -1017,7 +1007,7 @@ def _controlled_ready_candidate(clock: datetime) -> dict[str, object]:
     assert decision.decision == "APPROVED"
     assert decision.confidence == "MEDIUM"
     assert stage == "READY_TO_PUBLISH"
-    return {
+    candidate = {
         "candidate_id": "deterministic-ready-v2-candidate",
         "policy": decision.policy,
         "fixture_id": 7001,
@@ -1050,6 +1040,27 @@ def _controlled_ready_candidate(clock: datetime) -> dict[str, object]:
         "lineup_confirmed": "NOT_SUPPORTED",
         "ensemble_decision_class": decision.decision,
     }
+
+    candidate['signals'] = [{k: str(v) if isinstance(v, Decimal) else v for k, v in asdict(signal).items()} for signal in decision.signals]
+    bind_candidate_evidence(candidate)
+    return candidate
+
+
+def bind_candidate_evidence(candidate):
+    """Bind synthetic test evidence after an intentional fixture/quote change."""
+    from app.real_match_lab_analysis.fingerprint import fingerprint
+    from app.lab_v2_shadow.api_prediction import NORMALIZATION_VERSION
+    candidate.update(bookmaker='Test Book', bookmaker_id=8)
+    candidate['provider_metadata'] = {'fixture': {'id': candidate['fixture_id']},
+        'teams': {side: {'id': candidate[side + '_team_id']} for side in ('home', 'away')}}
+    candidate['quote_provenance_fingerprint'] = fingerprint(dict(provider='API_FOOTBALL', fixture_id=candidate['fixture_id'],
+        bookmaker_id=8, bookmaker='Test Book', market=candidate['market'], odds=Decimal(candidate['captured_odds']),
+        provider_updated=datetime.fromisoformat(candidate['provider_origin_timestamp_utc']),
+        retrieved_at=datetime.fromisoformat(candidate['goalvision_retrieved_at_utc'])))
+    candidate['api_prediction_normalization'] = dict(normalization_version=NORMALIZATION_VERSION,
+        available=True, source_fingerprint='synthetic-source', fixture_id=candidate['fixture_id'],
+        home_team_id=candidate['home_team_id'], away_team_id=candidate['away_team_id'],
+        probabilities={'HOME_WIN': '0.60', 'DRAW': '0.25', 'AWAY_WIN': '0.15'})
 
 
 class _NoNetworkClient:
@@ -1249,7 +1260,8 @@ def test_indeterminate_v2_send_blocks_replay_even_after_quote_refresh(
 
     def refreshed(clock: datetime) -> dict[str, object]:
         candidate = original(clock)
-        candidate["quote_provenance_fingerprint"] = "refreshed-current-quote"
+        candidate["captured_odds"] = "1.91"
+        bind_candidate_evidence(candidate)
         return candidate
 
     monkeypatch.setitem(globals(), "_controlled_ready_candidate", refreshed)

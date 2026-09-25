@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from decimal import Decimal, localcontext
 
 
+MAX_MARKET_EDGE = Decimal("0.18")
+MAX_MODEL_MARKET_DIFFERENCE = Decimal("0.22")
+
 POLICY_VERSION = "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4"
 _FAMILY = {
     "HOME_WIN": "1X2", "DRAW": "1X2", "AWAY_WIN": "1X2",
@@ -140,7 +143,7 @@ def evaluate_ensemble(
             blockers.append("WEIGHTED_AGREEMENT_BELOW_0_65")
         if edge is not None and edge < Decimal("0.04"):
             blockers.append("ENSEMBLE_EDGE_BELOW_0_04")
-        if edge is not None and edge > Decimal("0.18"):
+        if edge is not None and edge > MAX_MARKET_EDGE:
             blockers.append("ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE")
         if not blockers:
             reasons.extend(("AVAILABILITY_AWARE_SIGNAL_QUORUM", "CURRENT_MARKET_INCLUDED", "NO_MATERIAL_DISAGREEMENT"))

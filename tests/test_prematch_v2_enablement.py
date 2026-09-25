@@ -19,7 +19,7 @@ from app.lab_v2_shadow.origin import LABEL, SELECTOR, freeze_origin
 from app.lab_v2_shadow.publication import prepare_v2_publications
 from app.lab_v2_shadow.statistics import single_cohorts
 from app.real_match_lab_analysis.models import LAB_BOT_USERNAME, LAB_CHAT_ID
-from tests.test_lab_v2_shadow import NOW, _controlled_ready_candidate
+from tests.test_lab_v2_shadow import NOW, _controlled_ready_candidate, bind_candidate_evidence
 
 
 @pytest.fixture
@@ -34,6 +34,7 @@ def candidate(index=0):
     value = _controlled_ready_candidate(NOW)
     value.update(candidate_id=f'candidate-{index}', fixture_id=7001+index,
                  predictive_family_count=2, predictive_families=['PI_RATINGS', 'API_FOOTBALL_PREDICTION'])
+    bind_candidate_evidence(value)
     return value
 
 

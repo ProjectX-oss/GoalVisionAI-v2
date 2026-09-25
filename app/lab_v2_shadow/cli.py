@@ -64,6 +64,8 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                              and datetime.fromisoformat(item['kickoff_utc'])>shadow_now
                              and 'ODDS_STALE_WAITING_REFRESH' not in item.get('rejection_reasons',[])]
             coordinator.shadow(shadow_inputs, stream='PREMATCH', now=datetime.now(timezone.utc))
+        report["analysis_status"] = "FAILED" if report.get("terminal_error") else "COMPLETED"
+        report["delivery_status"] = "NOT_REQUESTED" if not args.send else "NOT_ATTEMPTED"
         report["analysis_mode"] = str(report.get("analysis_mode") or report.get("mode") or "LAB_V2_NO_SEND")
         report["mode"] = "LAB_V2_CONTROLLED_SEND" if args.send else "LAB_V2_NO_SEND"
         report["publication_requested"] = bool(args.send)
@@ -93,6 +95,8 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                 football_context=football_context,
             )
             report['controlled_publication']['publication_blockers']=prepared['publication_blockers']
+            report['controlled_publication']['publication_reviews']=prepared['publication_reviews']
+            report['controlled_publication']['publication_policy_version']=prepared['publication_policy_version']
             pending = [
                 *[("single_prediction", item["prediction_id"]) for item in prepared["singles"]],
                 *[("combo_prediction", item["prediction_id"]) for item in prepared["combos"]],
@@ -114,13 +118,35 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             report["controlled_publication"]["telegram_transport_constructed"] = True
             service = LabComboService(ledger, None, clock=lambda: datetime.now(timezone.utc))
             deliveries = []
-            async with transport.bot:
-                if "@" + (transport.bot.username or "") != LAB_BOT_USERNAME:
-                    report["controlled_publication"]["reason"] = "LAB_BOT_IDENTITY_MISMATCH"
-                    return _persist_cycle_evidence(repository, report, clock)
-                for kind, identity in pending:
-                    outcome = await service.publish_experimental(kind, identity, config, transport)
-                    deliveries.append({"kind": kind, "prediction_id": identity, **outcome})
+            phase = 'INITIALIZATION'
+            failure = None
+            try:
+                # PTB's context manager shuts requests down if initialize/getMe fails.
+                async with transport.bot:
+                    phase = 'PUBLICATION'
+                    if "@" + (transport.bot.username or "") != LAB_BOT_USERNAME:
+                        failure = {'stage': phase, 'code': 'LAB_BOT_IDENTITY_MISMATCH'}
+                    else:
+                        for kind, identity in pending:
+                            outcome = await service.publish_experimental(kind, identity, config, transport)
+                            deliveries.append({"kind": kind, "prediction_id": identity, **outcome})
+                    phase = 'SHUTDOWN'
+            except Exception as exc:
+                # Never persist exception text/URLs/tokens. No batch or send retry.
+                from telegram.error import TimedOut
+                failure = {'stage': phase, 'code': 'LAB_TELEGRAM_' + phase + '_FAILED',
+                           'kind': 'TIMEOUT' if isinstance(exc, (TimedOut, TimeoutError)) else 'ERROR'}
+                # A failed shutdown may leave one request pool open. Closing is
+                # idempotent and cannot resend; never retry initialize or publish.
+                try:
+                    await transport.bot.shutdown()
+                except Exception:
+                    failure['cleanup'] = 'FAILED'
+                else:
+                    failure['cleanup'] = 'COMPLETED'
+            report['delivery_status'] = ('DEGRADED' if phase == 'SHUTDOWN' and failure else
+                                         'FAILED' if failure else
+                                         'DEGRADED' if any(not d.get('sent') for d in deliveries) else 'COMPLETED')
             attempts = len(deliveries)
             singles_sent = sum(
                 item["kind"] == "single_prediction" and bool(item.get("sent"))
@@ -134,6 +160,9 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             report["publication_attempt_count"] = attempts
             report["telegram_sends"] = telegram_sends
             report["controlled_publication"] = {
+                **report["controlled_publication"],
+                "status": report["delivery_status"],
+                "failure": failure,
                 "authorized_destination": "-1003510920417",
                 "send_attempted": attempts > 0,
                 "publication_attempt_count": attempts,
@@ -141,7 +170,7 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                 "singles_sent": singles_sent,
                 "combos_sent": combos_sent,
                 "deliveries": deliveries,
-                "reason": None,
+                "reason": failure["code"] if failure else None,
             }
             return _persist_cycle_evidence(repository, report, clock)
         finally:
@@ -202,7 +231,9 @@ def _persist_cycle_evidence(
 ) -> dict[str, object]:
     """Append the outer publication-boundary outcome for every controlled cycle."""
     evidence = {
-        "schema_version": "goalvision-lab-v2-publication-cycle-v1",
+        "schema_version": "goalvision-lab-v2-publication-cycle-v2",
+        "analysis_status": report["analysis_status"],
+        "delivery_status": report["delivery_status"],
         "analysis_mode": report["analysis_mode"],
         "mode": report["mode"],
         "publication_requested": report["publication_requested"],

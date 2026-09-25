@@ -1023,7 +1023,9 @@ class LabV2ShadowRunner:
                 ),
             )
             record_service(self.repository, fixture, clock, "prediction")
-            result[fixture_id] = normalize_api_prediction(payload, fixture_id=fixture_id)
+            result[fixture_id] = normalize_api_prediction(
+                payload, fixture_id=fixture_id, home_team_id=fixture["home_team_id"],
+                away_team_id=fixture["away_team_id"], league_id=fixture["league_id"], season=fixture["season"])
         return result, skipped
 
     async def _capabilities(self, clock: datetime) -> tuple[LeagueCapabilityCache, str]:
@@ -1238,7 +1240,7 @@ class LabV2ShadowRunner:
                         signals.append(EnsembleSignal(
                             "API_FOOTBALL_PREDICTION", market, api.probabilities[market],
                             _market_selection(api.probabilities, market), Decimal("0.75"),
-                            "AVAILABLE", "CURRENT_/PREDICTIONS", "API_FOOTBALL_PREDICTION",
+                            "AVAILABLE", f"CURRENT_/PREDICTIONS:{api.normalization_version}:{api.source_fingerprint}", "API_FOOTBALL_PREDICTION",
                         ))
                     if market in cmi:
                         signals.append(EnsembleSignal(
@@ -1344,6 +1346,7 @@ class LabV2ShadowRunner:
                         "rejection_reasons": list(decision.rejection_reasons),
                         "signals": [_plain(asdict(item)) for item in decision.signals],
                         "pi": _plain(asdict(pi)), "api_prediction_available": bool(api and api.available),
+                        "api_prediction_normalization": _plain(asdict(api)) if api else None,
                         "market_consensus_bookmakers": consensus.bookmaker_count,
                         "market_consensus_dispersion": _plain(consensus.dispersion),
                         "availability_impact": _plain({key: asdict(value) for key, value in impacts.items()}),

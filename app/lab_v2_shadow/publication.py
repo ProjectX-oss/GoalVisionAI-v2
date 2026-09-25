@@ -14,6 +14,7 @@ from app.real_match_lab_analysis.fingerprint import fingerprint
 
 
 from .forward_evidence import current_quote
+from .publication_policy import review_publication, PUBLICATION_POLICY_VERSION
 
 
 MAX_SINGLES_PER_CYCLE = 3
@@ -26,9 +27,15 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     clock = now.astimezone(timezone.utc)
     ready = []
     publication_blockers = {}
+    publication_reviews = {}
     for item in report.get("candidate_markets", []):
         if (item.get("decision") != "APPROVED" or item.get("stage") != "READY_TO_PUBLISH"
                 or item.get("candidate_lane") == "TRACKING"):
+            continue
+        gate = review_publication(item, now=clock)
+        publication_reviews[item['candidate_id']] = gate
+        if not gate['eligible']:
+            publication_blockers[item['candidate_id']] = 'LAB_PUBLICATION_POLICY_REJECTED'
             continue
         try:
             blocker=publication_blocker(clock,[item['kickoff_utc']])
@@ -45,7 +52,8 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                 or not probability.is_finite() or not Decimal(0) < probability < Decimal(1)
                 or probability * odds <= 1):
             continue
-        ready.append(dict(item))
+        ready.append({**item, "publication_policy_version": PUBLICATION_POLICY_VERSION,
+                      "publication_review": gate})
     ready.sort(key=lambda item: (
         {"STRONG": 0, "STANDARD": 1, "EXPERIMENTAL": 2}.get(item.get("candidate_lane"), 3),
         -Decimal(str(item.get("edge") or "-99")),
@@ -135,6 +143,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                 tuple(item["quote_provenance_fingerprint"] for item in group),
             )),
             "policy": "LAB_V2_BROAD_COVERAGE_COMBO_V2",
+            "publication_policy_version": PUBLICATION_POLICY_VERSION,
             "created_at_utc": max(item["prepared_at_utc"] for item in group),
             "legs": [dict(item) for item in group],
             "combined_odds": str(combined),
@@ -150,7 +159,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         remaining = [item for item in remaining
                      if int(item["fixture_id"]) not in consumed_fixtures
                      and not consumed_teams.intersection({str(item["home_team_id"]), str(item["away_team_id"])})]
-    return {"publication_blockers":publication_blockers,"singles": singles, "combos": combos, "ready_input_count": len(ready)}
+    return {"publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION, "publication_blockers":publication_blockers,"singles": singles, "combos": combos, "ready_input_count": len(ready)}
 
 
 def v2_single_message(value: dict) -> str:

@@ -14,7 +14,7 @@ def cycle_health(report: dict, *, started: datetime, completed: datetime) -> dic
     rows=report.get('candidate_markets',[])
     quota=report.get('adaptive_quota_budget') or {}
     failures=report.get('terminal_error') or report.get('error')
-    result='FAILED' if failures else 'DEGRADED' if quota.get('status') in {
+    result='FAILED' if failures else 'DEGRADED' if report.get('delivery_status') in {'FAILED', 'DEGRADED'} or quota.get('status') in {
         'REDUCED_TO_PRESERVE_QUOTA','QUOTA_UNAVAILABLE_STOP_AFTER_STATUS'} else 'HEALTHY'
     return {'started_at':utc(started).isoformat(),'completed_at':utc(completed).isoformat(),
             'result':result,'failure':failures,'evidence_at':report.get('evaluated_at_utc'),'provider_calls':report.get('api_calls_consumed',0),

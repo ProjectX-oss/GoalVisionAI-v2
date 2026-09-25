@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 
 from .ensemble import EnsembleDecision, EnsembleSignal, evaluate_ensemble, _independence_group, _market_weight
+from .ensemble import MAX_MARKET_EDGE, MAX_MODEL_MARKET_DIFFERENCE
 from .profiles import ProfilePolicy
 
 SOFT_ENSEMBLE = frozenset({'INSUFFICIENT_INDEPENDENT_SIGNALS', 'ENSEMBLE_EDGE_BELOW_0_04',
@@ -48,9 +49,9 @@ def evaluate_profile(market: str, odds: Decimal | None, signals: list[EnsembleSi
                            offered_implied_probability=implied)
         market_probabilities = [s.probability for s in decision.signals
                                 if s.name == 'CURRENT_MARKET_CONSENSUS' and s.probability is not None]
-        if any(abs(probability - value) > Decimal('0.22') for value in market_probabilities):
+        if any(abs(probability - value) > MAX_MODEL_MARKET_DIFFERENCE for value in market_probabilities):
             soft.append('SEVERE_MODEL_MARKET_CONTRADICTION')
-        if probability - implied > Decimal('0.18'):
+        if probability - implied > MAX_MARKET_EDGE:
             soft.append('ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE')
     p, edge = decision.ensemble_probability, decision.edge
     waiting = odds is None

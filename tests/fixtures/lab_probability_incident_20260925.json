@@ -1,0 +1,1435 @@
+{
+  "notice": "Read-only projections of retained pre-kickoff evidence. Source hashes identify full original payloads, not these projections. No match results or new provider calls.",
+  "cutoff": "2026-09-25T18:25:00+00:00",
+  "candidates": [
+    {
+      "accounting": "LAB_ONLY_HYPOTHETICAL_ONE_UNIT",
+      "adaptive_features": {
+        "baseline_context": {
+          "contradiction": false,
+          "market": "DRAW",
+          "missing": [
+            "lineup",
+            "injuries",
+            "advanced_stats",
+            "standings",
+            "recent_form"
+          ],
+          "odds": "9.00",
+          "profile": "INTERNATIONAL_SENIOR",
+          "signals": [
+            {
+              "availability": "AVAILABLE",
+              "independence_group": "CURRENT_MARKET_CONSENSUS",
+              "market": "DRAW",
+              "name": "CURRENT_MARKET_CONSENSUS",
+              "probability": "0.1173795291597921035268705692",
+              "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+              "reliability": "0.90",
+              "selection": "HOME_WIN"
+            },
+            {
+              "availability": "AVAILABLE",
+              "independence_group": "API_FOOTBALL_PREDICTION",
+              "market": "DRAW",
+              "name": "API_FOOTBALL_PREDICTION",
+              "probability": "0.5",
+              "provenance": "CURRENT_/PREDICTIONS",
+              "reliability": "0.75",
+              "selection": "HOME_WIN"
+            }
+          ]
+        },
+        "baseline_probability": 0.5,
+        "signal_api_probability": 0.5
+      },
+      "age_category": "UNSPECIFIED",
+      "api_prediction_available": true,
+      "api_prediction_relation": "DISAGREEMENT",
+      "approval_reasons": [
+        "PROFILE_EXPERIMENTAL"
+      ],
+      "availability_impact": {},
+      "away_team": "Gabon",
+      "away_team_id": 1503,
+      "baseline_probability": "0.5",
+      "bookmaker": "Bet365",
+      "bookmaker_id": 8,
+      "calculated_fair_odds": "2",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-bfb5868b9f45700470470dcd1c07be15201659e7fc698721f184abb0e6d2d57f",
+      "candidate_lane": "EXPERIMENTAL",
+      "capability_tier": "TIER_B_GOOD",
+      "captured_odds": "9.00",
+      "classification_fingerprint": "ab5fa992c3906188fa8ee90d360ce12e452cffed8f020b03daf25fdb36429df5",
+      "classification_reason": "NAME_NATIONAL_TEAM_COMPETITION",
+      "classifier_version": "LAB_COMPETITION_CLASSIFIER_V5",
+      "competition_profile": "INTERNATIONAL_SENIOR",
+      "confidence": "LOW",
+      "country": "World",
+      "decision": "APPROVED",
+      "edge": "0.3888888888888888888888888889",
+      "ensemble_decision_class": "APPROVED",
+      "ensemble_probability": "0.5",
+      "evidence_lane": "SINGLE_MODEL_EXPERIMENTAL",
+      "expected_value": "3.500",
+      "experimental_confidence": "LOW",
+      "experimental_lane_edge": "0.04275",
+      "final_review": {
+        "fixture_refreshed": true,
+        "fixture_status": "NS",
+        "injuries_status": "NOT_REQUESTED",
+        "lineup_status": "NOT_YET_PUBLISHED",
+        "near_kickoff": true,
+        "odds_provider_timestamp_utc": "2026-09-25T16:41:19+00:00",
+        "odds_refreshed": true,
+        "odds_retrieved_at_utc": "2026-09-25T18:00:36.924270+00:00",
+        "odds_retry_state": null,
+        "odds_status": "AVAILABLE",
+        "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+        "refreshed_kickoff_utc": "2026-09-25T19:00:00+00:00",
+        "reviewed_at_utc": "2026-09-25T18:00:37.423603+00:00",
+        "status": "FIXTURE_REFRESHED"
+      },
+      "final_review_completed_at_utc": "2026-09-25T18:00:37.423603+00:00",
+      "fixture_id": 1545826,
+      "flags": [
+        "CURRENT_ODDS_SUPPORTED",
+        "IS_QUALIFIER",
+        "LINEUPS_SUPPORTED",
+        "STATS_SUPPORTED"
+      ],
+      "goalvision_retrieved_at_utc": "2026-09-25T18:00:36.924270+00:00",
+      "hard_failures": [],
+      "historical_bookmaker_odds_used": false,
+      "home_team": "Morocco",
+      "home_team_id": 31,
+      "independent_probability_available": true,
+      "kickoff_utc": "2026-09-25T19:00:00+00:00",
+      "league": "Africa Cup of Nations - Qualification",
+      "league_id": 36,
+      "lineup_confirmed": "NOT_YET_PUBLISHED",
+      "market": "DRAW",
+      "market_consensus_bookmakers": 5,
+      "market_consensus_dispersion": {
+        "AWAY_WIN": "0.0221250818235274538737199471",
+        "DRAW": "0.0223093304626617678032341861",
+        "HOME_WIN": "0.0409538742365027731623411569"
+      },
+      "market_consensus_relation": "DISAGREEMENT",
+      "market_context_edge": "0.3888888888888888888888888889",
+      "market_fair_probability": "0.1173795291597921035268705692",
+      "market_preference_rank": 0,
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "observation_id": "lab-v2-candidate-bfb5868b9f45700470470dcd1c07be15201659e7fc698721f184abb0e6d2d57f",
+      "odds": "9.00",
+      "odds_band": "3.50+",
+      "offered_implied_probability": "0.1111111111111111111111111111",
+      "offered_odds": "9.00",
+      "optional_data_reasons": [
+        "OPTIONAL_SIGNAL_MISSING",
+        "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+        "SIGNAL_NOT_YET_AVAILABLE",
+        "LINEUPS_NOT_YET_AVAILABLE",
+        "INSUFFICIENT_RECENT_MATCHES",
+        "ADVANCED_STATISTICS_UNAVAILABLE",
+        "CALIBRATION_UNAVAILABLE"
+      ],
+      "pi": {
+        "away_observations": 0,
+        "away_pi_rating": null,
+        "away_team_away_strength": null,
+        "away_team_home_strength": null,
+        "away_team_id": 1503,
+        "away_venue_observations": 0,
+        "expected_relative_strength": null,
+        "home_observations": 0,
+        "home_pi_rating": null,
+        "home_team_away_strength": null,
+        "home_team_home_strength": null,
+        "home_team_id": 31,
+        "home_venue_observations": 0,
+        "league_id": 36,
+        "probabilities": {},
+        "rating_difference": null,
+        "state": "UNAVAILABLE"
+      },
+      "pi_agreement": "UNAVAILABLE",
+      "pi_available": "UNAVAILABLE",
+      "policy": "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4",
+      "prediction_id": "lab-v2-single-3810568e7053f6f9f0c3ab7890ed00f3341c04cfdd6e807e33616dc6bb51379b",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "predictive_family_count": 1,
+      "prepared_at_utc": "2026-09-25T18:00:37.423603+00:00",
+      "probability": "0.5",
+      "probability_kind": "INDEPENDENT_SINGLE_MODEL",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "provider_metadata": {
+        "fixture": {
+          "date": "2026-09-25T19:00:00+00:00",
+          "id": 1545826,
+          "periods": {
+            "first": null,
+            "second": null
+          },
+          "referee": "Abongile Tom",
+          "status": {
+            "elapsed": null,
+            "extra": null,
+            "long": "Not Started",
+            "short": "NS"
+          },
+          "timestamp": 1790362800,
+          "timezone": "UTC",
+          "venue": {
+            "city": "Rabat",
+            "id": null,
+            "name": "Stade Prince Moulay Abdallah"
+          }
+        },
+        "league": {
+          "country": "World",
+          "flag": null,
+          "id": 36,
+          "logo": "https://media.api-sports.io/football/leagues/36.png",
+          "name": "Africa Cup of Nations - Qualification",
+          "round": "Group Stage - 1",
+          "season": 2027,
+          "standings": false
+        },
+        "teams": {
+          "away": {
+            "id": 1503,
+            "logo": "https://media.api-sports.io/football/teams/1503.png",
+            "name": "Gabon",
+            "winner": null
+          },
+          "home": {
+            "id": 31,
+            "logo": "https://media.api-sports.io/football/teams/31.png",
+            "name": "Morocco",
+            "winner": null
+          }
+        }
+      },
+      "provider_origin_timestamp_utc": "2026-09-25T16:41:19+00:00",
+      "provider_type": "API_FOOTBALL_CURRENT_ODDS",
+      "publication_blocker": null,
+      "publication_key": "1545826:DRAW",
+      "quote_provenance_fingerprint": "ef190343ffc0edf729509f44162a04f041004d69b4bdd660106cf91df1b31a0d",
+      "readiness_lane": "EXPERIMENTAL_READY",
+      "readiness_policy": "LAB_V2_FINAL_REVIEW_READINESS_V5",
+      "readiness_reasons": [
+        "FINAL_REVIEW_COMPLETE"
+      ],
+      "rejection_reasons": [],
+      "season": 2027,
+      "selection_origin": {
+        "context": null,
+        "frozen_at_utc": "2026-09-25T18:04:04.326548+00:00",
+        "independent_context_model": null,
+        "model_artifact": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+        "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+        "origins": [
+          "EXISTING_LAB_V2_SELECTOR"
+        ],
+        "predictive_families": [
+          "API_FOOTBALL_PREDICTION"
+        ],
+        "probability_kind": "INDEPENDENT_SINGLE_MODEL",
+        "profile_policy": "LAB_COMPETITION_POLICY_V2",
+        "selector_policy": "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4",
+        "version": "LAB_SELECTION_ORIGIN_V1"
+      },
+      "signal_requirements": [
+        {
+          "gate_type": "HARD",
+          "present": true,
+          "reason_code": "PASSED",
+          "signal": "independent_non_market_probability"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "SIGNAL_NOT_YET_AVAILABLE",
+          "signal": "lineup"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+          "signal": "injuries"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "OPTIONAL_SIGNAL_MISSING",
+          "signal": "advanced_stats"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+          "signal": "standings"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "OPTIONAL_SIGNAL_MISSING",
+          "signal": "recent_form"
+        }
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "market": "DRAW",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0.5",
+          "provenance": "CURRENT_/PREDICTIONS",
+          "reliability": "0.75",
+          "selection": "HOME_WIN"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "market": "DRAW",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.1173795291597921035268705692",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+          "reliability": "0.90",
+          "selection": "HOME_WIN"
+        }
+      ],
+      "soft_findings": [
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE",
+        "INSUFFICIENT_INDEPENDENT_SIGNALS",
+        "MATERIAL_SIGNAL_DISAGREEMENT",
+        "SEVERE_MODEL_MARKET_CONTRADICTION",
+        "WEIGHTED_AGREEMENT_BELOW_0_65"
+      ],
+      "soft_penalties": {
+        "advanced_stats": "0.00125",
+        "injuries": "0.00325",
+        "lineup": "0.005",
+        "recent_form": "0.005",
+        "standings": "0.00325"
+      },
+      "stage": "READY_TO_PUBLISH",
+      "uncertainty_penalty": "0.03275",
+      "vig_method": "PER_BOOKMAKER_MULTIPLICATIVE_NORMALIZATION",
+      "waiting_for_refresh": false,
+      "weighted_agreement": "0E+4"
+    },
+    {
+      "accounting": "LAB_ONLY_HYPOTHETICAL_ONE_UNIT",
+      "adaptive_features": {
+        "baseline_context": {
+          "contradiction": false,
+          "market": "DRAW",
+          "missing": [
+            "lineup",
+            "injuries",
+            "advanced_stats",
+            "standings",
+            "recent_form"
+          ],
+          "odds": "3.80",
+          "profile": "INTERNATIONAL_SENIOR",
+          "signals": [
+            {
+              "availability": "AVAILABLE",
+              "independence_group": "CURRENT_MARKET_CONSENSUS",
+              "market": "DRAW",
+              "name": "CURRENT_MARKET_CONSENSUS",
+              "probability": "0.2470595426259611214854851352",
+              "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+              "reliability": "0.90",
+              "selection": "HOME_WIN"
+            },
+            {
+              "availability": "AVAILABLE",
+              "independence_group": "API_FOOTBALL_PREDICTION",
+              "market": "DRAW",
+              "name": "API_FOOTBALL_PREDICTION",
+              "probability": "0.5",
+              "provenance": "CURRENT_/PREDICTIONS",
+              "reliability": "0.75",
+              "selection": "HOME_WIN"
+            }
+          ]
+        },
+        "baseline_probability": 0.5,
+        "signal_api_probability": 0.5
+      },
+      "age_category": "UNSPECIFIED",
+      "api_prediction_available": true,
+      "api_prediction_relation": "DISAGREEMENT",
+      "approval_reasons": [
+        "PROFILE_EXPERIMENTAL"
+      ],
+      "availability_impact": {},
+      "away_team": "Benin",
+      "away_team_id": 1516,
+      "baseline_probability": "0.5",
+      "bookmaker": "Betano",
+      "bookmaker_id": 32,
+      "calculated_fair_odds": "2",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-4c7bd995e9af25d5d0356a153f329d1aa43149fdf72fc4a0e58765dabb01ddc1",
+      "candidate_lane": "EXPERIMENTAL",
+      "capability_tier": "TIER_B_GOOD",
+      "captured_odds": "3.80",
+      "classification_fingerprint": "7bf644c4a67f74b83cc6d3533ee6f8509b017d3d6e1d48e4440ea8b253c8efea",
+      "classification_reason": "NAME_NATIONAL_TEAM_COMPETITION",
+      "classifier_version": "LAB_COMPETITION_CLASSIFIER_V5",
+      "competition_profile": "INTERNATIONAL_SENIOR",
+      "confidence": "LOW",
+      "country": "World",
+      "decision": "APPROVED",
+      "edge": "0.2368421052631578947368421053",
+      "ensemble_decision_class": "APPROVED",
+      "ensemble_probability": "0.5",
+      "evidence_lane": "SINGLE_MODEL_EXPERIMENTAL",
+      "expected_value": "0.900",
+      "experimental_confidence": "LOW",
+      "experimental_lane_edge": "0.04275",
+      "final_review": {
+        "fixture_refreshed": true,
+        "fixture_status": "NS",
+        "injuries_status": "NOT_REQUESTED",
+        "lineup_status": "NOT_YET_PUBLISHED",
+        "near_kickoff": true,
+        "odds_provider_timestamp_utc": "2026-09-25T16:41:19+00:00",
+        "odds_refreshed": true,
+        "odds_retrieved_at_utc": "2026-09-25T18:00:31.454063+00:00",
+        "odds_retry_state": null,
+        "odds_status": "AVAILABLE",
+        "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+        "refreshed_kickoff_utc": "2026-09-25T19:00:00+00:00",
+        "reviewed_at_utc": "2026-09-25T18:00:32.347183+00:00",
+        "status": "FIXTURE_REFRESHED"
+      },
+      "final_review_completed_at_utc": "2026-09-25T18:00:32.347183+00:00",
+      "fixture_id": 1545815,
+      "flags": [
+        "CURRENT_ODDS_SUPPORTED",
+        "IS_QUALIFIER",
+        "LINEUPS_SUPPORTED",
+        "STATS_SUPPORTED"
+      ],
+      "goalvision_retrieved_at_utc": "2026-09-25T18:00:31.454063+00:00",
+      "hard_failures": [],
+      "historical_bookmaker_odds_used": false,
+      "home_team": "Burkina Faso",
+      "home_team_id": 1502,
+      "independent_probability_available": true,
+      "kickoff_utc": "2026-09-25T19:00:00+00:00",
+      "league": "Africa Cup of Nations - Qualification",
+      "league_id": 36,
+      "lineup_confirmed": "NOT_YET_PUBLISHED",
+      "market": "DRAW",
+      "market_consensus_bookmakers": 5,
+      "market_consensus_dispersion": {
+        "AWAY_WIN": "0.0269191451792088288101143571",
+        "DRAW": "0.0270905795432371353912032323",
+        "HOME_WIN": "0.0259864778652039686439000064"
+      },
+      "market_consensus_relation": "DISAGREEMENT",
+      "market_context_edge": "0.2368421052631578947368421053",
+      "market_fair_probability": "0.2470595426259611214854851352",
+      "market_preference_rank": 0,
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "observation_id": "lab-v2-candidate-4c7bd995e9af25d5d0356a153f329d1aa43149fdf72fc4a0e58765dabb01ddc1",
+      "odds": "3.80",
+      "odds_band": "3.50+",
+      "offered_implied_probability": "0.2631578947368421052631578947",
+      "offered_odds": "3.80",
+      "optional_data_reasons": [
+        "OPTIONAL_SIGNAL_MISSING",
+        "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+        "SIGNAL_NOT_YET_AVAILABLE",
+        "LINEUPS_NOT_YET_AVAILABLE",
+        "INSUFFICIENT_RECENT_MATCHES",
+        "ADVANCED_STATISTICS_UNAVAILABLE",
+        "CALIBRATION_UNAVAILABLE"
+      ],
+      "pi": {
+        "away_observations": 0,
+        "away_pi_rating": null,
+        "away_team_away_strength": null,
+        "away_team_home_strength": null,
+        "away_team_id": 1516,
+        "away_venue_observations": 0,
+        "expected_relative_strength": null,
+        "home_observations": 0,
+        "home_pi_rating": null,
+        "home_team_away_strength": null,
+        "home_team_home_strength": null,
+        "home_team_id": 1502,
+        "home_venue_observations": 0,
+        "league_id": 36,
+        "probabilities": {},
+        "rating_difference": null,
+        "state": "UNAVAILABLE"
+      },
+      "pi_agreement": "UNAVAILABLE",
+      "pi_available": "UNAVAILABLE",
+      "policy": "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4",
+      "prediction_id": "lab-v2-single-70d3ec495afe0ff1593a7869ad64d1a62a367f2512a4ae8ddb1d3821f66024b3",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "predictive_family_count": 1,
+      "prepared_at_utc": "2026-09-25T18:00:32.347183+00:00",
+      "probability": "0.5",
+      "probability_kind": "INDEPENDENT_SINGLE_MODEL",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "provider_metadata": {
+        "fixture": {
+          "date": "2026-09-25T19:00:00+00:00",
+          "id": 1545815,
+          "periods": {
+            "first": null,
+            "second": null
+          },
+          "referee": "Omar Abdulkadir Artan",
+          "status": {
+            "elapsed": null,
+            "extra": null,
+            "long": "Not Started",
+            "short": "NS"
+          },
+          "timestamp": 1790362800,
+          "timezone": "UTC",
+          "venue": {
+            "city": "Ouagadougou",
+            "id": null,
+            "name": "Stade du 4-Ao\u00fbt"
+          }
+        },
+        "league": {
+          "country": "World",
+          "flag": null,
+          "id": 36,
+          "logo": "https://media.api-sports.io/football/leagues/36.png",
+          "name": "Africa Cup of Nations - Qualification",
+          "round": "Group Stage - 1",
+          "season": 2027,
+          "standings": false
+        },
+        "teams": {
+          "away": {
+            "id": 1516,
+            "logo": "https://media.api-sports.io/football/teams/1516.png",
+            "name": "Benin",
+            "winner": null
+          },
+          "home": {
+            "id": 1502,
+            "logo": "https://media.api-sports.io/football/teams/1502.png",
+            "name": "Burkina Faso",
+            "winner": null
+          }
+        }
+      },
+      "provider_origin_timestamp_utc": "2026-09-25T16:41:19+00:00",
+      "provider_type": "API_FOOTBALL_CURRENT_ODDS",
+      "publication_blocker": null,
+      "publication_key": "1545815:DRAW",
+      "quote_provenance_fingerprint": "645db442b9c2d659a4ba8616963b3ff790b006410aa9c1e9387e95a50e4eb667",
+      "readiness_lane": "EXPERIMENTAL_READY",
+      "readiness_policy": "LAB_V2_FINAL_REVIEW_READINESS_V5",
+      "readiness_reasons": [
+        "FINAL_REVIEW_COMPLETE"
+      ],
+      "rejection_reasons": [],
+      "season": 2027,
+      "selection_origin": {
+        "context": null,
+        "frozen_at_utc": "2026-09-25T18:04:04.326548+00:00",
+        "independent_context_model": null,
+        "model_artifact": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+        "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+        "origins": [
+          "EXISTING_LAB_V2_SELECTOR"
+        ],
+        "predictive_families": [
+          "API_FOOTBALL_PREDICTION"
+        ],
+        "probability_kind": "INDEPENDENT_SINGLE_MODEL",
+        "profile_policy": "LAB_COMPETITION_POLICY_V2",
+        "selector_policy": "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4",
+        "version": "LAB_SELECTION_ORIGIN_V1"
+      },
+      "signal_requirements": [
+        {
+          "gate_type": "HARD",
+          "present": true,
+          "reason_code": "PASSED",
+          "signal": "independent_non_market_probability"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "SIGNAL_NOT_YET_AVAILABLE",
+          "signal": "lineup"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+          "signal": "injuries"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "OPTIONAL_SIGNAL_MISSING",
+          "signal": "advanced_stats"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+          "signal": "standings"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "OPTIONAL_SIGNAL_MISSING",
+          "signal": "recent_form"
+        }
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "market": "DRAW",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0.5",
+          "provenance": "CURRENT_/PREDICTIONS",
+          "reliability": "0.75",
+          "selection": "HOME_WIN"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "market": "DRAW",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2470595426259611214854851352",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+          "reliability": "0.90",
+          "selection": "HOME_WIN"
+        }
+      ],
+      "soft_findings": [
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE",
+        "INSUFFICIENT_INDEPENDENT_SIGNALS",
+        "MATERIAL_SIGNAL_DISAGREEMENT",
+        "SEVERE_MODEL_MARKET_CONTRADICTION",
+        "WEIGHTED_AGREEMENT_BELOW_0_65"
+      ],
+      "soft_penalties": {
+        "advanced_stats": "0.00125",
+        "injuries": "0.00325",
+        "lineup": "0.005",
+        "recent_form": "0.005",
+        "standings": "0.00325"
+      },
+      "stage": "READY_TO_PUBLISH",
+      "uncertainty_penalty": "0.03275",
+      "vig_method": "PER_BOOKMAKER_MULTIPLICATIVE_NORMALIZATION",
+      "waiting_for_refresh": false,
+      "weighted_agreement": "0E+4"
+    },
+    {
+      "accounting": "LAB_ONLY_HYPOTHETICAL_ONE_UNIT",
+      "adaptive_features": {
+        "baseline_context": {
+          "contradiction": false,
+          "market": "HOME_WIN",
+          "missing": [
+            "lineup",
+            "injuries",
+            "advanced_stats",
+            "standings",
+            "recent_form"
+          ],
+          "odds": "8.50",
+          "profile": "INTERNATIONAL_SENIOR",
+          "signals": [
+            {
+              "availability": "AVAILABLE",
+              "independence_group": "CURRENT_MARKET_CONSENSUS",
+              "market": "HOME_WIN",
+              "name": "CURRENT_MARKET_CONSENSUS",
+              "probability": "0.1177654437711428903476737754",
+              "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+              "reliability": "0.90",
+              "selection": "AWAY_WIN"
+            },
+            {
+              "availability": "AVAILABLE",
+              "independence_group": "API_FOOTBALL_PREDICTION",
+              "market": "HOME_WIN",
+              "name": "API_FOOTBALL_PREDICTION",
+              "probability": "0.5",
+              "provenance": "CURRENT_/PREDICTIONS",
+              "reliability": "0.75",
+              "selection": "HOME_WIN"
+            }
+          ]
+        },
+        "baseline_probability": 0.5,
+        "signal_api_probability": 0.5
+      },
+      "age_category": "SENIOR",
+      "api_prediction_available": true,
+      "api_prediction_relation": "AGREEMENT",
+      "approval_reasons": [
+        "PROFILE_EXPERIMENTAL"
+      ],
+      "availability_impact": {},
+      "away_team": "France",
+      "away_team_id": 2,
+      "baseline_probability": "0.5",
+      "bookmaker": "Betfair",
+      "bookmaker_id": 3,
+      "calculated_fair_odds": "2",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-8e5741b87eb8748c3d39507b4f6a32f0a2cd1b8bd511b8244aa3030ee6cbfa78",
+      "candidate_lane": "EXPERIMENTAL",
+      "capability_tier": "UNSUPPORTED",
+      "captured_odds": "8.50",
+      "classification_fingerprint": "45db702740be0fc36e4c019f6272d05c143b7fc5f679cce9bb60a63e1af60bae",
+      "classification_reason": "REVIEWED_REGISTRY:LAB_REVIEWED_COMPETITIONS_V2",
+      "classifier_version": "LAB_COMPETITION_CLASSIFIER_V5",
+      "competition_profile": "INTERNATIONAL_SENIOR",
+      "confidence": "LOW",
+      "country": "World",
+      "decision": "APPROVED",
+      "edge": "0.3823529411764705882352941176",
+      "ensemble_decision_class": "APPROVED",
+      "ensemble_probability": "0.5",
+      "evidence_lane": "SINGLE_MODEL_EXPERIMENTAL",
+      "expected_value": "3.250",
+      "experimental_confidence": "LOW",
+      "experimental_lane_edge": "0.04275",
+      "final_review": {
+        "fixture_refreshed": true,
+        "fixture_status": "NS",
+        "injuries_status": "NOT_SUPPORTED",
+        "lineup_status": "NOT_SUPPORTED",
+        "near_kickoff": true,
+        "odds_provider_timestamp_utc": "2026-09-25T16:33:16+00:00",
+        "odds_refreshed": true,
+        "odds_retrieved_at_utc": "2026-09-25T18:00:38.420531+00:00",
+        "odds_retry_state": null,
+        "odds_status": "AVAILABLE",
+        "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+        "refreshed_kickoff_utc": "2026-09-25T18:45:00+00:00",
+        "reviewed_at_utc": "2026-09-25T18:03:38.003327+00:00",
+        "status": "FIXTURE_REFRESHED"
+      },
+      "final_review_completed_at_utc": "2026-09-25T18:03:38.003327+00:00",
+      "fixture_id": 1528882,
+      "flags": [
+        "CURRENT_ODDS_SUPPORTED"
+      ],
+      "goalvision_retrieved_at_utc": "2026-09-25T18:00:38.420531+00:00",
+      "hard_failures": [],
+      "historical_bookmaker_odds_used": false,
+      "home_team": "T\u00fcrkiye",
+      "home_team_id": 777,
+      "independent_probability_available": true,
+      "kickoff_utc": "2026-09-25T18:45:00+00:00",
+      "league": "UEFA Nations League",
+      "league_id": 5,
+      "lineup_confirmed": "NOT_SUPPORTED",
+      "market": "HOME_WIN",
+      "market_consensus_bookmakers": 5,
+      "market_consensus_dispersion": {
+        "AWAY_WIN": "0.0148658533443409277520199569",
+        "DRAW": "0.0114964510950625443764802833",
+        "HOME_WIN": "0.0178080335169161808296398639"
+      },
+      "market_consensus_relation": "DISAGREEMENT",
+      "market_context_edge": "0.3823529411764705882352941176",
+      "market_fair_probability": "0.1177654437711428903476737754",
+      "market_preference_rank": 0,
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "observation_id": "lab-v2-candidate-8e5741b87eb8748c3d39507b4f6a32f0a2cd1b8bd511b8244aa3030ee6cbfa78",
+      "odds": "8.50",
+      "odds_band": "3.50+",
+      "offered_implied_probability": "0.1176470588235294117647058824",
+      "offered_odds": "8.50",
+      "optional_data_reasons": [
+        "OPTIONAL_SIGNAL_MISSING",
+        "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+        "LINEUPS_NOT_SUPPORTED_BY_PROVIDER",
+        "INSUFFICIENT_RECENT_MATCHES",
+        "ADVANCED_STATISTICS_UNAVAILABLE",
+        "CALIBRATION_UNAVAILABLE"
+      ],
+      "pi": {
+        "away_observations": 0,
+        "away_pi_rating": null,
+        "away_team_away_strength": null,
+        "away_team_home_strength": null,
+        "away_team_id": 2,
+        "away_venue_observations": 0,
+        "expected_relative_strength": null,
+        "home_observations": 0,
+        "home_pi_rating": null,
+        "home_team_away_strength": null,
+        "home_team_home_strength": null,
+        "home_team_id": 777,
+        "home_venue_observations": 0,
+        "league_id": 5,
+        "probabilities": {},
+        "rating_difference": null,
+        "state": "UNAVAILABLE"
+      },
+      "pi_agreement": "UNAVAILABLE",
+      "pi_available": "UNAVAILABLE",
+      "policy": "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4",
+      "prediction_id": "lab-v2-single-a5efce39d2e66f12d9104b76e526739824e77f3545bbbe07a3a7a37059630ad4",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "predictive_family_count": 1,
+      "prepared_at_utc": "2026-09-25T18:03:38.003327+00:00",
+      "probability": "0.5",
+      "probability_kind": "INDEPENDENT_SINGLE_MODEL",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "provider_metadata": {
+        "fixture": {
+          "date": "2026-09-25T18:45:00+00:00",
+          "id": 1528882,
+          "periods": {
+            "first": null,
+            "second": null
+          },
+          "referee": "Felix Zwayer",
+          "status": {
+            "elapsed": null,
+            "extra": null,
+            "long": "Not Started",
+            "short": "NS"
+          },
+          "timestamp": 1790361900,
+          "timezone": "UTC",
+          "venue": {
+            "city": "Izmit",
+            "id": 20309,
+            "name": "Turka Kocaeli Stadium"
+          }
+        },
+        "league": {
+          "country": "World",
+          "flag": null,
+          "id": 5,
+          "logo": "https://media.api-sports.io/football/leagues/5.png",
+          "name": "UEFA Nations League",
+          "round": "League A - 1",
+          "season": 2026,
+          "standings": true
+        },
+        "teams": {
+          "away": {
+            "id": 2,
+            "logo": "https://media.api-sports.io/football/teams/2.png",
+            "name": "France",
+            "winner": null
+          },
+          "home": {
+            "id": 777,
+            "logo": "https://media.api-sports.io/football/teams/777.png",
+            "name": "T\u00fcrkiye",
+            "winner": null
+          }
+        }
+      },
+      "provider_origin_timestamp_utc": "2026-09-25T16:33:16+00:00",
+      "provider_type": "API_FOOTBALL_CURRENT_ODDS",
+      "publication_blocker": null,
+      "publication_key": "1528882:HOME_WIN",
+      "quote_provenance_fingerprint": "4b37d1a56d867fbc6b1245d7cf82af23b6099cf854a92b2b7826d9fa4ae71ab5",
+      "readiness_lane": "EXPERIMENTAL_READY",
+      "readiness_policy": "LAB_V2_FINAL_REVIEW_READINESS_V5",
+      "readiness_reasons": [
+        "FINAL_REVIEW_COMPLETE"
+      ],
+      "rejection_reasons": [],
+      "season": 2026,
+      "selection_origin": {
+        "context": null,
+        "frozen_at_utc": "2026-09-25T18:04:04.326548+00:00",
+        "independent_context_model": null,
+        "model_artifact": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+        "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+        "origins": [
+          "EXISTING_LAB_V2_SELECTOR"
+        ],
+        "predictive_families": [
+          "API_FOOTBALL_PREDICTION"
+        ],
+        "probability_kind": "INDEPENDENT_SINGLE_MODEL",
+        "profile_policy": "LAB_COMPETITION_POLICY_V2",
+        "selector_policy": "LAB_V2_BROAD_COVERAGE_ENSEMBLE_V4",
+        "version": "LAB_SELECTION_ORIGIN_V1"
+      },
+      "signal_requirements": [
+        {
+          "gate_type": "HARD",
+          "present": true,
+          "reason_code": "PASSED",
+          "signal": "independent_non_market_probability"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+          "signal": "lineup"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+          "signal": "injuries"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "PROVIDER_DOES_NOT_SUPPORT_SIGNAL",
+          "signal": "advanced_stats"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "OPTIONAL_SIGNAL_MISSING",
+          "signal": "standings"
+        },
+        {
+          "gate_type": "SOFT",
+          "present": false,
+          "reason_code": "OPTIONAL_SIGNAL_MISSING",
+          "signal": "recent_form"
+        }
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "market": "HOME_WIN",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0.5",
+          "provenance": "CURRENT_/PREDICTIONS",
+          "reliability": "0.75",
+          "selection": "HOME_WIN"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "market": "HOME_WIN",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.1177654437711428903476737754",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+          "reliability": "0.90",
+          "selection": "AWAY_WIN"
+        }
+      ],
+      "soft_findings": [
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE",
+        "INSUFFICIENT_INDEPENDENT_SIGNALS",
+        "MATERIAL_SIGNAL_DISAGREEMENT",
+        "SEVERE_MODEL_MARKET_CONTRADICTION",
+        "WEIGHTED_AGREEMENT_BELOW_0_65"
+      ],
+      "soft_penalties": {
+        "advanced_stats": "0.00125",
+        "injuries": "0.00325",
+        "lineup": "0.005",
+        "recent_form": "0.005",
+        "standings": "0.00325"
+      },
+      "stage": "READY_TO_PUBLISH",
+      "uncertainty_penalty": "0.03275",
+      "vig_method": "PER_BOOKMAKER_MULTIPLICATIVE_NORMALIZATION",
+      "waiting_for_refresh": false,
+      "weighted_agreement": "0E+4"
+    }
+  ],
+  "sources": [
+    {
+      "fixture_id": 1545826,
+      "cache_id": "lab-v2-cache-eac607bd7a800d08220c6042295d15cc80e39af0641d56b8d3ab72ed4ee8c534",
+      "retrieved_at_utc": "2026-09-25T18:01:19.562783+00:00",
+      "original_payload_fingerprint": "96fdee8d44d1dd388d375580260a7a6331b8625d08f70ec77c25ddbe0f1e949a",
+      "projection": {
+        "parameters": {
+          "fixture": "1545826"
+        },
+        "errors": [],
+        "response": [
+          {
+            "predictions": {
+              "advice": "Double chance : Morocco or draw",
+              "goals": {
+                "away": null,
+                "home": null
+              },
+              "percent": {
+                "away": "0%",
+                "draw": "50%",
+                "home": "50%"
+              },
+              "under_over": null,
+              "win_or_draw": true,
+              "winner": {
+                "comment": "Win or draw",
+                "id": 31,
+                "name": "Morocco"
+              }
+            },
+            "comparison": {
+              "att": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "def": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "form": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "goals": {
+                "away": "30%",
+                "home": "70%"
+              },
+              "h2h": {
+                "away": "29%",
+                "home": "71%"
+              },
+              "poisson_distribution": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "total": {
+                "away": "29.5%",
+                "home": "70.5%"
+              }
+            },
+            "league": {
+              "country": "World",
+              "flag": null,
+              "id": 36,
+              "logo": "https://media.api-sports.io/football/leagues/36.png",
+              "name": "Africa Cup of Nations - Qualification",
+              "season": 2027
+            },
+            "teams": {
+              "home": {
+                "id": 31
+              },
+              "away": {
+                "id": 1503
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fixture_id": 1545815,
+      "cache_id": "lab-v2-cache-f0edc94c39b9b48342bd8f4667c601f16cf59f548a57173aaf4d74e56bc7a2b6",
+      "retrieved_at_utc": "2026-09-25T18:00:53.051429+00:00",
+      "original_payload_fingerprint": "e09e1071edd798860c090e157b533aacc640b08e72cd15f33d99e520392569a5",
+      "projection": {
+        "parameters": {
+          "fixture": "1545815"
+        },
+        "errors": [],
+        "response": [
+          {
+            "predictions": {
+              "advice": "Double chance : Burkina Faso or draw",
+              "goals": {
+                "away": null,
+                "home": null
+              },
+              "percent": {
+                "away": "0%",
+                "draw": "50%",
+                "home": "50%"
+              },
+              "under_over": null,
+              "win_or_draw": true,
+              "winner": {
+                "comment": "Win or draw",
+                "id": 1502,
+                "name": "Burkina Faso"
+              }
+            },
+            "comparison": {
+              "att": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "def": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "form": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "goals": {
+                "away": "27%",
+                "home": "73%"
+              },
+              "h2h": {
+                "away": "25%",
+                "home": "75%"
+              },
+              "poisson_distribution": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "total": {
+                "away": "26.0%",
+                "home": "74.0%"
+              }
+            },
+            "league": {
+              "country": "World",
+              "flag": null,
+              "id": 36,
+              "logo": "https://media.api-sports.io/football/leagues/36.png",
+              "name": "Africa Cup of Nations - Qualification",
+              "season": 2027
+            },
+            "teams": {
+              "home": {
+                "id": 1502
+              },
+              "away": {
+                "id": 1516
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fixture_id": 1528882,
+      "cache_id": "lab-v2-cache-cfd3ae6b164eee2bad887a35336208f1f184311c504db0436f4204b43749c3b2",
+      "retrieved_at_utc": "2026-09-25T18:01:01.192008+00:00",
+      "original_payload_fingerprint": "a0daaf4b07964399b55082d1e611201ea2d12cb6fca016aa45561c7ccf7454cf",
+      "projection": {
+        "parameters": {
+          "fixture": "1528882"
+        },
+        "errors": [],
+        "response": [
+          {
+            "predictions": {
+              "advice": "Double chance : T\u00fcrkiye or draw",
+              "goals": {
+                "away": null,
+                "home": null
+              },
+              "percent": {
+                "away": "0%",
+                "draw": "50%",
+                "home": "50%"
+              },
+              "under_over": null,
+              "win_or_draw": true,
+              "winner": {
+                "comment": "Win or draw",
+                "id": 777,
+                "name": "T\u00fcrkiye"
+              }
+            },
+            "comparison": {
+              "att": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "def": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "form": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "goals": {
+                "away": "25%",
+                "home": "75%"
+              },
+              "h2h": {
+                "away": "20%",
+                "home": "80%"
+              },
+              "poisson_distribution": {
+                "away": "0%",
+                "home": "0%"
+              },
+              "total": {
+                "away": "22.5%",
+                "home": "77.5%"
+              }
+            },
+            "league": {
+              "country": "World",
+              "flag": null,
+              "id": 5,
+              "logo": "https://media.api-sports.io/football/leagues/5.png",
+              "name": "UEFA Nations League",
+              "season": 2026
+            },
+            "teams": {
+              "home": {
+                "id": 777
+              },
+              "away": {
+                "id": 2
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "morocco_odds_projection": {
+    "errors": [],
+    "get": "odds",
+    "paging": {
+      "current": 1,
+      "total": 1
+    },
+    "parameters": {
+      "fixture": "1545826"
+    },
+    "response": [
+      {
+        "bookmakers": [
+          {
+            "bets": [
+              {
+                "id": 1,
+                "name": "Match Winner",
+                "values": [
+                  {
+                    "odd": "1.11",
+                    "value": "Home"
+                  },
+                  {
+                    "odd": "9.00",
+                    "value": "Draw"
+                  },
+                  {
+                    "odd": "21.00",
+                    "value": "Away"
+                  }
+                ]
+              }
+            ],
+            "id": 8,
+            "name": "Bet365"
+          },
+          {
+            "bets": [
+              {
+                "id": 1,
+                "name": "Match Winner",
+                "values": [
+                  {
+                    "odd": "1.08",
+                    "value": "Home"
+                  },
+                  {
+                    "odd": "8.60",
+                    "value": "Draw"
+                  },
+                  {
+                    "odd": "22.00",
+                    "value": "Away"
+                  }
+                ]
+              }
+            ],
+            "id": 2,
+            "name": "Marathonbet"
+          },
+          {
+            "bets": [
+              {
+                "id": 1,
+                "name": "Match Winner",
+                "values": [
+                  {
+                    "odd": "1.10",
+                    "value": "Home"
+                  },
+                  {
+                    "odd": "7.00",
+                    "value": "Draw"
+                  },
+                  {
+                    "odd": "14.00",
+                    "value": "Away"
+                  }
+                ]
+              }
+            ],
+            "id": 3,
+            "name": "Betfair"
+          },
+          {
+            "bets": [
+              {
+                "id": 1,
+                "name": "Match Winner",
+                "values": [
+                  {
+                    "odd": "1.08",
+                    "value": "Home"
+                  },
+                  {
+                    "odd": "8.00",
+                    "value": "Draw"
+                  },
+                  {
+                    "odd": "22.00",
+                    "value": "Away"
+                  }
+                ]
+              }
+            ],
+            "id": 36,
+            "name": "BetVictor"
+          },
+          {
+            "bets": [
+              {
+                "id": 1,
+                "name": "Match Winner",
+                "values": [
+                  {
+                    "odd": "1.11",
+                    "value": "Home"
+                  },
+                  {
+                    "odd": "7.26",
+                    "value": "Draw"
+                  },
+                  {
+                    "odd": "17.23",
+                    "value": "Away"
+                  }
+                ]
+              }
+            ],
+            "id": 4,
+            "name": "Pinnacle"
+          },
+          {
+            "bets": [
+              {
+                "id": 1,
+                "name": "Match Winner",
+                "values": [
+                  {
+                    "odd": "1.08",
+                    "value": "Home"
+                  },
+                  {
+                    "odd": "8.60",
+                    "value": "Draw"
+                  },
+                  {
+                    "odd": "22.00",
+                    "value": "Away"
+                  }
+                ]
+              }
+            ],
+            "id": 11,
+            "name": "1xBet"
+          },
+          {
+            "bets": [
+              {
+                "id": 1,
+                "name": "Match Winner",
+                "values": [
+                  {
+                    "odd": "1.13",
+                    "value": "Home"
+                  },
+                  {
+                    "odd": "8.25",
+                    "value": "Draw"
+                  },
+                  {
+                    "odd": "22.00",
+                    "value": "Away"
+                  }
+                ]
+              }
+            ],
+            "id": 32,
+            "name": "Betano"
+          }
+        ],
+        "fixture": {
+          "date": "2026-09-25T19:00:00+00:00",
+          "id": 1545826,
+          "timestamp": 1790362800,
+          "timezone": "UTC"
+        },
+        "league": {
+          "country": "World",
+          "flag": null,
+          "id": 36,
+          "logo": "https://media.api-sports.io/football/leagues/36.png",
+          "name": "Africa Cup of Nations - Qualification",
+          "season": 2027
+        },
+        "update": "2026-09-25T16:41:19+00:00"
+      }
+    ],
+    "results": 1
+  }
+}
