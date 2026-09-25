@@ -340,3 +340,99 @@ in `app/adaptive_lab/health.py`. Tests: new hardening test and retained-evidence
 projection fixture, updated `test_lab_v2_shadow.py` and `test_prematch_v2_enablement.py`.
 This report is the only operations document added. No schema or shared Official
 transport change, deployment, enablement or retrospective data mutation.
+
+## Final delivery accounting correction — narrow continuation
+
+Continuation base: `b72ace22297a94e9dc98f03daade922fad8ceb0f`, same
+`codex/prematch-probability-delivery-hardening` branch. The base CLI blob is
+`7d3a68a818ce940ba51549f46817841512ac0a42`, matching the independently reproduced
+boundary. This section supplements the historical investigation above; **these
+injected persistence failures are not evidence of production incidents**.
+
+The service previously wrote a receipt only after the transport response, while
+the CLI recorded an item only after the service returned. A failed receipt write,
+or a failed unknown-delivery marker write following a timeout, therefore erased
+the affected item's transport facts from the cycle report. Counting every service
+invocation would also incorrectly count policy rejections and existing claims.
+
+`DeliveryFacts` and the bounded `DeliveryFailure.outcome` now retain the delivery
+kind and prediction ID, stage, claim acquired by this invocation, actual transport
+invocation, timeout/error classification, validated acknowledgement, durable
+receipt, unknown-marker persistence, and reconciliation requirement. Only the
+fixed destination and validated positive message ID enter acknowledgement
+evidence; exception messages, tokens, request URLs and message bodies do not.
+`claim_persisted` describes the current invocation; an existing claim is separately
+identified by `DELIVERY_ALREADY_CLAIMED` / `NO_TRANSPORT_EXISTING_CLAIM`.
+
+The CLI counts `publication_attempt_count` and `send_attempted` from explicit
+`transport_attempted` facts. The existing `telegram_sends`, `singles_sent`,
+`combos_sent` and `sent` success meanings remain durable-confirmation based.
+An unpersisted acknowledgement is retained under `acknowledgement`, never
+fabricated as a ledger receipt or admitted to confirmed-publication cohorts or
+settlement publication. Existing settlement/statistics requirements remain intact.
+
+Synthetic failure-state examples (all retain the affected prediction identity):
+
+| Outcome | Attempts | Acknowledged | Durable receipts | Reconciliation | Evidence |
+|---|---:|---|---:|---|---|
+| Send acknowledged; receipt write raises | 1 | yes, message ID retained | 0 | required | `RECEIPT_PERSISTENCE`, `persistence_failure=RECEIPT` |
+| Send times out; unknown-marker write raises | 1 | no validated acknowledgement | 0 | required | `UNKNOWN_MARKER_PERSISTENCE`, `transport_failure_kind=TIMEOUT`, `persistence_failure=DELIVERY_UNKNOWN` |
+| First receipt durable; second receipt write raises; third pending | 2 | first and second | 1 | second required | both completed/failed items retained; third unattempted |
+| Policy/window rejection or existing claim | 0 | no new acknowledgement | 0 new | no new transport uncertainty | explicit pre-transport rejection/claim status |
+| Initialization failure | 0 | no | 0 | no new delivery | `LAB_TELEGRAM_INITIALIZATION_FAILED` |
+| Shutdown failure after one durable receipt | 1 | yes | 1 | no new delivery uncertainty | `DEGRADED`, receipt and counts retained |
+
+Both injected write failures return `LAB_DELIVERY_PERSISTENCE_FAILED` with
+`receipt_persisted=false`, `sent=false`, and `reconciliation_required=true`.
+The durable publication/economic claims are preserved. Neither the exception
+handler nor subsequent replay resends. A later item failure stops the batch and
+preserves earlier receipts; a simultaneous shutdown failure is recorded without
+replacing the delivery failure. Pre-transport exceptions also retain the affected
+identity with zero attempts.
+
+If the outer publication-cycle append fails too, the returned CLI JSON still
+contains every known delivery fact and the bounded marker
+`publication_cycle_persistence={"persisted":false,"code":"LAB_PUBLICATION_CYCLE_PERSISTENCE_FAILED"}`.
+Delivery status is FAILED or DEGRADED, never COMPLETED. No successful report write
+is claimed and no persistence/send retry is introduced. As before, controlled
+cycle exit status follows the terminal-analysis-error convention; automation must
+inspect delivery status and the persistence marker. This fallback is returned
+evidence, not a durable database record; operators must retain it for reconciliation.
+
+Final validation after the last application/test change, one invocation:
+
+```text
+/home/arvis/GoalVisionAI/.venv/bin/python -m pytest -q --disable-warnings \
+ tests/test_lab_delivery_accounting.py \
+ tests/test_lab_probability_delivery_hardening.py tests/test_lab_v2_shadow.py \
+ tests/test_lab_combo.py tests/test_lab_combo_integrity.py \
+ tests/test_lab_experimental_selection.py tests/test_prematch_v2_enablement.py \
+ tests/test_prematch_production_integration.py \
+ tests/adaptive_lab/test_lab_product_schedule.py \
+ tests/adaptive_lab/test_prematch_autonomy.py
+```
+
+Final result: **436 passed**: **16 new focused accounting cases + 420 directly
+affected regressions**, disjoint within this invocation. Development reruns and
+the earlier hardening totals above are not added. Tests use fake transports and
+disposable stores through the actual service/CLI boundary. A stale schedule-test
+fixture was given valid synthetic publication evidence so it reaches its intended
+cutoff gate; the existing publication policy and cutoff rules were not changed.
+`git diff --check` passed.
+
+Continuation files: `app/lab_combo/service.py`, `app/lab_v2_shadow/cli.py`,
+`tests/test_lab_delivery_accounting.py`,
+`tests/adaptive_lab/test_lab_product_schedule.py`, and this document.
+The percentage parser, severe-disagreement policy, historical evidence, application
+and installer fixes remain preserved. No production store, installed release,
+service, credential, installer, Official or LIVE change; no migration, provider
+call, Telegram message, deployment, re-enablement, push or merge was performed.
+The installed publication-disabled state was left untouched.
+
+Deployment and re-enablement remain separate operator work: review this commit,
+upgrade through a separately reviewed isolated release while preserving disabled
+publication, verify release/configuration and existing claims/receipts/history,
+and explicitly authorize any later re-enable. Any actual uncertain or acknowledged
+but unpersisted delivery requires reconciliation before confirmed accounting;
+do not remove claims or automatically resend. **Do not reuse the old installer's
+`apply` against existing drop-ins.**

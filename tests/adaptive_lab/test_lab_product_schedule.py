@@ -184,8 +184,11 @@ def test_combo_leg_cutoff_and_preparation_reason():
                                     {'kickoff_utc':riga('2026-09-20T23:00').isoformat()}]})
     l.append('preview','c',{'message':'synthetic'})
     assert asyncio.run(LabComboService(l,None,clock=lambda:clock).publish_experimental('combo_prediction','c',config(),t))['status']=='FIXTURE_AFTER_LAB_CUTOFF'
-    candidate={'decision':'APPROVED','stage':'READY_TO_PUBLISH','captured_odds':'2','ensemble_probability':'.6',
-               'fixture_id':1,'candidate_id':'x','kickoff_utc':riga('2026-09-20T23:00').isoformat()}
+    from tests.test_lab_v2_shadow import _controlled_ready_candidate
+    # Valid publication evidence reaches the cutoff gate; missing evidence is
+    # already rejected by the authoritative publication policy before that gate.
+    candidate = _controlled_ready_candidate(clock)
+    candidate.update(candidate_id='x', kickoff_utc=riga('2026-09-20T23:00').isoformat())
     prepared=prepare_v2_publications({'candidate_markets':[candidate]},l,now=clock)
     assert prepared['publication_blockers']=={'x':'FIXTURE_AFTER_LAB_CUTOFF'}
     assert not prepared['singles'] and not prepared['combos'] and not t.calls

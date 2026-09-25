@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Callable
 
@@ -24,6 +25,34 @@ from .settlement import (
     resolve_leg, resolve_single, aggregate, statistics, single_statistics,
     settlement_message,
 )
+
+
+@dataclass
+class DeliveryFacts:
+    """Known facts for one invocation; acknowledgement is not a durable receipt."""
+
+    kind: str
+    prediction_id: str
+    stage: str = 'BEFORE_TRANSPORT'
+    claim_persisted: bool = False
+    transport_attempted: bool = False
+    transport_failure_kind: str | None = None
+    acknowledgement_received: bool = False
+    acknowledgement: dict | None = None
+    receipt_persisted: bool = False
+    reconciliation_required: bool = False
+    unknown_marker_persisted: bool = False
+    persistence_failure: str | None = None
+
+
+class DeliveryFailure(Exception):
+    """Bounded, secret-free failure evidence retained across the CLI boundary."""
+
+    def __init__(self, facts: DeliveryFacts) -> None:
+        code = ('LAB_DELIVERY_PERSISTENCE_FAILED' if facts.persistence_failure
+                else 'LAB_DELIVERY_STAGE_FAILED')
+        self.outcome = {'status': code, 'sent': False, **asdict(facts)}
+        super().__init__(code)
 
 
 class LabComboService:
@@ -122,6 +151,19 @@ class LabComboService:
                 'combo_statistics': statistics(self.ledger, published_only=True)}
 
     async def publish_experimental(self, kind: str, prediction_id: str, config: object, transport: object) -> dict:
+        facts = DeliveryFacts(kind, prediction_id)
+        try:
+            result = await self._publish_experimental(kind, prediction_id, config, transport, facts)
+        except Exception:
+            # Do not carry arbitrary transport/database exception text or secrets.
+            raise DeliveryFailure(facts) from None
+        if not facts.transport_attempted:
+            facts.stage = ('NO_TRANSPORT_EXISTING_CLAIM' if result['status'] == 'DELIVERY_ALREADY_CLAIMED'
+                           else 'REJECTED_BEFORE_TRANSPORT')
+        return {**result, **asdict(facts)}
+
+    async def _publish_experimental(self, kind: str, prediction_id: str, config: object,
+                                    transport: object, facts: DeliveryFacts) -> dict:
         if validate_lab_telegram_config(config) is not None:
             return {'status': 'LAB_CONFIGURATION_REJECTED', 'sent': False}
         mapping = {
@@ -200,14 +242,18 @@ class LabComboService:
                    else self.ledger.append('claim', identity, claim))
         if not claimed:
             return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
+        facts.claim_persisted = True
+        if kind in {'single_prediction','combo_prediction'}:
+            blocker=publication_blocker(self.clock(),[item['kickoff_utc'] for item in candidates])
+            if blocker:
+                self.ledger.append('publication_blocked',identity,{'status':blocker,'sent':False})
+                return {'status':blocker,'sent':False}
+        image = self.result_images.available_for(value['status']) if kind in {'single_settlement', 'combo_settlement'} else None
+        use_photo = image is not None and hasattr(transport, 'send_photo_receipt')
+        facts.stage = 'TRANSPORT'
+        facts.transport_attempted = True
         try:
-            if kind in {'single_prediction','combo_prediction'}:
-                blocker=publication_blocker(self.clock(),[item['kickoff_utc'] for item in candidates])
-                if blocker:
-                    self.ledger.append('publication_blocked',identity,{'status':blocker,'sent':False})
-                    return {'status':blocker,'sent':False}
-            image = self.result_images.available_for(value['status']) if kind in {'single_settlement', 'combo_settlement'} else None
-            if image is not None and hasattr(transport, 'send_photo_receipt'):
+            if use_photo:
                 operation = transport.send_photo_receipt(
                     chat_id=LAB_CHAT_ID, image_path=image, caption=message, timeout_seconds=10)
             else:
@@ -216,12 +262,33 @@ class LabComboService:
             receipt = await asyncio.wait_for(operation, timeout=11)
             if receipt.chat_id != LAB_CHAT_ID or type(receipt.message_id) is not int or receipt.message_id <= 0:
                 raise ValueError('Invalid receipt')
-        except Exception:
-            self.ledger.append('delivery_unknown', identity, {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED'})
+        except Exception as exc:
+            from telegram.error import TimedOut
+            facts.transport_failure_kind = 'TIMEOUT' if isinstance(exc, (TimedOut, TimeoutError)) else 'ERROR'
+            facts.stage = 'UNKNOWN_MARKER_PERSISTENCE'
+            facts.reconciliation_required = True
+            try:
+                self.ledger.append('delivery_unknown', identity, {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED'})
+            except Exception:
+                facts.persistence_failure = 'DELIVERY_UNKNOWN'
+                raise
+            facts.unknown_marker_persisted = True
+            facts.stage = 'DELIVERY_UNKNOWN'
             return {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED', 'sent': False}
+        facts.acknowledgement_received = True
+        facts.acknowledgement = {'chat_id': receipt.chat_id, 'message_id': receipt.message_id}
+        facts.reconciliation_required = True
+        facts.stage = 'RECEIPT_PERSISTENCE'
         result = {'status': 'SENT', 'sent': True, 'chat_id': receipt.chat_id,
                   'message_id': receipt.message_id, 'sent_at_utc': self.clock().isoformat()}
-        self.ledger.append('receipt', identity, result)
+        try:
+            self.ledger.append('receipt', identity, result)
+        except Exception:
+            facts.persistence_failure = 'RECEIPT'
+            raise
+        facts.receipt_persisted = True
+        facts.reconciliation_required = False
+        facts.stage = 'RECEIPT_PERSISTED'
         return result
 
     async def publish(self, prediction_id: str, config: object, transport: object, *, settlement: bool = False) -> dict:

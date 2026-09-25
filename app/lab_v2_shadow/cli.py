@@ -10,7 +10,7 @@ from pathlib import Path
 from app.football.client import FootballClient
 from app.lab_combo.presentation import LabTelegramTransport
 from app.lab_combo.repository import ComboRepository
-from app.lab_combo.service import LabComboService
+from app.lab_combo.service import DeliveryFailure, LabComboService
 from app.lab_telegram.service import load_lab_telegram_config, validate_lab_telegram_config
 from app.real_match_lab_analysis.fingerprint import canonical_json, fingerprint
 from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
@@ -128,14 +128,24 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                         failure = {'stage': phase, 'code': 'LAB_BOT_IDENTITY_MISMATCH'}
                     else:
                         for kind, identity in pending:
-                            outcome = await service.publish_experimental(kind, identity, config, transport)
+                            try:
+                                outcome = await service.publish_experimental(kind, identity, config, transport)
+                            except DeliveryFailure as exc:
+                                deliveries.append(exc.outcome)
+                                failure = {'stage': exc.outcome['stage'], 'code': exc.outcome['status'],
+                                           'kind': kind, 'prediction_id': identity}
+                                break
                             deliveries.append({"kind": kind, "prediction_id": identity, **outcome})
                     phase = 'SHUTDOWN'
             except Exception as exc:
                 # Never persist exception text/URLs/tokens. No batch or send retry.
                 from telegram.error import TimedOut
-                failure = {'stage': phase, 'code': 'LAB_TELEGRAM_' + phase + '_FAILED',
-                           'kind': 'TIMEOUT' if isinstance(exc, (TimedOut, TimeoutError)) else 'ERROR'}
+                lifecycle_failure = {'stage': phase, 'code': 'LAB_TELEGRAM_' + phase + '_FAILED',
+                                     'kind': 'TIMEOUT' if isinstance(exc, (TimedOut, TimeoutError)) else 'ERROR'}
+                if failure is None:
+                    failure = lifecycle_failure
+                else:
+                    failure['lifecycle_failure'] = lifecycle_failure
                 # A failed shutdown may leave one request pool open. Closing is
                 # idempotent and cannot resend; never retry initialize or publish.
                 try:
@@ -144,16 +154,16 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                     failure['cleanup'] = 'FAILED'
                 else:
                     failure['cleanup'] = 'COMPLETED'
-            report['delivery_status'] = ('DEGRADED' if phase == 'SHUTDOWN' and failure else
+            report['delivery_status'] = ('DEGRADED' if failure and failure['stage'] == 'SHUTDOWN' else
                                          'FAILED' if failure else
                                          'DEGRADED' if any(not d.get('sent') for d in deliveries) else 'COMPLETED')
-            attempts = len(deliveries)
+            attempts = sum(item['transport_attempted'] for item in deliveries)
             singles_sent = sum(
-                item["kind"] == "single_prediction" and bool(item.get("sent"))
+                item["kind"] == "single_prediction" and item['receipt_persisted']
                 for item in deliveries
             )
             combos_sent = sum(
-                item["kind"] == "combo_prediction" and bool(item.get("sent"))
+                item["kind"] == "combo_prediction" and item['receipt_persisted']
                 for item in deliveries
             )
             telegram_sends = singles_sent + combos_sent
@@ -245,12 +255,24 @@ def _persist_cycle_evidence(
         "controlled_publication": report["controlled_publication"],
     }
     identity = "lab-v2-publication-cycle-" + fingerprint((started_at, evidence))
-    repository.append(
-        "publication_cycle",
-        identity,
-        evidence,
-        created_at=datetime.now(timezone.utc),
-    )
+    try:
+        repository.append(
+            "publication_cycle",
+            identity,
+            evidence,
+            created_at=datetime.now(timezone.utc),
+        )
+    except Exception:
+        # Retain all in-memory delivery facts when the reporting store also fails.
+        # No exception text, write retry, or fabricated durable evidence.
+        report['publication_cycle_persistence'] = {
+            'persisted': False, 'code': 'LAB_PUBLICATION_CYCLE_PERSISTENCE_FAILED',
+        }
+        if report['delivery_status'] != 'FAILED':
+            report['delivery_status'] = 'DEGRADED'
+        report['controlled_publication']['status'] = report['delivery_status']
+    else:
+        report['publication_cycle_persistence'] = {'persisted': True}
     return report
 
 
