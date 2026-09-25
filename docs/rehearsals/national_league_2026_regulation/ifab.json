@@ -1,0 +1,30 @@
+{
+  "review_id": "IFAB_2026_27_NATIONAL_LEAGUE_43_2026_CODEX_20260925",
+  "provider": "API_FOOTBALL",
+  "competition_id": 43,
+  "season": 2026,
+  "regulation_minutes": 90,
+  "organizer": "IFAB",
+  "competition_name": "England National League 2026/27",
+  "source_type": "IFAB_BASE_LAW",
+  "source_title": "Laws of the Game 2026/27 (English, single pages)",
+  "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages",
+  "source_edition": "2026/27; effective 1 July 2026; English PDF SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+  "source_effective_from": "2026-09-25T12:36:32.436588Z",
+  "source_effective_until": "2026-10-02T12:36:32.436588Z",
+  "reviewed_statement": "Law 7.1 supplies the standard scheduled 2 x 45 regulation minutes. Prior referee/team agreement AND competition-rule permission are needed for reduction. Added time, penalty completion and abandonment qualify actual play; interval, extra time and shoot-outs are not the scheduled regulation duration. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+  "retained_source_content": {
+    "document_identity": "IFAB catalogue-linked Laws of the Game 2026/27, English single-page PDF; 23437157 bytes; SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+    "section": "Printed pp. 4 (effective date), 20-21 (modifications), 93-94 (Law 7.1-7.5)",
+    "excerpt": "A match lasts for two equal halves of 45 minutes",
+    "applicability_statement": "Exact API_FOOTBALL/43/2026 only, via the separate THE_FA incorporation review. IFAB alone is insufficient. PDF effective 1 July 2026; pp.20-21 permit duration modifications for youth, veterans, disability and FA-designated grassroots football. No duration derogation for this reviewed Step 1 league was identified in the inspected provisions. This is the default scheduled format, not proof of actual match length. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+    "provider_mapping_evidence": "Project-reviewed mapping at 4a24ec4c089719dedf0150508b034d46da711708:app/lab_v2_shadow/reviewed_competitions.json has API_FOOTBALL/43/England/National League, men, SENIOR, LEAGUE. Exact entry and blob identity retained in source_manifest.json; it has no season field and is NOT a fresh provider response. Official API-Football beginners guide /leagues/seasons uses starting year: 2026/27 maps to 2026. Public coverage lists England National League separately from North/South/Cup; current 2026 API coverage is unmeasured."
+  },
+  "source_content_sha256": "1346c7268424faf1580eb0c436d9c0ca79d0e435f87cd05470de68b14ecd2b06",
+  "reviewer": "OpenAI Codex AI assistant; authorized primary-document review for this isolated TEST task; no human/operator review asserted",
+  "reviewed_at": "2026-09-25T12:36:32.436588Z",
+  "validity_start": null,
+  "validity_end": null,
+  "evidence_version": "FC_V2_REVIEWED_REGULATION_V1",
+  "evidence_fingerprint": "3ead28c2c65ede2f8f0582eece7ef75b4feaf07cf8e8c1af09c7ce21cdd9f07b"
+}

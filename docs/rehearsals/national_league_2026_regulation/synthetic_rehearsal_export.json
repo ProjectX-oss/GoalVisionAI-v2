@@ -1,0 +1,1152 @@
+{
+  "football": "SYNTHETIC; fixture 9999 is not a provider observation or the public fixture",
+  "clock": "2026-09-25T12:37:04.594428Z",
+  "registry_unavailable": true,
+  "readiness_root": "/tmp/goalvision-national-league-pytest/test_national_league_review_an0/synthetic-readiness",
+  "snapshot": {
+    "opportunity": {
+      "fixture_id": 9999,
+      "market": "HOME_WIN",
+      "candidate_id": "lab-v2-candidate-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "receipt": {
+      "cutoff": "2026-09-25T12:37:04.594428Z",
+      "ordering": 3,
+      "receipt_hash": "4384061e532e5c593814ec8c341f0debdba7221ac1a0205d84452ddf7197f78f"
+    },
+    "binding": {
+      "fixture_id": 9999,
+      "competition_id": 43,
+      "season": 2026,
+      "cutoff": "2026-09-25T12:37:04.594428Z",
+      "classification": {
+        "profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "version": "SYNTHETIC_V1",
+        "reason": "TEST",
+        "flags": [],
+        "gender": "UNKNOWN",
+        "age_group": "SENIOR",
+        "team_category": "CLUB",
+        "evidence_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "current_format": {
+        "competition_id": 43,
+        "season": 2026,
+        "minutes": 90,
+        "proof_id": "FC_V2_REGISTRY.95a5708f70a94244b282d619325c3f7e8731f75d13bbfd60841cf951f6abcfba",
+        "proof_hash": "95a5708f70a94244b282d619325c3f7e8731f75d13bbfd60841cf951f6abcfba",
+        "known_at": "2026-09-25T12:36:32.437646Z",
+        "version": "FC_REGULATION_EVIDENCE_V1"
+      },
+      "previous_format": {
+        "competition_id": 43,
+        "season": 2025,
+        "minutes": null,
+        "proof_id": null,
+        "proof_hash": null,
+        "known_at": null,
+        "version": "FC_REGULATION_EVIDENCE_V1"
+      }
+    },
+    "home_team_id": 1,
+    "away_team_id": 2,
+    "source_candidates": [
+      [
+        "d7af1058a6bf02817249b111f640704fe8de1781b45dbae10823179a2e2e27d8"
+      ],
+      [
+        "75bca3fb930bb7ad594f2453a19a18070b3a397678de070aa4d03512cce5d0a0"
+      ],
+      []
+    ],
+    "selected_sources": [
+      "d7af1058a6bf02817249b111f640704fe8de1781b45dbae10823179a2e2e27d8",
+      "75bca3fb930bb7ad594f2453a19a18070b3a397678de070aa4d03512cce5d0a0",
+      null
+    ],
+    "evidence_hash": "393fb5e2d366170cea676ac82ee878045473dc0067eb4254b9b5ed002c4b2ae7",
+    "semantic_hash": "f6b27feb0a0352f02390f392cfeea9e200039ad163dad7f764567cc4efe8276a",
+    "input_hash": "be13a72b13f412061143a60a68a953185ef784983cd870e213153b481a2d5b8b",
+    "result_hash": "471c0a7f1416c4d3f090eb213a2588899965208d5e820cc17e1212aa62732bd7",
+    "projection": {
+      "values": [
+        "1.000000",
+        "0.000000",
+        "1.000000",
+        "0.000000",
+        null,
+        null,
+        null
+      ],
+      "missing": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "reasons": [
+        [],
+        [],
+        [],
+        [],
+        [
+          "UNSUPPORTED_PI_STATE"
+        ],
+        [
+          "UNSUPPORTED_PI_STATE"
+        ],
+        [
+          "INSUFFICIENT_SAMPLE"
+        ]
+      ],
+      "names": [
+        "home_team_observed_weighted_scoring_rate",
+        "home_team_observed_weighted_conceding_rate",
+        "away_team_observed_weighted_scoring_rate",
+        "away_team_observed_weighted_conceding_rate",
+        "home_team_current_pi_adjusted_form",
+        "away_team_current_pi_adjusted_form",
+        "pi_designated_side_rating_difference"
+      ],
+      "contract": "PREMATCH_FOOTBALL_CONTEXT_V2_PROJECTION_1"
+    },
+    "projection_hash": "110ae888bbcaccdccbda9baaa9ada830cc67bf26b7f28bccae9b36d44606f3f8",
+    "validations": [
+      [
+        "TARGET",
+        "VALID",
+        "VERIFIED_90"
+      ],
+      [
+        "CURRENT",
+        "VALID",
+        "VERIFIED_90"
+      ],
+      [
+        "PREVIOUS",
+        "UNAVAILABLE",
+        "REGULATION_UNVERIFIED"
+      ]
+    ],
+    "source_decisions": [
+      [
+        "TARGET",
+        "d7af1058a6bf02817249b111f640704fe8de1781b45dbae10823179a2e2e27d8",
+        "ELIGIBLE"
+      ],
+      [
+        "CURRENT",
+        "75bca3fb930bb7ad594f2453a19a18070b3a397678de070aa4d03512cce5d0a0",
+        "ELIGIBLE"
+      ]
+    ],
+    "exclusions": [],
+    "snapshot_hash": "6b74b870c5175ce1c98fd8eb341eb941a3b1bb792f0758a5221d9380604aadad",
+    "contract": "PREMATCH_FOOTBALL_CONTEXT_V2_SNAPSHOT_1",
+    "stream": "PREMATCH"
+  },
+  "retained_events": [
+    [
+      "OPPORTUNITY",
+      "6aa10b67ef4346cbbefdbb3375114ce7:9999:HOME_WIN",
+      {
+        "attempted": true,
+        "candidate_id": "lab-v2-candidate-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "competition_id": 43,
+        "fixture_id": 9999,
+        "key": "9999:HOME_WIN",
+        "profile": "LOWER_DIVISION_OR_SEMIPRO",
+        "receipt": "4384061e532e5c593814ec8c341f0debdba7221ac1a0205d84452ddf7197f78f",
+        "run_id": "6aa10b67ef4346cbbefdbb3375114ce7"
+      }
+    ],
+    [
+      "REGISTRY_ACQUISITION",
+      "3874e2f9009c6d51f5bb684c874f52ca541ab6631bb22250622126854ec192aa",
+      {
+        "acquired_clock": "2026-09-25T12:37:04.594428Z",
+        "completed_at_utc": "2026-09-25T12:38:24.053366Z",
+        "method": "SQLITE_READ_TRANSACTION_VERIFY_ALL",
+        "registry_path": "/tmp/goalvision-national-league-pytest/test_national_league_review_an0/regulations.sqlite",
+        "run_id": "6aa10b67ef4346cbbefdbb3375114ce7",
+        "started_at_utc": "2026-09-25T12:38:24.045151Z",
+        "view_id": "c796ff3081e200806e8bbe35e90d414778eedc92312aa0df733aaace53709d20"
+      }
+    ],
+    [
+      "REGISTRY_DECISION",
+      "4384061e532e5c593814ec8c341f0debdba7221ac1a0205d84452ddf7197f78f",
+      {
+        "acquisition_id": "3874e2f9009c6d51f5bb684c874f52ca541ab6631bb22250622126854ec192aa",
+        "receipt": {
+          "cutoff": "2026-09-25T12:37:04.594428Z",
+          "ordering": 3,
+          "receipt_hash": "4384061e532e5c593814ec8c341f0debdba7221ac1a0205d84452ddf7197f78f"
+        }
+      }
+    ],
+    [
+      "REGISTRY_VIEW",
+      "c796ff3081e200806e8bbe35e90d414778eedc92312aa0df733aaace53709d20",
+      {
+        "records": [
+          {
+            "competition_id": 43,
+            "competition_name": "England National League 2026/27",
+            "evidence_fingerprint": "3ead28c2c65ede2f8f0582eece7ef75b4feaf07cf8e8c1af09c7ce21cdd9f07b",
+            "evidence_version": "FC_V2_REVIEWED_REGULATION_V1",
+            "organizer": "IFAB",
+            "provider": "API_FOOTBALL",
+            "regulation_minutes": 90,
+            "retained_source_content": {
+              "applicability_statement": "Exact API_FOOTBALL/43/2026 only, via the separate THE_FA incorporation review. IFAB alone is insufficient. PDF effective 1 July 2026; pp.20-21 permit duration modifications for youth, veterans, disability and FA-designated grassroots football. No duration derogation for this reviewed Step 1 league was identified in the inspected provisions. This is the default scheduled format, not proof of actual match length. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+              "document_identity": "IFAB catalogue-linked Laws of the Game 2026/27, English single-page PDF; 23437157 bytes; SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+              "excerpt": "A match lasts for two equal halves of 45 minutes",
+              "provider_mapping_evidence": "Project-reviewed mapping at 4a24ec4c089719dedf0150508b034d46da711708:app/lab_v2_shadow/reviewed_competitions.json has API_FOOTBALL/43/England/National League, men, SENIOR, LEAGUE. Exact entry and blob identity retained in source_manifest.json; it has no season field and is NOT a fresh provider response. Official API-Football beginners guide /leagues/seasons uses starting year: 2026/27 maps to 2026. Public coverage lists England National League separately from North/South/Cup; current 2026 API coverage is unmeasured.",
+              "section": "Printed pp. 4 (effective date), 20-21 (modifications), 93-94 (Law 7.1-7.5)"
+            },
+            "review_id": "IFAB_2026_27_NATIONAL_LEAGUE_43_2026_CODEX_20260925",
+            "reviewed_at": "2026-09-25T12:36:32.436588Z",
+            "reviewed_statement": "Law 7.1 supplies the standard scheduled 2 x 45 regulation minutes. Prior referee/team agreement AND competition-rule permission are needed for reduction. Added time, penalty completion and abandonment qualify actual play; interval, extra time and shoot-outs are not the scheduled regulation duration. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+            "reviewer": "OpenAI Codex AI assistant; authorized primary-document review for this isolated TEST task; no human/operator review asserted",
+            "season": 2026,
+            "source_content_sha256": "1346c7268424faf1580eb0c436d9c0ca79d0e435f87cd05470de68b14ecd2b06",
+            "source_edition": "2026/27; effective 1 July 2026; English PDF SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+            "source_effective_from": "2026-09-25T12:36:32.436588Z",
+            "source_effective_until": "2026-10-02T12:36:32.436588Z",
+            "source_title": "Laws of the Game 2026/27 (English, single pages)",
+            "source_type": "IFAB_BASE_LAW",
+            "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages",
+            "validity_end": null,
+            "validity_start": null
+          },
+          {
+            "competition_id": 43,
+            "competition_name": "England National League 2026/27",
+            "evidence_fingerprint": "ec2471858c8868ba4937e25eaee1e489aabb5e3c61c2ede77f676d211b7b3877",
+            "evidence_version": "FC_V2_INCORPORATED_REGULATION_V1",
+            "incorporation": {
+              "base_evidence_fingerprint": "3ead28c2c65ede2f8f0582eece7ef75b4feaf07cf8e8c1af09c7ce21cdd9f07b",
+              "base_review_id": "IFAB_2026_27_NATIONAL_LEAGUE_43_2026_CODEX_20260925",
+              "competition_review_id": "THE_FA_NATIONAL_LEAGUE_2026_27_43_2026_CODEX_20260925",
+              "fingerprint": "04db113b84e75bfa622ffba105827b5271771149d3f766f37d0fad28045e1de5",
+              "relationship": "INCORPORATES",
+              "reviewed_statement": "FA section 8 A1/A1.1 and its IFAB definition incorporate Laws; B9.2 and J1.5 support compliance/current commencement. Section 21 regulations 2/3.1 establish Step 1 competition applicability. Reviewer pins IFAB 2026/27, effective 1 July 2026, for this dated exact-scope review; the FA provisions do not explicitly name that edition or state 90 minutes. Duration is supplied only by the linked IFAB record."
+            },
+            "organizer": "THE_FA",
+            "provider": "API_FOOTBALL",
+            "regulation_minutes": null,
+            "retained_source_content": {
+              "applicability_statement": "Section 21 defines NLS leagues as sanctioned competitions and binds their clubs/leagues; its regulation 3.1 diagram locates National League at Step 1, North/South at Step 2. Combined with section 8 incorporation and the retained project mapping, this supports only England National League, API_FOOTBALL/43/2026, senior men club league. It does not validate North/South, Cup, FA Cup, youth, friendlies or all English football. Edition selection is a dated reviewer inference from J1.5 and IFAB effective date. IFAB qualifications remain; no reviewed duration derogation was identified. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+              "document_identity": "FA Handbook 2026/27. Section 8, 77 PDF pages, SHA-256 6185e654b7d2cd4d151798b60dba2e5b912d37084cdb40b2aa2292236a1f1d92; section 21, 10 PDF pages, SHA-256 2b9d7074a1acdeb08d61a76253f9decff5c0fa49d238195840211ace249e08b6. URLs/access identities in source_manifest.json.",
+              "excerpt": "All Clubs and Affiliated Associations shall play and/or administer football in conformity with these Rules and also: A1.1 The Laws of the Game;",
+              "provider_mapping_evidence": "Project-reviewed mapping at 4a24ec4c089719dedf0150508b034d46da711708:app/lab_v2_shadow/reviewed_competitions.json has API_FOOTBALL/43/England/National League, men, SENIOR, LEAGUE. Exact entry and blob identity retained in source_manifest.json; it has no season field and is NOT a fresh provider response. Official API-Football beginners guide /leagues/seasons uses starting year: 2026/27 maps to 2026. Public coverage lists England National League separately from North/South/Cup; current 2026 API coverage is unmeasured.",
+              "section": "Section 8 A1/A1.1 (PDF p1), Laws definition (p7), B9.2 (p16), J1.5 (p62); section 21 definitions (p1), regulations 2 and 3.1/structure diagram (p2)."
+            },
+            "review_id": "THE_FA_NATIONAL_LEAGUE_2026_27_43_2026_CODEX_20260925",
+            "reviewed_at": "2026-09-25T12:36:32.437646Z",
+            "reviewed_statement": "A1/A1.1 require clubs/affiliated associations to conform to Laws defined as IFAB. B9.2 requires competition-rule compliance; J1.5 adopts IFAB annual commencement. These incorporate Laws, not an explicit 90-minute statement. THE_FA is the national governing authority, not the National League operator. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+            "reviewer": "OpenAI Codex AI assistant; authorized primary-document review for this isolated TEST task; no human/operator review asserted",
+            "season": 2026,
+            "source_content_sha256": "61590aa5daa2acc4d0c18c83e5dd9a9b93822efda10ffc3f246532065f4264b4",
+            "source_edition": "2026/27; section 8 adopted 1 June 2026; current-handbook landing confirms season; section 21 edition-specific PDF",
+            "source_effective_from": "2026-09-25T12:36:32.437646Z",
+            "source_effective_until": "2026-10-02T12:36:32.436588Z",
+            "source_title": "The FA Handbook 2026/27: Rules of the Association (section 8), with NLS Regulations (section 21)",
+            "source_type": "ORGANIZER_REGULATIONS",
+            "source_url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-8---rules-of-association.ashx",
+            "validity_end": null,
+            "validity_start": null
+          }
+        ],
+        "version": "FC_REGISTRY_VIEW_1"
+      }
+    ],
+    [
+      "REGULATION_LINK",
+      "fc-v2-6b74b870c5175ce1c98fd8eb341eb941a3b1bb792f0758a5221d9380604aadad",
+      {
+        "acquisition_id": "3874e2f9009c6d51f5bb684c874f52ca541ab6631bb22250622126854ec192aa",
+        "opportunity": {
+          "candidate_id": "lab-v2-candidate-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "fixture_id": 9999,
+          "market": "HOME_WIN"
+        },
+        "proofs": {
+          "current": "6e86b347fc8a34c6fde61ddaed9bbd284a5a80e867386d3730ba3d16985862be"
+        },
+        "receipt": {
+          "cutoff": "2026-09-25T12:37:04.594428Z",
+          "ordering": 3,
+          "receipt_hash": "4384061e532e5c593814ec8c341f0debdba7221ac1a0205d84452ddf7197f78f"
+        }
+      }
+    ],
+    [
+      "REGULATION_PROOF",
+      "6e86b347fc8a34c6fde61ddaed9bbd284a5a80e867386d3730ba3d16985862be",
+      {
+        "format_evidence": {
+          "competition_id": 43,
+          "known_at": "2026-09-25T12:36:32.437646Z",
+          "minutes": 90,
+          "proof_hash": "95a5708f70a94244b282d619325c3f7e8731f75d13bbfd60841cf951f6abcfba",
+          "proof_id": "FC_V2_REGISTRY.95a5708f70a94244b282d619325c3f7e8731f75d13bbfd60841cf951f6abcfba",
+          "season": 2026,
+          "version": "FC_REGULATION_EVIDENCE_V1"
+        },
+        "resolution": {
+          "competition_id": 43,
+          "cutoff": "2026-09-25T12:37:04.594428Z",
+          "provider": "API_FOOTBALL",
+          "reason": "REVIEWED_INCORPORATED_LAW",
+          "records": [
+            {
+              "competition_id": 43,
+              "competition_name": "England National League 2026/27",
+              "evidence_fingerprint": "3ead28c2c65ede2f8f0582eece7ef75b4feaf07cf8e8c1af09c7ce21cdd9f07b",
+              "evidence_version": "FC_V2_REVIEWED_REGULATION_V1",
+              "organizer": "IFAB",
+              "provider": "API_FOOTBALL",
+              "regulation_minutes": 90,
+              "retained_source_content": {
+                "applicability_statement": "Exact API_FOOTBALL/43/2026 only, via the separate THE_FA incorporation review. IFAB alone is insufficient. PDF effective 1 July 2026; pp.20-21 permit duration modifications for youth, veterans, disability and FA-designated grassroots football. No duration derogation for this reviewed Step 1 league was identified in the inspected provisions. This is the default scheduled format, not proof of actual match length. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+                "document_identity": "IFAB catalogue-linked Laws of the Game 2026/27, English single-page PDF; 23437157 bytes; SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+                "excerpt": "A match lasts for two equal halves of 45 minutes",
+                "provider_mapping_evidence": "Project-reviewed mapping at 4a24ec4c089719dedf0150508b034d46da711708:app/lab_v2_shadow/reviewed_competitions.json has API_FOOTBALL/43/England/National League, men, SENIOR, LEAGUE. Exact entry and blob identity retained in source_manifest.json; it has no season field and is NOT a fresh provider response. Official API-Football beginners guide /leagues/seasons uses starting year: 2026/27 maps to 2026. Public coverage lists England National League separately from North/South/Cup; current 2026 API coverage is unmeasured.",
+                "section": "Printed pp. 4 (effective date), 20-21 (modifications), 93-94 (Law 7.1-7.5)"
+              },
+              "review_id": "IFAB_2026_27_NATIONAL_LEAGUE_43_2026_CODEX_20260925",
+              "reviewed_at": "2026-09-25T12:36:32.436588Z",
+              "reviewed_statement": "Law 7.1 supplies the standard scheduled 2 x 45 regulation minutes. Prior referee/team agreement AND competition-rule permission are needed for reduction. Added time, penalty completion and abandonment qualify actual play; interval, extra time and shoot-outs are not the scheduled regulation duration. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+              "reviewer": "OpenAI Codex AI assistant; authorized primary-document review for this isolated TEST task; no human/operator review asserted",
+              "season": 2026,
+              "source_content_sha256": "1346c7268424faf1580eb0c436d9c0ca79d0e435f87cd05470de68b14ecd2b06",
+              "source_edition": "2026/27; effective 1 July 2026; English PDF SHA-256 89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+              "source_effective_from": "2026-09-25T12:36:32.436588Z",
+              "source_effective_until": "2026-10-02T12:36:32.436588Z",
+              "source_title": "Laws of the Game 2026/27 (English, single pages)",
+              "source_type": "IFAB_BASE_LAW",
+              "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages",
+              "validity_end": null,
+              "validity_start": null
+            },
+            {
+              "competition_id": 43,
+              "competition_name": "England National League 2026/27",
+              "evidence_fingerprint": "ec2471858c8868ba4937e25eaee1e489aabb5e3c61c2ede77f676d211b7b3877",
+              "evidence_version": "FC_V2_INCORPORATED_REGULATION_V1",
+              "incorporation": {
+                "base_evidence_fingerprint": "3ead28c2c65ede2f8f0582eece7ef75b4feaf07cf8e8c1af09c7ce21cdd9f07b",
+                "base_review_id": "IFAB_2026_27_NATIONAL_LEAGUE_43_2026_CODEX_20260925",
+                "competition_review_id": "THE_FA_NATIONAL_LEAGUE_2026_27_43_2026_CODEX_20260925",
+                "fingerprint": "04db113b84e75bfa622ffba105827b5271771149d3f766f37d0fad28045e1de5",
+                "relationship": "INCORPORATES",
+                "reviewed_statement": "FA section 8 A1/A1.1 and its IFAB definition incorporate Laws; B9.2 and J1.5 support compliance/current commencement. Section 21 regulations 2/3.1 establish Step 1 competition applicability. Reviewer pins IFAB 2026/27, effective 1 July 2026, for this dated exact-scope review; the FA provisions do not explicitly name that edition or state 90 minutes. Duration is supplied only by the linked IFAB record."
+              },
+              "organizer": "THE_FA",
+              "provider": "API_FOOTBALL",
+              "regulation_minutes": null,
+              "retained_source_content": {
+                "applicability_statement": "Section 21 defines NLS leagues as sanctioned competitions and binds their clubs/leagues; its regulation 3.1 diagram locates National League at Step 1, North/South at Step 2. Combined with section 8 incorporation and the retained project mapping, this supports only England National League, API_FOOTBALL/43/2026, senior men club league. It does not validate North/South, Cup, FA Cup, youth, friendlies or all English football. Edition selection is a dated reviewer inference from J1.5 and IFAB effective date. IFAB qualifications remain; no reviewed duration derogation was identified. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+                "document_identity": "FA Handbook 2026/27. Section 8, 77 PDF pages, SHA-256 6185e654b7d2cd4d151798b60dba2e5b912d37084cdb40b2aa2292236a1f1d92; section 21, 10 PDF pages, SHA-256 2b9d7074a1acdeb08d61a76253f9decff5c0fa49d238195840211ace249e08b6. URLs/access identities in source_manifest.json.",
+                "excerpt": "All Clubs and Affiliated Associations shall play and/or administer football in conformity with these Rules and also: A1.1 The Laws of the Game;",
+                "provider_mapping_evidence": "Project-reviewed mapping at 4a24ec4c089719dedf0150508b034d46da711708:app/lab_v2_shadow/reviewed_competitions.json has API_FOOTBALL/43/England/National League, men, SENIOR, LEAGUE. Exact entry and blob identity retained in source_manifest.json; it has no season field and is NOT a fresh provider response. Official API-Football beginners guide /leagues/seasons uses starting year: 2026/27 maps to 2026. Public coverage lists England National League separately from North/South/Cup; current 2026 API coverage is unmeasured.",
+                "section": "Section 8 A1/A1.1 (PDF p1), Laws definition (p7), B9.2 (p16), J1.5 (p62); section 21 definitions (p1), regulations 2 and 3.1/structure diagram (p2)."
+              },
+              "review_id": "THE_FA_NATIONAL_LEAGUE_2026_27_43_2026_CODEX_20260925",
+              "reviewed_at": "2026-09-25T12:36:32.437646Z",
+              "reviewed_statement": "A1/A1.1 require clubs/affiliated associations to conform to Laws defined as IFAB. B9.2 requires competition-rule compliance; J1.5 adopts IFAB annual commencement. These incorporate Laws, not an explicit 90-minute statement. THE_FA is the national governing authority, not the National League operator. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+              "reviewer": "OpenAI Codex AI assistant; authorized primary-document review for this isolated TEST task; no human/operator review asserted",
+              "season": 2026,
+              "source_content_sha256": "61590aa5daa2acc4d0c18c83e5dd9a9b93822efda10ffc3f246532065f4264b4",
+              "source_edition": "2026/27; section 8 adopted 1 June 2026; current-handbook landing confirms season; section 21 edition-specific PDF",
+              "source_effective_from": "2026-09-25T12:36:32.437646Z",
+              "source_effective_until": "2026-10-02T12:36:32.436588Z",
+              "source_title": "The FA Handbook 2026/27: Rules of the Association (section 8), with NLS Regulations (section 21)",
+              "source_type": "ORGANIZER_REGULATIONS",
+              "source_url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-8---rules-of-association.ashx",
+              "validity_end": null,
+              "validity_start": null
+            }
+          ],
+          "season": 2026,
+          "verdict": "VERIFIED_90"
+        },
+        "resolution_fingerprint": "95a5708f70a94244b282d619325c3f7e8731f75d13bbfd60841cf951f6abcfba",
+        "view_id": "c796ff3081e200806e8bbe35e90d414778eedc92312aa0df733aaace53709d20"
+      }
+    ],
+    [
+      "RESULT",
+      "6aa10b67ef4346cbbefdbb3375114ce7:9999:HOME_WIN",
+      {
+        "key": "9999:HOME_WIN",
+        "run_id": "6aa10b67ef4346cbbefdbb3375114ce7",
+        "snapshot_id": "fc-v2-6b74b870c5175ce1c98fd8eb341eb941a3b1bb792f0758a5221d9380604aadad",
+        "source_diagnostics": {
+          "CURRENT": {
+            "ELIGIBLE": 1,
+            "candidates": 1,
+            "selected": 1,
+            "unavailable": 0
+          },
+          "PREVIOUS": {
+            "UNAVAILABLE": 1,
+            "candidates": 0,
+            "selected": 0,
+            "unavailable": 1
+          },
+          "TARGET": {
+            "ELIGIBLE": 1,
+            "candidates": 1,
+            "selected": 1,
+            "unavailable": 0
+          }
+        },
+        "sources": {
+          "CURRENT": "SELECTED",
+          "PREVIOUS": "UNAVAILABLE",
+          "TARGET": "SELECTED"
+        },
+        "status": "CAPTURED"
+      }
+    ],
+    [
+      "RUN",
+      "6aa10b67ef4346cbbefdbb3375114ce7",
+      {
+        "environment": "TEST",
+        "version": "FC_READINESS_2"
+      }
+    ]
+  ],
+  "offline_reports": {
+    "report": {
+      "all_seven_available": {
+        "denominator": 1,
+        "denominator_name": "successful_immutable_snapshots",
+        "fraction": "0.000000",
+        "numerator": 0
+      },
+      "attempt_profile_counts": {
+        "LOWER_DIVISION_OR_SEMIPRO": 1
+      },
+      "attempts_with_durable_receipt": 1,
+      "available_feature_histogram": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 0,
+        "6": 0,
+        "7": 0
+      },
+      "competition_profile_breakdown": [
+        {
+          "competition_id": 43,
+          "profile": "LOWER_DIVISION_OR_SEMIPRO",
+          "sample_sufficient": false,
+          "snapshots": 1
+        }
+      ],
+      "completed_observation_runs": 1,
+      "denominator_completeness": "VERIFIED_PERSISTED_RUNS",
+      "denominator_definitions": {
+        "attempts": "New canonical PREMATCH fixture:market opportunities observed during enabled runs, including receipt, scope, source and persistence failures.",
+        "canonical": "Unique fixture:market keys seen at the existing coordinator canonical-freeze hook during enabled runs; includes old rows separately.",
+        "discovery": "Not a canonical opportunity denominator; no discovery percentages are calculated.",
+        "feature_missing_reasons": "One count per missing feature/reason; multiple reasons may apply.",
+        "regulation_and_profiles": "Successful immutable snapshots; current target regulation counted once per snapshot.",
+        "runs": "All persisted runs remain visible; incomplete_runs includes preflight failures. Only evidence_window_incomplete_runs blocks completeness, alongside integrity failures.",
+        "sources": "Phase B source-selection verdict per eligible attempt; SELECTED proves query/as-of payload availability, not regulation/support.",
+        "successful_immutable_snapshots": "Structurally valid immutable snapshots with exact prospective attempt linkage; reproduction failures are separately blocking."
+      },
+      "diagnostics": {
+        "CAPTURED": 1,
+        "FINAL_EVALUATED_CANDIDATES": 1,
+        "REGULATION_NO_QUALIFYING_COMPETITION_EVIDENCE": 1,
+        "REGULATION_REVIEWED_INCORPORATED_LAW": 1,
+        "SNAPSHOT_CAPTURED": 1,
+        "SOURCE_CAPTURED": 2
+      },
+      "durable_decision_receipts": 1,
+      "evidence_window_incomplete_runs": 0,
+      "features": {
+        "away_team_current_pi_adjusted_form": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "UNSUPPORTED_PI_STATE": 1
+          }
+        },
+        "away_team_observed_weighted_conceding_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "away_team_observed_weighted_scoring_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "home_team_current_pi_adjusted_form": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "UNSUPPORTED_PI_STATE": 1
+          }
+        },
+        "home_team_observed_weighted_conceding_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "home_team_observed_weighted_scoring_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "pi_designated_side_rating_difference": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "INSUFFICIENT_SAMPLE": 1
+          }
+        }
+      },
+      "final_evaluated_candidates": 1,
+      "first_decision_cutoff": "2026-09-25T12:37:04.594428Z",
+      "historical_preflight_failures": 0,
+      "incomplete_runs": 0,
+      "integrity_failures": {},
+      "interpretation": "Input availability only. Coverage does not establish predictive value or authorize Phase E.",
+      "last_decision_cutoff": "2026-09-25T12:37:04.594428Z",
+      "observed_canonical_prematch_opportunities": 1,
+      "old_canonical_observations_not_attempted": 0,
+      "phase_e_authorized": false,
+      "profile_counts": {
+        "LOWER_DIVISION_OR_SEMIPRO": 1
+      },
+      "readiness": "INSUFFICIENT_SAMPLE",
+      "registered_sources": 2,
+      "regulation_counts": {
+        "REGULATION_UNVERIFIED": 0,
+        "UNSUPPORTED_REGULATION": 0,
+        "VERIFIED_90": 1
+      },
+      "reproduction": {
+        "FAILED": 0,
+        "VERIFIED": 1,
+        "rate": {
+          "denominator": 1,
+          "denominator_name": "all_stored_snapshot_rows",
+          "fraction": "1.000000",
+          "numerator": 1
+        }
+      },
+      "run_classification": [
+        {
+          "proof": "COMPLETED_END",
+          "run_id": "6aa10b67ef4346cbbefdbb3375114ce7",
+          "state": "COMPLETED_OBSERVATION"
+        }
+      ],
+      "runs": 1,
+      "snapshot_distinct_utc_days": 1,
+      "snapshot_failure_counts": {},
+      "snapshot_rate": {
+        "denominator": 1,
+        "denominator_name": "eligible_v2_observation_attempts",
+        "fraction": "1.000000",
+        "numerator": 1
+      },
+      "snapshot_rows": 1,
+      "snapshot_unique_competitions": 1,
+      "snapshot_unique_fixtures": 1,
+      "source_availability": {
+        "CURRENT": {
+          "available": 1,
+          "missing": 0,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "verdict_counts": {
+            "SELECTED": 1
+          }
+        },
+        "PREVIOUS": {
+          "available": 0,
+          "missing": 1,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "verdict_counts": {
+            "UNAVAILABLE": 1
+          }
+        },
+        "TARGET": {
+          "available": 1,
+          "missing": 0,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "verdict_counts": {
+            "SELECTED": 1
+          }
+        }
+      },
+      "source_capture_failure_counts": {},
+      "successful_v2_snapshots": 1,
+      "thresholds": {
+        "competitions": 5,
+        "distinct_utc_decision_dates": 7,
+        "group_minimum": 10,
+        "integrity_failures": 0,
+        "reproduction_fraction": "1.000000",
+        "snapshots": 100
+      },
+      "unique_competitions": 1,
+      "unique_fixtures": 1,
+      "v2_observation_attempts": 1,
+      "version": "FC_READINESS_2"
+    },
+    "verify": {
+      "all_seven_available": {
+        "denominator": 1,
+        "denominator_name": "successful_immutable_snapshots",
+        "fraction": "0.000000",
+        "numerator": 0
+      },
+      "attempt_profile_counts": {
+        "LOWER_DIVISION_OR_SEMIPRO": 1
+      },
+      "attempts_with_durable_receipt": 1,
+      "available_feature_histogram": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 0,
+        "6": 0,
+        "7": 0
+      },
+      "competition_profile_breakdown": [
+        {
+          "competition_id": 43,
+          "profile": "LOWER_DIVISION_OR_SEMIPRO",
+          "sample_sufficient": false,
+          "snapshots": 1
+        }
+      ],
+      "completed_observation_runs": 1,
+      "denominator_completeness": "VERIFIED_PERSISTED_RUNS",
+      "denominator_definitions": {
+        "attempts": "New canonical PREMATCH fixture:market opportunities observed during enabled runs, including receipt, scope, source and persistence failures.",
+        "canonical": "Unique fixture:market keys seen at the existing coordinator canonical-freeze hook during enabled runs; includes old rows separately.",
+        "discovery": "Not a canonical opportunity denominator; no discovery percentages are calculated.",
+        "feature_missing_reasons": "One count per missing feature/reason; multiple reasons may apply.",
+        "regulation_and_profiles": "Successful immutable snapshots; current target regulation counted once per snapshot.",
+        "runs": "All persisted runs remain visible; incomplete_runs includes preflight failures. Only evidence_window_incomplete_runs blocks completeness, alongside integrity failures.",
+        "sources": "Phase B source-selection verdict per eligible attempt; SELECTED proves query/as-of payload availability, not regulation/support.",
+        "successful_immutable_snapshots": "Structurally valid immutable snapshots with exact prospective attempt linkage; reproduction failures are separately blocking."
+      },
+      "diagnostics": {
+        "CAPTURED": 1,
+        "FINAL_EVALUATED_CANDIDATES": 1,
+        "REGULATION_NO_QUALIFYING_COMPETITION_EVIDENCE": 1,
+        "REGULATION_REVIEWED_INCORPORATED_LAW": 1,
+        "SNAPSHOT_CAPTURED": 1,
+        "SOURCE_CAPTURED": 2
+      },
+      "durable_decision_receipts": 1,
+      "evidence_window_incomplete_runs": 0,
+      "features": {
+        "away_team_current_pi_adjusted_form": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "UNSUPPORTED_PI_STATE": 1
+          }
+        },
+        "away_team_observed_weighted_conceding_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "away_team_observed_weighted_scoring_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "home_team_current_pi_adjusted_form": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "UNSUPPORTED_PI_STATE": 1
+          }
+        },
+        "home_team_observed_weighted_conceding_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "home_team_observed_weighted_scoring_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "pi_designated_side_rating_difference": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "INSUFFICIENT_SAMPLE": 1
+          }
+        }
+      },
+      "final_evaluated_candidates": 1,
+      "first_decision_cutoff": "2026-09-25T12:37:04.594428Z",
+      "historical_preflight_failures": 0,
+      "incomplete_runs": 0,
+      "integrity_failures": {},
+      "interpretation": "Input availability only. Coverage does not establish predictive value or authorize Phase E.",
+      "last_decision_cutoff": "2026-09-25T12:37:04.594428Z",
+      "observed_canonical_prematch_opportunities": 1,
+      "old_canonical_observations_not_attempted": 0,
+      "phase_e_authorized": false,
+      "profile_counts": {
+        "LOWER_DIVISION_OR_SEMIPRO": 1
+      },
+      "readiness": "INSUFFICIENT_SAMPLE",
+      "registered_sources": 2,
+      "regulation_counts": {
+        "REGULATION_UNVERIFIED": 0,
+        "UNSUPPORTED_REGULATION": 0,
+        "VERIFIED_90": 1
+      },
+      "reproduction": {
+        "FAILED": 0,
+        "VERIFIED": 1,
+        "rate": {
+          "denominator": 1,
+          "denominator_name": "all_stored_snapshot_rows",
+          "fraction": "1.000000",
+          "numerator": 1
+        }
+      },
+      "run_classification": [
+        {
+          "proof": "COMPLETED_END",
+          "run_id": "6aa10b67ef4346cbbefdbb3375114ce7",
+          "state": "COMPLETED_OBSERVATION"
+        }
+      ],
+      "runs": 1,
+      "snapshot_distinct_utc_days": 1,
+      "snapshot_failure_counts": {},
+      "snapshot_rate": {
+        "denominator": 1,
+        "denominator_name": "eligible_v2_observation_attempts",
+        "fraction": "1.000000",
+        "numerator": 1
+      },
+      "snapshot_rows": 1,
+      "snapshot_unique_competitions": 1,
+      "snapshot_unique_fixtures": 1,
+      "source_availability": {
+        "CURRENT": {
+          "available": 1,
+          "missing": 0,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "verdict_counts": {
+            "SELECTED": 1
+          }
+        },
+        "PREVIOUS": {
+          "available": 0,
+          "missing": 1,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "verdict_counts": {
+            "UNAVAILABLE": 1
+          }
+        },
+        "TARGET": {
+          "available": 1,
+          "missing": 0,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "verdict_counts": {
+            "SELECTED": 1
+          }
+        }
+      },
+      "source_capture_failure_counts": {},
+      "successful_v2_snapshots": 1,
+      "thresholds": {
+        "competitions": 5,
+        "distinct_utc_decision_dates": 7,
+        "group_minimum": 10,
+        "integrity_failures": 0,
+        "reproduction_fraction": "1.000000",
+        "snapshots": 100
+      },
+      "unique_competitions": 1,
+      "unique_fixtures": 1,
+      "v2_observation_attempts": 1,
+      "version": "FC_READINESS_2"
+    },
+    "diagnostics": {
+      "all_seven_available": {
+        "denominator": 1,
+        "denominator_name": "successful_immutable_snapshots",
+        "fraction": "0.000000",
+        "numerator": 0
+      },
+      "attempt_profile_counts": {
+        "LOWER_DIVISION_OR_SEMIPRO": 1
+      },
+      "attempts_with_durable_receipt": 1,
+      "available_feature_histogram": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 0,
+        "6": 0,
+        "7": 0
+      },
+      "competition_profile_breakdown": [
+        {
+          "competition_id": 43,
+          "profile": "LOWER_DIVISION_OR_SEMIPRO",
+          "sample_sufficient": false,
+          "snapshots": 1
+        }
+      ],
+      "completed_observation_runs": 1,
+      "denominator_completeness": "VERIFIED_PERSISTED_RUNS",
+      "denominator_definitions": {
+        "attempts": "New canonical PREMATCH fixture:market opportunities observed during enabled runs, including receipt, scope, source and persistence failures.",
+        "canonical": "Unique fixture:market keys seen at the existing coordinator canonical-freeze hook during enabled runs; includes old rows separately.",
+        "discovery": "Not a canonical opportunity denominator; no discovery percentages are calculated.",
+        "feature_missing_reasons": "One count per missing feature/reason; multiple reasons may apply.",
+        "regulation_and_profiles": "Successful immutable snapshots; current target regulation counted once per snapshot.",
+        "runs": "All persisted runs remain visible; incomplete_runs includes preflight failures. Only evidence_window_incomplete_runs blocks completeness, alongside integrity failures.",
+        "sources": "Phase B source-selection verdict per eligible attempt; SELECTED proves query/as-of payload availability, not regulation/support.",
+        "successful_immutable_snapshots": "Structurally valid immutable snapshots with exact prospective attempt linkage; reproduction failures are separately blocking."
+      },
+      "diagnostics": {
+        "CAPTURED": 1,
+        "FINAL_EVALUATED_CANDIDATES": 1,
+        "REGULATION_NO_QUALIFYING_COMPETITION_EVIDENCE": 1,
+        "REGULATION_REVIEWED_INCORPORATED_LAW": 1,
+        "SNAPSHOT_CAPTURED": 1,
+        "SOURCE_CAPTURED": 2
+      },
+      "durable_decision_receipts": 1,
+      "evidence_window_incomplete_runs": 0,
+      "features": {
+        "away_team_current_pi_adjusted_form": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "UNSUPPORTED_PI_STATE": 1
+          }
+        },
+        "away_team_observed_weighted_conceding_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "away_team_observed_weighted_scoring_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "home_team_current_pi_adjusted_form": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "UNSUPPORTED_PI_STATE": 1
+          }
+        },
+        "home_team_observed_weighted_conceding_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "home_team_observed_weighted_scoring_rate": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "available": 1,
+          "missing": 0,
+          "missing_reasons": {}
+        },
+        "pi_designated_side_rating_difference": {
+          "availability_rate": {
+            "denominator": 1,
+            "denominator_name": "successful_immutable_snapshots",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "available": 0,
+          "missing": 1,
+          "missing_reasons": {
+            "INSUFFICIENT_SAMPLE": 1
+          }
+        }
+      },
+      "final_evaluated_candidates": 1,
+      "first_decision_cutoff": "2026-09-25T12:37:04.594428Z",
+      "historical_preflight_failures": 0,
+      "incomplete_runs": 0,
+      "integrity_failures": {},
+      "interpretation": "Input availability only. Coverage does not establish predictive value or authorize Phase E.",
+      "last_decision_cutoff": "2026-09-25T12:37:04.594428Z",
+      "observed_canonical_prematch_opportunities": 1,
+      "old_canonical_observations_not_attempted": 0,
+      "phase_e_authorized": false,
+      "profile_counts": {
+        "LOWER_DIVISION_OR_SEMIPRO": 1
+      },
+      "readiness": "INSUFFICIENT_SAMPLE",
+      "registered_sources": 2,
+      "regulation_counts": {
+        "REGULATION_UNVERIFIED": 0,
+        "UNSUPPORTED_REGULATION": 0,
+        "VERIFIED_90": 1
+      },
+      "reproduction": {
+        "FAILED": 0,
+        "VERIFIED": 1,
+        "rate": {
+          "denominator": 1,
+          "denominator_name": "all_stored_snapshot_rows",
+          "fraction": "1.000000",
+          "numerator": 1
+        }
+      },
+      "run_classification": [
+        {
+          "proof": "COMPLETED_END",
+          "run_id": "6aa10b67ef4346cbbefdbb3375114ce7",
+          "state": "COMPLETED_OBSERVATION"
+        }
+      ],
+      "runs": 1,
+      "snapshot_distinct_utc_days": 1,
+      "snapshot_failure_counts": {},
+      "snapshot_rate": {
+        "denominator": 1,
+        "denominator_name": "eligible_v2_observation_attempts",
+        "fraction": "1.000000",
+        "numerator": 1
+      },
+      "snapshot_rows": 1,
+      "snapshot_unique_competitions": 1,
+      "snapshot_unique_fixtures": 1,
+      "source_availability": {
+        "CURRENT": {
+          "available": 1,
+          "missing": 0,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "verdict_counts": {
+            "SELECTED": 1
+          }
+        },
+        "PREVIOUS": {
+          "available": 0,
+          "missing": 1,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "0.000000",
+            "numerator": 0
+          },
+          "verdict_counts": {
+            "UNAVAILABLE": 1
+          }
+        },
+        "TARGET": {
+          "available": 1,
+          "missing": 0,
+          "rate": {
+            "denominator": 1,
+            "denominator_name": "eligible_v2_observation_attempts",
+            "fraction": "1.000000",
+            "numerator": 1
+          },
+          "verdict_counts": {
+            "SELECTED": 1
+          }
+        }
+      },
+      "source_capture_failure_counts": {},
+      "successful_v2_snapshots": 1,
+      "thresholds": {
+        "competitions": 5,
+        "distinct_utc_decision_dates": 7,
+        "group_minimum": 10,
+        "integrity_failures": 0,
+        "reproduction_fraction": "1.000000",
+        "snapshots": 100
+      },
+      "unique_competitions": 1,
+      "unique_fixtures": 1,
+      "v2_observation_attempts": 1,
+      "version": "FC_READINESS_2"
+    }
+  }
+}

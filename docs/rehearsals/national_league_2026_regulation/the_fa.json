@@ -1,0 +1,38 @@
+{
+  "review_id": "THE_FA_NATIONAL_LEAGUE_2026_27_43_2026_CODEX_20260925",
+  "provider": "API_FOOTBALL",
+  "competition_id": 43,
+  "season": 2026,
+  "regulation_minutes": null,
+  "organizer": "THE_FA",
+  "competition_name": "England National League 2026/27",
+  "source_type": "ORGANIZER_REGULATIONS",
+  "source_title": "The FA Handbook 2026/27: Rules of the Association (section 8), with NLS Regulations (section 21)",
+  "source_url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-8---rules-of-association.ashx",
+  "source_edition": "2026/27; section 8 adopted 1 June 2026; current-handbook landing confirms season; section 21 edition-specific PDF",
+  "source_effective_from": "2026-09-25T12:36:32.437646Z",
+  "source_effective_until": "2026-10-02T12:36:32.436588Z",
+  "reviewed_statement": "A1/A1.1 require clubs/affiliated associations to conform to Laws defined as IFAB. B9.2 requires competition-rule compliance; J1.5 adopts IFAB annual commencement. These incorporate Laws, not an explicit 90-minute statement. THE_FA is the national governing authority, not the National League operator. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+  "retained_source_content": {
+    "document_identity": "FA Handbook 2026/27. Section 8, 77 PDF pages, SHA-256 6185e654b7d2cd4d151798b60dba2e5b912d37084cdb40b2aa2292236a1f1d92; section 21, 10 PDF pages, SHA-256 2b9d7074a1acdeb08d61a76253f9decff5c0fa49d238195840211ace249e08b6. URLs/access identities in source_manifest.json.",
+    "section": "Section 8 A1/A1.1 (PDF p1), Laws definition (p7), B9.2 (p16), J1.5 (p62); section 21 definitions (p1), regulations 2 and 3.1/structure diagram (p2).",
+    "excerpt": "All Clubs and Affiliated Associations shall play and/or administer football in conformity with these Rules and also: A1.1 The Laws of the Game;",
+    "applicability_statement": "Section 21 defines NLS leagues as sanctioned competitions and binds their clubs/leagues; its regulation 3.1 diagram locates National League at Step 1, North/South at Step 2. Combined with section 8 incorporation and the retained project mapping, this supports only England National League, API_FOOTBALL/43/2026, senior men club league. It does not validate North/South, Cup, FA Cup, youth, friendlies or all English football. Edition selection is a dated reviewer inference from J1.5 and IFAB effective date. IFAB qualifications remain; no reviewed duration derogation was identified. Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+    "provider_mapping_evidence": "Project-reviewed mapping at 4a24ec4c089719dedf0150508b034d46da711708:app/lab_v2_shadow/reviewed_competitions.json has API_FOOTBALL/43/England/National League, men, SENIOR, LEAGUE. Exact entry and blob identity retained in source_manifest.json; it has no season field and is NOT a fresh provider response. Official API-Football beginners guide /leagues/seasons uses starting year: 2026/27 maps to 2026. Public coverage lists England National League separately from North/South/Cup; current 2026 API coverage is unmeasured."
+  },
+  "source_content_sha256": "61590aa5daa2acc4d0c18c83e5dd9a9b93822efda10ffc3f246532065f4264b4",
+  "reviewer": "OpenAI Codex AI assistant; authorized primary-document review for this isolated TEST task; no human/operator review asserted",
+  "reviewed_at": "2026-09-25T12:36:32.437646Z",
+  "validity_start": null,
+  "validity_end": null,
+  "evidence_version": "FC_V2_INCORPORATED_REGULATION_V1",
+  "evidence_fingerprint": "ec2471858c8868ba4937e25eaee1e489aabb5e3c61c2ede77f676d211b7b3877",
+  "incorporation": {
+    "competition_review_id": "THE_FA_NATIONAL_LEAGUE_2026_27_43_2026_CODEX_20260925",
+    "base_review_id": "IFAB_2026_27_NATIONAL_LEAGUE_43_2026_CODEX_20260925",
+    "base_evidence_fingerprint": "3ead28c2c65ede2f8f0582eece7ef75b4feaf07cf8e8c1af09c7ce21cdd9f07b",
+    "reviewed_statement": "FA section 8 A1/A1.1 and its IFAB definition incorporate Laws; B9.2 and J1.5 support compliance/current commencement. Section 21 regulations 2/3.1 establish Step 1 competition applicability. Reviewer pins IFAB 2026/27, effective 1 July 2026, for this dated exact-scope review; the FA provisions do not explicitly name that edition or state 90 minutes. Duration is supplied only by the linked IFAB record.",
+    "relationship": "INCORPORATES",
+    "fingerprint": "04db113b84e75bfa622ffba105827b5271771149d3f766f37d0fad28045e1de5"
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "base_commit": "4a24ec4c089719dedf0150508b034d46da711708",
+  "branch": "codex/prematch-v2-national-league-regulation-evidence",
+  "worktree": "/tmp/goalvision-national-league-evidence",
+  "original_worktree": "/tmp/goalvision-regulation-evidence",
+  "original_head": "87f9f249a594f5cf24d1e36a05f2c76ad914048b",
+  "reviewer": "OpenAI Codex AI assistant; authorized primary-document review for this isolated TEST task; no human/operator review asserted",
+  "reviews": [
+    "2026-09-25T12:36:32.436588Z",
+    "2026-09-25T12:36:32.437646Z"
+  ],
+  "admission_until_exclusive": "2026-10-02T12:36:32.436588Z",
+  "window_rationale": "Local TEST admission/re-review limit only: seven days from this new review, not an official document expiry. No historical or other-season validity.",
+  "public_review_interval_utc": [
+    "2026-09-25T12:28:50Z",
+    "2026-09-25T12:33:44Z"
+  ],
+  "sources": [
+    {
+      "title": "FA handbook landing",
+      "url": "https://www.thefa.com/football-rules-governance/lawsandrules/fa-handbook",
+      "access_method": "web reader; bounded sections only"
+    },
+    {
+      "title": "FA section 8",
+      "url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-8---rules-of-association.ashx",
+      "access_method": "web reader; bounded sections only"
+    },
+    {
+      "title": "FA section 21",
+      "url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-21---national-league-system-regulations.ashx",
+      "access_method": "web reader; bounded sections only"
+    },
+    {
+      "title": "IFAB edition catalogue",
+      "url": "https://www.theifab.com/laws-of-the-game-documents/",
+      "access_method": "web reader; bounded sections only"
+    },
+    {
+      "title": "API-Football season guide",
+      "url": "https://www.api-football.com/news/post/how-to-get-started-with-api-football-the-complete-beginners-guide",
+      "access_method": "web reader; bounded sections only"
+    },
+    {
+      "title": "API-Football public coverage",
+      "url": "https://www.api-football.com/coverage",
+      "access_method": "web reader; bounded sections only"
+    },
+    {
+      "title": "Club first-team calendar",
+      "url": "https://www.borehamwoodfootballclub.co.uk/fixtures-results/",
+      "access_method": "web reader; bounded sections only"
+    },
+    {
+      "title": "Club fixture page",
+      "url": "https://www.borehamwoodfootballclub.co.uk/fixtures-and-results/solihull-moors-v-bw/",
+      "access_method": "web reader; bounded sections only"
+    }
+  ],
+  "direct_document_reads": [
+    {
+      "name": "fa8",
+      "url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-8---rules-of-association.ashx",
+      "started_at": "2026-09-25T12:30:34.742440+00:00",
+      "status": 200,
+      "final_url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-8---rules-of-association.ashx",
+      "bytes": 1012890,
+      "sha256": "6185e654b7d2cd4d151798b60dba2e5b912d37084cdb40b2aa2292236a1f1d92",
+      "completed_at": "2026-09-25T12:30:35.194528+00:00"
+    },
+    {
+      "name": "fa21",
+      "url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-21---national-league-system-regulations.ashx",
+      "started_at": "2026-09-25T12:30:35.194555+00:00",
+      "status": 200,
+      "final_url": "https://www.thefa.com/-/media/files/thefaportal/governance-docs/rules-of-the-association/2026-27/section-21---national-league-system-regulations.ashx",
+      "bytes": 194804,
+      "sha256": "2b9d7074a1acdeb08d61a76253f9decff5c0fa49d238195840211ace249e08b6",
+      "completed_at": "2026-09-25T12:30:35.561791+00:00"
+    },
+    {
+      "name": "fixture",
+      "url": "https://www.borehamwoodfootballclub.co.uk/fixtures-and-results/solihull-moors-v-bw/",
+      "started_at": "2026-09-25T12:30:35.561814+00:00",
+      "status": 200,
+      "final_url": "https://www.borehamwoodfootballclub.co.uk/fixtures-and-results/solihull-moors-v-bw/",
+      "bytes": 81691,
+      "sha256": "7f5dc50b012184c8d8ec3953641786ed17db9d0c892ac6d075416aa83c049f23",
+      "completed_at": "2026-09-25T12:30:35.724465+00:00"
+    }
+  ],
+  "ifab_reuse": {
+    "url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages",
+    "local_path": "/tmp/ucl-2026-ifab.pdf",
+    "bytes": 23437157,
+    "sha256": "89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+    "identity_check": "Matched accepted retained document hash and current catalogue 2026/27 single-page edition; independently re-extracted PDF and read printed pp4,20-21,93-94. No new IFAB download. Original preserved."
+  },
+  "mapping": {
+    "source_commit": "4a24ec4c089719dedf0150508b034d46da711708",
+    "last_change_commit": "82c58f9aaf2a6237aad58abd9628753a7c409e98",
+    "path": "app/lab_v2_shadow/reviewed_competitions.json",
+    "git_blob": "b417b612bba9734c0e6572e62a2515b94e8557c4",
+    "file_sha256": "9e3cc8e923e392bb535354759a0b587e82d9ef2179dc4bde20cfa660c66b7cd6",
+    "exact_entry": {
+      "provider": "API_FOOTBALL",
+      "league_id": 43,
+      "country": "England",
+      "name": "National League",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "gender": "men",
+      "age_group": "SENIOR",
+      "professional_status": "UNSPECIFIED",
+      "competition_type": "LEAGUE",
+      "tier": "UNSPECIFIED",
+      "review_reason": "Migrated reviewed ID policy from e710c30; provider catalogue country guard added.",
+      "review_source": "e710c303e60c93d3299941597d949f43f5a7f18b:app/lab_v2_shadow/profiles.py; captured API-Football capability catalogue 2026-09-17",
+      "registry_version": "LAB_REVIEWED_COMPETITIONS_V2"
+    },
+    "provenance": "Project-reviewed mapping, not a fresh API response. review_source retains earlier catalogue attribution only.",
+    "season_field_present": false,
+    "season_mapping": "Official starting-year convention establishes 2026 for human 2026/27; no absent catalogue season field inferred. No separate relevant catalogue artifact found in inspected worktree artifacts or original task var filenames; no existing real readiness database opened."
+  },
+  "calendar": {
+    "competition": "Enterprise National League, first team",
+    "fixtures": [
+      {
+        "home": "Solihull Moors",
+        "away": "Boreham Wood",
+        "listed_date": "2026-09-26",
+        "listed_time": "15:00",
+        "venue": "The ARMCO Arena"
+      },
+      {
+        "home": "Boreham Wood",
+        "away": "Kidderminster Harriers",
+        "listed_date": "2026-09-29",
+        "listed_time": "19:00"
+      }
+    ],
+    "status": "Both listed as upcoming; no postponed/cancelled marker in inspected calendar or first fixture detail. Club pages do not explicitly label timezone; Europe/London is a planning assumption to reconfirm. Both dates fall inside the seven-day local window.",
+    "limits": "No provider fixture ID, current odds, exact TARGET, current history, canonical eligibility or publication inferred. Results page not accessed; no website results imported."
+  },
+  "counts": {
+    "web_operations": 25,
+    "web_backend_http_count": "Not exposed; includes find/open and two screenshot attempts whose images were not exposed to the reviewer.",
+    "direct_public_reads": 3,
+    "football_api_calls": 0,
+    "live_cycles": 0
+  },
+  "access_limitations": [
+    "Fixture web reader returned Internal Error; one direct public GET succeeded.",
+    "FA diagram text required local embedded-font encoding extraction; web screenshot images unavailable.",
+    "Full handbook and old 2024/25 standardised rules not downloaded or used."
+  ],
+  "network_block": {
+    "method": "Task-local libseccomp process launcher denies socket/connect/sendto/sendmsg/sendmmsg; inherited by subprocesses. EPERM verified before import/testing.",
+    "launcher": "/tmp/national-league-source-review/offline.py",
+    "note": "unshare namespace unavailable (uid_map denied); kernel seccomp used instead. No later public reads."
+  },
+  "preserved_artifact_sha256": {
+    "docs/rehearsals/ucl_2026_regulation/ifab.json": "ef1f5d08acde609a039b8d8a2f80fd8e79f5b7c2ed9120774b4e00ec84a2527a",
+    "docs/rehearsals/ucl_2026_regulation/offline_export.json": "678076edb2c4487ab955806a2d232a86909a783adf46e712d0dc93888eea768e",
+    "docs/rehearsals/ucl_2026_regulation/source_review.json": "372d99fd909eab351e6e611df38a634c6b78aa2ef0985241e18cca322eb58522",
+    "docs/rehearsals/ucl_2026_regulation/uefa.json": "642dd940628af1401b2594d6e0ee4df45d738ad9c1689b1a814d19410cb9c088",
+    "docs/rehearsals/ucl_2026_regulation_renewed/ifab.json": "a302dc4e5e9f1d8591e0460e42fd686d265b67a80f0321d9ab464c0829435129",
+    "docs/rehearsals/ucl_2026_regulation_renewed/source_review.json": "0d2f435bdd1097c2315a0be958fe22c00cb4bb1807620b8154cbb7d847f3814a",
+    "docs/rehearsals/ucl_2026_regulation_renewed/uefa.json": "fc4ea46fb55db1eeaaaf730b7f6bcb7c62df7147f161671daa58089a299f7f2f",
+    "tests/test_prematch_registry_readiness.py": "88cb67a5a7879ddf87c2d722f51075cb63dfb4fc85bd317abd84c1a58e5638b4",
+    "tests/test_ucl_2026_regulation_rehearsal.py": "d9b6c9175e21afe27c126e83a475a1524889491f4ec2f5137f2e69389773e06d"
+  },
+  "fingerprints": {
+    "ifab_source": "1346c7268424faf1580eb0c436d9c0ca79d0e435f87cd05470de68b14ecd2b06",
+    "ifab_record": "3ead28c2c65ede2f8f0582eece7ef75b4feaf07cf8e8c1af09c7ce21cdd9f07b",
+    "fa_source": "61590aa5daa2acc4d0c18c83e5dd9a9b93822efda10ffc3f246532065f4264b4",
+    "fa_record": "ec2471858c8868ba4937e25eaee1e489aabb5e3c61c2ede77f676d211b7b3877",
+    "incorporation": "04db113b84e75bfa622ffba105827b5271771149d3f766f37d0fad28045e1de5"
+  }
+}
