@@ -1,0 +1,63 @@
+[
+  {
+    "command": [
+      "/home/arvis/GoalVisionAI/.venv/bin/python",
+      "docs/operations/offline_test_runner.py",
+      "/home/arvis/GoalVisionAI/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_prematch_reviewed_upgrade.py",
+      "tests/test_prematch_v2_rollout.py",
+      "tests/test_lab_delivery_accounting.py",
+      "tests/test_lab_probability_delivery_hardening.py",
+      "tests/test_prematch_v2_enablement.py",
+      "tests/test_lab_combo.py",
+      "tests/adaptive_lab/test_lab_product_schedule.py",
+      "tests/test_lab_experimental_selection.py::test_lab_transport_logging_redacts_bot_credential"
+    ],
+    "exit_code": 0,
+    "network": "Kernel seccomp denies socket/connect/send syscalls; all installer administrative calls fake; disposable test databases.",
+    "output": "........................................................................ [ 29%]\n........................................................................ [ 59%]\n........................................................................ [ 88%]\n...........................                                              [100%]\n243 passed in 6.38s\n"
+  },
+  {
+    "command": [
+      "systemd-analyze",
+      "verify",
+      "/tmp/prematch-upgrade-verify-sfw6nbwo/goalvision-lab-v2-discover.service",
+      "/tmp/prematch-upgrade-verify-sfw6nbwo/goalvision-lab-combo-settle.service",
+      "/tmp/prematch-upgrade-verify-sfw6nbwo/goalvision-adaptive-learning-observer.service",
+      "/tmp/prematch-upgrade-verify-sfw6nbwo/goalvision-lab-weekly-stats.service"
+    ],
+    "exit_code": 0,
+    "output": "",
+    "scope": "Disposable staged unit files; read-only syntax validation."
+  },
+  {
+    "command": [
+      "/usr/sbin/logrotate",
+      "--debug",
+      "--state",
+      "/tmp/prematch-upgrade-verify-sfw6nbwo/rotation.state",
+      "/home/arvis/goalvision-operations/prematch-reviewed-hardening-upgrade-v1-20260925/logrotate.conf"
+    ],
+    "exit_code": 1,
+    "expected_result": "Exact production config parsed; root su rejected as expected for unprivileged reviewer. No privileged validation claimed.",
+    "output": "warning: logrotate in debug mode does nothing except printing debug messages!  Consider using verbose mode (-v) instead if this is not what you want.\n\nreading config file /home/arvis/goalvision-operations/prematch-reviewed-hardening-upgrade-v1-20260925/logrotate.conf\nReading state from file: /tmp/prematch-upgrade-verify-sfw6nbwo/rotation.state\nstate file /tmp/prematch-upgrade-verify-sfw6nbwo/rotation.state does not exist\nAllocating hash table for state file, size 64 entries\n\nHandling 1 logs\n\nrotating pattern: /var/log/goalvision-prematch/discovery-output.log  after 1 days (14 rotations)\nempty log files are not rotated, log files >= 8388608 are rotated earlier, old logs are removed\nswitching euid from 1001 to 0 and egid from 1001 to 1001 (pid 741564)\nerror: error switching euid from 1001 to 0 and egid from 1001 to 1001 (pid 741564): Operation not permitted\n",
+    "scope": "Debug only; no log, state, host or rotation mutation."
+  },
+  {
+    "command": [
+      "/home/arvis/GoalVisionAI/.venv/bin/python",
+      "/home/arvis/goalvision-operations/prematch-reviewed-hardening-upgrade/docs/operations/offline_test_runner.py",
+      "/usr/sbin/logrotate",
+      "--force",
+      "--state",
+      "/tmp/prematch-upgrade-verify-sfw6nbwo/fixture.state",
+      "/tmp/prematch-upgrade-verify-sfw6nbwo/logrotate.conf"
+    ],
+    "exit_code": 0,
+    "output": "",
+    "scope": "Disposable log and state; only log path and root owner replaced by fixture path/arvis. Prior full content retained in .1; new file mode0640."
+  }
+]

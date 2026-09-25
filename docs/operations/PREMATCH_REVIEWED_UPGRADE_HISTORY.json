@@ -1,0 +1,309 @@
+{
+  "acknowledged_unpersisted_in_latest_200_cycles": [],
+  "bound": "15 second progress deadline per database; 200 rows per detail; no history writes.",
+  "captured_at_utc": "2026-09-25T19:50:22.920487+00:00",
+  "confirmed_publications": {
+    "rows": [
+      {
+        "count": 8,
+        "publication_kind": "combo_prediction"
+      },
+      {
+        "count": 53,
+        "publication_kind": "single_prediction"
+      }
+    ],
+    "truncated": false
+  },
+  "consistency": "One mode=ro query_only transaction per database; not a simultaneous cross-database snapshot.",
+  "delivery_kinds": {
+    "rows": [
+      {
+        "count": 118,
+        "kind": "claim"
+      },
+      {
+        "count": 4,
+        "kind": "economic_claim"
+      },
+      {
+        "count": 12,
+        "kind": "prediction"
+      },
+      {
+        "count": 118,
+        "kind": "receipt"
+      },
+      {
+        "count": 7,
+        "kind": "settlement"
+      },
+      {
+        "count": 71,
+        "kind": "single_prediction"
+      },
+      {
+        "count": 50,
+        "kind": "single_settlement"
+      }
+    ],
+    "truncated": false
+  },
+  "economic_claims_without_receipts": {
+    "rows": [],
+    "truncated": false
+  },
+  "observation_stores": {
+    "attempts.db": {
+      "integrity": "ok",
+      "mode": "0o600",
+      "tables": {
+        "fc_readiness_events": 519
+      }
+    },
+    "reviewed-regulations.sqlite": {
+      "integrity": "ok",
+      "mode": "0o600",
+      "tables": {
+        "fc_v2_reviewed_regulations": 4
+      }
+    },
+    "snapshots.db": {
+      "integrity": "ok",
+      "mode": "0o600",
+      "tables": {
+        "fc_v2_snapshots": 4
+      }
+    },
+    "sources.db": {
+      "integrity": "ok",
+      "mode": "0o600",
+      "tables": {
+        "fc_receipts": 488,
+        "fc_sources": 483
+      }
+    }
+  },
+  "observer_store": {
+    "rows": [
+      {
+        "count": 333,
+        "latest": "2026-09-25T19:30:20.264113+00:00",
+        "stream": "PREMATCH"
+      }
+    ],
+    "truncated": false
+  },
+  "pending_settlements": {
+    "rows": [
+      {
+        "identity": "lab-v2-combo-49ccb88c8afb7f3881f64c96b4ec8c0d705850810b5bcc1d92176e9f18ae6e33",
+        "kind": "prediction",
+        "message_id": 132
+      },
+      {
+        "identity": "lab-v2-single-3810568e7053f6f9f0c3ab7890ed00f3341c04cfdd6e807e33616dc6bb51379b",
+        "kind": "single_prediction",
+        "message_id": 129
+      },
+      {
+        "identity": "lab-v2-single-70d3ec495afe0ff1593a7869ad64d1a62a367f2512a4ae8ddb1d3821f66024b3",
+        "kind": "single_prediction",
+        "message_id": 131
+      },
+      {
+        "identity": "lab-v2-single-a5efce39d2e66f12d9104b76e526739824e77f3545bbbe07a3a7a37059630ad4",
+        "kind": "single_prediction",
+        "message_id": 130
+      }
+    ],
+    "truncated": false
+  },
+  "recent_publication_cycles": {
+    "rows": [
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-25T19:35:46.733415+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-9379f33e94fa8ae8c7dadd981291117ec081b40cb0f405192fca7fb3174fbeee",
+        "publication_requested": 0,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-25T19:03:35.357055+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-eaadc78940fef0e0608f26b4d6c5c96a7213cbb87936a8f9ea74037cd2d2c802",
+        "publication_requested": 0,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-25T18:34:56.415173+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-e60fe76ca0e4abc97733bcc7ae16483084759639f923f16790e558ccd20a53d9",
+        "publication_requested": 0,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-25T18:04:05.491512+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-66d89ec7b27c9ce1c1df0c3a247a048173184437de538e68e228463512f4aa36",
+        "publication_requested": 1,
+        "telegram_sends": 4
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T18:37:20.474542+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-3d6ec01a2e0dba7c86f57117cf9dcbe7a8a95bf2b61bdcdbafa83aefaa4a9845",
+        "publication_requested": 1,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T17:37:22.235364+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-646dfb402d60937e97ca343d5eca87e9d95d1a06e69a2ec51e99c1cf4d200bd9",
+        "publication_requested": 1,
+        "telegram_sends": 1
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T16:37:57.757247+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-d8a3a87d352080a8df1b5fbd00ee4333a5d6d02fe7fc91dbe1f761733211c136",
+        "publication_requested": 1,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T15:36:45.075612+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-5f922a898345031bbb0ec2b38d810a2ed719e8f29a0bbf4c76a7f2906ec8cd2f",
+        "publication_requested": 1,
+        "telegram_sends": 4
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T14:38:07.285222+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-7f734688937beb1c898454ea2256a25820e19d4dc88a9dd61614f77622107be1",
+        "publication_requested": 1,
+        "telegram_sends": 2
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T13:37:12.980125+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-68b5e024276c92d8e552cc3be33fa16b67a45aaf8e2eee077210e9e2e032579f",
+        "publication_requested": 1,
+        "telegram_sends": 1
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T12:38:54.275794+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-5141d040cdbe30b44efcb2c9e268893538f112792eebcf26089d4bb136ef40cd",
+        "publication_requested": 1,
+        "telegram_sends": 1
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T11:36:15.099000+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-70956d83ff1f50ccbe65bb97d3fbf62252ede88a721efe7e87f45092c4ea447b",
+        "publication_requested": 1,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T09:36:27.935276+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-f2ceade00a4096abb0e68b0c9636c59a490df1b8d2afbcca3e259c780953d65b",
+        "publication_requested": 1,
+        "telegram_sends": 1
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T08:36:07.372737+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-6b3e3fb16a005d489a25b488ea363c0d1c591c131743fcb27f7c7672742ea97d",
+        "publication_requested": 1,
+        "telegram_sends": 1
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T07:35:27.851845+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-c03c85de6bdc0bc6b87c6ba6a84b3a92d8662995a5f870938edc0f1264d8dc53",
+        "publication_requested": 1,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-24T06:19:27.737438+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-c70bb5e9ac507634bafb6c85aeb4dcf7b14e91406e43eb20775521ca021a0629",
+        "publication_requested": 1,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-23T17:35:50.839415+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-1b4ff02d8484366f81e41b1eaf37b11d77be81672737f10c32fec98fc40b9d23",
+        "publication_requested": 1,
+        "telegram_sends": 2
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-23T16:35:18.685258+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-501dd12abd758e94498a177296c49d5b7f47500b124c5a5ef789fc7d97ef3f8d",
+        "publication_requested": 1,
+        "telegram_sends": 0
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-23T15:35:43.430287+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-b4cd74e290671dad026321a7a274c091e4a52e83821213ab0ff2cddbdebce5a1",
+        "publication_requested": 1,
+        "telegram_sends": 1
+      },
+      {
+        "analysis_status": null,
+        "created_at_utc": "2026-09-23T12:35:22.512396+00:00",
+        "delivery_status": null,
+        "identity": "lab-v2-publication-cycle-b1a4d45f80fd98492322f076bc1c5808f8560b88e9dc2cbbf3e7ba9edbc5880b",
+        "publication_requested": 1,
+        "telegram_sends": 0
+      }
+    ],
+    "truncated": false
+  },
+  "registry_validation": {
+    "records": 4,
+    "status": "VERIFIED"
+  },
+  "stdout_evidence_limit": "Installed discovery stdout=null: absent receipt/cycle output cannot prove non-delivery. No complete stdout archive is available.",
+  "unknown_outcomes": {
+    "rows": [],
+    "truncated": false
+  },
+  "unreceipted_claims": {
+    "rows": [],
+    "truncated": false
+  },
+  "unresolved_delivery_observed": false,
+  "weekly_unknown": {
+    "rows": [],
+    "truncated": false
+  },
+  "weekly_unreceipted_claims": {
+    "rows": [],
+    "truncated": false
+  }
+}
