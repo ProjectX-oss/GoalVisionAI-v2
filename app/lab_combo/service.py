@@ -136,7 +136,35 @@ class LabComboService:
         value, preview = self.ledger.get(evidence_kind, prediction_id), self.ledger.get(preview_kind, prediction_id)
         if value is None or preview is None:
             return {'status': 'LAB_EVIDENCE_NOT_READY', 'sent': False}
+        if kind in {'single_settlement', 'combo_settlement'}:
+            prefix = 'single_prediction:' if kind == 'single_settlement' else 'combo_prediction:'
+            receipt = self.ledger.get('receipt', prefix + prediction_id)
+            if not (receipt and receipt.get('sent') is True and receipt.get('status') == 'SENT'
+                    and str(receipt.get('chat_id')) == str(LAB_CHAT_ID)
+                    and type(receipt.get('message_id')) is int and receipt['message_id'] > 0):
+                return {'status': 'PUBLISHED_PREDICTION_AND_SETTLEMENT_REQUIRED', 'sent': False}
         if kind in {'single_prediction', 'combo_prediction'}:
+            from app.lab_v2_shadow.origin import is_labelled
+            if 'selection_origin' in value and not is_labelled(value):
+                return {'status': 'SELECTION_ORIGIN_OR_APPROVAL_INVALID', 'sent': False}
+            if is_labelled(value):
+                from app.lab_v2_shadow.publication import v2_single_message
+                from app.adaptive_lab.contracts import MARKETS
+                from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
+                origin = value['selection_origin']
+                bot = getattr(transport, 'bot', None)
+                if '@' + (getattr(bot, 'username', None) or '') != LAB_BOT_USERNAME:
+                    return {'status': 'LAB_BOT_IDENTITY_MISMATCH', 'sent': False}
+                if (value.get('decision') != 'APPROVED' or value.get('market') not in MARKETS
+                        or value.get('candidate_lane') == 'TRACKING'
+                        or not value.get('quote_provenance_fingerprint')
+                        or not value.get('predictive_family_count')
+                        or origin['selector_policy'] != value.get('policy')
+                        or origin['model_artifact'] != value.get('model_artifact_identity')
+                        or origin['model_generation'] != value.get('model_generation')
+                        or origin['independent_context_model'] is not None
+                        or preview['message'] != v2_single_message(value)):
+                    return {'status': 'SELECTION_ORIGIN_OR_APPROVAL_INVALID', 'sent': False}
             candidates = [value] if kind == 'single_prediction' else value['legs']
             blocker=publication_blocker(self.clock(),[item['kickoff_utc'] for item in candidates])
             if blocker:return {'status':blocker,'sent':False}
@@ -159,7 +187,11 @@ class LabComboService:
         message = preview['message']
         if len(message) > 4096:
             return {'status': 'TELEGRAM_MESSAGE_TOO_LONG', 'sent': False}
-        if not self.ledger.append('claim', identity, {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}):
+        claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}
+        claimed = (self.ledger.claim_publication(kind, value, claim)
+                   if kind in {'single_prediction', 'combo_prediction'}
+                   else self.ledger.append('claim', identity, claim))
+        if not claimed:
             return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
         try:
             if kind in {'single_prediction','combo_prediction'}:
@@ -216,7 +248,10 @@ class LabComboService:
         if len(message) > 4096:
             return {'status': 'TELEGRAM_MESSAGE_TOO_LONG', 'sent': False}
         identity = ('settlement:' if settlement else 'prediction:') + prediction_id
-        if not self.ledger.append('claim', identity, {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}):
+        claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}
+        claimed = (self.ledger.append('claim', identity, claim) if settlement
+                   else self.ledger.claim_publication('prediction', combo, claim))
+        if not claimed:
             return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
         try:
             if not settlement:
@@ -264,7 +299,7 @@ class LabComboService:
                 single_completed.append(identity)
                 stats = single_statistics(self.ledger)
                 self.ledger.append('single_settlement_preview', identity, {
-                    'message': single_result_message(result, stats), 'statistics': stats})
+                    'message': self._single_result_message(result, stats), 'statistics': stats})
         for combo in self.ledger.all('prediction'):
             identity = combo['prediction_id']
             if (self.ledger.get('settlement', identity)
@@ -299,7 +334,7 @@ class LabComboService:
             if not self.ledger.get('single_settlement_preview', identity):
                 stats = single_statistics(self.ledger)
                 self.ledger.append('single_settlement_preview', identity, {
-                    'message': single_result_message(value, stats), 'statistics': stats})
+                    'message': self._single_result_message(value, stats), 'statistics': stats})
         for value in self.ledger.all('settlement'):
             identity = value['prediction_id']
             if not self.ledger.get('settlement_preview', identity):
@@ -312,6 +347,16 @@ class LabComboService:
                 'single_statistics': single_statistics(self.ledger),
                 'combo_statistics': statistics(self.ledger, published_only=True),
                 'statistics': statistics(self.ledger, published_only=True)}
+
+    def _single_result_message(self, result: dict, stats: dict) -> str:
+        """New attributed outcomes retain the label; historical previews stay frozen."""
+        from app.lab_v2_shadow.origin import is_labelled, result_message
+        if is_labelled(result):
+            receipt = self.ledger.get('receipt', 'single_prediction:' + result['prediction_id'])
+            if receipt is None:
+                raise ValueError('CONFIRMED_PUBLICATION_REQUIRED')
+            return result_message(result, receipt)
+        return single_result_message(result, stats)
 
 
 def _fresh_captured_odds(value: dict, now: datetime) -> bool:

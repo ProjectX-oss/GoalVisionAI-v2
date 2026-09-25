@@ -115,6 +115,7 @@ def resolve_single(prediction: dict, payload: dict, now: datetime) -> dict | Non
     odds = Decimal(prediction['captured_odds'])
     unit = Decimal(-1) if result['outcome'] == 'LOST' else Decimal(0) if result['outcome'] == 'VOID' else odds - 1
     return {'prediction_id': prediction['prediction_id'], 'fixture_id': prediction['fixture_id'],
+            **({'selection_origin': prediction['selection_origin']} if 'selection_origin' in prediction else {}),
             'market': prediction['market'], 'captured_odds': prediction['captured_odds'],
             'home_team': prediction.get('home_team'), 'away_team': prediction.get('away_team'),
             'status': result['outcome'], 'fulltime_home': result['fulltime_home'],

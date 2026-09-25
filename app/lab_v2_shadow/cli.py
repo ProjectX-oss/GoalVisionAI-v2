@@ -87,7 +87,11 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             return _persist_cycle_evidence(repository, report, clock)
         ledger = ComboRepository(args.ledger)
         try:
-            prepared = prepare_v2_publications(report, ledger, now=datetime.now(timezone.utc))
+            prepared = prepare_v2_publications(
+                report, ledger, now=datetime.now(timezone.utc),
+                label_origin=bool(getattr(args, 'label_v2_selections', False)),
+                football_context=football_context,
+            )
             report['controlled_publication']['publication_blockers']=prepared['publication_blockers']
             pending = [
                 *[("single_prediction", item["prediction_id"]) for item in prepared["singles"]],
@@ -157,8 +161,38 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             health_report=locals().get('report',{})
             if error:
                 health_report={**health_report,'terminal_error':error.__name__}
-            persist_health(adaptive_repository,health_report,started=clock,completed=datetime.now(timezone.utc))
-            adaptive_repository.close()
+            try:
+                persist_health(adaptive_repository,health_report,started=clock,completed=datetime.now(timezone.utc))
+            finally:
+                adaptive_repository.close()
+
+
+async def configured_cycle(args: argparse.Namespace) -> dict[str, object]:
+    """Decorate the existing cycle once; optional observation never starts polling."""
+    root = getattr(args, 'football_context_root', None)
+    if root is None:
+        return await _cycle(args)
+    from app.prematch_football_context.readiness.composition import ProspectiveObservation
+    import sys
+    try:
+        observation = ProspectiveObservation(
+            root, environment='LAB', clock=lambda: datetime.now(timezone.utc),
+            regulation_registry=getattr(args, 'football_context_registry', None),
+        )
+    except Exception:
+        print(canonical_json({'football_context_observation': {'CONSTRUCTION_FAILED': 1}}), file=sys.stderr)
+        return await _cycle(args)
+    completed = False
+    try:
+        result = await _cycle(args, football_context=observation)
+        completed = not bool(result.get('terminal_error'))
+        return result
+    finally:
+        try:
+            diagnostics = observation.finish(completed=completed)
+        except Exception:
+            diagnostics = {'FINISH_FAILED': 1}
+        print(canonical_json({'football_context_observation': diagnostics}), file=sys.stderr)
 
 
 def _persist_cycle_evidence(
@@ -211,8 +245,20 @@ def main(argv: list[str] | None = None) -> int:
                            choices=[DAILY_SAFETY_RESERVE], default=DAILY_SAFETY_RESERVE,
                            help="Result reserve; discovery uses time-aware Riga daytime pacing")
         cycle.add_argument("--adaptive-database", type=Path, help="Opt-in LAB adaptive registry")
+        cycle.add_argument('--football-context-root', type=Path,
+                           help='Explicit preinitialized isolated observation stores; no extra requests')
+        cycle.add_argument('--football-context-registry', type=Path,
+                           help='Optional reviewed registry opened read-only and pinned before decisions')
+        cycle.add_argument('--label-v2-selections', action='store_true',
+                           help='Freeze truthful existing-selector attribution for new singles')
         cycle.add_argument("--send", action="store_true", help="Explicitly publish genuine READY picks to the fixed Lab chat")
     args = parser.parse_args(argv)
+    if getattr(args, 'football_context_registry', None) and not getattr(args, 'football_context_root', None):
+        parser.error('--football-context-registry requires --football-context-root')
+    root = getattr(args, 'football_context_root', None)
+    if root is not None and (not root.is_absolute() or Path('/tmp') in root.resolve().parents
+                             or not getattr(args, 'adaptive_database', None)):
+        parser.error('Observation requires an absolute stable root outside /tmp and --adaptive-database')
     if args.command == "audit":
         value = {
             "bottleneck_audit": audit_recent_lab(args.ledger, args.analysis_database),
@@ -223,7 +269,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         if args.command == "rehearse" and args.send:
             parser.error("rehearse is always no-send; use controlled-cycle --send")
-        value = asyncio.run(_cycle(args))
+        value = asyncio.run(configured_cycle(args))
     if args.command == "summary" and args.human:
         from .diagnostics import human_diagnostic
         print(human_diagnostic(value))

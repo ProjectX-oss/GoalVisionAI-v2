@@ -127,7 +127,7 @@ def ingest(repository: AuditRepository, prediction: dict, receipt: dict, settlem
         value = freeze_observation(prediction, receipt, settlement, stream=stream,
                                    publication_id=publication_id, source_product=source_product)
         # Canonical shadow and published copies of a fixture/market are one sample.
-        for old in repository.all('learning_observations', stream):
+        for old in repository.matching_observations(stream, value['fixture_id'], value['market']):
             if (old['fixture_id'], old['market']) == (value['fixture_id'], value['market']) and (
                     old.get('source_product') == 'SHADOW' or source_product == 'SHADOW'):
                 if old['outcome'] != value['outcome'] or old['final_score'] != value['final_score']:

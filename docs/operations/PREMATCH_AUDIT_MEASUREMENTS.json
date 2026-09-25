@@ -1,0 +1,363 @@
+{
+  "windows": {
+    "1d": {
+      "start": "2026-09-24T13:00:00+00:00",
+      "end_exclusive": "2026-09-25T13:00:00+00:00",
+      "singles": {
+        "published": 7,
+        "pending": 0,
+        "outcomes": {
+          "LOST": 6,
+          "WON": 1
+        },
+        "pnl": "-3.60",
+        "roi": "-0.5142857142857142857142857143",
+        "roi_denominator": "settled incl VOID",
+        "hit_rate": "0.1428571428571428571428571429",
+        "confirmed_sends_including_results": 15
+      },
+      "combos": {
+        "published": 1,
+        "pending": 0,
+        "outcomes": {
+          "LOST": 1
+        },
+        "pnl": "-1",
+        "roi": "-1",
+        "roi_denominator": "settled incl VOID",
+        "hit_rate": "0",
+        "confirmed_sends_including_results": 2
+      },
+      "settlement_runs": {
+        "retained": 96,
+        "terminal_errors": {
+          "NONE": 96
+        },
+        "api_calls": 604
+      },
+      "cycle_health": {
+        "retained": 13,
+        "states": {
+          "DEGRADED": 6,
+          "FAILED": 7
+        },
+        "failures": {
+          "OperationalError": 7
+        }
+      },
+      "discovery": {
+        "retained_completed_summaries": 6,
+        "sum_cycle_fixture_counts": 9558,
+        "sum_cycle_market_counts": 1606,
+        "sum_cycle_ready_rows": 19,
+        "calls_completed_cycles_only": 1663,
+        "top_reasons": {
+          "NON_POSITIVE_VALUE": 1190,
+          "INVALID_MODEL_PROBABILITY": 49,
+          "MARKET_REVIEW_TERMINAL": 8
+        },
+        "global_discovery": {
+          "rows": 29090,
+          "distinct_fixtures": 2433
+        },
+        "candidate": {
+          "rows": 1606,
+          "distinct_fixtures": 79
+        }
+      },
+      "publication_cycles": {
+        "retained": 6,
+        "confirmed_sends": 8,
+        "reasons": {
+          "null": 5,
+          "NO_READY_SELECTIONS": 1
+        },
+        "delivery_outcomes": {
+          "FINAL_REVIEW_EXPIRED": 4,
+          "SENT": 8
+        }
+      },
+      "goalvision-lab-v2-discover.service": {
+        "traceback_markers": 36,
+        "exceptions": {
+          "sqlite3.OperationalError: database is locked": 36
+        }
+      },
+      "goalvision-lab-combo-settle.service": {
+        "traceback_markers": 48,
+        "exceptions": {
+          "sqlite3.OperationalError: database is locked": 48
+        }
+      },
+      "goalvision-adaptive-learning-observer.service": {
+        "traceback_markers": 0,
+        "exceptions": {}
+      }
+    },
+    "7d": {
+      "start": "2026-09-18T13:00:00+00:00",
+      "end_exclusive": "2026-09-25T13:00:00+00:00",
+      "singles": {
+        "published": 37,
+        "pending": 0,
+        "outcomes": {
+          "LOST": 29,
+          "WON": 8
+        },
+        "pnl": "-16.31",
+        "roi": "-0.4408108108108108108108108108",
+        "roi_denominator": "settled incl VOID",
+        "hit_rate": "0.2162162162162162162162162162",
+        "confirmed_sends_including_results": 74
+      },
+      "combos": {
+        "published": 4,
+        "pending": 0,
+        "outcomes": {
+          "LOST": 4
+        },
+        "pnl": "-4",
+        "roi": "-1",
+        "roi_denominator": "settled incl VOID",
+        "hit_rate": "0",
+        "confirmed_sends_including_results": 8
+      },
+      "settlement_runs": {
+        "retained": 826,
+        "terminal_errors": {
+          "NONE": 819,
+          "OperationalError": 5,
+          "TimedOut": 2
+        },
+        "api_calls": 2054
+      },
+      "cycle_health": {
+        "retained": 184,
+        "states": {
+          "FAILED": 86,
+          "DEGRADED": 97,
+          "HEALTHY": 1
+        },
+        "failures": {
+          "ValueError": 67,
+          "OperationalError": 18,
+          "TimedOut": 1
+        }
+      },
+      "discovery": {
+        "retained_completed_summaries": 113,
+        "sum_cycle_fixture_counts": 199661,
+        "sum_cycle_market_counts": 63137,
+        "sum_cycle_ready_rows": 142,
+        "calls_completed_cycles_only": 12595,
+        "top_reasons": {
+          "NON_POSITIVE_VALUE": 41217,
+          "ENSEMBLE_EDGE_BELOW_0_04": 39748,
+          "INSUFFICIENT_INDEPENDENT_SIGNALS": 39080,
+          "VALUE_BELOW_PROFILE_THRESHOLD": 38286,
+          "MATERIAL_SIGNAL_DISAGREEMENT": 17129,
+          "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 13905,
+          "WEIGHTED_AGREEMENT_BELOW_0_65": 3964,
+          "SEVERE_MODEL_MARKET_CONTRADICTION": 2051,
+          "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 1262,
+          "ODDS_STALE_WAITING_REFRESH": 451,
+          "INVALID_MODEL_PROBABILITY": 188,
+          "MARKET_REVIEW_TERMINAL": 43
+        },
+        "global_discovery": {
+          "rows": 253531,
+          "distinct_fixtures": 6023
+        },
+        "candidate": {
+          "rows": 63137,
+          "distinct_fixtures": 1363
+        }
+      },
+      "publication_cycles": {
+        "retained": 111,
+        "confirmed_sends": 41,
+        "reasons": {
+          "NO_READY_SELECTIONS": 86,
+          "null": 24,
+          "FIXTURE_AFTER_LAB_CUTOFF": 1
+        },
+        "delivery_outcomes": {
+          "SENT": 41,
+          "FINAL_REVIEW_EXPIRED": 4
+        }
+      },
+      "goalvision-lab-v2-discover.service": {
+        "traceback_markers": 162,
+        "exceptions": {
+          "ValueError: MODEL_INTEGRITY_PUBLICATION_BLOCKED": 65,
+          "sqlite3.OperationalError: database is locked": 93,
+          "ValueError: SHADOW_CHRONOLOGY_INVALID": 1
+        }
+      },
+      "goalvision-lab-combo-settle.service": {
+        "traceback_markers": 182,
+        "exceptions": {
+          "ValueError: DEDICATED_LAB_AUDIT_DATABASE_REQUIRED": 2,
+          "sqlite3.OperationalError: database is locked": 180
+        }
+      },
+      "goalvision-adaptive-learning-observer.service": {
+        "traceback_markers": 3,
+        "exceptions": {
+          "ValueError: DEDICATED_LAB_AUDIT_DATABASE_REQUIRED": 1,
+          "sqlite3.OperationalError: database is locked": 2
+        }
+      }
+    }
+  },
+  "inventory": {},
+  "publication": {
+    "single_retained_snapshot": {
+      "published": 50,
+      "pending": 0,
+      "outcomes": {
+        "LOST": 39,
+        "WON": 11
+      },
+      "pnl": "-22.21",
+      "roi": "-0.4442",
+      "roi_denominator": "settled incl VOID",
+      "hit_rate": "0.22"
+    },
+    "single_historical_v2": {
+      "published": 47,
+      "pending": 0,
+      "outcomes": {
+        "LOST": 36,
+        "WON": 11
+      },
+      "pnl": "-19.21",
+      "roi": "-0.4087234042553191489361702128",
+      "roi_denominator": "settled incl VOID",
+      "hit_rate": "0.2340425531914893617021276596"
+    },
+    "single_latest_receipt": {
+      "chat_id": "-1003510920417",
+      "message_id": 122,
+      "sent": true,
+      "sent_at_utc": "2026-09-24T17:37:22.228239+00:00",
+      "status": "SENT"
+    },
+    "combo_retained_snapshot": {
+      "published": 7,
+      "pending": 0,
+      "outcomes": {
+        "LOST": 7
+      },
+      "pnl": "-7",
+      "roi": "-1",
+      "roi_denominator": "settled incl VOID",
+      "hit_rate": "0"
+    },
+    "combo_historical_v2": {
+      "published": 7,
+      "pending": 0,
+      "outcomes": {
+        "LOST": 7
+      },
+      "pnl": "-7",
+      "roi": "-1",
+      "roi_denominator": "settled incl VOID",
+      "hit_rate": "0"
+    },
+    "combo_latest_receipt": {
+      "chat_id": "-1003510920417",
+      "message_id": 118,
+      "sent": true,
+      "sent_at_utc": "2026-09-24T15:36:45.071812+00:00",
+      "status": "SENT"
+    },
+    "claims_without_receipt": [],
+    "unknown_delivery_count": 0,
+    "duplicate_confirmed_economic_singles": {},
+    "multiple_single_markets_same_fixture": {
+      "1551463": [
+        "BTTS_NO",
+        "DRAW"
+      ]
+    },
+    "single_combo_economic_overlap": 19
+  },
+  "learning": {
+    "snapshot_observations": 977,
+    "asof_window_end": 975,
+    "source_products": {
+      "SINGLE": 47,
+      "COMBO_LEG": 2,
+      "SHADOW": 928
+    },
+    "distinct_fixtures": 314,
+    "champion": [
+      {
+        "artifact_id": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+        "created_at": "2026-09-18T19:53:42.075830+00:00",
+        "evidence": {
+          "artifact_fingerprint": "694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d"
+        },
+        "generation_id": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+        "previous_generation": null,
+        "reason": "BOOTSTRAP",
+        "scope": "LAB_ONLY",
+        "stream": "PREMATCH"
+      }
+    ],
+    "research_cycles": [
+      {
+        "created_at": "2026-09-18T19:53:42.075830+00:00",
+        "kind": "REVIEWED_BOOTSTRAP"
+      },
+      {
+        "created_at": "2026-09-21T02:15:00.831204+00:00",
+        "cycle_id": "cycle-bebb11b7321d0117f029dfe906e99b4718781d4693a1d259b20790f12c4005d0",
+        "dataset_fingerprint": "542fe16e81e4ec71641ac43bb8231fcc87cee11f182e7f428453e956c7937929",
+        "eligibility": {
+          "automatic_eligible": false,
+          "cycle_due": true,
+          "days_covered": 2,
+          "new_resolved": 242,
+          "next_threshold": {
+            "calendar_days": 90,
+            "resolved": 500
+          },
+          "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+          "policy_version": "LAB_ADAPTIVE_V2",
+          "reason": "RESEARCH_ELIGIBLE",
+          "research_due": true,
+          "resolved": 242,
+          "stage": "CHALLENGER_RESEARCH",
+          "status": "RESEARCH_ELIGIBLE",
+          "stream": "PREMATCH"
+        },
+        "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+        "stream": "PREMATCH"
+      }
+    ],
+    "partitions": [
+      {
+        "PURGED": 168,
+        "SEALED_HOLDOUT": 59,
+        "TRAIN": 15,
+        "VALIDATION": 0
+      }
+    ],
+    "families": {
+      "EXISTING_PREMATCH_BASELINE_V1": 1,
+      "REGULARIZED_LOGISTIC": 8,
+      "LOGISTIC": 13
+    },
+    "challenger_all_missing_feature_counts": {
+      "9": 8,
+      "0": 13
+    },
+    "consumed_holdouts": 0,
+    "promotions": 0,
+    "shadow_runs": 0,
+    "1d_new_resolved": 185,
+    "7d_new_resolved": 963
+  }
+}

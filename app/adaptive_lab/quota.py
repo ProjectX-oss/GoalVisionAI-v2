@@ -30,7 +30,10 @@ class SharedQuota:
                 raise FootballQuotaError('QUOTA_UNAVAILABLE')
         clock=utc(now)
         with self.repository.transaction():
-            claims=self.repository.all('quota_claims')
+            # Include the prior minute across UTC midnight. Filtering below keeps
+            # the exact existing day/minute policy, including future same-day claims.
+            since = clock.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(seconds=60)
+            claims=self.repository.quota_since(since.isoformat())
             today=[r for r in claims if utc(r['created_at']).date()==clock.date()]
             recent=[r for r in claims if clock-timedelta(seconds=60)<utc(r['created_at'])<=clock]
             live=sum(r['category'].startswith('LIVE_') for r in today)

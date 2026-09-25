@@ -33,6 +33,20 @@ def test_durable_minute_daily_and_restart_accounting(tmp_path):
     repo.close()
 
 
+def test_midnight_quota_window_matches_retained_history_without_full_scan(repo, monkeypatch):
+    """Previous-day attempts still consume this minute; older days cost no lock work."""
+    shared = SharedQuota(repo, minute_limit=2)
+    shared.claim('SETTLEMENT', now=START-timedelta(days=10), provider=quota())
+    shared.claim('SETTLEMENT', now=START-timedelta(seconds=30), provider=quota())
+    original = repo.all
+    monkeypatch.setattr(repo, 'all', lambda table, *args: (_ for _ in ()).throw(
+        AssertionError('unbounded quota read')) if table == 'quota_claims' else original(table, *args))
+    shared.claim('PREMATCH_DISCOVERY', now=START, provider=quota())
+    with pytest.raises(FootballQuotaError, match='PROTECTED_QUOTA_RESERVE'):
+        shared.claim('SETTLEMENT', now=START+timedelta(seconds=1), provider=quota())
+    shared.claim('SETTLEMENT', now=START+timedelta(seconds=61), provider=quota())
+
+
 @pytest.mark.parametrize('command',COMMANDS)
 def test_readonly_cli_inert_json(repo,tmp_path,command,capsys):
     path=tmp_path/'audit.db'

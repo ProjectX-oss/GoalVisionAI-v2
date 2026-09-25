@@ -324,6 +324,7 @@ def test_win_loss_void_public_messages_and_separate_statistics():
 def test_result_image_missing_falls_back_to_text_only():
     directory, ledger = ledger_fixture()
     try:
+        ledger.append('receipt', 'single_prediction:s1', {'status':'SENT','sent':True,'chat_id':LAB_CHAT_ID,'message_id':10})
         ledger.append("single_settlement", "s1", {"prediction_id": "s1", "status": "WON"})
         ledger.append("single_settlement_preview", "s1", {"message": "result"})
         class Transport:
@@ -353,6 +354,7 @@ def test_result_image_missing_falls_back_to_text_only():
 def test_available_result_image_uses_optional_photo_transport():
     directory, ledger = ledger_fixture()
     try:
+        ledger.append('receipt', 'single_prediction:s1', {'status':'SENT','sent':True,'chat_id':LAB_CHAT_ID,'message_id':10})
         image = Path(directory.name) / "win.png"
         image.write_bytes(b"not-a-real-network-image")
         ledger.append("single_settlement", "s1", {"prediction_id": "s1", "status": "WON"})

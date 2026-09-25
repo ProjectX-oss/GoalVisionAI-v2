@@ -1,5 +1,17 @@
 # TASKS.md
 
+## 2026-09-23 — PREMATCH adaptive shadow chronology hardening
+
+- Audit the complete incoming/canonical/governance shadow path on exact `50a73ce`.
+- Diagnose and skip expired immutable canonical PREMATCH records before governance,
+  retaining structured, idempotent evidence and processing later candidates.
+- Reject future incoming preparation before canonical substitution can hide it;
+  future frozen preparation and unrelated integrity errors remain fail-closed.
+- Preserve the invalid-baseline hotfix, canonical identities/history and governance.
+- Add focused synthetic chronology, continuation, replay and integrity regressions.
+- Audit and validation record: `docs/PREMATCH_SHADOW_HARDENING_2026-09-23.md`.
+- No deployment, production-state changes, external API calls or Telegram sends.
+
 ## Final LAB launch readiness foundation (2026-08-02)
 
 - [x] Add independent governance policy review and append-only operator approval/revocation.
@@ -1429,3 +1441,13 @@ Review after completing the current priority.
 - Phase E remains unauthorized. Next: operator review/import of a complete genuine
   mapping + competition incorporation + base-law chain in an isolated Test registry.
 - Report: `docs/audits/PREMATCH_FOOTBALL_CONTEXT_V2_INCORPORATED_LAW_REPORT.md`.
+
+
+## 2026-09-25 — Deployed PREMATCH audit and gated V2 enablement
+
+- Audited actual 363f567 runtime, timers, immutable SQLite snapshots and fixed 24h/7d windows; preserved deployed probability/chronology fixes.
+- Bounded lock-held quota/learning reads, fixed cooldown diagnostics and atomic cross-version economic publication claims; guarded result sends with confirmed receipts.
+- Added opt-in existing-loop Football Context observation and truthful existing-selector attribution, offline verified context links and separate forward singles statistics in existing settlement/weekly paths.
+- Offline affected-path regression: 1,287 passed and 42 subtests; deployed isolated baseline: 764 passed and 8 subtests. No operational training or synthetic live sends.
+- Prepared service-specific reversible rollout; installation blocked by unavailable sudo. No production unit/release/champion changes.
+- Full evidence and remaining limitations: docs/operations/PREMATCH_FULL_AUDIT_V2_ENABLEMENT.md.

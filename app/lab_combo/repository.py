@@ -49,3 +49,40 @@ class ComboRepository:
     def all(self, kind: str) -> list[dict]:
         identities = [row[0] for row in self.connection.execute('SELECT identity FROM evidence WHERE kind=? ORDER BY identity', (kind,))]
         return [self.get(kind, identity) for identity in identities]
+
+    def claim_publication(self, kind: str, prediction: dict, claim: dict) -> bool:
+        """Atomically claim an economic selection across versions and legacy paths.
+
+        Unknown delivery stays claimed. The economic key excludes model, label,
+        quote and candidate IDs. Existing immutable historical claims also block.
+        Singles and combos remain separate accounting products.
+        """
+        if kind not in {'single_prediction', 'combo_prediction', 'prediction'}:
+            raise ValueError('Unsupported prediction claim')
+        single = kind == 'single_prediction'
+
+        def economic(value: dict) -> str:
+            legs = [value] if single else value['legs']
+            keys = sorted(f"{leg['fixture_id']}:{leg['market']}" for leg in legs)
+            return ('SINGLE:' if single else 'COMBO:') + '|'.join(keys)
+
+        key = economic(prediction)
+        identity = kind + ':' + prediction['prediction_id']
+        with self.connection:
+            self.connection.execute('BEGIN IMMEDIATE')
+            if self.get('economic_claim', key) or self.get('claim', identity):
+                return False
+            for old in self.all('single_prediction' if single else 'prediction'):
+                if economic(old) != key:
+                    continue
+                prefixes = ('single_prediction:',) if single else ('combo_prediction:', 'prediction:')
+                if any(self.get(record, prefix + old['prediction_id'])
+                       for prefix in prefixes for record in ('claim', 'receipt')):
+                    return False
+            for record, record_id, document in (
+                ('economic_claim', key, {'publication_identity': identity, 'economic_key': key}),
+                ('claim', identity, claim),
+            ):
+                self.connection.execute('INSERT INTO evidence VALUES (?,?,?,?)',
+                    (record, record_id, fingerprint(document), canonical_json(document)))
+        return True

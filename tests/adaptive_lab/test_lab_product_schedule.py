@@ -140,6 +140,8 @@ def test_cutoff_blocks_send_not_settlement_and_never_counts_unpublished(hour):
     assert statistics(ledger,week_start=week_bounds(clock)[0],as_of=clock)['SINGLE']['published']==0
     ledger.append('single_settlement','p',{'status':'WON'})
     ledger.append('single_settlement_preview','p',{'message':'synthetic settlement'})
+    assert asyncio.run(service.publish_experimental('single_settlement','p',config(),transport))['status']=='PUBLISHED_PREDICTION_AND_SETTLEMENT_REQUIRED'
+    ledger.append('receipt','single_prediction:p',{'status':'SENT','sent':True,'chat_id':LAB_CHAT_ID,'message_id':123})
     assert asyncio.run(service.publish_experimental('single_settlement','p',config(),transport))['sent']
     assert len(transport.calls)==1
 
@@ -163,6 +165,7 @@ def test_send_boundary_rechecked_after_durable_claim(monkeypatch):
         if kind=='claim':clock[0]=riga('2026-09-20T23:00')
         return result
     l.append=append
+    l.claim_publication=lambda kind,value,claim:l.append('claim',kind+':'+value['prediction_id'],claim)
     l.append('single_prediction','p',{'prediction_id':'p','kickoff_utc':riga('2026-09-20T22:59').isoformat(),
        'stage':'READY_TO_PUBLISH','final_review_completed_at_utc':clock[0].isoformat()})
     l.append('single_preview','p',{'message':'synthetic'})

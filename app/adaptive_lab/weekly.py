@@ -68,7 +68,10 @@ def statistics(ledger: object, *, week_start: datetime, as_of: datetime) -> dict
           'flat_unit_pnl':str(pnl),'flat_unit_roi':str(pnl/settled_count) if settled_count else None,
           'average_odds':str(sum(odds)/len(odds)) if odds else None}
         if product=='COMBO':output[product]['partial_void_count']=partial_count
+    from app.lab_v2_shadow.statistics import single_cohorts
+    cohorts = single_cohorts(ledger, start=start, end=end, as_of=as_of)
     return {'week_start':start.isoformat(),'week_end':end.isoformat(),'as_of':utc(as_of).isoformat(),
+            'v2_single_cohorts': cohorts,
             'timezone':'Europe/Riga',**output,'diagnostics':diagnostics,'LIVE':'EXCLUDED','Official':'EXCLUDED'}
 
 
@@ -84,7 +87,18 @@ def message(report: dict) -> str:
           f"Pending: {s['pending']}",f"🎯 Hit rate: {percent(s['hit_rate'])}",
           f"💰 Flat P/L: {Decimal(s['flat_unit_pnl']):+.2f}u · ROI: {percent(s['flat_unit_roi'])}",f'Average odds: {avg}'])
         if name=='COMBO':lines.append(f"Partial void: {s['partial_void_count']} (partial-void wins: {s['PARTIAL_VOID']})")
-    lines.extend(['','Flat units; settled bets only in ROI. Full voids excluded from hit rate.',
+    cohorts = stats.get('v2_single_cohorts', {})
+    forward = cohorts.get('forward_union')
+    if forward and forward['published']:
+        lines.extend(['', '🧪 V2 atlase · jaunais SINGLE segments',
+            f"Published: {forward['published']} · Pending: {forward['pending']} · W/L/VOID: {forward['WON']}/{forward['LOST']}/{forward['VOID']}",
+            f"Hypothetical P/L: {forward['flat_unit_pnl']}u · ROI: {percent(forward['flat_unit_roi'])} · n={forward['sample_size']}",
+            f"Selector exclusive: {cohorts['selector_exclusive']['published']} · Multiple-origin overlap: {cohorts['multi_origin_overlap']['published']}",
+            f"Linked context (observation): {cohorts['context_linked_observation_only']['published']} · ROI denominator: {forward['roi_denominator_units']} settled units (includes VOID).",
+            'Football Context V2: observation only; independent model publications: 0.',
+            'Overlapping cohorts are subsets of this total; never add them.'])
+    lines.extend(['','Hypothetical signals, not realized cash profit.',
+                  'Flat units; settled bets only in ROI. Full voids excluded from hit rate.',
                   'Combo hit rate includes partial-void wins.'])
     return '\n'.join(lines)
 

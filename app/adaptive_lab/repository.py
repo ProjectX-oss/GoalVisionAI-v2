@@ -173,5 +173,22 @@ class AuditRepository:
         row = self.connection.execute('SELECT generation_id FROM champion_pointers WHERE stream=?', (stream,)).fetchone()
         return self.get('champion_generations', row[0]) if row else None
 
+    def quota_since(self, since: str) -> list[dict]:
+        """Verify only potentially relevant claims, using existing stream/time indexes."""
+        ids = self.connection.execute(
+            "SELECT id FROM quota_claims WHERE stream IN ('PREMATCH','LIVE') AND created_at>=? ORDER BY created_at,id",
+            (since,),
+        ).fetchall()
+        return [self.get('quota_claims', row[0]) for row in ids]
+
+    def matching_observations(self, stream: str, fixture_id: int, market: str) -> list[dict]:
+        """Read verified economic matches without deserializing unrelated history."""
+        ids = self.connection.execute(
+            "SELECT id FROM learning_observations WHERE stream=? "
+            "AND json_extract(document,'$.fixture_id')=? AND json_extract(document,'$.market')=? "
+            "ORDER BY created_at,id", (stream, fixture_id, market),
+        ).fetchall()
+        return [self.get('learning_observations', row[0]) for row in ids]
+
     def close(self) -> None:
         self.connection.close()

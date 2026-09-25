@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from itertools import combinations
+from zoneinfo import ZoneInfo
 
 from app.lab_combo.presentation import latvia_time, market_label, public_decimal
 from app.lab_combo.repository import ComboRepository
@@ -19,7 +20,8 @@ MAX_SINGLES_PER_CYCLE = 3
 MAX_COMBOS_PER_CYCLE = 3
 
 
-def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, *, now: datetime) -> dict[str, object]:
+def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, *, now: datetime,
+                            label_origin: bool = False, football_context: object | None = None) -> dict[str, object]:
     """Persist only final-reviewed V2 READY singles and independent triples."""
     clock = now.astimezone(timezone.utc)
     ready = []
@@ -76,6 +78,17 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             candidate["quote_provenance_fingerprint"],
         ))
         value["accounting"] = "LAB_ONLY_HYPOTHETICAL_ONE_UNIT"
+        existing = ledger.get('single_prediction', value['prediction_id'])
+        if existing is not None:
+            # Retain old previews and attribution exactly, even on a new-label replay.
+            from .origin import is_labelled
+            if label_origin and not is_labelled(existing):
+                publication_blockers[candidate['candidate_id']] = 'HISTORICAL_PREVIEW_REQUIRES_NEW_DECISION'
+                continue
+            value = existing
+        elif label_origin:
+            from .origin import freeze_origin
+            value['selection_origin'] = freeze_origin(candidate, now=clock, observer=football_context)
         if ledger.append("single_prediction", value["prediction_id"], value):
             ledger.append("single_preview", value["prediction_id"], {"message": v2_single_message(value)})
             ledger.append("v2_segmentation", value["prediction_id"], _segmentation(value, "SINGLE"))
@@ -141,6 +154,22 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
 
 
 def v2_single_message(value: dict) -> str:
+    from .origin import LABEL, is_labelled
+    if is_labelled(value):
+        origin = value['selection_origin']
+        families = ', '.join(origin['predictive_families']) or 'saglabātā atlases politika'
+        lines = [LABEL, 'Eksperimentāla atlase; nekalibrēts novērtējums.',
+            f"⚽ Mačs: {value['home_team']} – {value['away_team']}",
+            f"🎯 Likme: {market_label(value['market'])}",
+            f"💰 Koef.: {public_decimal(value['captured_odds'])}",
+            f"⏰ Starts: {datetime.fromisoformat(value['kickoff_utc']).astimezone(ZoneInfo('Europe/Riga')):%d.%m.%Y %H:%M} (Latvija)",
+            f"Novērtētā varbūtība: {Decimal(value['ensemble_probability']) * 100:.1f}%",
+            f"Pamatojums: {families}; vērtības pārsvars {Decimal(value['edge']) * 100:.1f} procentpunkti.",
+            'Noslēguma pārbaude pabeigta; iznākums nav garantēts.',
+            f"Atsauce: {value['prediction_id']}"]
+        if origin['context'] is not None:
+            lines.append(f"V2 futbola konteksts: {origin['context']['available_features']}/7 pazīmes — novērošanai")
+        return '\n'.join(lines)
     lines = [
         "🧪 GoalVision AI Lab",
         f"⚽ Mačs: {value['home_team']} – {value['away_team']}",

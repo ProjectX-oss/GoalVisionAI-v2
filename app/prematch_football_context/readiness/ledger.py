@@ -83,6 +83,19 @@ class Ledger:
                 corrupt += 1
         return records, corrupt
 
+    def get(self, kind: str, identity: str) -> dict[str, object]:
+        """Verify one exact retained proof record without scanning unrelated runs."""
+        row = self.connection.execute(
+            f'SELECT document,hash FROM {TABLE} WHERE kind=? AND identity=?', (kind, identity),
+        ).fetchone()
+        if row is None:
+            raise ValueError('READINESS_RECORD_UNAVAILABLE')
+        document = json.loads(row[0])
+        if (kind not in KINDS or type(document) is not dict or canonical_bytes(document).decode() != row[0]
+                or digest((kind, identity, document)) != row[1]):
+            raise ValueError('READINESS_RECORD_CORRUPT')
+        return document
+
     def close(self) -> None:
         """Close the explicit connection."""
         self.connection.close()

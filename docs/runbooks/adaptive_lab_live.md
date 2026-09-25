@@ -332,6 +332,12 @@ Telegram sends.
 
 ## Verification and limits
 
+PREMATCH adaptive processing skips a baseline probability that is missing,
+non-finite, or outside the open interval `(0, 1)`, before champion resolution.
+It returns the original signals with empty adaptive provenance, preserving the
+baseline rejection without clamping probabilities or aborting later evaluations.
+Regression coverage: `tests/adaptive_lab/test_prematch_probability_guard.py`.
+
 Tests use synthetic observed outcomes, fixed clocks and recording transports.
 The high-volume rehearsal uses 600 training-era opportunities plus 140 fresh
 shadow opportunities per stream and proves independent training, promotion,
