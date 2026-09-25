@@ -1,0 +1,76 @@
+{
+  "review_completed_at": "2026-09-25T11:35:12.998310Z",
+  "reviewer": "OpenAI Codex AI assistant; authorized primary-source re-review for TEST integration; no human personal review asserted",
+  "new_review_ids": [
+    "IFAB_2026_27_UCL_2_2026_CODEX_20260925_RENEWED_113512967439",
+    "UEFA_UCL_2026_27_2_2026_CODEX_20260925_RENEWED_113512968503"
+  ],
+  "reviewed_at": [
+    "2026-09-25T11:35:12.967439Z",
+    "2026-09-25T11:35:12.968503Z"
+  ],
+  "local_test_admission_until": "2026-10-02T11:35:12.967232Z",
+  "policy": "Operator-controlled LOCAL TEST admission/re-review limit: from this new review until 2026-10-02T11:35:12.967232Z (at most seven days). NOT an official UEFA/IFAB document expiry, NOT full-season trust; no historical or other-season validity and no automatic renewal.",
+  "original_artifacts": "../ucl_2026_regulation (unchanged)",
+  "sources_revalidated": [
+    "https://www.api-football.com/news/post/how-to-get-started-with-api-football-the-complete-beginners-guide",
+    "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-13-Competition-stages-Online",
+    "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-96-Adoption-and-entry-into-force-Online?contentId=Xb72NoiAqwnadXykMvZmlA",
+    "https://www.theifab.com/laws-of-the-game-documents/",
+    "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-1-Scope-of-application-Online?contentId=AWNVKC73_Ud10i2HCbMr4g",
+    "https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-28-Completion-of-suspended-matches-Online?contentId=JPk7Ltwo5tad5wvXjGvc~Q",
+    "https://downloads.theifab.com/downloads/laws-of-the-game-202627-single-pages"
+  ],
+  "public_access_accounting": {
+    "web_open_operations": 9,
+    "web_find_operations": 3,
+    "new_pdf_downloads": 0,
+    "football_api_calls": 0,
+    "note": "Six authorized public pages opened; three repeat opens inspect article text. Web tool HTTP/cache counts are not exposed. Local access in this task before the recorded actual review; per-request wall timestamps not captured."
+  },
+  "reused_pdf": {
+    "path_at_review": "/tmp/ucl-2026-ifab.pdf",
+    "bytes": 23437157,
+    "sha256": "89398520b353c6d995a1bb2557c97dc3c5aa1712c1d3009589f580a5a23c6a7d",
+    "inspected_printed_pages": [
+      4,
+      20,
+      21,
+      93,
+      94
+    ]
+  },
+  "findings": "Revalidated public mapping ID 2 / starting-year 2026; UEFA Articles 1, 13, 28, 96 and catalogue edition. Retained PDF exact hash matches original download. Standard scheduled 2 x 45 supported with all prior qualifications. IFAB edition selection remains dated reviewer inference; UEFA Article 13 does not name its edition.",
+  "disposable_import": {
+    "db": "/tmp/goalvision-renewed-ucl-test-wzdsz2bc/registry.sqlite",
+    "commands": [
+      [
+        "init",
+        "--db",
+        "/tmp/goalvision-renewed-ucl-test-wzdsz2bc/registry.sqlite"
+      ],
+      [
+        "import",
+        "--db",
+        "/tmp/goalvision-renewed-ucl-test-wzdsz2bc/registry.sqlite",
+        "docs/rehearsals/ucl_2026_regulation_renewed/ifab.json"
+      ],
+      [
+        "import",
+        "--db",
+        "/tmp/goalvision-renewed-ucl-test-wzdsz2bc/registry.sqlite",
+        "docs/rehearsals/ucl_2026_regulation_renewed/uefa.json"
+      ],
+      [
+        "verify",
+        "--db",
+        "/tmp/goalvision-renewed-ucl-test-wzdsz2bc/registry.sqlite"
+      ]
+    ],
+    "verification": {
+      "status": "VERIFIED",
+      "records": 2
+    }
+  },
+  "limitations": "No fixture-specific exception investigation, provider availability claim, competition 36 or season 2025 verification. No real football observation."
+}

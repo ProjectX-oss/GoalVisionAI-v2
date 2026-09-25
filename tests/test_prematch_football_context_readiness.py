@@ -239,14 +239,21 @@ def test_cli_requires_explicit_action_and_has_no_send(tmp_path, monkeypatch, cap
     assert not (tmp_path/'adaptive.db').exists()
 
 
-@pytest.mark.parametrize('near', [True, False])
-def test_real_client_controlled_cycle_exact_parity(tmp_path, monkeypatch, near):
+@pytest.mark.parametrize('near,ucl', [(True, False), (False, False), (True, True)])
+def test_real_client_controlled_cycle_exact_parity(tmp_path, monkeypatch, near, ucl):
     """Real CLI, runner, coordinator and FootballClient; only transport is fake."""
     from app.football.client import FootballClient
     from app.lab_v2_shadow import cli
     from app.adaptive_lab.repository import AuditRepository
     from app.adaptive_lab.features import captured_features
     from tests.test_lab_v2_shadow import LifecycleClient, NOW, results
+
+    registry = None
+    if ucl:
+        from tests.test_prematch_registry_readiness import renewed_registry
+        registry = tmp_path/'reviewed-registry.db'
+        NOW = renewed_registry(registry)  # Injected TEST time; synthetic football only.
+        monkeypatch.setattr('tests.test_lab_v2_shadow.NOW', NOW)
 
     class Clock(datetime):
         @classmethod
@@ -257,18 +264,48 @@ def test_real_client_controlled_cycle_exact_parity(tmp_path, monkeypatch, near):
     def no_send(*a, **k): pytest.fail('TELEGRAM_CONSTRUCTED')
     monkeypatch.setattr(cli, 'LabTelegramTransport', no_send)
     records = []
-    for mode in ('off','on','capture','receipt','persist','evidence_missing','snapshot_missing',
-                 'evidence_locked','snapshot_locked'):
+    modes = ('off', 'on', 'registry', 'registry_missing', 'registry_corrupt', 'registry_locked',
+             'registry_expired', 'registry_conflict', 'proof_write') if ucl else (
+        'off','on','capture','receipt','persist','evidence_missing','snapshot_missing',
+        'evidence_locked','snapshot_locked')
+    for mode in modes:
         root = tmp_path/mode
         initialize(root)
         monkeypatch.chdir(root)
         if mode == 'evidence_missing': (root/'sources.db').unlink()
         if mode == 'snapshot_missing': (root/'snapshots.db').unlink()
-        o = None if mode == 'off' else ProspectiveObservation(root, environment='TEST', clock=lambda: NOW)
+        selected_registry = registry
+        registry_lock = None
+        if mode in ('registry_corrupt', 'registry_expired', 'registry_conflict'):
+            from tests.test_prematch_football_context_regulation_registry import record, append, initialize as init_registry
+            selected_registry = root/'fault-registry.db'
+            if mode == 'registry_corrupt':
+                selected_registry.write_bytes(b'SYNTHETIC CORRUPT STORE')
+            else:
+                init_registry(selected_registry)
+                append(selected_registry, record(competition_id=2,
+                    source_effective_until=NOW if mode == 'registry_expired' else NOW+timedelta(days=1)))
+                if mode == 'registry_conflict':
+                    append(selected_registry, record(competition_id=2, review_id='SYNTHETIC_CONFLICT', regulation_minutes=80))
+        if mode == 'registry_locked':
+            registry_lock = sqlite3.connect(registry)
+            registry_lock.execute('BEGIN EXCLUSIVE')
+        o = None if mode == 'off' else ProspectiveObservation(root, environment='TEST', clock=lambda: NOW,
+            regulation_registry=(tmp_path/'absent.db' if mode == 'registry_missing' else selected_registry)
+            if mode.startswith('registry') or mode == 'proof_write' else None)
+        if registry_lock:
+            registry_lock.rollback()
+            registry_lock.close()
         def fail(*a, **k): raise RuntimeError('SECRET')
         if mode == 'capture': monkeypatch.setattr(o, 'capture', fail)
         if mode == 'receipt': monkeypatch.setattr(o.evidence, 'capture_cutoff', fail)
         if mode == 'persist': monkeypatch.setattr(o.snapshots, 'append', fail)
+        if mode == 'proof_write':
+            original_append = o.ledger.append
+            def fail_proof(kind, *args):
+                if kind == 'REGULATION_PROOF': raise OSError('SYNTHETIC_PROOF_WRITE_FAILURE')
+                return original_append(kind, *args)
+            monkeypatch.setattr(o.ledger, 'append', fail_proof)
         requests = []
         provider = LifecycleClient(NOW, NOW+timedelta(minutes=30 if near else 240))
         async def handler(request):
@@ -288,6 +325,11 @@ def test_real_client_controlled_cycle_exact_parity(tmp_path, monkeypatch, near):
             elif path == '/odds': payload = await provider.current_odds(int(q['fixture']))
             elif path == '/fixtures/lineups': payload = await provider.lineup(int(q['fixture']))
             else: payload = (await provider._get(path, params=q)).json()
+            if ucl:
+                for row in payload.get('response', []):
+                    if isinstance(row, dict) and isinstance(row.get('league'), dict):
+                        row['league'].update(id=2, name='UEFA Champions League', type='Cup', country='World')
+                        if 'seasons' in row: row['country'] = {'name':'World'}
             return httpx.Response(200,json=payload,headers={'x-ratelimit-requests-limit':'7500',
                 'x-ratelimit-requests-remaining':'7000','x-ratelimit-limit':'300','x-ratelimit-remaining':'290'})
         clients = []
@@ -315,7 +357,7 @@ def test_real_client_controlled_cycle_exact_parity(tmp_path, monkeypatch, near):
         champion = Governance(seed).bootstrap(artifact(), now=NOW-timedelta(days=1))
         seed.close()
         blocker = None
-        if mode.endswith('locked'):
+        if mode in ('evidence_locked', 'snapshot_locked'):
             blocker = sqlite3.connect(root/('sources.db' if mode.startswith('evidence') else 'snapshots.db'))
             blocker.execute('BEGIN IMMEDIATE')
         try:
@@ -342,11 +384,24 @@ def test_real_client_controlled_cycle_exact_parity(tmp_path, monkeypatch, near):
         if o:
             o.finish(completed=True)
             evidence = coverage(root)
-            if mode == 'on' and near:
+            if (mode == 'on' or mode.startswith('registry_')) and near:
                 assert evidence['successful_v2_snapshots'] == len(canonical)
                 assert evidence['reproduction']['VERIFIED'] == len(canonical)
                 assert evidence['regulation_counts']['REGULATION_UNVERIFIED'] == len(canonical)
                 assert evidence['available_feature_histogram']['0'] == len(canonical)
+            elif mode == 'registry':
+                assert evidence['successful_v2_snapshots'] == len(canonical)
+                assert evidence['reproduction']['VERIFIED'] == len(canonical)
+                assert evidence['regulation_counts']['VERIFIED_90'] == len(canonical)
+                assert all(evidence['features'][name]['available'] == len(canonical) for name in FEATURE_NAMES[:4])
+                # Restarted report/verification needs no live registry.
+                offline_before = canonical_bytes(evidence)
+                registry.rename(tmp_path/'registry-unavailable.db')
+                assert canonical_bytes(coverage(root)) == offline_before
+                (tmp_path/'registry-unavailable.db').rename(registry)
+                print('SYNTHETIC_UCL_E2E', json.dumps({'snapshots': len(canonical),
+                    'requests': requests, 'request_count': clients[0].request_count,
+                    'features': evidence['features'], 'reproduction': evidence['reproduction']}, sort_keys=True))
             else:
                 assert evidence['readiness'] == 'CAPTURE_BLOCKED'
     assert all(r == records[0] for r in records[1:])

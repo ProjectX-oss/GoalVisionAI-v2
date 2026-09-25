@@ -5,11 +5,11 @@ No default wiring, scheduler, provider reference, clock fallback or V1 mutation.
 """
 from collections import Counter
 from dataclasses import dataclass, replace
-from typing import Mapping
+from typing import Callable, Mapping
 
 from ..capture.repository import DecisionReceipt, EvidenceRepository, ImmutableConflict
 from ..evidence import Binding
-from .contracts import Opportunity
+from .contracts import Opportunity, PrematchFootballContextV2Snapshot
 from .repository import SnapshotRepository
 from .service import assemble, reproduce
 
@@ -42,10 +42,13 @@ class SnapshotObserver:
     """
 
     def __init__(self, evidence: EvidenceRepository, snapshots: SnapshotRepository,
-                 scopes: tuple[Binding, ...]) -> None:
+                 scopes: tuple[Binding, ...], *,
+                 resolve_binding: Callable[[Binding, DecisionReceipt], Binding] | None = None,
+                 retain_snapshot: Callable[[PrematchFootballContextV2Snapshot], None] | None = None) -> None:
         if type(scopes) is not tuple or len({b.fixture_id for b in scopes}) != len(scopes):
             raise ValueError('EXPLICIT_UNAMBIGUOUS_SCOPE_REQUIRED')
         self.evidence, self.snapshots = evidence, snapshots
+        self.resolve_binding, self.retain_snapshot = resolve_binding, retain_snapshot
         self.scopes = {b.fixture_id: b for b in scopes}
         self.pending: dict[str, tuple[DecisionIdentity, DecisionReceipt]] = {}
         self.counts: Counter[str] = Counter()
@@ -93,8 +96,12 @@ class SnapshotObserver:
             scope = self.scopes[decision.fixture_id]
             if (scope.competition_id, scope.season) != (decision.competition_id, decision.season):
                 raise ValueError('DECISION_SCOPE_MISMATCH')
+            if self.resolve_binding is not None:
+                scope = self.resolve_binding(scope, receipt)
             snapshot = assemble(self.evidence, opportunity, receipt, replace(scope, cutoff=receipt.cutoff),
                                 expected_teams=(decision.home_team_id, decision.away_team_id))
+            if self.retain_snapshot is not None:
+                self.retain_snapshot(snapshot)
             self.snapshots.append(snapshot)
             self.counts['CAPTURED'] += 1
         except ImmutableConflict:

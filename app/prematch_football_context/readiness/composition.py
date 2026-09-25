@@ -13,9 +13,11 @@ from ..policy import Profile
 from ..source_adapter import FormatEvidence
 from ..sources import SourceKind, diagnostics, history_query, select_source, target_query
 from ..snapshot.observer import DecisionIdentity, SnapshotObserver
+from ..snapshot.contracts import PrematchFootballContextV2Snapshot
 from ..snapshot.repository import SnapshotRepository
 from ..snapshot.service import available_pins, KINDS
 from .ledger import Ledger
+from .regulations import PinnedRegistry
 
 Repository = TypeVar('Repository')
 
@@ -46,7 +48,8 @@ class ProspectiveObservation:
     preinitialized, and optional failures cannot affect the PREMATCH return value.
     """
 
-    def __init__(self, root: Path, *, environment: str, clock: Callable[[], datetime]) -> None:
+    def __init__(self, root: Path, *, environment: str, clock: Callable[[], datetime],
+                 regulation_registry: Path | None = None) -> None:
         if environment not in ('TEST', 'LAB'):
             raise ValueError('EXPLICIT_TEST_LAB_REQUIRED')
         self.clock = clock
@@ -62,6 +65,11 @@ class ProspectiveObservation:
         self.receipt: DecisionReceipt | None = None
         self.seen: set[str] = set()
         self._event('RUN', self.run_id, {'environment': environment, 'version': 'FC_READINESS_2'})
+        self.registry: PinnedRegistry | None = None
+        self.registry_receipts: set[str] = set()
+        if regulation_registry is not None:
+            self.registry = self._open('REGISTRY_VIEW_UNAVAILABLE', lambda: PinnedRegistry.acquire(
+                regulation_registry, self.ledger, self.run_id, self.clock))
 
     def _open(self, code: str, factory: Callable[[], Repository]) -> Repository | None:
         try:
@@ -100,7 +108,29 @@ class ProspectiveObservation:
         if self.evidence is not None:
             self.adapter = CaptureAdapter(self.evidence, scopes)
         if self.evidence is not None and self.snapshots is not None:
-            self.observer = SnapshotObserver(self.evidence, self.snapshots, tuple(self.scopes.values()))
+            self.observer = SnapshotObserver(self.evidence, self.snapshots, tuple(self.scopes.values()),
+                resolve_binding=self._regulation_binding, retain_snapshot=self._retain_regulation)
+
+    def _regulation_binding(self, scope: Binding, receipt: DecisionReceipt) -> Binding:
+        if self.registry is None or receipt.receipt_hash not in self.registry_receipts:
+            return scope
+        try:
+            binding = self.registry.bind(scope, receipt)
+            for season in (scope.season, scope.season - 1):
+                resolution = self.registry.resolution(scope.competition_id, season, receipt.cutoff)
+                self.counts['REGULATION_' + resolution.reason] += 1
+            return binding
+        except Exception:
+            self.counts['REGULATION_RESOLUTION_UNAVAILABLE'] += 1
+            return scope
+
+    def _retain_regulation(self, snapshot: PrematchFootballContextV2Snapshot) -> None:
+        if self.registry is not None and snapshot.receipt.receipt_hash in self.registry_receipts:
+            try:
+                self.registry.retain(self.ledger, snapshot)
+            except Exception:
+                self.counts['REGULATION_PROOF_WRITE_FAILURE'] += 1
+                raise
 
     def capture(self, endpoint: str, query: Mapping[str, object], payload: object, completed: datetime) -> None:
         """Persist exact responses immediately, even before classification is planned.
@@ -141,6 +171,12 @@ class ProspectiveObservation:
             pass
         if self.receipt is None:
             self.counts['DECISION_RECEIPT_FAILURE'] += 1
+        if self.receipt is not None and self.registry is not None:
+            try:
+                self.registry.decision(self.ledger, self.receipt)
+                self.registry_receipts.add(self.receipt.receipt_hash)
+            except Exception:
+                self.counts['REGISTRY_DECISION_UNAVAILABLE'] += 1
         return self.receipt
 
     def bind(self, receipt: DecisionReceipt | None, decisions: tuple[DecisionIdentity, ...]) -> None:

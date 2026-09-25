@@ -8,7 +8,8 @@ from ..fingerprint import canonical_bytes
 from ..sources import digest
 
 TABLE = 'fc_readiness_events'
-KINDS = ('RUN', 'OPPORTUNITY', 'RESULT', 'END')
+KINDS = ('RUN', 'OPPORTUNITY', 'RESULT', 'END', 'REGISTRY_VIEW', 'REGISTRY_ACQUISITION',
+         'REGISTRY_DECISION', 'REGULATION_PROOF', 'REGULATION_LINK')
 
 
 def verify(connection: sqlite3.Connection) -> None:

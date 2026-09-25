@@ -10,6 +10,7 @@ from ..snapshot.repository import SnapshotRepository
 from ..snapshot.service import reproduce
 from ..snapshot.contracts import Projection
 from .ledger import Ledger
+from .regulations import verify_retained
 
 
 def rate(numerator: int, denominator: int, name: str) -> dict[str, object]:
@@ -161,6 +162,7 @@ def analyze(e: EvidenceRepository, s: SnapshotRepository, ledger: Ledger) -> dic
             else:
                 cutoff.append(receipts[doc['receipt']].cutoff)
     verified, failed, snapshots = 0, 0, []
+    regulation_failures: set[str] = set()
     raw_rows = s.connection.execute('SELECT opportunity_key FROM fc_v2_snapshots ORDER BY opportunity_key').fetchall()
     for (key,) in raw_rows:
         try:
@@ -171,6 +173,12 @@ def analyze(e: EvidenceRepository, s: SnapshotRepository, ledger: Ledger) -> dic
                     value.binding.competition_id, value.binding.classification.profile.value):
                 raise ValueError('SNAPSHOT_ATTEMPT_LINKAGE')
             snapshots.append(value)
+            try:
+                verify_retained(value, events, attempt['run_id'])
+            except Exception:
+                regulation_failures.add(value.snapshot_id)
+                integrity['REGULATION_PROOF_UNAVAILABLE_OR_INVALID'] += 1
+                raise
             reproduce(e, value)
             verified += 1
         except Exception:
@@ -196,7 +204,8 @@ def analyze(e: EvidenceRepository, s: SnapshotRepository, ledger: Ledger) -> dic
     for value in snapshots:
         profile = value.binding.classification.profile.value
         profiles[profile] += 1
-        regulations[value.binding.current_format.verdict(value.receipt.cutoff)] += 1
+        regulations['REGULATION_UNVERIFIED' if value.snapshot_id in regulation_failures
+                    else value.binding.current_format.verdict(value.receipt.cutoff)] += 1
         groups.setdefault((value.binding.competition_id, profile), []).append(value)
     n = len(snapshots)
     competitions = {v.binding.competition_id for v in snapshots}

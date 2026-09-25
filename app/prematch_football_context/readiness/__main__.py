@@ -33,6 +33,7 @@ def main(argv: list[str] | None = None) -> int:
     cycle = sub.add_parser('cycle')
     cycle.add_argument('--environment', required=True, choices=('TEST', 'LAB'))
     cycle.add_argument('--observe', required=True, action='store_true')
+    cycle.add_argument('--regulation-registry', type=Path, help='Existing reviewed registry, opened read-only for this run')
     cycle.add_argument('--max-calls', type=int, default=40)
     cycle.add_argument('--horizon-days', type=int, default=1)
     args = parser.parse_args(argv)
@@ -54,7 +55,8 @@ def main(argv: list[str] | None = None) -> int:
     runtime = argparse.Namespace(shadow_database=root/'shadow.db', analysis_database=root/'analysis.db',
         adaptive_database=root/'adaptive.db', ledger=root/'lab-ledger.db', capability_cache=root/'var/capabilities.json',
         max_calls=args.max_calls, horizon_days=args.horizon_days, daily_reserve=DAILY_SAFETY_RESERVE, send=False)
-    observation = ProspectiveObservation(root, environment=args.environment, clock=lambda: datetime.now(timezone.utc))
+    observation = ProspectiveObservation(root, environment=args.environment, clock=lambda: datetime.now(timezone.utc),
+                                         regulation_registry=args.regulation_registry)
     completed = False
     credential_failure = False
     try:
