@@ -1,5 +1,14 @@
 # TASKS.md
 
+## 2026-09-26 — Compact PREMATCH operator stdout
+
+- [x] Add versioned bounded controlled-cycle/rehearse output without altering persisted evidence.
+- [x] Retain all delivery reconciliation facts, including emergency persistence failures.
+- [x] Add large synthetic cycle, immutable inspection, redaction and exit regressions.
+- [x] Recheck focused delivery, statistics, settlement and discovery behavior offline.
+- No policy/model changes, migrations, deployment or publication enablement.
+
+
 ## 2026-09-23 — PREMATCH adaptive shadow chronology hardening
 
 - Audit the complete incoming/canonical/governance shadow path on exact `50a73ce`.

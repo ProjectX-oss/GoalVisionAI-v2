@@ -16,6 +16,7 @@ from app.real_match_lab_analysis.fingerprint import canonical_json, fingerprint
 from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
 
 from .audit import audit_recent_lab, settled_loss_postmortems
+from .operator_output import operator_cycle_summary
 from .publication import prepare_v2_publications
 from .quota import DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE, discovery_state
 from .repository import ShadowEvidenceRepository
@@ -327,7 +328,8 @@ def main(argv: list[str] | None = None) -> int:
         from .diagnostics import human_diagnostic
         print(human_diagnostic(value))
     else:
-        print(canonical_json(value))
+        print(canonical_json(operator_cycle_summary(value)
+                             if args.command in {"controlled-cycle", "rehearse"} else value))
     return 1 if value.get("terminal_error") else 0
 
 

@@ -37,6 +37,13 @@ def cycle(tmp_path, monkeypatch, capsys):
     def run():
         assert cli.main([*_controlled_cycle_arguments(send=True), '--label-v2-selections']) == 0
         report = json.loads(capsys.readouterr().out)
+        assert report['schema_version'] == 'goalvision-lab-v2-operator-cycle-v1'
+        assert 'candidate_markets' not in report
+        for delivery in report['controlled_publication']['deliveries']:
+            assert {'kind', 'prediction_id', 'stage', 'claim_persisted', 'transport_attempted',
+                    'transport_failure_kind', 'acknowledgement_received', 'acknowledgement',
+                    'receipt_persisted', 'reconciliation_required', 'unknown_marker_persisted',
+                    'persistence_failure', 'status'} <= delivery.keys()
         assert 'secret' not in json.dumps(report)
         return report
 
@@ -210,6 +217,12 @@ def test_reporting_persistence_failure_exposes_bounded_failure(cycle, monkeypatc
     item, = report['controlled_publication']['deliveries']
     assert item['transport_attempted']
     assert item['receipt_persisted'] is (record is None)
+    assert item['prediction_id'].startswith('lab-v2-single-')
+    assert item['claim_persisted']
+    assert item['acknowledgement'] == (None if record == 'delivery_unknown' else
+                                       {'chat_id': '-1003510920417', 'message_id': 9001})
+    assert item['reconciliation_required'] is (record is not None)
+    assert item['unknown_marker_persisted'] is False
     assert report['telegram_sends'] == int(record is None)
 
 

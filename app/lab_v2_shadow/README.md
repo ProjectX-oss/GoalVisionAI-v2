@@ -145,3 +145,33 @@ remain visible separately from the current discovery clock state.
 
 No schema migration is needed. Historical rows and losing results are unchanged.
 See [implementation and validation report](../../docs/LAB_V2_PREMATCH_SIMPLIFICATION.md).
+
+## Compact controlled-cycle stdout
+
+`controlled-cycle` and `rehearse` emit one JSON line with schema
+`goalvision-lab-v2-operator-cycle-v1`. It contains the evaluation timestamp,
+`cycle_id` (the existing `rehearsal` evidence identity), analysis/delivery status,
+mode, publication flags, discovery/candidate/API counts, cycle-persistence result,
+and a bounded controlled-publication summary. `summary` keeps its existing format.
+
+Every service delivery invocation retains kind, prediction ID, stage, claim and
+transport facts, transport failure kind, acknowledgement chat/message IDs, receipt
+status, reconciliation requirement, unknown-marker persistence, persistence failure
+and status. Successful deliveries before a later failure remain visible. There is
+no delivery-list truncation, including when publication-cycle persistence fails.
+Size depends on delivery invocations, never discovered fixtures or candidates.
+
+Only bounded scalar fields are projected. No candidate arrays, fixture lists,
+provider responses, message bodies, tokens or raw exception text are printed.
+A truthy terminal error becomes `{"code":"CYCLE_TERMINAL_ERROR"}`; the original
+report still determines the process exit code. Night pauses have zero attempts,
+`analysis_status=SKIPPED`, and `publication_cycle_persistence.persisted=null`
+because that path only stores the existing night rehearsal record.
+
+Persistence is unchanged: inspect the complete cycle with
+`ShadowEvidenceRepository.get("rehearsal", cycle_id)`, then resolve its
+`candidate_ids` through `get("candidate", candidate_id)`. Publication-boundary
+records remain under `publication_cycle`; delivery claims and receipts remain in
+the existing ledger. The formatter neither writes nor modifies these records.
+For emergency delivery reconciliation, retain the protected stdout line even if
+the evidence store failed. Never retry a send based on stdout alone.
