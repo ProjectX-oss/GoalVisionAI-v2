@@ -15,7 +15,8 @@ sys.path.insert(0, str(SOURCE.parent))
 import upgrade_prematch_reviewed as upgrade
 
 
-@pytest.fixture(params=[False, True], ids=['initial-upgrade', 'protected-output-upgrade'])
+@pytest.fixture(params=[(False, False), (True, False), (True, True)],
+                ids=['initial-upgrade', 'protected-output-upgrade', 'enabled-publication-upgrade'])
 def prepared(rollout, monkeypatch, tmp_path, request):
     r = rollout
     r.invoke()
@@ -37,8 +38,9 @@ def prepared(rollout, monkeypatch, tmp_path, request):
     proposed['commit'] = 'accepted-commit'
     r.upgrade_manifest = {'previous':previous,'proposed':proposed,'effective_static':{},
                           'expected_dropins':{s:hashlib.sha256(b).hexdigest() for s,b in r.files().items()}}
-    r.upgrade_manifest['previous_protected_stdout'] = request.param
-    if request.param:
+    r.upgrade_manifest['previous_protected_stdout'] = request.param[0]
+    r.upgrade_manifest['preserve_new_picks'] = request.param[1]
+    if request.param[0]:
         for service in r.services:
             r.module.write_atomic(r.etc/(service+'.d')/r.module.DROPIN,
                                   upgrade.render(r.upgrade_manifest, service, previous=True))
@@ -54,13 +56,13 @@ def test_upgrade_and_monotonic_controls_and_compatible_recovery(prepared):
     r.upgrade()
     after=r.files()
     assert all(after[s] == upgrade.render(r.upgrade_manifest,s) for s in r.services)
-    assert '--send' not in after[r.services[0]].decode()
+    assert ('--send' in after[r.services[0]].decode()) == r.upgrade_manifest['preserve_new_picks']
     assert 'StandardOutput=append:' in after[r.services[0]].decode()
     for action in ('disable-new-picks','disable-data-labels','disable-new-picks','disable-data-labels'):
         r.upgrade(action)
         assert '--send' not in r.files()[r.services[0]].decode()
     r.upgrade('recover')
-    assert all(r.files()[s] == upgrade.render(r.upgrade_manifest,s,previous=True,observe=False,labels=False) for s in r.services)
+    assert all(r.files()[s] == upgrade.render(r.upgrade_manifest,s,previous=True,send=False,observe=False,labels=False) for s in r.services)
     assert r.timer_states == r.original_timers
     if r.upgrade_manifest['previous_protected_stdout']:
         assert 'StandardOutput=append:' in r.files()[r.services[0]].decode()
@@ -75,7 +77,7 @@ def test_preserves_each_already_disabled_capability(prepared,observe,labels):
         r.module.write_atomic(r.etc/(s+'.d')/r.module.DROPIN,upgrade.render(r.upgrade_manifest,s,previous=True,observe=observe,labels=labels))
     r.upgrade_manifest['expected_dropins']={s:hashlib.sha256(b).hexdigest() for s,b in r.files().items()}
     r.upgrade()
-    assert upgrade.state(r.upgrade_manifest,r.files()) == (False,observe,labels)
+    assert upgrade.state(r.upgrade_manifest,r.files()) == (False,r.upgrade_manifest['preserve_new_picks'],observe,labels)
 
 
 @pytest.mark.parametrize('drift', ['dropin','base','loaded','timer','expected'])
@@ -322,3 +324,13 @@ def test_effective_command_drift_after_reload_is_rejected(prepared,monkeypatch):
         return r.run(*args)
     monkeypatch.setattr(r.module,'run',run)
     with pytest.raises(SystemExit,match='Effective command drift'):upgrade.configuration(r.upgrade_manifest,r.files())
+
+
+def test_enabled_upgrade_and_explicit_recovery_restore_exact_bytes(prepared):
+    r = prepared
+    r.upgrade()
+    assert upgrade.state(r.upgrade_manifest, r.files())[1:] == (
+        r.upgrade_manifest['preserve_new_picks'], True, True)
+    r.upgrade('recover')
+    assert r.files() == r.before
+    assert r.timer_states == r.original_timers

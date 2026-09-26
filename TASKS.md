@@ -1,5 +1,15 @@
 # TASKS.md
 
+## 2026-09-26 — Lab V2 public message upgrade package
+
+- [x] Preserve current publication/observation/label capabilities on reviewed upgrade.
+- [x] Restore exact compact-output release on failed/interrupted recovery.
+- [x] Rehearse enabled and disabled states with disposable fake systemd tests.
+- [x] Prepare versioned package, exact configuration diff and read-only check.
+- Runbook: `docs/operations/LAB_V2_PUBLIC_MESSAGE_UPGRADE.md`.
+- No installation, timer stop, live cycle, Telegram send, sudo, push or merge.
+
+
 ## 2026-09-26 — Compact-output installed-release upgrade preparation
 
 - [x] Preserve the existing protected stdout sink through upgrade and recovery.

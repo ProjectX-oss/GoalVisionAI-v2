@@ -1,4 +1,4 @@
-"""Explicit upgrade of the installed, no-send PREMATCH V2 configuration.
+"""Explicit upgrade of the installed PREMATCH V2 configuration.
 
 Reuse reviewed V2 validation, lock, atomic writes and start gates. Never apply,
 remove installed release drop-ins, invoke application commands, or alter history.
@@ -30,20 +30,23 @@ def check_files(fingerprints: dict) -> None:
             raise SystemExit('Configuration/package drift: ' + name)
 
 
-def render(m: dict, service: str, *, previous=False, observe=True, labels=True) -> bytes:
+def render(m: dict, service: str, *, previous=False, send=None, observe=True, labels=True) -> bytes:
     config = m['previous'] if previous else m['proposed']
-    value = base.dropin(config, service, send=False, observe=observe, labels=labels)
+    send = m.get('preserve_new_picks', False) if send is None else send
+    value = base.dropin(config, service, send=send, observe=observe, labels=labels)
     if (not previous or m.get('previous_protected_stdout', False)) and service == base.SERVICES[0]:
         value += ('StandardOutput=append:' + str(LOG) + '\n').encode()
     return value
 
 
-def state(m: dict, originals: dict) -> tuple[bool, bool, bool]:
+def state(m: dict, originals: dict) -> tuple[bool, bool, bool, bool]:
     for previous in (True, False):
-        for observe, labels in ((False, False), (True, False), (True, True)):
-            if all(originals[s] == render(m, s, previous=previous, observe=observe, labels=labels)
-                   for s in base.SERVICES):
-                return previous, observe, labels
+        for send in ((False, True) if m.get('preserve_new_picks', False) else (False,)):
+            for observe, labels in ((False, False), (True, False), (True, True)):
+                if all(originals[s] == render(m, s, previous=previous, send=send,
+                                              observe=observe, labels=labels)
+                       for s in base.SERVICES):
+                    return previous, send, observe, labels
     raise SystemExit('Unknown or mixed installed configuration; explicit recovery/review required.')
 
 
@@ -245,24 +248,25 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
             if set(base.run('systemctl', 'show', service, '-p', 'DropInPaths', '--value').split()) != expected_paths:
                 raise SystemExit('Unknown effective recovery drop-ins.')
     else:
-        previous, observe, labels = state(m, originals)
+        previous, send, observe, labels = state(m, originals)
         configuration(m, originals)
         if any(path.exists() for path in gates().values()):
             raise SystemExit('Existing installer gate; review required.')
         if action == 'upgrade':
             if not previous or {s: sha(p) for s, p in targets.items()} != m['expected_dropins']:
                 raise SystemExit('Upgrade requires exact reviewed installed configuration.')
-            desired = {s: render(m, s, observe=observe, labels=labels) for s in targets}
+            desired = {s: render(m, s, send=send, observe=observe, labels=labels) for s in targets}
         elif action == 'recover':
             if previous:
                 raise SystemExit('Previous compatible release already installed.')
-            desired = {s: render(m, s, previous=True, observe=observe, labels=labels) for s in targets}
+            desired = {s: render(m, s, previous=True, send=send, observe=observe, labels=labels) for s in targets}
         else:
             if previous:
                 raise SystemExit('Upgrade controls require upgraded release; use prior reviewed controls before upgrade.')
+            send = False
             if action == 'disable-data-labels':
                 observe = labels = False
-            desired = {s: render(m, s, observe=observe, labels=labels) for s in targets}
+            desired = {s: render(m, s, send=send, observe=observe, labels=labels) for s in targets}
         states = {t: base.run('systemctl', 'show', t, '-p', 'ActiveState', '--value') for t in timers}
         if any(v not in ('active', 'inactive', 'failed') for v in states.values()):
             raise SystemExit('Transitional timer state; retry at a stable boundary.')
@@ -309,12 +313,12 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
             restore_timers(active)
         except BaseException:
             write_gates()
-            raise RuntimeError('Recovery incomplete: keep new picks disabled; retain journal and run recover after reviewing the failure.') from None
+            raise RuntimeError('Recovery incomplete: keep start gates in place; retain journal and run recover after reviewing the failure.') from None
         else:
             JOURNAL.unlink()
         raise
     JOURNAL.unlink()
-    print('Configuration changed; no application cycle invoked. Installation, scheduled tick and re-enable are separate states.')
+    print('Configuration changed; no application cycle invoked. The next scheduled tick uses the installed release and preserved capabilities.')
 
 
 def main() -> None:
@@ -329,9 +333,9 @@ def main() -> None:
     if args.action == 'check':
         validate(m)
         originals = {s: (base.SYSTEMD / (s + '.d') / base.DROPIN).read_bytes() for s in base.SERVICES}
-        previous, observe, labels = state(m, originals)
+        previous, send, observe, labels = state(m, originals)
         configuration(m, originals)
-        print(json.dumps({'release_state': 'previous' if previous else 'upgraded', 'new_picks': False,
+        print(json.dumps({'release_state': 'previous' if previous else 'upgraded', 'new_picks': send,
                           'observe': observe, 'labels': labels, 'journal_pending': JOURNAL.exists()}))
         return
     if os.geteuid() != 0:
