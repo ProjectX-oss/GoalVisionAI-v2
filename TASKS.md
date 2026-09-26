@@ -1,5 +1,15 @@
 # TASKS.md
 
+## 2026-09-26 — Controlled LAB new-pick re-enablement preparation
+
+- [x] Add an exact accepted-compact-release `enable-new-picks` operator action.
+- [x] Require fresh bounded delivery/history clearance before pause and after drain.
+- [x] Preserve lock, gates, journal, timer restoration, compact stdout and all service invariants.
+- [x] Recover failed enablement to its recorded compact/no-send state; keep disable monotonic.
+- [x] Complete 168 offline operations/history tests and 380 accepted-application regressions.
+- [x] Prepare a versioned package and review report; no enablement or deployment executed.
+- See `docs/operations/LAB_NEW_PICK_REENABLE_REVIEW.md`.
+
 ## 2026-09-26 — Compact-output installed-release upgrade preparation
 
 - [x] Preserve the existing protected stdout sink through upgrade and recovery.

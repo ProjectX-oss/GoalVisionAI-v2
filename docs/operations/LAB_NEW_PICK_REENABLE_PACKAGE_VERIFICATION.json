@@ -1,0 +1,17 @@
+{
+  "application": "4fd68bd9a71958152a91a6ca51cbc23ef96da47b",
+  "configuration_directories": 288,
+  "history": "PASSED",
+  "host_fingerprints": 3625,
+  "journal_pending": false,
+  "labels": true,
+  "manifest_sha256": "31b4c2fab50b866d9db1ba59350cc6ca965afb71caa768602aee6a63ba57d7c1",
+  "mutation_actions_executed": [],
+  "new_picks": false,
+  "observe": true,
+  "operations_baseline": "9b74345e7cd76f3566485baaafb41676fba8b1c4",
+  "payload_fingerprints": 1162,
+  "protected_stdout": "VERIFIED",
+  "release_state": "upgraded",
+  "validation": "PASSED"
+}

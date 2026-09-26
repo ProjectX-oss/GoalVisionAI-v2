@@ -1,4 +1,4 @@
-"""Explicit upgrade of the installed, no-send PREMATCH V2 configuration.
+"""Explicit reviewed PREMATCH V2 upgrade and compact-release new-pick controls.
 
 Reuse reviewed V2 validation, lock, atomic writes and start gates. Never apply,
 remove installed release drop-ins, invoke application commands, or alter history.
@@ -18,6 +18,8 @@ JOURNAL = Path('/var/lib/goalvision-prematch-upgrade/transaction.json')
 LOG_DIR = Path('/var/log/goalvision-prematch')
 LOG = LOG_DIR / 'discovery-output.log'
 ROTATION = Path('/etc/logrotate.d/goalvision-prematch-reviewed')
+ACCEPTED_APPLICATION = '4fd68bd9a71958152a91a6ca51cbc23ef96da47b'
+ACCEPTED_OPERATIONS = '9b74345e7cd76f3566485baaafb41676fba8b1c4'
 
 
 def sha(path: Path) -> str:
@@ -30,24 +32,62 @@ def check_files(fingerprints: dict) -> None:
             raise SystemExit('Configuration/package drift: ' + name)
 
 
-def render(m: dict, service: str, *, previous=False, observe=True, labels=True) -> bytes:
+def render(m: dict, service: str, *, previous: bool = False, observe: bool = True, labels: bool = True, send: bool = False) -> bytes:
     config = m['previous'] if previous else m['proposed']
-    value = base.dropin(config, service, send=False, observe=observe, labels=labels)
+    value = base.dropin(config, service, send=send, observe=observe, labels=labels)
     if (not previous or m.get('previous_protected_stdout', False)) and service == base.SERVICES[0]:
         value += ('StandardOutput=append:' + str(LOG) + '\n').encode()
     return value
 
 
-def state(m: dict, originals: dict) -> tuple[bool, bool, bool]:
+def state(m: dict, originals: dict) -> tuple[bool, bool, bool, bool]:
+    """Recognize exact release, send, observation and label bytes for all services."""
     for previous in (True, False):
-        for observe, labels in ((False, False), (True, False), (True, True)):
-            if all(originals[s] == render(m, s, previous=previous, observe=observe, labels=labels)
-                   for s in base.SERVICES):
-                return previous, observe, labels
+        for send in (False, True):
+            if send and (previous or not m.get('enablement')):
+                continue
+            for observe, labels in ((False, False), (True, False), (True, True)):
+                if all(originals[s] == render(m, s, previous=previous, send=send,
+                                              observe=observe, labels=labels)
+                       for s in base.SERVICES):
+                    return previous, send, observe, labels
     raise SystemExit('Unknown or mixed installed configuration; explicit recovery/review required.')
 
 
+def enablement_contract(m: dict) -> None:
+    """Bind the new action to the accepted compact application and operations."""
+    if (m.get('enablement') != {'application': ACCEPTED_APPLICATION, 'operations': ACCEPTED_OPERATIONS}
+            or m['proposed']['commit'] != ACCEPTED_APPLICATION
+            or not m.get('previous_protected_stdout')):
+        raise SystemExit('Enablement requires the accepted compact-output release/package.')
+
+
+def require_history(m: dict) -> dict:
+    """Run a fresh bounded read-only check; never use a saved clearance result."""
+    from prematch_enable_history import inventory
+    report = inventory(m['history_paths'])
+    if any(report['blockers'].values()):
+        raise SystemExit('Current delivery/history blocks enablement: ' + json.dumps(report['blockers'], sort_keys=True))
+    return report
+
+
+def protected_output(m: dict) -> None:
+    """Require existing protected stdout/rotation without creating or changing them."""
+    group = pwd.getpwnam('arvis').pw_gid
+    for path, mode in ((LOG_DIR, 0o750), (LOG, 0o640), (ROTATION, 0o644)):
+        if path.is_symlink() or not path.exists():
+            raise SystemExit('Installed protected output configuration missing or unsafe.')
+        info = path.stat()
+        expected_group = group if path != ROTATION else 0
+        if (info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode)) != (0, expected_group, mode):
+            raise SystemExit('Output permissions/ownership drift.')
+    if ROTATION.read_bytes() != Path(m['rotation_source']).read_bytes():
+        raise SystemExit('Rotation configuration drift.')
+
+
 def validate(m: dict) -> None:
+    if m.get('enablement'):
+        enablement_contract(m)
     for config in (m['previous'], m['proposed']):
         base.validate_manifest(config)
         release = Path(config['release'])
@@ -211,6 +251,8 @@ def restore_timers(active: list) -> None:
 
 def operate(m: dict, action: str, manifest_digest: str) -> None:
     """Fence all four compatible services and retain recovery state on any failure."""
+    if action not in ('upgrade', 'recover', 'enable-new-picks', 'disable-new-picks', 'disable-data-labels'):
+        raise SystemExit('Unknown operator action.')
     validate(m)
     targets = {s: base.SYSTEMD / (s + '.d') / base.DROPIN for s in base.SERVICES}
     originals = {s: path.read_bytes() for s, path in targets.items()}
@@ -234,7 +276,11 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
         active = data['active_timers']
         if not set(active).issubset(timers):
             raise SystemExit('Unexpected recovery timer scope.')
-        desired = before
+        desired = {s: v.encode() for s, v in data.get('recovery', data['before']).items()}
+        state(m, desired)
+        if desired != before and not (data.get('action') == 'disable-new-picks' and desired == after
+                                      and not state(m, desired)[1]):
+            raise SystemExit('Invalid recovery target.')
         # A partial gate set is allowed only for this recorded interrupted operation.
         for service, path in gates().items():
             expected_paths = {str(targets[service])}
@@ -245,11 +291,22 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
             if set(base.run('systemctl', 'show', service, '-p', 'DropInPaths', '--value').split()) != expected_paths:
                 raise SystemExit('Unknown effective recovery drop-ins.')
     else:
-        previous, observe, labels = state(m, originals)
+        previous, send, observe, labels = state(m, originals)
         configuration(m, originals)
         if any(path.exists() for path in gates().values()):
             raise SystemExit('Existing installer gate; review required.')
-        if action == 'upgrade':
+        if m.get('enablement') and action in ('upgrade', 'recover'):
+            raise SystemExit('Enablement package requires a recorded journal for recovery; no release rollback.')
+        if action == 'enable-new-picks':
+            enablement_contract(m)
+            if previous or send or not observe or not labels:
+                raise SystemExit('Enablement requires compact release with new_picks=false, observe=true, labels=true.')
+            if {s: sha(p) for s, p in targets.items()} != m['expected_dropins']:
+                raise SystemExit('Enablement requires exact reviewed installed configuration.')
+            protected_output(m)
+            require_history(m)
+            desired = {s: render(m, s, send=True) for s in targets}
+        elif action == 'upgrade':
             if not previous or {s: sha(p) for s, p in targets.items()} != m['expected_dropins']:
                 raise SystemExit('Upgrade requires exact reviewed installed configuration.')
             desired = {s: render(m, s, observe=observe, labels=labels) for s in targets}
@@ -269,13 +326,17 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
         active = [t for t, v in states.items() if v == 'active']
         if action == 'upgrade':
             output_setup(m)
+        elif m.get('enablement'):
+            protected_output(m)
         elif not previous:
             if not LOG.exists() or not ROTATION.exists():
                 raise SystemExit('Installed output configuration missing.')
             output_setup(m)
-        data = {'manifest_sha256': manifest_digest, 'active_timers': active,
+        data = {'manifest_sha256': manifest_digest, 'active_timers': active, 'action': action,
                 'before': {s: b.decode() for s, b in originals.items()},
                 'after': {s: b.decode() for s, b in desired.items()}}
+        if action == 'disable-new-picks':
+            data['recovery'] = data['after']  # A failed kill switch must never restore --send.
         save_journal(data)
     try:
         if active:
@@ -288,6 +349,9 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
         configuration(m, originals, gated=True)
         if not base.idle(list(base.SERVICES)):
             raise RuntimeError('Service not drained.')
+        if action == 'enable-new-picks':
+            protected_output(m)
+            require_history(m)  # Recheck after every service drained, immediately before the write.
         write_set(targets, desired)
         configuration(m, desired, gated=True)
         clear_gates()
@@ -301,7 +365,7 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
                 base.run('systemctl', 'stop', *active)
             write_gates()
             drain()
-            restored = {s: v.encode() for s, v in data['before'].items()}
+            restored = {s: v.encode() for s, v in data.get('recovery', data['before']).items()}
             write_set(targets, restored)
             configuration(m, restored, gated=True)
             clear_gates()
@@ -320,7 +384,7 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('manifest', type=Path)
-    parser.add_argument('action', choices=('upgrade', 'recover', 'disable-new-picks', 'disable-data-labels', 'check'))
+    parser.add_argument('action', choices=('upgrade', 'recover', 'disable-new-picks', 'disable-data-labels', 'enable-new-picks', 'check'))
     parser.add_argument('--sha256', required=True, help='Reviewed manifest SHA-256')
     args = parser.parse_args()
     if sha(args.manifest) != args.sha256:
@@ -329,9 +393,11 @@ def main() -> None:
     if args.action == 'check':
         validate(m)
         originals = {s: (base.SYSTEMD / (s + '.d') / base.DROPIN).read_bytes() for s in base.SERVICES}
-        previous, observe, labels = state(m, originals)
+        previous, send, observe, labels = state(m, originals)
         configuration(m, originals)
-        print(json.dumps({'release_state': 'previous' if previous else 'upgraded', 'new_picks': False,
+        if m.get('enablement'):
+            protected_output(m)
+        print(json.dumps({'release_state': 'previous' if previous else 'upgraded', 'new_picks': send,
                           'observe': observe, 'labels': labels, 'journal_pending': JOURNAL.exists()}))
         return
     if os.geteuid() != 0:

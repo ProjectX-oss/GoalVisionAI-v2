@@ -1,0 +1,23 @@
+{
+  "blockers": {
+    "acknowledged_unpersisted_delivery_evidence": 0,
+    "delivery_unknown": 0,
+    "economic_claims_without_receipts": 0,
+    "invalid_receipts": 0,
+    "pending_settlement_integrity_blockers": 0,
+    "unreceipted_publication_claims": 0,
+    "unresolved_delivery_evidence": 0,
+    "weekly_delivery_unknown": 0,
+    "weekly_unreceipted_claims": 0
+  },
+  "bounds": {
+    "bytes_per_source": 67108864,
+    "recent_cycles": 200,
+    "sql_seconds_per_database": 15,
+    "stdout_records": 200
+  },
+  "captured_at_utc": "2026-09-26T08:53:06.265492+00:00",
+  "pending_policy": "Any pending published settlement blocks this one-time re-enablement.",
+  "recent_cycles_checked": 200,
+  "stdout_records_checked": 4
+}

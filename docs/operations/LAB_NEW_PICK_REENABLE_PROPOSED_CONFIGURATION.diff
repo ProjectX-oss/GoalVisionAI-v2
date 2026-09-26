@@ -1,0 +1,9 @@
+--- /etc/systemd/system/goalvision-lab-v2-discover.service.d/90-reviewed-prematch-v2.conf
++++ /etc/systemd/system/goalvision-lab-v2-discover.service.d/90-reviewed-prematch-v2.conf
+@@ -2,5 +2,5 @@
+ EnvironmentFile=
+ EnvironmentFile=/home/arvis/goalvision-operations/prematch-compact-output-upgrade-v1-20260926/release.env
+ ExecStart=
+-ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_v2_shadow controlled-cycle --max-calls 400 --settlement-reserve 100 --adaptive-database /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db --football-context-root /home/arvis/goalvision-operations/football-context-v2 --football-context-registry /home/arvis/goalvision-operations/football-context-v2/reviewed-regulations.sqlite --label-v2-selections
++ExecStart=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_v2_shadow controlled-cycle --send --max-calls 400 --settlement-reserve 100 --adaptive-database /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db --football-context-root /home/arvis/goalvision-operations/football-context-v2 --football-context-registry /home/arvis/goalvision-operations/football-context-v2/reviewed-regulations.sqlite --label-v2-selections
+ StandardOutput=append:/var/log/goalvision-prematch/discovery-output.log

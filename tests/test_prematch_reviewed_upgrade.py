@@ -75,7 +75,7 @@ def test_preserves_each_already_disabled_capability(prepared,observe,labels):
         r.module.write_atomic(r.etc/(s+'.d')/r.module.DROPIN,upgrade.render(r.upgrade_manifest,s,previous=True,observe=observe,labels=labels))
     r.upgrade_manifest['expected_dropins']={s:hashlib.sha256(b).hexdigest() for s,b in r.files().items()}
     r.upgrade()
-    assert upgrade.state(r.upgrade_manifest,r.files()) == (False,observe,labels)
+    assert upgrade.state(r.upgrade_manifest,r.files()) == (False,False,observe,labels)
 
 
 @pytest.mark.parametrize('drift', ['dropin','base','loaded','timer','expected'])

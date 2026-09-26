@@ -1,0 +1,21 @@
+{
+  "administrator_calls": "FAKE_IN_TESTS",
+  "application": {
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "380",
+    "time": "32.264"
+  },
+  "application_commit": "4fd68bd9a71958152a91a6ca51cbc23ef96da47b",
+  "backtest": "No new algorithm; exact accepted application retained. Existing offline application regression suite rerun.",
+  "network_syscalls": "DENIED_BY_SECCOMP",
+  "operations": {
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "168",
+    "time": "5.579"
+  },
+  "prediction_logic_changed": false
+}
