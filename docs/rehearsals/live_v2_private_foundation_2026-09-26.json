@@ -1,0 +1,107 @@
+{
+  "status": "LIVE_V2_PRIVATE_FOUNDATION_BLOCKED",
+  "base_application": "23e57e9c48f321b8ee5f67bd536fbb2b264f6cb0",
+  "branch": "codex/live-v2-private-foundation",
+  "rehearsal": {
+    "api_calls": 0,
+    "candidate_qualified": false,
+    "slot": "2026-09-26T22:00:00+03:00",
+    "status": "QUOTA_RESERVED_FOR_PREMATCH",
+    "telegram_sends": 0
+  },
+  "quota_decision": {
+    "at": "2026-09-26T19:46:41.262833+00:00",
+    "endpoint": "/fixtures",
+    "evidence": {
+      "claims_24h": 6925,
+      "claims_7d": 35241,
+      "cycle_24h": {
+        "count": 28,
+        "max": 275,
+        "median": 253,
+        "min": 0,
+        "p95": 272,
+        "total": 6099
+      },
+      "cycle_7d": {
+        "count": 167,
+        "max": 299,
+        "median": 1,
+        "min": 0,
+        "p95": 281,
+        "total": 17968
+      },
+      "cycle_active_24h": {
+        "count": 24,
+        "max": 275,
+        "median": 255,
+        "min": 225,
+        "p95": 272,
+        "total": 6099
+      },
+      "cycle_active_7d": {
+        "count": 82,
+        "max": 299,
+        "median": 256,
+        "min": 2,
+        "p95": 293,
+        "total": 17959
+      },
+      "daily_remaining_lower_bound": 718,
+      "earliest_retained_claim_in_window": "2026-09-19T20:00:04.032658+00:00",
+      "earliest_retained_cycle_in_window": "2026-09-19T20:00:30.332552+00:00",
+      "installed_contract": {
+        "configuration_fingerprint": "79a71aef032b08483575f001d8f611917fa6386b3ed8353a0bcb34f033be037d",
+        "cycle_ceiling": 400,
+        "verified": true
+      },
+      "last_claim_at": "2026-09-26T19:40:22.437957+00:00",
+      "latest_cycle_at": "2026-09-26T19:30:42.363194+00:00",
+      "minute_remaining_lower_bound": 292,
+      "observed_at": "2026-09-26T19:46:41.262833+00:00",
+      "provider_headers_verified": false,
+      "remaining_prematch_cycles": 1,
+      "settlement_24h": 665,
+      "settlement_7d": 2463,
+      "settlement_max_utc_day": 547,
+      "shared_token_exclusive_until": null,
+      "source": "PREMATCH_READ_ONLY_AUDIT",
+      "status_24h": 172
+    },
+    "live_daily_calls": 0,
+    "live_opportunity_calls": 0,
+    "median_projected_full_day_requirement": 8257,
+    "observed_daily_remaining": 718,
+    "observed_minute_remaining": 292,
+    "per_cycle_protected": 400,
+    "protected_full_day_requirement": 12373,
+    "protected_remaining_requirement": 1573,
+    "query": {
+      "live": "all"
+    },
+    "reasons": [
+      "FRESH_PROVIDER_QUOTA_REQUIRED",
+      "SHARED_TOKEN_CONCURRENCY_UNPROVEN",
+      "PROTECTED_CAPACITY_EXHAUSTED"
+    ],
+    "remaining_cycles": 1,
+    "safe_calls": 0,
+    "safety_margin": 375,
+    "settlement_reserve": 798,
+    "slot": "2026-09-26T22:00:00+03:00",
+    "status": "QUOTA_RESERVED_FOR_PREMATCH",
+    "version": "LIVE_PREMATCH_FIRST_QUOTA_V1"
+  },
+  "api_claim_count": 0,
+  "telegram_send_count": 0,
+  "live_fixture_count": null,
+  "shortlisted_fixture": null,
+  "available_statistics": null,
+  "available_bookmakers": null,
+  "verified_live_bet_mappings": [],
+  "candidate_evaluation": "NOT_EVALUATED_QUOTA_BLOCKED",
+  "focused_tests": 92,
+  "directly_affected_regressions": 151,
+  "evidence_note": "Retained PREMATCH claims are pre-request quota evidence. No fresh provider header probe was authorized by safe capacity.",
+  "fingerprint": "415515086f383d870761dfad908636836c680f0d4d83420d69897728107db52d"
+}

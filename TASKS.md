@@ -1,5 +1,16 @@
 # TASKS.md
 
+## 2026-09-26 — V2 LIVE direct-private foundation
+
+- [x] Implement isolated append-only LIVE evidence, conservative PREMATCH-first quota governor, eight Riga opportunities and current-only discovery contracts.
+- [x] Add reviewed-market/multiple-bookmaker consensus contracts, state gates, fixed-private delivery, deterministic 1u settlement and operator CLI.
+- [x] Pass 92 focused LIVE tests and 151 related regressions; prepare inert LIVE-only units and kill switch.
+- [x] Run one bounded rehearsal: QUOTA_RESERVED_FOR_PREMATCH, zero API/Telegram calls.
+- [ ] Resolve fresh/shared-token quota proof, actual LIVE catalogue/bookmaker coverage and private-bot prerequisites before deployment review.
+- Status: LIVE_V2_PRIVATE_FOUNDATION_BLOCKED. No deployment, PREMATCH mutation, push or merge.
+- Evidence: `docs/LIVE_V2_PRIVATE_FOUNDATION.md`.
+
+
 ## 2026-09-26 — Professional Lab V2 public messages
 
 - [x] Add versioned Latvian presentation for new labelled single previews.

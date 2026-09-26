@@ -4,3 +4,6 @@ __pycache__/
 *.pyc
 var/lab_rehearsal/
 var/staging_rehearsal/
+
+# Isolated LIVE evidence and claims; never commit runtime databases.
+var/live_v2/

@@ -1,0 +1,12 @@
+[Unit]
+Description=GoalVision V2 LIVE eight Riga opportunities daily
+
+[Timer]
+OnCalendar=*-*-* 08,10,12,14,16,18,20,22:00:00 Europe/Riga
+Persistent=false
+AccuracySec=1s
+RandomizedDelaySec=0
+Unit=goalvision-live-v2-private.service
+
+[Install]
+WantedBy=timers.target

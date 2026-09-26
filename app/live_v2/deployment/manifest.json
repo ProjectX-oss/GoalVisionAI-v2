@@ -1,0 +1,30 @@
+{
+  "status": "BLOCKED_PREPARED_ONLY",
+  "base_application": "23e57e9c48f321b8ee5f67bd536fbb2b264f6cb0",
+  "install_prefix": "/opt/goalvision-live-v2",
+  "state_prefix": "/var/lib/goalvision-live-v2",
+  "environment_reference": "/etc/goalvision-live-v2/private.env",
+  "send_enabled": false,
+  "files": {
+    "app/live_v2/__init__.py": "ad5d90a2208b4f4476a7ddf8ad27dd4066d296f8e28631c83239eda42ce04d0a",
+    "app/live_v2/__main__.py": "7e68fe8e5e49ff1cb38dc00156678c9a117b60381bcbf8c414efd4baf1df6107",
+    "app/live_v2/contracts.py": "43f9c26b95c305d18c5ab23c5a92ef7f397b514493fe91ca10fa9df79e21fd8f",
+    "app/live_v2/delivery.py": "599923a957b3b1b384bf4acee4690859c3f4f9650dd7d12b21793740465cf8fa",
+    "app/live_v2/deployment/REVIEW.md": "c9ddc003ac11c45dabfea8e6d1c625979048b88dd94269411bcdadf260fbd5bb",
+    "app/live_v2/deployment/disable-live-v2": "8afd0d9484db3f3757d7b221d8806171553bcf3c9716dca856cb5f442fbd3d1f",
+    "app/live_v2/deployment/goalvision-live-v2-private.service": "06c8ce34278582f3bbf4dc27cbb7fcc5f6dbcf129229d0b03ebcf08fe64eb0bd",
+    "app/live_v2/deployment/goalvision-live-v2-private.timer": "0c9111c27cedaf44f0ca766a02048a1ccc593d79e5b607a6bfcf22d5e783a0ee",
+    "app/live_v2/deployment/private.env.example": "bf3d7b0978502c2953ef2bf3744dbb80b56e2633f7207270a1d950b44a0a179b",
+    "app/live_v2/markets.json": "95b1cd002356362622717ee3cd2be9d50ace3142748a268b73bb651464f04b25",
+    "app/live_v2/markets.py": "97477f008842d557739bdec20d082dbb5950933f36b520ccc2899b3fc5ea744a",
+    "app/live_v2/policy.py": "5ef636f9315becd47fdb07c11cf23d674b212ca61c93b2be4c907091d946f73d",
+    "app/live_v2/presentation.py": "ac0eafbce044c7312256643a6556e1a3e09486f3520d1da243a56651ea37751c",
+    "app/live_v2/provider.py": "9f1a264ac7e2c86d6194cdf727b61b1c477c57d4700180dedfa97448e2ec2d2a",
+    "app/live_v2/quota.py": "6097b8cd7602bd3b5469177b45904db3265431bd51784741f9d8eb4888f9e0da",
+    "app/live_v2/runner.py": "e3aa83df62c780178f0a74a1c8b7bedd00c78ed75563485f51ec3fedd7fb28bd",
+    "app/live_v2/schedule.py": "c8ec38a0c97b6a0324d88af2a6ce1aee2a085aae8c626767b9479e814cf188e3",
+    "app/live_v2/settlement.py": "3e2b18cc5c877793c295d56847f26dd4179d6d7351159fc280a7fe5a1ce77a86",
+    "app/live_v2/state.py": "764339f3269be5dde16670ad58b040175270783df828c5b04f8baa1fff4400f0",
+    "app/live_v2/store.py": "d3d51cb7a55263e030df64468bfda7ca8311acc43228cbdb1a29758f2e9504bb"
+  }
+}

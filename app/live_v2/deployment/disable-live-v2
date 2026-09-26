@@ -1,0 +1,4 @@
+#!/bin/sh
+# Stops future LIVE opportunities only. An already running no-send discovery may finish.
+set -eu
+exec systemctl disable --now goalvision-live-v2-private.timer

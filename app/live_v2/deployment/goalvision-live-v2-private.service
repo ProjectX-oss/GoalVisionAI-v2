@@ -1,0 +1,21 @@
+[Unit]
+Description=GoalVision V2 LIVE isolated private discovery (no-send foundation)
+Wants=network-online.target
+After=network-online.target
+ConditionPathExists=/etc/goalvision-live-v2/private.env
+
+[Service]
+Type=oneshot
+User=arvis
+WorkingDirectory=/opt/goalvision-live-v2/current
+EnvironmentFile=/etc/goalvision-live-v2/private.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONPATH=/opt/goalvision-live-v2/current
+ExecStart=/opt/goalvision-live-v2/venv/bin/python -P -m app.live_v2 discover --real-api --store /var/lib/goalvision-live-v2/private.sqlite --prematch-audit /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db
+TimeoutStartSec=90
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/goalvision-live-v2
+PrivateTmp=true

@@ -1,0 +1,9 @@
+{
+  "version": "LIVE_MARKET_REVIEW_V1",
+  "endpoint": "/odds/live/bets",
+  "review_status": "BLOCKED_AWAITING_SAFE_AUTHENTICATED_CATALOGUE",
+  "source": "https://www.api-football.com/documentation-v3#tag/Odds-(In-Play)",
+  "catalogue_fingerprint": null,
+  "mappings": [],
+  "note": "No provider IDs guessed. Current bookmaker attribution and market semantics require review."
+}
