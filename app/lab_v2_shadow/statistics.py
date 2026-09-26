@@ -1,7 +1,7 @@
 """Read-only hypothetical single cohorts from immutable confirmed publications."""
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 from app.adaptive_lab.contracts import utc
@@ -81,3 +81,17 @@ def single_cohorts(ledger: object, *, start: datetime, end: datetime, as_of: dat
             'independent_football_context_model': _totals([]),
             'historical_selector_segment': _totals(historical),
             'records': rows, 'diagnostics': diagnostics}
+
+
+def public_single_snapshot(ledger: object, *, as_of: datetime) -> dict:
+    """Freeze all-time confirmed labelled SINGLE evidence using existing formulas.
+
+    Records and cutoffs stay internal for reproduction. Duplicate economic
+    selections fail closed through the existing cohort contract.
+    """
+    cohort = single_cohorts(ledger, start=datetime.min.replace(tzinfo=timezone.utc),
+                           end=datetime.max.replace(tzinfo=timezone.utc), as_of=as_of)
+    if cohort['forward_union'] is None:
+        raise ValueError('DUPLICATE_CONFIRMED_ECONOMIC_SELECTION')
+    return {'version': 'LAB_V2_PUBLIC_SINGLE_STATISTICS_V1', 'as_of': cohort['as_of'],
+            'totals': cohort['forward_union'], 'records': cohort['records']}

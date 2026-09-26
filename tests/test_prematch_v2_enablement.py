@@ -15,7 +15,8 @@ from app.lab_combo.repository import ComboRepository
 from app.lab_combo.service import LabComboService
 from app.lab_combo.settlement import resolve_single
 from app.lab_telegram.models import LabTelegramConfig
-from app.lab_v2_shadow.origin import LABEL, SELECTOR, freeze_origin
+from app.lab_v2_shadow.origin import SELECTOR, freeze_origin
+from app.lab_v2_shadow.public_presentation import TITLE as LABEL
 from app.lab_v2_shadow.publication import prepare_v2_publications
 from app.lab_v2_shadow.statistics import single_cohorts
 from app.real_match_lab_analysis.models import LAB_BOT_USERNAME, LAB_CHAT_ID
@@ -66,7 +67,7 @@ def test_truthful_origin_frozen_no_retroactive_relabelling(ledger):
     assert origin['origins'] == [SELECTOR]
     assert origin['independent_context_model'] is None and origin['context'] is None
     message = ledger.get('single_preview', value['prediction_id'])['message']
-    assert LABEL in message and 'nekalibrēts' in message and 'Atsauce:' in message
+    assert LABEL in message and 'nekalibrēts' not in message and 'Atsauce:' not in message
     assert 'HIGH' not in message
     assert prepare(ledger) == value
     old = prepare(ledger, candidate(1), labelled=False)
@@ -162,8 +163,9 @@ def test_result_labels_original_link_and_receipt_requirement(ledger,status,score
     result=resolve_single(value,payload,after)
     assert result['status']==expected and result['selection_origin']==value['selection_origin']
     ledger.append('single_settlement',pid,result)
-    message=service._single_result_message(result,{})
-    assert LABEL in message and 'https://t.me/c/3510920417/123' in message and expected in message
+    service.clock=lambda:after
+    message=service._single_result_message(result,service._single_preview_statistics(result))
+    assert LABEL in message and 'https://t.me/' not in message and expected in message
     ledger.append('single_settlement_preview',pid,{'message':message})
     service.clock=lambda:after
     assert asyncio.run(service.publish_experimental('single_settlement',pid,config(),t))['sent']

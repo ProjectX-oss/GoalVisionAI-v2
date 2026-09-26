@@ -1,5 +1,15 @@
 # TASKS.md
 
+## 2026-09-26 — Professional Lab V2 public messages
+
+- [x] Add versioned Latvian presentation for new labelled single previews.
+- [x] Freeze existing confirmed labelled-single cohort statistics for predictions/results.
+- [x] Preserve historical bytes, internal linkage, claims, receipts and plain-text delivery.
+- [x] Cover wording, accounting, replay and directly affected regressions offline.
+- Documentation: `docs/LAB_V2_PUBLIC_MESSAGES.md`.
+- No model/policy/schema change, deployment, timer stop, live cycle or Telegram send.
+
+
 ## 2026-09-26 — Compact PREMATCH operator stdout
 
 - [x] Add versioned bounded controlled-cycle/rehearse output without altering persisted evidence.

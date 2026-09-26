@@ -371,7 +371,7 @@ class LabComboService:
             result = resolve_single(prediction, cache.get(fixture, {}), now)
             if result and self.ledger.append('single_settlement', identity, result):
                 single_completed.append(identity)
-                stats = single_statistics(self.ledger)
+                stats = self._single_preview_statistics(result)
                 self.ledger.append('single_settlement_preview', identity, {
                     'message': self._single_result_message(result, stats), 'statistics': stats})
         for combo in self.ledger.all('prediction'):
@@ -406,7 +406,7 @@ class LabComboService:
         for value in self.ledger.all('single_settlement'):
             identity = value['prediction_id']
             if not self.ledger.get('single_settlement_preview', identity):
-                stats = single_statistics(self.ledger)
+                stats = self._single_preview_statistics(value)
                 self.ledger.append('single_settlement_preview', identity, {
                     'message': self._single_result_message(value, stats), 'statistics': stats})
         for value in self.ledger.all('settlement'):
@@ -422,14 +422,23 @@ class LabComboService:
                 'combo_statistics': statistics(self.ledger, published_only=True),
                 'statistics': statistics(self.ledger, published_only=True)}
 
+    def _single_preview_statistics(self, result: dict) -> dict:
+        """Snapshot after settlement acceptance, only for a new preview."""
+        from app.lab_v2_shadow.origin import is_labelled
+        from app.lab_v2_shadow.statistics import public_single_snapshot
+        if is_labelled(result):
+            return public_single_snapshot(self.ledger, as_of=self.clock())
+        return single_statistics(self.ledger)
+
     def _single_result_message(self, result: dict, stats: dict) -> str:
         """New attributed outcomes retain the label; historical previews stay frozen."""
-        from app.lab_v2_shadow.origin import is_labelled, result_message
+        from app.lab_v2_shadow.origin import is_labelled
+        from app.lab_v2_shadow.public_presentation import result_message
         if is_labelled(result):
             receipt = self.ledger.get('receipt', 'single_prediction:' + result['prediction_id'])
             if receipt is None:
                 raise ValueError('CONFIRMED_PUBLICATION_REQUIRED')
-            return result_message(result, receipt)
+            return result_message(result, stats)
         return single_result_message(result, stats)
 
 

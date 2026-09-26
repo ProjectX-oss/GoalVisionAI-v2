@@ -97,6 +97,10 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         elif label_origin:
             from .origin import freeze_origin
             value['selection_origin'] = freeze_origin(candidate, now=clock, observer=football_context)
+            from .public_presentation import VERSION
+            from .statistics import public_single_snapshot
+            value['public_presentation'] = {
+                'version': VERSION, 'statistics': public_single_snapshot(ledger, as_of=clock)}
         if ledger.append("single_prediction", value["prediction_id"], value):
             ledger.append("single_preview", value["prediction_id"], {"message": v2_single_message(value)})
             ledger.append("v2_segmentation", value["prediction_id"], _segmentation(value, "SINGLE"))
@@ -164,7 +168,11 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
 
 def v2_single_message(value: dict) -> str:
     from .origin import LABEL, is_labelled
+    if is_labelled(value) and 'public_presentation' in value:
+        from .public_presentation import prediction_message
+        return prediction_message(value)
     if is_labelled(value):
+        # Historical version: replay and delivery validation retain exact bytes.
         origin = value['selection_origin']
         families = ', '.join(origin['predictive_families']) or 'saglabātā atlases politika'
         lines = [LABEL, 'Eksperimentāla atlase; nekalibrēts novērtējums.',
