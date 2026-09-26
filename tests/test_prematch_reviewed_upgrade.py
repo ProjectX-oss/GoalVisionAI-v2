@@ -15,8 +15,8 @@ sys.path.insert(0, str(SOURCE.parent))
 import upgrade_prematch_reviewed as upgrade
 
 
-@pytest.fixture
-def prepared(rollout, monkeypatch, tmp_path):
+@pytest.fixture(params=[False, True], ids=['initial-upgrade', 'protected-output-upgrade'])
+def prepared(rollout, monkeypatch, tmp_path, request):
     r = rollout
     r.invoke()
     r.invoke('disable-new-picks')
@@ -37,6 +37,12 @@ def prepared(rollout, monkeypatch, tmp_path):
     proposed['commit'] = 'accepted-commit'
     r.upgrade_manifest = {'previous':previous,'proposed':proposed,'effective_static':{},
                           'expected_dropins':{s:hashlib.sha256(b).hexdigest() for s,b in r.files().items()}}
+    r.upgrade_manifest['previous_protected_stdout'] = request.param
+    if request.param:
+        for service in r.services:
+            r.module.write_atomic(r.etc/(service+'.d')/r.module.DROPIN,
+                                  upgrade.render(r.upgrade_manifest, service, previous=True))
+        r.upgrade_manifest['expected_dropins'] = {s: hashlib.sha256(b).hexdigest() for s,b in r.files().items()}
     r.before = r.files()
     r.calls.clear()
     r.upgrade = lambda action='upgrade': upgrade.operate(r.upgrade_manifest,action,'reviewed-sha')
@@ -56,6 +62,8 @@ def test_upgrade_and_monotonic_controls_and_compatible_recovery(prepared):
     r.upgrade('recover')
     assert all(r.files()[s] == upgrade.render(r.upgrade_manifest,s,previous=True,observe=False,labels=False) for s in r.services)
     assert r.timer_states == r.original_timers
+    if r.upgrade_manifest['previous_protected_stdout']:
+        assert 'StandardOutput=append:' in r.files()[r.services[0]].decode()
     assert not upgrade.JOURNAL.exists()
     assert not any(call[:2] in (('systemctl','restart'),('systemctl','enable')) for call in r.calls)
 

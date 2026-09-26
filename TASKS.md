@@ -1,5 +1,13 @@
 # TASKS.md
 
+## 2026-09-26 — Compact-output installed-release upgrade preparation
+
+- [x] Preserve the existing protected stdout sink through upgrade and recovery.
+- [x] Exercise original and protected-output configurations with disposable systemd fakes.
+- [x] Prepare pinned compact application package, exact configuration diff and review runbook.
+- See `docs/operations/PREMATCH_COMPACT_OUTPUT_UPGRADE.md`; no deployment or publication enablement.
+
+
 ## 2026-09-23 — PREMATCH adaptive shadow chronology hardening
 
 - Audit the complete incoming/canonical/governance shadow path on exact `50a73ce`.

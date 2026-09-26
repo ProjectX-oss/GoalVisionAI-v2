@@ -33,7 +33,7 @@ def check_files(fingerprints: dict) -> None:
 def render(m: dict, service: str, *, previous=False, observe=True, labels=True) -> bytes:
     config = m['previous'] if previous else m['proposed']
     value = base.dropin(config, service, send=False, observe=observe, labels=labels)
-    if not previous and service == base.SERVICES[0]:
+    if (not previous or m.get('previous_protected_stdout', False)) and service == base.SERVICES[0]:
         value += ('StandardOutput=append:' + str(LOG) + '\n').encode()
     return value
 

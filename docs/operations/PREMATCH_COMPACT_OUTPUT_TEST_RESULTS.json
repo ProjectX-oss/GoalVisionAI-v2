@@ -1,0 +1,24 @@
+{
+  "application": {
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "380",
+    "time": "37.647"
+  },
+  "network_syscalls": "DENIED_BY_SECCOMP",
+  "size": {
+    "candidates": 600,
+    "exit_code": 0,
+    "fixtures": 2500,
+    "full_report_bytes": 13731974,
+    "stdout_bytes": 936
+  },
+  "upgrade": {
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "90",
+    "time": "4.186"
+  }
+}
