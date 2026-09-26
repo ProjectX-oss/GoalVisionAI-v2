@@ -44,7 +44,8 @@ def state(m: dict, originals: dict) -> tuple[bool, bool, bool, bool]:
     """Recognize exact release, send, observation and label bytes for all services."""
     for previous in (True, False):
         for send in (False, True):
-            if send and (previous or not m.get('enablement')):
+            if send and not (m.get('preserve_new_picks') is True
+                             or (not previous and m.get('enablement'))):
                 continue
             for observe, labels in ((False, False), (True, False), (True, True)):
                 if all(originals[s] == render(m, s, previous=previous, send=send,
@@ -278,17 +279,22 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
             raise SystemExit('Unexpected recovery timer scope.')
         desired = {s: v.encode() for s, v in data.get('recovery', data['before']).items()}
         state(m, desired)
-        if desired != before and not (data.get('action') == 'disable-new-picks' and desired == after
-                                      and not state(m, desired)[1]):
+        if data.get('action') == 'disable-new-picks':
+            # Missing/unsafe legacy targets must never fall back to send-enabled bytes.
+            valid_recovery = desired == after and not state(m, desired)[1]
+        else:
+            valid_recovery = desired == before
+        if not valid_recovery:
             raise SystemExit('Invalid recovery target.')
-        # A partial gate set is allowed only for this recorded interrupted operation.
+        # Interrupted gate writes/cleanup may not have reached daemon-reload.
+        # Accept only the owned drop-in with or without our known gate. The
+        # transaction below re-establishes all gates before drain and validation.
         for service, path in gates().items():
-            expected_paths = {str(targets[service])}
             if path.exists():
                 if path.read_bytes() != base.start_gate_content():
                     raise SystemExit('Unknown recovery gate.')
-                expected_paths.add(str(path))
-            if set(base.run('systemctl', 'show', service, '-p', 'DropInPaths', '--value').split()) != expected_paths:
+            loaded = set(base.run('systemctl', 'show', service, '-p', 'DropInPaths', '--value').split())
+            if loaded not in ({str(targets[service])}, {str(targets[service]), str(path)}):
                 raise SystemExit('Unknown effective recovery drop-ins.')
     else:
         previous, send, observe, labels = state(m, originals)
@@ -309,11 +315,11 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
         elif action == 'upgrade':
             if not previous or {s: sha(p) for s, p in targets.items()} != m['expected_dropins']:
                 raise SystemExit('Upgrade requires exact reviewed installed configuration.')
-            desired = {s: render(m, s, observe=observe, labels=labels) for s in targets}
+            desired = {s: render(m, s, send=send, observe=observe, labels=labels) for s in targets}
         elif action == 'recover':
             if previous:
                 raise SystemExit('Previous compatible release already installed.')
-            desired = {s: render(m, s, previous=True, observe=observe, labels=labels) for s in targets}
+            desired = {s: render(m, s, previous=True, send=send, observe=observe, labels=labels) for s in targets}
         else:
             if previous:
                 raise SystemExit('Upgrade controls require upgraded release; use prior reviewed controls before upgrade.')
@@ -372,13 +378,19 @@ def operate(m: dict, action: str, manifest_digest: str) -> None:
             configuration(m, restored)
             restore_timers(active)
         except BaseException:
-            write_gates()
-            raise RuntimeError('Recovery incomplete: keep new picks disabled; retain journal and run recover after reviewing the failure.') from None
+            # Timer restoration can partially succeed before failing. Stop again,
+            # and attempt gates even if stopping fails. Retain the safe journal.
+            try:
+                if active:
+                    base.run('systemctl', 'stop', *active)
+            finally:
+                write_gates()
+            raise RuntimeError('Recovery incomplete: retain start gates and journal; run recover toward the recorded recovery target.') from None
         else:
             JOURNAL.unlink()
         raise
     JOURNAL.unlink()
-    print('Configuration changed; no application cycle invoked. Installation, scheduled tick and re-enable are separate states.')
+    print('Configuration changed; no application cycle invoked. The next scheduled tick uses the installed release and capabilities.')
 
 
 def main() -> None:

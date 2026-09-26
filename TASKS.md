@@ -1,5 +1,15 @@
 # TASKS.md
 
+## 2026-09-26 — Public message upgrade lineage safety correction
+
+- [x] Rebuild on accepted operations ac2ffec; keep application 23e57e9 unchanged.
+- [x] Preserve formatter upgrade capabilities and exact prior-byte failure recovery.
+- [x] Retain explicit no-send disable recovery, journal, gates and timer fences.
+- [x] Test every disable stage, failed recovery, explicit recovery and old-package drift.
+- [x] Run 236 offline operations tests and 407 accepted-application regressions.
+- [x] Regenerate versioned package and exact four-environment-reference diff for review.
+- See `docs/operations/LAB_V2_PUBLIC_MESSAGE_UPGRADE.md`; no deployment.
+
 ## 2026-09-26 — Controlled LAB new-pick re-enablement preparation
 
 - [x] Add an exact accepted-compact-release `enable-new-picks` operator action.
