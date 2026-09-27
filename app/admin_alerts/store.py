@@ -67,6 +67,9 @@ class Store:
         if 'episode' not in {r[1] for r in self.db.execute('PRAGMA table_info(incidents)')}:
             self.db.execute('ALTER TABLE incidents ADD COLUMN episode INTEGER NOT NULL DEFAULT 1')
             self.db.commit()
+        if 'episode' not in {r[1] for r in self.db.execute('PRAGMA table_info(outbox)')}:
+            self.db.execute('ALTER TABLE outbox ADD COLUMN episode INTEGER')
+            self.db.commit()
         correlation.initialize(self.db)
         os.chmod(path, 0o600)
 
@@ -183,43 +186,57 @@ class Store:
             projections = correlation.reconcile(self.db, now)
             interrupted = self.db.execute("SELECT * FROM outbox WHERE state='ATTEMPTING' AND incident NOT IN (SELECT id FROM incidents WHERE state='INVALIDATED')").fetchall()
             for pending in interrupted:
-                if correlation.deliverable(self.db, pending['incident'], projections):
+                if correlation.deliverable(self.db, pending['incident'], projections, pending):
                     self.db.execute("UPDATE outbox SET state=CASE WHEN attempts>=5 THEN 'EXHAUSTED' ELSE 'UNCERTAIN' END,error='INTERRUPTED_ATTEMPT' WHERE id=?", (pending['id'],))
-            rows = self.db.execute('''SELECT i.* FROM incidents i WHERE state IN ('OPEN','REPEATED','ESCALATED','RECOVERED')
-                AND (state!='RECOVERED' OR (notified_state!='RECOVERED' AND
-                    (last_sent>0 OR EXISTS (SELECT 1 FROM outbox o WHERE o.incident=i.id AND o.attempts>0))))
-                AND NOT EXISTS (SELECT 1 FROM outbox o WHERE o.incident=i.id AND
-                    (o.state IN ('PERMANENT','EXHAUSTED') OR
-                     (o.generation=i.generation AND o.state IN ('PENDING','UNCERTAIN','ATTEMPTING') AND i.state!='ESCALATED')))
-                ORDER BY severity DESC,CASE WHEN last_sent=0 THEN 0 ELSE 1 END,last_seen DESC LIMIT 1000''').fetchall()
-            self.db.execute("""UPDATE outbox SET state='SUPERSEDED' WHERE attempts=0 AND state='PENDING'
-                AND incident IN (SELECT id FROM incidents WHERE state='RECOVERED' AND last_sent=0)""")
+            rows = self.db.execute("""SELECT * FROM incidents
+                WHERE state IN ('OPEN','REPEATED','ESCALATED','RECOVERED')
+                ORDER BY severity DESC,CASE WHEN last_sent=0 THEN 0 ELSE 1 END,last_seen DESC""")
+            considered = 0
             for row in rows:
                 if not correlation.allowed(self.db, dict(row), projections):
                     continue
-                attempted = self.db.execute('SELECT 1 FROM outbox WHERE incident=? AND attempts>0 LIMIT 1', (row['id'],)).fetchone()
-                if row['state'] == 'RECOVERED' and not row['last_sent'] and not attempted:
-                    # Avoid sending a stale fault after its explicit recovery.
-                    self.db.execute("UPDATE outbox SET state='SUPERSEDED' WHERE incident=? AND state IN ('PENDING','UNCERTAIN')", (row['id'],))
+                # Held pre-activation work cannot block a new episode or be
+                # rewritten by recovery, escalation or generation supersession.
+                notifications = [n for n in self.db.execute('SELECT * FROM outbox WHERE incident=?', (row['id'],))
+                                 if not correlation.epoch_hold(self.db, dict(row), n)]
+                attempted = any(n['attempts'] > 0 for n in notifications)
+                activation_member = self.db.execute('SELECT 1 FROM epoch_incidents WHERE incident=?', (row['id'],)).fetchone()
+                last_sent = row['last_sent'] if not activation_member or attempted else 0
+                if row['state'] == 'RECOVERED' and not last_sent and not attempted:
+                    for n in notifications:
+                        if n['state'] == 'PENDING' and not n['attempts']:
+                            self.db.execute("UPDATE outbox SET state='SUPERSEDED' WHERE id=?", (n['id'],))
                     continue
-                due = row['notified_state'] != ('RECOVERED' if row['state'] == 'RECOVERED' else 'OPEN')
+                if row['state'] == 'RECOVERED' and row['notified_state'] == 'RECOVERED':
+                    continue
+                if any(n['state'] in ('PERMANENT', 'EXHAUSTED') or
+                       (n['generation'] == row['generation'] and n['state'] in ('PENDING','UNCERTAIN','ATTEMPTING')
+                        and row['state'] != 'ESCALATED') for n in notifications):
+                    continue
+                if considered >= 1000:
+                    break
+                considered += 1
+                due = (bool(activation_member) and not notifications) or row['notified_state'] != ('RECOVERED' if row['state'] == 'RECOVERED' else 'OPEN')
                 escalation = row['state'] == 'ESCALATED'
                 if not due and not escalation and (row['state'] == 'RECOVERED' or now - row['last_sent'] < 1800):
                     continue
-                self.db.execute("UPDATE outbox SET state='SUPERSEDED' WHERE incident=? AND generation!=? AND state IN ('PENDING','UNCERTAIN')",
-                                (row['id'], row['generation']))
-                if escalation:
-                    self.db.execute("UPDATE outbox SET due=?,body=? WHERE incident=? AND state IN ('PENDING','UNCERTAIN')",
-                                    (now, self.notification(row, projections), row['id']))
-                pending = self.db.execute("SELECT 1 FROM outbox WHERE incident=? AND state IN ('PENDING','UNCERTAIN','ATTEMPTING','PERMANENT','EXHAUSTED')", (row['id'],)).fetchone()
+                pending = False
+                for n in notifications:
+                    if n['generation'] != row['generation'] and n['state'] in ('PENDING','UNCERTAIN'):
+                        self.db.execute("UPDATE outbox SET state='SUPERSEDED' WHERE id=?", (n['id'],))
+                        continue
+                    if escalation and n['state'] in ('PENDING','UNCERTAIN'):
+                        self.db.execute('UPDATE outbox SET due=?,body=? WHERE id=?',
+                                        (now, self.notification(row, projections), n['id']))
+                    pending |= n['state'] in ('PENDING','UNCERTAIN','ATTEMPTING','PERMANENT','EXHAUSTED')
                 if pending:
                     continue
                 group = next((g for g in projections if g['primary_incident'] == row['id']), None)
                 decision = (group['correlation_id'], group['associations']) if group else None
                 supersessions = self.db.execute("SELECT count(*) FROM outbox WHERE incident=? AND state='SUPERSEDED'", (row['id'],)).fetchone()[0]
                 key = digest((row['id'], row['generation'], row['last_sent'], decision, supersessions))
-                self.db.execute('INSERT OR IGNORE INTO outbox(id,incident,generation,body,state,created,due) VALUES (?,?,?,?,?,?,?)',
-                                (key, row['id'], row['generation'], self.notification(row, projections), 'PENDING', now, now))
+                self.db.execute('INSERT OR IGNORE INTO outbox(id,incident,generation,body,state,created,due,episode) VALUES (?,?,?,?,?,?,?,?)',
+                                (key, row['id'], row['generation'], self.notification(row, projections), 'PENDING', now, now, row['episode']))
 
     def notification(self, row: sqlite3.Row, projections: list[dict]) -> str:
         group = next((g for g in projections if g['primary_incident'] == row['id']), None)
@@ -263,6 +280,7 @@ class Store:
                     'Inspect loaded systemd properties and the exact deployment manifest; make no changes.'],
                 'monitoring_state': 'DEGRADED' if degraded else 'AVAILABLE',
                 'incidents': [{**dict(r), 'evidence': json.loads(r['evidence']),
+                               'activation_hold': correlation.epoch_hold(self.db, dict(r)),
                                **({'invalidation': audits[r['id']]} if r['id'] in audits else {})} for r in rows],
                 'truncated': self.db.execute('SELECT count(*) FROM incidents').fetchone()[0] > 200}
 

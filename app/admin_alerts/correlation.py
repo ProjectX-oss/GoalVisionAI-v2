@@ -7,6 +7,7 @@ import sqlite3
 from .model import digest
 
 VERSION = 'ADMIN_CORRELATION_V1'
+EPOCH_POLICY = 'PRE_ENABLEMENT_EPISODES_SUPPRESSED_V1'
 PRECEDENCE = {'QUOTA_DB_CONTENTION': 0, 'AUTH_FAILURE': 1, 'INTEGRITY_FAILURE': 1,
               'CYCLE_PERSISTENCE': 1, 'OBSERVATION_FAILURE': 1,
               'SERVICE_FAILURE': 2, 'ANALYSIS_FAILURE': 3, 'MISSING_OUTPUT': 4}
@@ -25,16 +26,27 @@ CREATE TABLE IF NOT EXISTS notification_audit(
 CREATE TABLE IF NOT EXISTS notification_epochs(
  id TEXT PRIMARY KEY, activated_at REAL NOT NULL, policy TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS epoch_incidents(
- incident TEXT PRIMARY KEY, epoch TEXT NOT NULL);
+ incident TEXT PRIMARY KEY, epoch TEXT NOT NULL,
+ episode_at_activation INTEGER, generation_at_activation INTEGER);
 '''
 
 
 def initialize(db: sqlite3.Connection) -> None:
     db.executescript(SCHEMA)
+    # Old snapshots cannot be reconstructed from today's mutable incident row.
+    # NULL preserves that uncertainty and requires operator review.
+    columns = {r[1] for r in db.execute('PRAGMA table_info(epoch_incidents)')}
+    for column in ('episode_at_activation', 'generation_at_activation'):
+        if column not in columns:
+            db.execute(f'ALTER TABLE epoch_incidents ADD COLUMN {column} INTEGER')
     for table in ('source_evidence', 'correlation_audit', 'notification_audit', 'notification_epochs', 'epoch_incidents'):
         for operation in ('UPDATE', 'DELETE'):
             db.execute(f'''CREATE TRIGGER IF NOT EXISTS {table}_no_{operation.lower()}
                 BEFORE {operation} ON {table} BEGIN SELECT RAISE(ABORT, 'ADMIN_AUDIT_IMMUTABLE'); END''')
+    for table, key in (('notification_epochs', 'id'), ('epoch_incidents', 'incident')):
+        db.execute(f"""CREATE TRIGGER IF NOT EXISTS {table}_no_replace
+            BEFORE INSERT ON {table} WHEN EXISTS (SELECT 1 FROM {table} WHERE {key}=NEW.{key})
+            BEGIN SELECT RAISE(ABORT, 'ADMIN_AUDIT_IMMUTABLE'); END""")
     db.commit()
 
 
@@ -105,6 +117,9 @@ def reconcile(db: sqlite3.Connection, now: float) -> list[dict]:
         attempted = any(r['attempts'] or r['acknowledged'] or r['receipt'] is not None
                         or db.execute('SELECT 1 FROM attempts WHERE outbox=?', (r['id'],)).fetchone() for r in notifications)
         for row in notifications:
+            source = next(r for r in group['members'] if r['id'] == row['incident'])
+            if epoch_hold(db, source, row):
+                continue
             primary = group['members'][0]
             if row['incident'] != group['primary_incident'] or (attempted and primary['state'] != 'RECOVERED'):
                 supersede(db, row, 'CORRELATED_EXECUTION_SUPPORT' if not attempted else 'EXECUTION_ALREADY_NOTIFIED',
@@ -115,10 +130,41 @@ def reconcile(db: sqlite3.Connection, now: float) -> list[dict]:
     return result
 
 
+def epoch_hold(db: sqlite3.Connection, incident: dict,
+               notification: dict | sqlite3.Row | None = None) -> str | None:
+    """Suppress activation episodes and their work, never a stable identity forever."""
+    epochs = db.execute('SELECT * FROM notification_epochs').fetchall()
+    if not epochs:
+        return None
+    if len(epochs) != 1 or epochs[0]['policy'] != EPOCH_POLICY:
+        return 'ACTIVATION_SNAPSHOT_REVIEW_REQUIRED'
+    snapshot = db.execute('SELECT * FROM epoch_incidents WHERE incident=?', (incident['id'],)).fetchone()
+    if snapshot is None:
+        return None  # No snapshot membership: normal post-activation incident.
+    values = (snapshot['episode_at_activation'], snapshot['generation_at_activation'],
+              incident['episode'], incident['generation'])
+    if (snapshot['epoch'] != epochs[0]['id'] or
+            any(type(v) is not int or v < 1 for v in values) or
+            incident['episode'] < snapshot['episode_at_activation'] or
+            incident['generation'] < snapshot['generation_at_activation']):
+        return 'ACTIVATION_SNAPSHOT_REVIEW_REQUIRED'
+    if incident['episode'] == snapshot['episode_at_activation']:
+        return 'PRE_ENABLEMENT_EPISODE_SUPPRESSED'
+    if incident['generation'] <= snapshot['generation_at_activation']:
+        return 'ACTIVATION_SNAPSHOT_REVIEW_REQUIRED'
+    if notification is not None:
+        episode = notification['episode']
+        generation = notification['generation']
+        if (type(episode) is not int or type(generation) is not int or
+                episode > incident['episode'] or generation > incident['generation']):
+            return 'ACTIVATION_NOTIFICATION_REVIEW_REQUIRED'
+        if episode <= snapshot['episode_at_activation'] or generation <= snapshot['generation_at_activation']:
+            return 'PRE_ENABLEMENT_NOTIFICATION_SUPPRESSED'
+    return None
+
+
 def allowed(db: sqlite3.Connection, incident: dict, projections: list[dict]) -> bool:
-    epoch = db.execute('SELECT activated_at FROM notification_epochs LIMIT 1').fetchone()
-    if epoch and (incident['first_seen'] < epoch[0] or db.execute(
-            'SELECT 1 FROM epoch_incidents WHERE incident=?', (incident['id'],)).fetchone()):
+    if epoch_hold(db, incident):
         return False
     for group in projections:
         ids = [r['id'] for r in group['members']]
@@ -137,13 +183,12 @@ def allowed(db: sqlite3.Connection, incident: dict, projections: list[dict]) -> 
     return True
 
 
-def deliverable(db: sqlite3.Connection, incident: str, projections: list[dict]) -> bool:
-    """Hold supporting retries without altering their delivery history."""
-    epoch = db.execute('SELECT activated_at FROM notification_epochs LIMIT 1').fetchone()
-    if epoch:
-        row = db.execute('SELECT first_seen FROM incidents WHERE id=?', (incident,)).fetchone()
-        if row and (row[0] < epoch[0] or db.execute('SELECT 1 FROM epoch_incidents WHERE incident=?', (incident,)).fetchone()):
-            return False
+def deliverable(db: sqlite3.Connection, incident: str, projections: list[dict],
+                notification: dict | sqlite3.Row | None = None) -> bool:
+    """Hold old episode work and supporting retries without changing history."""
+    row = db.execute('SELECT * FROM incidents WHERE id=?', (incident,)).fetchone()
+    if row is None or epoch_hold(db, dict(row), notification):
+        return False
     for group in projections:
         ids = [r['id'] for r in group['members']]
         if incident not in ids:

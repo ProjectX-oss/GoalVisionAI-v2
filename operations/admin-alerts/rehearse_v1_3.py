@@ -40,6 +40,10 @@ def project(raw: bytes, now: float, invocation: str) -> dict:
                 'historical_crash_groups':[{'correlation_id':g['correlation_id'],
                     'primary_rule':g['members'][0]['rule'], 'rules':[r['rule'] for r in g['members']],
                     'associations':g['associations']} for g in episodes],
+                'activation_policy':store.db.execute('SELECT policy FROM notification_epochs').fetchone()[0],
+                'activation_snapshot_rows':store.db.execute('SELECT count(*) FROM epoch_incidents').fetchone()[0],
+                'activation_snapshot_complete':not store.db.execute('''SELECT 1 FROM epoch_incidents
+                    WHERE episode_at_activation IS NULL OR generation_at_activation IS NULL''').fetchone(),
                 'existing_outbox_rows':old_outbox, 'would_suppress_at_activation':suppressed,
                 'attempt_history_preserved':attempts_before==list(map(tuple,store.db.execute('SELECT * FROM attempts'))),
                 'telegram_sends':0,'football_api_calls':0,'live_mutations':0}

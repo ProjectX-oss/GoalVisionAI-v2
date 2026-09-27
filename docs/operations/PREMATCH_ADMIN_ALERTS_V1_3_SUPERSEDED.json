@@ -1,0 +1,11 @@
+{
+  "preserved_archive_path": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review.SUPERSEDED-DO-NOT-INSTALL.tar.gz",
+  "preserved_archive_sha256": "87d3d47f81a05ba42f7816942f51f71d32f7ac9ac6ea229df9ec099918651ce8",
+  "reason": "Activation suppressed stable incident identities across new episodes.",
+  "replacement_manifest_sha256": "a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc",
+  "replacement_package": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected",
+  "status": "SUPERSEDED_DO_NOT_INSTALL",
+  "superseded_archive_original_path": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review.tar.gz",
+  "superseded_manifest_sha256": "ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49",
+  "superseded_package": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review"
+}

@@ -145,7 +145,7 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
             WHERE i.state IN ('OPEN','REPEATED','ESCALATED','RECOVERED') AND o.state IN ('PENDING','UNCERTAIN') AND o.due<=? AND o.attempts<5
             ORDER BY i.severity DESC,o.created LIMIT 1000''', (now,)).fetchall()
         projections = groups(store.db)
-        rows = [r for r in rows if deliverable(store.db, r['incident'], projections)]
+        rows = [r for r in rows if deliverable(store.db, r['incident'], projections, r)]
         if not rows:
             break
         backlog = len(rows) > 5 or now - min(r['created'] for r in rows) > 1800

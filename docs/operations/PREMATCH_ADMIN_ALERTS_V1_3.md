@@ -6,7 +6,7 @@ Implementation and the standalone direct-upgrade package are complete. **Final r
 
 Branch: `codex/prematch-admin-alerts-v1-3`, directly based on ADMIN v1.2 `d811177fdd11e25b087f036584d33c0e0328906b`. No PREMATCH application branch was used. Changes are confined to ADMIN code, operations, tests and these reports. Nothing was pushed, installed or enabled. No PREMATCH service/timer was controlled. No real Telegram or API-Football calls occurred.
 
-The installed v1.2 payload and unchanged ADMIN service/timer hashes were independently verified. The live ADMIN database and configuration are permission-restricted; `sudo -n true` requires a password. The one attempted host rehearsal returned `HOST_REHEARSAL_BLOCKED`. Sender=false and zero historical delivery attempts are operator-provided facts, not newly verified live observations. See [host evidence](PREMATCH_ADMIN_ALERTS_V1_3_HOST.json).
+The installed v1.2 payload and unchanged ADMIN service/timer hashes were independently verified. The live ADMIN database and configuration are permission-restricted; `sudo -n true` requires a password. The corrected package’s read-only host rehearsal returned `HOST_REHEARSAL_BLOCKED`. Sender=false and zero historical delivery attempts are operator-provided facts, not newly verified live observations. See [host evidence](PREMATCH_ADMIN_ALERTS_V1_3_HOST.json).
 
 The requested `ADMIN_ALERTS_V1_3_READY_FOR_OPERATOR_PREFLIGHT` status must wait for the read-only root rehearsal below and review of its actual historical group/backlog results. Until then: `ADMIN_ALERTS_V1_3_BLOCKED_HOST_REHEARSAL`.
 
@@ -50,15 +50,25 @@ Latvian meaning: “PREMATCH API kvotas rezervācijas datubāze bija aizņemta i
 
 `enable-sender --confirm ENABLE_PRIVATE_ADMIN_NEW_INCIDENTS_ONLY` is a separate explicit root operation. It requires the installed v1.3 hashes, unchanged ADMIN units, literal sender=false, configured identity/private destination, operator start confirmation and matching token identity. It reuses installed configuration and performs no Telegram validation or test send. Normal future dispatch retains its configured identity/private-chat checks.
 
-Activation serializes ADMIN operations, fences ADMIN persistently, stops only ADMIN timer/service, and takes the scan lock. It commits `ADMIN_NOTIFICATION_EPOCH_V1`, records the existing incident set and audits pre-epoch never-attempted PENDING notifications as `PRE_ENABLEMENT_BACKLOG_SUPERSEDED`. Then it atomically replaces/fsyncs configuration, preserving ownership/mode and every other field, and verifies it. Only the previously active ADMIN timer is restarted. Live scan re-reads config under the lock; sender=true without an epoch cannot dispatch.
+Activation serializes ADMIN operations, fences ADMIN persistently, stops only ADMIN timer/service, and takes the scan lock. It commits `ADMIN_NOTIFICATION_EPOCH_V1`, records each existing incident ID, current episode and current generation in the immutable `epoch_incidents` snapshot and audits pre-epoch never-attempted PENDING notifications as `PRE_ENABLEMENT_BACKLOG_SUPERSEDED`. Then it atomically replaces/fsyncs configuration, preserving ownership/mode and every other field, and verifies it. Only the previously active ADMIN timer is restarted. Live scan re-reads config under the lock; sender=true without an epoch cannot dispatch.
 
-Existing incidents do not later generate reminders after activation. Post-epoch new incidents are eligible. Attempted/uncertain/acknowledged/receipted history is preserved and held for operator reconciliation. The epoch is never deleted to retry. Activation replay, including re-enablement after disable, is explicitly refused and requires review. If database preparation or enabling fails, the sender remains/restores false and ADMIN stays fenced/stopped. A failure after config replacement or timer start is covered by the same fail-closed path. If underlying storage also prevents restoring configuration, the persistent ADMIN fence is the additional protection; operator repair is required.
+**Activation suppresses the pre-enablement episode, not the incident identity.**
+
+The activation snapshot contains `incident`, `epoch`, `episode_at_activation` and `generation_at_activation`. Update, delete and replacement guards keep it immutable. The epoch policy is `PRE_ENABLEMENT_EPISODES_SUPPRESSED_V1`; the epoch ID remains `ADMIN_NOTIFICATION_EPOCH_V1`.
+
+For a snapshot member, the same episode stays suppressed through repeats, reminders, escalation and explicit recovery. Stronger evidence remains visible locally. Recovery of a suppressed fault does not produce a recovery notification. A later fault after `RECOVERED` uses the existing Store episode increment and becomes eligible, even with the same incident ID and historical `first_seen`. No snapshot row means normal eligibility; source timestamp age alone never suppresses an incident.
+
+New outbox rows record their episode and retain the existing generation-based durable notification identity. Enqueue and dispatch both check the episode boundary. Old SUPERSEDED rows and notification/correlation audits remain intact. Old attempted, uncertain, acknowledged and receipted notifications remain held for operator reconciliation, even after recurrence; they neither retry nor block fresh stable-incident notification work. Exact-invocation correlation and its conservative execution escalation policy remain in force.
+
+Migration adds nullable snapshot fields and a nullable `outbox.episode` to existing ADMIN storage without backfilling historical guesses. The reviewed v1.2 path takes a fresh complete activation snapshot. Already-activated legacy v1.3 policy, unknown snapshot episode/generation, mismatched epoch or regressed counters fail closed. `activation_review_required` in preparation/status and `activation_hold` in the incident report expose these cases. Operators must review them; do not delete an epoch or edit old notifications to permit sending. The epoch is never deleted to retry. Activation replay, including re-enablement after disable, is explicitly refused and requires review. If database preparation or enabling fails, the sender remains/restores false and ADMIN stays fenced/stopped. A failure after config replacement or timer start is covered by the same fail-closed path. If underlying storage also prevents restoring configuration, the persistent ADMIN fence is the additional protection; operator repair is required.
 
 `disable-sender` stops future ADMIN dispatch, persists sender=false and preserves monitoring/evidence by restoring a previously active ADMIN timer when safe. An existing fence is preserved. Disable does not require readable token material or a DB preflight. An in-flight network request cannot be retracted; the fence stops subsequent sends. It never controls PREMATCH.
 
 ## Direct v1.2 upgrade and rollback
 
-Only use `/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review`. Earlier v1.3 review/final/final-r1 directories are superseded development artifacts.
+Only use `/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected`.
+
+The previous `prematch-admin-alerts-upgrade-v1-3-operator-review` package is **SUPERSEDED and MUST NOT be installed**. Its original payload is preserved with an unmanifested `SUPERSEDED_DO_NOT_INSTALL.json` marker, which causes its controller to refuse package verification. Its archive was preserved byte-for-byte under `prematch-admin-alerts-upgrade-v1-3-operator-review.SUPERSEDED-DO-NOT-INSTALL.tar.gz`. See [supersession record](PREMATCH_ADMIN_ALERTS_V1_3_SUPERSEDED.json). Earlier v1.3 review/final/final-r1 directories are also superseded development artifacts.
 
 The builder pins the reviewed installed v1.2 manifest. Upgrade stages/fsyncs the new ADMIN tree, verifies old/new manifests and unchanged ADMIN unit hashes, stops/fences ADMIN only, acquires its scan lock and exchanges complete code directories atomically. Database, config and token are retained in place. Upgrade requires sender=false and leaves it false. Additive schema creation, legacy invalidation and grouping occur in v1.3 monitoring. No unit change or daemon-reload occurs.
 
@@ -72,9 +82,11 @@ Rollback uses `/opt/goalvision-admin-alerts-v1-3-v1-2-rollback`, explicitly disa
 
 ## Validation
 
-**133 complete ADMIN tests passed**, with socket connection guards and **zero real network attempts**. No historical/model suite or PREMATCH application test suite ran. No shared production code changed. See [test summary](PREMATCH_ADMIN_ALERTS_V1_3_TESTS.json).
+**148 complete ADMIN tests passed**, with socket connection guards and **zero real network attempts**. No historical/model suite or PREMATCH application test suite ran. No shared production code changed. See [test summary](PREMATCH_ADMIN_ALERTS_V1_3_TESTS.json).
 
 Tests cover normal/final/repeated ledger and weekly sweeps; stalled/corrupt/unavailable scans; no progress incident/outbox/degradation; legacy invalidation and future real-fault recovery; exact/unique/ambiguous/competing/different-invocation associations; immutable audits and stable restart; already-sent/uncertain/attempting history; quota exhaustion/retry/protection/unavailable; read-only preparation; epoch/backlog/post-epoch delivery; config/audit/timer-start failures; explicit confirmation/replay refusal; secret-safe output; direct v1.2-shaped DB and config/token/cursor preservation; ADMIN-only control; disable with unavailable token; fenced rollback.
+
+The focused recurrence regressions cover timer, provider, quota, coverage and execution incidents; recovery followed by a new episode with and without restart; exactly one new fake fault send; unchanged old supersession/audits; same-episode escalation; debounce; new incidents and late source evidence without snapshot membership; all attempted outbox states; actual v1.2 outbox migration; immutable snapshot replacement rejection; malformed/legacy state; and atomic activation refusal. Prediction logic is unchanged, so model backtesting is outside this patch.
 
 Reproduce offline:
 
@@ -84,11 +96,11 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python3 operations/admin-alerts/test_v1_3
 
 ## Package hashes
 
-Archive: `/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review.tar.gz`
+Archive: `/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected.tar.gz`
 
-Archive SHA256: `87d3d47f81a05ba42f7816942f51f71d32f7ac9ac6ea229df9ec099918651ce8`
+Archive SHA256: `1b3cff703c4c119ba62b15ead3f0dc14a45bcdf63fe2d2a918eb1d739e2cd96f`
 
-`SHA256SUMS` SHA256: `ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49`
+`SHA256SUMS` SHA256: `a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc`
 
 [Payload manifest](PREMATCH_ADMIN_ALERTS_V1_3_PACKAGE_SHA256SUMS.txt) · [package hash record](PREMATCH_ADMIN_ALERTS_V1_3_PACKAGE.json)
 
@@ -99,47 +111,47 @@ Use an existing root shell. These are prepared instructions, not actions execute
 Read-only snapshot rehearsal, required to close the current evidence gap:
 
 ```sh
-cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review && printf '%s  SHA256SUMS\n' 'ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./rehearse_v1_3.py --invocation 1149428ce2d749cb9a1335fbceb78bd9
+cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected && printf '%s  SHA256SUMS\n' 'a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./rehearse_v1_3.py --invocation 1149428ce2d749cb9a1335fbceb78bd9
 ```
 
 Check installed v1.2, read-only:
 
 ```sh
-cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review && printf '%s  SHA256SUMS\n' 'ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py check
+cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected && printf '%s  SHA256SUMS\n' 'a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py check
 ```
 
 Upgrade, sender remains false:
 
 ```sh
-cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review && printf '%s  SHA256SUMS\n' 'ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py upgrade
+cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected && printf '%s  SHA256SUMS\n' 'a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py upgrade
 ```
 
 Status after upgrade, read-only:
 
 ```sh
-cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review && printf '%s  SHA256SUMS\n' 'ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py status
+cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected && printf '%s  SHA256SUMS\n' 'a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py status
 ```
 
 Prepare-enable, read-only:
 
 ```sh
-cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review && printf '%s  SHA256SUMS\n' 'ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py prepare-enable
+cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected && printf '%s  SHA256SUMS\n' 'a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py prepare-enable
 ```
 
 Enable, separate explicit confirmation:
 
 ```sh
-cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review && printf '%s  SHA256SUMS\n' 'ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py enable-sender --confirm ENABLE_PRIVATE_ADMIN_NEW_INCIDENTS_ONLY
+cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected && printf '%s  SHA256SUMS\n' 'a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py enable-sender --confirm ENABLE_PRIVATE_ADMIN_NEW_INCIDENTS_ONLY
 ```
 
 Disable:
 
 ```sh
-cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review && printf '%s  SHA256SUMS\n' 'ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py disable-sender
+cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected && printf '%s  SHA256SUMS\n' 'a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py disable-sender
 ```
 
 Rollback, sender false and ADMIN fenced:
 
 ```sh
-cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-operator-review && printf '%s  SHA256SUMS\n' 'ea9ebc37b5868dd9e540f3af3c772e3ecd5847ac98a3b2ba4afe67e90d762f49' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py rollback
+cd /home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-epoch-corrected && printf '%s  SHA256SUMS\n' 'a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc' | sha256sum -c - && sha256sum --quiet -c SHA256SUMS && /usr/bin/python3 -I ./control_v1_3.py rollback
 ```

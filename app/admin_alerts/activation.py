@@ -9,7 +9,7 @@ import re
 import sqlite3
 import tempfile
 
-from .correlation import supersede, groups, EXECUTION_RULES
+from .correlation import supersede, groups, EXECUTION_RULES, EPOCH_POLICY, epoch_hold
 from .delivery import SenderConfig, DeliveryError
 
 EPOCH = 'ADMIN_NOTIFICATION_EPOCH_V1'
@@ -58,6 +58,21 @@ def projection(db: sqlite3.Connection, config: dict) -> dict:
                   attempted_notifications=db.execute('SELECT count(*) FROM attempts').fetchone()[0],
                   notification_epoch=[dict(r) for r in db.execute('SELECT * FROM notification_epochs')]
                     if 'notification_epochs' in table_names else [])
+    result['activation_review_required'] = []
+    if result['notification_epoch']:
+        columns = {r[1] for r in db.execute('PRAGMA table_info(epoch_incidents)')}
+        if (len(result['notification_epoch']) != 1 or
+                result['notification_epoch'][0]['policy'] != EPOCH_POLICY or
+                not {'episode_at_activation', 'generation_at_activation'} <= columns):
+            result['activation_review_required'] = [{'reason': 'ACTIVATION_SNAPSHOT_REVIEW_REQUIRED'}]
+        else:
+            for row in db.execute('SELECT * FROM incidents'):
+                reason = epoch_hold(db, dict(row))
+                if reason and reason.endswith('REVIEW_REQUIRED'):
+                    result['activation_review_required'].append({'incident': row['id'], 'reason': reason})
+                    if len(result['activation_review_required']) >= 200:
+                        result['summary_truncated'] = True
+                        break
     return result
 
 
@@ -69,8 +84,12 @@ def prepare_epoch(db: sqlite3.Connection, now: float) -> int:
         if db.execute('SELECT 1 FROM notification_epochs').fetchone():
             raise ValueError('ACTIVATION_ALREADY_PREPARED_REVIEW_REQUIRED')
         db.execute('INSERT INTO notification_epochs VALUES (?,?,?)',
-                   (EPOCH, now, 'ONLY_NEW_INCIDENTS_NO_PRE_ENABLEMENT_BACKLOG'))
-        db.execute('INSERT INTO epoch_incidents SELECT id,? FROM incidents', (EPOCH,))
+                   (EPOCH, now, EPOCH_POLICY))
+        if db.execute('''SELECT 1 FROM incidents WHERE typeof(episode)!='integer' OR episode<1
+                OR typeof(generation)!='integer' OR generation<1''').fetchone():
+            raise ValueError('ACTIVATION_SNAPSHOT_REVIEW_REQUIRED')
+        db.execute('''INSERT INTO epoch_incidents(incident,epoch,episode_at_activation,generation_at_activation)
+            SELECT id,?,episode,generation FROM incidents''', (EPOCH,))
         for row in db.execute("SELECT * FROM outbox WHERE created<?", (now,)).fetchall():
             count += supersede(db, row, 'PRE_ENABLEMENT_BACKLOG_SUPERSEDED', now, EPOCH)
     return count

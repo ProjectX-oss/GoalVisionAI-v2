@@ -6,5 +6,5 @@
   "real_network_attempts": 0,
   "scope": "ADMIN_ONLY_FAKE_TRANSPORT",
   "telegram_sends": 0,
-  "tests": 133
+  "tests": 148
 }

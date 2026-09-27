@@ -33,6 +33,7 @@ class OperationsTests(Temporary):
         store.enqueue(NOW)
         # Drop v1.3-only tables: exact v1.2 schema shape, including retained audits.
         with store.db:
+            store.db.execute('ALTER TABLE outbox DROP COLUMN episode')
             for table in ('source_evidence','correlation_audit','notification_audit','notification_epochs','epoch_incidents'):
                 store.db.execute('DROP TABLE '+table)
         store.close()

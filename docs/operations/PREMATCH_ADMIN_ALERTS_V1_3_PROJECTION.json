@@ -1,4 +1,7 @@
 {
+  "activation_policy": "PRE_ENABLEMENT_EPISODES_SUPPRESSED_V1",
+  "activation_snapshot_complete": true,
+  "activation_snapshot_rows": 4,
   "attempt_history_preserved": true,
   "evidence_origin": "SYNTHETIC_CONTRACT_FIXTURE_NOT_LIVE",
   "existing_outbox_rows": 2,

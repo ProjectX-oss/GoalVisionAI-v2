@@ -1,3 +1,12 @@
+# ADMIN activation episode correction (2026-09-27)
+
+- [x] Snapshot activation episode/generation immutably; suppress old work while permitting stable-incident recurrence.
+- [x] Preserve outbox/audits/attempts/receipts and fail closed on unknown legacy snapshots.
+- [x] Pass 148 offline ADMIN tests; regenerate the direct v1.2 upgrade package and supersede the defective package.
+- [x] Document the corrected semantics and read-only host rehearsal block.
+- No deployment, sender enablement, push, Telegram/API calls or PREMATCH control.
+- Handoff: `docs/operations/PREMATCH_ADMIN_ALERTS_V1_3.md`.
+
 # TASKS.md
 
 ## 2026-09-26 — Professional Lab V2 public messages
