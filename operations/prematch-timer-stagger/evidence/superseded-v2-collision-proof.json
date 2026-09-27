@@ -7,13 +7,13 @@
     "/usr/share/zoneinfo/Europe/Berlin": "5ee475f71a0fc1a32faeb849f8c39c6e7aa66d6d41ec742b97b3a7436b3b0701",
     "/usr/share/zoneinfo/Europe/Riga": "849dbfd26d6d696f48b80fa13323f99fe597ed83ab47485e2accc98609634569"
   },
-  "generated_at": "2026-09-27T18:56:11.617510+00:00",
+  "generated_at": "2026-09-27T18:56:15.912127+00:00",
   "schedules": {
     "goalvision-lab-v2-discover.timer": "*-*-* 09..22:00,30:00 Europe/Riga",
     "goalvision-lab-combo-settle.timer": "*-*-* *:05,15,25,35,45,55:00",
     "goalvision-adaptive-learning-observer.timer": "*-*-* *:08,38:00",
     "goalvision-lab-weekly-stats.timer": "Sun *-*-* 22:48:00 Europe/Riga",
-    "goalvision-adaptive-learning.timer": "*-*-* 04:20:00"
+    "goalvision-adaptive-learning.timer": "*-*-* 04:15:00"
   },
   "pair_count": 10,
   "windows": [
@@ -35,7 +35,10 @@
         "goalvision-lab-v2-discover.timer / goalvision-adaptive-learning.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning-observer.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [],
-        "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning.timer": [],
+        "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning.timer": [
+          "2026-09-28T02:15:00+00:00",
+          "2026-09-29T02:15:00+00:00"
+        ],
         "goalvision-adaptive-learning-observer.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-adaptive-learning-observer.timer / goalvision-adaptive-learning.timer": [],
         "goalvision-lab-weekly-stats.timer / goalvision-adaptive-learning.timer": []
@@ -491,8 +494,8 @@
           "2026-09-27T19:48:00+00:00"
         ],
         "goalvision-adaptive-learning.timer": [
-          "2026-09-28T02:20:00+00:00",
-          "2026-09-29T02:20:00+00:00"
+          "2026-09-28T02:15:00+00:00",
+          "2026-09-29T02:15:00+00:00"
         ]
       },
       "original_triggers_utc": {
@@ -1004,24 +1007,24 @@
         "preserved": true
       },
       "cadence_preserved": true,
-      "research_shift_exactly_300_seconds": true,
+      "research_shift_exactly_300_seconds": false,
       "research_separation": [
         {
-          "previous_settlement_local": "2026-09-28T04:15:00+02:00",
-          "research_local": "2026-09-28T04:20:00+02:00",
+          "previous_settlement_local": "2026-09-28T04:05:00+02:00",
+          "research_local": "2026-09-28T04:15:00+02:00",
           "next_settlement_local": "2026-09-28T04:25:00+02:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "before_seconds": 600,
+          "after_seconds": 600
         },
         {
-          "previous_settlement_local": "2026-09-29T04:15:00+02:00",
-          "research_local": "2026-09-29T04:20:00+02:00",
+          "previous_settlement_local": "2026-09-29T04:05:00+02:00",
+          "research_local": "2026-09-29T04:15:00+02:00",
           "next_settlement_local": "2026-09-29T04:25:00+02:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "before_seconds": 600,
+          "after_seconds": 600
         }
       ],
-      "research_separation_passed": true,
+      "research_separation_passed": false,
       "discovery_unchanged": true
     },
     {
@@ -1042,7 +1045,10 @@
         "goalvision-lab-v2-discover.timer / goalvision-adaptive-learning.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning-observer.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [],
-        "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning.timer": [],
+        "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning.timer": [
+          "2026-03-28T03:15:00+00:00",
+          "2026-03-29T02:15:00+00:00"
+        ],
         "goalvision-adaptive-learning-observer.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-adaptive-learning-observer.timer / goalvision-adaptive-learning.timer": [],
         "goalvision-lab-weekly-stats.timer / goalvision-adaptive-learning.timer": []
@@ -1498,8 +1504,8 @@
           "2026-03-29T19:48:00+00:00"
         ],
         "goalvision-adaptive-learning.timer": [
-          "2026-03-28T03:20:00+00:00",
-          "2026-03-29T02:20:00+00:00"
+          "2026-03-28T03:15:00+00:00",
+          "2026-03-29T02:15:00+00:00"
         ]
       },
       "original_triggers_utc": {
@@ -2011,24 +2017,24 @@
         "preserved": true
       },
       "cadence_preserved": true,
-      "research_shift_exactly_300_seconds": true,
+      "research_shift_exactly_300_seconds": false,
       "research_separation": [
         {
-          "previous_settlement_local": "2026-03-28T04:15:00+01:00",
-          "research_local": "2026-03-28T04:20:00+01:00",
+          "previous_settlement_local": "2026-03-28T04:05:00+01:00",
+          "research_local": "2026-03-28T04:15:00+01:00",
           "next_settlement_local": "2026-03-28T04:25:00+01:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "before_seconds": 600,
+          "after_seconds": 600
         },
         {
-          "previous_settlement_local": "2026-03-29T04:15:00+02:00",
-          "research_local": "2026-03-29T04:20:00+02:00",
+          "previous_settlement_local": "2026-03-29T04:05:00+02:00",
+          "research_local": "2026-03-29T04:15:00+02:00",
           "next_settlement_local": "2026-03-29T04:25:00+02:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "before_seconds": 600,
+          "after_seconds": 600
         }
       ],
-      "research_separation_passed": true,
+      "research_separation_passed": false,
       "discovery_unchanged": true
     },
     {
@@ -2049,7 +2055,10 @@
         "goalvision-lab-v2-discover.timer / goalvision-adaptive-learning.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning-observer.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [],
-        "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning.timer": [],
+        "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning.timer": [
+          "2026-10-24T02:15:00+00:00",
+          "2026-10-25T03:15:00+00:00"
+        ],
         "goalvision-adaptive-learning-observer.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-adaptive-learning-observer.timer / goalvision-adaptive-learning.timer": [],
         "goalvision-lab-weekly-stats.timer / goalvision-adaptive-learning.timer": []
@@ -2497,8 +2506,8 @@
           "2026-10-25T20:48:00+00:00"
         ],
         "goalvision-adaptive-learning.timer": [
-          "2026-10-24T02:20:00+00:00",
-          "2026-10-25T03:20:00+00:00"
+          "2026-10-24T02:15:00+00:00",
+          "2026-10-25T03:15:00+00:00"
         ]
       },
       "original_triggers_utc": {
@@ -3006,26 +3015,26 @@
         "preserved": true
       },
       "cadence_preserved": true,
-      "research_shift_exactly_300_seconds": true,
+      "research_shift_exactly_300_seconds": false,
       "research_separation": [
         {
-          "previous_settlement_local": "2026-10-24T04:15:00+02:00",
-          "research_local": "2026-10-24T04:20:00+02:00",
+          "previous_settlement_local": "2026-10-24T04:05:00+02:00",
+          "research_local": "2026-10-24T04:15:00+02:00",
           "next_settlement_local": "2026-10-24T04:25:00+02:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "before_seconds": 600,
+          "after_seconds": 600
         },
         {
-          "previous_settlement_local": "2026-10-25T04:15:00+01:00",
-          "research_local": "2026-10-25T04:20:00+01:00",
+          "previous_settlement_local": "2026-10-25T04:05:00+01:00",
+          "research_local": "2026-10-25T04:15:00+01:00",
           "next_settlement_local": "2026-10-25T04:25:00+01:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "before_seconds": 600,
+          "after_seconds": 600
         }
       ],
-      "research_separation_passed": true,
+      "research_separation_passed": false,
       "discovery_unchanged": true
     }
   ],
-  "zero_collisions": true
+  "zero_collisions": false
 }

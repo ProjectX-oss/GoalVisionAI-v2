@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-09-27T18:42:56.256778+00:00",
+  "captured_at": "2026-09-27T18:55:08.495260+00:00",
   "unit_hashes_and_loaded_schedules": "PASS",
   "units_checked": 12,
   "source_files_checked": 17,
@@ -19,6 +19,13 @@
   },
   "admin_sender_verification": "NOT_PERFORMED_PROTECTED_FILES_REQUIRE_ROOT_OPERATOR",
   "production_changes": "NONE",
-  "weekly_collision": "RESOLVED_APPROVED_SUNDAY_2248_EUROPE_RIGA",
-  "systemd_version": "systemd 255 (255.4-1ubuntu8.17)"
+  "daily_research_live_calendar": [
+    "*-*-* 04:15:00"
+  ],
+  "allowed_dropins": [
+    "goalvision-lab-combo-settle.timer",
+    "goalvision-adaptive-learning-observer.timer",
+    "goalvision-lab-weekly-stats.timer",
+    "goalvision-adaptive-learning.timer"
+  ]
 }

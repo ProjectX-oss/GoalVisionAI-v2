@@ -83,15 +83,18 @@ class DeploymentTests(unittest.TestCase):
     def install(self):
         return c.change(self.host,'install')
 
-    def test_exactly_three_dropins_and_no_service_controls(self):
+    def test_exactly_four_dropins_and_no_service_controls(self):
         self.install()
         files = list(c.UNIT_ROOT.glob('*.timer.d/*.conf'))
+        self.assertEqual(len(files), 4)
+        self.assertEqual(c.CHANGED, cal.NAMES[1:])
         self.assertEqual({p.parent.name[:-2] for p in files},set(c.CHANGED))
+        self.assertFalse(c.dropin(cal.NAMES[0]).exists())
         self.assertEqual(self.host.calls,[('daemon-reload',None),*[('restart',u) for u in c.CHANGED]])
         self.assertEqual(c.read_transaction()['phase'],'installed')
         self.assertTrue(all(p.read_bytes()==c.payload(p.parent.name[:-2]) for p in files))
 
-    def test_original_units_discovery_research_and_admin_unchanged(self):
+    def test_original_units_discovery_and_admin_unchanged(self):
         before = {p: c.sha(Path(p)) for v in self.baseline['units'].values() for p in v['files']}
         admin = copy.deepcopy(self.host.admin_state)
         self.install(); c.change(self.host,'rollback')
@@ -106,6 +109,13 @@ class DeploymentTests(unittest.TestCase):
         self.install();c.change(self.host,'rollback')
         self.assertNotIn(('restart',u),self.host.calls)
         self.assertEqual(self.host.show(u)['ActiveState'],'inactive')
+
+    def test_deployment_baseline_rejects_old_three_timer_allowlist(self):
+        self.baseline['deployment']['changed_timers'] = list(cal.NAMES[1:4])
+        with self.assertRaisesRegex(ValueError, 'DEPLOYMENT_BASELINE_DRIFT'):
+            self.install()
+        self.assertEqual(self.host.calls, [])
+        self.assertFalse((c.STATE/'transaction.json').exists())
 
     def test_hash_drift_rejected_before_mutation(self):
         Path(next(iter(self.baseline['units'][cal.NAMES[0]]['files']))).write_text('changed')
@@ -144,7 +154,7 @@ class DeploymentTests(unittest.TestCase):
             for u in c.CHANGED:self.assertEqual(c.calendar_of(self.host.show(u)),[cal.OLD[u]])
 
     def test_interrupt_after_each_atomic_dropin_recovers_on_next_command(self):
-        for count in range(1,4):
+        for count in range(1,5):
             tx={'phase':'installing','manifest':c.MANIFEST,'reload_pending':False,
                 'timers':{u:{k:self.host.show(u)[k] for k in ('ActiveState','UnitFileState')} for u in cal.NAMES}}
             c.save_transaction(tx)
@@ -171,6 +181,16 @@ class DeploymentTests(unittest.TestCase):
         c.check(self.host)
         self.assertEqual(before,set(Path(self.tmp.name).rglob('*')))
         self.assertEqual(self.host.calls,[])
+
+    def test_superseded_research_collision_blocks_install_before_lock_or_writes(self):
+        superseded = {**cal.TARGET, cal.NAMES[4]: '*-*-* 04:15:00'}
+        with patch.object(c, 'proof', side_effect=lambda **kw: cal.proof(superseded, **kw)), patch.object(c, 'deployment_lock') as lock:
+            with self.assertRaisesRegex(ValueError, 'TARGET_CALENDAR_COLLISION'):
+                self.install()
+            lock.assert_not_called()
+        self.assertFalse((c.STATE/'transaction.json').exists())
+        self.assertFalse(any(c.dropin(u).exists() for u in c.CHANGED))
+        self.assertEqual(self.host.calls, [])
 
     def test_collision_blocks_install_without_writing_dropins(self):
         with patch.object(c,'proof',return_value={'zero_collisions':False}):
@@ -229,18 +249,22 @@ class BoundaryTests(unittest.TestCase):
 
 class CalendarTests(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):cls.report=cal.proof()
+    def setUpClass(cls):cls.report=cal.proof(current_start=datetime.fromisoformat('2026-09-27T18:00:00+00:00'))
 
     def test_exact_requested_targets(self):
         self.assertEqual(cal.TARGET[cal.NAMES[1]],'*-*-* *:05,15,25,35,45,55:00')
         self.assertEqual(cal.TARGET[cal.NAMES[2]],'*-*-* *:08,38:00')
         self.assertEqual(cal.TARGET[cal.NAMES[3]],'Sun *-*-* 22:48:00 Europe/Riga')
+        self.assertEqual(cal.TARGET[cal.NAMES[4]], '*-*-* 04:20:00')
+        self.assertEqual({p.name for p in (ROOT/'drop-ins').iterdir()}, {u+'.conf' for u in c.CHANGED})
         for u in c.CHANGED:self.assertEqual((ROOT/'drop-ins'/(u+'.conf')).read_bytes(),c.payload(u))
 
-    def test_cadence_discovery_and_research_preserved_including_dst(self):
+    def test_cadence_preserved_and_research_shifted_five_minutes_including_dst(self):
         for window in self.report['windows']:
             self.assertTrue(window['cadence_preserved'])
-            self.assertTrue(window['discovery_unchanged']);self.assertTrue(window['research_unchanged'])
+            self.assertTrue(window['weekly_cadence']['preserved'])
+            self.assertEqual(len(window['weekly_cadence']['target_gap_seconds']), 2)
+            self.assertTrue(window['discovery_unchanged']);self.assertTrue(window['research_shift_exactly_300_seconds'])
             self.assertEqual(window['counts'][cal.NAMES[3]],1)
 
     def test_three_frequent_timers_never_collide(self):
@@ -248,19 +272,40 @@ class CalendarTests(unittest.TestCase):
             for pair, timestamps in w['collisions'].items():
                 if cal.NAMES[3] not in pair:self.assertEqual(timestamps,[])
 
-    def test_all_six_pairs_have_zero_collisions_in_every_window(self):
+    def test_all_ten_pairs_have_zero_collisions_in_every_window(self):
         self.assertTrue(self.report['zero_collisions'])
         self.assertEqual(len(self.report['windows']), 3)
         for window in self.report['windows']:
-            self.assertEqual(len(window['collisions']), 6)
+            self.assertEqual(len(window['collisions']), 10)
             self.assertTrue(all(not times for times in window['collisions'].values()))
 
     def test_superseded_2245_target_is_still_rejected(self):
         superseded = {**cal.TARGET, cal.NAMES[3]: 'Sun *-*-* 22:45:00 Europe/Riga'}
-        report = cal.proof(superseded)
+        report = cal.proof(superseded, current_start=datetime.fromisoformat('2026-09-27T18:00:00+00:00'))
         self.assertFalse(report['zero_collisions'])
         for window in report['windows']:
             self.assertEqual(len(window['collisions'][cal.NAMES[1]+' / '+cal.NAMES[3]]), 1)
+
+    def test_research_has_five_minutes_to_each_adjacent_settlement(self):
+        for window in self.report['windows']:
+            self.assertTrue(window['research_separation_passed'])
+            for row in window['research_separation']:
+                for key, expected in (('previous_settlement_local', '04:15'),
+                                      ('research_local', '04:20'), ('next_settlement_local', '04:25')):
+                    self.assertEqual(datetime.fromisoformat(row[key]).strftime('%H:%M'), expected)
+                self.assertEqual((row['before_seconds'], row['after_seconds']), (300, 300))
+
+    def test_superseded_0415_research_collides_daily_in_every_window(self):
+        report = cal.proof({**cal.TARGET, cal.NAMES[4]: '*-*-* 04:15:00'})
+        self.assertFalse(report['zero_collisions'])
+        for window in report['windows']:
+            hits = window['collisions'][cal.NAMES[1]+' / '+cal.NAMES[4]]
+            self.assertEqual(len(hits), window['counts'][cal.NAMES[4]])
+            self.assertGreaterEqual(len(hits), 2)
+
+    def test_missing_collision_participant_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, 'ALL_FIVE_TIMERS_REQUIRED'):
+            cal.proof({u: cal.TARGET[u] for u in cal.NAMES[:4]})
 
 
 class AdminReadTests(unittest.TestCase):

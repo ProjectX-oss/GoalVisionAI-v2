@@ -27,7 +27,7 @@ UNIT_SEARCH_ROOTS = (Path('/etc/systemd/system'), Path('/run/systemd/system'), P
 ADMIN_CONFIG = Path('/etc/goalvision-admin-alerts/admin-alerts.json')
 ADMIN_STATE = Path('/var/lib/goalvision-admin-alerts')
 OWNED = '95-goalvision-prematch-timer-stagger.conf'
-CHANGED = NAMES[1:4]
+CHANGED = NAMES[1:]
 STABLE = ('Id', 'LoadState', 'FragmentPath', 'UnitFileState', 'Unit', 'AccuracyUSec',
           'RandomizedDelayUSec', 'Persistent', 'Requires', 'Wants', 'Conflicts', 'BindsTo',
           'PartOf', 'ConsistsOf', 'BoundBy', 'PropagatesStopTo', 'OnFailure', 'OnSuccess', 'Triggers',
@@ -141,6 +141,8 @@ def payload(unit):
 
 
 def inspect(host, mode='original', reload_pending=False):
+    require(BASELINE['deployment']['target_calendars'] == TARGET and
+            BASELINE['deployment']['changed_timers'] == list(CHANGED), 'DEPLOYMENT_BASELINE_DRIFT')
     require(Path('/etc/timezone').read_text().strip() == BASELINE['timezone'] and
             sha(Path('/etc/localtime')) == BASELINE['localtime_sha256'], 'TIMEZONE_DRIFT')
     units = {}

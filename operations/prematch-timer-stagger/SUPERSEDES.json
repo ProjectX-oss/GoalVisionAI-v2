@@ -1,8 +1,18 @@
 {
-  "superseded_commit": "b286210",
-  "superseded_manifest_sha256": "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca",
-  "superseded_status": "SUPERSEDED_DO_NOT_INSTALL",
-  "replacement_package": "prematch-timer-stagger-v2-20260927",
-  "approved_weekly_calendar": "Sun *-*-* 22:48:00 Europe/Riga",
-  "other_target_schedules": "UNCHANGED"
+  "superseded_commit": "46e680851fd8c64c5d003c14215de75128537542",
+  "superseded_package": "prematch-timer-stagger-v2-20260927",
+  "superseded_manifest_sha256": "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472",
+  "superseded_archive_sha256": "226b0494d8c08b72210c12500017fa75ee7368dc1c549482a873289e42d6d0bb",
+  "superseded_status": "SUPERSEDED / MUST NOT INSTALL",
+  "reason": "Zone-less daily research at 04:15 collides with settlement at :15 and shares adaptive_lab audit SQLite.",
+  "replacement_package": "prematch-timer-stagger-v3-20260927",
+  "daily_research_calendar": "*-*-* 04:20:00",
+  "previous_superseded_release": {
+    "superseded_commit": "b286210",
+    "superseded_manifest_sha256": "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca",
+    "superseded_status": "SUPERSEDED_DO_NOT_INSTALL",
+    "replacement_package": "prematch-timer-stagger-v2-20260927",
+    "approved_weekly_calendar": "Sun *-*-* 22:48:00 Europe/Riga",
+    "other_target_schedules": "UNCHANGED"
+  }
 }
