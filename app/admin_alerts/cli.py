@@ -171,6 +171,7 @@ def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
                     events.append(Event('monitor', 'MONITORING_COVERAGE_DEGRADED', source,
                         'read-available-' + digest(cursors.get(source, {})), now, source, healthy=True))
             store.ingest(events, cursors, now)
+            store.invalidate_legacy_output(now)
             store.enqueue(now)
             sent = 0
             sender = SenderConfig(**config.get('sender', {}))

@@ -121,7 +121,7 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
     budget = max(0, min(5, 20 - used))
     if not budget:
         return 0
-    if not store.db.execute("SELECT 1 FROM outbox WHERE state IN ('PENDING','UNCERTAIN') AND due<=? AND attempts<5 LIMIT 1", (now,)).fetchone():
+    if not store.db.execute("SELECT 1 FROM outbox o JOIN incidents i ON i.id=o.incident WHERE i.state IN ('OPEN','REPEATED','ESCALATED','RECOVERED') AND o.state IN ('PENDING','UNCERTAIN') AND o.due<=? AND o.attempts<5 LIMIT 1", (now,)).fetchone():
         return 0
     try:
         transport.validate()
@@ -137,7 +137,7 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
         if deadline is not None and time.monotonic() > deadline - 4:
             break
         rows = store.db.execute('''SELECT o.* FROM outbox o JOIN incidents i ON i.id=o.incident
-            WHERE o.state IN ('PENDING','UNCERTAIN') AND o.due<=? AND o.attempts<5
+            WHERE i.state IN ('OPEN','REPEATED','ESCALATED','RECOVERED') AND o.state IN ('PENDING','UNCERTAIN') AND o.due<=? AND o.attempts<5
             ORDER BY i.severity DESC,o.created LIMIT 1000''', (now,)).fetchall()
         if not rows:
             break

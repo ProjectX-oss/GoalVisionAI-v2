@@ -1,0 +1,71 @@
+{
+  "archive_sha256": "a3fee3a79fa946d877e7e95e42369154e22ea975a7b03fa2e4b4a4bde7a62287",
+  "combo_loaded_need_daemon_reload": "no",
+  "combo_loaded_standard_output": "null",
+  "daemon_reload_calls": 0,
+  "deployment_performed": false,
+  "hash_changes": {
+    "installed_admin_sha256": [],
+    "protected_sha256": []
+  },
+  "installed_admin_file_count": 18,
+  "installed_v1_manifest_verified": true,
+  "live_admin_state": "LIVE_ADMIN_STATE_REQUIRES_OPERATOR_PREFLIGHT",
+  "offline_reconstruction": {
+    "active_fault_count": 0,
+    "audit_rows": 2,
+    "installed_state": "LIVE_ADMIN_STATE_REQUIRES_OPERATOR_PREFLIGHT",
+    "monitoring_state": "AVAILABLE",
+    "network_attempts": 0,
+    "original_cursor_count": 1,
+    "original_cursor_preserved": true,
+    "original_incident_fields_preserved": true,
+    "outcomes": [
+      {
+        "attempts": 0,
+        "id": "7f2cfe2a621b163f2367ac94",
+        "outbox_state": "SUPERSEDED",
+        "state": "INVALIDATED"
+      },
+      {
+        "attempts": 0,
+        "id": "d9f68a79d28d17a4bcb88d10",
+        "outbox_state": "SUPERSEDED",
+        "state": "INVALIDATED"
+      }
+    ],
+    "producer_mutations": 0,
+    "producer_source_reads": 0,
+    "scan_runs": [
+      {
+        "elapsed_seconds": 0.0069,
+        "events": 4,
+        "football_api_calls": 0,
+        "no_send": true,
+        "stdout_bytes": 0,
+        "telegram_sends": 0
+      },
+      {
+        "elapsed_seconds": 0.0044,
+        "events": 3,
+        "football_api_calls": 0,
+        "no_send": true,
+        "stdout_bytes": 0,
+        "telegram_sends": 0
+      }
+    ],
+    "state_origin": "USER_REPORTED_INCIDENTS_RECONSTRUCTED_WITH_ACTUAL_V1_CODE",
+    "v1_2_manifest_sha256": "e747128e373a237db2031085eef2b905af55e543488b23d7ef58e678e0e4575f",
+    "v1_manifest_sha256": "3a27a9f75996698a5576cff2f3e889d3a5c20d091fb0c891de704b462ac9b7a0"
+  },
+  "package": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-2-final",
+  "package_manifest_verified": true,
+  "prematch_loaded_drift_review": "PASSED",
+  "protected_file_count": 1586,
+  "tests": {
+    "admin_passed": 107,
+    "network_attempts": 0,
+    "scope": "ADMIN_ONLY"
+  },
+  "unit_control_calls": 0
+}

@@ -3,5 +3,7 @@ set -eu
 # ADMIN only. Preserve SQLite incidents, attempts, receipts, reports and cursors.
 /usr/bin/test -d /var/lib/goalvision-admin-alerts
 /usr/bin/touch /var/lib/goalvision-admin-alerts/DISABLED
-/usr/bin/systemctl disable --now goalvision-admin-alerts.timer
+# The persistent marker blocks future activation, including after reboot.
+# Stop avoids enablement symlink changes and systemctl's implicit daemon-reload.
+/usr/bin/systemctl stop goalvision-admin-alerts.timer
 /usr/bin/systemctl stop goalvision-admin-alerts.service

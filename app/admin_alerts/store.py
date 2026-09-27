@@ -10,6 +10,8 @@ import sqlite3
 from typing import Iterator
 
 from .model import Event, alert, digest
+from .invalidation import eligible, REASON
+from .output_contracts import CONTRACTS
 
 
 @contextmanager
@@ -52,6 +54,13 @@ class Store:
         CREATE TABLE IF NOT EXISTS attempts(
             id INTEGER PRIMARY KEY,outbox TEXT NOT NULL,started REAL NOT NULL,result TEXT NOT NULL);
         CREATE INDEX IF NOT EXISTS attempt_time ON attempts(started);
+        CREATE TABLE IF NOT EXISTS invalidations(
+            incident TEXT PRIMARY KEY, invalidated_at REAL NOT NULL, evidence TEXT NOT NULL,
+            original_incident TEXT NOT NULL, original_outbox TEXT NOT NULL);
+        CREATE TRIGGER IF NOT EXISTS invalidations_no_update BEFORE UPDATE ON invalidations
+            BEGIN SELECT RAISE(ABORT, 'INVALIDATION_AUDIT_IMMUTABLE'); END;
+        CREATE TRIGGER IF NOT EXISTS invalidations_no_delete BEFORE DELETE ON invalidations
+            BEGIN SELECT RAISE(ABORT, 'INVALIDATION_AUDIT_IMMUTABLE'); END;
         ''')
         # Version-local migration is confined to the ADMIN file, never producer storage.
         if 'episode' not in {r[1] for r in self.db.execute('PRAGMA table_info(incidents)')}:
@@ -87,6 +96,8 @@ class Store:
             if correlated:
                 signature = correlated['id']
         row = self.db.execute('SELECT * FROM incidents WHERE id=?', (signature,)).fetchone()
+        if row and row['state'] == 'INVALIDATED':
+            return  # Terminal evidence tombstone; neither replay nor health is recovery.
         if event.healthy and not row:
             return
         episode = row['episode'] if row else 1
@@ -126,11 +137,39 @@ class Store:
                 (state, severity, event.observed, json.dumps(event.document()), event.invocation, streak, int(changed), episode, signature))
         self.db.execute('INSERT INTO occurrences VALUES (?,?,?,?)', (key, signature, now, event.source))
 
+    def invalidate_legacy_output(self, now: float) -> int:
+        """Atomically append audit evidence and retire unsupported absence work."""
+        count = 0
+        with self.db:
+            # Lock before assessing contradictions or notification history.
+            self.db.execute('BEGIN IMMEDIATE')
+            rows = self.db.execute("""SELECT * FROM incidents WHERE rule='MISSING_OUTPUT'
+                AND state IN ('OPEN','REPEATED','ESCALATED') AND id NOT IN
+                (SELECT incident FROM invalidations)""").fetchall()
+            for row in rows:
+                if not eligible(self.db, row):
+                    continue
+                evidence = {'reason': REASON, 'contract_source': 'NONE',
+                            'contract_version': CONTRACTS[row['service']].version,
+                            'invalidated_by': 'ADMIN_ALERTS_V1_2'}
+                outbox = [dict(r) for r in self.db.execute('SELECT * FROM outbox WHERE incident=?', (row['id'],))]
+                self.db.execute('INSERT INTO invalidations VALUES (?,?,?,?,?)',
+                    (row['id'], now, json.dumps(evidence, sort_keys=True),
+                     json.dumps(dict(row), sort_keys=True), json.dumps(outbox, sort_keys=True)))
+                self.db.execute("UPDATE incidents SET state='INVALIDATED' WHERE id=?", (row['id'],))
+                self.db.execute("""UPDATE outbox SET state='SUPERSEDED' WHERE incident=?
+                    AND state='PENDING' AND attempts=0 AND acknowledged=0 AND receipt IS NULL
+                    AND NOT EXISTS (SELECT 1 FROM attempts a WHERE a.outbox=outbox.id)""", (row['id'],))
+                # Attempted/acknowledged rows stay byte-identical. Dispatch's incident
+                # state guard prevents retries without erasing uncertain/sent history.
+                count += 1
+        return count
+
     def enqueue(self, now: float) -> None:
         """Persist notification identity before transport; coalesce pending repeats."""
         with self.db:
-            self.db.execute("UPDATE outbox SET state=CASE WHEN attempts>=5 THEN 'EXHAUSTED' ELSE 'UNCERTAIN' END,error='INTERRUPTED_ATTEMPT' WHERE state='ATTEMPTING'")
-            rows = self.db.execute('''SELECT i.* FROM incidents i WHERE state!='PENDING'
+            self.db.execute("UPDATE outbox SET state=CASE WHEN attempts>=5 THEN 'EXHAUSTED' ELSE 'UNCERTAIN' END,error='INTERRUPTED_ATTEMPT' WHERE state='ATTEMPTING' AND incident NOT IN (SELECT id FROM incidents WHERE state='INVALIDATED')")
+            rows = self.db.execute('''SELECT i.* FROM incidents i WHERE state IN ('OPEN','REPEATED','ESCALATED','RECOVERED')
                 AND (state!='RECOVERED' OR (notified_state!='RECOVERED' AND
                     (last_sent>0 OR EXISTS (SELECT 1 FROM outbox o WHERE o.incident=i.id AND o.attempts>0))))
                 AND NOT EXISTS (SELECT 1 FROM outbox o WHERE o.incident=i.id AND
@@ -164,7 +203,13 @@ class Store:
     def report(self, configured_release: str) -> dict:
         """Bounded sanitized forwarding report, with explicit release uncertainty."""
         rows = self.db.execute("SELECT * FROM incidents ORDER BY severity DESC,last_seen DESC LIMIT 200").fetchall()
-        return {'schema': 'goalvision-admin-incidents-v1', 'configured_release_now': configured_release,
+        audits = {r['incident']: {'invalidated_at': r['invalidated_at'], **json.loads(r['evidence'])}
+                  for r in self.db.execute('SELECT incident,invalidated_at,evidence FROM invalidations WHERE incident IN ('
+                      + ','.join('?' for _ in rows) + ')', [r['id'] for r in rows])}
+        active = self.db.execute("SELECT count(*) FROM incidents WHERE state IN ('OPEN','REPEATED','ESCALATED')").fetchone()[0]
+        degraded = self.db.execute("""SELECT 1 FROM incidents WHERE rule='MONITORING_COVERAGE_DEGRADED'
+            AND state IN ('PENDING','OPEN','REPEATED','ESCALATED') LIMIT 1""").fetchone()
+        return {'active_fault_count': active, 'schema': 'goalvision-admin-incidents-v1', 'configured_release_now': configured_release,
                 'affected_invocation_release': 'UNKNOWN', 'missing_evidence': [
                     'Invocation release is not recorded by systemd; current configuration is not historical proof.',
                     'No raw exception messages, message bodies, provider payloads, headers or locals retained.'],
@@ -172,8 +217,9 @@ class Store:
                     'Inspect the listed invocation in journalctl, allowlisted service only, at most 100 entries.',
                     'Compare source cycle/prediction IDs with the existing receipt; do not retry PREMATCH sends.',
                     'Inspect loaded systemd properties and the exact deployment manifest; make no changes.'],
-                'monitoring_state': 'DEGRADED' if any(r['rule'] == 'MONITORING_COVERAGE_DEGRADED' and r['state'] != 'RECOVERED' for r in rows) else 'AVAILABLE',
-                'incidents': [{**dict(r), 'evidence': json.loads(r['evidence'])} for r in rows],
+                'monitoring_state': 'DEGRADED' if degraded else 'AVAILABLE',
+                'incidents': [{**dict(r), 'evidence': json.loads(r['evidence']),
+                               **({'invalidation': audits[r['id']]} if r['id'] in audits else {})} for r in rows],
                 'truncated': self.db.execute('SELECT count(*) FROM incidents').fetchone()[0] > 200}
 
     def retain(self, now: float) -> None:
@@ -183,13 +229,13 @@ class Store:
                 JOIN incidents i ON i.id=o.incident WHERE i.state='RECOVERED' AND i.last_seen<? LIMIT 500)''', (now - 90 * 86400,))
             self.db.execute('''DELETE FROM occurrences WHERE key IN (SELECT o.key FROM occurrences o JOIN incidents i ON i.id=o.incident
                 WHERE i.state='RECOVERED' AND i.last_seen<? LIMIT 500)''', (now - 90 * 86400,))
-            self.db.execute('''DELETE FROM attempts WHERE id IN (SELECT id FROM attempts WHERE started<? LIMIT 500)''', (now - 90 * 86400,))
+            self.db.execute('''DELETE FROM attempts WHERE id IN (SELECT id FROM attempts WHERE started<? AND outbox NOT IN (SELECT o.id FROM outbox o JOIN incidents i ON i.id=o.incident WHERE i.state='INVALIDATED') LIMIT 500)''', (now - 90 * 86400,))
             self.db.execute('''DELETE FROM outbox WHERE id IN (SELECT id FROM outbox WHERE state IN ('SENT','SUPERSEDED')
-                AND created<? LIMIT 500)''', (now - 90 * 86400,))
+                AND incident NOT IN (SELECT id FROM incidents WHERE state='INVALIDATED') AND created<? LIMIT 500)''', (now - 90 * 86400,))
             # Keep incident tombstones/cursors for replay protection. Bound repeated open evidence
             # to the newest 100 occurrences per incident; count and first/last seen remain durable.
             after = self.get('retention_cursor', '')
-            rows = self.db.execute('SELECT id FROM incidents WHERE id>? ORDER BY id LIMIT 10', (after,)).fetchall()
+            rows = self.db.execute("SELECT id FROM incidents WHERE id>? AND state!='INVALIDATED' ORDER BY id LIMIT 10", (after,)).fetchall()
             for row in rows:
                 self.db.execute('''DELETE FROM occurrences WHERE key IN
                     (SELECT key FROM occurrences WHERE incident=? ORDER BY seen DESC LIMIT 500 OFFSET 100)''', (row['id'],))
