@@ -12,6 +12,7 @@ import urllib.request
 
 from .model import digest
 from .store import Store
+from .correlation import groups, deliverable
 
 
 @dataclass(frozen=True)
@@ -114,6 +115,8 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
              *, deadline: float | None = None) -> int:
     """At most five sends/scan, twenty/hour; durable attempts precede transport."""
     config.validate()
+    if (store.root / 'DISABLED').exists():
+        return 0
     state = store.get('delivery', {})
     if state.get('permanent') or state.get('next', 0) > now:
         return 0
@@ -134,11 +137,15 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
         return 0
     sent = 0
     for _ in range(budget):
+        if (store.root / 'DISABLED').exists():
+            break
         if deadline is not None and time.monotonic() > deadline - 4:
             break
         rows = store.db.execute('''SELECT o.* FROM outbox o JOIN incidents i ON i.id=o.incident
             WHERE i.state IN ('OPEN','REPEATED','ESCALATED','RECOVERED') AND o.state IN ('PENDING','UNCERTAIN') AND o.due<=? AND o.attempts<5
             ORDER BY i.severity DESC,o.created LIMIT 1000''', (now,)).fetchall()
+        projections = groups(store.db)
+        rows = [r for r in rows if deliverable(store.db, r['incident'], projections)]
         if not rows:
             break
         backlog = len(rows) > 5 or now - min(r['created'] for r in rows) > 1800

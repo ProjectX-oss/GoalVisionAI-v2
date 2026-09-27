@@ -351,7 +351,7 @@ def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[
                     if doc.get('schema_version'):
                         events.extend(compact(doc, 'journal-' + digest(cursor), now, invocation=inv))
                     else:
-                        events.extend(code_events(doc.get('code') or doc.get('status'), unit, inv, stamp, 'journal-' + digest(cursor)))
+                        events.extend(code_events(doc.get('code') or doc.get('status'), unit, inv, stamp, 'journal-' + digest(cursor), invocation=inv))
                         if doc.get('status') == 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED':
                             events.append(Event(unit, 'DELIVERY_UNCERTAIN', identity(doc.get('report_id') or doc.get('prediction_id') or inv),
                                 inv, stamp, 'journal-' + digest(cursor), 3, inv))
@@ -361,15 +361,16 @@ def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[
                             continue
                         for key in ('CONSTRUCTION_FAILED', 'FINISH_FAILED'):
                             if observation.get(key):
-                                events.extend(code_events('OBSERVATION_' + key, unit, inv, stamp, 'journal-' + digest(cursor)))
+                                events.extend(code_events('OBSERVATION_' + key, unit, inv, stamp, 'journal-' + digest(cursor), invocation=inv))
                 else:
                     known = None
                     for needle, code in (('database is locked', 'DATABASE_LOCKED'),
+                        ('QUOTA_DB_CONTENTION_EXHAUSTED', 'QUOTA_DB_CONTENTION_EXHAUSTED'),
                         ('OBSERVATION_CONSTRUCTION_FAILED', 'OBSERVATION_CONSTRUCTION_FAILED'),
                         ('OBSERVATION_FINISH_FAILED', 'OBSERVATION_FINISH_FAILED')):
                         if needle in message:
                             known = code
-                    events.extend(code_events(known, unit, inv, stamp, 'journal-' + digest(cursor)))
+                    events.extend(code_events(known, unit, inv, stamp, 'journal-' + digest(cursor), invocation=inv))
     except (OSError, ValueError, TimeoutError, subprocess.TimeoutExpired):
         # Journal vacuum/cursor loss does not mean an application failure.
         events.append(coverage('journal', now, 'READ_OR_CURSOR_UNAVAILABLE'))
@@ -462,6 +463,7 @@ def unresolved(path: Path, previous: dict, now: float) -> tuple[list[Event], dic
     state = dict(previous)
     connection = None
     try:
+        validate_scan_cursor(state)
         connection = readonly(path)
         rows = connection.execute('''SELECT identity FROM evidence WHERE kind='claim' AND identity>?
                                      ORDER BY identity LIMIT ?''', (state.get('after', ''), MAX_ROWS)).fetchall()
@@ -471,11 +473,10 @@ def unresolved(path: Path, previous: dict, now: float) -> tuple[list[Event], dic
             events.append(Event(DISCOVERY, 'DELIVERY_UNCERTAIN', identity(key.split(':', 1)[-1]),
                 'ledger-' + digest((key, bool(receipt))), now, 'ledger-' + digest(key), 3,
                 facts={'claim_exists': True, 'receipt_persisted': bool(receipt)}, healthy=bool(receipt)))
-        state['after'] = rows[-1][0] if len(rows) == MAX_ROWS else ''
-        if len(rows) == MAX_ROWS:
-            events.append(coverage('ledger', now, 'UNRESOLVED_SCAN_IN_PROGRESS'))
+        events.extend(scan_page(state, rows, now, 'ledger'))
     except (OSError, ValueError, sqlite3.Error):
-        events.append(coverage('ledger', now, 'READ_SCHEMA_OR_WAL_ACCESS_UNAVAILABLE'))
+        state.update(version=2, read_available=False, status='SCAN_UNAVAILABLE', processed_this_page=0, progress=False)
+        events.append(coverage('ledger', now, 'READ_SCHEMA_OR_CURSOR_UNAVAILABLE'))
     finally:
         if connection:
             connection.close()
@@ -488,6 +489,7 @@ def weekly_unresolved(path: Path, previous: dict, now: float) -> tuple[list[Even
     state = dict(previous)
     connection = None
     try:
+        validate_scan_cursor(state)
         connection = readonly(path)
         rows = connection.execute("SELECT id FROM weekly_claims WHERE id>? AND stream='PREMATCH' ORDER BY id LIMIT ?",
                                   (state.get('after', ''), MAX_ROWS)).fetchall()
@@ -495,12 +497,44 @@ def weekly_unresolved(path: Path, previous: dict, now: float) -> tuple[list[Even
             receipt = connection.execute("SELECT 1 FROM weekly_receipts WHERE id=? AND stream='PREMATCH'", (key,)).fetchone()
             events.append(Event(UNITS[4], 'DELIVERY_UNCERTAIN', identity(key), 'weekly-' + digest((key, bool(receipt))),
                 now, 'weekly-' + digest(key), 3, facts={'claim_exists': True, 'receipt_persisted': bool(receipt)}, healthy=bool(receipt)))
-        state['after'] = rows[-1][0] if len(rows) == MAX_ROWS else ''
-        if len(rows) == MAX_ROWS:
-            events.append(coverage('weekly', now, 'UNRESOLVED_SCAN_IN_PROGRESS'))
+        events.extend(scan_page(state, rows, now, 'weekly'))
     except (OSError, ValueError, sqlite3.Error):
-        events.append(coverage('weekly', now, 'READ_SCHEMA_OR_WAL_ACCESS_UNAVAILABLE'))
+        state.update(version=2, read_available=False, status='SCAN_UNAVAILABLE', processed_this_page=0, progress=False)
+        events.append(coverage('weekly', now, 'READ_SCHEMA_OR_CURSOR_UNAVAILABLE'))
     finally:
         if connection:
             connection.close()
     return events, state
+
+
+SCAN_STALL_SECONDS = 1200
+
+
+def validate_scan_cursor(state: dict) -> None:
+    if (state.get('version', 2) != 2 or not isinstance(state.get('after', ''), str)
+            or not isinstance(state.get('last_progress_at', 0), (float, int))):
+        raise ValueError('SCAN_CURSOR_CORRUPT')
+
+
+def scan_page(state: dict, rows: list, now: float, source: str) -> list[Event]:
+    """A bounded page is healthy. Stall is measured since the last advancement.
+
+    A migrated v1 cursor starts its 20-minute observation window now. A delayed
+    producer deferral is assessed by the caller, independently of page progress.
+    """
+    before = state.get('after', '')
+    after = rows[-1][0] if len(rows) == MAX_ROWS else ''
+    fingerprint = digest(rows)
+    completed = len(rows) < MAX_ROWS
+    advancing = (not rows and completed) or (all(isinstance(r[0], str) for r in rows)
+                 and rows[0][0] > before and all(a[0] < b[0] for a, b in zip(rows, rows[1:]))
+                 and (completed or after != before) and fingerprint != state.get('page_fingerprint'))
+    last = state.get('last_progress_at', now)
+    stalled = not advancing and now - last >= SCAN_STALL_SECONDS
+    state.update(version=2, read_available=True,
+                 status='SCAN_STALLED' if stalled else 'SCAN_COMPLETED' if completed and advancing else 'SCAN_IN_PROGRESS',
+                 processed_this_page=len(rows), progress=advancing,
+                 last_progress_at=now if advancing else last, page_fingerprint=fingerprint if not completed else None)
+    if advancing:
+        state['after'] = after
+    return [coverage(source, now, 'SCAN_STALLED_NO_ADVANCEMENT')] if stalled else []

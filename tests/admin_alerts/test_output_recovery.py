@@ -146,7 +146,7 @@ class RecoveryTests(Temporary):
             value[unit]['InvocationID'] = OTHER
         def recover(unit, inv, now):
             return invocation_output(unit, inv, now, lambda _: line())
-        for _ in range(3):  # bounded round-robin reaches all four old incidents
+        for _ in range(5):  # two per scan reaches eight execution-specific candidates
             run(recovery=recover)
         store = Store(root)
         self.assertEqual(store.db.execute("select state from incidents where service=? and object_id=?", (UNIT, INV)).fetchone()[0], 'RECOVERED')

@@ -45,7 +45,7 @@ def configured_release(path: Path) -> str:
         return 'UNKNOWN'
 
 
-def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
+def scan(config: dict, root: Path, *, no_send: bool = True, config_path: Path | None = None) -> dict:
     """One serialized scan. Transactions close before any ADMIN network activity."""
     begin = time.monotonic()
     now = time.time()
@@ -55,6 +55,8 @@ def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
     with lock(root):
         if (root / 'DISABLED').exists():
             return {'status': 'DISABLED', 'telegram_sends': 0, 'football_api_calls': 0}
+        if config_path is not None:
+            config = json.loads(config_path.read_text())
         store = Store(root)
         try:
             started = store.get('monitor_started', now)
@@ -170,6 +172,7 @@ def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
                 if not any(e.rule == 'MONITORING_COVERAGE_DEGRADED' and e.source == source for e in events):
                     events.append(Event('monitor', 'MONITORING_COVERAGE_DEGRADED', source,
                         'read-available-' + digest(cursors.get(source, {})), now, source, healthy=True))
+            store.invalidate_scan_progress(now)
             store.ingest(events, cursors, now)
             store.invalidate_legacy_output(now)
             store.enqueue(now)
@@ -179,6 +182,8 @@ def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
                 if (root / 'DISABLED').exists():
                     return {'status': 'DISABLED', 'telegram_sends': 0, 'football_api_calls': 0}
                 try:
+                    if not store.db.execute('SELECT 1 FROM notification_epochs LIMIT 1').fetchone():
+                        raise DeliveryError('ACTIVATION_EPOCH_REQUIRED', permanent=True)
                     sent = dispatch(store, sender, Telegram(sender), now, deadline=begin + 35)
                 except (DeliveryError, OSError) as failure:
                     with store.db:
@@ -193,6 +198,12 @@ def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
             report = store.report(release)
             report['output_contracts'] = contract_report()
             report['source_access'] = {e.object_id: {**e.facts, 'read_available': e.healthy} for e in events if e.rule == 'MONITORING_COVERAGE_DEGRADED'}
+            for source in ('ledger', 'weekly'):
+                scan_state = cursors.get(source, store.get(source, {}))
+                if scan_state.get('version') == 2:
+                    report['source_access'][source] = {k: scan_state[k] for k in
+                        ('version', 'read_available', 'status', 'processed_this_page', 'progress', 'last_progress_at')
+                        if k in scan_state}
             report['schedule_evidence'] = {u: s['schedule_evidence'] for u, s in states.items()}
             if cursors.get('ledger_deferred_since'):
                 report['source_access']['ledger'] = {'read_available': False, 'reason': 'DEFERRED_ACTIVE_OR_UNKNOWN_PRODUCER',
@@ -242,7 +253,7 @@ def main(argv: list[str] | None = None) -> int:
                 finally:
                     store.close()
             return 0
-        print(json.dumps(scan(config, root, no_send=args.no_send), sort_keys=True))
+        print(json.dumps(scan(config, root, no_send=args.no_send, config_path=args.config), sort_keys=True))
         return 0
     except Exception:
         # Deliberately no traceback/str(exception): transport exceptions can contain tokens.

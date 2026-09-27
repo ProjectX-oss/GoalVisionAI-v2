@@ -66,7 +66,7 @@ def compact(record: dict, reference: str, now: float, *, invocation: str = 'UNKN
     # Only classify fixed codes. Arbitrary exception text is discarded before retention.
     for failure in (publication.get('failure'), persistence, record.get('terminal_error')):
         if isinstance(failure, dict):
-            events.extend(code_events(failure.get('code'), DISCOVERY, cycle, stamp, reference))
+            events.extend(code_events(failure.get('code'), DISCOVERY, cycle, stamp, reference, invocation=invocation))
     return events
 
 
@@ -84,18 +84,19 @@ CODE_RULES = {
     'AUTHENTICATION_FAILED': ('AUTH_FAILURE', 3, 1),
     'PROVIDER_FAILURE': ('PROVIDER_FAILURE', 2, 2),
     'RATE_LIMITED': ('PROVIDER_FAILURE', 2, 2),
+    'QUOTA_DB_CONTENTION_EXHAUSTED': ('QUOTA_DB_CONTENTION', 3, 1),
     'DATABASE_LOCKED': ('DATABASE_LOCK', 2, 2),
     'QUOTA_UNAVAILABLE_STOP_AFTER_STATUS': ('QUOTA_FAILURE', 2, 2),
     'UNUSABLE_DATA': ('QUOTA_FAILURE', 2, 2),
 }
 
 
-def code_events(code: object, service: str, occurrence: str, stamp: float, source: str) -> list[Event]:
+def code_events(code: object, service: str, occurrence: str, stamp: float, source: str, *, invocation: str = 'UNKNOWN') -> list[Event]:
     if not isinstance(code, str) or code not in CODE_RULES:
         return []
     rule, severity, debounce = CODE_RULES[code]
     return [Event(service, rule, 'pipeline', occurrence, stamp, source, severity,
-                  facts={'code': code}, debounce=debounce)]
+                  invocation=invocation, facts={'code': code}, debounce=debounce)]
 
 
 def completed_health(value: dict, service: str, key: str, now: float, source: str) -> list[Event]:

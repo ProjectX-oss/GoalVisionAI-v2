@@ -1,0 +1,31 @@
+{
+  "attempt_history_preserved": true,
+  "evidence_origin": "SYNTHETIC_CONTRACT_FIXTURE_NOT_LIVE",
+  "existing_outbox_rows": 2,
+  "football_api_calls": 0,
+  "historical_crash_group_count": 1,
+  "historical_crash_groups": [
+    {
+      "associations": {
+        "1ea11b82645463a19c917b99": "EXACT_INVOCATION",
+        "74fd33fb81084003c5c03f98": "UNIQUE_TEMPORAL_SAME_SERVICE",
+        "be8cd4e1a32832e13f8f4b11": "EXACT_INVOCATION"
+      },
+      "correlation_id": "380cbf3385ff136c2f59caca",
+      "primary_rule": "SERVICE_FAILURE",
+      "rules": [
+        "SERVICE_FAILURE",
+        "ANALYSIS_FAILURE",
+        "MISSING_OUTPUT"
+      ]
+    }
+  ],
+  "legacy_scan_invalidated": 1,
+  "live_mutations": 0,
+  "mode": "ISOLATED_SNAPSHOT_NO_SEND",
+  "scan_progress_faults": 0,
+  "scan_progress_status": "SCAN_IN_PROGRESS",
+  "sender_enabled": false,
+  "telegram_sends": 0,
+  "would_suppress_at_activation": 1
+}

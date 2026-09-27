@@ -249,7 +249,9 @@ class StoreTests(Temporary):
         self.store.ingest([self.event, replace(self.event, source='journal')], {}, NOW)
         self.assertEqual(self.store.db.execute('SELECT count(*) FROM occurrences').fetchone()[0], 1)
         self.store.ingest([replace(self.event, rule='ANALYSIS_FAILURE', occurrence='cycle-1')], {}, NOW)
-        self.assertEqual(self.store.db.execute('SELECT count(*) FROM incidents').fetchone()[0], 1)
+        self.assertEqual(self.store.db.execute('SELECT count(*) FROM incidents').fetchone()[0], 2)
+        self.store.enqueue(NOW)
+        self.assertEqual(self.store.db.execute("SELECT count(*) FROM outbox WHERE state='PENDING'").fetchone()[0], 1)
 
     def test_repeat_escalation_recovery(self) -> None:
         self.store.ingest([self.event], {}, NOW)
@@ -414,14 +416,14 @@ class DeliveryTests(Temporary):
         self.store.enqueue(NOW+60)
         self.assertEqual(self.store.db.execute('SELECT state FROM outbox').fetchone()[0], 'UNCERTAIN')
 
-    def test_reminder_thirty_minutes_and_recovery_once(self) -> None:
+    def test_execution_no_reminder_and_recovery_once(self) -> None:
         fake = FakeTransport()
         dispatch(self.store, self.config, fake, NOW)
         self.store.enqueue(NOW+1799)
         self.assertEqual(self.store.db.execute('SELECT count(*) FROM outbox').fetchone()[0], 1)
         self.store.enqueue(NOW+1801)
         dispatch(self.store, self.config, fake, NOW+1801)
-        self.assertEqual(len(fake.messages), 2)
+        self.assertEqual(len(fake.messages), 1)
         self.store.ingest([replace(self.event, healthy=True, observed=NOW+1802)], {}, NOW+1802)
         self.store.enqueue(NOW+1802)
         dispatch(self.store, self.config, fake, NOW+1802)

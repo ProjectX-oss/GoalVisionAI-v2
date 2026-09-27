@@ -17,6 +17,7 @@ DISCOVERY = UNITS[0]
 SCHEMA = 'goalvision-lab-v2-operator-cycle-v1'
 RULE_VERSION = 1
 LABELS = {
+    'QUOTA_DB_CONTENTION': 'API kvotas rezervācijas datubāzes konflikts',
     'SERVICE_FAILURE': 'Serviss beidzās ar kļūdu',
     'ANALYSIS_FAILURE': 'Analīze beidzās ar kļūdu',
     'DELIVERY_FAILURE': 'Publikācijas piegādes kļūda',
@@ -77,6 +78,12 @@ class Event:
 
     @property
     def signature(self) -> str:
+        if self.rule == 'MONITORING_COVERAGE_DEGRADED' and self.source in ('ledger', 'weekly') and self.facts.get('reason') != 'UNRESOLVED_SCAN_IN_PROGRESS':
+            return digest((2, self.service, self.rule, self.object_id))
+        from .correlation import EXECUTION_RULES
+        if self.rule in EXECUTION_RULES:
+            execution = self.invocation if self.invocation != 'UNKNOWN' else self.occurrence
+            return digest((RULE_VERSION, self.service, self.rule, self.object_id, execution))
         return digest((RULE_VERSION, self.service, self.rule, self.object_id))
 
     @property
@@ -93,16 +100,21 @@ def coverage(source: str, now: float, reason: str, *, object_id: str | None = No
                  reason, now, source, facts={'reason': reason})
 
 
-def alert(row: dict) -> str:
+def alert(row: dict, group: dict | None = None) -> str:
     """Concise Latvian plain text; includes identifiers useful after forwarding."""
-    data = json.loads(row['evidence'])
     restored = row['state'] == 'RECOVERED'
     heading = '✅ GoalVision ADMIN • Darbība atjaunota' if restored else '🚨 GoalVision ADMIN • PREMATCH'
     when = datetime.fromtimestamp(row['last_seen'], timezone.utc).astimezone(ZoneInfo('Europe/Riga'))
-    return ('\n'.join((heading, f"Kļūda: {LABELS[row['rule']]}",
-        f"Serviss: {row['service']}", f"Posms: {row['rule']}",
-        'Ietekme: Nav apstiprināta',
-        'Darbība: Pārbaudīt sanitizēto incidenta pārskatu; piegādi saskaņot pēc prognozes ID.',
-        f"Incidents: {row['id']}", f"Cikls / prognoze: {data['cycle']} / {row['object_id']}",
-        'Versija: skartajai izpildei UNKNOWN',
-        f"Laiks: {when:%Y-%m-%d %H:%M:%S %Z} (Latvija)", f"Atkārtojumi: {row['count']}")))[:3000]
+    quota = row['rule'] == 'QUOTA_DB_CONTENTION'
+    members = group['members'] if group else [row]
+    status = 'darbība atjaunota' if restored else 'cikls beidzās ar kļūdu' if any(r['rule'] == 'SERVICE_FAILURE' for r in members) else 'nepieciešama pārbaude'
+    codes = sorted({json.loads(r['evidence']).get('facts', {}).get('code', r['rule']) for r in members})
+    return '\n'.join((heading, f"Kļūda: {LABELS[row['rule']]}",
+        f"Serviss: {'PREMATCH Discovery' if row['service'] == DISCOVERY else row['service']}",
+        f"Posms: {row['rule']}",
+        'Ietekme: šis API pieprasījums netika sākts' if quota else 'Ietekme: darbība atjaunota' if restored else 'Ietekme: rezultāts jāpārbauda',
+        'Statuss: kvotas datubāze bija aizņemta ilgāk par drošo 500 ms robežu' if quota else f"Statuss: {status}",
+        'Pierādījumi: ' + ', '.join(codes), f"Incidents: {row['id']}",
+        f"Invocation: {group['invocation'] if group else row['invocation']}",
+        f"Laiks: {when:%Y-%m-%d %H:%M:%S} Europe/Riga (Latvija)", f"Atkārtojumi: {row['count']}",
+        'Darbība: Pārbaudīt sanitizēto incidenta pārskatu.'))[:3000]

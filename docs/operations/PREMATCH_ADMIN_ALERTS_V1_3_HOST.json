@@ -1,0 +1,12 @@
+{
+  "admin_units": "UNCHANGED_HASH_VERIFIED",
+  "football_api_calls": 0,
+  "installed_v1_2_payload": "HASH_VERIFIED",
+  "live_database": "NOT_READABLE",
+  "live_mutations": 0,
+  "live_sender_state": "OPERATOR_REPORTED_FALSE_NOT_READABLE",
+  "passwordless_sudo": false,
+  "reason": "READABLE_LIVE_ADMIN_STATE_REQUIRED",
+  "status": "HOST_REHEARSAL_BLOCKED",
+  "telegram_sends": 0
+}
