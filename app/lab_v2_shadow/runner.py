@@ -136,11 +136,14 @@ class LabV2ShadowRunner:
                 self.client, lambda: datetime.now(timezone.utc), allow_status_preflight=True)
         if hasattr(self.client, 'request_authorizer'):
             previous_authorizer = self.client.request_authorizer
-            def authorize_daytime() -> None:
+            async def authorize_daytime() -> None:
                 if discovery_state(self.runtime_clock() if self.runtime_clock else clock) == 'NIGHT_DISCOVERY_PAUSED':
                     raise FootballQuotaError('NIGHT_DISCOVERY_PAUSED')
                 if previous_authorizer is not None:
-                    previous_authorizer()
+                    import inspect
+                    authorization = previous_authorizer()
+                    if inspect.isawaitable(authorization):
+                        await authorization
             self.client.request_authorizer = authorize_daytime
 
         await self._fetch(

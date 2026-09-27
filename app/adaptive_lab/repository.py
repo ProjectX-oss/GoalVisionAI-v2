@@ -10,6 +10,7 @@ from pathlib import Path
 import json
 import sqlite3
 from typing import Iterator
+from dataclasses import dataclass
 from .contracts import canonical, digest, stream_name
 
 SCHEMA_VERSION = 5
@@ -49,6 +50,18 @@ ROOTS = ('canonical_opportunities', 'canonical_results', 'source_records', 'lear
 TABLES = (*ROOTS, *PARENTS)
 
 
+@dataclass(frozen=True)
+class PreparedAppend:
+    """Encoded immutable row, prepared before acquiring the writer lock."""
+    table: str
+    identity: str
+    stream: str
+    encoded: str
+    fingerprint: str
+    created_at: str
+    links: dict[str, str]
+
+
 class AuditRepository:
     """Explicit initialization; read-only inspection never creates a file or schema."""
     def __init__(self, path: Path | str, *, readonly: bool = False) -> None:
@@ -84,7 +97,10 @@ class AuditRepository:
                 self.connection.commit()
         except BaseException:
             if not nested:
-                self.connection.rollback()
+                try:
+                    self.connection.rollback()
+                except sqlite3.Error:
+                    raise RuntimeError('AUDIT_ROLLBACK_FAILED') from None
             raise
 
     def migrate(self) -> None:
@@ -136,19 +152,56 @@ class AuditRepository:
             required.add('observation_id')
         if set(links) != required:
             raise ValueError('AUDIT_LINKS_INVALID')
-        encoded, fp = canonical(document), digest(document)
-        with self.transaction():
-            existing = self.connection.execute(f'SELECT * FROM {table} WHERE id=?', (identity,)).fetchone()
-            if existing:
-                if (existing['fingerprint'] != fp or existing['stream'] != stream or
-                        any(existing[k] != v for k, v in links.items())):
-                    raise ValueError('CONFLICTING_REPLAY')
-                self.get(table, identity)
+        return self.append_prepared(PreparedAppend(
+            table, identity, stream, canonical(document), digest(document), created_at, links))
+
+    def append_prepared(self, row: PreparedAppend) -> bool:
+        """Persist already encoded evidence; exact replays need no writer lock."""
+        if row.table not in TABLES or row.stream not in {'PREMATCH', 'LIVE', 'COMBO'}:
+            raise ValueError('AUDIT_TABLE_OR_STREAM_INVALID')
+
+        def replay() -> bool:
+            old = self.connection.execute(
+                f'SELECT * FROM {row.table} WHERE id=?', (row.identity,)).fetchone()
+            if old is None:
                 return False
-            columns = ['id', 'stream', 'created_at', 'fingerprint', 'document', *links]
-            self.connection.execute(f"INSERT INTO {table} ({','.join(columns)}) VALUES ({','.join('?' for _ in columns)})",
-                                    (identity, stream, created_at, fp, encoded, *links.values()))
+            if (old['fingerprint'] != row.fingerprint or old['document'] != row.encoded
+                    or old['stream'] != row.stream
+                    or any(old[k] != v for k, v in row.links.items())):
+                raise ValueError('CONFLICTING_REPLAY')
             return True
+
+        if self.readonly:
+            raise ValueError('READ_ONLY')
+        if replay():
+            return False
+        with self.transaction():
+            if replay():
+                return False
+            columns = ['id', 'stream', 'created_at', 'fingerprint', 'document', *row.links]
+            self.connection.execute(
+                f"INSERT INTO {row.table} ({','.join(columns)}) VALUES ({','.join('?' for _ in columns)})",
+                (row.identity, row.stream, row.created_at, row.fingerprint, row.encoded, *row.links.values()))
+            return True
+
+    def revision(self, table: str) -> int:
+        """O(1) high-water mark for append-only tables; never a history scan."""
+        if table not in TABLES:
+            raise ValueError('AUDIT_TABLE_INVALID')
+        return self.connection.execute(f'SELECT coalesce(max(rowid),0) FROM {table}').fetchone()[0]
+
+    def pointer(self, stream: str) -> str | None:
+        """Return the mutable pointer identity for optimistic validation."""
+        row = self.connection.execute(
+            'SELECT generation_id FROM champion_pointers WHERE stream=?', (stream,)).fetchone()
+        return row[0] if row else None
+
+    def set_champion(self, stream: str, generation_id: str) -> None:
+        """Change a pointer only inside its atomic evidence transaction."""
+        if not self.connection.in_transaction:
+            raise ValueError('CHAMPION_TRANSACTION_REQUIRED')
+        self.connection.execute("""INSERT INTO champion_pointers VALUES (?,?) ON CONFLICT(stream)
+            DO UPDATE SET generation_id=excluded.generation_id""", (stream, generation_id))
 
     def get(self, table: str, identity: str) -> dict | None:
         if table not in TABLES:

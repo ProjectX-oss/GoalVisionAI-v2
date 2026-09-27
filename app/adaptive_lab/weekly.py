@@ -109,13 +109,19 @@ def freeze(repository: object, ledger: object, *, now: datetime) -> dict:
     key={'product':'LAB_SINGLE_AND_COMBO','week_start':start.isoformat(),'week_end':end.isoformat(),
          'timezone':'Europe/Riga','report_version':REPORT_VERSION}
     identity='weekly-'+digest(key)
+    existing=repository.get('weekly_reports',identity)
+    if existing:return existing
+    value={**key,'report_id':identity,'statistics':statistics(ledger,week_start=start,as_of=end)}
+    value['message']=message(value)
+    from .repository import PreparedAppend
+    from .contracts import canonical
+    prepared = PreparedAppend('weekly_reports', identity, 'PREMATCH', canonical(value),
+                              digest(value), utc(now).isoformat(), {})
     with repository.transaction():
         existing=repository.get('weekly_reports',identity)
         if existing:return existing
-        value={**key,'report_id':identity,'statistics':statistics(ledger,week_start=start,as_of=end)}
-        value['message']=message(value)
-        repository.append('weekly_reports',identity,'PREMATCH',value,utc(now).isoformat())
-        return value
+        repository.append_prepared(prepared)
+    return value
 
 
 async def deliver(repository: object, report: dict, config: object, transport: object, *, now: datetime) -> dict:

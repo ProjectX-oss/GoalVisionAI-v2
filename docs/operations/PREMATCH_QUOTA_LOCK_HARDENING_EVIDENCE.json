@@ -1,0 +1,172 @@
+{
+  "deployment_executed": false,
+  "host_rehearsal": {
+    "admin_sender": "OPERATOR_REPORTED_DISABLED_NOT_READABLE",
+    "api_calls": 0,
+    "audit_inode_locks_at_sample": [],
+    "completed_at": "2026-09-27T09:48:35.876141+00:00",
+    "configuration_comparison_note": "Installed drop-ins match hash-pinned accepted .proposed files; expected_dropins in the older upgrade manifest describe its PRE-upgrade state. No DB recheck performed.",
+    "configuration_drift": [],
+    "configuration_unchanged_during_rehearsal": true,
+    "database": {
+      "elapsed_ms": 831.475,
+      "foreign_key_violations": 0,
+      "integrity_check": [
+        "ok"
+      ],
+      "journal_mode": "delete",
+      "schema_version": 5
+    },
+    "live_database_writes": 0,
+    "lock_holder_proven": false,
+    "mutating_commands": 0,
+    "services": {
+      "goalvision-adaptive-learning": {
+        "ActiveState": "inactive",
+        "DropInPaths": "",
+        "EnvironmentFiles": "/etc/goalvision-prematch-release.conf (ignore_errors=no)",
+        "FragmentPath": "/etc/systemd/system/goalvision-adaptive-learning.service",
+        "SubState": "dead"
+      },
+      "goalvision-adaptive-learning-observer": {
+        "ActiveState": "inactive",
+        "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning-observer.service.d/90-reviewed-prematch-v2.conf",
+        "EnvironmentFiles": "/home/arvis/goalvision-operations/lab-v2-public-message-upgrade-v2-20260926/release.env (ignore_errors=no)",
+        "FragmentPath": "/etc/systemd/system/goalvision-adaptive-learning-observer.service",
+        "SubState": "dead"
+      },
+      "goalvision-lab-combo-settle": {
+        "ActiveState": "inactive",
+        "DropInPaths": "/etc/systemd/system/goalvision-lab-combo-settle.service.d/90-reviewed-prematch-v2.conf",
+        "EnvironmentFiles": "/home/arvis/goalvision-operations/lab-v2-public-message-upgrade-v2-20260926/release.env (ignore_errors=no)",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-combo-settle.service",
+        "SubState": "dead"
+      },
+      "goalvision-lab-v2-discover": {
+        "ActiveState": "inactive",
+        "DropInPaths": "/etc/systemd/system/goalvision-lab-v2-discover.service.d/90-reviewed-prematch-v2.conf",
+        "EnvironmentFiles": "/home/arvis/goalvision-operations/lab-v2-public-message-upgrade-v2-20260926/release.env (ignore_errors=no)",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-v2-discover.service",
+        "SubState": "dead"
+      },
+      "goalvision-lab-weekly-stats": {
+        "ActiveState": "inactive",
+        "DropInPaths": "/etc/systemd/system/goalvision-lab-weekly-stats.service.d/90-reviewed-prematch-v2.conf",
+        "EnvironmentFiles": "/home/arvis/goalvision-operations/lab-v2-public-message-upgrade-v2-20260926/release.env (ignore_errors=no)",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-weekly-stats.service",
+        "SubState": "dead"
+      }
+    },
+    "started_at": "2026-09-27T09:48:33.772155+00:00",
+    "telegram_sends": 0,
+    "timers": {
+      "goalvision-adaptive-learning": {
+        "ActiveState": "active",
+        "UnitFileState": "enabled"
+      },
+      "goalvision-adaptive-learning-observer": {
+        "ActiveState": "active",
+        "UnitFileState": "enabled"
+      },
+      "goalvision-lab-combo-settle": {
+        "ActiveState": "active",
+        "UnitFileState": "enabled"
+      },
+      "goalvision-lab-v2-discover": {
+        "ActiveState": "active",
+        "UnitFileState": "enabled"
+      },
+      "goalvision-lab-weekly-stats": {
+        "ActiveState": "active",
+        "UnitFileState": "enabled"
+      }
+    },
+    "verified_files": 4766
+  },
+  "incident": {
+    "configured_busy_timeout_ms": 5000,
+    "cycle_start": "2026-09-27T09:00:13.994968+00:00",
+    "failed_begin_rollback_executed": false,
+    "failed_begin_started_transaction": false,
+    "failure_cleanup": "2026-09-27T09:00:42.937846+00:00",
+    "health_provider_calls_incorrectly_recorded": 0,
+    "historical_completed_http_requests": 7,
+    "invocation": "1149428ce2d749cb9a1335fbceb78bd9",
+    "last_journal_exception": "2026-09-27T09:00:45.888665+00:00",
+    "lock_holder": "LOCK_HOLDER_NOT_PROVEN",
+    "systemd_exit_status": "NOT_READABLE"
+  },
+  "package_verifier_tests": {
+    "passed": 5
+  },
+  "real_development_api_calls": 0,
+  "synthetic_writer_measurement": {
+    "baseline": {
+      "observer_1480_replays": {
+        "elapsed_ms": 7149.137,
+        "max_writer_body_ms": 15.321,
+        "median_writer_body_ms": 4.454,
+        "write_transactions": 1480
+      },
+      "quota_1712_claim_history": {
+        "elapsed_ms": 322.515,
+        "max_writer_body_ms": 17.604,
+        "median_writer_body_ms": 13.573,
+        "write_transactions": 20
+      }
+    },
+    "caveat": "Synthetic workload, writer body excludes commit/fsync; not historical lock-owner attribution.",
+    "hardened": {
+      "observer_1480_replays": {
+        "elapsed_ms": 7608.115,
+        "max_writer_body_ms": 0,
+        "median_writer_body_ms": 0,
+        "write_transactions": 0
+      },
+      "quota_1712_claim_history": {
+        "elapsed_ms": 606.153,
+        "max_writer_body_ms": 0.274,
+        "median_writer_body_ms": 0.207,
+        "write_transactions": 20
+      }
+    }
+  },
+  "telegram_sends": 0,
+  "tests": {
+    "admin-final": {
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "151",
+      "time": "3.477"
+    },
+    "contention-final": {
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "59",
+      "time": "4.689"
+    },
+    "final": {
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "740",
+      "time": "93.178"
+    },
+    "followup": {
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "270",
+      "time": "40.910"
+    },
+    "research": {
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "59",
+      "time": "26.405"
+    }
+  }
+}

@@ -16,17 +16,13 @@ class AutoLearner:
         self.repository=repository
 
     def run(self, stream: str, *, now: datetime) -> dict:
-        # Train outside the production write lock. Commit only an immutable batch,
-        # after checking that another worker has not advanced research/champion.
-        buffer=_ResearchBuffer(self.repository)
-        result=AutoLearner(buffer)._run(stream,now=now)
-        if buffer.pending:
-            with self.repository.transaction():
-                if (self.repository.all('learning_cycles',stream)!=buffer.original_cycles.get(stream,[]) or
-                    self.repository.champion(stream)!=buffer.original_champions.get(stream)):
-                    return {'status':'CONCURRENT_RESEARCH_OR_CHAMPION_CHANGE'}
-                for table,identity,scope,document,stamp,links in buffer.pending:
-                    self.repository.append(table,identity,scope,document,stamp,**links)
+        from .prepared import PreparedAudit, AuditSnapshotChanged
+        buffer = PreparedAudit(self.repository)
+        result = AutoLearner(buffer)._run(stream, now=now)
+        try:
+            buffer.commit()
+        except AuditSnapshotChanged:
+            return {'status': 'CONCURRENT_RESEARCH_OR_CHAMPION_CHANGE'}
         return result
 
     def _run(self, stream: str, *, now: datetime) -> dict:
@@ -135,48 +131,3 @@ class AutoLearner:
     def event(self, artifact_id: str, stream: str, status: str, now: str, **extra: object) -> None:
         value={'artifact_id':artifact_id,'status':status,'created_at':now,**extra}
         self.repository.append('candidate_events',digest(value),stream,value,now,artifact_id=artifact_id)
-
-
-class _ResearchBuffer:
-    """Private append batch; reviewed AutoML cannot activate pointers through it."""
-    def __init__(self, repository: AuditRepository) -> None:
-        self.repository=repository
-        self.pending=[]
-        self.snapshots={}
-        self.original_cycles={}
-        self.original_champions={}
-
-    def all(self, table: str, stream: str | None = None) -> list[dict]:
-        from copy import deepcopy
-        key=(table,stream)
-        if key not in self.snapshots:
-            self.snapshots[key]=self.repository.all(table,stream)
-            if table=='learning_cycles':self.original_cycles[stream]=deepcopy(self.snapshots[key])
-        rows=deepcopy(self.snapshots[key])
-        rows.extend(deepcopy(d) for t,_,s,d,_,_ in self.pending if t==table and (stream is None or s==stream))
-        return rows
-
-    def get(self, table: str, identity: str) -> dict | None:
-        from copy import deepcopy
-        for t,i,_,d,_,_ in self.pending:
-            if (t,i)==(table,identity):return deepcopy(d)
-        return self.repository.get(table,identity)
-
-    def champion(self, stream: str) -> dict | None:
-        from copy import deepcopy
-        if stream not in self.original_champions:
-            self.original_champions[stream]=self.repository.champion(stream)
-        return deepcopy(self.original_champions[stream])
-
-    def append(self, table: str, identity: str, stream: str, document: dict, created_at: str, **links: str) -> bool:
-        from copy import deepcopy
-        existing=self.get(table,identity)
-        if existing is not None:
-            if existing!=document:raise ValueError('CONFLICTING_RESEARCH_REPLAY')
-            return False
-        self.pending.append((table,identity,stream,deepcopy(document),created_at,links))
-        return True
-
-    def transaction(self):
-        from contextlib import nullcontext
-        return nullcontext()

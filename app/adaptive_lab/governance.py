@@ -6,6 +6,7 @@ from .comparison import compare
 from .models import predict, validate_artifact
 from .policy import POLICY, eligibility
 from .repository import AuditRepository
+from .prepared import PreparedAudit, AuditSnapshotChanged
 
 INTEGRITY_REASONS=frozenset({'ARTIFACT_INTEGRITY_FAILURE','PROBABILITY_CONTRACT_VIOLATION',
                             'MODEL_STREAM_MISMATCH','SYSTEMATIC_RUNTIME_FAILURE'})
@@ -18,6 +19,14 @@ class Governance:
 
     def bootstrap(self, artifact: dict, *, now: datetime) -> dict:
         """Explicit future operator bootstrap; never called by reports or research."""
+        if isinstance(self.repository, AuditRepository):
+            batch = PreparedAudit(self.repository)
+            result = Governance(batch).bootstrap(artifact, now=now)
+            try:
+                batch.commit()
+            except AuditSnapshotChanged:
+                return {'status': 'CONCURRENT_EVIDENCE_CHANGE'}
+            return result
         validate_artifact(artifact)
         stream=stream_name(artifact['stream'])
         repo=self.repository
@@ -181,6 +190,14 @@ class Governance:
                 'passed':comparison['passed'] and days>=POLICY.shadow_days}
 
     def promote(self, shadow_id: str, *, now: datetime) -> dict:
+        if isinstance(self.repository, AuditRepository):
+            batch = PreparedAudit(self.repository)
+            result = Governance(batch).promote(shadow_id, now=now)
+            try:
+                batch.commit()
+            except AuditSnapshotChanged:
+                return {'status': 'CONCURRENT_EVIDENCE_CHANGE'}
+            return result
         repo=self.repository
         with repo.transaction():
             run=repo.get('shadow_runs',shadow_id)
@@ -221,8 +238,7 @@ class Governance:
         gid='generation-'+digest(value)
         value['generation_id']=gid
         self.repository.append('champion_generations',gid,stream,value,stamp,artifact_id=artifact_id)
-        self.repository.connection.execute('''INSERT INTO champion_pointers VALUES (?,?) ON CONFLICT(stream)
-            DO UPDATE SET generation_id=excluded.generation_id''',(stream,gid))
+        self.repository.set_champion(stream, gid)
         table='rollback_events' if reason=='ROLLBACK' else 'activation_events'
         self.repository.append(table,gid,stream,value,stamp,generation_id=gid)
         event={'artifact_id':artifact_id,'status':'ACTIVE_CHAMPION','created_at':stamp,'generation_id':gid}
@@ -231,6 +247,14 @@ class Governance:
 
     def rollback(self, stream: str, *, now: datetime, incident: dict | None = None) -> dict:
         """Integrity rollback needs persisted reproducible failure, performance needs 200/30d."""
+        if isinstance(self.repository, AuditRepository):
+            batch = PreparedAudit(self.repository)
+            result = Governance(batch).rollback(stream, now=now, incident=incident)
+            try:
+                batch.commit()
+            except AuditSnapshotChanged:
+                return {'status': 'CONCURRENT_EVIDENCE_CHANGE'}
+            return result
         repo=self.repository
         with repo.transaction():
             current=repo.champion(stream)

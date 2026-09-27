@@ -1,3 +1,14 @@
+## 2026-09-27 — PREMATCH shared quota lock hardening
+
+- [x] Audit the exact failed invocation and every shared-audit writer boundary.
+- [x] Move history/compute outside writer locks with atomic validated append batches.
+- [x] Add bounded cancellable local quota retries before any HTTP/count increment.
+- [x] Verify real SQLite contention, quota limits, rollback, and focused regressions offline.
+- [x] Rehearse host readability/configuration read-only; prepare inert upgrade/rollback payloads.
+- [ ] Obtain protected exact systemd lifecycle/exit and independent ADMIN disabled readback.
+- Report: `docs/operations/PREMATCH_QUOTA_LOCK_HARDENING.md`.
+- No deployment, production service controls, real API calls or Telegram sends.
+
 # TASKS.md
 
 ## 2026-09-26 — Professional Lab V2 public messages

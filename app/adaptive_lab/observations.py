@@ -123,6 +123,13 @@ def freeze_observation(prediction: dict, receipt: dict, settlement: dict, *, str
 def ingest(repository: AuditRepository, prediction: dict, receipt: dict, settlement: dict, *,
            stream: str, publication_id: str, source_product: str = 'SINGLE') -> dict:
     """Atomic evidence reference plus observation; idempotent across combo/single copies."""
+    if isinstance(repository, AuditRepository) and not repository.connection.in_transaction:
+        from .prepared import PreparedAudit
+        batch = PreparedAudit(repository)
+        value = ingest(batch, prediction, receipt, settlement, stream=stream,
+                       publication_id=publication_id, source_product=source_product)
+        batch.commit()
+        return value
     with repository.transaction():
         value = freeze_observation(prediction, receipt, settlement, stream=stream,
                                    publication_id=publication_id, source_product=source_product)

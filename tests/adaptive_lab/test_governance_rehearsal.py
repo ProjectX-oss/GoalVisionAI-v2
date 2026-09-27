@@ -64,11 +64,11 @@ def test_full_synthetic_training_shadow_promotion_and_integrity_rollback(repo,st
 
 def test_atomic_pointer_restored_on_injected_failure(repo,monkeypatch):
     gov=Governance(repo)
-    original=repo.append
-    def fail(table,*args,**kwargs):
-        if table=='activation_events': raise RuntimeError('simulated crash')
-        return original(table,*args,**kwargs)
-    monkeypatch.setattr(repo,'append',fail)
+    original=repo.append_prepared
+    def fail(row):
+        if row.table=='activation_events': raise RuntimeError('simulated crash')
+        return original(row)
+    monkeypatch.setattr(repo,'append_prepared',fail)
     with pytest.raises(RuntimeError): gov.bootstrap(baseline('LIVE'),now=START)
     assert repo.champion('LIVE') is None and repo.all('champion_generations')==[]
 

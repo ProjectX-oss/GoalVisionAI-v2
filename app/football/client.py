@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 from datetime import datetime, timezone
 from pathlib import Path
 import logging
@@ -275,7 +276,9 @@ class FootballClient:
             # A response may have changed quota state while this caller waited.
             self._require_request_capacity()
             if self.request_authorizer is not None:
-                self.request_authorizer()
+                authorization = self.request_authorizer()
+                if inspect.isawaitable(authorization):
+                    await authorization
             self._last_request_started_monotonic = loop.time()
             self._request_count += 1
 

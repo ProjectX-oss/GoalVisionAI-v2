@@ -197,10 +197,14 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
         if adaptive_repository is not None:
             from app.adaptive_lab.health import persist_health
             import sys
-            error=sys.exc_info()[0]
+            error=sys.exc_info()[1]
             health_report=locals().get('report',{})
             if error:
-                health_report={**health_report,'terminal_error':error.__name__}
+                from app.adaptive_lab.quota import QuotaDBContentionError
+                failure = ({'code': error.code} if isinstance(error, QuotaDBContentionError)
+                           else type(error).__name__)
+                health_report={**health_report,'terminal_error':failure,
+                               'api_calls_consumed':client.request_count}
             try:
                 persist_health(adaptive_repository,health_report,started=clock,completed=datetime.now(timezone.utc))
             finally:
