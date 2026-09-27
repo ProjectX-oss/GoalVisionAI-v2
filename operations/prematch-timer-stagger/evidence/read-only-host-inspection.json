@@ -1,0 +1,24 @@
+{
+  "captured_at": "2026-09-27T18:35:54.552271+00:00",
+  "unit_hashes_and_loaded_schedules": "PASS",
+  "units_checked": 12,
+  "source_files_checked": 17,
+  "NeedDaemonReload": {
+    "goalvision-adaptive-learning-observer.service": "no",
+    "goalvision-adaptive-learning-observer.timer": "no",
+    "goalvision-adaptive-learning.service": "no",
+    "goalvision-adaptive-learning.timer": "no",
+    "goalvision-admin-alerts.service": "no",
+    "goalvision-admin-alerts.timer": "no",
+    "goalvision-lab-combo-settle.service": "no",
+    "goalvision-lab-combo-settle.timer": "no",
+    "goalvision-lab-v2-discover.service": "no",
+    "goalvision-lab-v2-discover.timer": "no",
+    "goalvision-lab-weekly-stats.service": "no",
+    "goalvision-lab-weekly-stats.timer": "no"
+  },
+  "admin_sender_verification": "NOT_PERFORMED_PROTECTED_FILES_REQUIRE_ROOT_OPERATOR",
+  "production_changes": "NONE",
+  "weekly_collision": "UNRESOLVED_USER_DECISION_REQUIRED",
+  "systemd_version": "systemd 255 (255.4-1ubuntu8.17)"
+}
