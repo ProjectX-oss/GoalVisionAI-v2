@@ -15,8 +15,8 @@ NAMES = ('goalvision-lab-v2-discover.timer', 'goalvision-lab-combo-settle.timer'
 OLD = dict(zip(NAMES, ('*-*-* 09..22:00,30:00 Europe/Riga', '*-*-* *:00/10:00',
                       '*-*-* *:00/30:00', 'Sun *-*-* 22:30:00 Europe/Riga', '*-*-* 04:15:00')))
 TARGET = {**OLD, NAMES[1]: '*-*-* *:05,15,25,35,45,55:00',
-          NAMES[2]: '*-*-* *:08,38:00', NAMES[3]: 'Sun *-*-* 22:48:00 Europe/Riga',
-          NAMES[4]: '*-*-* 04:20:00'}
+          NAMES[2]: '*-*-* *:08,38:00', NAMES[3]: 'Sun *-*-* 22:28:00 Europe/Riga',
+          NAMES[4]: '*-*-* 04:12:00'}
 # The first window is regenerated at runtime, including operator preflight.
 DST_WINDOWS = ('2026-03-28T00:00:00+00:00', '2026-10-24T00:00:00+00:00')
 
@@ -63,7 +63,7 @@ def proof(target=TARGET, local_zone='Europe/Berlin', current_start=None):
         weekly_old = evaluate(OLD[NAMES[3]], start-timedelta(days=7), 3, local_zone)
         weekly_new = evaluate(target[NAMES[3]], start-timedelta(days=7), 3, local_zone)
         weekly_cadence = gaps(weekly_old) == gaps(weekly_new)
-        research_shift = series[NAMES[4]] == [t+timedelta(minutes=5) for t in old_series[NAMES[4]]]
+        research_shift = series[NAMES[4]] == [t-timedelta(minutes=3) for t in old_series[NAMES[4]]]
         separation = []
         for tick in series[NAMES[4]]:
             adjacent = evaluate(target[NAMES[1]], tick-timedelta(minutes=11), 4, local_zone)
@@ -74,6 +74,20 @@ def proof(target=TARGET, local_zone='Europe/Berlin', current_start=None):
                 'next_settlement_local': following.astimezone(ZoneInfo(local_zone)).isoformat(),
                 'before_seconds': int((tick-previous).total_seconds()),
                 'after_seconds': int((following-tick).total_seconds())})
+        neighbors = []
+        for subject, peers, zone in ((NAMES[4], (NAMES[1], NAMES[2]), local_zone),
+                                     (NAMES[3], (NAMES[1], NAMES[0], NAMES[2]), 'Europe/Riga')):
+            for tick in series[subject]:
+                for peer in peers:
+                    adjacent = evaluate(target[peer], tick-timedelta(days=1), 320, local_zone)
+                    previous = max(t for t in adjacent if t < tick)
+                    following = min(t for t in adjacent if t > tick)
+                    neighbors.append({'subject': subject, 'peer': peer, 'display_timezone': zone,
+                        'subject_local': tick.astimezone(ZoneInfo(zone)).isoformat(),
+                        'previous_peer_local': previous.astimezone(ZoneInfo(zone)).isoformat(),
+                        'next_peer_local': following.astimezone(ZoneInfo(zone)).isoformat(),
+                        'previous_gap_minutes': (tick-previous).total_seconds()/60,
+                        'next_gap_minutes': (following-tick).total_seconds()/60})
         reports.append({'label': label, 'start_utc': start.isoformat(), 'end_utc_exclusive': end.isoformat(),
             'counts': {u: len(v) for u, v in series.items()}, 'collisions': collisions,
             'triggers_utc': {u: [t.isoformat() for t in v] for u, v in series.items()},
@@ -84,9 +98,9 @@ def proof(target=TARGET, local_zone='Europe/Berlin', current_start=None):
                 'original_gap_seconds': gaps(weekly_old), 'target_gap_seconds': gaps(weekly_new),
                 'preserved': weekly_cadence},
             'cadence_preserved': weekly_cadence and cadence == old_gaps and all(len(series[u]) == len(old_series[u]) for u in NAMES),
-            'research_shift_exactly_300_seconds': research_shift,
-            'research_separation': separation,
-            'research_separation_passed': bool(separation) and all(r['before_seconds'] == r['after_seconds'] == 300 for r in separation),
+            'research_shift_exactly_minus_180_seconds': research_shift,
+            'research_separation': separation, 'nearest_neighbors': neighbors,
+            'research_separation_passed': bool(separation) and all(r['before_seconds'] == 420 and r['after_seconds'] == 180 for r in separation),
             'discovery_unchanged': series[NAMES[0]] == old_series[NAMES[0]]})
     zonefiles = (Path('/usr/share/zoneinfo')/local_zone, Path('/usr/share/zoneinfo/Europe/Riga'))
     return {'evaluator': 'systemd-analyze calendar', 'host_timezone': local_zone,

@@ -7,20 +7,20 @@
     "/usr/share/zoneinfo/Europe/Berlin": "5ee475f71a0fc1a32faeb849f8c39c6e7aa66d6d41ec742b97b3a7436b3b0701",
     "/usr/share/zoneinfo/Europe/Riga": "849dbfd26d6d696f48b80fa13323f99fe597ed83ab47485e2accc98609634569"
   },
-  "generated_at": "2026-09-27T18:56:11.617510+00:00",
+  "generated_at": "2026-09-27T19:18:26.944915+00:00",
   "schedules": {
     "goalvision-lab-v2-discover.timer": "*-*-* 09..22:00,30:00 Europe/Riga",
     "goalvision-lab-combo-settle.timer": "*-*-* *:05,15,25,35,45,55:00",
     "goalvision-adaptive-learning-observer.timer": "*-*-* *:08,38:00",
-    "goalvision-lab-weekly-stats.timer": "Sun *-*-* 22:48:00 Europe/Riga",
-    "goalvision-adaptive-learning.timer": "*-*-* 04:20:00"
+    "goalvision-lab-weekly-stats.timer": "Sun *-*-* 22:28:00 Europe/Riga",
+    "goalvision-adaptive-learning.timer": "*-*-* 04:12:00"
   },
   "pair_count": 10,
   "windows": [
     {
       "label": "current_48_hours",
-      "start_utc": "2026-09-27T18:00:00+00:00",
-      "end_utc_exclusive": "2026-09-29T18:00:00+00:00",
+      "start_utc": "2026-09-27T19:00:00+00:00",
+      "end_utc_exclusive": "2026-09-29T19:00:00+00:00",
       "counts": {
         "goalvision-lab-v2-discover.timer": 56,
         "goalvision-lab-combo-settle.timer": 288,
@@ -42,8 +42,6 @@
       },
       "triggers_utc": {
         "goalvision-lab-v2-discover.timer": [
-          "2026-09-27T18:00:00+00:00",
-          "2026-09-27T18:30:00+00:00",
           "2026-09-27T19:00:00+00:00",
           "2026-09-27T19:30:00+00:00",
           "2026-09-28T06:00:00+00:00",
@@ -97,15 +95,11 @@
           "2026-09-29T16:00:00+00:00",
           "2026-09-29T16:30:00+00:00",
           "2026-09-29T17:00:00+00:00",
-          "2026-09-29T17:30:00+00:00"
+          "2026-09-29T17:30:00+00:00",
+          "2026-09-29T18:00:00+00:00",
+          "2026-09-29T18:30:00+00:00"
         ],
         "goalvision-lab-combo-settle.timer": [
-          "2026-09-27T18:05:00+00:00",
-          "2026-09-27T18:15:00+00:00",
-          "2026-09-27T18:25:00+00:00",
-          "2026-09-27T18:35:00+00:00",
-          "2026-09-27T18:45:00+00:00",
-          "2026-09-27T18:55:00+00:00",
           "2026-09-27T19:05:00+00:00",
           "2026-09-27T19:15:00+00:00",
           "2026-09-27T19:25:00+00:00",
@@ -387,11 +381,15 @@
           "2026-09-29T17:25:00+00:00",
           "2026-09-29T17:35:00+00:00",
           "2026-09-29T17:45:00+00:00",
-          "2026-09-29T17:55:00+00:00"
+          "2026-09-29T17:55:00+00:00",
+          "2026-09-29T18:05:00+00:00",
+          "2026-09-29T18:15:00+00:00",
+          "2026-09-29T18:25:00+00:00",
+          "2026-09-29T18:35:00+00:00",
+          "2026-09-29T18:45:00+00:00",
+          "2026-09-29T18:55:00+00:00"
         ],
         "goalvision-adaptive-learning-observer.timer": [
-          "2026-09-27T18:08:00+00:00",
-          "2026-09-27T18:38:00+00:00",
           "2026-09-27T19:08:00+00:00",
           "2026-09-27T19:38:00+00:00",
           "2026-09-27T20:08:00+00:00",
@@ -485,20 +483,20 @@
           "2026-09-29T16:08:00+00:00",
           "2026-09-29T16:38:00+00:00",
           "2026-09-29T17:08:00+00:00",
-          "2026-09-29T17:38:00+00:00"
+          "2026-09-29T17:38:00+00:00",
+          "2026-09-29T18:08:00+00:00",
+          "2026-09-29T18:38:00+00:00"
         ],
         "goalvision-lab-weekly-stats.timer": [
-          "2026-09-27T19:48:00+00:00"
+          "2026-09-27T19:28:00+00:00"
         ],
         "goalvision-adaptive-learning.timer": [
-          "2026-09-28T02:20:00+00:00",
-          "2026-09-29T02:20:00+00:00"
+          "2026-09-28T02:12:00+00:00",
+          "2026-09-29T02:12:00+00:00"
         ]
       },
       "original_triggers_utc": {
         "goalvision-lab-v2-discover.timer": [
-          "2026-09-27T18:00:00+00:00",
-          "2026-09-27T18:30:00+00:00",
           "2026-09-27T19:00:00+00:00",
           "2026-09-27T19:30:00+00:00",
           "2026-09-28T06:00:00+00:00",
@@ -552,15 +550,11 @@
           "2026-09-29T16:00:00+00:00",
           "2026-09-29T16:30:00+00:00",
           "2026-09-29T17:00:00+00:00",
-          "2026-09-29T17:30:00+00:00"
+          "2026-09-29T17:30:00+00:00",
+          "2026-09-29T18:00:00+00:00",
+          "2026-09-29T18:30:00+00:00"
         ],
         "goalvision-lab-combo-settle.timer": [
-          "2026-09-27T18:00:00+00:00",
-          "2026-09-27T18:10:00+00:00",
-          "2026-09-27T18:20:00+00:00",
-          "2026-09-27T18:30:00+00:00",
-          "2026-09-27T18:40:00+00:00",
-          "2026-09-27T18:50:00+00:00",
           "2026-09-27T19:00:00+00:00",
           "2026-09-27T19:10:00+00:00",
           "2026-09-27T19:20:00+00:00",
@@ -842,11 +836,15 @@
           "2026-09-29T17:20:00+00:00",
           "2026-09-29T17:30:00+00:00",
           "2026-09-29T17:40:00+00:00",
-          "2026-09-29T17:50:00+00:00"
+          "2026-09-29T17:50:00+00:00",
+          "2026-09-29T18:00:00+00:00",
+          "2026-09-29T18:10:00+00:00",
+          "2026-09-29T18:20:00+00:00",
+          "2026-09-29T18:30:00+00:00",
+          "2026-09-29T18:40:00+00:00",
+          "2026-09-29T18:50:00+00:00"
         ],
         "goalvision-adaptive-learning-observer.timer": [
-          "2026-09-27T18:00:00+00:00",
-          "2026-09-27T18:30:00+00:00",
           "2026-09-27T19:00:00+00:00",
           "2026-09-27T19:30:00+00:00",
           "2026-09-27T20:00:00+00:00",
@@ -940,7 +938,9 @@
           "2026-09-29T16:00:00+00:00",
           "2026-09-29T16:30:00+00:00",
           "2026-09-29T17:00:00+00:00",
-          "2026-09-29T17:30:00+00:00"
+          "2026-09-29T17:30:00+00:00",
+          "2026-09-29T18:00:00+00:00",
+          "2026-09-29T18:30:00+00:00"
         ],
         "goalvision-lab-weekly-stats.timer": [
           "2026-09-27T19:30:00+00:00"
@@ -989,9 +989,9 @@
           "2026-10-04T19:30:00+00:00"
         ],
         "target_utc": [
-          "2026-09-20T19:48:00+00:00",
-          "2026-09-27T19:48:00+00:00",
-          "2026-10-04T19:48:00+00:00"
+          "2026-09-20T19:28:00+00:00",
+          "2026-09-27T19:28:00+00:00",
+          "2026-10-04T19:28:00+00:00"
         ],
         "original_gap_seconds": [
           604800,
@@ -1004,21 +1004,93 @@
         "preserved": true
       },
       "cadence_preserved": true,
-      "research_shift_exactly_300_seconds": true,
+      "research_shift_exactly_minus_180_seconds": true,
       "research_separation": [
         {
-          "previous_settlement_local": "2026-09-28T04:15:00+02:00",
-          "research_local": "2026-09-28T04:20:00+02:00",
-          "next_settlement_local": "2026-09-28T04:25:00+02:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "previous_settlement_local": "2026-09-28T04:05:00+02:00",
+          "research_local": "2026-09-28T04:12:00+02:00",
+          "next_settlement_local": "2026-09-28T04:15:00+02:00",
+          "before_seconds": 420,
+          "after_seconds": 180
         },
         {
-          "previous_settlement_local": "2026-09-29T04:15:00+02:00",
-          "research_local": "2026-09-29T04:20:00+02:00",
-          "next_settlement_local": "2026-09-29T04:25:00+02:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "previous_settlement_local": "2026-09-29T04:05:00+02:00",
+          "research_local": "2026-09-29T04:12:00+02:00",
+          "next_settlement_local": "2026-09-29T04:15:00+02:00",
+          "before_seconds": 420,
+          "after_seconds": 180
+        }
+      ],
+      "nearest_neighbors": [
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-09-28T04:12:00+02:00",
+          "previous_peer_local": "2026-09-28T04:05:00+02:00",
+          "next_peer_local": "2026-09-28T04:15:00+02:00",
+          "previous_gap_minutes": 7.0,
+          "next_gap_minutes": 3.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-09-28T04:12:00+02:00",
+          "previous_peer_local": "2026-09-28T04:08:00+02:00",
+          "next_peer_local": "2026-09-28T04:38:00+02:00",
+          "previous_gap_minutes": 4.0,
+          "next_gap_minutes": 26.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-09-29T04:12:00+02:00",
+          "previous_peer_local": "2026-09-29T04:05:00+02:00",
+          "next_peer_local": "2026-09-29T04:15:00+02:00",
+          "previous_gap_minutes": 7.0,
+          "next_gap_minutes": 3.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-09-29T04:12:00+02:00",
+          "previous_peer_local": "2026-09-29T04:08:00+02:00",
+          "next_peer_local": "2026-09-29T04:38:00+02:00",
+          "previous_gap_minutes": 4.0,
+          "next_gap_minutes": 26.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-09-27T22:28:00+03:00",
+          "previous_peer_local": "2026-09-27T22:25:00+03:00",
+          "next_peer_local": "2026-09-27T22:35:00+03:00",
+          "previous_gap_minutes": 3.0,
+          "next_gap_minutes": 7.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-lab-v2-discover.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-09-27T22:28:00+03:00",
+          "previous_peer_local": "2026-09-27T22:00:00+03:00",
+          "next_peer_local": "2026-09-27T22:30:00+03:00",
+          "previous_gap_minutes": 28.0,
+          "next_gap_minutes": 2.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-09-27T22:28:00+03:00",
+          "previous_peer_local": "2026-09-27T22:08:00+03:00",
+          "next_peer_local": "2026-09-27T22:38:00+03:00",
+          "previous_gap_minutes": 20.0,
+          "next_gap_minutes": 10.0
         }
       ],
       "research_separation_passed": true,
@@ -1495,11 +1567,11 @@
           "2026-03-29T23:38:00+00:00"
         ],
         "goalvision-lab-weekly-stats.timer": [
-          "2026-03-29T19:48:00+00:00"
+          "2026-03-29T19:28:00+00:00"
         ],
         "goalvision-adaptive-learning.timer": [
-          "2026-03-28T03:20:00+00:00",
-          "2026-03-29T02:20:00+00:00"
+          "2026-03-28T03:12:00+00:00",
+          "2026-03-29T02:12:00+00:00"
         ]
       },
       "original_triggers_utc": {
@@ -1996,9 +2068,9 @@
           "2026-04-05T19:30:00+00:00"
         ],
         "target_utc": [
-          "2026-03-22T20:48:00+00:00",
-          "2026-03-29T19:48:00+00:00",
-          "2026-04-05T19:48:00+00:00"
+          "2026-03-22T20:28:00+00:00",
+          "2026-03-29T19:28:00+00:00",
+          "2026-04-05T19:28:00+00:00"
         ],
         "original_gap_seconds": [
           601200,
@@ -2011,21 +2083,93 @@
         "preserved": true
       },
       "cadence_preserved": true,
-      "research_shift_exactly_300_seconds": true,
+      "research_shift_exactly_minus_180_seconds": true,
       "research_separation": [
         {
-          "previous_settlement_local": "2026-03-28T04:15:00+01:00",
-          "research_local": "2026-03-28T04:20:00+01:00",
-          "next_settlement_local": "2026-03-28T04:25:00+01:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "previous_settlement_local": "2026-03-28T04:05:00+01:00",
+          "research_local": "2026-03-28T04:12:00+01:00",
+          "next_settlement_local": "2026-03-28T04:15:00+01:00",
+          "before_seconds": 420,
+          "after_seconds": 180
         },
         {
-          "previous_settlement_local": "2026-03-29T04:15:00+02:00",
-          "research_local": "2026-03-29T04:20:00+02:00",
-          "next_settlement_local": "2026-03-29T04:25:00+02:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "previous_settlement_local": "2026-03-29T04:05:00+02:00",
+          "research_local": "2026-03-29T04:12:00+02:00",
+          "next_settlement_local": "2026-03-29T04:15:00+02:00",
+          "before_seconds": 420,
+          "after_seconds": 180
+        }
+      ],
+      "nearest_neighbors": [
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-03-28T04:12:00+01:00",
+          "previous_peer_local": "2026-03-28T04:05:00+01:00",
+          "next_peer_local": "2026-03-28T04:15:00+01:00",
+          "previous_gap_minutes": 7.0,
+          "next_gap_minutes": 3.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-03-28T04:12:00+01:00",
+          "previous_peer_local": "2026-03-28T04:08:00+01:00",
+          "next_peer_local": "2026-03-28T04:38:00+01:00",
+          "previous_gap_minutes": 4.0,
+          "next_gap_minutes": 26.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-03-29T04:12:00+02:00",
+          "previous_peer_local": "2026-03-29T04:05:00+02:00",
+          "next_peer_local": "2026-03-29T04:15:00+02:00",
+          "previous_gap_minutes": 7.0,
+          "next_gap_minutes": 3.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-03-29T04:12:00+02:00",
+          "previous_peer_local": "2026-03-29T04:08:00+02:00",
+          "next_peer_local": "2026-03-29T04:38:00+02:00",
+          "previous_gap_minutes": 4.0,
+          "next_gap_minutes": 26.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-03-29T22:28:00+03:00",
+          "previous_peer_local": "2026-03-29T22:25:00+03:00",
+          "next_peer_local": "2026-03-29T22:35:00+03:00",
+          "previous_gap_minutes": 3.0,
+          "next_gap_minutes": 7.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-lab-v2-discover.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-03-29T22:28:00+03:00",
+          "previous_peer_local": "2026-03-29T22:00:00+03:00",
+          "next_peer_local": "2026-03-29T22:30:00+03:00",
+          "previous_gap_minutes": 28.0,
+          "next_gap_minutes": 2.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-03-29T22:28:00+03:00",
+          "previous_peer_local": "2026-03-29T22:08:00+03:00",
+          "next_peer_local": "2026-03-29T22:38:00+03:00",
+          "previous_gap_minutes": 20.0,
+          "next_gap_minutes": 10.0
         }
       ],
       "research_separation_passed": true,
@@ -2494,11 +2638,11 @@
           "2026-10-25T23:38:00+00:00"
         ],
         "goalvision-lab-weekly-stats.timer": [
-          "2026-10-25T20:48:00+00:00"
+          "2026-10-25T20:28:00+00:00"
         ],
         "goalvision-adaptive-learning.timer": [
-          "2026-10-24T02:20:00+00:00",
-          "2026-10-25T03:20:00+00:00"
+          "2026-10-24T02:12:00+00:00",
+          "2026-10-25T03:12:00+00:00"
         ]
       },
       "original_triggers_utc": {
@@ -2991,9 +3135,9 @@
           "2026-11-01T20:30:00+00:00"
         ],
         "target_utc": [
-          "2026-10-18T19:48:00+00:00",
-          "2026-10-25T20:48:00+00:00",
-          "2026-11-01T20:48:00+00:00"
+          "2026-10-18T19:28:00+00:00",
+          "2026-10-25T20:28:00+00:00",
+          "2026-11-01T20:28:00+00:00"
         ],
         "original_gap_seconds": [
           608400,
@@ -3006,21 +3150,93 @@
         "preserved": true
       },
       "cadence_preserved": true,
-      "research_shift_exactly_300_seconds": true,
+      "research_shift_exactly_minus_180_seconds": true,
       "research_separation": [
         {
-          "previous_settlement_local": "2026-10-24T04:15:00+02:00",
-          "research_local": "2026-10-24T04:20:00+02:00",
-          "next_settlement_local": "2026-10-24T04:25:00+02:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "previous_settlement_local": "2026-10-24T04:05:00+02:00",
+          "research_local": "2026-10-24T04:12:00+02:00",
+          "next_settlement_local": "2026-10-24T04:15:00+02:00",
+          "before_seconds": 420,
+          "after_seconds": 180
         },
         {
-          "previous_settlement_local": "2026-10-25T04:15:00+01:00",
-          "research_local": "2026-10-25T04:20:00+01:00",
-          "next_settlement_local": "2026-10-25T04:25:00+01:00",
-          "before_seconds": 300,
-          "after_seconds": 300
+          "previous_settlement_local": "2026-10-25T04:05:00+01:00",
+          "research_local": "2026-10-25T04:12:00+01:00",
+          "next_settlement_local": "2026-10-25T04:15:00+01:00",
+          "before_seconds": 420,
+          "after_seconds": 180
+        }
+      ],
+      "nearest_neighbors": [
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-10-24T04:12:00+02:00",
+          "previous_peer_local": "2026-10-24T04:05:00+02:00",
+          "next_peer_local": "2026-10-24T04:15:00+02:00",
+          "previous_gap_minutes": 7.0,
+          "next_gap_minutes": 3.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-10-24T04:12:00+02:00",
+          "previous_peer_local": "2026-10-24T04:08:00+02:00",
+          "next_peer_local": "2026-10-24T04:38:00+02:00",
+          "previous_gap_minutes": 4.0,
+          "next_gap_minutes": 26.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-10-25T04:12:00+01:00",
+          "previous_peer_local": "2026-10-25T04:05:00+01:00",
+          "next_peer_local": "2026-10-25T04:15:00+01:00",
+          "previous_gap_minutes": 7.0,
+          "next_gap_minutes": 3.0
+        },
+        {
+          "subject": "goalvision-adaptive-learning.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Berlin",
+          "subject_local": "2026-10-25T04:12:00+01:00",
+          "previous_peer_local": "2026-10-25T04:08:00+01:00",
+          "next_peer_local": "2026-10-25T04:38:00+01:00",
+          "previous_gap_minutes": 4.0,
+          "next_gap_minutes": 26.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-lab-combo-settle.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-10-25T22:28:00+02:00",
+          "previous_peer_local": "2026-10-25T22:25:00+02:00",
+          "next_peer_local": "2026-10-25T22:35:00+02:00",
+          "previous_gap_minutes": 3.0,
+          "next_gap_minutes": 7.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-lab-v2-discover.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-10-25T22:28:00+02:00",
+          "previous_peer_local": "2026-10-25T22:00:00+02:00",
+          "next_peer_local": "2026-10-25T22:30:00+02:00",
+          "previous_gap_minutes": 28.0,
+          "next_gap_minutes": 2.0
+        },
+        {
+          "subject": "goalvision-lab-weekly-stats.timer",
+          "peer": "goalvision-adaptive-learning-observer.timer",
+          "display_timezone": "Europe/Riga",
+          "subject_local": "2026-10-25T22:28:00+02:00",
+          "previous_peer_local": "2026-10-25T22:08:00+02:00",
+          "next_peer_local": "2026-10-25T22:38:00+02:00",
+          "previous_gap_minutes": 20.0,
+          "next_gap_minutes": 10.0
         }
       ],
       "research_separation_passed": true,

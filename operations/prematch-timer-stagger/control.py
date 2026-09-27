@@ -19,6 +19,7 @@ import time
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from calendar_proof import NAMES, OLD, TARGET, evaluate, proof
+import persistent_proof as persistent
 
 PACKAGE = Path(__file__).resolve().parent
 UNIT_ROOT = Path('/etc/systemd/system')
@@ -198,19 +199,78 @@ def timestamp(text):
     return datetime.fromtimestamp(int(result.stdout), timezone.utc)
 
 
+def utcnow():
+    return datetime.now(timezone.utc)
+
+
+class CommonWindowRefusal(ValueError):
+    def __init__(self, report):
+        self.report = report
+        super().__init__('NO_COMMON_PERSISTENT_WINDOW' if not report['deployment_compatible']
+                         else 'OUTSIDE_COMMON_SAFE_WINDOW')
+
+
+def common_safety(host, now=None, reserve_seconds=persistent.INSTALL_RESERVE_SECONDS):
+    """Forecast from pinned calendars; permission from observed last triggers."""
+    captured = now or utcnow()
+    start = captured.replace(hour=0, minute=0, second=0, microsecond=0)
+    end = start+timedelta(days=8)
+    windows = persistent.common_windows(BASELINE, TARGET, start, end)
+    evaluated = persistent.series(BASELINE, TARGET, start, end)
+    observations = {u: host.show(u) for u in CHANGED}
+    moment = now or utcnow()  # Never authorize with time captured before evaluation.
+    eligible = [(a,b) for a,b in windows
+                if (b-a).total_seconds() > persistent.INSTALL_RESERVE_SECONDS]
+    current = next(((a,b) for a,b in eligible if a <= moment < b), None)
+    enough_time = bool(current and (current[1]-moment).total_seconds() > reserve_seconds)
+    details = {}
+    for unit, props in observations.items():
+        old, new = evaluated[unit]
+        last = timestamp(props.get('LastTriggerUSec'))
+        latest = persistent.prior(new, moment)
+        active = props.get('ActiveState') == 'active'
+        known = (props.get('ActiveState') in ('active', 'inactive') and props.get('Persistent') == 'yes'
+                 and calendar_of(props) in ([OLD[unit]], [TARGET[unit]]))
+        observed_safe = known and (not active or bool(last and latest <= last <= moment))
+        details[unit] = {'active': active, 'persistent': props.get('Persistent'),
+            'last_trigger_observed_utc': last.isoformat() if last else None,
+            'latest_target_tick_utc': latest.isoformat(), 'observed_safe': observed_safe}
+    selected = next(((a,b) for a,b in eligible
+        if b-timedelta(seconds=persistent.INSTALL_RESERVE_SECONDS) > moment), None)
+    next_window = None if selected is None else {
+        'start_utc': selected[0].isoformat(), 'end_utc_exclusive': selected[1].isoformat(),
+        'latest_install_start_utc_exclusive': (selected[1]-timedelta(seconds=persistent.INSTALL_RESERVE_SECONDS)).isoformat(),
+        'conditional_on_observed_last_triggers': True}
+    return {'common_safe_now': enough_time and all(r['observed_safe'] for r in details.values()),
+        'next_common_safe_window': next_window, 'deployment_compatible': bool(eligible),
+        'evaluated_at_utc': moment.isoformat(), 'forecast_horizon_end_utc': end.isoformat(),
+        'boundary_guard_seconds': persistent.GUARD_SECONDS,
+        'minimum_install_time_remaining_seconds': persistent.INSTALL_RESERVE_SECONDS,
+        'timer_observations': details,
+        'forecast_basis': 'Pinned original calendars; future ticks are conditional, never run evidence.'}
+
+
+def require_common_window(host, reserve_seconds=persistent.INSTALL_RESERVE_SECONDS):
+    report = common_safety(host, reserve_seconds=reserve_seconds)
+    if not report['common_safe_now']:
+        raise CommonWindowRefusal(report)
+    return report
+
+
 def safe_rearm(host, unit, expression):
     p = host.show(unit)
     if p['ActiveState'] == 'inactive':
         return
-    now = datetime.now(timezone.utc)
+    now = utcnow()
     require(not any(abs((t-now).total_seconds()) < 10 for t in evaluate(expression, now-timedelta(seconds=11), 2)),
             'CALENDAR_BOUNDARY_RETRY_LATER:'+unit)
     if p.get('Persistent') == 'yes':
         last = timestamp(p.get('LastTriggerUSec'))
         # Nine days includes the last weekly tick, DST included.
-        events = evaluate(expression, now-timedelta(days=9), 1400 if unit == NAMES[1] else 500)
+        count = {NAMES[1]: 1400, NAMES[2]: 500, NAMES[3]: 4, NAMES[4]: 12}[unit]
+        events = evaluate(expression, now-timedelta(days=9), count, BASELINE['timezone'])
         prior = [t for t in events if t <= now]
-        require(prior and last and last >= max(prior), 'PERSISTENT_CATCHUP_RISK_RETRY_AFTER_NORMAL_RUN:'+unit)
+        require(prior and last and max(prior) <= last <= now, 'PERSISTENT_CATCHUP_RISK_RETRY_AFTER_NORMAL_RUN:'+unit)
 
 
 def verify_next(host, unit, expression, active, deadline):
@@ -259,17 +319,10 @@ def restore(host, tx):
     tx['phase'] = 'rolling_back'
     tx['reload_pending'] = tx.get('reload_pending', False) or any(dropin(u).exists() for u in CHANGED)
     save_transaction(tx)
-    # If a boundary was crossed, wait for a NORMAL run to make persistent
-    # re-arming safe. No worker control, timer stop, or timestamp-file writes.
-    deadline = time.monotonic()+900
-    while True:
-        try:
-            for unit in CHANGED:
-                safe_rearm(host, unit, OLD[unit])
-            break
-        except ValueError as exc:
-            require(time.monotonic() < deadline, 'ROLLBACK_PENDING:'+str(exc))
-            time.sleep(2)
+    # No multi-hour waiting or background recovery. If a safe rollback is no
+    # longer possible, retain the durable transaction and refuse for review.
+    for unit in CHANGED:
+        safe_rearm(host, unit, OLD[unit])
     changed = False
     for unit in CHANGED:
         path = dropin(unit)
@@ -302,8 +355,12 @@ def verify_states(host, tx, schedules, units):
 
 
 def change(host, action):
-    if action == 'install' and read_transaction() is None:
+    existing = read_transaction()
+    if action == 'install' and (existing is None or existing['phase'] == 'rolled_back'):
         require(proof(local_zone=BASELINE['timezone'])['zero_collisions'], 'TARGET_CALENDAR_COLLISION')
+        # Refuse before deployment_lock can create its directory or lock file.
+        inspect(host)
+        require_common_window(host)
     with deployment_lock():
         tx = read_transaction()
         if action == 'rollback':
@@ -313,7 +370,7 @@ def change(host, action):
             return restore(host, tx)
         if tx and tx['phase'] not in ('rolled_back',):
             if tx['phase'] == 'installed':
-                return {'phase': 'installed', 'units': inspect(host, 'installed')}
+                return {'phase': 'installed', 'units': inspect(host, 'installed'), **common_safety(host)}
             # Recover, then require a fresh check/install; never silently resume.
             return restore(host, tx)
         require(proof(local_zone=BASELINE['timezone'])['zero_collisions'], 'TARGET_CALENDAR_COLLISION')
@@ -323,9 +380,10 @@ def change(host, action):
             require((PACKAGE/'drop-ins'/(unit+'.conf')).read_bytes() == payload(unit), 'PAYLOAD_MISMATCH')
             safe_rearm(host, unit, TARGET[unit])
         units = inspect(host)
+        window = require_common_window(host)
         tx = {'schema': 1, 'phase': 'installing', 'manifest': MANIFEST,
               'reload_pending': False, 'started_at': datetime.now(timezone.utc).isoformat(),
-              'admin_before': check_result['admin'],
+              'admin_before': check_result['admin'], 'common_window_at_install': window,
               'timers': {u: {k: units[u][k] for k in ('ActiveState', 'UnitFileState')} for u in NAMES}}
         save_transaction(tx)
         try:
@@ -337,11 +395,13 @@ def change(host, action):
                 atomic(path, payload(unit))
                 tx['reload_pending'] = True
                 save_transaction(tx)
+            require_common_window(host)
             for unit in CHANGED:
                 safe_rearm(host, unit, TARGET[unit])
             host.mutate('daemon-reload')
             for unit in CHANGED:
                 if tx['timers'][unit]['ActiveState'] == 'active':
+                    require_common_window(host, reserve_seconds=0)
                     safe_rearm(host, unit, TARGET[unit])
                     host.mutate('restart', unit)
             units = inspect(host, 'installed')
@@ -350,7 +410,7 @@ def change(host, action):
             require(admin_after == tx['admin_before'], 'ADMIN_STATE_CHANGED_EXTERNALLY')
             tx.update(phase='installed', reload_pending=False, installed_at=datetime.now(timezone.utc).isoformat())
             save_transaction(tx)
-            return {'phase': 'installed', 'units': units, 'admin': admin_after}
+            return {'phase': 'installed', 'units': units, 'admin': admin_after, **common_safety(host)}
         except BaseException:
             restore(host, tx)
             raise
@@ -362,8 +422,11 @@ def check(host):
     units = inspect(host)
     report = proof(local_zone=BASELINE['timezone'])
     require(report['zero_collisions'], 'TARGET_CALENDAR_COLLISION')
+    safety = common_safety(host)
+    if not safety['deployment_compatible']:
+        raise CommonWindowRefusal(safety)
     admin = host.admin()
-    return {'phase': 'preflight_passed', 'units': units, 'admin': admin, 'collision_proof': report}
+    return {'phase': 'preflight_passed', 'units': units, 'admin': admin, 'collision_proof': report, **safety}
 
 
 def status(host):
@@ -372,7 +435,7 @@ def status(host):
     units = inspect(host, 'installed' if phase == 'installed' else 'original' if phase in ('not_installed', 'rolled_back') else 'recovery',
                     reload_pending=phase in ('installing', 'rolling_back'))
     return {'phase': phase, 'transaction': tx, 'units': units, 'admin': host.admin(),
-            'collision_proof': proof(local_zone=BASELINE['timezone'])}
+            'collision_proof': proof(local_zone=BASELINE['timezone']), **common_safety(host)}
 
 
 def main():
@@ -396,7 +459,13 @@ def main():
     elif args.action == 'status':
         result = status(host)
     elif args.action == 'proof':
+        tx = read_transaction()
+        phase = tx['phase'] if tx else 'not_installed'
+        inspect(host, 'installed' if phase == 'installed' else 'original' if phase in ('not_installed', 'rolled_back') else 'recovery',
+                reload_pending=phase in ('installing', 'rolling_back'))
         result = proof(local_zone=BASELINE['timezone'])
+        result['persistent_common_window_proof'] = persistent.proof(BASELINE)
+        result.update(common_safety(host))
     else:
         from forward_evidence import evidence
         tx = read_transaction()
@@ -404,7 +473,7 @@ def main():
         require(since is not None, 'EVIDENCE_START_REQUIRED')
         result = evidence(host, since)
     print(json.dumps(result, indent=2, sort_keys=True))
-    if args.action == 'proof' and not result['zero_collisions']:
+    if args.action == 'proof' and (not result['zero_collisions'] or not result['persistent_common_window_proof']['compatible']):
         return 2
     if args.action == 'evidence' and result['verdict'] != 'PASS':
         return 2
@@ -415,5 +484,6 @@ if __name__ == '__main__':
     try:
         sys.exit(main())
     except (ValueError, OSError, subprocess.SubprocessError) as exc:
-        print(json.dumps({'status': 'REFUSED', 'reason': str(exc)}), file=sys.stderr)
+        print(json.dumps({'status': 'REFUSED', 'reason': str(exc),
+                          **(exc.report if isinstance(exc, CommonWindowRefusal) else {})}), file=sys.stderr)
         sys.exit(1)

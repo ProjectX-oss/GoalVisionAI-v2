@@ -1,0 +1,74 @@
+{
+  "evaluator": "systemd-analyze calendar with installed tzdata",
+  "host_timezone": "Europe/Berlin",
+  "baseline_original_schedules": {
+    "goalvision-lab-combo-settle.timer": "*-*-* *:00/10:00",
+    "goalvision-adaptive-learning-observer.timer": "*-*-* *:00/30:00",
+    "goalvision-lab-weekly-stats.timer": "Sun *-*-* 22:30:00 Europe/Riga",
+    "goalvision-adaptive-learning.timer": "*-*-* 04:15:00"
+  },
+  "target_schedules": {
+    "goalvision-lab-combo-settle.timer": "*-*-* *:05,15,25,35,45,55:00",
+    "goalvision-adaptive-learning-observer.timer": "*-*-* *:08,38:00",
+    "goalvision-lab-weekly-stats.timer": "Sun *-*-* 22:48:00 Europe/Riga",
+    "goalvision-adaptive-learning.timer": "*-*-* 04:20:00"
+  },
+  "persistent_preserved": true,
+  "boundary_guard_seconds": 10,
+  "install_reserve_seconds": 60,
+  "predicate": "latest evaluated original tick >= latest evaluated target tick for every changed timer; outside old and target boundary guards",
+  "forecast_limit": "Conditional on normal original ticks. Actual LastTriggerUSec is mandatory at install; no forecast is a run receipt.",
+  "windows": [
+    {
+      "label": "current_eight_days",
+      "start_utc": "2026-09-27T00:00:00+00:00",
+      "end_utc_exclusive": "2026-10-05T00:00:00+00:00",
+      "window_count": 0,
+      "windows_per_utc_day": {
+        "2026-09-27": 0,
+        "2026-09-28": 0,
+        "2026-09-29": 0,
+        "2026-09-30": 0,
+        "2026-10-01": 0,
+        "2026-10-02": 0,
+        "2026-10-03": 0,
+        "2026-10-04": 0
+      },
+      "recurring": false,
+      "windows": []
+    },
+    {
+      "label": "spring_dst",
+      "start_utc": "2026-03-28T00:00:00+00:00",
+      "end_utc_exclusive": "2026-03-30T00:00:00+00:00",
+      "window_count": 0,
+      "windows_per_utc_day": {
+        "2026-03-28": 0,
+        "2026-03-29": 0
+      },
+      "recurring": false,
+      "windows": []
+    },
+    {
+      "label": "autumn_dst",
+      "start_utc": "2026-10-24T00:00:00+00:00",
+      "end_utc_exclusive": "2026-10-26T00:00:00+00:00",
+      "window_count": 0,
+      "windows_per_utc_day": {
+        "2026-10-24": 0,
+        "2026-10-25": 0
+      },
+      "recurring": false,
+      "windows": []
+    }
+  ],
+  "compatible": false,
+  "systemd_version": "systemd 255 (255.4-1ubuntu8.17)",
+  "tzdata_version": "# version 2026c",
+  "zoneinfo_sha256": {
+    "/usr/share/zoneinfo/Europe/Berlin": "5ee475f71a0fc1a32faeb849f8c39c6e7aa66d6d41ec742b97b3a7436b3b0701",
+    "/usr/share/zoneinfo/Europe/Riga": "849dbfd26d6d696f48b80fa13323f99fe597ed83ab47485e2accc98609634569"
+  },
+  "generated_at": "2026-09-27T19:18:26.944915+00:00",
+  "baseline_sha256": "c1483eeeebf91c4ba5699965d0348334ba3f692f787bd6efe35497c5d082285a"
+}

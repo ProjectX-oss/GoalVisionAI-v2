@@ -17,6 +17,10 @@ sys.path.insert(0, str(ROOT))
 import control as c
 import calendar_proof as cal
 import forward_evidence as evidence
+import persistent_proof as persistent
+
+REAL_COMMON_SAFETY = c.common_safety
+REAL_SAFE_REARM = c.safe_rearm
 
 
 class FakeHost:
@@ -74,6 +78,9 @@ class DeploymentTests(unittest.TestCase):
         self.addCleanup(patch.stopall)
         patch.object(c,'deployment_lock',lambda: __import__('contextlib').nullcontext()).start()
         patch.object(c,'safe_rearm').start()
+        patch.object(c, 'common_safety', return_value={
+            'common_safe_now': True, 'deployment_compatible': True,
+            'next_common_safe_window': {'synthetic': True}}).start()
         patch.object(c,'verify_next',side_effect=lambda host,u,*args:host.show(u)).start()
         # Transaction tests isolate calendar-policy acceptance. Real calendar
         # tests below evaluate every final schedule and reject the superseded target.
@@ -192,6 +199,65 @@ class DeploymentTests(unittest.TestCase):
         self.assertFalse(any(c.dropin(u).exists() for u in c.CHANGED))
         self.assertEqual(self.host.calls, [])
 
+    def set_observed_original_ticks(self, moment):
+        origin = moment.replace(hour=0, minute=0, second=0, microsecond=0)
+        data = persistent.series(self.baseline, cal.TARGET, origin, origin+timedelta(days=8))
+        for unit, (old, new) in data.items():
+            self.host.props[unit]['LastTriggerUSec'] = persistent.prior(old, moment).isoformat()
+
+    def test_install_outside_common_window_refuses_before_any_mutation(self):
+        moment = datetime.fromisoformat('2026-09-28T10:10:30+00:00')
+        self.set_observed_original_ticks(moment)
+        before = {str(p):p.read_bytes() for p in Path(self.tmp.name).rglob('*') if p.is_file()}
+        with patch.object(c, 'common_safety', REAL_COMMON_SAFETY), patch.object(c, 'utcnow', return_value=moment), patch.object(c, 'deployment_lock') as lock:
+            with self.assertRaisesRegex(c.CommonWindowRefusal, 'OUTSIDE_COMMON_SAFE_WINDOW') as error:
+                self.install()
+            self.assertFalse(error.exception.report['common_safe_now'])
+            self.assertIsNotNone(error.exception.report['next_common_safe_window'])
+            lock.assert_not_called()
+        self.assertEqual(self.host.calls, [])
+        self.assertEqual(before, {str(p):p.read_bytes() for p in Path(self.tmp.name).rglob('*') if p.is_file()})
+
+    def test_install_inside_observed_common_window_and_rollback_succeed(self):
+        moment = datetime.fromisoformat('2026-09-28T10:01:30+00:00')
+        self.set_observed_original_ticks(moment)
+        with patch.object(c, 'common_safety', REAL_COMMON_SAFETY), patch.object(c, 'safe_rearm', REAL_SAFE_REARM), patch.object(c, 'utcnow', return_value=moment):
+            result = self.install()
+            self.assertTrue(result['common_safe_now'])
+            self.assertEqual(result['phase'], 'installed')
+            self.assertEqual(len(list(c.UNIT_ROOT.glob('*.timer.d/*.conf'))), 4)
+            c.change(self.host, 'rollback')
+        for u in cal.NAMES:
+            self.assertEqual(c.calendar_of(self.host.show(u)), [cal.OLD[u]])
+        self.assertFalse(list(c.UNIT_ROOT.glob('*.timer.d/*.conf')))
+
+    def test_forecast_never_substitutes_for_missing_stale_or_future_last_trigger(self):
+        moment = datetime.fromisoformat('2026-09-28T10:01:30+00:00')
+        self.set_observed_original_ticks(moment)
+        for value in ('n/a', (moment-timedelta(days=10)).isoformat(), (moment+timedelta(hours=1)).isoformat()):
+            self.host.props[cal.NAMES[4]]['LastTriggerUSec'] = value
+            report = REAL_COMMON_SAFETY(self.host, now=moment)
+            self.assertFalse(report['common_safe_now'])
+            self.assertTrue(report['deployment_compatible'])
+        self.assertEqual(self.host.calls, [])
+
+    def test_boundary_and_insufficient_time_refuse(self):
+        for clock in ('10:00:05', '10:04:00', '10:04:55'):
+            moment = datetime.fromisoformat('2026-09-28T'+clock+'+00:00')
+            self.set_observed_original_ticks(moment)
+            report = REAL_COMMON_SAFETY(self.host, now=moment)
+            self.assertFalse(report['common_safe_now'])
+
+    def test_0420_deployment_is_rejected_without_mutation(self):
+        target = {**cal.TARGET, cal.NAMES[4]: '*-*-* 04:20:00'}
+        self.baseline['deployment']['target_calendars'] = target
+        with patch.object(c, 'TARGET', target), patch.object(c, 'common_safety', REAL_COMMON_SAFETY), patch.object(c, 'deployment_lock') as lock:
+            with self.assertRaisesRegex(c.CommonWindowRefusal, 'NO_COMMON_PERSISTENT_WINDOW'):
+                self.install()
+            lock.assert_not_called()
+        self.assertFalse((c.STATE/'transaction.json').exists())
+        self.assertEqual(self.host.calls, [])
+
     def test_collision_blocks_install_without_writing_dropins(self):
         with patch.object(c,'proof',return_value={'zero_collisions':False}):
             with self.assertRaisesRegex(ValueError,'TARGET_CALENDAR_COLLISION'):self.install()
@@ -227,7 +293,7 @@ class BoundaryTests(unittest.TestCase):
     def test_persistent_catchup_refused(self):
         host=unittest.mock.Mock();host.show.return_value={'ActiveState':'active','Persistent':'yes','LastTriggerUSec':'old'}
         now=datetime.now(timezone.utc)
-        with patch.object(c,'timestamp',return_value=now-timedelta(days=2)),patch.object(c,'evaluate',return_value=[now-timedelta(hours=1)]):
+        with patch.object(c, 'BASELINE', {'timezone':'Europe/Berlin'}, create=True), patch.object(c,'timestamp',return_value=now-timedelta(days=2)),patch.object(c,'evaluate',return_value=[now-timedelta(hours=1)]):
             with self.assertRaisesRegex(ValueError,'PERSISTENT_CATCHUP'):c.safe_rearm(host,c.CHANGED[0],cal.TARGET[c.CHANGED[0]])
         host.mutate.assert_not_called()
 
@@ -254,17 +320,17 @@ class CalendarTests(unittest.TestCase):
     def test_exact_requested_targets(self):
         self.assertEqual(cal.TARGET[cal.NAMES[1]],'*-*-* *:05,15,25,35,45,55:00')
         self.assertEqual(cal.TARGET[cal.NAMES[2]],'*-*-* *:08,38:00')
-        self.assertEqual(cal.TARGET[cal.NAMES[3]],'Sun *-*-* 22:48:00 Europe/Riga')
-        self.assertEqual(cal.TARGET[cal.NAMES[4]], '*-*-* 04:20:00')
+        self.assertEqual(cal.TARGET[cal.NAMES[3]],'Sun *-*-* 22:28:00 Europe/Riga')
+        self.assertEqual(cal.TARGET[cal.NAMES[4]], '*-*-* 04:12:00')
         self.assertEqual({p.name for p in (ROOT/'drop-ins').iterdir()}, {u+'.conf' for u in c.CHANGED})
         for u in c.CHANGED:self.assertEqual((ROOT/'drop-ins'/(u+'.conf')).read_bytes(),c.payload(u))
 
-    def test_cadence_preserved_and_research_shifted_five_minutes_including_dst(self):
+    def test_cadence_preserved_and_research_shifted_three_minutes_earlier_including_dst(self):
         for window in self.report['windows']:
             self.assertTrue(window['cadence_preserved'])
             self.assertTrue(window['weekly_cadence']['preserved'])
             self.assertEqual(len(window['weekly_cadence']['target_gap_seconds']), 2)
-            self.assertTrue(window['discovery_unchanged']);self.assertTrue(window['research_shift_exactly_300_seconds'])
+            self.assertTrue(window['discovery_unchanged']);self.assertTrue(window['research_shift_exactly_minus_180_seconds'])
             self.assertEqual(window['counts'][cal.NAMES[3]],1)
 
     def test_three_frequent_timers_never_collide(self):
@@ -286,14 +352,14 @@ class CalendarTests(unittest.TestCase):
         for window in report['windows']:
             self.assertEqual(len(window['collisions'][cal.NAMES[1]+' / '+cal.NAMES[3]]), 1)
 
-    def test_research_has_five_minutes_to_each_adjacent_settlement(self):
+    def test_research_neighbors_are_0405_0412_0415(self):
         for window in self.report['windows']:
             self.assertTrue(window['research_separation_passed'])
             for row in window['research_separation']:
-                for key, expected in (('previous_settlement_local', '04:15'),
-                                      ('research_local', '04:20'), ('next_settlement_local', '04:25')):
+                for key, expected in (('previous_settlement_local', '04:05'),
+                                      ('research_local', '04:12'), ('next_settlement_local', '04:15')):
                     self.assertEqual(datetime.fromisoformat(row[key]).strftime('%H:%M'), expected)
-                self.assertEqual((row['before_seconds'], row['after_seconds']), (300, 300))
+                self.assertEqual((row['before_seconds'], row['after_seconds']), (420, 180))
 
     def test_superseded_0415_research_collides_daily_in_every_window(self):
         report = cal.proof({**cal.TARGET, cal.NAMES[4]: '*-*-* 04:15:00'})
@@ -306,6 +372,62 @@ class CalendarTests(unittest.TestCase):
     def test_missing_collision_participant_is_rejected(self):
         with self.assertRaisesRegex(ValueError, 'ALL_FIVE_TIMERS_REQUIRED'):
             cal.proof({u: cal.TARGET[u] for u in cal.NAMES[:4]})
+
+    def test_research_and_weekly_nearest_neighbor_margins(self):
+        expected = {(cal.NAMES[4], cal.NAMES[1]): (7,3),
+                    (cal.NAMES[4], cal.NAMES[2]): (4,26),
+                    (cal.NAMES[3], cal.NAMES[1]): (3,7),
+                    (cal.NAMES[3], cal.NAMES[0]): (28,2),
+                    (cal.NAMES[3], cal.NAMES[2]): (20,10)}
+        for window in self.report['windows']:
+            for row in window['nearest_neighbors']:
+                self.assertEqual((row['previous_gap_minutes'], row['next_gap_minutes']),
+                                 expected[(row['subject'], row['peer'])])
+
+
+class PersistentTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.baseline = json.loads((ROOT/'baseline.json').read_text())
+        cls.start = datetime.fromisoformat('2026-09-27T00:00:00+00:00')
+
+    def test_final_targets_have_recurring_common_windows_across_dst(self):
+        report = persistent.proof(self.baseline, current_start=self.start)
+        self.assertTrue(report['compatible'])
+        for window in report['windows']:
+            self.assertTrue(window['recurring'])
+            self.assertGreater(window['window_count'], 90)
+            self.assertTrue(all(window['windows_per_utc_day'].values()))
+        first = report['windows'][0]['windows'][0]
+        self.assertEqual(first['start_utc'], '2026-09-27T00:00:10+00:00')
+        self.assertEqual(first['end_utc_exclusive'], '2026-09-27T00:04:50+00:00')
+
+    def test_0420_research_has_no_common_window_even_with_2228_weekly(self):
+        report = persistent.proof(self.baseline, {**cal.TARGET, cal.NAMES[4]: '*-*-* 04:20:00'}, self.start)
+        self.assertFalse(report['compatible'])
+        self.assertTrue(all(w['window_count'] == 0 for w in report['windows']))
+
+    def test_superseded_2248_and_0420_have_no_common_window(self):
+        report = persistent.proof(self.baseline, {**cal.TARGET,
+            cal.NAMES[3]: 'Sun *-*-* 22:48:00 Europe/Riga', cal.NAMES[4]: '*-*-* 04:20:00'}, self.start)
+        self.assertFalse(report['compatible'])
+        self.assertTrue(all(w['window_count'] == 0 for w in report['windows']))
+
+    def test_pinned_original_calendar_and_persistent_flag_are_required(self):
+        for key, value in (('Persistent', 'no'), ('TimersCalendar', 'changed')):
+            baseline = copy.deepcopy(self.baseline)
+            baseline['units'][cal.NAMES[4]]['properties'][key] = value
+            with self.assertRaisesRegex(ValueError, 'PERSISTENT_BASELINE_DRIFT'):
+                persistent.proof(baseline, current_start=self.start)
+
+    def test_dropins_change_only_oncalendar_and_controller_never_writes_stamps(self):
+        for u in c.CHANGED:
+            lines = (ROOT/'drop-ins'/(u+'.conf')).read_text().splitlines()
+            self.assertEqual([s for s in lines if s and not s.startswith('#')],
+                             ['[Timer]', 'OnCalendar=', 'OnCalendar='+cal.TARGET[u]])
+        source = (ROOT/'control.py').read_text()
+        self.assertNotIn('/var/lib/systemd/timers', source)
+        self.assertNotIn('Persistent=', source)
 
 
 class AdminReadTests(unittest.TestCase):

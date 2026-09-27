@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-09-27T18:55:08.495260+00:00",
+  "captured_at": "2026-09-27T19:18:35.077604+00:00",
   "unit_hashes_and_loaded_schedules": "PASS",
   "units_checked": 12,
   "source_files_checked": 17,
@@ -19,13 +19,53 @@
   },
   "admin_sender_verification": "NOT_PERFORMED_PROTECTED_FILES_REQUIRE_ROOT_OPERATOR",
   "production_changes": "NONE",
-  "daily_research_live_calendar": [
-    "*-*-* 04:15:00"
-  ],
   "allowed_dropins": [
     "goalvision-lab-combo-settle.timer",
     "goalvision-adaptive-learning-observer.timer",
     "goalvision-lab-weekly-stats.timer",
     "goalvision-adaptive-learning.timer"
-  ]
+  ],
+  "common_safe_now": false,
+  "next_common_safe_window": {
+    "start_utc": "2026-09-27T19:30:10+00:00",
+    "end_utc_exclusive": "2026-09-27T19:34:50+00:00",
+    "latest_install_start_utc_exclusive": "2026-09-27T19:33:50+00:00",
+    "conditional_on_observed_last_triggers": true
+  },
+  "deployment_compatible": true,
+  "evaluated_at_utc": "2026-09-27T19:18:35.054425+00:00",
+  "forecast_horizon_end_utc": "2026-10-05T00:00:00+00:00",
+  "boundary_guard_seconds": 10,
+  "minimum_install_time_remaining_seconds": 60,
+  "timer_observations": {
+    "goalvision-lab-combo-settle.timer": {
+      "active": true,
+      "persistent": "yes",
+      "last_trigger_observed_utc": "2026-09-27T19:10:07+00:00",
+      "latest_target_tick_utc": "2026-09-27T19:15:00+00:00",
+      "observed_safe": false
+    },
+    "goalvision-adaptive-learning-observer.timer": {
+      "active": true,
+      "persistent": "yes",
+      "last_trigger_observed_utc": "2026-09-27T19:00:09+00:00",
+      "latest_target_tick_utc": "2026-09-27T19:08:00+00:00",
+      "observed_safe": false
+    },
+    "goalvision-lab-weekly-stats.timer": {
+      "active": true,
+      "persistent": "yes",
+      "last_trigger_observed_utc": "2026-09-20T19:30:00+00:00",
+      "latest_target_tick_utc": "2026-09-20T19:28:00+00:00",
+      "observed_safe": true
+    },
+    "goalvision-adaptive-learning.timer": {
+      "active": true,
+      "persistent": "yes",
+      "last_trigger_observed_utc": "2026-09-27T02:15:02+00:00",
+      "latest_target_tick_utc": "2026-09-27T02:12:00+00:00",
+      "observed_safe": true
+    }
+  },
+  "forecast_basis": "Pinned original calendars; future ticks are conditional, never run evidence."
 }

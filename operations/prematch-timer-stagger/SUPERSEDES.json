@@ -1,13 +1,24 @@
 {
-  "superseded_commit": "46e680851fd8c64c5d003c14215de75128537542",
-  "superseded_package": "prematch-timer-stagger-v2-20260927",
-  "superseded_manifest_sha256": "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472",
-  "superseded_archive_sha256": "226b0494d8c08b72210c12500017fa75ee7368dc1c549482a873289e42d6d0bb",
-  "superseded_status": "SUPERSEDED / MUST NOT INSTALL",
-  "reason": "Zone-less daily research at 04:15 collides with settlement at :15 and shares adaptive_lab audit SQLite.",
-  "replacement_package": "prematch-timer-stagger-v3-20260927",
-  "daily_research_calendar": "*-*-* 04:20:00",
-  "previous_superseded_release": {
+  "replacement_package": "prematch-timer-stagger-v4-20260927",
+  "superseded_releases": [
+    {
+      "commit": "46e680851fd8c64c5d003c14215de75128537542",
+      "package": "prematch-timer-stagger-v2-20260927",
+      "status": "SUPERSEDED / MUST NOT INSTALL",
+      "manifest_sha256": "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472",
+      "archive_sha256": "226b0494d8c08b72210c12500017fa75ee7368dc1c549482a873289e42d6d0bb",
+      "reason": "04:15 research collides with settlement"
+    },
+    {
+      "commit": "a8bfc1fd30b2da3112284e436d11eec050d804e8",
+      "package": "prematch-timer-stagger-v3-20260927",
+      "status": "SUPERSEDED / MUST NOT INSTALL",
+      "manifest_sha256": "0b323c31b53cffebff688a1fb370fe8d07deb210031f5949aecc71ddecd9166d",
+      "archive_sha256": "ade13cb7dc820fc22105188cae042960f0954f1f0b1723a980d3ae9584d301de",
+      "reason": "04:20 research and Sunday 22:48 weekly have no common Persistent-safe deployment window"
+    }
+  ],
+  "earlier_superseded_release": {
     "superseded_commit": "b286210",
     "superseded_manifest_sha256": "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca",
     "superseded_status": "SUPERSEDED_DO_NOT_INSTALL",
