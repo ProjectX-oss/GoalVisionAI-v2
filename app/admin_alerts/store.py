@@ -11,7 +11,7 @@ from typing import Iterator
 
 from .model import Event, alert, digest
 from . import correlation
-from .invalidation import eligible, REASON
+from .invalidation import eligible, REASON, idle_eligible, IDLE_REASON
 from .output_contracts import CONTRACTS
 
 
@@ -93,6 +93,11 @@ class Store:
 
     def _event(self, event: Event, now: float) -> None:
         signature = event.signature
+        if event.rule == 'ADMIN_DELIVERY_DEGRADED' and self.db.execute(
+                "SELECT 1 FROM invalidations WHERE incident=?", (signature,)).fetchone():
+            # The false incident remains a terminal tombstone. Future real faults
+            # share a separate stable identity, including their receipt recovery.
+            signature = digest((signature, 'ADMIN_DELIVERY_AFTER_IDLE_INVALIDATION_V1'))
         # Reuse a legacy source identity only for the same rule and execution.
         # V1.3 never folds independent source rules into one incident.
         if event.invocation != 'UNKNOWN' and event.rule in correlation.EXECUTION_RULES:
@@ -177,6 +182,24 @@ class Store:
                     AND NOT EXISTS (SELECT 1 FROM attempts a WHERE a.outbox=outbox.id)""", (row['id'],))
                 # Attempted/acknowledged rows stay byte-identical. Dispatch's incident
                 # state guard prevents retries without erasing uncertain/sent history.
+                count += 1
+        return count
+
+    def invalidate_idle_delivery(self, now: float) -> int:
+        """Audit the proven old idle defect without changing activation history."""
+        count = 0
+        with self.db:
+            self.db.execute('BEGIN IMMEDIATE')
+            for row in self.db.execute("SELECT * FROM incidents WHERE rule='ADMIN_DELIVERY_DEGRADED'").fetchall():
+                if not idle_eligible(self.db, row):
+                    continue
+                outbox = list(self.db.execute('SELECT * FROM outbox WHERE incident=?', (row['id'],)))
+                self.db.execute('INSERT INTO invalidations VALUES (?,?,?,?,?)', (row['id'], now,
+                    json.dumps({'reason': IDLE_REASON, 'invalidated_by': 'ADMIN_ALERTS_V1_3_1'}),
+                    json.dumps(dict(row), sort_keys=True), json.dumps([dict(r) for r in outbox], sort_keys=True)))
+                self.db.execute("UPDATE incidents SET state='INVALIDATED' WHERE id=?", (row['id'],))
+                for notification in outbox:
+                    correlation.supersede(self.db, notification, IDLE_REASON, now)
                 count += 1
         return count
 

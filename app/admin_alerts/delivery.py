@@ -124,7 +124,7 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
     budget = max(0, min(5, 20 - used))
     if not budget:
         return 0
-    if not store.db.execute("SELECT 1 FROM outbox o JOIN incidents i ON i.id=o.incident WHERE i.state IN ('OPEN','REPEATED','ESCALATED','RECOVERED') AND o.state IN ('PENDING','UNCERTAIN') AND o.due<=? AND o.attempts<5 LIMIT 1", (now,)).fetchone():
+    if not delivery_work(store, now):
         return 0
     try:
         transport.validate()
@@ -141,11 +141,7 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
             break
         if deadline is not None and time.monotonic() > deadline - 4:
             break
-        rows = store.db.execute('''SELECT o.* FROM outbox o JOIN incidents i ON i.id=o.incident
-            WHERE i.state IN ('OPEN','REPEATED','ESCALATED','RECOVERED') AND o.state IN ('PENDING','UNCERTAIN') AND o.due<=? AND o.attempts<5
-            ORDER BY i.severity DESC,o.created LIMIT 1000''', (now,)).fetchall()
-        projections = groups(store.db)
-        rows = [r for r in rows if deliverable(store.db, r['incident'], projections, r)]
+        rows = delivery_work(store, now)
         if not rows:
             break
         backlog = len(rows) > 5 or now - min(r['created'] for r in rows) > 1800
@@ -195,3 +191,54 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
                     'next': now + max(failure.retry_after, min(1800, 30 * 2 ** max(r['attempts'] for r in batch)))})
             break  # outage never drains a backlog in a burst
     return sent
+
+
+def delivery_work(store: Store, now: float) -> list:
+    """Apply lifecycle, correlation and epoch eligibility before any transport call."""
+    projections = groups(store.db)
+    rows = store.db.execute("""SELECT o.* FROM outbox o JOIN incidents i ON i.id=o.incident
+        WHERE i.state IN ('OPEN','REPEATED','ESCALATED','RECOVERED')
+        AND o.state IN ('PENDING','UNCERTAIN') AND o.due<=? AND o.attempts<5
+        ORDER BY i.severity DESC,o.created""", (now,))
+    result = []
+    for row in rows:
+        if deliverable(store.db, row['incident'], projections, row):
+            result.append(row)
+            if len(result) == 1000:
+                break
+    return result
+
+
+def run_delivery(store: Store, sender: SenderConfig, now: float, *, deadline: float,
+                 factory=Telegram) -> tuple[int, dict]:
+    """Idle is informational; only retained/observed delivery evidence affects faults."""
+    from .model import Event
+    sent = 0
+    work = delivery_work(store, now)
+    try:
+        # Construction checks local configuration/token only. Keep these genuine
+        # failures visible even while idle; validate()/send() require eligible work.
+        transport = factory(sender)
+        if work:
+            if not store.db.execute('SELECT 1 FROM notification_epochs LIMIT 1').fetchone():
+                raise DeliveryError('ACTIVATION_EPOCH_REQUIRED', permanent=True)
+            sent = dispatch(store, sender, transport, now, deadline=deadline)
+    except (DeliveryError, OSError) as failure:
+        with store.db:
+            store.put('delivery', {'code': failure.code if isinstance(failure, DeliveryError)
+                      else 'SECRET_UNAVAILABLE', 'permanent': True, 'next': 0})
+    state = store.get('delivery', {})
+    code = state.get('code')
+    # A persisted failure remains actionable even with no work. Idle never supplies
+    # recovery evidence. HEALTHY is written only after a validated durable receipt.
+    if code and (code != 'HEALTHY' or sent):
+        store.ingest([Event('monitor', 'ADMIN_DELIVERY_DEGRADED', 'admin', code, now,
+            'admin-transport', facts={'code': code}, healthy=code == 'HEALTHY')], {}, now)
+    if not work and not state:
+        retained = store.db.execute("SELECT evidence FROM incidents WHERE rule='ADMIN_DELIVERY_DEGRADED' AND state IN ('PENDING','OPEN','REPEATED','ESCALATED')").fetchone()
+        if retained:
+            return sent, {'code': json.loads(retained[0]).get('facts', {}).get('code', 'UNKNOWN'),
+                          'transport_verified_this_scan': False}
+    if not work and (not state or code == 'HEALTHY'):
+        return sent, {'code': 'IDLE_NO_DELIVERY_WORK', 'transport_verified_this_scan': False}
+    return sent, state or {'code': 'DELIVERY_DEFERRED', 'transport_verified_this_scan': False}

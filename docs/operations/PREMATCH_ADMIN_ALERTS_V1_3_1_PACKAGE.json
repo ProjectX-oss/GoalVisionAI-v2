@@ -1,0 +1,18 @@
+{
+  "archive": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-1.tar.gz",
+  "archive_sha256": "88b213eabba35e54b7803c1f6d3a0d58f9adaedcf6e1a8086ef96ae4ac5f8530",
+  "base_commit": "ee01244efd35c02acf542b9e13d540577ab800ed",
+  "baseline_manifest_sha256": "a1439c9f61b31582af8a2908770ccd7d523f6fc973eabb7c423e81cc0d1351fc",
+  "branch": "codex/prematch-admin-alerts-v1-3-1",
+  "deployed": false,
+  "epoch_policy": "PRE_ENABLEMENT_EPISODES_SUPPRESSED_V1",
+  "football_api_calls": 0,
+  "live_host_rehearsal": "PREPARED_FOR_OPERATOR_NOT_EXECUTED",
+  "manifest_sha256": "90c86babf218f0526877e5e4631e16d86facfea0282ba9e5555c9f24d3e41543",
+  "package": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-3-1",
+  "prematch_controls": 0,
+  "production_sender_enabled_by_codex": false,
+  "pushed": false,
+  "status": "ADMIN_ALERTS_V1_3_1_READY_FOR_OPERATOR_PREFLIGHT",
+  "telegram_sends": 0
+}

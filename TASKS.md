@@ -1,3 +1,13 @@
+# ADMIN alerts v1.3.1 (2026-09-27)
+
+- [x] Separate idle delivery from receipt-backed health; preserve real delivery faults.
+- [x] Audit and invalidate only proven unattempted old UNKNOWN idle incidents.
+- [x] Preserve the existing activation epoch and add explicit confirmed resume.
+- [x] Prepare direct corrected-v1.3 upgrade/rollback and offline/read-only rehearsal.
+- [x] Run the complete ADMIN-only suite with a network guard; document operator handoff.
+- No deployment, live sender enablement, push, Telegram/API calls or PREMATCH controls.
+- Handoff: `docs/operations/PREMATCH_ADMIN_ALERTS_V1_3_1.md`.
+
 # ADMIN activation episode correction (2026-09-27)
 
 - [x] Snapshot activation episode/generation immutably; suppress old work while permitting stable-incident recurrence.

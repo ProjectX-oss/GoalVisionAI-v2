@@ -9,7 +9,7 @@ from pathlib import Path
 import signal
 import time
 
-from .delivery import DeliveryError, SenderConfig, Telegram, dispatch
+from .delivery import DeliveryError, SenderConfig, Telegram, dispatch, run_delivery
 from .model import DISCOVERY, Event, coverage, digest, epoch, identity
 from .output_contracts import CONTRACTS, contract_report, expected_document
 from .rules import compact
@@ -175,24 +175,16 @@ def scan(config: dict, root: Path, *, no_send: bool = True, config_path: Path | 
             store.invalidate_scan_progress(now)
             store.ingest(events, cursors, now)
             store.invalidate_legacy_output(now)
+            store.invalidate_idle_delivery(now)
             store.enqueue(now)
             sent = 0
+            delivery_report = None
             sender = SenderConfig(**config.get('sender', {}))
             if not no_send and sender.enabled:
                 if (root / 'DISABLED').exists():
                     return {'status': 'DISABLED', 'telegram_sends': 0, 'football_api_calls': 0}
-                try:
-                    if not store.db.execute('SELECT 1 FROM notification_epochs LIMIT 1').fetchone():
-                        raise DeliveryError('ACTIVATION_EPOCH_REQUIRED', permanent=True)
-                    sent = dispatch(store, sender, Telegram(sender), now, deadline=begin + 35)
-                except (DeliveryError, OSError) as failure:
-                    with store.db:
-                        store.put('delivery', {'code': failure.code if isinstance(failure, DeliveryError) else 'SECRET_UNAVAILABLE',
-                                              'permanent': True, 'next': 0})
-                delivery_state = store.get('delivery', {})
-                delivery_code = delivery_state.get('code', 'UNKNOWN')
-                store.ingest([Event('monitor', 'ADMIN_DELIVERY_DEGRADED', 'admin', delivery_code, now,
-                    'admin-transport', facts={'code': delivery_code}, healthy=delivery_code == 'HEALTHY')], {}, now)
+                sent, delivery_report = run_delivery(store, sender, now, deadline=begin + 35,
+                                                     factory=Telegram)
             store.retain(now)
             release = configured_release(Path(config['release_environment']))
             report = store.report(release)
@@ -208,7 +200,7 @@ def scan(config: dict, root: Path, *, no_send: bool = True, config_path: Path | 
             if cursors.get('ledger_deferred_since'):
                 report['source_access']['ledger'] = {'read_available': False, 'reason': 'DEFERRED_ACTIVE_OR_UNKNOWN_PRODUCER',
                                                       'status': 'UNKNOWN'}
-            report['admin_delivery'] = store.get('delivery', {'code': 'DISABLED' if no_send or not sender.enabled else 'UNKNOWN'})
+            report['admin_delivery'] = delivery_report or store.get('delivery', {'code': 'DISABLED'})
             report['scan'] = {'elapsed_seconds': round(time.monotonic() - begin, 4), 'stdout_bytes': bytes_read,
                               'events': len(events), 'telegram_sends': sent, 'football_api_calls': 0, 'no_send': no_send}
             atomic_json(root / 'incident-report.json', report)

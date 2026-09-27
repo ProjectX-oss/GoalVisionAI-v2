@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -17,6 +18,9 @@ EPOCH = 'ADMIN_NOTIFICATION_EPOCH_V1'
 
 def readiness(config: dict) -> dict:
     sender = SenderConfig(**config.get('sender', {}))
+    if (sender.operator_confirmed_start is not True or type(sender.bot_id) is not int
+            or type(sender.private_chat_id) is not int or type(sender.enabled) is not bool):
+        raise ValueError('INVALID_SENDER_CONFIGURATION')
     replace(sender, enabled=True).validate()
     token = Path(sender.token_file)
     if token.is_symlink() or not token.is_file() or token.stat().st_mode & 0o077:
@@ -139,3 +143,50 @@ def enable(config_path: Path, db: sqlite3.Connection, now: float) -> int:
         write_config(config_path, original)
         raise
     return count
+
+
+def resume_projection(db: sqlite3.Connection, config: dict) -> dict:
+    """Read-only validation of the existing immutable activation boundary."""
+    result = projection(db, config)
+    epochs = result['notification_epoch']
+    safe = (len(epochs) == 1 and epochs[0]['id'] == EPOCH
+            and epochs[0]['policy'] == EPOCH_POLICY
+            and type(epochs[0]['activated_at']) in (int, float)
+            and math.isfinite(epochs[0]['activated_at']) and epochs[0]['activated_at'] > 0)
+    columns = {r[1] for r in db.execute('PRAGMA table_info(epoch_incidents)')}
+    complete = {'incident', 'epoch', 'episode_at_activation', 'generation_at_activation'} <= columns
+    if complete:
+        complete = not db.execute('''SELECT 1 FROM epoch_incidents e LEFT JOIN incidents i ON i.id=e.incident
+            WHERE i.id IS NULL OR e.epoch!=? OR typeof(e.episode_at_activation)!='integer'
+            OR e.episode_at_activation<1 OR typeof(e.generation_at_activation)!='integer'
+            OR e.generation_at_activation<1''', (EPOCH,)).fetchone()
+    unknown = []
+    for row in db.execute("SELECT * FROM incidents WHERE rule='ADMIN_DELIVERY_DEGRADED' AND state IN ('PENDING','OPEN','REPEATED','ESCALATED')"):
+        evidence = json.loads(row['evidence'])
+        if evidence.get('facts', {}).get('code') == 'UNKNOWN':
+            unknown.append(row['id'])
+    result['actionable_unknown_delivery_incidents'] = unknown
+    result['activation_snapshot_complete'] = bool(safe and complete)
+    result['active_actionable_post_epoch_incidents'] = [
+        {'id': r['id'], 'rule': r['rule']} for r in db.execute(
+            "SELECT * FROM incidents WHERE state IN ('OPEN','REPEATED','ESCALATED')")
+        if not epoch_hold(db, dict(r))] if safe and complete else []
+    result['resume_ready'] = bool(safe and complete and not result['activation_review_required']
+        and not unknown and result['configuration_ready'] and result['sender_enabled'] is False)
+    return result
+
+
+def resume(config_path: Path, db: sqlite3.Connection) -> None:
+    """Enable under the caller's ADMIN fence/scan lock; never mutate the database."""
+    original = json.loads(config_path.read_text())
+    if not resume_projection(db, original)['resume_ready']:
+        raise ValueError('EXISTING_ACTIVATION_NOT_RESUME_READY')
+    config = json.loads(json.dumps(original))
+    config['sender']['enabled'] = True
+    try:
+        write_config(config_path, config)
+        if json.loads(config_path.read_text()) != config:
+            raise ValueError('RESUME_CONFIG_VERIFICATION_FAILED')
+    except BaseException:
+        write_config(config_path, original)
+        raise

@@ -1,0 +1,25 @@
+{
+  "activation_review_required": [],
+  "activation_snapshot_complete": true,
+  "attempt_history_preserved": true,
+  "epoch_preserved": true,
+  "evidence_origin": "SYNTHETIC_EXISTING_EPOCH_FIXTURE_NOT_LIVE",
+  "football_api_calls": 0,
+  "live_mutations": 0,
+  "mode": "ISOLATED_SNAPSHOT_NO_SEND",
+  "new_epoch_rows": 0,
+  "notification_epoch": [
+    {
+      "activated_at": 1790518091.7560692,
+      "id": "ADMIN_NOTIFICATION_EPOCH_V1",
+      "policy": "PRE_ENABLEMENT_EPISODES_SUPPRESSED_V1"
+    }
+  ],
+  "prematch_controls": 0,
+  "resume_database_bytes_unchanged": true,
+  "resume_ready_after_cleanup": true,
+  "snapshot_sender_after_resume": true,
+  "source_snapshot_sha256": "6f7961076be26856398d1a01378956d189f1ee29cafd67e7011577688ba7715b",
+  "telegram_sends": 0,
+  "would_invalidate_idle_unknown": 1
+}
