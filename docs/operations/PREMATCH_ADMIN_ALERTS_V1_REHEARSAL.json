@@ -1,0 +1,54 @@
+{
+  "affected_invocation_release": "UNKNOWN",
+  "configured_release_now": "23e57e9c48f321b8ee5f67bd536fbb2b264f6cb0",
+  "incident_rules": [
+    "MONITORING_COVERAGE_DEGRADED",
+    "MONITORING_COVERAGE_DEGRADED",
+    "MONITORING_COVERAGE_DEGRADED",
+    "MONITORING_COVERAGE_DEGRADED"
+  ],
+  "limitations": [
+    "No ADMIN account or unit installed; rehearsal uses existing operator read access.",
+    "No Telegram identity/chat/start validation performed.",
+    "Empty compact log; no cycle-to-invocation mapping proven."
+  ],
+  "local_report_path": "/home/arvis/goalvision-operations/prematch-admin-alerts-rehearsal/incident-report.json",
+  "protected_files_changed": [],
+  "scan": {
+    "elapsed_seconds": 0.0845,
+    "events": 11,
+    "football_api_calls": 0,
+    "no_send": true,
+    "stdout_bytes": 0,
+    "telegram_sends": 0
+  },
+  "scan_count": 1,
+  "schema": "goalvision-admin-host-rehearsal-v1",
+  "source_access": {
+    "goalvision-adaptive-learning-observer.service-schedule": {
+      "read_available": false,
+      "reason": "NEXT_ELAPSE_UNKNOWN"
+    },
+    "goalvision-lab-combo-settle.service-schedule": {
+      "read_available": false,
+      "reason": "NEXT_ELAPSE_UNKNOWN"
+    },
+    "goalvision-lab-v2-discover.service-schedule": {
+      "read_available": false,
+      "reason": "NEXT_ELAPSE_UNKNOWN"
+    },
+    "health": {
+      "read_available": true
+    },
+    "journal": {
+      "read_available": true
+    },
+    "ledger": {
+      "read_available": false,
+      "reason": "CLAIM_REVIEW_DEFERRED_ACTIVE_OR_UNKNOWN_PRODUCER"
+    },
+    "stdout": {
+      "read_available": true
+    }
+  }
+}

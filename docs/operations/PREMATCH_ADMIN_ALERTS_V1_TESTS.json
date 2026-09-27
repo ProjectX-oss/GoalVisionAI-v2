@@ -1,0 +1,13 @@
+{
+  "final_package": "/home/arvis/goalvision-operations/prematch-admin-alerts-package-v1-final",
+  "football_api_calls": 0,
+  "host_monitor_scans": 1,
+  "manifest_sha256": "3a27a9f75996698a5576cff2f3e889d3a5c20d091fb0c891de704b462ac9b7a0",
+  "monitor_tests": 72,
+  "package_check": "FILES_AND_LOADED_STATE_MATCH",
+  "prematch_regressions": 66,
+  "production_deployed": false,
+  "sender_configured": false,
+  "systemd_template_verify": "PASSED",
+  "telegram_sends": 0
+}

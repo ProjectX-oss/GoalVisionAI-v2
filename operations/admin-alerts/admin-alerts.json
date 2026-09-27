@@ -1,0 +1,14 @@
+{
+  "stdout": "/var/log/goalvision-prematch/discovery-output.log",
+  "health_database": "/home/arvis/GoalVisionAI/var/adaptive_lab/audit.db",
+  "ledger_database": "/home/arvis/GoalVisionAI/var/lab_combo/ledger.db",
+  "release_environment": "/home/arvis/goalvision-operations/lab-v2-public-message-upgrade-v2-20260926/release.env",
+  "sender": {
+    "enabled": false,
+    "token_file": "/etc/goalvision-admin-alerts/admin-token",
+    "bot_id": 0,
+    "bot_username": "",
+    "private_chat_id": 0,
+    "operator_confirmed_start": false
+  }
+}

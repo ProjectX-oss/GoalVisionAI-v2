@@ -1482,3 +1482,13 @@ Review after completing the current priority.
 - Old `prematch-v2-release-e120f1b` package MUST NOT be applied.
 - Report: `docs/operations/PREMATCH_INSTALLER_HARDENING_2026-09-25.md`.
 - Installation BLOCKED pending review/operator execution; no deployment/push/merge.
+
+## 2026-09-27 — Independent PREMATCH ADMIN alerts v1
+
+- [x] Verify loaded PREMATCH application/capabilities and narrowly inventory ADMIN/evidence sources without changes.
+- [x] Add isolated read-only evidence adapters, versioned incident rules, ADMIN store, Latvian alerts, sanitized reports and disabled private sender.
+- [x] Cover incremental/rotated logs, exact delivery uncertainty, schedule/startup/maintenance guards, bounded retries and durable cursor/outbox behavior.
+- [x] Pass 72 offline monitor tests and 66 directly relevant PREMATCH regressions; save synthetic resource benchmark and one no-send host rehearsal.
+- [x] Prepare standalone ADMIN service/timer, disabled configuration, checksummed package, drift check, installer and ADMIN-only kill switch.
+- [x] Document handoff in `docs/operations/PREMATCH_ADMIN_ALERTS_V1.md`.
+- [ ] Separate operator action: provide verified dedicated ADMIN configuration and `/start`, grant narrow read access, review/install, then review sender enablement. No deployment or real message was authorized/executed here.

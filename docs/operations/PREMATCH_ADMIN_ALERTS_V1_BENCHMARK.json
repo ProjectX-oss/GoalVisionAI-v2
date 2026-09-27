@@ -1,0 +1,1 @@
+{"elapsed_seconds": 0.0855, "football_api_calls": 0, "incidents": 133, "log_bytes_on_disk": 8580499, "max_rss_kib": 37120, "maximum_rows_per_query": 128, "producer_writes_during_scan": 0, "records_processed": 512, "schema": "goalvision-admin-benchmark-v1", "stdout_bytes_read": 954880, "synthetic_claim_rows": 10000, "synthetic_health_rows_per_table": 10000, "telegram_sends": 0}

@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+# ADMIN only. Preserve SQLite incidents, attempts, receipts, reports and cursors.
+/usr/bin/test -d /var/lib/goalvision-admin-alerts
+/usr/bin/touch /var/lib/goalvision-admin-alerts/DISABLED
+/usr/bin/systemctl disable --now goalvision-admin-alerts.timer
+/usr/bin/systemctl stop goalvision-admin-alerts.service
