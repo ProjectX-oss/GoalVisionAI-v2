@@ -359,7 +359,7 @@ def check(host):
     require(not tx or tx['phase'] == 'rolled_back', 'TRANSACTION_PRESENT_USE_STATUS_OR_ROLLBACK')
     units = inspect(host)
     report = proof(local_zone=BASELINE['timezone'])
-    require(report['zero_collisions'], 'TARGET_CALENDAR_COLLISION: Sunday 22:45 conflicts with settlement :45')
+    require(report['zero_collisions'], 'TARGET_CALENDAR_COLLISION')
     admin = host.admin()
     return {'phase': 'preflight_passed', 'units': units, 'admin': admin, 'collision_proof': report}
 

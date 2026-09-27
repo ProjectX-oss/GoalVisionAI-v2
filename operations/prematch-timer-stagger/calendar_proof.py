@@ -12,9 +12,8 @@ NAMES = ('goalvision-lab-v2-discover.timer', 'goalvision-lab-combo-settle.timer'
 OLD = dict(zip(NAMES, ('*-*-* 09..22:00,30:00 Europe/Riga', '*-*-* *:00/10:00',
                       '*-*-* *:00/30:00', 'Sun *-*-* 22:30:00 Europe/Riga', '*-*-* 04:15:00')))
 TARGET = {**OLD, NAMES[1]: '*-*-* *:05,15,25,35,45,55:00',
-          NAMES[2]: '*-*-* *:08,38:00', NAMES[3]: 'Sun *-*-* 22:45:00 Europe/Riga'}
-# The requested weekly target is deliberately retained until the operator resolves
-# its contradiction with settlement at :45. Collision checks block installation.
+          NAMES[2]: '*-*-* *:08,38:00', NAMES[3]: 'Sun *-*-* 22:48:00 Europe/Riga'}
+# Weekly 22:48 was explicitly approved to avoid settlement at :45.
 WINDOWS = ('2026-09-26T21:00:00+00:00', '2026-03-28T00:00:00+00:00',
            '2026-10-24T00:00:00+00:00')
 

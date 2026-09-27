@@ -1,0 +1,8 @@
+{
+  "superseded_commit": "b286210",
+  "superseded_manifest_sha256": "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca",
+  "superseded_status": "SUPERSEDED_DO_NOT_INSTALL",
+  "replacement_package": "prematch-timer-stagger-v2-20260927",
+  "approved_weekly_calendar": "Sun *-*-* 22:48:00 Europe/Riga",
+  "other_target_schedules": "UNCHANGED"
+}

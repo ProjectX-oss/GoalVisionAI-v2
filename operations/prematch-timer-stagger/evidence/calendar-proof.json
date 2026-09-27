@@ -5,7 +5,7 @@
     "goalvision-lab-v2-discover.timer": "*-*-* 09..22:00,30:00 Europe/Riga",
     "goalvision-lab-combo-settle.timer": "*-*-* *:05,15,25,35,45,55:00",
     "goalvision-adaptive-learning-observer.timer": "*-*-* *:08,38:00",
-    "goalvision-lab-weekly-stats.timer": "Sun *-*-* 22:45:00 Europe/Riga",
+    "goalvision-lab-weekly-stats.timer": "Sun *-*-* 22:48:00 Europe/Riga",
     "goalvision-adaptive-learning.timer": "*-*-* 04:15:00"
   },
   "windows": [
@@ -24,9 +24,7 @@
         "goalvision-lab-v2-discover.timer / goalvision-adaptive-learning-observer.timer": [],
         "goalvision-lab-v2-discover.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning-observer.timer": [],
-        "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [
-          "2026-09-27T19:45:00+00:00"
-        ],
+        "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-adaptive-learning-observer.timer / goalvision-lab-weekly-stats.timer": []
       },
       "cadence_seconds": {
@@ -64,9 +62,7 @@
         "goalvision-lab-v2-discover.timer / goalvision-adaptive-learning-observer.timer": [],
         "goalvision-lab-v2-discover.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning-observer.timer": [],
-        "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [
-          "2026-03-29T19:45:00+00:00"
-        ],
+        "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-adaptive-learning-observer.timer / goalvision-lab-weekly-stats.timer": []
       },
       "cadence_seconds": {
@@ -104,9 +100,7 @@
         "goalvision-lab-v2-discover.timer / goalvision-adaptive-learning-observer.timer": [],
         "goalvision-lab-v2-discover.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-lab-combo-settle.timer / goalvision-adaptive-learning-observer.timer": [],
-        "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [
-          "2026-10-25T20:45:00+00:00"
-        ],
+        "goalvision-lab-combo-settle.timer / goalvision-lab-weekly-stats.timer": [],
         "goalvision-adaptive-learning-observer.timer / goalvision-lab-weekly-stats.timer": []
       },
       "cadence_seconds": {
@@ -134,5 +128,5 @@
       "discovery_unchanged": true
     }
   ],
-  "zero_collisions": false
+  "zero_collisions": true
 }

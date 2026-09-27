@@ -76,7 +76,7 @@ class DeploymentTests(unittest.TestCase):
         patch.object(c,'safe_rearm').start()
         patch.object(c,'verify_next',side_effect=lambda host,u,*args:host.show(u)).start()
         # Transaction tests isolate calendar-policy acceptance. Real calendar
-        # tests below explicitly reject the unresolved weekly collision.
+        # tests below evaluate every final schedule and reject the superseded target.
         patch.object(c,'proof',return_value={'zero_collisions':True}).start()
         patch.object(socket,'socket',side_effect=AssertionError('network forbidden')).start()
 
@@ -234,7 +234,7 @@ class CalendarTests(unittest.TestCase):
     def test_exact_requested_targets(self):
         self.assertEqual(cal.TARGET[cal.NAMES[1]],'*-*-* *:05,15,25,35,45,55:00')
         self.assertEqual(cal.TARGET[cal.NAMES[2]],'*-*-* *:08,38:00')
-        self.assertEqual(cal.TARGET[cal.NAMES[3]],'Sun *-*-* 22:45:00 Europe/Riga')
+        self.assertEqual(cal.TARGET[cal.NAMES[3]],'Sun *-*-* 22:48:00 Europe/Riga')
         for u in c.CHANGED:self.assertEqual((ROOT/'drop-ins'/(u+'.conf')).read_bytes(),c.payload(u))
 
     def test_cadence_discovery_and_research_preserved_including_dst(self):
@@ -248,16 +248,19 @@ class CalendarTests(unittest.TestCase):
             for pair, timestamps in w['collisions'].items():
                 if cal.NAMES[3] not in pair:self.assertEqual(timestamps,[])
 
-    def test_weekly_requirement_contradiction_detected(self):
-        self.assertFalse(self.report['zero_collisions'])
-        for w in self.report['windows']:
-            self.assertEqual(len(w['collisions'][cal.NAMES[1]+' / '+cal.NAMES[3]]),1)
+    def test_all_six_pairs_have_zero_collisions_in_every_window(self):
+        self.assertTrue(self.report['zero_collisions'])
+        self.assertEqual(len(self.report['windows']), 3)
+        for window in self.report['windows']:
+            self.assertEqual(len(window['collisions']), 6)
+            self.assertTrue(all(not times for times in window['collisions'].values()))
 
-    def test_proposed_2248_resolves_weekly_collision(self):
-        amended={**cal.TARGET,cal.NAMES[3]:'Sun *-*-* 22:48:00 Europe/Riga'}
-        self.assertTrue(cal.proof(amended)['zero_collisions'])
-
-
+    def test_superseded_2245_target_is_still_rejected(self):
+        superseded = {**cal.TARGET, cal.NAMES[3]: 'Sun *-*-* 22:45:00 Europe/Riga'}
+        report = cal.proof(superseded)
+        self.assertFalse(report['zero_collisions'])
+        for window in report['windows']:
+            self.assertEqual(len(window['collisions'][cal.NAMES[1]+' / '+cal.NAMES[3]]), 1)
 
 
 class AdminReadTests(unittest.TestCase):

@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-09-27T18:35:54.552271+00:00",
+  "captured_at": "2026-09-27T18:42:56.256778+00:00",
   "unit_hashes_and_loaded_schedules": "PASS",
   "units_checked": 12,
   "source_files_checked": 17,
@@ -19,6 +19,6 @@
   },
   "admin_sender_verification": "NOT_PERFORMED_PROTECTED_FILES_REQUIRE_ROOT_OPERATOR",
   "production_changes": "NONE",
-  "weekly_collision": "UNRESOLVED_USER_DECISION_REQUIRED",
+  "weekly_collision": "RESOLVED_APPROVED_SUNDAY_2248_EUROPE_RIGA",
   "systemd_version": "systemd 255 (255.4-1ubuntu8.17)"
 }

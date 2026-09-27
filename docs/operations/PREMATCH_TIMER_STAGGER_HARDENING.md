@@ -1,22 +1,26 @@
 # PREMATCH systemd timer stagger hardening
 
-## Status and blocking decision
+## Readiness and supersession
 
-**PREMATCH_TIMER_STAGGER_HARDENING_BLOCKED_SCHEDULE_CONFLICT**
+**PREMATCH_TIMER_STAGGER_HARDENING_READY_FOR_OPERATOR_PREFLIGHT**
 
-The operations package is prepared and committed for review. It cannot honestly
-be marked `PREMATCH_TIMER_STAGGER_HARDENING_READY_FOR_OPERATOR_PREFLIGHT` with the
-requested schedules: **Sunday 22:45 Europe/Riga is also a settlement trigger**.
-The installer and check fail closed on that collision. No production installation,
-timer re-arm, daemon reload, manual PREMATCH cycle, worker control, API request,
-Telegram send, application change, or ADMIN mutation was performed.
+Weekly stats now uses the explicitly approved Sunday **22:48 Europe/Riga**.
+All other target schedules are unchanged. Systemd calendar evaluation proves
+zero exact trigger collisions across all six required timer pairs in each of
+three 48-hour windows, including both DST transitions. All 31 operations tests
+pass. Production installation and forward validation have not been performed.
 
-Decision requested: use Sunday **22:48 Europe/Riga** for weekly stats, or explicitly
-relax the weekly-versus-settlement collision requirement. No answer has been
-assumed. The package retains the exact requested 22:45 expression. A separate
-22:48 calendar proof is included as a proposal; it is not an installed/selected
-schedule. After a decision, revise the target, acceptance test, drop-in, proof,
-manifest and trusted command digests together. Do not bypass the guard.
+**Commit `b286210` and its package are SUPERSEDED — DO NOT INSTALL.** The obsolete
+manifest SHA-256 is
+`03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca`.
+The corrected package records this in `SUPERSEDES.json`. Use the new package and
+trusted hashes below; the old 22:45 target is retained only in a negative
+regression test. This readiness status means ready for the root operator's
+read-only preflight, including protected ADMIN state verification.
+
+No production installation, timer re-arm, daemon reload, manual PREMATCH cycle,
+worker control, API-Football request, Telegram send, application change, or ADMIN
+mutation was performed. The corrected commit has not been pushed.
 
 The supplied production incident counts establish recurring contention and
 simultaneous scheduling. They do not identify the historical lock holder. This
@@ -29,7 +33,7 @@ change addresses exact scheduled timestamps; worker durations can still overlap.
 | `goalvision-lab-v2-discover.timer` | `*-*-* 09..22:00,30:00 Europe/Riga` | unchanged |
 | `goalvision-lab-combo-settle.timer` | `*:0/10` | `*-*-* *:05,15,25,35,45,55:00` |
 | `goalvision-adaptive-learning-observer.timer` | `*:0/30` | `*-*-* *:08,38:00` |
-| `goalvision-lab-weekly-stats.timer` | `Sun *-*-* 22:30:00 Europe/Riga` | `Sun *-*-* 22:45:00 Europe/Riga` — blocked |
+| `goalvision-lab-weekly-stats.timer` | `Sun *-*-* 22:30:00 Europe/Riga` | `Sun *-*-* 22:48:00 Europe/Riga` |
 | `goalvision-adaptive-learning.timer` | `*-*-* 04:15:00` | unchanged |
 
 Systemd normalizes the old settlement and observer expressions to
@@ -56,16 +60,18 @@ No discovery or research drop-in is created.
 `evidence/calendar-proof.json` contains the requested schedules and all pairwise
 intersections. Windows are half-open, exactly 48 elapsed hours:
 
-| Window start (UTC) | Discovery | Settlement | Observer | Weekly | Research | Weekly/settlement collisions |
+| Window start (UTC) | Discovery | Settlement | Observer | Weekly | Research | Exact collisions across all six pairs |
 |---|---:|---:|---:|---:|---:|---:|
-| 2026-09-26 21:00 | 56 | 288 | 96 | 1 | 2 | 1: Sep 27 19:45 UTC |
-| 2026-03-28 00:00, spring DST | 56 | 288 | 96 | 1 | 2 | 1: Mar 29 19:45 UTC |
-| 2026-10-24 00:00, autumn DST | 56 | 282 | 94 | 1 | 2 | 1: Oct 25 20:45 UTC |
+| 2026-09-26 21:00 | 56 | 288 | 96 | 1 | 2 | 0 |
+| 2026-03-28 00:00, spring DST | 56 | 288 | 96 | 1 | 2 | 0 |
+| 2026-10-24 00:00, autumn DST | 56 | 282 | 94 | 1 | 2 | 0 |
 
-Discovery/settlement, discovery/observer and settlement/observer intersections
-are empty in all windows. Weekly/discovery and weekly/observer are also empty.
-The proposed 22:48 expression has **zero intersections across all six pairs**
-in `evidence/proposed-2248-proof.json`.
+Discovery/settlement, discovery/observer, settlement/observer,
+weekly/discovery, weekly/observer and weekly/settlement intersections are all
+empty in every window. Weekly stats evaluates to 19:48 UTC on September 27 and
+March 29, and 20:48 UTC on October 25, with Europe/Riga resolved by systemd.
+`evidence/calendar-proof.json` is the final accepted proof; the old proposal-only
+proof has been removed to avoid two competing release artifacts.
 
 Normal settlement spacing is 600 seconds and observer spacing 1,800 seconds.
 The systemd evaluator skips the repeated local hour in autumn, producing one
@@ -98,8 +104,8 @@ hash, unit state, and a stable database byte snapshot under the existing read-on
 scan-lock handle. SQLite receives only an in-memory copy. WAL/journal sidecars,
 unknown sender state or inconsistent enabled/fenced/epoch state fail closed.
 No ADMIN token is read and no transport is contacted. This verifies local state,
-not Telegram delivery health. In this draft the calendar conflict is reported
-before attempting the protected ADMIN read.
+not Telegram delivery health. The calendar proof now passes; the protected ADMIN
+read remains part of the operator preflight.
 
 Check/status/proof/evidence do not create transaction files or change configuration.
 All actions verify the package manifest. Check rejects source hashes, extra
@@ -110,8 +116,8 @@ be performed during the operator transaction.
 
 ## Install, rollback and interrupted operation
 
-Installation remains blocked in this draft. Once the schedule conflict is
-resolved and the package is rebuilt:
+The following describes future operator execution after a successful preflight.
+It was not executed while preparing this package:
 
 1. Acquire an exclusive package operation lock under
    `/var/lib/goalvision-prematch-timer-stagger`; no ADMIN lock/state is written.
@@ -157,13 +163,13 @@ is never reported. Do not delete its transaction metadata.
 31 operations tests passed. No model, history or full application suite ran.
 Fixtures use temporary unit/state directories and a fake systemd control boundary.
 Real `systemd-analyze` handles calendar evaluation only. Transaction tests isolate
-the collision gate to exercise mechanics; separate acceptance tests prove that
-the requested weekly target is rejected. Passing tests do **not** mean the
-unresolved schedule satisfies the requested acceptance criteria.
+the collision gate to exercise mechanics. Separate acceptance tests evaluate the
+final schedules and all six pairwise intersections, while a negative regression
+proves that the superseded 22:45 weekly target is still rejected.
 
 | Requested coverage | Verification |
 |---|---|
-| Exact targets, cadence, no collisions | Exact requested payloads; 48-hour/DST evaluation; frequent pairs pass; weekly collision explicitly detected; proposed 22:48 passes |
+| Exact targets, cadence, no collisions | Exact final payloads; 48-hour/DST evaluation; all six pairs pass at approved 22:48; superseded 22:45 is rejected |
 | Discovery/research unchanged | Original hashes, exact expressions/evaluated research timestamps |
 | Only intended timer changes | Exactly three owned drop-ins; all original unit hashes preserved |
 | No worker stop/restart/kill | Structural mutation allowlist and negative boundary tests |
@@ -191,7 +197,7 @@ Python, which repeats the manifest and inventory checks. This prevents a changed
 manifest from blessing changed package content. Hashes provide integrity against
 the reviewed digest; they are not a signature from a separate authority.
 
-The install command is supplied for review and **will reject this draft**.
+The install command is supplied for later operator use after preflight.
 No command below was used to install or roll back production.
 
 ## Forward validation after a future successful install
@@ -231,23 +237,35 @@ No monitor scan is invoked and no ADMIN cursor is advanced.
 
 Production success is **not yet measured**: this package has not been installed.
 
-### Package digest
+### Versioned package
 
-`SHA256SUMS`: `03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca`
+- Package archive: `/home/arvis/goalvision-operations/prematch-timer-stagger-v2-20260927.tar.gz`
+- Package SHA-256: `226b0494d8c08b72210c12500017fa75ee7368dc1c549482a873289e42d6d0bb`
+- Extracted package: `/home/arvis/goalvision-operations/prematch-timer-stagger-v2-20260927`
+- Manifest (`SHA256SUMS`) SHA-256: `34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472`
+
+The archive contains only the standalone operations package. Its frozen extracted
+copy is used by the commands below. The source tests and this handoff remain in
+the committed worktree. The archive uses fixed metadata and gzip mtime for
+reproducible packaging. Both the extracted package and archive are read-only.
+Archive members, frozen package files and committed source package bytes were
+compared and match exactly. The frozen package CLI reproduced the accepted
+calendar/DST proof. Its read-only check reached the protected ADMIN configuration
+and refused access without root, as expected; full operator preflight is pending.
 
 | Package file | SHA-256 |
 |---|---|
-| `README.md` | `84a2b6463c6f0122625449a3f618f9ae4f87b4585f5da1cfe7f1a5805e6c16b0` |
+| `README.md` | `b5cbc2a2e31e7cff3134e6ff86bd88b066a1b4fa7c575a90adc7a1ee5b26292a` |
+| `SUPERSEDES.json` | `a1465dddaba260d726e6afb4718ea0c9f641be5905b41a18788e4a5e69272fb7` |
 | `baseline.json` | `1eb8e37a510a5cf525e37e5c15ea85164e0c8b91a244e8ea2fb8ca03a739e4a1` |
-| `calendar_proof.py` | `6906e9a1174b320860e4ee2821f42071bec1a4e44ecd0982c3b9d8bc9ee4f661` |
-| `control.py` | `712599cffac9420bf0465f4c76772bc8642613e4b5f12c1834cb572d613ee0fa` |
+| `calendar_proof.py` | `1c5ed11137d60f35b5e4b2169c9fb27064529734a840204fe383be48a7dac1d8` |
+| `control.py` | `805edab5621104dacf6b0339a182679579ce11aeed99979c05f80da1f7231866` |
 | `drop-ins/goalvision-adaptive-learning-observer.timer.conf` | `0ddbd492381bd624ab9cc2fd08cc1e7839e6e20bc2c86f80cc3f1736ec0f2f58` |
 | `drop-ins/goalvision-lab-combo-settle.timer.conf` | `29eb3bdcab1115c4457a897633cd487ca55207a09a620aa8a530b624342a48c0` |
-| `drop-ins/goalvision-lab-weekly-stats.timer.conf` | `3430178ed3c28ba5ed0be9eb99da0087b4f6d73cbf33a8a1533e70e651bb455d` |
-| `evidence/calendar-proof.json` | `b575c3cc97d8f4fca2d0f4aef21efa1a11681fd4dbe12a0c50f4a3e2f90b4d29` |
-| `evidence/operations-tests.txt` | `f0fa3f5b5ffd9d66377f6ec4613b58d0c3e2e88562a710cae4e1e974645097c7` |
-| `evidence/proposed-2248-proof.json` | `1c9a03b7857788fd0b551dba21da83b5a036a35ef49bde39a0bb2ec03d6788b1` |
-| `evidence/read-only-host-inspection.json` | `8b63b0f5783ee009f4799b4e55fbb28077921b88b50db85803a9bb67a5e0f702` |
+| `drop-ins/goalvision-lab-weekly-stats.timer.conf` | `6b64433a79d412ae4f6dfca9d3e791fbbbba1ade4e68e75a2248a5ae17549092` |
+| `evidence/calendar-proof.json` | `1c9a03b7857788fd0b551dba21da83b5a036a35ef49bde39a0bb2ec03d6788b1` |
+| `evidence/operations-tests.txt` | `fef9a188ef87d9d539e2243480567548c59b7e63999d25eb40be02eeb36079dc` |
+| `evidence/read-only-host-inspection.json` | `1fecfdf3c2d03b1ebd9aaaf731cd5d2b7a2b5e0a2af0d3a041ac89b9465591f8` |
 | `forward_evidence.py` | `9a84af3e3fa80f2aa6033561b36d51a93261655d5379eb801e002e68a9d797c5` |
 
 ### Exact one-line commands
@@ -255,37 +273,37 @@ Production success is **not yet measured**: this package has not been installed.
 Check:
 
 ```bash
-sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-hardening/operations/prematch-timer-stagger && echo "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py check --manifest-sha256 03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca'
+sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-v2-20260927 && echo "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py check --manifest-sha256 34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472'
 ```
 
 Install:
 
 ```bash
-sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-hardening/operations/prematch-timer-stagger && echo "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py install --manifest-sha256 03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca'
+sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-v2-20260927 && echo "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py install --manifest-sha256 34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472'
 ```
 
 Status:
 
 ```bash
-sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-hardening/operations/prematch-timer-stagger && echo "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py status --manifest-sha256 03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca'
+sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-v2-20260927 && echo "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py status --manifest-sha256 34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472'
 ```
 
 Rollback:
 
 ```bash
-sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-hardening/operations/prematch-timer-stagger && echo "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py rollback --manifest-sha256 03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca'
+sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-v2-20260927 && echo "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py rollback --manifest-sha256 34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472'
 ```
 
 Evidence:
 
 ```bash
-sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-hardening/operations/prematch-timer-stagger && echo "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py evidence --manifest-sha256 03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca'
+sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-v2-20260927 && echo "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py evidence --manifest-sha256 34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472'
 ```
 
 Proof:
 
 ```bash
-sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-hardening/operations/prematch-timer-stagger && echo "03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py proof --manifest-sha256 03102aa9c8b06a18d735328846725680c9347a4d1074cfc51cdaa699358938ca'
+sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-v2-20260927 && echo "34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py proof --manifest-sha256 34faa9f26e8176b54213209e0a705e2096f821d18b45365b5a06c56460cc2472'
 ```
 
 ### Pinned live unit and drop-in hashes
