@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from copy import deepcopy
 from datetime import datetime, timezone
 import json
 import os
@@ -15,6 +16,7 @@ from typing import Callable
 
 from .model import DISCOVERY, UNITS, Event, coverage, digest, epoch, identity
 from .rules import compact, completed_health, code_events
+from .output_contracts import CONTRACTS, expected_document
 
 MAX_LINE = 131072
 MAX_READ = 1048576
@@ -155,7 +157,7 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
 
 PROPERTIES = ('Id', 'LoadState', 'Result', 'ExecMainCode', 'ExecMainStatus', 'ActiveState', 'SubState',
               'InvocationID', 'ExecMainStartTimestampMonotonic', 'ExecMainExitTimestampMonotonic',
-              'TimeoutStartUSec', 'UnitFileState', 'TimersCalendar', 'LastTriggerUSec',
+              'StandardOutput', 'TimeoutStartUSec', 'UnitFileState', 'TimersCalendar', 'LastTriggerUSec',
               'NextElapseUSecRealtime', 'AccuracyUSec', 'RandomizedDelayUSec', 'NeedDaemonReload')
 
 
@@ -213,7 +215,7 @@ def service_rules(properties: dict, previous: dict, now: float, boot_time: float
         old = previous.get(unit, {})
         due = old.get('next', 0)
         state[unit] = {'next': deadline or due, 'invocation': invocation, 'start': start, 'end': end,
-                       'running': running, 'failed': failed,
+                       'running': running, 'failed': failed, 'standard_output': service.get('StandardOutput', 'UNKNOWN'),
                        'next_unknown_since': old.get('next_unknown_since', now) if not deadline else 0,
                        'schedule_evidence': 'AVAILABLE' if deadline else 'UNKNOWN'}
         if suppressed:
@@ -264,7 +266,7 @@ def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[
     else:
         args.extend(['--since', '@' + str(int(now - 900))])
     events = []
-    state = dict(previous)
+    state = deepcopy(previous)
     if read is command:
         readable = False
         try:
@@ -281,6 +283,7 @@ def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[
             return [coverage('journal', now, 'SYSTEM_JOURNAL_ACCESS_UNPROVEN')], state
     state.setdefault('outputs', {})
     state.setdefault('frames', {})
+    state.setdefault('output_proofs_v1', {})
     proofs = {}
     try:
         output = read(args)
@@ -332,8 +335,19 @@ def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[
                 except ValueError:
                     doc = None
                 if isinstance(doc, dict):
-                    if inv != 'UNKNOWN':
-                        state['outputs'][unit] = inv
+                    # Only a service's final artifact with trusted journal attribution is proof.
+                    if (CONTRACTS[unit].source == 'STRUCTURED_JOURNAL_JSON'
+                            and value.get('_SYSTEMD_UNIT') == unit
+                            and value.get('_SYSTEMD_INVOCATION_ID') == inv and inv != 'UNKNOWN'
+                            and expected_document(unit, doc)):
+                        proof = {'contract_version': CONTRACTS[unit].version,
+                                 'output_timestamp': stamp, 'journal_cursor': cursor,
+                                 'association': 'EXACT_INVOCATION'}
+                        outputs = state['output_proofs_v1'].setdefault(unit, {})
+                        outputs[inv] = proof
+                        state['output_proofs_v1'][unit] = dict(list(outputs.items())[-32:])
+                        events.append(Event(unit, 'MISSING_OUTPUT', inv, inv, now,
+                            'journal-' + digest(cursor), invocation=inv, healthy=True, facts=proof))
                     if doc.get('schema_version'):
                         events.extend(compact(doc, 'journal-' + digest(cursor), now, invocation=inv))
                     else:
@@ -359,9 +373,27 @@ def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[
     except (OSError, ValueError, TimeoutError, subprocess.TimeoutExpired):
         # Journal vacuum/cursor loss does not mean an application failure.
         events.append(coverage('journal', now, 'READ_OR_CURSOR_UNAVAILABLE'))
-        state = {}  # next scan uses bounded recent recovery; occurrence keys absorb replay
+        state = {'output_proofs_v1': state.get('output_proofs_v1', {})}  # retain verified evidence on cursor loss
     events = [replace(e, facts={**e.facts, **proofs.get(e.source, {})}) for e in events]
     return events, state
+
+
+def invocation_output(unit: str, invocation: str, now: float, read: Callable = command) -> list[Event]:
+    """At most 100 entries for one exact unresolved invocation; no global cursor change."""
+    if (unit not in CONTRACTS or CONTRACTS[unit].source != 'STRUCTURED_JOURNAL_JSON'
+            or not re.fullmatch(r'[a-f0-9]{32}', invocation)):
+        return []
+
+    def exact_read(unused: list[str]) -> str:
+        output = read(['journalctl', '--quiet', '--no-pager', '-o', 'json', '-n', '100',
+                       '_SYSTEMD_UNIT=' + unit, '_SYSTEMD_INVOCATION_ID=' + invocation])
+        # Validate even injected readers, and bound parser work independently of journalctl.
+        entries = [json.loads(line) for line in output.splitlines()[:100]]
+        return '\n'.join(json.dumps(v) for v in entries if
+            v.get('_SYSTEMD_UNIT') == unit and v.get('_SYSTEMD_INVOCATION_ID') == invocation)
+
+    events, _ = journal({}, now, exact_read)
+    return [e for e in events if e.rule == 'MISSING_OUTPUT' and e.healthy]
 
 
 def readonly(path: Path) -> sqlite3.Connection:

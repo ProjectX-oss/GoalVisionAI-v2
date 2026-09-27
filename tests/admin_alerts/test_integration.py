@@ -80,7 +80,7 @@ class ScanTests(Temporary):
         with patch('app.admin_alerts.cli.systemd', return_value=value), patch('app.admin_alerts.cli.journal', return_value=([], {})):
             scan(config, root)
         report = json.loads((root/'incident-report.json').read_text())
-        self.assertEqual(len([i for i in report['incidents'] if i['rule'] == 'MISSING_OUTPUT']), 5)
+        self.assertEqual(len([i for i in report['incidents'] if i['rule'] == 'MISSING_OUTPUT']), 4)
 
     def test_running_timer_next_elapse_unknown_does_not_page(self) -> None:
         from app.admin_alerts.sources import service_rules

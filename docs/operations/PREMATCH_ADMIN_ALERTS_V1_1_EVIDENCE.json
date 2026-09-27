@@ -1,0 +1,213 @@
+{
+  "admin_unit_dropins": "NONE",
+  "all_loaded_service_timer_drift": "NONE",
+  "captured_at": "2026-09-27T07:20:40.311267+00:00",
+  "evidence_annotation": "Original rehearsal included an overbroad WAL-refusal limitation. No WAL refusal was observed; it is corrected in this summary without rewriting original evidence.",
+  "findings": [
+    {
+      "admin_cursor_observed_final_output": "UNKNOWN",
+      "bounded_at": 94,
+      "exact_trusted_invocation_entries": 6,
+      "finding": "OUTPUT_CONTRACT_NOT_APPLICABLE",
+      "first_entry_utc": "2026-09-27T06:50:13.239648+00:00",
+      "historical_exec_main_status": "UNKNOWN",
+      "historical_start_exit_timestamps": "UNKNOWN",
+      "historical_systemd_result": "UNKNOWN",
+      "incident_assessment": "UNSUPPORTED_OUTPUT_CONTRACT; producer outcome unresolved; retain OPEN",
+      "invocation": "98ef19a6d7cd463a8f03842c5decd889",
+      "journal_cursor_references": [
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=54f49;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b259963101;t=65c715c805b60;x=45a9480325e372bd",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=54f57;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b25a180790;t=65c715d0231ef;x=9b10190e433c41d1",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=54f5a;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b25a1f758d;t=65c715d099fed;x=85bf6d99582d9443",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=54f5b;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b25a275689;t=65c715d1180e8;x=f4a69cc069d50756",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=54f5c;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b25a2f625e;t=65c715d198cbe;x=2f960191aca7163d",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=54f5d;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b25a371e8b;t=65c715d2148ea;x=6d652a34bd5f5d57"
+      ],
+      "journal_entries": 6,
+      "json_objects": 0,
+      "last_entry_utc": "2026-09-27T06:50:23.786218+00:00",
+      "output_after_180_second_grace": "NOT_PROVEN"
+    },
+    {
+      "admin_cursor_observed_final_output": "UNKNOWN",
+      "bounded_at": 94,
+      "exact_trusted_invocation_entries": 6,
+      "finding": "OUTPUT_CONTRACT_NOT_APPLICABLE",
+      "first_entry_utc": "2026-09-27T07:00:09.183144+00:00",
+      "historical_exec_main_status": "UNKNOWN",
+      "historical_start_exit_timestamps": "UNKNOWN",
+      "historical_systemd_result": "UNKNOWN",
+      "incident_assessment": "UNSUPPORTED_OUTPUT_CONTRACT; producer outcome unresolved; retain OPEN",
+      "invocation": "7e9844d0c9a54464a4fde8bd7ce6417e",
+      "journal_cursor_references": [
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=55002;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b27d1b9149;t=65c718005bba8;x=578412018e7db53d",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=55017;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b27e8bca03;t=65c718175f463;x=3fae9ea7392c643c",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=55019;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b27e934830;t=65c71817d728f;x=c95b84e41d248970",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=5501b;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b27e9b8d14;t=65c718185b773;x=6ab555f4b63d29ed",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=5501e;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b27eab4f75;t=65c71819579d4;x=c086f39c8dd926ae",
+        "s=44a10fdc39bc404fbb3d0e423d02509e;i=55020;b=e62d51d4ac754f44bb9d35e0cca60627;m=1b27eacd1fa;t=65c718196fc59;x=28a3a31225fe4af0"
+      ],
+      "journal_entries": 6,
+      "json_objects": 0,
+      "last_entry_utc": "2026-09-27T07:00:35.479641+00:00",
+      "output_after_180_second_grace": "NOT_PROVEN"
+    }
+  ],
+  "full_local_evidence_path": "/home/arvis/goalvision-operations/prematch-admin-alerts-v1-1-rehearsal/rehearsal.json",
+  "full_local_evidence_sha256": "2de11cb3f0ff540f2906f61abdf87a2272d22c0ec26abf8ac29b015932cead37",
+  "installed_admin_hash_changes": [],
+  "installed_admin_state_readable": false,
+  "installed_sender_verified_disabled": false,
+  "installed_v1_all_manifest_hashes": "MATCH",
+  "isolated_sender_enabled": false,
+  "journal_scope": "ONLY_TWO_REQUESTED_INVOCATIONS",
+  "limitations": [
+    "Live ADMIN configuration/database access denied; sudo -n requires a password.",
+    "Historical systemd manager result/exit timestamps unavailable in readable journal.",
+    "Live ADMIN cursor/outbox and sender-disabled status not independently verified."
+  ],
+  "loaded_output_routes": [
+    {
+      "Id": "goalvision-lab-combo-settle.service",
+      "NeedDaemonReload": "no",
+      "StandardError": "journal",
+      "StandardOutput": "null"
+    },
+    {
+      "Id": "goalvision-adaptive-learning-observer.service",
+      "NeedDaemonReload": "no",
+      "StandardError": "inherit",
+      "StandardOutput": "journal"
+    },
+    {
+      "Id": "goalvision-adaptive-learning.service",
+      "NeedDaemonReload": "no",
+      "StandardError": "inherit",
+      "StandardOutput": "journal"
+    },
+    {
+      "Id": "goalvision-lab-weekly-stats.service",
+      "NeedDaemonReload": "no",
+      "StandardError": "inherit",
+      "StandardOutput": "journal"
+    },
+    {
+      "Id": "goalvision-lab-v2-discover.service",
+      "NeedDaemonReload": "no",
+      "StandardError": "journal",
+      "StandardOutput": "append"
+    }
+  ],
+  "monitoring_state": "DEGRADED",
+  "network_attempts": 0,
+  "outcomes": [
+    {
+      "attempts": 0,
+      "id": "7f2cfe2a621b163f2367ac94",
+      "invocation": "98ef19a6d7cd463a8f03842c5decd889",
+      "outbox_state": "PENDING",
+      "state": "OPEN"
+    },
+    {
+      "attempts": 0,
+      "id": "d9f68a79d28d17a4bcb88d10",
+      "invocation": "7e9844d0c9a54464a4fde8bd7ce6417e",
+      "outbox_state": "PENDING",
+      "state": "OPEN"
+    }
+  ],
+  "output_contracts": {
+    "goalvision-adaptive-learning-observer.service": {
+      "association": "EXACT_INVOCATION",
+      "description": "observe final PREMATCH observer document",
+      "source": "STRUCTURED_JOURNAL_JSON",
+      "version": 1
+    },
+    "goalvision-adaptive-learning.service": {
+      "association": "EXACT_INVOCATION",
+      "description": "research final eligibility or research outcome",
+      "source": "STRUCTURED_JOURNAL_JSON",
+      "version": 1
+    },
+    "goalvision-lab-combo-settle.service": {
+      "association": "UNAVAILABLE",
+      "description": "settle prints final JSON to discarded stdout (StandardOutput=null)",
+      "source": "NONE",
+      "version": 1
+    },
+    "goalvision-lab-v2-discover.service": {
+      "association": "TIME_WINDOW_ONLY",
+      "description": "operator-cycle-v1; stdout has no InvocationID",
+      "source": "COMPACT_STDOUT",
+      "version": 1
+    },
+    "goalvision-lab-weekly-stats.service": {
+      "association": "EXACT_INVOCATION",
+      "description": "weekly final status and sent boolean",
+      "source": "STRUCTURED_JOURNAL_JSON",
+      "version": 1
+    }
+  },
+  "package": {
+    "archive": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-1-review.tar.gz",
+    "archive_sha256": "710522294fd86d5513206c9dcfbe03a307a8d1aaa4adcc20d096508b019d8fed",
+    "path": "/home/arvis/goalvision-operations/prematch-admin-alerts-upgrade-v1-1-review",
+    "payload_hashes": "MATCH",
+    "read_only_check": "BLOCKED_LIVE_CONFIGURATION_ACCESS",
+    "sha256sums_sha256": "3d29fde0539516a480d1afbb417c3e79f8952e3222eae85007a2c3845b960ffb"
+  },
+  "protected_file_count": 1586,
+  "protected_file_hash_changes": [],
+  "protected_sha256_map_digest": "22408210d5b572ed7964561d3a1ff2a817dbd4550feb7106b39092e66a8f76a3",
+  "scan": {
+    "elapsed_seconds": 0.0372,
+    "events": 149,
+    "football_api_calls": 0,
+    "no_send": true,
+    "stdout_bytes": 2853,
+    "telegram_sends": 0
+  },
+  "source_access": {
+    "goalvision-adaptive-learning-observer.service-schedule": {
+      "read_available": true
+    },
+    "goalvision-adaptive-learning.service-schedule": {
+      "read_available": true
+    },
+    "goalvision-lab-combo-settle.service-schedule": {
+      "read_available": true
+    },
+    "goalvision-lab-v2-discover.service-schedule": {
+      "read_available": true
+    },
+    "goalvision-lab-weekly-stats.service-schedule": {
+      "read_available": true
+    },
+    "health": {
+      "read_available": true
+    },
+    "journal": {
+      "read_available": true
+    },
+    "ledger": {
+      "read_available": false,
+      "reason": "UNRESOLVED_SCAN_IN_PROGRESS"
+    },
+    "stdout": {
+      "read_available": true
+    },
+    "weekly": {
+      "read_available": true
+    }
+  },
+  "source_database_access": "Existing mode=ro/query_only adapter; health and weekly available, ledger scan in progress.",
+  "state_origin": "USER_REPORTED_INCIDENTS_RECONSTRUCTED",
+  "tests": {
+    "full_historical_model_suite": "NOT_RUN",
+    "network_connect": "DENIED_BY_TEST_GUARD",
+    "new_focused": 14,
+    "previous_admin": 72,
+    "result": "PASS",
+    "total": 86
+  }
+}

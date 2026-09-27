@@ -11,8 +11,9 @@ import time
 
 from .delivery import DeliveryError, SenderConfig, Telegram, dispatch
 from .model import DISCOVERY, Event, coverage, digest, epoch, identity
+from .output_contracts import CONTRACTS, contract_report, expected_document
 from .rules import compact
-from .sources import command, health_rows, journal, service_rules, systemd, tail, unresolved, weekly_unresolved
+from .sources import command, health_rows, journal, service_rules, systemd, tail, unresolved, weekly_unresolved, invocation_output
 from .store import Store, lock
 
 DEFAULT_STATE = Path('/var/lib/goalvision-admin-alerts')
@@ -83,7 +84,7 @@ def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
                     continue
                 # stdout carries no InvocationID. Never infer it from the latest systemd state.
                 events.extend(compact(record, reference, now))
-                if stamp:
+                if stamp and expected_document(DISCOVERY, record):
                     cursors['last_compact_time'] = max(stamp, cursors.get('last_compact_time', store.get('last_compact_time', 0)))
             journal_events, journal_state = journal(store.get('journal', {}), now)
             cursors['journal'] = journal_state
@@ -109,14 +110,36 @@ def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
             if (discovery and not discovery['running'] and discovery['end'] > max(boot_time, started) and
                     now - discovery['end'] > 180 and output_time < discovery['start']):
                 events.append(Event(DISCOVERY, 'MISSING_OUTPUT', discovery['invocation'], discovery['invocation'], now,
-                                    'stdout-window', invocation=discovery['invocation']))
+                                    'stdout-window', invocation=discovery['invocation'],
+                                    facts={'association': 'ASSOCIATION_UNKNOWN', 'contract_version': 1}))
             for unit, state in states.items():
-                if unit == DISCOVERY or state['running'] or state['failed']:
+                if (CONTRACTS[unit].source != 'STRUCTURED_JOURNAL_JSON'
+                        or state['running'] or state['failed']):
                     continue
-                if (state['end'] > max(boot_time, started) and now - state['end'] > 180 and
-                        journal_state.get('outputs', {}).get(unit) != state['invocation']):
+                if state.get('standard_output') != 'journal':
+                    events.append(coverage('journal', now, 'OUTPUT_CONTRACT_ROUTE_UNKNOWN', object_id=unit + '-output'))
+                    continue
+                events.append(Event('monitor', 'MONITORING_COVERAGE_DEGRADED', unit + '-output',
+                                    'contract-route-available', now, 'journal', healthy=True))
+                proof = journal_state.get('output_proofs_v1', {}).get(unit, {}).get(state['invocation'])
+                if proof:
+                    events.append(Event(unit, 'MISSING_OUTPUT', state['invocation'], state['invocation'], now,
+                                        'journal-output', invocation=state['invocation'], healthy=True, facts=proof))
+                elif (not store.db.execute("SELECT 1 FROM incidents WHERE service=? AND rule='MISSING_OUTPUT' AND object_id=? AND state='RECOVERED'",
+                                          (unit, state['invocation'])).fetchone()
+                      and state['invocation'] != 'UNKNOWN' and state['end'] > max(boot_time, started)
+                      and now - state['end'] > 180):
                     events.append(Event(unit, 'MISSING_OUTPUT', state['invocation'], state['invocation'], now,
                                         'journal-output', invocation=state['invocation']))
+            # Revisit unresolved historical incidents even when the stream cursor passed them.
+            # Two per scan, round-robin; NONE and discovery never claim exact recovery.
+            after = store.get('output_recheck_after', '')
+            candidates = store.db.execute("""SELECT id,service,invocation FROM incidents
+                WHERE rule='MISSING_OUTPUT' AND state IN ('OPEN','REPEATED','ESCALATED')
+                AND id>? ORDER BY id LIMIT 2""", (after,)).fetchall()
+            for row in candidates:
+                events.extend(invocation_output(row['service'], row['invocation'], now))
+            cursors['output_recheck_after'] = candidates[-1]['id'] if len(candidates) == 2 else ''
             # Expensive indexed diagnostics run at most once per five minutes.
             if now - store.get('last_database_poll', 0) >= 300:
                 health_events, health_state = health_rows(Path(config['health_database']), store.get('health', {}), now)
@@ -167,6 +190,7 @@ def scan(config: dict, root: Path, *, no_send: bool = True) -> dict:
             store.retain(now)
             release = configured_release(Path(config['release_environment']))
             report = store.report(release)
+            report['output_contracts'] = contract_report()
             report['source_access'] = {e.object_id: {**e.facts, 'read_available': e.healthy} for e in events if e.rule == 'MONITORING_COVERAGE_DEGRADED'}
             report['schedule_evidence'] = {u: s['schedule_evidence'] for u, s in states.items()}
             if cursors.get('ledger_deferred_since'):

@@ -37,7 +37,7 @@ def faults(events: list[Event]) -> list[Event]:
 def props(result: str = 'success', status: str = '0', running: bool = False) -> dict:
     answer = {}
     for unit in UNITS:
-        answer[unit] = {'InvocationID': 'abc123', 'Result': result, 'ExecMainStatus': status,
+        answer[unit] = {'StandardOutput': 'journal', 'InvocationID': 'abc123', 'Result': result, 'ExecMainStatus': status,
             'ActiveState': 'activating' if running else 'inactive', 'SubState': 'start' if running else 'dead',
             'ExecMainStartTimestampMonotonic': str(1000_000_000),
             'ExecMainExitTimestampMonotonic': '0' if running else str(1400_000_000),
@@ -458,7 +458,7 @@ class SourceTests(Temporary):
         def fail(args: list[str]) -> str:
             raise OSError()
         events, state = journal({'cursor': 'vacuumed'}, NOW, fail)
-        self.assertEqual(state, {})
+        self.assertEqual(state, {'output_proofs_v1': {}})
         self.assertEqual(events[0].rule, 'MONITORING_COVERAGE_DEGRADED')
 
     def test_readonly_missing_never_creates(self) -> None:
