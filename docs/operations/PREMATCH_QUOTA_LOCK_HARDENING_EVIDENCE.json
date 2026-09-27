@@ -96,6 +96,17 @@
     "lock_holder": "LOCK_HOLDER_NOT_PROVEN",
     "systemd_exit_status": "NOT_READABLE"
   },
+  "package": {
+    "application_commit": "557d5af2c05d78404b5e86368e72ec5671dcf737",
+    "archive": "/home/arvis/goalvision-operations/prematch-quota-lock-hardening-package-20260927.tar.gz",
+    "archive_sha256": "024972a084a68966c535f73fd9c4307b075b917e9d1277f88103b5e3f9d3e517",
+    "archive_size": 2316146,
+    "files": 1695,
+    "manifest_sha256": "f24738b05fef5f71f3ebcaead3c791233d94fcc38cee21e96a59f2f23493fff2",
+    "package": "/home/arvis/goalvision-operations/prematch-quota-lock-hardening-package-20260927",
+    "rollback_reconstruction": "5 routes passed in temporary directory; operational rollback not executed",
+    "verification": "1695 exact payload hashes and file set verified"
+  },
   "package_verifier_tests": {
     "passed": 5
   },
@@ -167,6 +178,13 @@
       "skipped": "0",
       "tests": "59",
       "time": "26.405"
+    },
+    "research_exact_package": {
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "59",
+      "time": "27.107"
     }
   }
 }

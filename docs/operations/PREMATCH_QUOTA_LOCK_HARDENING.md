@@ -186,7 +186,8 @@ launcher denies network syscalls to the test process and its children.
   contention/failure-path cases. This includes the last diagnostic validation
   changes and failure-path call accounting.
 - The installed `363f567` research lineage with only the five-file persistence
-  overlay: 59 AutoML/database/metrics/governance tests passed (26.41 s).
+  overlay: 59 AutoML/database/metrics/governance tests passed (26.41 s);
+  repeated against the exact packaged persistence files: 59 passed (27.11 s).
 - Separate ADMIN v1.2: 109 tests + 42 subtests passed with networking denied.
 - Package verifier: 5 tests passed, including changed manifest/payload, unexpected
   files and symlink rejection.
@@ -274,3 +275,20 @@ facts before closing the incident audit or authorizing deployment.
 
 Real development API calls: **0**. Telegram sends: **0**. Production database
 writes: **0**. Production PREMATCH control operations: **0**. Deployments: **0**.
+
+### Frozen package identity
+
+- Application source commit: `557d5af2c05d78404b5e86368e72ec5671dcf737`.
+- Manifest SHA-256: `f24738b05fef5f71f3ebcaead3c791233d94fcc38cee21e96a59f2f23493fff2`.
+- Archive: `/home/arvis/goalvision-operations/prematch-quota-lock-hardening-package-20260927.tar.gz`.
+- Archive SHA-256: `024972a084a68966c535f73fd9c4307b075b917e9d1277f88103b5e3f9d3e517`.
+- Exact payload files verified: 1,695; archive size: 2316146 bytes.
+- All five proposed routes and exact rollback bytes reconstructed successfully
+  in a temporary directory; no systemd mutation or operational rollback.
+- The final documentation commit does not alter the packaged application tree.
+
+Read-only verification:
+
+```bash
+/home/arvis/GoalVisionAI/.venv/bin/python -B /home/arvis/goalvision-operations/prematch-quota-lock-hardening-package-20260927/verify_package.py /home/arvis/goalvision-operations/prematch-quota-lock-hardening-package-20260927 --sha256 f24738b05fef5f71f3ebcaead3c791233d94fcc38cee21e96a59f2f23493fff2
+```
