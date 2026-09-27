@@ -1,0 +1,11 @@
+{
+  "api_calls": 0,
+  "application_changes": 0,
+  "application_regressions_rerun": false,
+  "controller_result": "PASSED",
+  "controller_tests": 59,
+  "prior_frozen_package_regressions": 64,
+  "production_mutation_commands": 0,
+  "telegram_sends": 0,
+  "test_mode": "FAKE_SYSTEMD_AND_DISPOSABLE_FILESYSTEM_DATABASES"
+}

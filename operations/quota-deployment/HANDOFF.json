@@ -1,0 +1,20 @@
+{
+  "api_calls": 0,
+  "archive": "/home/arvis/goalvision-operations/prematch-quota-deployment-controller-package-v2-r1-20260927.tar.gz",
+  "archive_sha256": "1162fca646c77304b85e61b5dd9aca79c8d5d0f648e6384eaaa0b49ff05cdb15",
+  "branch": "codex/prematch-quota-hardening-deployment-controller",
+  "contract_sha256": "e7eb6e1184a6662b96791fec40ce989aa534eff374bdfd563af726c4fb59970a",
+  "controller": "operations/quota-deployment/controller.py",
+  "controller_tests": 59,
+  "deployment_executed": false,
+  "operations_manifest_sha256": "daf439cd783d843076081165b15901f4b5e995b5e8b7a0dcd5c9b07925e0c3c6",
+  "package": "/home/arvis/goalvision-operations/prematch-quota-deployment-controller-package-v2-r1-20260927",
+  "push_performed": false,
+  "remaining_gate": "ADMIN_PRIVILEGED_CHECK_REQUIRES_OPERATOR",
+  "report": "docs/operations/PREMATCH_QUOTA_HARDENING_DEPLOYMENT_CONTROLLER.md",
+  "route_relocation_approved": true,
+  "shadow_compatibility": "PASSED",
+  "status": "PREMATCH_QUOTA_HARDENING_DEPLOYMENT_READY_FOR_OPERATOR_PREFLIGHT",
+  "superseded_archive_sha256": "d71856ece190455edcb10b165070f9ce334d1b3a8a03adc7a342fabdc5544722",
+  "telegram_sends": 0
+}
