@@ -1,14 +1,112 @@
 """Read-only bounded journal report; missing evidence can never become success."""
 from datetime import datetime, timedelta, timezone
 import json
+import os
 import re
 from pathlib import Path
+import stat
 import subprocess
+from typing import Any
 from calendar_proof import NAMES, TARGET, evaluate
 
 RULES = ('QUOTA_DB_CONTENTION_RETRY', 'QUOTA_DB_CONTENTION_EXHAUSTED',
          'SERVICE_FAILURE', 'DATABASE_LOCK', 'MISSING_OUTPUT')
 REQUIRED = dict(zip((u.replace('.timer', '.service') for u in NAMES[:3]), (2, 3, 2)))
+DISCOVERY_LOG = Path('/var/log/goalvision-prematch/discovery-output.log')
+MAX_DISCOVERY_BYTES = 64 * 1024 * 1024
+MAX_DISCOVERY_RECORDS = 100_000
+DISCOVERY_SCHEMA = 'goalvision-lab-v2-operator-cycle-v1'
+
+
+def read_discovery_file(path: Path, byte_budget: int, record_budget: int
+                        ) -> tuple[list[tuple[datetime, dict[str, Any]]], int, int]:
+    """Read one regular, uncompressed JSONL file within the shared budgets."""
+    if path.suffix == '.gz' or path.is_symlink():
+        raise ValueError('DISCOVERY_ROTATION_REQUIRES_OPERATOR_REVIEW:' + str(path))
+    rows = []
+    used_bytes = used_records = 0
+    try:
+        # Refuse symlink swaps and non-regular files without blocking on a FIFO.
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        with os.fdopen(fd, 'rb') as stream:
+            info = os.fstat(stream.fileno())
+            if not stat.S_ISREG(info.st_mode) or info.st_size > byte_budget:
+                raise ValueError('DISCOVERY_OUTPUT_UNAVAILABLE_OR_EXCEEDS_64M_REVIEW_WINDOW')
+            while line := stream.readline(byte_budget - used_bytes + 1):
+                used_bytes += len(line)
+                used_records += 1
+                if used_bytes > byte_budget:
+                    raise ValueError('DISCOVERY_OUTPUT_UNAVAILABLE_OR_EXCEEDS_64M_REVIEW_WINDOW')
+                if used_records > record_budget:
+                    raise ValueError('DISCOVERY_OUTPUT_RECORD_LIMIT_EXCEEDED')
+                try:
+                    doc = json.loads(line)
+                except (ValueError, UnicodeError):
+                    # As before, unrelated/malformed lines never supply evidence.
+                    continue
+                if not isinstance(doc, dict) or doc.get('schema_version') != DISCOVERY_SCHEMA:
+                    continue
+                try:
+                    stamp = datetime.fromisoformat(doc['evaluated_at_utc'].replace('Z', '+00:00'))
+                    if stamp.tzinfo is None:
+                        raise ValueError('TIMEZONE_REQUIRED')
+                except (ValueError, KeyError, TypeError, AttributeError) as exc:
+                    raise ValueError('DISCOVERY_OUTPUT_MALFORMED_TIMESTAMP:' + str(path)) from exc
+                rows.append((stamp, doc))
+    except OSError as exc:
+        raise ValueError('DISCOVERY_OUTPUT_UNAVAILABLE:' + str(path)) from exc
+    if not rows:
+        raise ValueError('DISCOVERY_OUTPUT_NO_VALID_CYCLE_TIMESTAMP:' + str(path))
+    return rows, used_bytes, used_records
+
+
+def discovery_evidence(current: Path, since: datetime, until: datetime
+                       ) -> tuple[list[tuple[datetime, dict[str, Any]]], dict[str, Any]]:
+    """Use current then consecutive numbered rotations only until since is covered.
+
+    Filename order establishes rotation continuity; scheduled journal/output
+    matching in summarize additionally rejects missing cycles within the window.
+    Older rotations are inventoried by name only, never opened or size-counted.
+    """
+    files_read: list[str] = []
+    ranges: list[dict[str, Any]] = []
+    outputs: list[tuple[datetime, dict[str, Any]]] = []
+    byte_budget, record_budget = MAX_DISCOVERY_BYTES, MAX_DISCOVERY_RECORDS
+    path = current
+    rotations: dict[int, list[Path]] = {}
+    index = 0
+    while True:
+        rows, used_bytes, used_records = read_discovery_file(path, byte_budget, record_budget)
+        byte_budget -= used_bytes
+        record_budget -= used_records
+        first, last = min(t for t, _ in rows), max(t for t, _ in rows)
+        files_read.append(str(path))
+        ranges.append({'path': str(path), 'earliest_valid_timestamp': first.isoformat(),
+                       'latest_valid_timestamp': last.isoformat(), 'bytes_read': used_bytes,
+                       'records_read': used_records})
+        outputs.extend((t, doc) for t, doc in rows if since <= t <= until)
+        if index == 0:
+            # Inventory names only after the current log has been validated.
+            for candidate in current.parent.iterdir():
+                match = re.fullmatch(re.escape(current.name) + r'\.([1-9][0-9]*)(\.gz)?', candidate.name)
+                if match:
+                    rotations.setdefault(int(match[1]), []).append(candidate)
+        if first <= since:
+            break
+        index += 1
+        candidates = rotations.get(index, [])
+        if len(candidates) != 1:
+            raise ValueError('DISCOVERY_ROTATION_GAP_OR_AMBIGUOUS:' + str(index))
+        path = candidates[0]
+    ignored = [str(p) for number in sorted(rotations) if number > index
+               for p in sorted(rotations[number])]
+    return sorted(outputs, key=lambda row: row[0]), {
+        'discovery_output_files_read': files_read,
+        'discovery_output_files_ignored_outside_window': ignored,
+        'discovery_output_file_ranges': ranges,
+        'discovery_output_coverage_since': first.isoformat(),
+        'discovery_output_rotation_policy': 'CURRENT_THEN_CONSECUTIVE_ROTATIONS_UNTIL_SINCE_COVERED',
+    }
 
 
 def utc(microseconds):
@@ -127,27 +225,11 @@ def evidence(host, since):
     result = subprocess.run(args, check=True, capture_output=True, text=True, timeout=60)
     if 'permission' in result.stderr.lower() or 'not seeing messages' in result.stderr.lower():
         raise ValueError('JOURNAL_ACCESS_INCOMPLETE_USE_ROOT')
-    outputs = []
-    files = sorted(Path('/var/log/goalvision-prematch').glob('discovery-output.log*'))
-    if not files or sum(p.stat().st_size for p in files) > 64*1024*1024:
-        raise ValueError('DISCOVERY_OUTPUT_UNAVAILABLE_OR_EXCEEDS_64M_REVIEW_WINDOW')
-    for path in files:
-        if path.is_symlink() or path.suffix == '.gz':
-            raise ValueError('DISCOVERY_ROTATION_REQUIRES_OPERATOR_REVIEW')
-        with path.open() as stream:
-            for line in stream:
-                try:
-                    doc = json.loads(line)
-                    if isinstance(doc, dict) and doc.get('schema_version') == 'goalvision-lab-v2-operator-cycle-v1':
-                        stamp = datetime.fromisoformat(doc['evaluated_at_utc'].replace('Z', '+00:00'))
-                        if stamp.tzinfo is not None and start <= stamp <= until:
-                            outputs.append((stamp, doc))
-                except (ValueError, KeyError, TypeError):
-                    continue
+    outputs, discovery_report = discovery_evidence(DISCOVERY_LOG, start, until)
     report = summarize([json.loads(line) for line in result.stdout.splitlines()], start, until, outputs)
     report['current_service_state'] = {}
     for unit in REQUIRED:
         state = host.show(unit)
         report['current_service_state'][unit] = {k: state.get(k) for k in ('ActiveState', 'InvocationID', 'ExecMainStatus', 'Result')}
-    report['discovery_output_files_read'] = [str(p) for p in files]
+    report.update(discovery_report)
     return report

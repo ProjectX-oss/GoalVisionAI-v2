@@ -509,4 +509,207 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(report['services'][cal.NAMES[1].replace('.timer','.service')]['counts']['MISSING_OUTPUT'],0)
         self.assertGreater(report['services'][cal.NAMES[2].replace('.timer','.service')]['counts']['MISSING_OUTPUT'],0)
 
+
+class DiscoveryRotationTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.current = self.root/'discovery-output.log'
+        self.start = datetime.fromisoformat('2026-09-27T06:00:00+00:00')
+        self.end = self.start + timedelta(minutes=40)
+        for name in ('socket', 'create_connection'):
+            guard = patch.object(socket, name, side_effect=AssertionError('NETWORK_API_TELEGRAM_FORBIDDEN'))
+            guard.start()
+            self.addCleanup(guard.stop)
+
+    def write(self, suffix, stamps):
+        path = self.root/('discovery-output.log' + suffix)
+        path.write_text(''.join(json.dumps({'schema_version': evidence.DISCOVERY_SCHEMA,
+            'evaluated_at_utc': t.isoformat()}) + '\n' for t in stamps))
+        return path
+
+    def collect(self):
+        return evidence.discovery_evidence(self.current, self.start, self.end)
+
+    def test_current_fully_covers_window_including_equal_since(self):
+        self.write('', [self.start, self.start+timedelta(minutes=30)])
+        rows, report = self.collect()
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(report['discovery_output_files_read'], [str(self.current)])
+        self.assertEqual(report['discovery_output_files_ignored_outside_window'], [])
+        self.assertEqual(report['discovery_output_coverage_since'], self.start.isoformat())
+
+    def test_old_irrelevant_gzip_and_oversized_rotation_never_opened_or_counted(self):
+        self.write('', [self.start-timedelta(minutes=1), self.start+timedelta(minutes=30)])
+        previous = self.write('.1', [])
+        with previous.open('wb') as stream:
+            stream.truncate(evidence.MAX_DISCOVERY_BYTES+1)
+        compressed = self.root/'discovery-output.log.2.gz'
+        compressed.write_bytes(b'not even a valid gzip archive')
+        real_open = evidence.os.open
+        def current_only(path, flags, *args, **kwargs):
+            self.assertEqual(Path(path), self.current)
+            self.assertEqual(flags & 3, evidence.os.O_RDONLY)
+            return real_open(path, flags, *args, **kwargs)
+        with patch.object(evidence.os, 'open', side_effect=current_only):
+            rows, report = self.collect()
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(report['discovery_output_files_read'], [str(self.current)])
+        self.assertEqual(report['discovery_output_files_ignored_outside_window'],
+                         [str(previous), str(compressed)])
+
+    def test_earliest_valid_schema_timestamp_not_first_line_or_wrong_schema(self):
+        self.write('', [self.start+timedelta(minutes=30), self.start])
+        self.current.write_text('malformed unrelated line\n' + json.dumps({
+            'schema_version': 'other', 'evaluated_at_utc': '2000-01-01T00:00:00Z'}) +
+            '\n' + self.current.read_text())
+        self.assertEqual(self.collect()[1]['discovery_output_coverage_since'], self.start.isoformat())
+        self.write('', [self.start+timedelta(minutes=30)])
+        self.current.write_text(json.dumps({'schema_version': 'other',
+            'evaluated_at_utc': self.start.isoformat()}) + '\n' + self.current.read_text())
+        with self.assertRaisesRegex(ValueError, 'DISCOVERY_ROTATION_GAP'):
+            self.collect()
+
+    def test_required_plain_rotations_used_newest_to_oldest_then_stop(self):
+        self.write('', [self.start+timedelta(minutes=30)])
+        previous = self.write('.1', [self.start+timedelta(minutes=10)])
+        older = self.write('.2', [self.start-timedelta(minutes=1), self.start])
+        unused = self.root/'discovery-output.log.3.gz'
+        unused.write_bytes(b'not read')
+        rows, report = self.collect()
+        self.assertEqual([t for t, _ in rows], [self.start, self.start+timedelta(minutes=10),
+                                              self.start+timedelta(minutes=30)])
+        self.assertEqual(report['discovery_output_files_read'],
+                         [str(self.current), str(previous), str(older)])
+        self.assertEqual(report['discovery_output_files_ignored_outside_window'], [str(unused)])
+
+    def test_required_gzip_fails_closed_without_opening_it(self):
+        self.write('', [self.start+timedelta(minutes=30)])
+        self.write('.1', [self.start+timedelta(minutes=10)])
+        compressed = self.root/'discovery-output.log.2.gz'
+        compressed.write_bytes(b'not read')
+        real_open = evidence.os.open
+        def plain_only(path, flags, *args, **kwargs):
+            self.assertNotEqual(Path(path), compressed)
+            return real_open(path, flags, *args, **kwargs)
+        with patch.object(evidence.os, 'open', side_effect=plain_only):
+            with self.assertRaisesRegex(ValueError, 'DISCOVERY_ROTATION_REQUIRES_OPERATOR_REVIEW'):
+                self.collect()
+
+    def test_missing_rotation_number_fails_closed(self):
+        self.write('', [self.start+timedelta(minutes=30)])
+        self.write('.2', [self.start])
+        with self.assertRaisesRegex(ValueError, 'DISCOVERY_ROTATION_GAP_OR_AMBIGUOUS:1'):
+            self.collect()
+
+    def test_duplicate_required_rotation_fails_closed(self):
+        self.write('', [self.start+timedelta(minutes=30)])
+        self.write('.1', [self.start])
+        (self.root/'discovery-output.log.1.gz').write_bytes(b'unused')
+        with self.assertRaisesRegex(ValueError, 'DISCOVERY_ROTATION_GAP_OR_AMBIGUOUS:1'):
+            self.collect()
+
+    def test_rotation_order_is_numeric(self):
+        self.write('', [self.start+timedelta(minutes=30)])
+        for index in range(1, 11):
+            self.write('.'+str(index), [self.start+timedelta(minutes=30-index*3)])
+        report = self.collect()[1]
+        self.assertEqual(report['discovery_output_files_read'],
+                         [str(self.current)]+[str(self.current)+'.'+str(i) for i in range(1, 11)])
+
+    def test_missing_empty_and_unusable_current_never_fall_back_to_old_rotation(self):
+        self.write('.1', [self.start])
+        with self.assertRaisesRegex(ValueError, 'DISCOVERY_OUTPUT_UNAVAILABLE'):
+            self.collect()
+        for contents in ('', '{truncated', '{}\n', '[]\n'):
+            with self.subTest(contents=contents):
+                self.current.write_text(contents)
+                with self.assertRaisesRegex(ValueError, 'DISCOVERY_OUTPUT_NO_VALID_CYCLE_TIMESTAMP'):
+                    self.collect()
+
+    def test_malformed_target_timestamp_never_supplies_coverage(self):
+        for value in (None, 123, 'invalid', '2026-09-27T05:00:00'):
+            with self.subTest(value=value):
+                self.current.write_text(json.dumps({'schema_version': evidence.DISCOVERY_SCHEMA,
+                    'evaluated_at_utc': value})+'\n')
+                with self.assertRaisesRegex(ValueError, 'DISCOVERY_OUTPUT_MALFORMED_TIMESTAMP'):
+                    self.collect()
+
+    def test_required_oversized_file_and_shared_byte_record_budgets_fail_closed(self):
+        self.write('', [self.start+timedelta(minutes=30)])
+        self.write('.1', [self.start])
+        size = self.current.stat().st_size
+        for limit in (size-1, size+1):
+            with self.subTest(limit=limit), patch.object(evidence, 'MAX_DISCOVERY_BYTES', limit):
+                with self.assertRaisesRegex(ValueError, 'DISCOVERY_OUTPUT_UNAVAILABLE_OR_EXCEEDS_64M'):
+                    self.collect()
+        with patch.object(evidence, 'MAX_DISCOVERY_RECORDS', 1):
+            with self.assertRaisesRegex(ValueError, 'DISCOVERY_OUTPUT_RECORD_LIMIT_EXCEEDED'):
+                self.collect()
+
+    def test_required_symlink_nonregular_and_unreadable_files_fail_closed(self):
+        target = self.write('.1', [self.start])
+        self.current.symlink_to(target)
+        with self.assertRaisesRegex(ValueError, 'DISCOVERY_ROTATION_REQUIRES_OPERATOR_REVIEW'):
+            self.collect()
+        self.current.unlink()
+        self.current.mkdir()
+        with self.assertRaisesRegex(ValueError, 'DISCOVERY_OUTPUT_UNAVAILABLE'):
+            self.collect()
+        self.current.rmdir()
+        self.write('', [self.start])
+        with patch.object(evidence.os, 'open', side_effect=PermissionError):
+            with self.assertRaisesRegex(ValueError, 'DISCOVERY_OUTPUT_UNAVAILABLE'):
+                self.collect()
+
+    def test_temporal_gap_between_rotations_cannot_pass_scheduled_evidence(self):
+        rows, outputs = EvidenceTests.make_records(self)
+        self.write('', [outputs[-1][0]])
+        # Consecutive filenames alone cannot prove the first scheduled cycle.
+        self.write('.1', [self.start-timedelta(minutes=30)])
+        selected, _ = self.collect()
+        report = evidence.summarize(rows, self.start, self.end, selected)
+        self.assertEqual(report['verdict'], 'FAIL')
+        service = report['services'][cal.NAMES[0].replace('.timer', '.service')]
+        self.assertGreater(service['counts']['MISSING_OUTPUT'], 0)
+
+    def test_integrated_report_is_read_only_with_no_production_network_api_telegram(self):
+        rows, outputs = EvidenceTests.make_records(self)
+        self.write('', [self.start-timedelta(minutes=30)]+[t for t, _ in outputs])
+        old = self.root/'discovery-output.log.2.gz'
+        old.write_bytes(b'outside window')
+        before = {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.iterdir()}
+        calendars = {expr: cal.evaluate(expr, self.start-timedelta(seconds=1), 2000)
+                     for expr in cal.TARGET.values()}
+        real_open = evidence.os.open
+        def read_only_fixture(path, flags, *args, **kwargs):
+            self.assertEqual(Path(path), self.current)
+            self.assertEqual(flags & 3, evidence.os.O_RDONLY)
+            return real_open(path, flags, *args, **kwargs)
+        def journal_only(args, **kwargs):
+            self.assertEqual(args[0], '/usr/bin/journalctl')
+            self.assertIn('--output=json', args)
+            return subprocess.CompletedProcess(args, 0, '\n'.join(map(json.dumps, rows)), '')
+        host = unittest.mock.Mock(spec=['show'])
+        host.show.return_value = {'ActiveState': 'inactive', 'ExecMainStatus': '0', 'Result': 'success'}
+        with patch.object(evidence, 'DISCOVERY_LOG', self.current), \
+             patch.object(evidence, 'datetime', wraps=datetime) as clock, \
+             patch.object(evidence, 'evaluate', side_effect=lambda expr, *_: calendars[expr]), \
+             patch.object(evidence.subprocess, 'run', side_effect=journal_only) as commands, \
+             patch.object(evidence.os, 'open', side_effect=read_only_fixture), \
+             patch.object(Path, 'write_text', side_effect=AssertionError('WRITE_FORBIDDEN')), \
+             patch.object(Path, 'write_bytes', side_effect=AssertionError('WRITE_FORBIDDEN')), \
+             patch.object(Path, 'unlink', side_effect=AssertionError('DELETE_FORBIDDEN')), \
+             patch.object(Path, 'rename', side_effect=AssertionError('RENAME_FORBIDDEN')):
+            clock.now.return_value = self.end
+            report = evidence.evidence(host, self.start.isoformat())
+        self.assertEqual(report['verdict'], 'PASS')
+        self.assertEqual(report['discovery_output_files_read'], [str(self.current)])
+        self.assertEqual(report['discovery_output_files_ignored_outside_window'], [str(old)])
+        self.assertEqual(commands.call_count, 1)
+        self.assertEqual(host.show.call_count, len(evidence.REQUIRED))
+        after = {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.iterdir()}
+        self.assertEqual(before, after)
+
 if __name__=='__main__':unittest.main()

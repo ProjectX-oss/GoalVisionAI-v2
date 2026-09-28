@@ -1,3 +1,105 @@
+# PREMATCH forward evidence rotation fix — 2026-09-28
+
+**PREMATCH_FORWARD_EVIDENCE_ROTATION_FIX_READY_FOR_REVIEW**
+
+## Current handoff
+
+Production timer stagger v4 is successfully installed, per the operator's
+2026-09-28 report, from commit
+`b32ede450e19ecac771cde5e9a1d03a6668e3746`. The remaining
+`DISCOVERY_ROTATION_REQUIRES_OPERATOR_REVIEW` refusal was caused by selecting
+irrelevant old compressed logs. This revision changes only the operations
+validator, tests and documentation/package evidence.
+
+The operator supplied these coverage bounds (not independently re-read here):
+
+| Discovery file | Earliest / latest supplied UTC timestamp |
+|---|---|
+| `/var/log/goalvision-prematch/discovery-output.log` | first `2026-09-28T06:00:02.475971+00:00`; last `2026-09-28T18:30:08.329293+00:00` |
+| `/var/log/goalvision-prematch/discovery-output.log.1` | last `2026-09-27T19:30:01.474996+00:00` |
+| `/var/log/goalvision-prematch/discovery-output.log.2.gz` | last `2026-09-26T19:00:19.868180+00:00` |
+
+The reported successful install time falls within the current file's coverage.
+The validator uses the exact requested `--since` or durable `installed_at`, with
+no rounding: earliest current timestamp <= start makes that file sufficient.
+
+### Selection and failure behavior
+
+1. Validate and read current `discovery-output.log`; calculate the minimum valid
+   timestamp for `goalvision-lab-v2-operator-cycle-v1`, independent of line order.
+2. Once the earliest timestamp is at or before the requested start, stop. List
+   older numeric rotations as outside the evidence window without opening,
+   decompressing or charging their size against the read budget.
+3. Otherwise read `.1`, `.2`, etc., in numeric newest-to-oldest order until
+   coverage reaches the start. Missing or duplicate required rotation numbers
+   fail closed with `DISCOVERY_ROTATION_GAP_OR_AMBIGUOUS`.
+4. A required `.gz` still refuses with
+   `DISCOVERY_ROTATION_REQUIRES_OPERATOR_REVIEW`. There is no gzip reader.
+5. Selected files share the existing 64 MiB limit, enforced during reads too,
+   plus a 100,000-line limit. Missing, unreadable, empty, symlinked and non-regular
+   required files fail closed. Malformed/unrelated lines never count as evidence;
+   malformed timestamps in matching cycle documents now explicitly refuse.
+6. Existing journal checks still require scheduled starts, invocation IDs,
+   completions and expected cycle output. Timestamp bounds alone cannot supply
+   missing output across a temporal gap. Service evidence rules are unchanged.
+
+Reports include `discovery_output_files_read` (selection order),
+`discovery_output_files_ignored_outside_window`,
+`discovery_output_file_ranges` (earliest/latest valid timestamps and bytes/lines
+read), and `discovery_output_coverage_since`.
+
+### Validation
+
+`python3 -B -m unittest discover -s tests/operations -v`: **61 tests passed**.
+Only operations tests ran. The 14 new tests cover current-file sufficiency,
+equality at `--since`, earliest valid schema timestamp, old gzip/oversized files
+never opened, consecutive and numeric rotation order, required gzip refusal,
+missing/duplicate rotations, temporal gaps, malformed/unavailable/oversized
+required evidence, shared byte/record bounds, and complete report integration.
+The integration fixture blocks network/API/Telegram access and file mutations,
+allows only a mocked journal read and service inspection, and verifies fixture
+bytes and mtimes are unchanged. Calendar tests use read-only systemd-analyze;
+transaction tests use fake hosts and temporary directories.
+
+No production logs were accessed or modified for this fix. No production
+validation, timer/systemd mutation, worker execution, application change,
+network/API/Telegram call, installation or push was performed. Algorithm
+backtesting does not apply to this operations reader correction.
+
+### Review package and read-only evidence command
+
+- New frozen package: `/home/arvis/goalvision-operations/prematch-timer-stagger-v4-evidence-r1-20260928`
+- Archive: `/home/arvis/goalvision-operations/prematch-timer-stagger-v4-evidence-r1-20260928.tar.gz`
+- Archive SHA-256: `67dd346ccaa3b873ba0c57ce7bdef6532c221163bb896b77d66c4e2266477504`
+- Manifest SHA-256: `1e1fa8ba34de63a2436da5d5a875231e388cfdc921430197dae596d514e6fffd`
+- Reader SHA-256: `7d2645db0c51986f461fe417133a2dd0e9a160bf9322f0db4c877669d048e8c3`
+
+The source package, frozen files and archive payload were compared byte-for-byte.
+The archive reproduced identically with fixed metadata and gzip mtime. The
+original installed v4 directory/archive remain unchanged. Controller, calendar
+proof, baseline, Persistent guards and all four drop-in payloads retain their
+original bytes. `SUPERSEDES.json` retains the historical v4 timer supersession
+record; evidence r1 does not replace the installed timer configuration.
+
+After review, the operator can use the new package's read-only evidence action:
+
+```bash
+sudo /bin/sh -c 'cd /home/arvis/goalvision-operations/prematch-timer-stagger-v4-evidence-r1-20260928 && echo "1e1fa8ba34de63a2436da5d5a875231e388cfdc921430197dae596d514e6fffd  SHA256SUMS" | /usr/bin/sha256sum --check --strict - && /usr/bin/sha256sum --check --strict SHA256SUMS && exec /usr/bin/python3 -I -B control.py evidence --manifest-sha256 1e1fa8ba34de63a2436da5d5a875231e388cfdc921430197dae596d514e6fffd'
+```
+
+It defaults to the existing durable successful installation timestamp. An
+explicit `--since` must preserve the intended post-install interval. No timer
+installation is needed. The older install/rollback commands below are archived
+historical instructions and must not be rerun for this validator fix.
+
+---
+
+## Archived v4 handoff (2026-09-27; superseded operational status)
+
+The rest of this document preserves the pre-install v4 review and original
+artifact hashes. Its statements about installation being pending describe that
+historical review, not the current production state.
+
 # PREMATCH systemd timer stagger hardening — v4
 
 ## Status and supersession

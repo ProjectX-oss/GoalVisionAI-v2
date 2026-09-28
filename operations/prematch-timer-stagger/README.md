@@ -1,3 +1,41 @@
+# PREMATCH forward evidence rotation fix — v4 evidence r1
+
+PREMATCH_FORWARD_EVIDENCE_ROTATION_FIX_READY_FOR_REVIEW
+
+Timer stagger v4 (`b32ede450e19ecac771cde5e9a1d03a6668e3746`) is already
+installed, as reported by the operator on 2026-09-28. This revision changes the
+operations evidence reader only. Use the `evidence` action with the existing
+successful installation timestamp; do not install or re-arm timers again.
+
+Discovery evidence reads the current uncompressed log first and determines its
+earliest valid `goalvision-lab-v2-operator-cycle-v1` timestamp. If that timestamp
+is at or before `--since`, older numbered rotations are outside the requested
+window. Otherwise it reads `.1`, `.2`, etc., stopping as soon as coverage reaches
+`--since`. Missing or ambiguous required rotation numbers fail closed. Required
+`.gz` rotations still refuse with `DISCOVERY_ROTATION_REQUIRES_OPERATOR_REVIEW`;
+no gzip decompression is attempted. Older rotations are listed by filename only.
+
+Selected files share a 64 MiB read budget and a 100,000-line budget. Missing,
+unreadable, empty, symlinked or non-regular required files cannot supply coverage.
+Malformed/non-cycle lines never count as evidence; malformed cycle timestamps
+refuse. Timestamp ranges select files; existing journal matching still requires
+scheduled starts and cycle outputs, so a temporal gap cannot become a PASS.
+The report lists `discovery_output_files_read`,
+`discovery_output_files_ignored_outside_window`, and per-file timestamp ranges.
+
+The new frozen review package is
+`prematch-timer-stagger-v4-evidence-r1-20260928`. Its manifest covers this reader,
+README and updated operations test evidence. The original installed v4 archive
+and frozen directory are retained unchanged. See the current section of
+`docs/operations/PREMATCH_TIMER_STAGGER_HARDENING.md` for hashes and the read-only
+evidence command. No production evidence run was performed for this revision.
+
+## Historical v4 installation handoff (2026-09-27)
+
+The remaining installation notes describe the original v4 release. Installation
+has since succeeded; these are retained for audit and are not instructions to
+repeat installation for this evidence fix.
+
 # PREMATCH timer stagger package v4
 
 PREMATCH_TIMER_STAGGER_HARDENING_READY_FOR_OPERATOR_PREFLIGHT

@@ -1511,3 +1511,16 @@ Review after completing the current priority.
 - [x] Prepare standalone ADMIN service/timer, disabled configuration, checksummed package, drift check, installer and ADMIN-only kill switch.
 - [x] Document handoff in `docs/operations/PREMATCH_ADMIN_ALERTS_V1.md`.
 - [ ] Separate operator action: provide verified dedicated ADMIN configuration and `/start`, grant narrow read access, review/install, then review sender enablement. No deployment or real message was authorized/executed here.
+
+
+## 2026-09-28 — PREMATCH forward evidence rotation selection
+
+- [x] Read current discovery output first; inspect consecutive rotations only
+  when required to cover the requested start timestamp.
+- [x] Keep required gzip, rotation gaps, malformed timestamps, unavailable and
+  oversized required evidence fail-closed; report selected and ignored files.
+- [x] Add operations-only regression and read-only integration coverage.
+- [x] Refresh the review package and handoff without replacing installed v4.
+- No push, production log writes, timer controls, PREMATCH application changes,
+  worker runs, API or Telegram calls.
+- Handoff: `docs/operations/PREMATCH_TIMER_STAGGER_HARDENING.md`.
