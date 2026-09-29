@@ -1562,3 +1562,16 @@ Review after completing the current priority.
 - [x] Prepare a distinct checksummed recovery package and operator commands; run guard and timer-stagger regressions.
 - Handoff: `docs/operations/PREMATCH_SETTLEMENT_GUARD_RECOVERY.md`.
 - Production preflight/finalization NOT executed. No production changes or push.
+
+
+## 2026-09-29 — Discovery Priority / Settlement Guard production closeout
+
+- [x] Record operator-reported production preflight PASS, successful recovery, installed 180-second guard, status pins PASS and forward evidence PASS.
+- [x] Preserve exact commit/manifest lineage, recovery timestamps, the supplied evidence window and zero discovery blocking counters.
+- [x] Document both false-positive recovery fixes, unchanged safety invariants and rollback compatibility.
+- [x] Record 2/3/2 required scheduled-cycle thresholds; exact totals and guard counts remain unavailable because the read-only evidence attempt required a sudo password.
+- [x] Add immutable audit artifacts and SHA-256 checks without modifying historical preparation evidence or the checksummed operations package.
+- Final verdict: `DISCOVERY_PRIORITY_SETTLEMENT_GUARD_VALIDATED`, based on the operator-supplied production result.
+- Closeout: [production audit](docs/rehearsals/DISCOVERY_PRIORITY_SETTLEMENT_GUARD_CLOSEOUT_2026-09-29.md).
+- Earlier pending/preparation-only entries remain historical; this entry records their later production outcome.
+- Documentation/evidence checks only; no runtime/configuration changes, systemd controls, daemon-reload, API/Telegram activity, business DB access, push or next phase.

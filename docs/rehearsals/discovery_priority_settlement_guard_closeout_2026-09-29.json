@@ -1,0 +1,138 @@
+{
+  "closeout_scope": {
+    "api_calls": 0,
+    "business_database_access": 0,
+    "business_database_writes": 0,
+    "daemon_reloads": 0,
+    "next_phase_started": false,
+    "prediction_model_policy_changes": 0,
+    "production_receipt_writes": 0,
+    "pushes": 0,
+    "runtime_or_configuration_changed": false,
+    "service_or_timer_controls": 0,
+    "systemd_mutations": 0,
+    "telegram_sends": 0
+  },
+  "commits": {
+    "recovery_v1": "9ff50c2380280c8343833bd08658600e64937d83",
+    "recovery_v2_and_audit_base": "26391232cb2e31a1d636ea20b6198af0a452c4ae",
+    "source_implementation": "ec0fa32789476d5fad497c05cbf93e3c78e09d18"
+  },
+  "final_audit_verdict": "DISCOVERY_PRIORITY_SETTLEMENT_GUARD_VALIDATED",
+  "historical_offline_validation": {
+    "recovery_tests_passed": 33,
+    "rerun_during_closeout": false,
+    "runtime_guard_tests_passed": 38,
+    "source": "operations/prematch-settlement-guard/evidence/recovery-validation.json",
+    "timer_stagger_tests_passed": 61,
+    "total_tests_passed": 132
+  },
+  "implementation_backed_inferences_from_reported_pass": {
+    "all_required_service_verdicts": "PASS",
+    "blocking_codes_absent": [
+      "QUOTA_DB_CONTENTION_EXHAUSTED",
+      "DATABASE_LOCK",
+      "SERVICE_FAILURE",
+      "SETTLEMENT_DEFERRED_DISCOVERY_STATE_UNAVAILABLE"
+    ],
+    "failed_discovery_absent": true,
+    "guard_records_complete_and_valid": true,
+    "required_evidence_complete": true,
+    "retry_counts_outside_discovery": null,
+    "service_thresholds": [
+      {
+        "cycle_kind": "completed scheduled discovery",
+        "observed_exact": null,
+        "observed_lower_bound": 2,
+        "required": 2,
+        "service": "goalvision-lab-v2-discover.service"
+      },
+      {
+        "cycle_kind": "successfully completed scheduled SETTLEMENT_EXECUTED",
+        "observed_exact": null,
+        "observed_lower_bound": 3,
+        "required": 3,
+        "service": "goalvision-lab-combo-settle.service"
+      },
+      {
+        "cycle_kind": "completed scheduled observer",
+        "observed_exact": null,
+        "observed_lower_bound": 2,
+        "required": 2,
+        "service": "goalvision-adaptive-learning-observer.service"
+      }
+    ],
+    "timer_causation_basis": "Operator-reported scheduled production result; calendar alignment alone is insufficient"
+  },
+  "operator_reported_production": {
+    "forward_evidence": {
+      "completed_discovery_evidence": {
+        "DATABASE_LOCK": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "SERVICE_FAILURE": 0,
+        "exit_status": 0,
+        "expected_output_seen": true,
+        "missing_scheduled_starts": []
+      },
+      "guard_counts": null,
+      "since": "2026-09-29T10:07:25.396888+00:00",
+      "until": "2026-09-29T13:42:00.990951+00:00",
+      "verdict": "PASS"
+    },
+    "full_preflight_and_finalization_outputs_supplied": false,
+    "guard_installed": true,
+    "guard_seconds": 180,
+    "installed_at": "2026-09-29T10:07:25.396888+00:00",
+    "phase": "installed",
+    "pins": "PASS",
+    "predecessor_manifest": "c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5",
+    "production_preflight": "PASS",
+    "recovered_at": "2026-09-29T10:07:25.396888+00:00",
+    "recovery_finalization": "SUCCESS",
+    "recovery_manifest": "b32966e45f178e0f74ff005b25adbe684933bf372b62c4da16cd4b22a32c7cc7"
+  },
+  "provenance": {
+    "exact_counts_available": false,
+    "immutable_record_policy": "Preserve after commit; corrections require a separate dated addendum",
+    "independent_production_revalidation": false,
+    "production_result_source": "Operator-supplied result in closeout request",
+    "raw_production_export_supplied": false
+  },
+  "read_only_exact_count_capture_attempt": {
+    "command": "sudo -n /usr/bin/python3 -I -B /home/arvis/goalvision-operations/prematch-settlement-guard-recovery-v2-20260929/control.py evidence --manifest-sha256 b32966e45f178e0f74ff005b25adbe684933bf372b62c4da16cd4b22a32c7cc7 --since 2026-09-29T10:07:25.396888+00:00",
+    "evidence_program_started": false,
+    "exit_status": 1,
+    "new_evidence_obtained": false,
+    "stderr": "sudo: a password is required",
+    "window_note": "A successful later CLI capture would use a later until time; no historical end boundary is accepted by this command"
+  },
+  "recorded_date": "2026-09-29",
+  "recovery_fixes": {
+    "dependency_properties": [
+      "After",
+      "Before",
+      "Requires",
+      "Wants",
+      "OnFailure",
+      "OnSuccess"
+    ],
+    "production_omitted_empty_properties": [
+      "ExecCondition",
+      "ExecStartPre",
+      "ExecStartPost",
+      "ExecStop",
+      "ExecStopPost"
+    ],
+    "safety_invariants_preserved": true,
+    "v1": "Exact token-set comparison for six unordered dependency properties; presence and exact membership remain mandatory",
+    "v2": "Restore props.get(key, '') == expected for non-dependency stable properties only; omitted values pass only when pinned empty"
+  },
+  "rollback": {
+    "attempted_during_closeout": false,
+    "basis": "Preserved recovery-v2 implementation and historical offline validation",
+    "compatibility": "INTACT",
+    "exact_original_argv_restore_and_reload_failure_retry_covered": true
+  },
+  "schema_version": "discovery-priority-settlement-guard-closeout-v1"
+}
