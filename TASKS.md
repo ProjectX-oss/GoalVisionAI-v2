@@ -1,3 +1,11 @@
+## 2026-09-29 — Discovery priority settlement guard: evidence blocker
+
+- [x] Create isolated operations branch from `fca075d`; inspect loaded service routing and all five installed calendars without production controls.
+- [x] Record sanitized unit/environment hashes and document inaccessible system-manager journal and protected ADMIN/stagger state.
+- [ ] Obtain completed settlement runtime evidence from at most seven days of systemd journals and review a defensible horizon.
+- [ ] Implement, test, and package the service-boundary guard only after that prerequisite is satisfied; no install or push authorized.
+- See `docs/operations/PREMATCH_DISCOVERY_PRIORITY_SETTLEMENT_GUARD.md` for the explicit task-section-8 stop and read-only evidence commands.
+
 # ADMIN alerts v1.3.1 (2026-09-27)
 
 - [x] Separate idle delivery from receipt-backed health; preserve real delivery faults.

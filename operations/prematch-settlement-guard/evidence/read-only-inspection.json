@@ -1,0 +1,299 @@
+{
+  "actions": {
+    "api_calls": 0,
+    "database_writes": 0,
+    "installed": false,
+    "production_controls": 0,
+    "pushed": false,
+    "telegram_sends": 0
+  },
+  "base_commit": "fca075d4e01028ab17f0b8c1d1d3dc5378beedb4",
+  "captured_at": "2026-09-29T08:01:10.741160+00:00",
+  "historical_overlap": {
+    "conditional_projected_decision": "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE",
+    "discovery_invocation": "4d931713a53b4404bae23bd990ccebdb",
+    "exact_lock_holder": "NOT_INDEPENDENTLY_PROVEN",
+    "operator_reported_discovery_start": "2026-09-28T14:30:20+02:00",
+    "operator_reported_settlement_start": "2026-09-28T14:35:00+02:00",
+    "projection_basis": "Operator-supplied active discovery state at settlement start; application contention independently visible; no guard implemented or replayed",
+    "systemd_start_completion_independently_verified": false,
+    "visible_discovery_codes": [
+      {
+        "code": "QUOTA_DB_CONTENTION_RETRY",
+        "timestamp_utc": "2026-09-28T12:35:03.098742+00:00"
+      },
+      {
+        "code": "QUOTA_DB_CONTENTION_RETRY",
+        "timestamp_utc": "2026-09-28T12:35:03.225238+00:00"
+      },
+      {
+        "code": "QUOTA_DB_CONTENTION_RETRY",
+        "timestamp_utc": "2026-09-28T12:35:03.353510+00:00"
+      },
+      {
+        "code": "QUOTA_DB_CONTENTION_RETRY",
+        "timestamp_utc": "2026-09-28T12:35:04.076220+00:00"
+      },
+      {
+        "code": "QUOTA_DB_CONTENTION_RETRY",
+        "timestamp_utc": "2026-09-28T12:35:04.192241+00:00"
+      },
+      {
+        "code": "QUOTA_DB_CONTENTION_RETRY",
+        "timestamp_utc": "2026-09-28T12:35:04.324270+00:00"
+      },
+      {
+        "code": "QUOTA_DB_CONTENTION_RETRY",
+        "timestamp_utc": "2026-09-28T12:35:04.450256+00:00"
+      },
+      {
+        "code": "QUOTA_DB_CONTENTION_EXHAUSTED",
+        "timestamp_utc": "2026-09-28T12:35:04.476771+00:00"
+      },
+      {
+        "code": "QUOTA_DB_CONTENTION_EXHAUSTED",
+        "timestamp_utc": "2026-09-28T12:35:04.539098+00:00"
+      }
+    ],
+    "zero_side_effects_executable_proof": "NOT_PERFORMED"
+  },
+  "protected_preflight": {
+    "admin_sender": "OPERATOR_REPORTS_DISABLED; protected state unreadable; unchanged by this work",
+    "sudo_noninteractive": "PASSWORD_REQUIRED",
+    "timer_stagger_transaction": "PROTECTED_STATE_UNREADABLE"
+  },
+  "runtime_evidence": {
+    "completed_settlement_invocation_count": null,
+    "horizon_seconds": null,
+    "journal_returncode": 0,
+    "maximum_seconds": null,
+    "median_seconds": null,
+    "minimum_seconds": null,
+    "p95_seconds": null,
+    "reason": "SYSTEM_JOURNAL_NOT_READABLE; zero visible manager records is not zero real completions",
+    "since": "2026-09-22T08:01:10.836469+00:00",
+    "system_journal_readable": false,
+    "until": "2026-09-29T08:01:10.836469+00:00",
+    "visible_manager_records": 0
+  },
+  "settlement": {
+    "EnvironmentFiles": "/opt/goalvision-prematch-quota-557d5af2-f24738b05fef/release.env (ignore_errors=no)",
+    "Environment_note": "Hash of systemctl show Environment value, excluding property label/newline; values withheld.",
+    "Environment_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ExecMainExitTimestamp": "Tue 2026-09-29 09:55:46 CEST",
+    "ExecMainExitTimestampMonotonic": "2042252141438",
+    "ExecMainStartTimestamp": "Tue 2026-09-29 09:55:13 CEST",
+    "ExecMainStartTimestampMonotonic": "2042218799404",
+    "ExecStart": "{ path=/home/arvis/GoalVisionAI/.venv/bin/python ; argv[]=/home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_combo settle --send --adaptive-database /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db ; ignore_errors=no ; start_time=[Tue 2026-09-29 09:55:13 CEST] ; stop_time=[Tue 2026-09-29 09:55:46 CEST] ; pid=1188545 ; code=exited ; status=0 }",
+    "Group": "",
+    "KillMode": "control-group",
+    "SendSIGKILL": "yes",
+    "StandardError": "journal",
+    "StandardOutput": "null",
+    "TimeoutStartUSec": "10min",
+    "TimeoutStopUSec": "1min 30s",
+    "Type": "oneshot",
+    "User": "arvis",
+    "WorkingDirectory": "/home/arvis/GoalVisionAI",
+    "environment_files_sha256": {
+      "/opt/goalvision-prematch-quota-557d5af2-f24738b05fef/release.env": "daaefd30ae7ae57823187e242ac9c2dbc72d7cd9bdbfcf6aa430a78a8406f915"
+    }
+  },
+  "status": "BLOCKED_REQUIRED_PRODUCTION_EVIDENCE_UNAVAILABLE",
+  "units": {
+    "goalvision-adaptive-learning-observer.service": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-adaptive-learning-observer.service": "a628c35482ebab376b82f348feffa6b2e8f542ca522c9fa57704525dd83a2393",
+        "/etc/systemd/system/goalvision-adaptive-learning-observer.service.d/90-reviewed-prematch-v2.conf": "8ecdfedd8ee5839e2ff1adf2ca2d6943bfea59f5e456c75d989b336661b331a1"
+      },
+      "properties": {
+        "ActiveState": "inactive",
+        "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning-observer.service.d/90-reviewed-prematch-v2.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-adaptive-learning-observer.service",
+        "Id": "goalvision-adaptive-learning-observer.service",
+        "InvocationID": "373dafc22450496da1affe6aec5dc93f",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "SubState": "dead",
+        "UnitFileState": "static"
+      }
+    },
+    "goalvision-adaptive-learning-observer.timer": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-adaptive-learning-observer.timer": "72daf0281538ab3570b3081dac7493c0252092fa86140860c1114a035398c09a",
+        "/etc/systemd/system/goalvision-adaptive-learning-observer.timer.d/95-goalvision-prematch-timer-stagger.conf": "0ddbd492381bd624ab9cc2fd08cc1e7839e6e20bc2c86f80cc3f1736ec0f2f58"
+      },
+      "properties": {
+        "AccuracyUSec": "1min",
+        "ActiveState": "active",
+        "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning-observer.timer.d/95-goalvision-prematch-timer-stagger.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-adaptive-learning-observer.timer",
+        "Id": "goalvision-adaptive-learning-observer.timer",
+        "InvocationID": "20bb2a4f4b794005b9f815994ec87edd",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "NextElapseUSecRealtime": "Tue 2026-09-29 10:08:00 CEST",
+        "Persistent": "yes",
+        "RandomizedDelayUSec": "0",
+        "SubState": "waiting",
+        "TimersCalendar": "{ OnCalendar=*-*-* *:08,38:00 ; next_elapse=Tue 2026-09-29 10:08:00 CEST }",
+        "UnitFileState": "enabled"
+      }
+    },
+    "goalvision-adaptive-learning.service": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-adaptive-learning.service": "a2e9081eb083665f17b32c8a3ff7a05c8f1073e2f1501de6f87ad00e755c2aed",
+        "/etc/systemd/system/goalvision-adaptive-learning.service.d/90-quota-lock-hardening.conf": "76332b75a5738a55ba4aa8f13dfb13063237a683e70262ccede2dcb73fae266e"
+      },
+      "properties": {
+        "ActiveState": "inactive",
+        "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning.service.d/90-quota-lock-hardening.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-adaptive-learning.service",
+        "Id": "goalvision-adaptive-learning.service",
+        "InvocationID": "ed6debdacbff4172aaa417379ce86029",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "SubState": "dead",
+        "UnitFileState": "static"
+      }
+    },
+    "goalvision-adaptive-learning.timer": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-adaptive-learning.timer": "190c203ea7b19776829fb97ee76fec62e0f9cf328a46760b34685d057fac456e",
+        "/etc/systemd/system/goalvision-adaptive-learning.timer.d/95-goalvision-prematch-timer-stagger.conf": "784754a925ba8e7635cdb8640991842bf02ad6dad667be3cd4fdb4ee5cfda29b"
+      },
+      "properties": {
+        "AccuracyUSec": "1min",
+        "ActiveState": "active",
+        "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning.timer.d/95-goalvision-prematch-timer-stagger.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-adaptive-learning.timer",
+        "Id": "goalvision-adaptive-learning.timer",
+        "InvocationID": "98a5ceb479594c4090f627b1fd448446",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "NextElapseUSecRealtime": "Wed 2026-09-30 04:12:00 CEST",
+        "Persistent": "yes",
+        "RandomizedDelayUSec": "0",
+        "SubState": "waiting",
+        "TimersCalendar": "{ OnCalendar=*-*-* 04:12:00 ; next_elapse=Wed 2026-09-30 04:12:00 CEST }",
+        "UnitFileState": "enabled"
+      }
+    },
+    "goalvision-lab-combo-settle.service": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-lab-combo-settle.service": "bb0c1d71cd510b83a4d87230a246b82e83886c882fdcbd086e0ab9b64c5a363e",
+        "/etc/systemd/system/goalvision-lab-combo-settle.service.d/90-reviewed-prematch-v2.conf": "8ecdfedd8ee5839e2ff1adf2ca2d6943bfea59f5e456c75d989b336661b331a1"
+      },
+      "properties": {
+        "ActiveState": "inactive",
+        "DropInPaths": "/etc/systemd/system/goalvision-lab-combo-settle.service.d/90-reviewed-prematch-v2.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-combo-settle.service",
+        "Id": "goalvision-lab-combo-settle.service",
+        "InvocationID": "9f5eee487f224c39a5d4d323f70536a9",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "SubState": "dead",
+        "UnitFileState": "static"
+      }
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-lab-combo-settle.timer": "cb07e8fa9591abfdae04d10143d7edf7f74fb71d62867ebf5c3acee72427a620",
+        "/etc/systemd/system/goalvision-lab-combo-settle.timer.d/95-goalvision-prematch-timer-stagger.conf": "29eb3bdcab1115c4457a897633cd487ca55207a09a620aa8a530b624342a48c0"
+      },
+      "properties": {
+        "AccuracyUSec": "1min",
+        "ActiveState": "active",
+        "DropInPaths": "/etc/systemd/system/goalvision-lab-combo-settle.timer.d/95-goalvision-prematch-timer-stagger.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-combo-settle.timer",
+        "Id": "goalvision-lab-combo-settle.timer",
+        "InvocationID": "e9e2dce97871445c9b624ffe71e6f3ce",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "NextElapseUSecRealtime": "Tue 2026-09-29 10:05:00 CEST",
+        "Persistent": "yes",
+        "RandomizedDelayUSec": "0",
+        "SubState": "waiting",
+        "TimersCalendar": "{ OnCalendar=*-*-* *:05,15,25,35,45,55:00 ; next_elapse=Tue 2026-09-29 10:05:00 CEST }",
+        "UnitFileState": "enabled"
+      }
+    },
+    "goalvision-lab-v2-discover.service": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-lab-v2-discover.service": "6eb6693d878bf0bdf75149250615f7bb409b4437b7ac8f19691285174d48e2d3",
+        "/etc/systemd/system/goalvision-lab-v2-discover.service.d/90-reviewed-prematch-v2.conf": "a2be440a9ef6518bf43b630c822fa0f61959e884d55d03072bc05f61302b25df"
+      },
+      "properties": {
+        "ActiveState": "activating",
+        "DropInPaths": "/etc/systemd/system/goalvision-lab-v2-discover.service.d/90-reviewed-prematch-v2.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-v2-discover.service",
+        "Id": "goalvision-lab-v2-discover.service",
+        "InvocationID": "c25025fd3e3143ed8d6b0e31ce244b40",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "SubState": "start",
+        "UnitFileState": "static"
+      }
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-lab-v2-discover.timer": "ba40f22f5157720ded06527849ec4cfefd737756905386fb815d0bccb8f5055c"
+      },
+      "properties": {
+        "AccuracyUSec": "1min",
+        "ActiveState": "active",
+        "DropInPaths": "",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-v2-discover.timer",
+        "Id": "goalvision-lab-v2-discover.timer",
+        "InvocationID": "3c63276af57d44a5a0129f6e0352057e",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "NextElapseUSecRealtime": "",
+        "Persistent": "yes",
+        "RandomizedDelayUSec": "0",
+        "SubState": "running",
+        "TimersCalendar": "{ OnCalendar=*-*-* 09..22:00,30:00 Europe/Riga ; next_elapse=Tue 2026-09-29 10:00:00 CEST }",
+        "UnitFileState": "enabled"
+      }
+    },
+    "goalvision-lab-weekly-stats.service": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-lab-weekly-stats.service": "ee64b9126e15128800ca6b5e9372e23cd1faf74edc959a04ed742341b3c32225",
+        "/etc/systemd/system/goalvision-lab-weekly-stats.service.d/90-reviewed-prematch-v2.conf": "8ecdfedd8ee5839e2ff1adf2ca2d6943bfea59f5e456c75d989b336661b331a1"
+      },
+      "properties": {
+        "ActiveState": "inactive",
+        "DropInPaths": "/etc/systemd/system/goalvision-lab-weekly-stats.service.d/90-reviewed-prematch-v2.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-weekly-stats.service",
+        "Id": "goalvision-lab-weekly-stats.service",
+        "InvocationID": "81a2572030f04f17a3f17cba829b53c6",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "SubState": "dead",
+        "UnitFileState": "static"
+      }
+    },
+    "goalvision-lab-weekly-stats.timer": {
+      "files_sha256": {
+        "/etc/systemd/system/goalvision-lab-weekly-stats.timer": "f0e27207d0b367cf275d762f7e7624013dba568df95f5762905010e0d5bd4aca",
+        "/etc/systemd/system/goalvision-lab-weekly-stats.timer.d/95-goalvision-prematch-timer-stagger.conf": "86630652ddf7dad6317e6992ec2f60d5184d300cd4f01f46f0ea34e2b8c4ce51"
+      },
+      "properties": {
+        "AccuracyUSec": "1s",
+        "ActiveState": "active",
+        "DropInPaths": "/etc/systemd/system/goalvision-lab-weekly-stats.timer.d/95-goalvision-prematch-timer-stagger.conf",
+        "FragmentPath": "/etc/systemd/system/goalvision-lab-weekly-stats.timer",
+        "Id": "goalvision-lab-weekly-stats.timer",
+        "InvocationID": "6888f43283bc46b3a22826011ca19514",
+        "LoadState": "loaded",
+        "NeedDaemonReload": "no",
+        "NextElapseUSecRealtime": "Sun 2026-10-04 21:28:00 CEST",
+        "Persistent": "yes",
+        "RandomizedDelayUSec": "0",
+        "SubState": "waiting",
+        "TimersCalendar": "{ OnCalendar=Sun *-*-* 22:28:00 Europe/Riga ; next_elapse=Sun 2026-10-04 21:28:00 CEST }",
+        "UnitFileState": "enabled"
+      }
+    }
+  }
+}
