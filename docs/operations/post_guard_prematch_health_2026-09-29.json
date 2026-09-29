@@ -1,0 +1,4184 @@
+{
+  "aggregate": {
+    "api_calls_consumed": 1782,
+    "candidate_markets_evaluated": 5925,
+    "candidate_rejection_reasons": {
+      "INVALID_MODEL_PROBABILITY": 45,
+      "MARKET_REVIEW_TERMINAL": 1,
+      "NON_POSITIVE_VALUE": 4150
+    },
+    "candidate_stages": {
+      "EARLY_CANDIDATE": 1085,
+      "FINAL_REVIEW_REQUIRED": 3,
+      "READY_TO_PUBLISH": 22,
+      "REJECTED": 4151,
+      "TRACKING": 664
+    },
+    "current_odds_fixtures": 586,
+    "early_candidate_count": 1085,
+    "exact_fixture_odds_refresh_calls": 361,
+    "fixtures_discovered": 3976,
+    "no_ready_cycles": 3,
+    "no_selection_literal_count": 0,
+    "no_send_cycles": 4,
+    "priority_exact_attempts": 160,
+    "priority_exact_recovered": 20,
+    "ready_candidate_count": 22,
+    "tracked_exact_odds_statuses": {
+      "AVAILABLE": 12,
+      "ODDS_STALE": 21
+    },
+    "unique_candidate_fixtures": 171,
+    "unique_fixture_market_pairs": 1735,
+    "unique_fixtures": 497,
+    "unique_leagues": 112
+  },
+  "context_observation_totals": {
+    "CAPTURE_NOT_SCOPED": 32,
+    "FINAL_EVALUATED_CANDIDATES": 5925,
+    "OLD_CANONICAL_NOT_ATTEMPTED": 1458,
+    "REGULATION_NO_QUALIFYING_COMPETITION_EVIDENCE": 147,
+    "REGULATION_REVIEWED_INCORPORATED_LAW": 1,
+    "SNAPSHOT_UNAVAILABLE_SNAPSHOT": 74,
+    "SOURCE_CAPTURED": 170,
+    "SOURCE_UNAVAILABLE_UNSCOPED_QUERY": 1579,
+    "TARGET_SOURCE_UNAVAILABLE": 74
+  },
+  "cycles_by_service": {
+    "discovery": {
+      "application_invocations": 8,
+      "calendar_slots": 8,
+      "manager_success_count": null,
+      "persisted_completed_reports": 8
+    },
+    "observer": {
+      "application_invocations": 9,
+      "calendar_slots": 9,
+      "manager_success_count": null,
+      "persisted_reports": 9
+    },
+    "settlement": {
+      "application_invocations": 24,
+      "calendar_slots": 24,
+      "deferred": 6,
+      "executed_markers": 18,
+      "manager_success_count": null,
+      "persisted_completed_runs": 18
+    }
+  },
+  "deferral_checks": {
+    "deferred_slots_utc": [
+      "10:35",
+      "11:05",
+      "11:35",
+      "12:35",
+      "13:05",
+      "13:35"
+    ],
+    "six_single_record_invocations": true,
+    "subsequent_executed_slots_utc": [
+      "10:45",
+      "11:15",
+      "11:45",
+      "12:45",
+      "13:15",
+      "13:45"
+    ],
+    "zero_declared_work": true
+  },
+  "delivery": {
+    "admin_sender_closeout_state": "OFF per validated closeout",
+    "admin_sender_current_state": null,
+    "claims_without_receipts_all_ledger": 0,
+    "counts": {
+      "combo_prediction": 1,
+      "combo_settlement": 1,
+      "single_prediction": 6,
+      "single_settlement": 5
+    },
+    "duplicate_message_ids": 0,
+    "duplicate_single_economic_keys": 0,
+    "live_cycle_health_states": {
+      "DISABLED": 8
+    },
+    "new_prediction_candidate_links": [
+      {
+        "candidate_id": "lab-v2-candidate-ec577c6f2b77bac2a21dc242e7e06825a4dd6493bd16c0f98bcb5c8dec206d75",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1598641,
+        "market": "DRAW",
+        "prediction_id": "lab-v2-single-3317cb04329767ebc54097ae0bf7b2fee71158e6f387f7682f5685dcbcffd6d3",
+        "stage": "READY_TO_PUBLISH"
+      },
+      {
+        "candidate_id": "lab-v2-candidate-942c1daad004c435c5809b2a76ae9ba603685ea1fa31f8ecf90fc622fc1cfa5f",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1528780,
+        "market": "UNDER_2_5",
+        "prediction_id": "lab-v2-single-73b73e8d021a924fe69a37e0afb9e0153152cc19ba59d48739b500d78b97c4ea",
+        "stage": "READY_TO_PUBLISH"
+      },
+      {
+        "candidate_id": "lab-v2-candidate-ec577c6f2b77bac2a21dc242e7e06825a4dd6493bd16c0f98bcb5c8dec206d75",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1598641,
+        "market": "DRAW",
+        "prediction_id": "lab-v2-combo-2b0ef6f679082551fc75703103e372926d6eba6d9ce487add4164a0f8c51f582",
+        "stage": "READY_TO_PUBLISH"
+      },
+      {
+        "candidate_id": "lab-v2-candidate-afd74490b6ce8823447f3d6e99c1f91d417365d6ee8602571eeeb750f4b29ecc",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1545844,
+        "market": "DRAW",
+        "prediction_id": "lab-v2-combo-2b0ef6f679082551fc75703103e372926d6eba6d9ce487add4164a0f8c51f582",
+        "stage": "READY_TO_PUBLISH"
+      },
+      {
+        "candidate_id": "lab-v2-candidate-942c1daad004c435c5809b2a76ae9ba603685ea1fa31f8ecf90fc622fc1cfa5f",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1528780,
+        "market": "UNDER_2_5",
+        "prediction_id": "lab-v2-combo-2b0ef6f679082551fc75703103e372926d6eba6d9ce487add4164a0f8c51f582",
+        "stage": "READY_TO_PUBLISH"
+      },
+      {
+        "candidate_id": "lab-v2-candidate-0676bc3000409d67c9582078e24fae51fa8c79bf120d4d15118937d8a91542f9",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1619154,
+        "market": "DRAW",
+        "prediction_id": "lab-v2-single-54e1ee1ca64a06304507300dc0a734350ab8952a19c3f546587e7e33f08bf129",
+        "stage": "READY_TO_PUBLISH"
+      },
+      {
+        "candidate_id": "lab-v2-candidate-ec8443fb3f01319486a36f98d176e177f4b1229f1c3891d825aa3a0af4fa9db8",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1350174,
+        "market": "AWAY_WIN",
+        "prediction_id": "lab-v2-single-a188406bc7d8728f2dcf20249bea15270c255ac4c691978213b3f38a2748ef67",
+        "stage": "READY_TO_PUBLISH"
+      },
+      {
+        "candidate_id": "lab-v2-candidate-d1531a6b665a80b3679eb0820e317c3d1f4fd955d15a6e41c016fc4633259fed",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1350171,
+        "market": "DRAW",
+        "prediction_id": "lab-v2-single-9cbfa2e2f1d5978566f3662f12efdaf52c9470052df5eee58a4096ba3bfdc837",
+        "stage": "READY_TO_PUBLISH"
+      },
+      {
+        "candidate_id": "lab-v2-candidate-19ba6bba941ffb785f550985cf20e2c82a21143638809c22a87c2cc4876ffe40",
+        "cycle_candidate_exists": true,
+        "decision": "APPROVED",
+        "fixture_id": 1639142,
+        "market": "BTTS_YES",
+        "prediction_id": "lab-v2-single-965f9b8c6a5458e874300c3920ac0645d0fee1b72ed466d5fa2bd498b19ad13c",
+        "stage": "READY_TO_PUBLISH"
+      }
+    ],
+    "official_publication_rows_in_inspected_databases": 0,
+    "publication_policy_reasons": {
+      "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 7,
+      "PUBLICATION_DECISION_EVIDENCE_STALE": 2,
+      "SEVERE_MODEL_MARKET_CONTRADICTION": 7
+    },
+    "receipts": [
+      {
+        "claim_exists": true,
+        "identity": "single_prediction:lab-v2-single-3317cb04329767ebc54097ae0bf7b2fee71158e6f387f7682f5685dcbcffd6d3",
+        "kind": "single_prediction",
+        "lab_destination": true,
+        "message_id": 235,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T10:36:21.709978+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_prediction:lab-v2-single-73b73e8d021a924fe69a37e0afb9e0153152cc19ba59d48739b500d78b97c4ea",
+        "kind": "single_prediction",
+        "lab_destination": true,
+        "message_id": 236,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T10:36:21.874189+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "combo_prediction:lab-v2-combo-2b0ef6f679082551fc75703103e372926d6eba6d9ce487add4164a0f8c51f582",
+        "kind": "combo_prediction",
+        "lab_destination": true,
+        "message_id": 237,
+        "prediction_decision": null,
+        "prediction_exists": true,
+        "prediction_stage": null,
+        "sent_at_utc": "2026-09-29T10:36:21.986431+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_prediction:lab-v2-single-54e1ee1ca64a06304507300dc0a734350ab8952a19c3f546587e7e33f08bf129",
+        "kind": "single_prediction",
+        "lab_destination": true,
+        "message_id": 238,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T11:35:50.355592+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_settlement:lab-v2-single-2964cb26490ffa6b1b3ae7533115c9a5d2a27f1fc1223dca9edb80966dd4dbd9",
+        "kind": "single_settlement",
+        "lab_destination": true,
+        "message_id": 239,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T12:05:59.567675+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_settlement:lab-v2-single-73b73e8d021a924fe69a37e0afb9e0153152cc19ba59d48739b500d78b97c4ea",
+        "kind": "single_settlement",
+        "lab_destination": true,
+        "message_id": 240,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T12:55:49.409623+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_settlement:lab-v2-single-3317cb04329767ebc54097ae0bf7b2fee71158e6f387f7682f5685dcbcffd6d3",
+        "kind": "single_settlement",
+        "lab_destination": true,
+        "message_id": 241,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T13:15:36.848282+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_prediction:lab-v2-single-a188406bc7d8728f2dcf20249bea15270c255ac4c691978213b3f38a2748ef67",
+        "kind": "single_prediction",
+        "lab_destination": true,
+        "message_id": 242,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T13:36:38.869861+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_settlement:lab-v2-single-54e1ee1ca64a06304507300dc0a734350ab8952a19c3f546587e7e33f08bf129",
+        "kind": "single_settlement",
+        "lab_destination": true,
+        "message_id": 243,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T13:55:53.147283+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_prediction:lab-v2-single-9cbfa2e2f1d5978566f3662f12efdaf52c9470052df5eee58a4096ba3bfdc837",
+        "kind": "single_prediction",
+        "lab_destination": true,
+        "message_id": 244,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T14:04:34.800062+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_prediction:lab-v2-single-965f9b8c6a5458e874300c3920ac0645d0fee1b72ed466d5fa2bd498b19ad13c",
+        "kind": "single_prediction",
+        "lab_destination": true,
+        "message_id": 245,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T14:04:35.098216+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "single_settlement:lab-v2-single-333ca63c083f1b1c5814750f28655ef70e34a6a1f23b5d72c3103383a8408ff4",
+        "kind": "single_settlement",
+        "lab_destination": true,
+        "message_id": 246,
+        "prediction_decision": "APPROVED",
+        "prediction_exists": true,
+        "prediction_stage": "READY_TO_PUBLISH",
+        "sent_at_utc": "2026-09-29T14:05:58.662766+00:00",
+        "status": "SENT",
+        "target_exists": true
+      },
+      {
+        "claim_exists": true,
+        "identity": "combo_settlement:lab-v2-combo-2b0ef6f679082551fc75703103e372926d6eba6d9ce487add4164a0f8c51f582",
+        "kind": "combo_settlement",
+        "lab_destination": true,
+        "message_id": 247,
+        "prediction_decision": null,
+        "prediction_exists": true,
+        "prediction_stage": null,
+        "sent_at_utc": "2026-09-29T14:05:58.865264+00:00",
+        "status": "SENT",
+        "target_exists": true
+      }
+    ],
+    "unexpected_destination_count": 0
+  },
+  "discovery_cycles": [
+    {
+      "adaptive_quota_budget": {
+        "additional_calls_available": 271,
+        "already_consumed": 1,
+        "base_cycle_budget": 271,
+        "daily_remaining_observed": 5260,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 272,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 19,
+        "requested_maximum": 400,
+        "reserve_headroom": 5160,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "api_calls_consumed": 222,
+      "application_duration_seconds": 374.343,
+      "candidate_markets_evaluated": 1017,
+      "combos_sent": 1,
+      "completed_at": "2026-09-29T10:36:22.000121+00:00",
+      "current_odds_fixtures": 101,
+      "currently_due_fixtures": 1,
+      "discovery_window_complete": true,
+      "early_candidate_count": 194,
+      "evaluated_at_utc": "2026-09-29T10:30:07.656834+00:00",
+      "exact_fixture_odds_refresh_calls": 44,
+      "failure": null,
+      "final_review_candidate_count": 0,
+      "fixture_reason_counts": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.604
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.604
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 98,
+          "percent_of_discovered": 19.718
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.201
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 25,
+          "percent_of_discovered": 5.03
+        },
+        "ODDS_FINAL_REVIEW_RESERVE_LIMITED_PAGINATION": {
+          "fixtures": 290,
+          "percent_of_discovered": 58.35
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.402
+        },
+        "ODDS_STALE": {
+          "fixtures": 34,
+          "percent_of_discovered": 6.841
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 41,
+          "percent_of_discovered": 8.249
+        }
+      },
+      "fixtures_considered_for_evaluation": 456,
+      "fixtures_discovered": 497,
+      "fixtures_evaluated": 101,
+      "fixtures_rejected_for_stale_current_odds": 34,
+      "fixtures_with_incomplete_odds_page_coverage": 297,
+      "fixtures_with_no_current_odds": 26,
+      "global_state_counts": {
+        "EXPERIMENTAL_READY": 3,
+        "RESULT_TRACKING": 40,
+        "TRACKING": 454
+      },
+      "health_result": "DEGRADED",
+      "number_of_leagues": 112,
+      "odds_date_coverage": {
+        "2026-09-29": {
+          "advertised_totals": [
+            15
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 15,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        "2026-09-30": {
+          "advertised_totals": [
+            6
+          ],
+          "coverage_status": "ODDS_RESTART_GAP",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION",
+          "maximum_advertised_total": 6,
+          "requested_pages": [
+            1,
+            3
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [
+            2,
+            4,
+            5,
+            6
+          ],
+          "valid_pages": [
+            1,
+            3
+          ]
+        },
+        "2026-10-01": {
+          "advertised_totals": [],
+          "coverage_status": "ODDS_BUDGET_LIMITED",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION",
+          "maximum_advertised_total": 1,
+          "requested_pages": [],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [
+            1
+          ],
+          "valid_pages": []
+        }
+      },
+      "priority_exact_recovered": 7,
+      "priority_exact_retries": 20,
+      "provider_fixture_rows": 496,
+      "publication_attempts": 3,
+      "readiness_reasons": {
+        "ENSEMBLE_NOT_APPROVED": 710,
+        "FINAL_REVIEW_COMPLETE": 8,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 194,
+        "QUALITY_RISK_TRACKING": 105
+      },
+      "ready_candidate_count": 8,
+      "rejection_reasons": {
+        "INVALID_MODEL_PROBABILITY": 8,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "NON_POSITIVE_VALUE": 709
+      },
+      "singles_sent": 2,
+      "stages": {
+        "EARLY_CANDIDATE": 194,
+        "READY_TO_PUBLISH": 8,
+        "REJECTED": 710,
+        "TRACKING": 105
+      },
+      "tracked_exact_odds_statuses": {
+        "AVAILABLE": 3
+      },
+      "tracked_exact_review_fixture_cycles": 3,
+      "tracked_exact_reviews": [
+        {
+          "fixture_id": 1528780,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:10:17+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T10:34:09.511300+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T11:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T10:34:10.095205+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545844,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T10:31:34.990295+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T11:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T10:31:35.554148+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1598641,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_SUPPORTED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:28:13+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T10:34:06.679242+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T11:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T10:34:06.679242+00:00",
+          "status": "FIXTURE_REFRESHED"
+        }
+      ],
+      "tracked_final_review_shortlist": [
+        1545844,
+        1598641,
+        1528780
+      ],
+      "tracked_final_review_state_counts": {
+        "EARLY_CANDIDATE": 532,
+        "PUBLICATION_CLOSED": 7,
+        "READY_TO_PUBLISH": 8,
+        "REJECTED": 2,
+        "TRACKING": 1
+      },
+      "tracking": 454
+    },
+    {
+      "adaptive_quota_budget": {
+        "additional_calls_available": 273,
+        "already_consumed": 1,
+        "base_cycle_budget": 273,
+        "daily_remaining_observed": 5029,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 274,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 18,
+        "requested_maximum": 400,
+        "reserve_headroom": 4929,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "api_calls_consumed": 220,
+      "application_duration_seconds": 601.778,
+      "candidate_markets_evaluated": 1320,
+      "combos_sent": 0,
+      "completed_at": "2026-09-29T11:10:11.792200+00:00",
+      "current_odds_fixtures": 132,
+      "currently_due_fixtures": 0,
+      "discovery_window_complete": true,
+      "early_candidate_count": 245,
+      "evaluated_at_utc": "2026-09-29T11:00:10.014247+00:00",
+      "exact_fixture_odds_refresh_calls": 45,
+      "failure": null,
+      "final_review_candidate_count": 2,
+      "fixture_reason_counts": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.402
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.402
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 130,
+          "percent_of_discovered": 26.157
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.604
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 118,
+          "percent_of_discovered": 23.742
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 5,
+          "percent_of_discovered": 1.006
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 152,
+          "percent_of_discovered": 30.584
+        },
+        "ODDS_STALE": {
+          "fixtures": 39,
+          "percent_of_discovered": 7.847
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 46,
+          "percent_of_discovered": 9.256
+        }
+      },
+      "fixtures_considered_for_evaluation": 451,
+      "fixtures_discovered": 497,
+      "fixtures_evaluated": 132,
+      "fixtures_rejected_for_stale_current_odds": 39,
+      "fixtures_with_incomplete_odds_page_coverage": 152,
+      "fixtures_with_no_current_odds": 121,
+      "global_state_counts": {
+        "EXPERIMENTAL_READY": 2,
+        "RESULT_TRACKING": 44,
+        "TRACKING": 451
+      },
+      "health_result": "DEGRADED",
+      "number_of_leagues": 112,
+      "odds_date_coverage": {
+        "2026-09-29": {
+          "advertised_totals": [
+            15
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 15,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        "2026-09-30": {
+          "advertised_totals": [
+            5,
+            6
+          ],
+          "coverage_status": "ODDS_PAGE_TOTAL_DRIFT",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_PAGINATION_CHANGED_DURING_SWEEP",
+          "maximum_advertised_total": 6,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "2026-10-01": {
+          "advertised_totals": [
+            2
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 2,
+          "requested_pages": [
+            1,
+            2
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2
+          ]
+        }
+      },
+      "priority_exact_recovered": 0,
+      "priority_exact_retries": 20,
+      "provider_fixture_rows": 496,
+      "publication_attempts": 0,
+      "readiness_reasons": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_NOT_APPROVED": 945,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 245,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "QUALITY_RISK_TRACKING": 126
+      },
+      "ready_candidate_count": 2,
+      "rejection_reasons": {
+        "INVALID_MODEL_PROBABILITY": 15,
+        "NON_POSITIVE_VALUE": 945
+      },
+      "singles_sent": 0,
+      "stages": {
+        "EARLY_CANDIDATE": 245,
+        "FINAL_REVIEW_REQUIRED": 2,
+        "READY_TO_PUBLISH": 2,
+        "REJECTED": 945,
+        "TRACKING": 126
+      },
+      "tracked_exact_odds_statuses": {
+        "AVAILABLE": 2
+      },
+      "tracked_exact_review_fixture_cycles": 2,
+      "tracked_exact_reviews": [
+        {
+          "fixture_id": 1619151,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:32:14+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T11:03:37.394308+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T12:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T11:03:37.960641+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1619152,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:32:14+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T11:03:39.120212+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T12:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T11:03:39.696556+00:00",
+          "status": "FIXTURE_REFRESHED"
+        }
+      ],
+      "tracked_final_review_shortlist": [
+        1619151,
+        1619152
+      ],
+      "tracked_final_review_state_counts": {
+        "EARLY_CANDIDATE": 564,
+        "FINAL_REVIEW_REQUIRED": 2,
+        "PUBLICATION_CLOSED": 11,
+        "READY_TO_PUBLISH": 2,
+        "TRACKING": 1
+      },
+      "tracking": 451
+    },
+    {
+      "adaptive_quota_budget": {
+        "additional_calls_available": 276,
+        "already_consumed": 1,
+        "base_cycle_budget": 276,
+        "daily_remaining_observed": 4800,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 277,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 17,
+        "requested_maximum": 400,
+        "reserve_headroom": 4700,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "api_calls_consumed": 218,
+      "application_duration_seconds": 340.771,
+      "candidate_markets_evaluated": 1391,
+      "combos_sent": 0,
+      "completed_at": "2026-09-29T11:35:50.370896+00:00",
+      "current_odds_fixtures": 139,
+      "currently_due_fixtures": 0,
+      "discovery_window_complete": true,
+      "early_candidate_count": 242,
+      "evaluated_at_utc": "2026-09-29T11:30:09.600274+00:00",
+      "exact_fixture_odds_refresh_calls": 45,
+      "failure": null,
+      "final_review_candidate_count": 1,
+      "fixture_reason_counts": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.604
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 132,
+          "percent_of_discovered": 26.559
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.805
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.402
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 266,
+          "percent_of_discovered": 53.521
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 7,
+          "percent_of_discovered": 1.408
+        },
+        "ODDS_STALE": {
+          "fixtures": 37,
+          "percent_of_discovered": 7.445
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 46,
+          "percent_of_discovered": 9.256
+        }
+      },
+      "fixtures_considered_for_evaluation": 451,
+      "fixtures_discovered": 497,
+      "fixtures_evaluated": 139,
+      "fixtures_rejected_for_stale_current_odds": 37,
+      "fixtures_with_incomplete_odds_page_coverage": 0,
+      "fixtures_with_no_current_odds": 268,
+      "global_state_counts": {
+        "EXPERIMENTAL_READY": 3,
+        "REJECTED": 4,
+        "RESULT_TRACKING": 44,
+        "TRACKING": 446
+      },
+      "health_result": "DEGRADED",
+      "number_of_leagues": 112,
+      "odds_date_coverage": {
+        "2026-09-29": {
+          "advertised_totals": [
+            15
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 15,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        "2026-09-30": {
+          "advertised_totals": [
+            6
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 6,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "2026-10-01": {
+          "advertised_totals": [
+            2
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 2,
+          "requested_pages": [
+            1,
+            2
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2
+          ]
+        }
+      },
+      "priority_exact_recovered": 0,
+      "priority_exact_retries": 20,
+      "provider_fixture_rows": 496,
+      "publication_attempts": 1,
+      "readiness_reasons": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 1,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 1,
+        "ENSEMBLE_NOT_APPROVED": 959,
+        "FINAL_REVIEW_COMPLETE": 3,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 242,
+        "FIXTURE_REFRESH_REQUIRED": 1,
+        "QUALITY_RISK_TRACKING": 186
+      },
+      "ready_candidate_count": 3,
+      "rejection_reasons": {
+        "INVALID_MODEL_PROBABILITY": 12,
+        "NON_POSITIVE_VALUE": 959
+      },
+      "singles_sent": 1,
+      "stages": {
+        "EARLY_CANDIDATE": 242,
+        "FINAL_REVIEW_REQUIRED": 1,
+        "READY_TO_PUBLISH": 3,
+        "REJECTED": 959,
+        "TRACKING": 186
+      },
+      "tracked_exact_odds_statuses": {
+        "AVAILABLE": 3
+      },
+      "tracked_exact_review_fixture_cycles": 3,
+      "tracked_exact_reviews": [
+        {
+          "fixture_id": 1619151,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:32:14+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T11:35:19.515234+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T12:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T11:35:20.103595+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1619154,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:32:14+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T11:35:16.009684+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T12:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T11:35:16.600707+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1619155,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:32:14+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T11:35:17.779847+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T12:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T11:35:18.354290+00:00",
+          "status": "FIXTURE_REFRESHED"
+        }
+      ],
+      "tracked_final_review_shortlist": [
+        1619154,
+        1619155,
+        1619151
+      ],
+      "tracked_final_review_state_counts": {
+        "EARLY_CANDIDATE": 589,
+        "FINAL_REVIEW_REQUIRED": 12,
+        "READY_TO_PUBLISH": 3,
+        "TRACKING": 1
+      },
+      "tracking": 446
+    },
+    {
+      "adaptive_quota_budget": {
+        "additional_calls_available": 279,
+        "already_consumed": 1,
+        "base_cycle_budget": 279,
+        "daily_remaining_observed": 4571,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 280,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 16,
+        "requested_maximum": 400,
+        "reserve_headroom": 4471,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "api_calls_consumed": 226,
+      "application_duration_seconds": 208.818,
+      "candidate_markets_evaluated": 148,
+      "combos_sent": 0,
+      "completed_at": "2026-09-29T12:03:31.374103+00:00",
+      "current_odds_fixtures": 14,
+      "currently_due_fixtures": 6,
+      "discovery_window_complete": true,
+      "early_candidate_count": 17,
+      "evaluated_at_utc": "2026-09-29T12:00:02.556556+00:00",
+      "exact_fixture_odds_refresh_calls": 45,
+      "failure": null,
+      "final_review_candidate_count": 0,
+      "fixture_reason_counts": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 12,
+          "percent_of_discovered": 2.414
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.402
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 19,
+          "percent_of_discovered": 3.823
+        },
+        "ODDS_FINAL_REVIEW_RESERVE_LIMITED_PAGINATION": {
+          "fixtures": 307,
+          "percent_of_discovered": 61.771
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.201
+        },
+        "ODDS_STALE": {
+          "fixtures": 101,
+          "percent_of_discovered": 20.322
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 55,
+          "percent_of_discovered": 11.066
+        }
+      },
+      "fixtures_considered_for_evaluation": 442,
+      "fixtures_discovered": 497,
+      "fixtures_evaluated": 14,
+      "fixtures_rejected_for_stale_current_odds": 101,
+      "fixtures_with_incomplete_odds_page_coverage": 307,
+      "fixtures_with_no_current_odds": 19,
+      "global_state_counts": {
+        "REJECTED": 2,
+        "RESULT_TRACKING": 53,
+        "TRACKING": 442
+      },
+      "health_result": "DEGRADED",
+      "number_of_leagues": 112,
+      "odds_date_coverage": {
+        "2026-09-29": {
+          "advertised_totals": [
+            15
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 15,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        "2026-09-30": {
+          "advertised_totals": [
+            6
+          ],
+          "coverage_status": "ODDS_BUDGET_LIMITED",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION",
+          "maximum_advertised_total": 6,
+          "requested_pages": [
+            1
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "valid_pages": [
+            1
+          ]
+        },
+        "2026-10-01": {
+          "advertised_totals": [],
+          "coverage_status": "ODDS_BUDGET_LIMITED",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION",
+          "maximum_advertised_total": 2,
+          "requested_pages": [],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [
+            1,
+            2
+          ],
+          "valid_pages": []
+        }
+      },
+      "priority_exact_recovered": 0,
+      "priority_exact_retries": 20,
+      "provider_fixture_rows": 496,
+      "publication_attempts": 0,
+      "readiness_reasons": {
+        "ENSEMBLE_NOT_APPROVED": 99,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 17,
+        "QUALITY_RISK_TRACKING": 32
+      },
+      "ready_candidate_count": 0,
+      "rejection_reasons": {
+        "NON_POSITIVE_VALUE": 99
+      },
+      "singles_sent": 0,
+      "stages": {
+        "EARLY_CANDIDATE": 17,
+        "REJECTED": 99,
+        "TRACKING": 32
+      },
+      "tracked_exact_odds_statuses": {
+        "ODDS_STALE": 6
+      },
+      "tracked_exact_review_fixture_cycles": 6,
+      "tracked_exact_reviews": [
+        {
+          "fixture_id": 1545841,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:00:26.675710+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:00:27.047243+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545848,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:00:28.075857+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:00:29.349693+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545853,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:00:30.110645+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:00:30.764705+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545855,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:00:32.054605+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:00:32.530592+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545856,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:00:33.795815+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:00:34.379312+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545858,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:00:34.989475+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:03:21.413600+00:00",
+          "status": "FIXTURE_REFRESHED"
+        }
+      ],
+      "tracked_final_review_shortlist": [
+        1545858,
+        1545841,
+        1545848,
+        1545853,
+        1545855
+      ],
+      "tracked_final_review_state_counts": {
+        "EARLY_CANDIDATE": 573,
+        "FINAL_REVIEW_REQUIRED": 14,
+        "ODDS_STALE": 26,
+        "PUBLICATION_CLOSED": 5
+      },
+      "tracking": 442
+    },
+    {
+      "adaptive_quota_budget": {
+        "additional_calls_available": 282,
+        "already_consumed": 1,
+        "base_cycle_budget": 282,
+        "daily_remaining_observed": 4330,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 283,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 15,
+        "requested_maximum": 400,
+        "reserve_headroom": 4230,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "api_calls_consumed": 241,
+      "application_duration_seconds": 373.442,
+      "candidate_markets_evaluated": 229,
+      "combos_sent": 0,
+      "completed_at": "2026-09-29T12:36:27.712797+00:00",
+      "current_odds_fixtures": 22,
+      "currently_due_fixtures": 5,
+      "discovery_window_complete": true,
+      "early_candidate_count": 45,
+      "evaluated_at_utc": "2026-09-29T12:30:14.271123+00:00",
+      "exact_fixture_odds_refresh_calls": 46,
+      "failure": null,
+      "final_review_candidate_count": 0,
+      "fixture_reason_counts": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 19,
+          "percent_of_discovered": 3.823
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 21,
+          "percent_of_discovered": 4.225
+        },
+        "ODDS_FINAL_REVIEW_RESERVE_LIMITED_PAGINATION": {
+          "fixtures": 276,
+          "percent_of_discovered": 55.533
+        },
+        "ODDS_STALE": {
+          "fixtures": 124,
+          "percent_of_discovered": 24.95
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 57,
+          "percent_of_discovered": 11.469
+        }
+      },
+      "fixtures_considered_for_evaluation": 440,
+      "fixtures_discovered": 497,
+      "fixtures_evaluated": 21,
+      "fixtures_rejected_for_stale_current_odds": 125,
+      "fixtures_with_incomplete_odds_page_coverage": 277,
+      "fixtures_with_no_current_odds": 21,
+      "global_state_counts": {
+        "RESULT_TRACKING": 54,
+        "TRACKING": 443
+      },
+      "health_result": "DEGRADED",
+      "number_of_leagues": 112,
+      "odds_date_coverage": {
+        "2026-09-29": {
+          "advertised_totals": [
+            15
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 15,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        "2026-09-30": {
+          "advertised_totals": [
+            6
+          ],
+          "coverage_status": "ODDS_BUDGET_LIMITED",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION",
+          "maximum_advertised_total": 6,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [
+            5,
+            6
+          ],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "2026-10-01": {
+          "advertised_totals": [],
+          "coverage_status": "ODDS_BUDGET_LIMITED",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_DISCOVERY_BUDGET_LIMITED_PAGINATION",
+          "maximum_advertised_total": 2,
+          "requested_pages": [],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [
+            1,
+            2
+          ],
+          "valid_pages": []
+        }
+      },
+      "priority_exact_recovered": 2,
+      "priority_exact_retries": 20,
+      "provider_fixture_rows": 496,
+      "publication_attempts": 0,
+      "readiness_reasons": {
+        "ENSEMBLE_NOT_APPROVED": 151,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 45,
+        "QUALITY_RISK_TRACKING": 33
+      },
+      "ready_candidate_count": 0,
+      "rejection_reasons": {
+        "NON_POSITIVE_VALUE": 151
+      },
+      "singles_sent": 0,
+      "stages": {
+        "EARLY_CANDIDATE": 45,
+        "REJECTED": 151,
+        "TRACKING": 33
+      },
+      "tracked_exact_odds_statuses": {
+        "ODDS_STALE": 5
+      },
+      "tracked_exact_review_fixture_cycles": 5,
+      "tracked_exact_reviews": [
+        {
+          "fixture_id": 1545841,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "CONFIRMED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:32:21.038750+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:32:21.663079+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545848,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:32:22.875733+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:32:23.472159+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545853,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "CONFIRMED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:32:24.694922+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:32:25.332351+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545856,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:32:26.491438+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:32:27.098268+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545858,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T12:32:28.321555+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T12:32:28.910846+00:00",
+          "status": "FIXTURE_REFRESHED"
+        }
+      ],
+      "tracked_final_review_shortlist": [
+        1545841,
+        1545848,
+        1545853,
+        1545856
+      ],
+      "tracked_final_review_state_counts": {
+        "EARLY_CANDIDATE": 568,
+        "FINAL_REVIEW_REQUIRED": 14,
+        "ODDS_STALE": 23,
+        "PUBLICATION_CLOSED": 11
+      },
+      "tracking": 443
+    },
+    {
+      "adaptive_quota_budget": {
+        "additional_calls_available": 283,
+        "already_consumed": 1,
+        "base_cycle_budget": 283,
+        "daily_remaining_observed": 4074,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 284,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 14,
+        "requested_maximum": 400,
+        "reserve_headroom": 3974,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "api_calls_consumed": 251,
+      "application_duration_seconds": 410.52,
+      "candidate_markets_evaluated": 468,
+      "combos_sent": 0,
+      "completed_at": "2026-09-29T13:06:53.106279+00:00",
+      "current_odds_fixtures": 46,
+      "currently_due_fixtures": 1,
+      "discovery_window_complete": true,
+      "early_candidate_count": 97,
+      "evaluated_at_utc": "2026-09-29T13:00:02.586519+00:00",
+      "exact_fixture_odds_refresh_calls": 45,
+      "failure": null,
+      "final_review_candidate_count": 0,
+      "fixture_reason_counts": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 40,
+          "percent_of_discovered": 8.048
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.201
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 115,
+          "percent_of_discovered": 23.139
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 147,
+          "percent_of_discovered": 29.577
+        },
+        "ODDS_STALE": {
+          "fixtures": 130,
+          "percent_of_discovered": 26.157
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 64,
+          "percent_of_discovered": 12.877
+        }
+      },
+      "fixtures_considered_for_evaluation": 433,
+      "fixtures_discovered": 497,
+      "fixtures_evaluated": 46,
+      "fixtures_rejected_for_stale_current_odds": 133,
+      "fixtures_with_incomplete_odds_page_coverage": 147,
+      "fixtures_with_no_current_odds": 115,
+      "global_state_counts": {
+        "REJECTED": 1,
+        "RESULT_TRACKING": 62,
+        "TRACKING": 434
+      },
+      "health_result": "DEGRADED",
+      "number_of_leagues": 112,
+      "odds_date_coverage": {
+        "2026-09-29": {
+          "advertised_totals": [
+            15
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 15,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        "2026-09-30": {
+          "advertised_totals": [
+            6,
+            7
+          ],
+          "coverage_status": "ODDS_PAGE_TOTAL_DRIFT",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_PAGINATION_CHANGED_DURING_SWEEP",
+          "maximum_advertised_total": 7,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "2026-10-01": {
+          "advertised_totals": [
+            2
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 2,
+          "requested_pages": [
+            1,
+            2
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2
+          ]
+        }
+      },
+      "priority_exact_recovered": 3,
+      "priority_exact_retries": 20,
+      "provider_fixture_rows": 496,
+      "publication_attempts": 0,
+      "readiness_reasons": {
+        "ENSEMBLE_NOT_APPROVED": 322,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 97,
+        "QUALITY_RISK_TRACKING": 49
+      },
+      "ready_candidate_count": 0,
+      "rejection_reasons": {
+        "INVALID_MODEL_PROBABILITY": 1,
+        "NON_POSITIVE_VALUE": 322
+      },
+      "singles_sent": 0,
+      "stages": {
+        "EARLY_CANDIDATE": 97,
+        "REJECTED": 322,
+        "TRACKING": 49
+      },
+      "tracked_exact_odds_statuses": {
+        "ODDS_STALE": 4
+      },
+      "tracked_exact_review_fixture_cycles": 4,
+      "tracked_exact_reviews": [
+        {
+          "fixture_id": 1350174,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "REFRESHED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:00:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T13:03:40.233376+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:03:40.831990+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545855,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T13:00:23.302171+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:00:23.854928+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1637603,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:05:15+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T13:03:43.215917+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:03:43.828727+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1639247,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:30:13+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T13:03:37.850159+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T13:30:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:03:38.438622+00:00",
+          "status": "FIXTURE_REFRESHED"
+        }
+      ],
+      "tracked_final_review_shortlist": [
+        1545855,
+        1639247,
+        1350174,
+        1637603
+      ],
+      "tracked_final_review_state_counts": {
+        "EARLY_CANDIDATE": 578,
+        "ODDS_STALE": 21,
+        "PUBLICATION_CLOSED": 26
+      },
+      "tracking": 434
+    },
+    {
+      "adaptive_quota_budget": {
+        "additional_calls_available": 285,
+        "already_consumed": 1,
+        "base_cycle_budget": 285,
+        "daily_remaining_observed": 3811,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 286,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 13,
+        "requested_maximum": 400,
+        "reserve_headroom": 3711,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "api_calls_consumed": 261,
+      "application_duration_seconds": 394.748,
+      "candidate_markets_evaluated": 665,
+      "combos_sent": 0,
+      "completed_at": "2026-09-29T13:36:38.879554+00:00",
+      "current_odds_fixtures": 65,
+      "currently_due_fixtures": 1,
+      "discovery_window_complete": true,
+      "early_candidate_count": 124,
+      "evaluated_at_utc": "2026-09-29T13:30:04.131651+00:00",
+      "exact_fixture_odds_refresh_calls": 45,
+      "failure": null,
+      "final_review_candidate_count": 0,
+      "fixture_reason_counts": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.201
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 54,
+          "percent_of_discovered": 10.865
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 19,
+          "percent_of_discovered": 3.823
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 241,
+          "percent_of_discovered": 48.491
+        },
+        "ODDS_STALE": {
+          "fixtures": 116,
+          "percent_of_discovered": 23.34
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 66,
+          "percent_of_discovered": 13.28
+        }
+      },
+      "fixtures_considered_for_evaluation": 431,
+      "fixtures_discovered": 497,
+      "fixtures_evaluated": 65,
+      "fixtures_rejected_for_stale_current_odds": 122,
+      "fixtures_with_incomplete_odds_page_coverage": 241,
+      "fixtures_with_no_current_odds": 19,
+      "global_state_counts": {
+        "EXPERIMENTAL_READY": 1,
+        "RESULT_TRACKING": 64,
+        "TRACKING": 432
+      },
+      "health_result": "DEGRADED",
+      "number_of_leagues": 112,
+      "odds_date_coverage": {
+        "2026-09-29": {
+          "advertised_totals": [
+            15
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 15,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        "2026-09-30": {
+          "advertised_totals": [
+            6,
+            7
+          ],
+          "coverage_status": "ODDS_PAGE_TOTAL_DRIFT",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_PAGINATION_CHANGED_DURING_SWEEP",
+          "maximum_advertised_total": 7,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "2026-10-01": {
+          "advertised_totals": [
+            2,
+            3
+          ],
+          "coverage_status": "ODDS_PAGE_TOTAL_DRIFT",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_PAGINATION_CHANGED_DURING_SWEEP",
+          "maximum_advertised_total": 3,
+          "requested_pages": [
+            1,
+            2,
+            3
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "priority_exact_recovered": 5,
+      "priority_exact_retries": 20,
+      "provider_fixture_rows": 496,
+      "publication_attempts": 1,
+      "readiness_reasons": {
+        "ENSEMBLE_NOT_APPROVED": 473,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 124,
+        "QUALITY_RISK_TRACKING": 66
+      },
+      "ready_candidate_count": 2,
+      "rejection_reasons": {
+        "INVALID_MODEL_PROBABILITY": 4,
+        "NON_POSITIVE_VALUE": 473
+      },
+      "singles_sent": 1,
+      "stages": {
+        "EARLY_CANDIDATE": 124,
+        "READY_TO_PUBLISH": 2,
+        "REJECTED": 473,
+        "TRACKING": 66
+      },
+      "tracked_exact_odds_statuses": {
+        "AVAILABLE": 1,
+        "ODDS_STALE": 4
+      },
+      "tracked_exact_review_fixture_cycles": 5,
+      "tracked_exact_reviews": [
+        {
+          "fixture_id": 1350174,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "REFRESHED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T12:00:18+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T13:35:03.009472+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:35:03.595827+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1545855,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_REQUESTED",
+          "lineup_status": "CONFIRMED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:12:16+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T13:31:58.990388+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:31:59.574895+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1640508,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:05:15+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T13:35:06.120574+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:30:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:35:06.728359+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1641856,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_SUPPORTED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:40:14+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T13:35:04.876085+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:35:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:35:04.876085+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1641857,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_SUPPORTED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:40:14+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T13:35:07.972941+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:40:00+00:00",
+          "reviewed_at_utc": "2026-09-29T13:35:07.972941+00:00",
+          "status": "FIXTURE_REFRESHED"
+        }
+      ],
+      "tracked_final_review_shortlist": [
+        1545855,
+        1350174,
+        1641856,
+        1640508,
+        1641857
+      ],
+      "tracked_final_review_state_counts": {
+        "EARLY_CANDIDATE": 571,
+        "FINAL_REVIEW_REQUIRED": 5,
+        "ODDS_STALE": 18,
+        "PUBLICATION_CLOSED": 11,
+        "READY_TO_PUBLISH": 2
+      },
+      "tracking": 432
+    },
+    {
+      "adaptive_quota_budget": {
+        "additional_calls_available": 286,
+        "already_consumed": 1,
+        "base_cycle_budget": 286,
+        "daily_remaining_observed": 3537,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 287,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 12,
+        "requested_maximum": 400,
+        "reserve_headroom": 3437,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "api_calls_consumed": 143,
+      "application_duration_seconds": 265.024,
+      "candidate_markets_evaluated": 687,
+      "combos_sent": 0,
+      "completed_at": "2026-09-29T14:04:35.111542+00:00",
+      "current_odds_fixtures": 67,
+      "currently_due_fixtures": 0,
+      "discovery_window_complete": true,
+      "early_candidate_count": 121,
+      "evaluated_at_utc": "2026-09-29T14:00:10.087750+00:00",
+      "exact_fixture_odds_refresh_calls": 46,
+      "failure": null,
+      "final_review_candidate_count": 0,
+      "fixture_reason_counts": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.604
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 53,
+          "percent_of_discovered": 10.664
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 17,
+          "percent_of_discovered": 3.421
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 240,
+          "percent_of_discovered": 48.29
+        },
+        "ODDS_STALE": {
+          "fixtures": 114,
+          "percent_of_discovered": 22.938
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 70,
+          "percent_of_discovered": 14.085
+        }
+      },
+      "fixtures_considered_for_evaluation": 427,
+      "fixtures_discovered": 497,
+      "fixtures_evaluated": 67,
+      "fixtures_rejected_for_stale_current_odds": 118,
+      "fixtures_with_incomplete_odds_page_coverage": 241,
+      "fixtures_with_no_current_odds": 18,
+      "global_state_counts": {
+        "EXPERIMENTAL_READY": 3,
+        "RESULT_TRACKING": 68,
+        "TRACKING": 426
+      },
+      "health_result": "DEGRADED",
+      "number_of_leagues": 112,
+      "odds_date_coverage": {
+        "2026-09-29": {
+          "advertised_totals": [
+            15
+          ],
+          "coverage_status": "ODDS_COMPLETE",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": null,
+          "maximum_advertised_total": 15,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "stable_complete_sweep": true,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        "2026-09-30": {
+          "advertised_totals": [
+            6,
+            7
+          ],
+          "coverage_status": "ODDS_PAGE_TOTAL_DRIFT",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_PAGINATION_CHANGED_DURING_SWEEP",
+          "maximum_advertised_total": 7,
+          "requested_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "2026-10-01": {
+          "advertised_totals": [
+            2,
+            3
+          ],
+          "coverage_status": "ODDS_PAGE_TOTAL_DRIFT",
+          "errors": [],
+          "failed_pages": [],
+          "incomplete_reason": "ODDS_PAGINATION_CHANGED_DURING_SWEEP",
+          "maximum_advertised_total": 3,
+          "requested_pages": [
+            1,
+            2,
+            3
+          ],
+          "stable_complete_sweep": false,
+          "unrequested_pages": [],
+          "valid_pages": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "priority_exact_recovered": 3,
+      "priority_exact_retries": 20,
+      "provider_fixture_rows": 496,
+      "publication_attempts": 2,
+      "readiness_reasons": {
+        "ENSEMBLE_NOT_APPROVED": 492,
+        "FINAL_REVIEW_COMPLETE": 7,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 121,
+        "QUALITY_RISK_TRACKING": 67
+      },
+      "ready_candidate_count": 7,
+      "rejection_reasons": {
+        "INVALID_MODEL_PROBABILITY": 5,
+        "NON_POSITIVE_VALUE": 492
+      },
+      "singles_sent": 2,
+      "stages": {
+        "EARLY_CANDIDATE": 121,
+        "READY_TO_PUBLISH": 7,
+        "REJECTED": 492,
+        "TRACKING": 67
+      },
+      "tracked_exact_odds_statuses": {
+        "AVAILABLE": 3,
+        "ODDS_STALE": 2
+      },
+      "tracked_exact_review_fixture_cycles": 5,
+      "tracked_exact_reviews": [
+        {
+          "fixture_id": 1350171,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "REFRESHED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T12:00:19+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T14:03:23.866780+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T15:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T14:03:24.493130+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1639142,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_SUPPORTED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T12:00:19+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T14:03:21.961500+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T15:00:00+00:00",
+          "reviewed_at_utc": "2026-09-29T14:03:21.961500+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1640508,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_YET_PUBLISHED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T12:05:14+00:00",
+          "odds_refreshed": true,
+          "odds_retrieved_at_utc": "2026-09-29T14:03:25.754969+00:00",
+          "odds_retry_state": null,
+          "odds_status": "AVAILABLE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:30:00+00:00",
+          "reviewed_at_utc": "2026-09-29T14:03:26.388783+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1641856,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_SUPPORTED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:40:14+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T14:03:27.645740+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:35:00+00:00",
+          "reviewed_at_utc": "2026-09-29T14:03:27.645740+00:00",
+          "status": "FIXTURE_REFRESHED"
+        },
+        {
+          "fixture_id": 1641857,
+          "fixture_refreshed": true,
+          "fixture_status": "NS",
+          "injuries_status": "NOT_SUPPORTED",
+          "lineup_status": "NOT_SUPPORTED",
+          "near_kickoff": true,
+          "odds_provider_timestamp_utc": "2026-09-29T08:40:14+00:00",
+          "odds_refreshed": false,
+          "odds_retrieved_at_utc": "2026-09-29T14:03:28.954770+00:00",
+          "odds_retry_state": "ODDS_FINAL_REFRESH_FAILED",
+          "odds_status": "ODDS_STALE",
+          "reason": "EXACT_FIXTURE_REFRESH_COMPLETE",
+          "refreshed_kickoff_utc": "2026-09-29T14:40:00+00:00",
+          "reviewed_at_utc": "2026-09-29T14:03:28.954770+00:00",
+          "status": "FIXTURE_REFRESHED"
+        }
+      ],
+      "tracked_final_review_shortlist": [
+        1639142,
+        1350171,
+        1640508,
+        1641856,
+        1641857
+      ],
+      "tracked_final_review_state_counts": {
+        "EARLY_CANDIDATE": 568,
+        "ODDS_STALE": 4,
+        "PUBLICATION_CLOSED": 10,
+        "READY_TO_PUBLISH": 7,
+        "REJECTED": 10,
+        "TRACKING": 1
+      },
+      "tracking": 426
+    }
+  ],
+  "freshness": {
+    "all_provider_exact_refresh_outcomes": null,
+    "invalid_probability_candidates": 45,
+    "invalid_probability_values": {
+      "0E+1": 45
+    },
+    "ready_after_unsuccessful_exact_odds": 0,
+    "ready_candidates": 22,
+    "ready_with_successful_fixture_and_odds_refresh": 22
+  },
+  "guard_counts": {
+    "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE": 6,
+    "SETTLEMENT_DEFERRED_DISCOVERY_IMMINENT": 0,
+    "SETTLEMENT_DEFERRED_DISCOVERY_STATE_UNAVAILABLE": 0,
+    "SETTLEMENT_EXECUTED": 18
+  },
+  "invocations": [
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T14:08:39.553253+00:00",
+      "guard": null,
+      "invocation_id": "01d46599ad4643a986dc05db90613a3d",
+      "last_application_record": "2026-09-29T14:08:39.553253+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:38:37.074350+00:00",
+      "guard": null,
+      "invocation_id": "2dfdb08bf42b4adbb5971a8f30b21e95",
+      "last_application_record": "2026-09-29T11:38:37.074350+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:38:37.733836+00:00",
+      "guard": null,
+      "invocation_id": "332e365edc7048b392830776d9d30f85",
+      "last_application_record": "2026-09-29T12:38:37.733836+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T10:38:58.334525+00:00",
+      "guard": null,
+      "invocation_id": "38c235203df14d919eddd600e51bcaf5",
+      "last_application_record": "2026-09-29T10:38:58.334525+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:08:37.503728+00:00",
+      "guard": null,
+      "invocation_id": "4515dd6cbcb64426ac85f66630346570",
+      "last_application_record": "2026-09-29T12:08:37.503728+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:08:28.585987+00:00",
+      "guard": null,
+      "invocation_id": "51fdfd293232401f96d672db599fef88",
+      "last_application_record": "2026-09-29T11:08:28.585987+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:08:44.969355+00:00",
+      "guard": null,
+      "invocation_id": "89d63fc69e7942cabe23e77cfcacf477",
+      "last_application_record": "2026-09-29T13:08:44.969355+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:39:01.010989+00:00",
+      "guard": null,
+      "invocation_id": "9f388b98321842599b90b82e2c02b6e3",
+      "last_application_record": "2026-09-29T13:39:01.010989+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T10:08:47.697774+00:00",
+      "guard": null,
+      "invocation_id": "aceffe076e1e495ba2c73689a9884fcc",
+      "last_application_record": "2026-09-29T10:08:47.697774+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:05:00.323268+00:00",
+      "guard": {
+        "api_calls": 0,
+        "code": "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE",
+        "database_writes": 0,
+        "discovery_invocation": "13658c57fb904b8d9012ea8c3f34d8e9",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "DEFERRED",
+        "telegram_sends": 0
+      },
+      "invocation_id": "0db1ee77c1354978bad61571d96db456",
+      "last_application_record": "2026-09-29T11:05:00.323268+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:55:04.810194+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "1ef0350ee19f482d86224d1abed64961",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 44.775409,
+      "invocation_id": "10163ac8ec9545fc9c7bbccdb1d0f2db",
+      "last_application_record": "2026-09-29T12:55:49.408844+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 44.59865,
+      "persisted_run_completed_at": "2026-09-29T12:55:49.585603+00:00",
+      "records": 12,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T10:15:24.597670+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "d6ebfb3cf6bb4d02a303e5e6ab2199ce",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 34.006889,
+      "invocation_id": "3a3d2dcc539d408297dd8ad9068dfaa0",
+      "last_application_record": "2026-09-29T10:15:43.706435+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 19.108765,
+      "persisted_run_completed_at": "2026-09-29T10:15:58.604559+00:00",
+      "records": 7,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:25:02.844210+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "13658c57fb904b8d9012ea8c3f34d8e9",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 36.64163,
+      "invocation_id": "40432921dbcd4fedbd078bbb3d636fcd",
+      "last_application_record": "2026-09-29T11:25:23.298871+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 20.454661,
+      "persisted_run_completed_at": "2026-09-29T11:25:39.485840+00:00",
+      "records": 7,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:35:00.343816+00:00",
+      "guard": {
+        "api_calls": 0,
+        "code": "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE",
+        "database_writes": 0,
+        "discovery_invocation": "1ef0350ee19f482d86224d1abed64961",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "DEFERRED",
+        "telegram_sends": 0
+      },
+      "invocation_id": "5688cf9cfed0460887e415d1dc3f7594",
+      "last_application_record": "2026-09-29T12:35:00.343816+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:25:18.625634+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "b93f6757dace44f0be70391cdfe18c57",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 38.181725,
+      "invocation_id": "60c3ff634dcc4df4bf8cdcb03c1d85f0",
+      "last_application_record": "2026-09-29T13:25:40.708863+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 22.083229,
+      "persisted_run_completed_at": "2026-09-29T13:25:56.807359+00:00",
+      "records": 8,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:15:02.494558+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "b93f6757dace44f0be70391cdfe18c57",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 34.442671,
+      "invocation_id": "656e336832c043539090e55cee5099ec",
+      "last_application_record": "2026-09-29T13:15:36.847542+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 34.352984,
+      "persisted_run_completed_at": "2026-09-29T13:15:36.937229+00:00",
+      "records": 11,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T14:05:21.877075+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "4566761762c14dec961eb451057de560",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 37.10018,
+      "invocation_id": "6e483cf6ebcb46f098af74abed257f62",
+      "last_application_record": "2026-09-29T14:05:58.863585+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 36.98651,
+      "persisted_run_completed_at": "2026-09-29T14:05:58.977255+00:00",
+      "records": 11,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:55:14.414458+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "c3ac5583ce4441e6aeb398b6f18b6d72",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 38.857874,
+      "invocation_id": "6ece4a3fc663438b89fa9081e5c8179a",
+      "last_application_record": "2026-09-29T13:55:53.146569+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 38.732111,
+      "persisted_run_completed_at": "2026-09-29T13:55:53.272332+00:00",
+      "records": 11,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:45:07.334906+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "1ef0350ee19f482d86224d1abed64961",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 35.604033,
+      "invocation_id": "74cd5bd796404d59beb6fda9c9879455",
+      "last_application_record": "2026-09-29T12:45:27.400057+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 20.065151,
+      "persisted_run_completed_at": "2026-09-29T12:45:42.938939+00:00",
+      "records": 10,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T10:45:08.605253+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "623e3e65eff34f4bbf6d22f6663871b0",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 34.240104,
+      "invocation_id": "756d95d658cd45c5b29769acf3fd2d8e",
+      "last_application_record": "2026-09-29T10:45:27.166283+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 18.56103,
+      "persisted_run_completed_at": "2026-09-29T10:45:42.845357+00:00",
+      "records": 7,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:05:00.569064+00:00",
+      "guard": {
+        "api_calls": 0,
+        "code": "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE",
+        "database_writes": 0,
+        "discovery_invocation": "b93f6757dace44f0be70391cdfe18c57",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "DEFERRED",
+        "telegram_sends": 0
+      },
+      "invocation_id": "88339c2e658f4185ab915b588d07fc63",
+      "last_application_record": "2026-09-29T13:05:00.569064+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T10:25:00.615694+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "d6ebfb3cf6bb4d02a303e5e6ab2199ce",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 34.569788,
+      "invocation_id": "a102b758a30f4a2b9f7f36672264b7c3",
+      "last_application_record": "2026-09-29T10:25:20.790674+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 20.17498,
+      "persisted_run_completed_at": "2026-09-29T10:25:35.185482+00:00",
+      "records": 7,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T10:55:22.131259+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "623e3e65eff34f4bbf6d22f6663871b0",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 34.785222,
+      "invocation_id": "a127355a0e5643cb9438f681cdc83df2",
+      "last_application_record": "2026-09-29T10:55:40.894193+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 18.762934,
+      "persisted_run_completed_at": "2026-09-29T10:55:56.916481+00:00",
+      "records": 7,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:45:18.604266+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "c3ac5583ce4441e6aeb398b6f18b6d72",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 34.823923,
+      "invocation_id": "a41c211677294c3ea574ecf0aecb6fef",
+      "last_application_record": "2026-09-29T13:45:38.505946+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 19.90168,
+      "persisted_run_completed_at": "2026-09-29T13:45:53.428189+00:00",
+      "records": 9,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T10:35:00.575517+00:00",
+      "guard": {
+        "api_calls": 0,
+        "code": "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE",
+        "database_writes": 0,
+        "discovery_invocation": "623e3e65eff34f4bbf6d22f6663871b0",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "DEFERRED",
+        "telegram_sends": 0
+      },
+      "invocation_id": "affe1804770349cb9f4174908084759c",
+      "last_application_record": "2026-09-29T10:35:00.575517+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:25:00.236203+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "89440754843f4ed28682c0e743fe94c9",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 40.347634,
+      "invocation_id": "c0abe73476814df69f0d0cc7c72a0ce5",
+      "last_application_record": "2026-09-29T12:25:23.191291+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 22.955088,
+      "persisted_run_completed_at": "2026-09-29T12:25:40.583837+00:00",
+      "records": 7,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:35:00.578489+00:00",
+      "guard": {
+        "api_calls": 0,
+        "code": "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE",
+        "database_writes": 0,
+        "discovery_invocation": "c3ac5583ce4441e6aeb398b6f18b6d72",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "DEFERRED",
+        "telegram_sends": 0
+      },
+      "invocation_id": "c8b364974c0b4cdab5d214182597e795",
+      "last_application_record": "2026-09-29T13:35:00.578489+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:35:00.326079+00:00",
+      "guard": {
+        "api_calls": 0,
+        "code": "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE",
+        "database_writes": 0,
+        "discovery_invocation": "8dcdd628eeda4026b027e5aa98f80904",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "DEFERRED",
+        "telegram_sends": 0
+      },
+      "invocation_id": "dbf3ebb0c3fc4e3b99ed6600e76a6340",
+      "last_application_record": "2026-09-29T11:35:00.326079+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 0.0,
+      "records": 1,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:15:00.657937+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "13658c57fb904b8d9012ea8c3f34d8e9",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 32.281293,
+      "invocation_id": "e27a65fd43764129b29fd240a2c23d84",
+      "last_application_record": "2026-09-29T11:15:18.798922+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 18.140985,
+      "persisted_run_completed_at": "2026-09-29T11:15:32.939230+00:00",
+      "records": 7,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:45:15.360641+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "8dcdd628eeda4026b027e5aa98f80904",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 34.984024,
+      "invocation_id": "e30574330b494b87880e426820acae15",
+      "last_application_record": "2026-09-29T11:45:34.769863+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 19.409222,
+      "persisted_run_completed_at": "2026-09-29T11:45:50.344665+00:00",
+      "records": 8,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:55:15.592004+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "8dcdd628eeda4026b027e5aa98f80904",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 33.891345,
+      "invocation_id": "e3533447c54c4d16aeb461500dac8a4e",
+      "last_application_record": "2026-09-29T11:55:34.153697+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 18.561693,
+      "persisted_run_completed_at": "2026-09-29T11:55:49.483349+00:00",
+      "records": 8,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:15:02.834622+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "89440754843f4ed28682c0e743fe94c9",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 35.448626,
+      "invocation_id": "fd589fa406384213a822a3b376916279",
+      "last_application_record": "2026-09-29T12:15:22.314951+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 19.480329,
+      "persisted_run_completed_at": "2026-09-29T12:15:38.283248+00:00",
+      "records": 7,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:05:22.070235+00:00",
+      "guard": {
+        "code": "SETTLEMENT_EXECUTED",
+        "discovery_invocation": "89440754843f4ed28682c0e743fe94c9",
+        "guard_seconds": 180,
+        "schema_version": "goalvision-settlement-runtime-guard-v1",
+        "status": "EXECUTED"
+      },
+      "guard_to_persisted_completion_seconds": 37.694147,
+      "invocation_id": "ff1de875337d4b54824c77c8d9715ec3",
+      "last_application_record": "2026-09-29T12:05:59.568276+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 37.498041,
+      "persisted_run_completed_at": "2026-09-29T12:05:59.764382+00:00",
+      "records": 10,
+      "unit": "goalvision-lab-combo-settle.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:00:10.595813+00:00",
+      "guard": null,
+      "invocation_id": "13658c57fb904b8d9012ea8c3f34d8e9",
+      "last_application_record": "2026-09-29T11:10:11.801521+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 601.205708,
+      "records": 221,
+      "unit": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:30:14.542647+00:00",
+      "guard": null,
+      "invocation_id": "1ef0350ee19f482d86224d1abed64961",
+      "last_application_record": "2026-09-29T12:36:27.721446+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 373.178799,
+      "records": 242,
+      "unit": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T14:00:11.105193+00:00",
+      "guard": null,
+      "invocation_id": "4566761762c14dec961eb451057de560",
+      "last_application_record": "2026-09-29T14:04:35.123796+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 264.018603,
+      "records": 146,
+      "unit": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T10:30:07.889552+00:00",
+      "guard": null,
+      "invocation_id": "623e3e65eff34f4bbf6d22f6663871b0",
+      "last_application_record": "2026-09-29T10:36:22.019487+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 374.129935,
+      "records": 227,
+      "unit": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T12:00:03.355135+00:00",
+      "guard": null,
+      "invocation_id": "89440754843f4ed28682c0e743fe94c9",
+      "last_application_record": "2026-09-29T12:03:31.385321+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 208.030186,
+      "records": 227,
+      "unit": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T11:30:09.904059+00:00",
+      "guard": null,
+      "invocation_id": "8dcdd628eeda4026b027e5aa98f80904",
+      "last_application_record": "2026-09-29T11:35:50.384318+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 340.480259,
+      "records": 221,
+      "unit": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:00:03.302181+00:00",
+      "guard": null,
+      "invocation_id": "b93f6757dace44f0be70391cdfe18c57",
+      "last_application_record": "2026-09-29T13:06:53.115732+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 409.813551,
+      "records": 252,
+      "unit": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "exit_status": null,
+      "first_application_record": "2026-09-29T13:30:04.482187+00:00",
+      "guard": null,
+      "invocation_id": "c3ac5583ce4441e6aeb398b6f18b6d72",
+      "last_application_record": "2026-09-29T13:36:38.889046+00:00",
+      "manager_completion": null,
+      "manager_start": null,
+      "observed_log_span_seconds": 394.406859,
+      "records": 264,
+      "unit": "goalvision-lab-v2-discover.service"
+    }
+  ],
+  "journal_coverage": {
+    "historical_exit_status_and_failures": null,
+    "http_response_codes": {
+      "200": 1928
+    },
+    "manager_records_readable": false,
+    "records": 1969,
+    "uids": {
+      "1001": 1969
+    }
+  },
+  "latest_completed_in_window_systemd_samples": {
+    "goalvision-adaptive-learning-observer.service": {
+      "exit_status": 0,
+      "exit_utc": "2026-09-29T14:08:39+00:00",
+      "result": "success",
+      "runtime_seconds": 31.675725,
+      "start_utc": "2026-09-29T14:08:08+00:00"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "exit_status": 0,
+      "exit_utc": "2026-09-29T14:05:59+00:00",
+      "result": "success",
+      "runtime_seconds": 37.469627,
+      "start_utc": "2026-09-29T14:05:21+00:00"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "exit_status": 0,
+      "exit_utc": "2026-09-29T14:04:35+00:00",
+      "result": "success",
+      "runtime_seconds": 266.903426,
+      "start_utc": "2026-09-29T14:00:08+00:00"
+    }
+  },
+  "lineage": {
+    "closeout_base": "a02673bb6572d9bd0ab683ae89f28913e8c235e5",
+    "implementation": "ec0fa32789476d5fad497c05cbf93e3c78e09d18",
+    "recovery_v1": "9ff50c2380280c8343833bd08658600e64937d83",
+    "recovery_v2": "26391232cb2e31a1d636ea20b6198af0a452c4ae"
+  },
+  "observer": {
+    "api_calls": 0,
+    "legacy_diagnostic_prediction_dates": {
+      "lab-single-3b662c54b42b039533e47494a161530ba030c7cdaf3fa2f0cadd2866ae45c71c": "2026-09-13T13:57:45.821140+00:00",
+      "lab-single-642482f77bacf1f297fb84cc443ea6d8e844760664025df73c957145e8402785": "2026-09-13T13:57:45.821140+00:00",
+      "lab-single-a7e9564f01ace088fda37feef29fad6c04db7284b38ea88c96634d96ada6ad60": "2026-09-14T16:00:46.565045+00:00"
+    },
+    "linked_singles_after": 95,
+    "linked_singles_before": 90,
+    "records": 9,
+    "repeated_legacy_diagnostics": [
+      {
+        "identity": "lab-single-3b662c54b42b039533e47494a161530ba030c7cdaf3fa2f0cadd2866ae45c71c",
+        "status": "MISSING_FROZEN_EVIDENCE"
+      },
+      {
+        "identity": "lab-single-642482f77bacf1f297fb84cc443ea6d8e844760664025df73c957145e8402785",
+        "status": "MISSING_FROZEN_EVIDENCE"
+      },
+      {
+        "identity": "lab-single-a7e9564f01ace088fda37feef29fad6c04db7284b38ea88c96634d96ada6ad60",
+        "status": "MISSING_FROZEN_EVIDENCE"
+      }
+    ],
+    "resolved_after": 1540,
+    "resolved_before": 1534,
+    "telegram_sends": 0
+  },
+  "persistence": {
+    "data/goalvision.db": {
+      "PRAGMA foreign_key_check": [],
+      "PRAGMA quick_check": [
+        [
+          "ok"
+        ]
+      ],
+      "journal_mode": "delete",
+      "size_bytes": 286720,
+      "triggers": [
+        "bankroll_transactions_no_update",
+        "bankroll_transactions_no_delete"
+      ]
+    },
+    "var/adaptive_lab/audit.db": {
+      "PRAGMA foreign_key_check": [],
+      "PRAGMA quick_check": [
+        [
+          "ok"
+        ]
+      ],
+      "journal_mode": "delete",
+      "size_bytes": 88682496,
+      "triggers": [
+        "source_records_no_update",
+        "source_records_no_delete",
+        "learning_cycles_no_update",
+        "learning_cycles_no_delete",
+        "linkage_diagnostics_no_update",
+        "linkage_diagnostics_no_delete",
+        "combo_analytics_no_update",
+        "combo_analytics_no_delete",
+        "live_snapshots_no_update",
+        "live_snapshots_no_delete",
+        "live_diagnostics_no_update",
+        "live_diagnostics_no_delete",
+        "quota_claims_no_update",
+        "quota_claims_no_delete",
+        "quota_observations_no_update",
+        "quota_observations_no_delete",
+        "cycle_health_no_update",
+        "cycle_health_no_delete",
+        "observer_runs_no_update",
+        "observer_runs_no_delete",
+        "weekly_reports_no_update",
+        "weekly_reports_no_delete",
+        "weekly_claims_no_update",
+        "weekly_claims_no_delete",
+        "weekly_receipts_no_update",
+        "weekly_receipts_no_delete",
+        "weekly_delivery_unknown_no_update",
+        "weekly_delivery_unknown_no_delete",
+        "learning_observations_no_update",
+        "learning_observations_no_delete",
+        "learning_datasets_no_update",
+        "learning_datasets_no_delete",
+        "split_assignments_no_update",
+        "split_assignments_no_delete",
+        "model_specs_no_update",
+        "model_specs_no_delete",
+        "training_runs_no_update",
+        "training_runs_no_delete",
+        "model_artifacts_no_update",
+        "model_artifacts_no_delete",
+        "validation_results_no_update",
+        "validation_results_no_delete",
+        "holdout_results_no_update",
+        "holdout_results_no_delete",
+        "candidate_comparisons_no_update",
+        "candidate_comparisons_no_delete",
+        "candidate_events_no_update",
+        "candidate_events_no_delete",
+        "shadow_runs_no_update",
+        "shadow_runs_no_delete",
+        "shadow_predictions_no_update",
+        "shadow_predictions_no_delete",
+        "shadow_settlements_no_update",
+        "shadow_settlements_no_delete",
+        "promotion_gates_no_update",
+        "promotion_gates_no_delete",
+        "champion_generations_no_update",
+        "champion_generations_no_delete",
+        "champion_predictions_no_update",
+        "champion_predictions_no_delete",
+        "activation_events_no_update",
+        "activation_events_no_delete",
+        "rollback_events_no_update",
+        "rollback_events_no_delete",
+        "live_candidates_no_update",
+        "live_candidates_no_delete",
+        "live_claims_no_update",
+        "live_claims_no_delete",
+        "live_publications_no_update",
+        "live_publications_no_delete",
+        "live_settlements_no_update",
+        "live_settlements_no_delete",
+        "live_result_claims_no_update",
+        "live_result_claims_no_delete",
+        "live_result_receipts_no_update",
+        "live_result_receipts_no_delete",
+        "canonical_opportunities_no_update",
+        "canonical_opportunities_no_delete",
+        "canonical_results_no_update",
+        "canonical_results_no_delete"
+      ]
+    },
+    "var/lab_combo/analysis.db": {
+      "PRAGMA foreign_key_check": {
+        "budget_seconds": 2,
+        "incomplete": "interrupted"
+      },
+      "PRAGMA quick_check": {
+        "budget_seconds": 2,
+        "incomplete": "interrupted"
+      },
+      "journal_mode": "delete",
+      "size_bytes": 619786240,
+      "triggers": [
+        "bankroll_transactions_no_update",
+        "bankroll_transactions_no_delete",
+        "calibration_artifacts_no_update",
+        "calibration_artifacts_no_delete",
+        "calibration_status_history_no_update",
+        "calibration_status_history_no_delete",
+        "model_monitoring_runs_no_update",
+        "model_monitoring_runs_no_delete",
+        "model_monitoring_alerts_no_update",
+        "model_monitoring_alerts_no_delete",
+        "probability_calibration_history_no_update",
+        "probability_calibration_history_no_delete",
+        "official_quality_gate_no_update",
+        "official_quality_gate_no_delete",
+        "official_prediction_orchestration_no_update",
+        "official_prediction_orchestration_no_delete",
+        "official_prediction_publication_no_update",
+        "official_prediction_publication_no_delete",
+        "official_prediction_runs_no_update",
+        "official_prediction_runs_no_delete",
+        "official_prediction_run_items_no_update",
+        "official_prediction_run_items_no_delete",
+        "official_prediction_candidate_versions_no_update",
+        "official_prediction_candidate_versions_no_delete",
+        "official_prediction_candidate_lifecycle_no_update",
+        "official_prediction_candidate_lifecycle_no_delete",
+        "match_data_snapshot_versions_no_update",
+        "match_data_snapshot_versions_no_delete",
+        "match_data_snapshot_lifecycle_no_update",
+        "match_data_snapshot_lifecycle_no_delete",
+        "match_feature_sets_no_update",
+        "match_feature_sets_no_delete",
+        "model_input_vectors_no_update",
+        "model_input_vectors_no_delete",
+        "prediction_inference_results_no_update",
+        "prediction_inference_results_no_delete",
+        "probability_calibration_sets_no_update",
+        "probability_calibration_sets_no_delete",
+        "calibrated_market_probability_assemblies_no_update",
+        "calibrated_market_probability_assemblies_no_delete",
+        "calibrated_market_probability_targets_no_update",
+        "calibrated_market_probability_targets_no_delete",
+        "market_odds_snapshots_no_update",
+        "market_odds_snapshots_no_delete",
+        "market_value_assessments_no_update",
+        "market_value_assessments_no_delete",
+        "official_selection_decisions_no_update",
+        "official_selection_decisions_no_delete",
+        "official_selection_evaluations_no_update",
+        "official_selection_evaluations_no_delete",
+        "candidate_preparation_executions_no_update",
+        "candidate_preparation_executions_no_delete",
+        "candidate_preparation_risk_no_update",
+        "candidate_preparation_risk_no_delete",
+        "official_pipeline_executions_no_update",
+        "official_pipeline_executions_no_delete",
+        "official_pipeline_stage_events_no_update",
+        "official_pipeline_stage_events_no_delete",
+        "historical_match_imports_no_update",
+        "historical_match_imports_no_delete",
+        "historical_matches_no_update",
+        "historical_matches_no_delete",
+        "historical_match_statistics_no_update",
+        "historical_match_statistics_no_delete",
+        "historical_lineups_no_update",
+        "historical_lineups_no_delete",
+        "historical_training_dataset_builds_no_update",
+        "historical_training_dataset_builds_no_delete",
+        "historical_training_examples_no_update",
+        "historical_training_examples_no_delete",
+        "historical_training_example_sources_no_update",
+        "historical_training_example_sources_no_delete",
+        "historical_training_exclusions_no_update",
+        "historical_training_exclusions_no_delete",
+        "historical_dataset_splits_no_update",
+        "historical_dataset_splits_no_delete",
+        "historical_dataset_split_folds_no_update",
+        "historical_dataset_split_folds_no_delete",
+        "historical_dataset_split_assignments_no_update",
+        "historical_dataset_split_assignments_no_delete",
+        "historical_model_training_runs_no_update",
+        "historical_model_training_runs_no_delete",
+        "historical_model_artifacts_no_update",
+        "historical_model_artifacts_no_delete",
+        "historical_model_artifact_targets_no_update",
+        "historical_model_artifact_targets_no_delete",
+        "historical_model_preprocessing_features_no_update",
+        "historical_model_preprocessing_features_no_delete",
+        "historical_model_training_examples_no_update",
+        "historical_model_training_examples_no_delete",
+        "historical_model_metrics_no_update",
+        "historical_model_metrics_no_delete",
+        "historical_probability_calibration_runs_no_update",
+        "historical_probability_calibration_runs_no_delete",
+        "historical_probability_calibration_artifact_sets_no_update",
+        "historical_probability_calibration_artifact_sets_no_delete",
+        "historical_probability_calibration_targets_no_update",
+        "historical_probability_calibration_targets_no_delete",
+        "historical_probability_calibration_predictions_no_update",
+        "historical_probability_calibration_predictions_no_delete",
+        "historical_probability_calibration_metrics_no_update",
+        "historical_probability_calibration_metrics_no_delete",
+        "historical_probability_calibration_reliability_bins_no_update",
+        "historical_probability_calibration_reliability_bins_no_delete",
+        "historical_backtest_runs_no_update",
+        "historical_backtest_runs_no_delete",
+        "historical_backtest_predictions_no_update",
+        "historical_backtest_predictions_no_delete",
+        "historical_backtest_odds_snapshots_no_update",
+        "historical_backtest_odds_snapshots_no_delete",
+        "historical_backtest_market_assessments_no_update",
+        "historical_backtest_market_assessments_no_delete",
+        "historical_backtest_selections_no_update",
+        "historical_backtest_selections_no_delete",
+        "historical_backtest_settlements_no_update",
+        "historical_backtest_settlements_no_delete",
+        "historical_backtest_bankroll_ledger_no_update",
+        "historical_backtest_bankroll_ledger_no_delete",
+        "historical_backtest_metrics_no_update",
+        "historical_backtest_metrics_no_delete",
+        "historical_backtest_reliability_bins_no_update",
+        "historical_backtest_reliability_bins_no_delete",
+        "historical_backtest_exclusions_no_update",
+        "historical_backtest_exclusions_no_delete",
+        "model_comparison_runs_no_update",
+        "model_comparison_runs_no_delete",
+        "model_comparison_candidates_no_update",
+        "model_comparison_candidates_no_delete",
+        "model_comparison_source_evidence_no_update",
+        "model_comparison_source_evidence_no_delete",
+        "model_comparison_metric_evaluations_no_update",
+        "model_comparison_metric_evaluations_no_delete",
+        "model_comparison_stability_groups_no_update",
+        "model_comparison_stability_groups_no_delete",
+        "model_comparison_statistical_evidence_no_update",
+        "model_comparison_statistical_evidence_no_delete",
+        "model_comparison_gate_evaluations_no_update",
+        "model_comparison_gate_evaluations_no_delete",
+        "model_comparison_score_components_no_update",
+        "model_comparison_score_components_no_delete",
+        "model_comparison_recommendations_no_update",
+        "model_comparison_recommendations_no_delete",
+        "model_comparison_exclusions_no_update",
+        "model_comparison_exclusions_no_delete",
+        "shadow_evaluation_executions_no_update",
+        "shadow_evaluation_executions_no_delete",
+        "shadow_evaluation_input_snapshots_no_update",
+        "shadow_evaluation_input_snapshots_no_delete",
+        "shadow_evaluation_inferences_no_update",
+        "shadow_evaluation_inferences_no_delete",
+        "shadow_evaluation_market_assessments_no_update",
+        "shadow_evaluation_market_assessments_no_delete",
+        "shadow_evaluation_selections_no_update",
+        "shadow_evaluation_selections_no_delete",
+        "shadow_evaluation_comparisons_no_update",
+        "shadow_evaluation_comparisons_no_delete",
+        "shadow_evaluation_settlements_no_update",
+        "shadow_evaluation_settlements_no_delete",
+        "shadow_evaluation_metrics_no_update",
+        "shadow_evaluation_metrics_no_delete",
+        "shadow_evaluation_aggregate_snapshots_no_update",
+        "shadow_evaluation_aggregate_snapshots_no_delete",
+        "shadow_evaluation_exclusions_no_update",
+        "shadow_evaluation_exclusions_no_delete",
+        "model_activation_requests_no_update",
+        "model_activation_requests_no_delete",
+        "model_activation_plans_no_update",
+        "model_activation_plans_no_delete",
+        "model_activation_validations_no_update",
+        "model_activation_validations_no_delete",
+        "model_champion_generations_no_update",
+        "model_champion_generations_no_delete",
+        "model_champion_registry_events_no_update",
+        "model_champion_registry_events_no_delete",
+        "model_activation_executions_no_update",
+        "model_activation_executions_no_delete",
+        "model_rollback_requests_no_update",
+        "model_rollback_requests_no_delete",
+        "model_rollback_plans_no_update",
+        "model_rollback_plans_no_delete",
+        "model_rollback_executions_no_update",
+        "model_rollback_executions_no_delete",
+        "model_activation_evidence_links_no_update",
+        "model_activation_evidence_links_no_delete",
+        "real_match_lab_analyses_no_update",
+        "real_match_lab_analyses_no_delete",
+        "real_match_lab_market_evaluations_no_update",
+        "real_match_lab_market_evaluations_no_delete",
+        "real_match_lab_stage_events_no_update",
+        "real_match_lab_stage_events_no_delete",
+        "real_match_lab_deliveries_no_update",
+        "real_match_lab_deliveries_no_delete",
+        "historical_source_reviews_no_update",
+        "historical_source_reviews_no_delete",
+        "historical_source_manifests_no_update",
+        "historical_source_manifests_no_delete",
+        "historical_source_files_no_update",
+        "historical_source_files_no_delete",
+        "historical_team_aliases_no_update",
+        "historical_team_aliases_no_delete",
+        "historical_feature_coverage_reports_no_update",
+        "historical_feature_coverage_reports_no_delete",
+        "historical_data_quality_reports_no_update",
+        "historical_data_quality_reports_no_delete",
+        "historical_leakage_audit_reports_no_update",
+        "historical_leakage_audit_reports_no_delete",
+        "historical_evidence_tiers_no_update",
+        "historical_evidence_tiers_no_delete",
+        "historical_odds_source_reviews_no_update",
+        "historical_odds_source_reviews_no_delete",
+        "historical_odds_source_manifests_no_update",
+        "historical_odds_source_manifests_no_delete",
+        "historical_odds_source_files_no_update",
+        "historical_odds_source_files_no_delete",
+        "historical_odds_event_links_no_update",
+        "historical_odds_event_links_no_delete",
+        "historical_odds_quotes_no_update",
+        "historical_odds_quotes_no_delete",
+        "historical_odds_quote_selections_no_update",
+        "historical_odds_quote_selections_no_delete",
+        "historical_odds_coverage_reports_no_update",
+        "historical_odds_coverage_reports_no_delete",
+        "reviewed_odds_backtest_integrity_reports_no_update",
+        "reviewed_odds_backtest_integrity_reports_no_delete",
+        "historical_betting_evidence_summaries_no_update",
+        "historical_betting_evidence_summaries_no_delete",
+        "historical_odds_shadow_summaries_no_update",
+        "historical_odds_shadow_summaries_no_delete",
+        "historical_odds_audit_reports_no_update",
+        "historical_odds_audit_reports_no_delete",
+        "historical_odds_source_review_versions_no_update",
+        "historical_odds_source_review_versions_no_delete",
+        "historical_odds_acquisition_windows_no_update",
+        "historical_odds_acquisition_windows_no_delete",
+        "historical_odds_partition_coverage_reports_no_update",
+        "historical_odds_partition_coverage_reports_no_delete",
+        "forward_test_odds_snapshots_no_update",
+        "forward_test_odds_snapshots_no_delete",
+        "forward_test_observations_no_update",
+        "forward_test_observations_no_delete",
+        "forward_test_results_no_update",
+        "forward_test_results_no_delete",
+        "forward_test_settlements_no_update",
+        "forward_test_settlements_no_delete",
+        "forward_test_events_no_update",
+        "forward_test_events_no_delete",
+        "forward_test_rejections_no_update",
+        "forward_test_rejections_no_delete",
+        "first_lab_run_executions_no_update",
+        "first_lab_run_executions_no_delete",
+        "first_lab_run_stage_events_no_update",
+        "first_lab_run_stage_events_no_delete",
+        "forward_test_publication_reviews_no_update",
+        "forward_test_publication_reviews_no_delete",
+        "forward_test_result_previews_no_update",
+        "forward_test_result_previews_no_delete",
+        "ft_monitoring_snapshots_no_update",
+        "ft_monitoring_snapshots_no_delete",
+        "ft_monitoring_reports_no_update",
+        "ft_monitoring_reports_no_delete",
+        "ft_monitoring_audits_no_update",
+        "ft_monitoring_audits_no_delete",
+        "ft_monitoring_incidents_no_update",
+        "ft_monitoring_incidents_no_delete",
+        "ft_monitoring_incident_events_no_update",
+        "ft_monitoring_incident_events_no_delete",
+        "ft_monitoring_exports_no_update",
+        "ft_monitoring_exports_no_delete",
+        "lab_console_actions_no_update",
+        "lab_console_actions_no_delete",
+        "lab_console_action_events_no_update",
+        "lab_console_action_events_no_delete",
+        "lab_console_demo_manifests_no_update",
+        "lab_console_demo_manifests_no_delete",
+        "reasoning_records_no_update",
+        "reasoning_records_no_delete",
+        "reasoning_features_no_update",
+        "reasoning_features_no_delete",
+        "reasoning_groups_no_update",
+        "reasoning_groups_no_delete",
+        "reasoning_factors_no_update",
+        "reasoning_factors_no_delete",
+        "reasoning_markets_no_update",
+        "reasoning_markets_no_delete",
+        "reasoning_audits_no_update",
+        "reasoning_audits_no_delete",
+        "reasoning_findings_no_update",
+        "reasoning_findings_no_delete",
+        "governance_policies_no_update",
+        "governance_policies_no_delete",
+        "governance_evaluations_no_update",
+        "governance_evaluations_no_delete",
+        "governance_windows_no_update",
+        "governance_windows_no_delete",
+        "governance_scopes_no_update",
+        "governance_scopes_no_delete",
+        "governance_decisions_no_update",
+        "governance_decisions_no_delete",
+        "governance_transitions_no_update",
+        "governance_transitions_no_delete",
+        "governance_recommendations_no_update",
+        "governance_recommendations_no_delete",
+        "governance_reproductions_no_update",
+        "governance_reproductions_no_delete",
+        "observation_governance_no_update",
+        "observation_governance_no_delete",
+        "governance_events_no_update",
+        "governance_events_no_delete",
+        "governance_policy_reviews_no_update",
+        "governance_policy_review_findings_no_update",
+        "governance_policy_approvals_no_update",
+        "governance_policy_approval_events_no_update",
+        "lab_launch_authorizations_no_update",
+        "lab_launch_authorization_events_no_update",
+        "lab_launch_readiness_audits_no_update",
+        "lab_launch_preflights_no_update",
+        "lab_launch_executions_no_update",
+        "lab_launch_stage_events_no_update",
+        "lab_database_backups_no_update",
+        "lab_database_backup_verifications_no_update",
+        "lab_run_audits_no_update",
+        "lab_launch_post_match_reviews_no_update",
+        "governance_policy_reviews_no_delete",
+        "governance_policy_review_findings_no_delete",
+        "governance_policy_approvals_no_delete",
+        "governance_policy_approval_events_no_delete",
+        "lab_launch_authorizations_no_delete",
+        "lab_launch_authorization_events_no_delete",
+        "lab_launch_readiness_audits_no_delete",
+        "lab_launch_preflights_no_delete",
+        "lab_launch_executions_no_delete",
+        "lab_launch_stage_events_no_delete",
+        "lab_database_backups_no_delete",
+        "lab_database_backup_verifications_no_delete",
+        "lab_run_audits_no_delete",
+        "lab_launch_post_match_reviews_no_delete",
+        "historical_odds_raw_quote_evidence_no_update",
+        "historical_odds_raw_quote_evidence_no_delete",
+        "current_match_intelligence_cache_no_update",
+        "current_match_intelligence_cache_no_delete",
+        "current_match_intelligence_snapshot_no_update",
+        "current_match_intelligence_snapshot_no_delete"
+      ]
+    },
+    "var/lab_combo/ledger.db": {
+      "PRAGMA foreign_key_check": [],
+      "PRAGMA quick_check": [
+        [
+          "ok"
+        ]
+      ],
+      "journal_mode": "delete",
+      "size_bytes": 60207104,
+      "triggers": [
+        "immutable_update",
+        "immutable_delete"
+      ]
+    },
+    "var/lab_v2/shadow.db": {
+      "PRAGMA foreign_key_check": [],
+      "PRAGMA quick_check": {
+        "budget_seconds": 2,
+        "incomplete": "interrupted"
+      },
+      "journal_mode": "delete",
+      "size_bytes": 12643274752,
+      "triggers": [
+        "lab_v2_shadow_no_update",
+        "lab_v2_shadow_no_delete",
+        "lab_v2_provider_cache_no_update",
+        "lab_v2_provider_cache_no_delete"
+      ]
+    }
+  },
+  "production_mutations": 0,
+  "provenance": {
+    "adaptive_database": "/home/arvis/GoalVisionAI/var/adaptive_lab/audit.db",
+    "cycles": [
+      "lab-v2-cycle-05f066e4c81209e4cfe370f0c606307856d88b05ec50d324c1b5e5cacdb30b5e",
+      "lab-v2-cycle-ad08f278fa6ad9dd8fe8025bcccb21dc154f50acfcccc9f65db447121b236081",
+      "lab-v2-cycle-b6fe110e8621f0d75d06715366c66369913cc16e68186422b0ad21df5e1bfb5c",
+      "lab-v2-cycle-6f1567712fcdfb54f891700e5cc7413a42002bb463eb3f04fdd74f5972a5d87c",
+      "lab-v2-cycle-2bd4f7407c44ac204c8fa7a3df5afd1b9a26ec03a67d867e426ce622c87a4c90",
+      "lab-v2-cycle-aa75f594e6362c537bfa53ffcf5472568481450ed358ed14275e37e79201a645",
+      "lab-v2-cycle-879d932388dd0ae233848c77f2d0ffbfe2af715f79f839cbd89bee90a567837d",
+      "lab-v2-cycle-dac95d4b765230e6395aae1993ae082c98335c095ac87b6eb966a9485b7b51ca"
+    ],
+    "installed_application": "/opt/goalvision-prematch-quota-557d5af2-f24738b05fef/application",
+    "installed_guard_sha256": "4ab82ae534403e2a3d8f7e1b589220b555b8f3cfac63bb7c878337eea53ea5ff",
+    "ledger_database": "/home/arvis/GoalVisionAI/var/lab_combo/ledger.db",
+    "scratch_capture_sha256": {
+      "post_guard_candidates.json": "8379a0627d94e454d0e508bf1d4a4c4c9cfdf316790cfbe25a9f0c2d9d7423bf",
+      "post_guard_cycle_0.json": "0331232109c0f0f4e3f10c7b961773f918170ea596ada384d4699066faf92beb",
+      "post_guard_cycle_1.json": "2c523110f3163ac2142ee298d0b1b9dbf7359d9f5739bb1d1c28d69b95f9359d",
+      "post_guard_cycle_2.json": "17054fdfc28cd4874086dfa707cf62052a02df78cba795d1b684aff39e301f80",
+      "post_guard_cycle_3.json": "8e0776799fb6734aca1c3f14ab9416c0de3e56e5f2792000e45633a5e25cac97",
+      "post_guard_cycle_4.json": "8ea517655f7de9eb9447c06cb8753cd79f8785d1e57966e734fa24e06670a395",
+      "post_guard_cycle_5.json": "2636995a69d1ed75420b72c96799c375c15613ba487aa2fc2241fe516de1305c",
+      "post_guard_cycle_6.json": "03afa69616e73f541957bdb9839e389db45edc5871cb2f68024b3e966a84ee4d",
+      "post_guard_cycle_7.json": "d0f2cfceed7f71c1b2141683ce3a5f260e938b175244a31cb469f0ca1e3236a8",
+      "post_guard_db_checks.json": "4fd232613b4a70a92e1b9c73a0a15c93caa13bf2db42fdc2ce1777a7e6ef6daa",
+      "post_guard_health.json": "017d1b98d375eceba07e490c63fc5352d0cd274507fb72b3ca56993e87dbb858",
+      "post_guard_journal.json": "1b93b50b125e1ccaad99b795ba7c87c7016786afdaf92b69bb6d722e6fb5d3c4",
+      "post_guard_ledger.json": "77d7a7cdae04ef17c6726c42a74649ea947bd2a861989a361b14f0085dca7422",
+      "post_guard_observers.json": "62b0f7c88bbd248e397614454d550081a4f3d72a50a1ea7589f3d2dff441f009",
+      "post_guard_quota.json": "019486dd1b69f9dfe6f2d901c6bbc24574c15c64b69ca3b8ecf7f92151da21d1"
+    },
+    "shadow_database": "/home/arvis/GoalVisionAI/var/lab_v2/shadow.db",
+    "stdout_log": "/var/log/goalvision-prematch/discovery-output.log"
+  },
+  "provider_calls_by_auditor": 0,
+  "pushed": false,
+  "quota": {
+    "all_discovery_cycles_within_effective_ceiling": true,
+    "categories": {
+      "PREMATCH_DISCOVERY": 366,
+      "PREMATCH_REVIEW": 1408,
+      "SETTLEMENT": 107,
+      "STATUS": 26
+    },
+    "claims": 1907,
+    "quota_observation_rows": 0,
+    "remaining_daily_before_range": [
+      3296,
+      5202
+    ],
+    "remaining_minute_before_range": [
+      199,
+      300
+    ]
+  },
+  "readable_journal_marker_counts": {
+    "DATABASE_LOCK": 0,
+    "ERROR": 0,
+    "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+    "QUOTA_DB_CONTENTION_RETRY": 0,
+    "SERVICE_FAILURE": 0,
+    "Traceback": 0,
+    "WARNING": 0,
+    "database is locked": 0
+  },
+  "schema_version": "post-guard-prematch-health-audit-v1",
+  "scope_notes": [
+    "Calendar slots are descriptive only; application invocations and persistence counted independently. Historical manager starts/success/exit counts remain null.",
+    "Unit snapshot is outside bounded window and shows settlement executing its next ordinary 14:15 cycle; that cycle is excluded from audit counts.",
+    "Database reads used mode=ro and query_only with short connections, no app imports. Immutable was avoided on live rollback-journal databases. Checks interrupted by progress handler are incomplete, not failures.",
+    "Snapshot-local sums repeat fixtures and markets. Counts of fixture coverage and final-review market projections have different denominators.",
+    "Current health flag DEGRADED records data coverage limits; it is not itself a crash, quota exhaustion, or demonstrated implementation defect."
+  ],
+  "settlement": {
+    "combo_results": 1,
+    "completed_run_records": 18,
+    "pending_published_singles": [
+      {
+        "fixture_id": 1350174,
+        "identity": "lab-v2-single-a188406bc7d8728f2dcf20249bea15270c255ac4c691978213b3f38a2748ef67",
+        "kickoff_utc": "2026-09-29T14:00:00+00:00"
+      },
+      {
+        "fixture_id": 1350171,
+        "identity": "lab-v2-single-9cbfa2e2f1d5978566f3662f12efdaf52c9470052df5eee58a4096ba3bfdc837",
+        "kickoff_utc": "2026-09-29T15:00:00+00:00"
+      },
+      {
+        "fixture_id": 1639142,
+        "identity": "lab-v2-single-965f9b8c6a5458e874300c3920ac0645d0fee1b72ed466d5fa2bd498b19ad13c",
+        "kickoff_utc": "2026-09-29T15:00:00+00:00"
+      }
+    ],
+    "runs": [
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T10:15:58.604559+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T10:25:35.185482+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T10:45:42.845357+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T10:55:56.916481+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T11:15:32.939230+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T11:25:39.485840+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T11:45:50.344665+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T11:55:49.483349+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T12:05:59.764382+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": [
+          "lab-v2-single-2964cb26490ffa6b1b3ae7533115c9a5d2a27f1fc1223dca9edb80966dd4dbd9"
+        ]
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T12:15:38.283248+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T12:25:40.583837+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T12:45:42.938939+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T12:55:49.585603+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": [
+          "lab-v2-single-73b73e8d021a924fe69a37e0afb9e0153152cc19ba59d48739b500d78b97c4ea"
+        ]
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T13:15:36.937229+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": [
+          "lab-v2-single-3317cb04329767ebc54097ae0bf7b2fee71158e6f387f7682f5685dcbcffd6d3"
+        ]
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T13:25:56.807359+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T13:45:53.428189+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": []
+      },
+      {
+        "combo_completed": [],
+        "completed_at": "2026-09-29T13:55:53.272332+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": [
+          "lab-v2-single-54e1ee1ca64a06304507300dc0a734350ab8952a19c3f546587e7e33f08bf129"
+        ]
+      },
+      {
+        "combo_completed": [
+          "lab-v2-combo-2b0ef6f679082551fc75703103e372926d6eba6d9ce487add4164a0f8c51f582"
+        ],
+        "completed_at": "2026-09-29T14:05:58.977255+00:00",
+        "shadow_settled_count": 0,
+        "single_completed": [
+          "lab-v2-single-333ca63c083f1b1c5814750f28655ef70e34a6a1f23b5d72c3103383a8408ff4"
+        ]
+      }
+    ],
+    "single_results": 5
+  },
+  "telegram_sends_by_auditor": 0,
+  "unavailable": [
+    "Root system-manager historical starts/completions, job failures, exit status, exact service runtimes and timer causation",
+    "Current protected guard transaction and full pin status",
+    "Current protected ADMIN sender configuration/state",
+    "Full quick_check of shadow.db and analysis.db; analysis.db foreign_key_check interrupted by bounded read budget",
+    "Success/unavailable/stale breakdown for all 361 exact calls (tracked review and priority recovery subsets are available)",
+    "End-to-end due queue SLA and absence of every historical stuck/orphan record",
+    "Independent completeness proof for unreadable root logs and destinations outside the inspected PREMATCH evidence"
+  ],
+  "unit_snapshot": [
+    {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Tue 2026-09-29 16:04:35 CEST",
+      "ExecMainExitTimestampMonotonic": "2064381003685",
+      "ExecMainStartTimestamp": "Tue 2026-09-29 16:00:08 CEST",
+      "ExecMainStartTimestampMonotonic": "2064114100259",
+      "ExecMainStatus": "0",
+      "Id": "goalvision-lab-v2-discover.service",
+      "LoadState": "loaded",
+      "NRestarts": "0",
+      "NeedDaemonReload": "no",
+      "Result": "success",
+      "SubState": "dead",
+      "latest_runtime_seconds": 266.903426
+    },
+    {
+      "ActiveState": "activating",
+      "ExecMainExitTimestamp": "",
+      "ExecMainExitTimestampMonotonic": "0",
+      "ExecMainStartTimestamp": "Tue 2026-09-29 16:15:00 CEST",
+      "ExecMainStartTimestampMonotonic": "2065005695248",
+      "ExecMainStatus": "0",
+      "Id": "goalvision-lab-combo-settle.service",
+      "LoadState": "loaded",
+      "NRestarts": "0",
+      "NeedDaemonReload": "no",
+      "Result": "success",
+      "SubState": "start"
+    },
+    {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Tue 2026-09-29 16:08:39 CEST",
+      "ExecMainExitTimestampMonotonic": "2064625370023",
+      "ExecMainStartTimestamp": "Tue 2026-09-29 16:08:08 CEST",
+      "ExecMainStartTimestampMonotonic": "2064593694298",
+      "ExecMainStatus": "0",
+      "Id": "goalvision-adaptive-learning-observer.service",
+      "LoadState": "loaded",
+      "NRestarts": "0",
+      "NeedDaemonReload": "no",
+      "Result": "success",
+      "SubState": "dead",
+      "latest_runtime_seconds": 31.675725
+    },
+    {
+      "ActiveState": "active",
+      "Id": "goalvision-lab-v2-discover.timer",
+      "LastTriggerUSec": "Tue 2026-09-29 16:00:08 CEST",
+      "LoadState": "loaded",
+      "NeedDaemonReload": "no",
+      "NextElapseUSecRealtime": "Tue 2026-09-29 16:30:00 CEST",
+      "Result": "success",
+      "SubState": "waiting"
+    },
+    {
+      "ActiveState": "active",
+      "Id": "goalvision-lab-combo-settle.timer",
+      "LastTriggerUSec": "Tue 2026-09-29 16:15:00 CEST",
+      "LoadState": "loaded",
+      "NeedDaemonReload": "no",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "running"
+    },
+    {
+      "ActiveState": "active",
+      "Id": "goalvision-adaptive-learning-observer.timer",
+      "LastTriggerUSec": "Tue 2026-09-29 16:08:08 CEST",
+      "LoadState": "loaded",
+      "NeedDaemonReload": "no",
+      "NextElapseUSecRealtime": "Tue 2026-09-29 16:38:00 CEST",
+      "Result": "success",
+      "SubState": "waiting"
+    }
+  ],
+  "unit_snapshot_captured_at": "2026-09-29T14:15:10.572195+00:00",
+  "validation": {
+    "candidate_stage_reconciliation": "PASS",
+    "deferred_no_run_within_120_seconds": "PASS_6",
+    "delivery_claim_prediction_target_linkage": "PASS_13",
+    "executed_marker_to_run_pairing": "PASS_18_UNIQUE_PAIRS",
+    "guard_outcome_reconciliation": "PASS",
+    "new_delivery_candidate_linkage": "PASS_9_LEGS_OR_SINGLES",
+    "per_cycle_stage_counts": "PASS_8",
+    "ready_exact_refresh_checks": "PASS_22",
+    "window_boundaries": "PASS"
+  },
+  "verdict": "POST_GUARD_PREMATCH_HEALTH_BLOCKED_INSUFFICIENT_EVIDENCE",
+  "window": {
+    "last_completed_application_evidence": "2026-09-29T14:08:39.553253+00:00",
+    "selection": "Fixed at first capture; later cycles intentionally excluded; all dates UTC. No pre-install throughput comparison.",
+    "since": "2026-09-29T10:07:25.396888+00:00",
+    "until": "2026-09-29T14:09:00+00:00"
+  }
+}

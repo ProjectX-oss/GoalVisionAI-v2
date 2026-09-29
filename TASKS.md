@@ -1575,3 +1575,14 @@ Review after completing the current priority.
 - Closeout: [production audit](docs/rehearsals/DISCOVERY_PRIORITY_SETTLEMENT_GUARD_CLOSEOUT_2026-09-29.md).
 - Earlier pending/preparation-only entries remain historical; this entry records their later production outcome.
 - Documentation/evidence checks only; no runtime/configuration changes, systemd controls, daemon-reload, API/Telegram activity, business DB access, push or next phase.
+
+
+## 2026-09-29 — Bounded post-guard PREMATCH health audit
+
+- [x] Inspect persisted production evidence from 10:07:25.396888 through 14:09 UTC using read-only systemd/journal/SQLite access.
+- [x] Record eight discovery cycles, 18 executed settlements, six zero-work deferrals, nine observer reports, throughput, exact refresh and delivery linkage.
+- [x] Document degraded odds coverage and missing privileged manager/guard/ADMIN evidence; preserve unavailable counts as unavailable.
+- [x] Prepare minimum read-only operator commands and validate documentation-only audit artifacts.
+- Verdict: `POST_GUARD_PREMATCH_HEALTH_BLOCKED_INSUFFICIENT_EVIDENCE`.
+- Report: `docs/operations/POST_GUARD_PREMATCH_HEALTH_2026-09-29.md`.
+- No runtime/source/configuration/database changes, provider calls, auditor Telegram sends, fixes, deployment, push or subsequent phase.
