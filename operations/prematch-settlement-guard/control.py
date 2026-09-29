@@ -185,7 +185,9 @@ def inspect(host: Host, installed: bool, pending: bool = False) -> dict[str, Any
         if not (pending and unit == SERVICE):
             require(props['NeedDaemonReload'] == 'no', 'DAEMON_RELOAD_DRIFT')
         for key, value in entry['stable'].items():
-            require(key in props and property_equal(key, props[key], value), 'UNIT_PROPERTY_DRIFT_'+key)
+            # systemctl show may omit empty non-dependency properties.
+            require((key not in DEPENDENCY_KEYS or key in props) and
+                    property_equal(key, props.get(key, ''), value), 'UNIT_PROPERTY_DRIFT_'+key)
         if unit == SERVICE and not pending:
             target = wrapped_argv() if installed else guard.SETTLEMENT_ARGV
             require(exec_argv(props['ExecStart']) == ' '.join(target), 'EXECSTART_DRIFT')

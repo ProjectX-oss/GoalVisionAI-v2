@@ -17,6 +17,7 @@ import test_settlement_runtime_guard as fixtures
 
 c, g, ROOT = fixtures.c, fixtures.g, fixtures.ROOT
 REAL_LOCKED = c.locked
+EMPTY_EXEC_KEYS = ('ExecCondition', 'ExecStartPre', 'ExecStartPost', 'ExecStop', 'ExecStopPost')
 
 
 class DependencyTests(unittest.TestCase):
@@ -71,6 +72,57 @@ class DependencyTests(unittest.TestCase):
             '-.mount basic.target goalvision-lab-combo-settle.timer network-online.target '
             'sysinit.target system.slice systemd-journald.socket')
         self.assertEqual(c.inspect(self.host, False)['pins'], 'PASS')
+
+
+class StablePropertyTests(unittest.TestCase):
+    setUp = fixtures.TransactionTests.setUp
+
+    def test_each_omitted_empty_exec_property_passes(self):
+        for key in EMPTY_EXEC_KEYS:
+            with self.subTest(key=key):
+                self.assertEqual(self.pin['units'][c.SERVICE]['stable'][key], '')
+                original = self.host.props[c.SERVICE].pop(key)
+                self.assertEqual(c.inspect(self.host, False)['pins'], 'PASS')
+                self.host.props[c.SERVICE][key] = original
+
+    def test_each_unexpected_nonempty_exec_property_fails(self):
+        for key in EMPTY_EXEC_KEYS:
+            for actual in ('/bin/false', ' \t'):
+                with self.subTest(key=key, actual=actual):
+                    self.host.props[c.SERVICE][key] = actual
+                    with self.assertRaisesRegex(ValueError, 'UNIT_PROPERTY_DRIFT_'+key):
+                        c.inspect(self.host, False)
+                    self.host.props[c.SERVICE][key] = ''
+
+    def test_all_other_stable_properties_retain_absent_and_empty_semantics(self):
+        for unit, entry in self.pin['units'].items():
+            for key, expected in entry['stable'].items():
+                if key in c.DEPENDENCY_KEYS:
+                    continue
+                for absent in (True, False):
+                    with self.subTest(unit=unit, key=key, absent=absent), \
+                            patch.dict(self.host.props[unit], {}):
+                        self.host.props[unit].pop(key)
+                        if not absent:
+                            self.host.props[unit][key] = ''
+                        if expected:
+                            code = 'UNIT_NOT_LOADED' if key == 'LoadState' else 'UNIT_PROPERTY_DRIFT_'+key
+                            with self.assertRaisesRegex(ValueError, code):
+                                c.inspect(self.host, False)
+                        else:
+                            self.assertEqual(c.inspect(self.host, False)['pins'], 'PASS')
+
+    def test_all_six_dependencies_require_presence_even_when_pinned_empty(self):
+        for key in c.DEPENDENCY_KEYS:
+            for expected in ('', 'alpha.service'):
+                with self.subTest(key=key, expected=expected):
+                    original = self.pin['units'][c.SERVICE]['stable'][key]
+                    self.pin['units'][c.SERVICE]['stable'][key] = expected
+                    actual = self.host.props[c.SERVICE].pop(key)
+                    with self.assertRaisesRegex(ValueError, 'UNIT_PROPERTY_DRIFT_'+key):
+                        c.inspect(self.host, False)
+                    self.pin['units'][c.SERVICE]['stable'][key] = original
+                    self.host.props[c.SERVICE][key] = actual
 
 
 class RecoveryTests(unittest.TestCase):
@@ -341,6 +393,49 @@ class RecoveryTests(unittest.TestCase):
             tx = c.recover(c.Host(), self.digest, True)
         self.assertEqual(tx['phase'], 'installed')
         self.assertEqual({argv[2] for argv in calls}, set(self.pin['units']))
+
+    def test_production_show_fixture_omits_all_five_empty_exec_properties(self):
+        calls = []
+        def show_only(argv, **kwargs):
+            self.assertEqual(argv[:2], ['/usr/bin/systemctl', 'show'])
+            self.assertEqual(len(argv), 4)
+            self.assertTrue(argv[3].startswith('--property='))
+            calls.append(argv)
+            props = self.host.show(argv[2])
+            props.pop('Environment_sha256', None)
+            props['Environment'] = ''
+            if argv[2] == c.SERVICE:
+                for key in EMPTY_EXEC_KEYS:
+                    self.assertEqual(props.pop(key), '')
+            output = '\n'.join(k+'='+v for k, v in props.items())
+            if argv[2] == c.SERVICE:
+                self.assertFalse(any(line.startswith(EMPTY_EXEC_KEYS)
+                                     for line in output.splitlines()))
+            return subprocess.CompletedProcess(argv, 0, output, '')
+
+        before = self.snapshot()
+        with patch.object(c.subprocess, 'run', side_effect=show_only):
+            host = c.Host()
+            self.assertTrue(all(key not in host.show(c.SERVICE) for key in EMPTY_EXEC_KEYS))
+            with patch.object(c, 'locked', side_effect=AssertionError('LOCK_WRITE')):
+                report = c.recover(host, self.digest)
+            self.assertEqual(report['verdict'], 'PASS')
+            self.assertEqual(report['phase'], 'installing')
+            self.assertEqual(before, self.snapshot())
+            self.assertEqual(c.recover(host, self.digest, True)['phase'], 'installed')
+        after = self.snapshot()
+        self.assertEqual(set(before), set(after))
+        self.assertEqual([p for p in before if before[p] != after[p]],
+                         [str(c.STATE/'transaction.json')])
+        self.assertEqual(self.host.calls, [])
+        self.assertEqual({argv[2] for argv in calls}, set(self.pin['units']))
+
+    def test_recovery_rejects_each_unexpected_nonempty_exec_property(self):
+        for key in EMPTY_EXEC_KEYS:
+            with self.subTest(key=key):
+                self.host.props[c.SERVICE][key] = '/bin/false'
+                self.refused('UNIT_PROPERTY_DRIFT_'+key)
+                self.host.props[c.SERVICE][key] = ''
 
     def test_finalization_uses_real_exclusive_lock(self):
         lock = c.STATE/'lock'

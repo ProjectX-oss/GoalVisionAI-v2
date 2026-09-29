@@ -27,6 +27,15 @@
 
 # TASKS.md
 
+## 2026-09-29 — Settlement guard recovery v2
+
+- [x] Start from exact `9ff50c2380280c8343833bd08658600e64937d83`; restore omitted-empty semantics for non-dependency stable properties only.
+- [x] Preserve exact token sets and mandatory presence for the six dependency properties and every recovery invariant.
+- [x] Pass 33 recovery, 38 runtime-guard and 61 timer-stagger tests; reproduce the omitted-Exec production output in an offline fixture before the fix and rerun it successfully afterward.
+- [x] Prepare a distinct checksummed recovery-v2 package/archive; preserve recovery-v1 artifacts.
+- Handoff: `docs/operations/PREMATCH_SETTLEMENT_GUARD_RECOVERY_V2.md`.
+- Preparation only: no production access, recovery execution or push.
+
 ## 2026-09-26 — Professional Lab V2 public messages
 
 - [x] Add versioned Latvian presentation for new labelled single previews.

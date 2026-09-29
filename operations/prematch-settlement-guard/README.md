@@ -1,4 +1,4 @@
-# Settlement runtime guard v1 — interrupted-install recovery
+# Settlement runtime guard v1 — interrupted-install recovery v2
 
 Operator preparation package. Approved horizon: **180 seconds**.
 See `docs/operations/PREMATCH_DISCOVERY_PRIORITY_SETTLEMENT_GUARD.md` in the
@@ -24,7 +24,7 @@ This package adds `recovery-preflight` (read-only) and `recover-installing`
 (explicit receipt finalization). Use the **new** externally verified SHA256SUMS
 hash for every action; do not pass the predecessor digest as the new package hash.
 Exact commands and trusted hashes are in the source checkout's
-`docs/operations/PREMATCH_SETTLEMENT_GUARD_RECOVERY.md`.
+`docs/operations/PREMATCH_SETTLEMENT_GUARD_RECOVERY_V2.md`.
 
 The only recoverable predecessor manifest is
 `c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5`,
@@ -45,8 +45,17 @@ exclusive transaction lock. The read-only preflight creates no lock or files.
 Only `After`, `Before`, `Requires`, `Wants`, `OnFailure`, and `OnSuccess` use
 `set(actual.split()) == set(expected.split())`: token order, whitespace, and
 repeated identical members are immaterial. Added, missing, changed, or substring
-members fail. Missing properties fail even when the pinned set is empty.
-All other comparisons retain their exact previous semantics.
+members fail. These six properties must be present even when the pinned set is empty.
+Every other stable property compares `props.get(key, '') == expected` exactly.
+An omitted property passes only when its pinned value is empty. In particular,
+systemd may omit empty `ExecCondition`, `ExecStartPre`, `ExecStartPost`, `ExecStop`,
+and `ExecStopPost` lines entirely. Unexpected nonempty values, including whitespace,
+still fail. No additional property is normalized.
+
+Recovery v2 corrects the unconditional presence check introduced in `9ff50c2`.
+The raw-output offline fixture reproduces the operator-reported omission of all
+five empty Exec properties. Recovery authorization, state checks, atomic writes,
+provenance schema, and rollback behavior are unchanged.
 
 Finalization atomically writes the receipt and uses the existing lock; it performs
 no daemon-reload, worker/timer control, API request, Telegram send, or business DB

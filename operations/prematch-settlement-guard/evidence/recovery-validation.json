@@ -1,9 +1,11 @@
 {
   "api_calls": 0,
-  "base_commit": "ec0fa32789476d5fad497c05cbf93e3c78e09d18",
+  "base_commit": "9ff50c2380280c8343833bd08658600e64937d83",
   "business_database_access": 0,
-  "control_sha256": "95a1dae7ee6abc345e4700143ab483b89642ac2f55136c6e1898956abdd945b2",
+  "control_sha256": "7a1e176d5e69f735d65adb2e9f87364cdefc1f8675d4c461711989fba33e978a",
+  "dependency_presence_required": true,
   "forward_validation": "PENDING_OPERATOR_RECOVERY_AND_NORMAL_SCHEDULED_CYCLES",
+  "non_dependency_stable_comparison": "props.get(key, '') == expected",
   "normalization": [
     "After",
     "Before",
@@ -12,9 +14,27 @@
     "OnFailure",
     "OnSuccess"
   ],
+  "package_version": "recovery-v2",
   "predecessor_manifest": "c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5",
   "production_commands_executed": 0,
   "production_finalization": "NOT_RUN",
+  "production_omission_fixture": {
+    "adapter": "real Host.show parser with synthetic systemctl stdout; all files redirected to temporary fixtures",
+    "after_fix": "PASS",
+    "before_fix": "UNIT_PROPERTY_DRIFT_ExecCondition",
+    "command": "python3 -B -m unittest discover -s tests/operations -p test_settlement_guard_recovery.py -k production_show_fixture",
+    "finalization_transaction_only": true,
+    "omitted_properties": [
+      "ExecCondition",
+      "ExecStartPre",
+      "ExecStartPost",
+      "ExecStop",
+      "ExecStopPost"
+    ],
+    "preflight_no_lock_or_write": true,
+    "standalone_rerun_passed": 1,
+    "test": "RecoveryTests.test_production_show_fixture_omits_all_five_empty_exec_properties"
+  },
   "production_preflight": "NOT_RUN",
   "pushed": false,
   "review": {
@@ -39,13 +59,13 @@
   "telegram_sends": 0,
   "test_source_sha256": {
     "tests/operations/test_prematch_timer_stagger.py": "e8b5ae4af206df9e777dc3effb2c9d350627450be95978f268a96edf2e1dcfce",
-    "tests/operations/test_settlement_guard_recovery.py": "70632f0fa75e45954714a7fc9e4f40f3e3321266d58976fe6e6d569cfface268",
+    "tests/operations/test_settlement_guard_recovery.py": "d076e6391f5c11104ac354ae92447ad993caf8cd65aa4d5953f707f5e4a0c68f",
     "tests/operations/test_settlement_runtime_guard.py": "ed30abf8062ca3664ebe23565a316ede66ad3749c750e1881f22d73c380a52a4"
   },
   "tests": [
     {
       "command": "python3 -B -m unittest discover -s tests/operations -p test_settlement_guard_recovery.py",
-      "passed": 27
+      "passed": 33
     },
     {
       "command": "python3 -B -m unittest discover -s tests/operations -p test_settlement_runtime_guard.py",
@@ -55,5 +75,6 @@
       "command": "python3 -B -m unittest discover -s tests/operations -p test_prematch_timer_stagger.py",
       "passed": 61
     }
-  ]
+  ],
+  "total_tests_passed": 132
 }
