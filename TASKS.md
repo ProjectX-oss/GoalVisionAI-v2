@@ -1542,3 +1542,14 @@ Review after completing the current priority.
 - [ ] Operator: verify package, run privileged preflight, separately authorize installation, then collect normal 2 discovery / 3 executed settlement / 2 observer cycles. Deferrals do not count as execution.
 - Handoff: `docs/operations/PREMATCH_DISCOVERY_PRIORITY_SETTLEMENT_GUARD.md`.
 - No installation, production worker controls, application/policy/timeout changes, API calls, Telegram sends or push.
+
+
+## 2026-09-29 — Interrupted settlement guard recovery
+
+- [x] Normalize exactly six unordered systemd dependency properties by whole-token set equality.
+- [x] Add read-only preflight and explicit locked metadata finalization for the single known predecessor manifest.
+- [x] Preserve original manifest/argv and receipt text with explicit recovery provenance; support normal status, evidence, and retryable exact rollback.
+- [x] Cover dependency differences, full pin enforcement, production-effect exclusions, and recovery/rollback CLI lifecycle in temporary fixtures.
+- [x] Prepare a distinct checksummed recovery package and operator commands; run guard and timer-stagger regressions.
+- Handoff: `docs/operations/PREMATCH_SETTLEMENT_GUARD_RECOVERY.md`.
+- Production preflight/finalization NOT executed. No production changes or push.

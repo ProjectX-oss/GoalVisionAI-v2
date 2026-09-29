@@ -1,0 +1,59 @@
+{
+  "api_calls": 0,
+  "base_commit": "ec0fa32789476d5fad497c05cbf93e3c78e09d18",
+  "business_database_access": 0,
+  "control_sha256": "95a1dae7ee6abc345e4700143ab483b89642ac2f55136c6e1898956abdd945b2",
+  "forward_validation": "PENDING_OPERATOR_RECOVERY_AND_NORMAL_SCHEDULED_CYCLES",
+  "normalization": [
+    "After",
+    "Before",
+    "Requires",
+    "Wants",
+    "OnFailure",
+    "OnSuccess"
+  ],
+  "predecessor_manifest": "c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5",
+  "production_commands_executed": 0,
+  "production_finalization": "NOT_RUN",
+  "production_preflight": "NOT_RUN",
+  "pushed": false,
+  "review": {
+    "exclusive_lock_contention_refuses": true,
+    "method": "local implementation review plus offline regression and CLI fixture rehearsal",
+    "new_package_hash_required_before_host_access": true,
+    "read_only_preflight_does_not_lock_or_write": true,
+    "recovery_atomic_write_failure_retry_verified": true,
+    "recovery_mutations": [
+      "existing transaction lock",
+      "atomic transaction receipt replacement"
+    ],
+    "recovery_systemd_command_allowlist": [
+      "/usr/bin/systemctl show"
+    ],
+    "result": "PASS",
+    "rollback_exact_original_argv_verified": true,
+    "rollback_reload_failure_retry_verified": true,
+    "runtime_and_baseline_unchanged": true
+  },
+  "status": "RECOVERY_PACKAGE_PREPARED_OFFLINE_ONLY",
+  "telegram_sends": 0,
+  "test_source_sha256": {
+    "tests/operations/test_prematch_timer_stagger.py": "e8b5ae4af206df9e777dc3effb2c9d350627450be95978f268a96edf2e1dcfce",
+    "tests/operations/test_settlement_guard_recovery.py": "70632f0fa75e45954714a7fc9e4f40f3e3321266d58976fe6e6d569cfface268",
+    "tests/operations/test_settlement_runtime_guard.py": "ed30abf8062ca3664ebe23565a316ede66ad3749c750e1881f22d73c380a52a4"
+  },
+  "tests": [
+    {
+      "command": "python3 -B -m unittest discover -s tests/operations -p test_settlement_guard_recovery.py",
+      "passed": 27
+    },
+    {
+      "command": "python3 -B -m unittest discover -s tests/operations -p test_settlement_runtime_guard.py",
+      "passed": 38
+    },
+    {
+      "command": "python3 -B -m unittest discover -s tests/operations -p test_prematch_timer_stagger.py",
+      "passed": 61
+    }
+  ]
+}

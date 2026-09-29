@@ -27,6 +27,13 @@ SERVICE = 'goalvision-lab-combo-settle.service'
 OWNED = '99-goalvision-settlement-guard.conf'
 ADMIN_CONFIG = Path('/etc/goalvision-admin-alerts/admin-alerts.json')
 STAGGER_RECEIPT = Path('/var/lib/goalvision-prematch-timer-stagger/transaction.json')
+# These systemd unit dependency arrays have no semantic member order.
+DEPENDENCY_KEYS = frozenset(('After', 'Before', 'Requires', 'Wants', 'OnFailure', 'OnSuccess'))
+PREDECESSOR_MANIFEST = 'c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5'
+PREDECESSOR_GUARD = '4ab82ae534403e2a3d8f7e1b589220b555b8f3cfac63bb7c878337eea53ea5ff'
+PREDECESSOR_ROUTE = 'c78ae7eb2347d049d2b9c763d4f77316b91a566de1eaa9f642c6754db6e36d51'
+PREDECESSOR_BASELINE = 'f78123f84c612e58d3d47cd1897d9afdaa0a058b805d22bc7abc6c223544374e'
+RECOVERY_SCHEMA = 'settlement-guard-installing-recovery-v1'
 SERVICE_KEYS = ('Type', 'User', 'Group', 'WorkingDirectory', 'StandardOutput', 'StandardError',
     'TimeoutStartUSec', 'TimeoutStopUSec', 'KillMode', 'SendSIGKILL', 'UMask',
     'NoNewPrivileges', 'ProtectSystem', 'ProtectHome', 'PrivateTmp', 'PrivateNetwork',
@@ -43,6 +50,13 @@ UNIT_KEYS = ('Id', 'LoadState', 'FragmentPath', 'DropInPaths', 'NeedDaemonReload
 def require(condition: bool, code: str) -> None:
     if not condition:
         raise ValueError(code)
+
+
+def property_equal(key: str, actual: str, expected: str) -> bool:
+    """Compare only dependency arrays as exact token sets; keep all other pins exact."""
+    if key in DEPENDENCY_KEYS:
+        return set(actual.split()) == set(expected.split())
+    return actual == expected
 
 
 def regular(path: Path) -> Path:
@@ -171,7 +185,7 @@ def inspect(host: Host, installed: bool, pending: bool = False) -> dict[str, Any
         if not (pending and unit == SERVICE):
             require(props['NeedDaemonReload'] == 'no', 'DAEMON_RELOAD_DRIFT')
         for key, value in entry['stable'].items():
-            require(props.get(key, '') == value, 'UNIT_PROPERTY_DRIFT_'+key)
+            require(key in props and property_equal(key, props[key], value), 'UNIT_PROPERTY_DRIFT_'+key)
         if unit == SERVICE and not pending:
             target = wrapped_argv() if installed else guard.SETTLEMENT_ARGV
             require(exec_argv(props['ExecStart']) == ' '.join(target), 'EXECSTART_DRIFT')
@@ -226,13 +240,102 @@ def idle(host: Host) -> None:
             'SETTLEMENT_INSTALL_WINDOW_UNAVAILABLE')
 
 
+def predecessor(tx: dict[str, Any]) -> None:
+    """Accept only the operator-identified interrupted installation."""
+    require(isinstance(tx, dict), 'RECOVERY_RECEIPT_INVALID')
+    require(tx.get('manifest') == PREDECESSOR_MANIFEST, 'RECOVERY_PREDECESSOR_MISMATCH')
+    require(tx.get('phase') == 'installing', 'RECOVERY_INSTALLING_REQUIRED')
+    require(tx.get('original_argv') == list(guard.SETTLEMENT_ARGV), 'ORIGINAL_ARGV_DRIFT')
+    require('recovery' not in tx and 'installed_at' not in tx, 'RECOVERY_RECEIPT_AMBIGUOUS')
+
+
+def authorize_transaction(tx: dict[str, Any], digest: str) -> None:
+    """Bind normal actions to this package or its explicitly recovered predecessor."""
+    require(tx.get('original_argv') == list(guard.SETTLEMENT_ARGV), 'ORIGINAL_ARGV_DRIFT')
+    if tx.get('manifest') == digest:
+        require('recovery' not in tx, 'RECOVERY_LINKAGE_INVALID')
+        return
+    require(tx.get('manifest') == PREDECESSOR_MANIFEST, 'TRANSACTION_PACKAGE_MISMATCH')
+    proof = tx.get('recovery', {})
+    require(isinstance(proof, dict), 'RECOVERY_LINKAGE_INVALID')
+    require(proof.get('schema') == RECOVERY_SCHEMA and proof.get('manifest') == digest,
+            'TRANSACTION_PACKAGE_MISMATCH')
+    raw = proof.get('predecessor_receipt', '')
+    require(isinstance(raw, str), 'RECOVERY_LINKAGE_INVALID')
+    require(hashlib.sha256(raw.encode()).hexdigest() == proof.get('predecessor_receipt_sha256'),
+            'RECOVERY_LINKAGE_INVALID')
+    previous = json.loads(raw)
+    predecessor(previous)
+    require(tx.get('phase') in ('installed', 'rolling_back', 'rolled_back') and
+            tx.get('installed_at') == proof.get('recovered_at'), 'RECOVERY_LINKAGE_INVALID')
+    require(isinstance(proof.get('recovered_at'), str), 'RECOVERY_LINKAGE_INVALID')
+    stamp = datetime.fromisoformat(proof['recovered_at'])
+    require(stamp.tzinfo is not None, 'RECOVERY_LINKAGE_INVALID')
+    require({k: v for k, v in tx.items() if k not in ('phase', 'installed_at', 'recovery')} ==
+            {k: v for k, v in previous.items() if k != 'phase'}, 'RECOVERY_LINKAGE_INVALID')
+
+
+def recovery_state(host: Host) -> None:
+    """Read the loaded route and idle state without any systemd mutation."""
+    props = host.show(SERVICE)
+    require((props.get('ActiveState'), props.get('SubState')) == ('inactive', 'dead'),
+            'SETTLEMENT_NOT_IDLE')
+    require(props.get('NeedDaemonReload') == 'no', 'DAEMON_RELOAD_DRIFT')
+    require(re.fullmatch(r'\{ path=/usr/bin/python3 ; argv\[\]=' +
+            re.escape(' '.join(wrapped_argv())) + r' ; ignore_errors=no ; [^{}]* \}',
+            props.get('ExecStart', '')) is not None, 'EXECSTART_DRIFT')
+    for unit in baseline()['units']:
+        if unit.endswith('.timer'):
+            timer = host.show(unit)
+            require((timer.get('ActiveState'), timer.get('SubState')) == ('active', 'waiting'),
+                    'RECOVERY_TIMER_STATE_DRIFT')
+
+
+def recovery_preflight(host: Host) -> tuple[dict[str, Any], str]:
+    """Run full production pins plus exact predecessor checks; perform no writes."""
+    raw = regular(STATE/'transaction.json').read_bytes().decode('utf-8')
+    tx = json.loads(raw)
+    predecessor(tx)
+    for path in (STATE, STATE/'transaction.json'):
+        require_root_owned(path)
+    require(sha(PACKAGE/'baseline.json') == PREDECESSOR_BASELINE, 'RECOVERY_BASELINE_DRIFT')
+    require(sha(PACKAGE/'runtime_guard.py') == PREDECESSOR_GUARD, 'RECOVERY_PACKAGE_GUARD_DRIFT')
+    require(sha(route()) == PREDECESSOR_ROUTE, 'RECOVERY_ROUTING_TAMPER')
+    require(sha(RELEASE/'runtime_guard.py') == PREDECESSOR_GUARD, 'RECOVERY_GUARD_TAMPER')
+    recovery_state(host)
+    inspect(host, True)  # No partial-transaction exemptions.
+    recovery_state(host)
+    require(regular(STATE/'transaction.json').read_bytes().decode('utf-8') == raw, 'RECOVERY_RECEIPT_CHANGED')
+    return tx, raw
+
+
+def recover(host: Host, digest: str, finalize: bool = False) -> dict[str, Any]:
+    """Finalize only metadata under the existing lock, preserving predecessor linkage."""
+    if not finalize:
+        tx, raw = recovery_preflight(host)
+        return {'verdict': 'PASS', 'phase': tx['phase'], 'action': 'recovery-preflight',
+                'predecessor_manifest': tx['manifest'], 'recovery_manifest': digest,
+                'predecessor_receipt_sha256': hashlib.sha256(raw.encode()).hexdigest()}
+    with locked():
+        tx, raw = recovery_preflight(host)
+        now = datetime.now(timezone.utc).isoformat()
+        tx.update(phase='installed', installed_at=now, recovery={
+            'schema': RECOVERY_SCHEMA, 'manifest': digest, 'recovered_at': now,
+            'predecessor_receipt': raw,
+            'predecessor_receipt_sha256': hashlib.sha256(raw.encode()).hexdigest()})
+        authorize_transaction(tx, digest)
+        save(tx)
+        return tx
+
+
 def change(host: Host, action: str, digest: str) -> dict[str, Any]:
     """Install/rollback only owned routing and files, retaining a recovery receipt."""
     with locked():
         tx = transaction()
         if tx:
-            require(tx['manifest'] == digest, 'TRANSACTION_PACKAGE_MISMATCH')
+            authorize_transaction(tx, digest)
         if action == 'install':
+            require(not tx or tx['manifest'] == digest, 'RECOVERED_TRANSACTION_REINSTALL_REFUSED')
             require(not tx or tx['phase'] == 'rolled_back', 'TRANSACTION_PRESENT')
             inspect(host, False)
             idle(host)
@@ -282,22 +385,29 @@ def change(host: Host, action: str, digest: str) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument('action', choices=('check', 'install', 'status', 'rollback', 'evidence'))
+    parser.add_argument('action', choices=('check', 'install', 'status', 'rollback', 'evidence',
+                                                   'recovery-preflight', 'recover-installing'))
     parser.add_argument('--manifest-sha256', required=True)
     parser.add_argument('--since')
     args = parser.parse_args()
     verify_package(PACKAGE, args.manifest_sha256)
     host = Host()
-    if args.action in ('install', 'rollback'):
+    if args.action in ('recovery-preflight', 'recover-installing'):
+        result = recover(host, args.manifest_sha256, args.action == 'recover-installing')
+    elif args.action in ('install', 'rollback'):
         result = change(host, args.action, args.manifest_sha256)
     else:
         tx = transaction()
         if tx:
-            require(tx['manifest'] == args.manifest_sha256, 'TRANSACTION_PACKAGE_MISMATCH')
+            authorize_transaction(tx, args.manifest_sha256)
         phase = tx['phase'] if tx else 'not_installed'
         require(phase in ('installed', 'not_installed', 'rolled_back'), 'PARTIAL_TRANSACTION_USE_ROLLBACK')
         result = inspect(host, phase == 'installed')
         result['phase'] = phase
+        if tx:
+            result['manifest'] = tx['manifest']
+            if 'recovery' in tx:
+                result['recovery'] = tx['recovery']
         if args.action == 'check':
             require(phase != 'installed', 'ALREADY_INSTALLED')
             idle(host)

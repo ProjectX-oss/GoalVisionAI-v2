@@ -1,5 +1,10 @@
 # PREMATCH discovery priority / settlement runtime guard
 
+> Interrupted-install incident: use [the recovery handoff](PREMATCH_SETTLEMENT_GUARD_RECOVERY.md).
+> The original package and install commands below are historical. The recovery
+> package preserves the original manifest linkage and supplies corrected status,
+> evidence, and rollback tooling. No production recovery has been executed here.
+
 Status: **PREMATCH_DISCOVERY_PRIORITY_GUARD_READY_FOR_OPERATOR_PREFLIGHT**.
 
 Branch: `ops/prematch-discovery-priority-guard`.
