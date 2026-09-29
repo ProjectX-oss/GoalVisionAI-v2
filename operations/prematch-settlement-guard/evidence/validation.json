@@ -1,0 +1,28 @@
+{
+  "status": "PREMATCH_DISCOVERY_PRIORITY_GUARD_READY_FOR_OPERATOR_PREFLIGHT",
+  "guard_tests": {
+    "passed": 38,
+    "command": "python3 -B -m unittest discover -s tests/operations -p test_settlement_runtime_guard.py"
+  },
+  "stagger_regression": {
+    "passed": 61,
+    "command": "python3 -B -m unittest discover -s tests/operations -p test_prematch_timer_stagger.py"
+  },
+  "transaction_recheck_after_release_mode_hardening": {
+    "passed": 11
+  },
+  "systemd_analyze_verify": {
+    "exit_status": 0,
+    "diagnostics": [],
+    "scope": "disposable service definition"
+  },
+  "normal_calendar_ticks": 858,
+  "production_preflight": "NOT_RUN_REQUIRES_OPERATOR",
+  "forward_validation": "PENDING_FUTURE_INSTALLATION_AND_NORMAL_SCHEDULED_CYCLES",
+  "production_controls": 0,
+  "api_calls": 0,
+  "telegram_sends": 0,
+  "business_database_writes": 0,
+  "installed": false,
+  "pushed": false
+}

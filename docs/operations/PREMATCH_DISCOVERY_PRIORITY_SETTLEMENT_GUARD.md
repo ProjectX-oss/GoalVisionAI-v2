@@ -1,169 +1,293 @@
-# PREMATCH discovery priority settlement guard — evidence blocker
+# PREMATCH discovery priority / settlement runtime guard
 
-Status: **BLOCKED_REQUIRED_PRODUCTION_EVIDENCE_UNAVAILABLE**.
+Status: **PREMATCH_DISCOVERY_PRIORITY_GUARD_READY_FOR_OPERATOR_PREFLIGHT**.
 
-Branch: `ops/prematch-discovery-priority-guard`, based on
-`fca075d4e01028ab17f0b8c1d1d3dc5378beedb4`.
-Inspection date: 2026-09-29. No installable package has been prepared.
+Branch: `ops/prematch-discovery-priority-guard`.
+Prepared 2026-09-29 from blocked handoff `8b7552ec6007e50ae6faefc18579dd5442d551d8`.
+No installation, production worker control, push, API call or Telegram send.
+Privileged operator preflight and future scheduled forward validation remain required.
 
-## Why implementation stopped
+## Approved horizon and evidence
 
-Task section 8 requires reviewing completed settlement runtimes from at most
-seven days of production systemd journals before choosing a horizon. It explicitly
-requires stopping if a defensible horizon cannot be established.
+The operator supplied verified root systemd journal evidence for the last seven
+days of `goalvision-lab-combo-settle.service`: **1,008 completed invocations**.
 
-The current `arvis` account can read application journal records, but cannot read
-the system journal containing PID 1 service start/completion records. A bounded
-seven-day query returned **zero visible manager records**. This does not mean
-there were zero completed invocations. `sudo -n -l` reports that a password is
-required. Protected ADMIN configuration and the installed timer-stagger transaction
-are also unreadable. No access controls were changed.
+| Statistic | Seconds |
+| --- | ---: |
+| Minimum | 7.031 |
+| Median | 27.968 |
+| p95 | 72.846 |
+| Maximum | 105.602 |
+| Loaded hard execution timeout | 600 |
+| Approved pre-discovery guard | **180** |
 
-An existing 2026-09-25 audit export was checked:
-`/home/arvis/goalvision-operations/prematch-audit-20260925/journal-invocations.json`.
-It reports visible application-log spans and traceback counts, without verified
-completion durations or the requested distribution. Those spans are unsuitable
-as settlement execution bounds.
+Exact calculations:
 
-| Required evidence | Result |
-| --- | --- |
-| Completed settlement invocation count | Unavailable |
-| Minimum / median / p95 / maximum runtime | Unavailable |
-| Loaded `TimeoutStartUSec` | `10min` |
-| Loaded `TimeoutStopUSec` | `1min 30s` |
-| Loaded `KillMode` / `SendSIGKILL` | `control-group` / `yes` |
-| Selected pre-discovery horizon | None; review blocked |
+- Margin over observed maximum: `180.000 − 105.602 = 74.398 seconds`.
+- Ratio to p95: `180 / 72.846 = 2.4709661477637757`, approximately 2.47×.
+- Nominal nearest settlement opportunity: `300 − 180 = 120 seconds` outside
+  the guard. The timer's 60-second accuracy window still leaves at least
+  `300 − 60 = 240 seconds`, exceeding 180 by 60 seconds.
 
-The start timeout alone does not replace the required runtime distribution.
-Termination can also consume the stop timeout. No timeout was changed, and no
-unsupported horizon was selected.
+The 600-second timeout is a hard execution bound, not a normal guard horizon.
+Using it would suppress useful five-minute opportunities. The approved constant
+is exactly `SETTLEMENT_PRE_DISCOVERY_GUARD_SECONDS = 180`; changing it requires
+explicit review. No SQLite, quota, systemd or application timeout changed.
 
-## Read-only production findings
-
-The sanitized capture is
+The supplied distribution is retained in
+[`approved-runtime-evidence.json`](../../operations/prematch-settlement-guard/evidence/approved-runtime-evidence.json).
+The earlier inaccessible-journal inspection is preserved unchanged in
 [`read-only-inspection.json`](../../operations/prematch-settlement-guard/evidence/read-only-inspection.json).
-SHA-256: `0bcd07d5055d9aed4ee481631b149cef360b7e35072d533e365f72f131b46781`.
-It records loaded properties, unit/drop-in hashes, the settlement environment
-value hash, and the environment-file hash. Environment values are withheld.
-These are inspection pins, not a completed deployment baseline or package manifest.
+Its blocked status describes that earlier capture; the supplied runtime evidence
+resolves that prerequisite. The raw privileged journal export was not re-collected
+or independently reprocessed in this implementation session.
 
-All five loaded calendars match the requested installed stagger v4 schedules:
+## Service boundary
 
-- Discovery: `*-*-* 09..22:00,30:00 Europe/Riga`.
-- Settlement: `*-*-* *:05,15,25,35,45,55:00`.
-- Observer: `*-*-* *:08,38:00`.
-- Weekly: `Sun *-*-* 22:28:00 Europe/Riga`.
-- Research: `*-*-* 04:12:00`.
+The sole routing change is a settlement service drop-in containing:
 
-All ten inspected PREMATCH service/timer units report `NeedDaemonReload=no`.
-The loaded settlement drop-in is `90-reviewed-prematch-v2.conf`; its exact hash
-and the original unit hash are in the capture. A complete foreign-drop-in
-inventory check remains part of future preflight.
+```ini
+[Service]
+ExecStart=
+ExecStart=/usr/bin/python3 -I -S /opt/goalvision-settlement-guard-v1/runtime_guard.py
+```
 
-The actual loaded settlement argv is:
+The standalone standard-library wrapper:
+
+1. Reads discovery `Id`, `LoadState`, `ActiveState`, `SubState`, `InvocationID`
+   and `NeedDaemonReload` with bounded read-only `systemctl show`.
+2. Defers `activating`, `active` and `deactivating` with
+   `SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE`. Only validated `inactive/dead`
+   proceeds. Failed, unknown, missing, malformed or inconsistent state uses
+   `SETTLEMENT_DEFERRED_DISCOVERY_STATE_UNAVAILABLE`.
+3. Validates the discovery timer is loaded, active and waiting, then reads its
+   **actual numeric `NextElapseUSecRealtime`** through local systemd D-Bus
+   (`busctl get-property`). There is no Riga offset arithmetic and no calendar
+   forecast used for runtime authorization.
+4. Defers if `deadline_us − time.time_ns() // 1000 <= 180000000`, including
+   exactly 180 seconds and stale deadlines. 180.001 seconds can proceed.
+   Missing/invalid/implausible deadlines defer unavailable.
+5. Repeats service and timer observations immediately before exec; changed
+   inactive invocation identity also defers unavailable. No sleep or retry.
+6. On authorization emits the execution marker and calls `os.execv` with:
 
 ```text
 /home/arvis/GoalVisionAI/.venv/bin/python -P -m app.lab_combo settle --send --adaptive-database /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db
 ```
 
-Loaded settings: `Type=oneshot`, `User=arvis`, empty explicit `Group`,
-`WorkingDirectory=/home/arvis/GoalVisionAI`, `StandardOutput=null`,
-`StandardError=journal`. The loaded environment file is
-`/opt/goalvision-prematch-quota-557d5af2-f24738b05fef/release.env`.
-The location agrees with the reported quota-hardening release; application source
-integrity has not been independently recertified by this inspection.
+The exact argv and inherited environment survive exec replacement. User/group,
+working directory, sandbox, environment files, timeout, stdout=null and
+stderr=journal are preserved. No application module is imported on deferral.
+Guard records use journal-backed stderr and never expose command stderr or
+arbitrary environment values. Deferred runs emit exactly one JSON record with
+schema, status, code, sanitized discovery invocation, guard_seconds=180 and zero
+API calls, Telegram sends and database writes. IMMINENT includes numeric
+seconds_to_discovery clamped to [-86400, 86400]. Informational deferral exits 0.
 
-## Historical overlap and conditional projection
+`SETTLEMENT_EXECUTED` is emitted immediately before exec. If exec fails the
+wrapper returns 126; a marker alone never counts as successful execution.
+Successful scheduled systemd manager completion is required by evidence.
 
-The operator supplied discovery invocation
-`4d931713a53b4404bae23bd990ccebdb`, starting at 2026-09-28 14:30:20
-Europe/Berlin and still running when settlement started at 14:35:00.
-The accessible application journal independently contains seven retry records and
-two exhaustion records for that invocation. The capture preserves only their
-timestamps and codes. Systemd start/completion evidence is inaccessible here.
+This boundary check is not an atomic lock with discovery. Discovery can start
+after the final observation, and settlement can exceed 180 seconds. The supplied
+runtime distribution justifies the guard; it does not guarantee mutual exclusion.
 
-Timer staggering separates nominal start times. A discovery running longer than
-five minutes can still overlap the next settlement activation. This supports a
-runtime guard; it does not establish settlement as the exact SQLite writer at
-every contention moment.
+## Normal schedule proof
 
-Given the supplied active state at settlement start, the required projected
-decision is `SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE`. The intended deferred path
-would launch no settlement Python process and perform zero API calls, Telegram
-sends, database/ledger writes, or quota claims. This is a **conditional design
-projection**, not an executable rehearsal or a measured historical counterfactual.
-No cycle was replayed.
+[`normal-schedule-proof.json`](../../operations/prematch-settlement-guard/evidence/normal-schedule-proof.json)
+reports **every settlement tick and its time to the next discovery**. It was
+generated by the installed `systemd-analyze calendar` and timezone database;
+systemd version, tzdata version and zoneinfo hashes are included. Loaded timer
+calendars and unit hashes were checked read-only and pinned in `baseline.json`.
 
-## Required design after evidence becomes available
+| UTC window, 48 hours | Settlement ticks | Minimum gap to discovery | Minimum gap at :25 / :55 |
+| --- | ---: | ---: | ---: |
+| 2026-09-29 through 2026-10-01 | 288 | 300 s | 300 s |
+| 2026-03-28 through 2026-03-30, spring DST | 288 | 300 s | 300 s |
+| 2026-10-24 through 2026-10-26, autumn DST | 282 | 300 s | 300 s |
 
-Use a root-owned, read-only executable through a settlement-only `ExecStart`
-drop-in. Preserve the exact business argv and inherited environment with exec
-replacement. Keep all other service settings, timers, and discovery behavior.
+All **858** systemd-enumerated normal ticks are outside the 180-second horizon.
+The autumn count follows systemd's local calendar evaluation across the repeated
+hour; no additional ticks are invented with manual clock arithmetic. During the
+discovery day, :05/:35 give 1,500 seconds, :15/:45 give 900 seconds, and
+:25/:55 give 300 seconds to the next discovery. Overnight gaps are longer; the
+JSON retains each exact value, including first/last daytime boundaries.
 
-1. Read discovery `ActiveState`, `SubState`, and `InvocationID`.
-2. Defer on `activating`, `active`, or `deactivating`; validate other states.
-3. Fail closed on missing, unreadable, invalid, or inconsistent observations.
-4. Read the real systemd-resolved next discovery timer deadline. Defer inside
-   the evidence-reviewed horizon, without calculating timezone offsets.
-5. Re-read state/deadline immediately before exec; defer if discovery became
-   active or observations are inconsistent.
-6. Emit one sanitized structured deferral record and exit zero, with no retry,
-   sleep, application import, background job, or business operation.
+Preserved schedules:
 
-Because stdout is currently discarded, emit guard records on the existing
-**journal-backed stderr**, preserving both stdout/stderr routing settings.
-Do not use `ExecCondition`: deferred invocations must retain normal systemd
-start/completion evidence. ACTIVE/IMMINENT are informational. STATE_UNAVAILABLE
-remains local evidence and prevents forward PASS. ADMIN sender stays disabled.
+- Discovery: `*-*-* 09..22:00,30:00 Europe/Riga`.
+- Settlement: `*-*-* *:05,15,25,35,45,55:00` in host Europe/Berlin time.
+- Observer: `*-*-* *:08,38:00` in host time.
+- Weekly: `Sun *-*-* 22:28:00 Europe/Riga`.
+- Research: `*-*-* 04:12:00` in host time.
 
-The later controller must expose read-only `check`, `status`, and `evidence`,
-plus operator-run `install` and `rollback`. Its only service-control operation
-is conditional `daemon-reload`; active settlement causes safe refusal.
-Rollback removes only verified package-owned routing/artifacts and cannot undo
-an already-running settlement, completed business work, or past overlap.
-No executable controller, guard, drop-in, or install/rollback command is supplied
-in this blocked revision.
+This proves horizon eligibility, not that discovery is inactive at each tick.
+An active long-running discovery may correctly defer a normal settlement tick.
+Late/Persistent catch-up starts are assessed from the actual runtime deadline.
 
-Forward evidence must require at least two completed scheduled discovery cycles,
-three actual executed settlement cycles, and two observer cycles after deployment.
-Deferrals cannot satisfy executed minimums. Exhaustion, database locks, service
-failures, nonzero discovery exit status, and missing required evidence prevent
-PASS. Successful retries alone do not fail a run. The existing evidence reader
-has not been changed before resolving this prerequisite.
-
-## Read-only evidence needed to resume
-
-An operator with existing root access can collect the missing manager records.
-These commands do not start or stop any service and do not change ADMIN state.
-Review exports before sharing; do not export environment values or tokens.
+Reproduce the per-tick report without changing timers:
 
 ```bash
-sudo journalctl --no-pager --output=json --since='7 days ago' \
-  --until=now --unit=goalvision-lab-combo-settle.service _PID=1 \
-  --output-fields=__REALTIME_TIMESTAMP,__MONOTONIC_TIMESTAMP,_BOOT_ID,_PID,UNIT,INVOCATION_ID,OBJECT_SYSTEMD_INVOCATION_ID,MESSAGE
-
-sudo journalctl --no-pager --output=json \
-  --since='2026-09-28 12:30:00 UTC' --until='2026-09-28 12:36:00 UTC' \
-  --unit=goalvision-lab-v2-discover.service \
-  --unit=goalvision-lab-combo-settle.service _PID=1 \
-  --output-fields=__REALTIME_TIMESTAMP,__MONOTONIC_TIMESTAMP,_BOOT_ID,_PID,UNIT,INVOCATION_ID,OBJECT_SYSTEMD_INVOCATION_ID,MESSAGE
+/usr/bin/python3 -I -B operations/prematch-settlement-guard/schedule_proof.py
 ```
 
-Pair starts with terminal manager records within the same boot/invocation; use
-monotonic elapsed time, exclude boundary-truncated runs, report unsuccessful and
-incomplete runs separately, and compute the completed-run distribution.
-Then review the horizon against observed runtime, timeout/termination bounds,
-and useful remaining scheduled settlement opportunities. Current protected ADMIN
-disabled-state verification and stagger installation receipt remain required.
+## Historical failure projection
 
-## Validation and handoff
+Verified supplied overlap: discovery invocation
+`4d931713a53b4404bae23bd990ccebdb` started **2026-09-28 14:30:20 Europe/Berlin**
+and was active when settlement started at **14:35:00 Europe/Berlin**.
+The offline boundary test returns `SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE`.
+Projected settlement application execution: **none**. Quota claims, database
+writes, API calls and Telegram sends: **0 each**. This is a deterministic
+projection using the supplied active state; production was not replayed. It does
+not identify the exact SQLite writer behind every historical contention record.
 
-This revision contains documentation and sanitized inspection evidence only.
-JSON structure/hash and `git diff --check` are checked. No runtime test claims are
-made; the 28 requested service-boundary tests remain pending implementation.
-No model/history/full ML suites were run.
+## Deployment checks and rollback
 
-API calls: 0. Telegram sends: 0. Application/database writes: 0.
-Production controls: 0. No installation or push. Original dirty checkout untouched.
-The requested `PREMATCH_DISCOVERY_PRIORITY_GUARD_READY_FOR_OPERATOR_PREFLIGHT`
-status cannot be asserted until the evidence blocker and implementation are resolved.
+The package pins all ten PREMATCH unit files/drop-ins, loaded calendars,
+settlement environment hashes, argv and loaded service settings. It rejects
+package inventory/hash drift, foreign loaded/unloaded drop-ins (including generic
+and dash-prefix drop-ins), timer/sandbox/environment drift and tampered owned
+artifacts. Protected preflight requires ADMIN sender disabled and the installed
+stagger v4 transaction manifest
+`61f3a3263cab3bf25fd064071ae8744190f6effa0f8c984f5d1aae2c3b2ba598`.
+It does not change ADMIN configuration or the sender.
+
+Install/rollback serialize through an operations receipt lock. They require
+settlement `inactive/dead` and >60 seconds before its actual next timer elapse.
+The only systemd mutation is conditional **daemon-reload**; no service/timer
+start, stop, restart, kill, enable, disable or rearm is implemented. The wrapper
+is root-owned 0444 under a root-owned 0755 release directory. The drop-in changes
+only ExecStart. An interrupted transaction remains visible and requires explicit
+verified rollback; it never silently resumes or controls a running worker.
+
+Rollback verifies hashes and removes only the owned drop-in, reloads systemd,
+verifies the original ExecStart, then removes the unused wrapper. It cannot undo
+completed settlement work or past overlap. Active settlement or artifact drift
+causes refusal. Keep this exact package and receipt for rollback.
+
+## Forward validation after future installation
+
+Use normal scheduled activations only. Minimums:
+
+- Discovery: **2** completed actual scheduled cycles with exit_status=0.
+- Settlement: **3 EXECUTED**, successfully completed actual scheduled cycles.
+- Observer: **2** completed actual scheduled cycles with expected output.
+
+Deferred cycles never satisfy settlement execution minimums. Report counts for:
+
+```text
+SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE
+SETTLEMENT_DEFERRED_DISCOVERY_IMMINENT
+SETTLEMENT_DEFERRED_DISCOVERY_STATE_UNAVAILABLE
+SETTLEMENT_EXECUTED
+QUOTA_DB_CONTENTION_RETRY
+QUOTA_DB_CONTENTION_EXHAUSTED
+```
+
+PASS additionally requires QUOTA_DB_CONTENTION_EXHAUSTED=0, DATABASE_LOCK=0,
+SERVICE_FAILURE=0, no failed discovery, and complete expected evidence.
+ACTIVE/IMMINENT and successful quota retries are informational.
+STATE_UNAVAILABLE blocks PASS. Missing, duplicate or invalid guard records also
+block PASS. Preserve and review actual invocation IDs, scheduled/actual times,
+manager completions and discovery/observer output; timestamp calendar alignment
+alone does not prove timer causation. Do not manually run workers to fill gaps.
+Evidence windows are post-install and at most seven days. The existing bounded
+current-first discovery rotation reader is preserved as a byte-identical vendored
+helper; the installed v4 package remains unchanged.
+
+## Validation
+
+Focused tests only: 38 guard/runtime/package/evidence/transaction tests plus
+61 existing timer-stagger operations regressions. Tests use disposable files,
+fake systemd adapters and synthetic journal evidence. An actual harmless child
+exec probe verifies PID replacement, argument boundaries and inherited environment.
+No settlement or discovery application is launched. Disposable `systemd-analyze
+verify` accepts the service boundary with exit 0 and no diagnostics.
+
+No prediction/model logic changed, so no model backtest or broad ML suite was run.
+The historical overlap projection and all-tick calendar evaluation cover the
+operational historical/schedule behavior. API calls, Telegram sends, business
+DB writes and production controls during this work: **0**.
+
+## Operator package and commands
+
+The trusted hashes and exact commands follow below. Readiness means the package
+is ready for operator preflight; privileged live preflight and forward PASS have
+not been claimed.
+
+Prepared package:
+`/home/arvis/goalvision-operations/prematch-settlement-guard-v1-20260929`.
+Archive:
+`/home/arvis/goalvision-operations/prematch-settlement-guard-v1-20260929.tar.gz`.
+
+- Archive SHA-256: `105bc739abbf5ac2b42dced2354029304c4727f1611f381a81ae8adf6741f982`.
+- SHA256SUMS SHA-256: `c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5`.
+- 12 checksummed package files; source package is under
+  `operations/prematch-settlement-guard/`.
+
+### Package verification
+
+The extracted package is already prepared. Verify these trusted hashes before
+executing package Python. The wrapper itself must never be manually invoked.
+
+```bash
+cd /home/arvis/goalvision-operations
+printf '%s\n' '105bc739abbf5ac2b42dced2354029304c4727f1611f381a81ae8adf6741f982  prematch-settlement-guard-v1-20260929.tar.gz' | sha256sum --check --strict -
+cd /home/arvis/goalvision-operations/prematch-settlement-guard-v1-20260929
+printf '%s\n' 'c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5  SHA256SUMS' | sha256sum --check --strict -
+sha256sum --check --strict SHA256SUMS
+```
+
+### Verified operator command helper
+
+Define this shell function once. Each invocation verifies the manifest and every
+file **before** executing Python as root. Root is needed to read the protected
+ADMIN configuration and installed stagger receipt, and for install/rollback.
+No additional application access is granted.
+
+```bash
+settlement_guard_operator() {
+  sudo /bin/sh -c '
+    cd /home/arvis/goalvision-operations/prematch-settlement-guard-v1-20260929 &&
+    printf "%s\n" "c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5  SHA256SUMS" | /usr/bin/sha256sum --check --strict - &&
+    /usr/bin/sha256sum --check --strict SHA256SUMS &&
+    exec /usr/bin/python3 -I -B control.py "$1" --manifest-sha256 c50abe7fc9f7f44a3c05d12fbc81fb41cf53be847d17a09b5f316f0ac85bcfb5
+  ' settlement-guard "$1"
+}
+```
+
+Preflight, read-only:
+
+```bash
+settlement_guard_operator check
+```
+
+**Future operator installation only, after reviewing successful preflight**:
+
+```bash
+settlement_guard_operator install
+```
+
+Status, read-only:
+
+```bash
+settlement_guard_operator status
+```
+
+Forward evidence, read-only, after sufficient normal scheduled cycles:
+
+```bash
+settlement_guard_operator evidence
+```
+
+Future rollback, when settlement is inactive and outside its installation window:
+
+```bash
+settlement_guard_operator rollback
+```
+
+A refused preflight does not grant permission to alter production state to make
+it pass. Review the bounded refusal code and updated read-only evidence. Do not
+stop a worker or change a timer to create a window. This package has **not** been
+installed, and these privileged operator commands have **not** been run here.

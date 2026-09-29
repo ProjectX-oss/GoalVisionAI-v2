@@ -1,0 +1,30 @@
+{
+  "source": "Operator-supplied verified read-only root systemd journal query, last 7 days, goalvision-lab-combo-settle.service",
+  "received_on": "2026-09-29",
+  "completed_invocations": 1008,
+  "runtime_seconds": {
+    "minimum": 7.031,
+    "median": 27.968,
+    "p95": 72.846,
+    "maximum": 105.602
+  },
+  "loaded_timeout_seconds": 600,
+  "approved_guard_seconds": 180,
+  "margin_calculation": "180.000 - 105.602 = 74.398 seconds",
+  "p95_ratio_calculation": "180 / 72.846 = 2.4709661477637757",
+  "timeout_role": "Hard upper execution bound, not the normal guard horizon; no timeout changes",
+  "historical_projection": {
+    "discovery_invocation": "4d931713a53b4404bae23bd990ccebdb",
+    "discovery_start": "2026-09-28T14:30:20+02:00",
+    "settlement_start": "2026-09-28T14:35:00+02:00",
+    "timezone": "Europe/Berlin",
+    "discovery_active_at_settlement_start": true,
+    "expected_code": "SETTLEMENT_DEFERRED_DISCOVERY_ACTIVE",
+    "settlement_application_executed": false,
+    "quota_claims": 0,
+    "database_writes": 0,
+    "api_calls": 0,
+    "telegram_sends": 0,
+    "method": "Offline service-boundary test using supplied active state; no production replay"
+  }
+}

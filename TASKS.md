@@ -1532,3 +1532,13 @@ Review after completing the current priority.
 - No push, production log writes, timer controls, PREMATCH application changes,
   worker runs, API or Telegram calls.
 - Handoff: `docs/operations/PREMATCH_TIMER_STAGGER_HARDENING.md`.
+
+## 2026-09-29 — Discovery priority settlement runtime guard
+
+- [x] Resolve the blocked runtime prerequisite with operator-verified 1,008-run statistics and approved 180-second horizon.
+- [x] Add a standalone ExecStart wrapper with two actual-systemd state/deadline observations, sanitized journal deferrals and exact argv/environment exec replacement.
+- [x] Prove all 858 normal settlement ticks in current/spring/autumn systemd windows remain outside the horizon; project the supplied active-discovery overlap offline.
+- [x] Prepare pinned package/check/install/status/rollback/evidence tooling and focused service-boundary regressions; keep installed stagger v4 unchanged.
+- [ ] Operator: verify package, run privileged preflight, separately authorize installation, then collect normal 2 discovery / 3 executed settlement / 2 observer cycles. Deferrals do not count as execution.
+- Handoff: `docs/operations/PREMATCH_DISCOVERY_PRIORITY_SETTLEMENT_GUARD.md`.
+- No installation, production worker controls, application/policy/timeout changes, API calls, Telegram sends or push.
