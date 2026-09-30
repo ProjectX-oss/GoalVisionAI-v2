@@ -56,11 +56,23 @@ def compact(record: dict, reference: str, now: float, *, invocation: str = 'UNKN
         elif item.get('receipt_persisted') is True:
             add('DELIVERY_UNCERTAIN', obj, facts=facts, healthy=True)
             add('DELIVERY_FAILURE', obj, facts=facts, healthy=True)
-        if item.get('status') in ('FAILED', 'DEGRADED') and not uncertain:
+        if item.get('status') == 'SELECTION_ORIGIN_OR_APPROVAL_INVALID':
+            add('INTEGRITY_FAILURE', obj, 3, {**facts, 'code': item['status']})
+        if (item.get('status') in ('FAILED', 'DEGRADED') and not uncertain
+                and not _pre_transport_rejection(item)):
             add('DELIVERY_FAILURE', obj, facts=facts)
     if len(deliveries) > 200:
         events.append(coverage('stdout', now, 'DELIVERY_RECORD_LIMIT'))
-    if (record.get('delivery_status') in ('FAILED', 'DEGRADED', 'UNKNOWN') or publication.get('failure')) and not any(
+    only_pre_transport = (0 < len(deliveries) <= 200
+                          and all(_pre_transport_rejection(item) for item in deliveries)
+                          and not record.get('telegram_sends')
+                          and not record.get('publication_attempt_count')
+                          and not publication.get('send_attempted')
+                          and not publication.get('publication_attempt_count')
+                          and not publication.get('singles_sent')
+                          and not publication.get('combos_sent'))
+    if (publication.get('failure') or (not only_pre_transport
+            and record.get('delivery_status') in ('FAILED', 'DEGRADED', 'UNKNOWN'))) and not any(
             e.rule in ('DELIVERY_FAILURE', 'DELIVERY_UNCERTAIN') and not e.healthy for e in events):
         add('DELIVERY_FAILURE', identity((publication.get('failure') or {}).get('prediction_id')))
     # Only classify fixed codes. Arbitrary exception text is discarded before retention.
@@ -74,6 +86,7 @@ CODE_RULES = {
     'OBSERVATION_CONSTRUCTION_FAILED': ('OBSERVATION_FAILURE', 3, 1),
     'OBSERVATION_FINISH_FAILED': ('OBSERVATION_FAILURE', 3, 1),
     'INTEGRITY_FAILURE': ('INTEGRITY_FAILURE', 3, 1),
+    'SELECTION_ORIGIN_OR_APPROVAL_INVALID': ('INTEGRITY_FAILURE', 3, 1),
     'SCHEMA_MISMATCH': ('INTEGRITY_FAILURE', 3, 1),
     'IDENTITY_MISMATCH': ('INTEGRITY_FAILURE', 3, 1),
     'STATISTICS_INTEGRITY_BLOCKER': ('INTEGRITY_FAILURE', 3, 1),
@@ -121,3 +134,12 @@ def completed_health(value: dict, service: str, key: str, now: float, source: st
         for rule in ('PROVIDER_FAILURE', 'DATABASE_LOCK', 'QUOTA_FAILURE', 'ANALYSIS_FAILURE'):
             events.append(Event(service, rule, 'pipeline', key, stamp, source, healthy=True))
     return events
+
+
+def _pre_transport_rejection(item: object) -> bool:
+    """Suppress aggregate delivery noise only when every item proves no send."""
+    return (isinstance(item, dict) and item.get('stage') == 'REJECTED_BEFORE_TRANSPORT'
+            and item.get('transport_attempted') is False
+            and not any(item.get(key) for key in (
+                'acknowledgement_received', 'receipt_persisted', 'reconciliation_required',
+                'persistence_failure', 'transport_failure_kind', 'unknown_marker_persisted', 'sent')))

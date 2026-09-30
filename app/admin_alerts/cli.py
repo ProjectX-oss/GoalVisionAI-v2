@@ -156,19 +156,14 @@ def scan(config: dict, root: Path, *, no_send: bool = True, config_path: Path | 
                 health_events, health_state = health_rows(Path(config['health_database']), store.get('health', {}), now)
                 events.extend(health_events)
                 cursors.update(health=health_state, last_database_poll=now)
-                if not any(s.get('running', True) for s in states.values()) and len(states) == 5:
-                    ledger_events, ledger_state = unresolved(Path(config['ledger_database']), store.get('ledger', {}), now)
-                    events.extend(ledger_events)
-                    cursors['ledger'] = ledger_state
-                    cursors['ledger_deferred_since'] = 0
-                    weekly_events, weekly_state = weekly_unresolved(Path(config['health_database']), store.get('weekly', {}), now)
-                    events.extend(weekly_events)
-                    cursors['weekly'] = weekly_state
-                else:
-                    deferred = store.get('ledger_deferred_since', 0) or now
-                    cursors['ledger_deferred_since'] = deferred
-                    if now - deferred >= 900:
-                        events.append(coverage('ledger', now, 'CLAIM_REVIEW_DEFERRED_ACTIVE_OR_UNKNOWN_PRODUCER'))
+                # The bounded readonly adapter decides whether source access is safe.
+                # A long-running producer alone is not a monitoring coverage failure.
+                ledger_events, ledger_state = unresolved(Path(config['ledger_database']), store.get('ledger', {}), now)
+                events.extend(ledger_events)
+                cursors['ledger'] = ledger_state
+                weekly_events, weekly_state = weekly_unresolved(Path(config['health_database']), store.get('weekly', {}), now)
+                events.extend(weekly_events)
+                cursors['weekly'] = weekly_state
             maintenance = store.get('maintenance', {})
             events = [e for e in events if not any(m.get('scope') in ('all', e.service) and m.get('until', 0) > now
                       for m in maintenance.values())]

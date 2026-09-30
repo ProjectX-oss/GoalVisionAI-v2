@@ -570,8 +570,8 @@ def validate_scan_cursor(state: dict) -> None:
 def scan_page(state: dict, rows: list, now: float, source: str) -> list[Event]:
     """A bounded page is healthy. Stall is measured since the last advancement.
 
-    A migrated v1 cursor starts its 20-minute observation window now. A delayed
-    producer deferral is assessed by the caller, independently of page progress.
+    A migrated v1 cursor starts its 20-minute observation window now. Producer
+    activity does not defer scans; readonly access failures remain explicit.
     """
     before = state.get('after', '')
     after = rows[-1][0] if len(rows) == MAX_ROWS else ''

@@ -48,9 +48,10 @@ class IdleTests(Temporary):
     def test_scan_reports_idle_and_does_not_create_delivery_incident(self):
         from app.admin_alerts.cli import scan
         mocks = {'systemd': {}, 'service_rules': ([], {}), 'tail': ([], [], {}, 0),
-                 'journal': ([], {}), 'health_rows': ([], {}) , 'configured_release': 'UNKNOWN'}
+                 'journal': ([], {}), 'health_rows': ([], {}), 'unresolved': ([], {}),
+                 'weekly_unresolved': ([], {}), 'configured_release': 'UNKNOWN'}
         with patch.multiple('app.admin_alerts.cli', **{k:Mock(return_value=v) for k,v in mocks.items()}), patch('app.admin_alerts.cli.Telegram', self.factory):
-            scan({'stdout':'unused','health_database':'unused','release_environment':'unused',
+            scan({'stdout':'unused','health_database':'unused','ledger_database':'unused','release_environment':'unused',
                   'sender':self.sender.__dict__}, self.root, no_send=False)
         report = json.loads((self.root/'incident-report.json').read_text())
         self.assertEqual(report['admin_delivery']['code'], 'IDLE_NO_DELIVERY_WORK')
