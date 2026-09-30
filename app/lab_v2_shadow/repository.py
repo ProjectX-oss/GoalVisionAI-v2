@@ -10,12 +10,16 @@ import sqlite3
 from app.real_match_lab_analysis.fingerprint import canonical_json, fingerprint
 
 
+SHADOW_DB_BUSY_TIMEOUT_MS = 30_000
+
+
 class ShadowEvidenceRepository:
     def __init__(self, path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
-        self.connection = sqlite3.connect(path)
+        self.connection = sqlite3.connect(path, timeout=SHADOW_DB_BUSY_TIMEOUT_MS / 1000)
         self.connection.row_factory = sqlite3.Row
         self.connection.execute("PRAGMA foreign_keys=ON")
+        self.connection.execute(f"PRAGMA busy_timeout={SHADOW_DB_BUSY_TIMEOUT_MS}")
         with self.connection:
             self.connection.executescript(
                 """
