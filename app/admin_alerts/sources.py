@@ -14,7 +14,7 @@ import subprocess
 import time
 from typing import Callable
 
-from .model import DISCOVERY, UNITS, Event, coverage, digest, epoch, identity
+from .model import DISCOVERY, UNITS, SCHEMA, Event, coverage, digest, epoch, identity
 from .rules import compact, completed_health, code_events
 from .output_contracts import CONTRACTS, expected_document
 
@@ -348,7 +348,9 @@ def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[
                         state['output_proofs_v1'][unit] = dict(list(outputs.items())[-32:])
                         events.append(Event(unit, 'MISSING_OUTPUT', inv, inv, now,
                             'journal-' + digest(cursor), invocation=inv, healthy=True, facts=proof))
-                    if doc.get('schema_version'):
+                    # The discovery compact schema belongs to the dedicated stdout contract.
+                    # Do not classify unrelated schema-versioned journal documents as stdout faults.
+                    if unit == DISCOVERY and doc.get('schema_version') == SCHEMA:
                         events.extend(compact(doc, 'journal-' + digest(cursor), now, invocation=inv))
                     else:
                         events.extend(code_events(doc.get('code') or doc.get('status'), unit, inv, stamp, 'journal-' + digest(cursor), invocation=inv))

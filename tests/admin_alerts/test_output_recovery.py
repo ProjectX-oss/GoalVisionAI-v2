@@ -73,6 +73,21 @@ class RecoveryTests(Temporary):
             self.assertFalse([e for e in events if e.rule == 'MISSING_OUTPUT'])
             self.assertFalse(state.get('output_proofs_v1'))
 
+    def test_unrelated_schema_versioned_journal_document_is_not_stdout_fault(self):
+        value = line(doc={'schema_version': 'other-service-v1', 'status': 'OK'})
+        events, _ = journal({}, NOW+1, lambda _: value)
+        self.assertFalse([e for e in events
+                          if e.rule == 'MONITORING_COVERAGE_DEGRADED'
+                          and e.source == 'stdout'])
+
+    def test_discovery_compact_schema_in_journal_still_uses_compact_rules(self):
+        from test_monitor import record
+        value = line(doc=record(analysis_status='FAILED'), _SYSTEMD_UNIT=UNITS[0])
+        events, _ = journal({}, NOW+1, lambda _: value)
+        self.assertTrue(any(e.rule == 'ANALYSIS_FAILURE' for e in events))
+        self.assertFalse(any(e.rule == 'MONITORING_COVERAGE_DEGRADED'
+                             and e.facts.get('reason') == 'UNSUPPORTED_RECORD' for e in events))
+
     def test_exact_lookup_is_bounded_and_rejects_other_identity(self):
         calls = []
         def read(args):
