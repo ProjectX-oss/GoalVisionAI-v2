@@ -116,6 +116,11 @@ def test_lab_single_at_1_25_still_fails_insufficient_edge() -> None:
 
 def test_three_low_odds_legs_form_combo_below_two(tmp_path, monkeypatch) -> None:
     monkeypatch.chdir(tmp_path)
+    import app.lab_v2_shadow.publication as publication
+    monkeypatch.setattr(publication, "review_publication",
+                        lambda item, now: {"eligible": True, "rejection_reasons": []})
+    monkeypatch.setattr(publication, "current_quote", lambda *args, **kwargs: True)
+    monkeypatch.setattr(publication, "publication_blocker", lambda *args, **kwargs: None)
     ledger_path = tmp_path / "var" / "lab_combo" / "ledger.db"
     ledger_path.parent.mkdir(parents=True)
     ledger = ComboRepository(ledger_path)

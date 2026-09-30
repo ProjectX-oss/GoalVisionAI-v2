@@ -12,8 +12,13 @@ from .global_evaluation import SOFT_ENSEMBLE
 from .api_prediction import NORMALIZATION_VERSION, _probability
 
 PUBLICATION_POLICY_VERSION = 'LAB_SEVERE_DISAGREEMENT_PUBLICATION_V1'
+ACCURACY_PUBLICATION_POLICY_VERSION = 'LAB_ACCURACY_FIRST_PUBLICATION_V1'
 SEVERE_FINDINGS = frozenset({'ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE',
                             'SEVERE_MODEL_MARKET_CONTRADICTION'})
+ACCURACY_SEVERE_FINDINGS = SEVERE_FINDINGS | frozenset({
+    'SEVERE_CURRENT_MATCH_INTELLIGENCE_CONTRADICTION',
+})
+ACCURACY_ALLOWED_HARD_FAILURES = frozenset({'NON_POSITIVE_VALUE'})
 
 
 def review_publication(candidate: dict, *, now: datetime) -> dict:
@@ -92,4 +97,83 @@ def review_publication(candidate: dict, *, now: datetime) -> dict:
     except (KeyError, TypeError, ValueError, InvalidOperation, ZeroDivisionError, AttributeError):
         reasons.add('PUBLICATION_DECISION_EVIDENCE_INVALID_OR_MISSING')
     return {'version': PUBLICATION_POLICY_VERSION, 'eligible': not reasons,
+            'rejection_reasons': sorted(reasons)}
+
+
+def review_accuracy_publication(candidate: dict, *, now: datetime) -> dict:
+    """Fail-closed Lab SINGLE review where hit-rate outranks EV.
+
+    NON_POSITIVE_VALUE is the only hard finding that may be ignored. Quote
+    freshness, fixture identity, probability replay and severe contradictions
+    remain mandatory. Market-consensus-only probabilities are permitted for
+    totals/BTTS accuracy selection when their retained value exactly replays.
+    """
+    reasons = set(candidate.get('soft_findings') or ()) & ACCURACY_SEVERE_FINDINGS
+    hard = set(candidate.get('hard_failures') or ()) | set(candidate.get('rejection_reasons') or ())
+    reasons.update(hard - ACCURACY_ALLOWED_HARD_FAILURES)
+    try:
+        market = candidate['market']
+        odds = Decimal(str(candidate['captured_odds']))
+        probability = _probability(candidate['ensemble_probability'], unit='probability')
+        if probability is None or not 0 < probability < 1 or not odds.is_finite() or odds <= 1:
+            raise ValueError('invalid probability or odds')
+        if not current_quote(candidate, now):
+            reasons.add('PUBLICATION_DECISION_EVIDENCE_STALE')
+        signals = [EnsembleSignal(**{**s,
+                    'probability': _probability(s['probability'], unit='probability') if s['probability'] is not None else None,
+                    'reliability': Decimal(str(s['reliability']))}) for s in candidate['signals']]
+        if any((raw['probability'] is not None and signal.probability is None) or not signal.provenance
+               for raw, signal in zip(candidate['signals'], signals)):
+            raise ValueError('invalid signal')
+        consensus = [s.probability for s in signals
+                     if s.name == 'CURRENT_MARKET_CONSENSUS' and s.probability is not None]
+        predictive = [s for s in signals if s.name != 'CURRENT_MARKET_CONSENSUS'
+                      and _independence_group(s) != 'CURRENT_MARKET_CONSENSUS'
+                      and s.probability is not None and s.provenance]
+        if len(consensus) != 1:
+            raise ValueError('current market consensus required')
+        if predictive:
+            decision = evaluate_ensemble(market, odds, signals)
+            reasons.update(set(decision.rejection_reasons) - SOFT_ENSEMBLE)
+            reasons.update(set(decision.rejection_reasons) & ACCURACY_SEVERE_FINDINGS)
+            families = {_independence_group(s) for s in predictive}
+            replay = decision.ensemble_probability
+            if len(families) == 1:
+                weights = [_market_weight(s, _FAMILY.get(market)) for s in predictive]
+                replay = sum((s.probability * w for s, w in zip(predictive, weights)), Decimal(0)) / sum(weights)
+                if abs(replay - consensus[0]) > MAX_MODEL_MARKET_DIFFERENCE:
+                    reasons.add('SEVERE_MODEL_MARKET_CONTRADICTION')
+            if any(s.name == 'API_FOOTBALL_PREDICTION' for s in predictive):
+                api = candidate.get('api_prediction_normalization') or {}
+                if (api.get('normalization_version') != NORMALIZATION_VERSION or not api.get('available')
+                        or not api.get('source_fingerprint') or api.get('fixture_id') != candidate['fixture_id']
+                        or any(api.get(side + '_team_id') != candidate[side + '_team_id'] for side in ('home', 'away'))):
+                    reasons.add('PUBLICATION_API_NORMALIZATION_EVIDENCE_REQUIRED')
+                else:
+                    distribution = {k: _probability(v, unit='probability') for k, v in api['probabilities'].items()}
+                    if (set(distribution) != {'HOME_WIN', 'DRAW', 'AWAY_WIN'}
+                            or any(v is None for v in distribution.values())
+                            or abs(sum(distribution.values()) - 1) > Decimal('1e-25')
+                            or any(s.probability != distribution.get(market) for s in predictive
+                                   if s.name == 'API_FOOTBALL_PREDICTION')):
+                        reasons.add('PUBLICATION_API_PROBABILITY_INVALID')
+        else:
+            replay = consensus[0]
+        if replay is None or abs(probability - replay) > Decimal('1e-25'):
+            reasons.add('PUBLICATION_PROBABILITY_REPLAY_MISMATCH')
+        quote = dict(provider='API_FOOTBALL', fixture_id=candidate['fixture_id'],
+                     bookmaker_id=candidate['bookmaker_id'], bookmaker=candidate['bookmaker'],
+                     market=market, odds=odds,
+                     provider_updated=datetime.fromisoformat(candidate['provider_origin_timestamp_utc']),
+                     retrieved_at=datetime.fromisoformat(candidate['goalvision_retrieved_at_utc']))
+        if fingerprint(quote) != candidate['quote_provenance_fingerprint']:
+            reasons.add('PUBLICATION_QUOTE_IDENTITY_MISMATCH')
+        metadata = candidate['provider_metadata']
+        if (metadata['fixture']['id'] != candidate['fixture_id']
+                or any(metadata['teams'][side]['id'] != candidate[side + '_team_id'] for side in ('home', 'away'))
+                or candidate['home_team_id'] == candidate['away_team_id']):
+            reasons.add('PUBLICATION_FIXTURE_IDENTITY_MISMATCH')
+    except (KeyError, TypeError, ValueError, InvalidOperation, ZeroDivisionError, AttributeError):
+        reasons.add('PUBLICATION_DECISION_EVIDENCE_INVALID_OR_MISSING')
+    return {'version': ACCURACY_PUBLICATION_POLICY_VERSION, 'eligible': not reasons,
             'rejection_reasons': sorted(reasons)}

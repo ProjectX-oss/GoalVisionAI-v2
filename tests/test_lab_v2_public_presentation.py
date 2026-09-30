@@ -13,7 +13,7 @@ from app.lab_combo.settlement import resolve_single
 from app.lab_v2_shadow.origin import result_message as legacy_result_message
 from app.lab_v2_shadow.publication import prepare_v2_publications, v2_single_message
 from app.lab_v2_shadow.public_presentation import (
-    MARKETS, SIGNALS, TITLE, analysis_signals, result_message, statistics_block,
+    LEGACY_VERSION, MARKETS, SIGNALS, TITLE, analysis_signals, result_message, statistics_block,
 )
 from app.lab_v2_shadow.statistics import public_single_snapshot, single_cohorts
 from app.real_match_lab_analysis.models import LAB_CHAT_ID
@@ -75,8 +75,33 @@ def test_exact_prediction_snapshot_and_zero_statistics(ledger):
     value = prepare(ledger)
     value.update(home_team='Faroe Islands', away_team='Kazakhstan', market='HOME_WIN',
                  captured_odds='2.28', kickoff_utc='2026-09-26T16:00:00+00:00',
+                 ensemble_probability='0.50', edge='0.061', expected_value='0.14')
+    value['selection_origin']['predictive_families'] = ['API_FOOTBALL_PREDICTION']
+    assert v2_single_message(value) == '''🧪 GoalVision AI Lab • V2 atlase
+
+⚽ Faroe Islands – Kazakhstan
+🎯 Likme: 1
+💰 Koeficients: 2.28
+⏰ Sākums: 26.09.2026 19:00 (Latvija)
+
+📊 Novērtētā varbūtība: 50.0%
+🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, koef. ≥1.30)
+💹 EV: +14.0% (diagnostikai)
+🧠 Analīzes pamats: API-Football prognoze
+
+📊 V2 statistika
+Likmes: 0 | ✅ WON: 0 | ❌ LOST: 0 | ➖ VOID: 0
+🎯 Precizitāte: —
+📈 P/L: +0.00u | ROI: —'''
+
+
+def test_legacy_v2_prediction_snapshot_remains_byte_stable(ledger):
+    value = prepare(ledger)
+    value.update(home_team='Faroe Islands', away_team='Kazakhstan', market='HOME_WIN',
+                 captured_odds='2.28', kickoff_utc='2026-09-26T16:00:00+00:00',
                  ensemble_probability='0.50', edge='0.061')
     value['selection_origin']['predictive_families'] = ['API_FOOTBALL_PREDICTION']
+    value['public_presentation']['version'] = LEGACY_VERSION
     assert v2_single_message(value) == '''🧪 GoalVision AI Lab • V2 atlase
 
 ⚽ Faroe Islands – Kazakhstan

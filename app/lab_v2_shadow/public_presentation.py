@@ -8,7 +8,8 @@ from zoneinfo import ZoneInfo
 
 from app.lab_combo.presentation import public_decimal, public_percent, score, signed_units, team_pair
 
-VERSION = 'LAB_V2_PUBLIC_MESSAGE_V2'
+VERSION = 'LAB_V2_PUBLIC_MESSAGE_V3'
+LEGACY_VERSION = 'LAB_V2_PUBLIC_MESSAGE_V2'
 TITLE = '🧪 GoalVision AI Lab • V2 atlase'
 MARKETS = MappingProxyType({
     'HOME_WIN': '1', 'DRAW': 'X', 'AWAY_WIN': '2',
@@ -51,16 +52,32 @@ def statistics_block(snapshot: dict) -> str:
 def prediction_message(value: dict) -> str:
     """Render exclusively from the immutable prediction and its statistics snapshot."""
     presentation = value['public_presentation']
-    if presentation['version'] != VERSION:
+    version = presentation['version']
+    if version not in {VERSION, LEGACY_VERSION}:
         raise ValueError('UNKNOWN_PUBLIC_PRESENTATION_VERSION')
     kickoff = datetime.fromisoformat(value['kickoff_utc']).astimezone(ZoneInfo('Europe/Riga'))
+    if version == LEGACY_VERSION:
+        return '\n'.join((TITLE, '', f"⚽ {team_pair(value)}",
+            f"🎯 Likme: {MARKETS[value['market']]}",
+            f"💰 Koeficients: {public_decimal(value['captured_odds'])}",
+            f"⏰ Sākums: {kickoff:%d.%m.%Y %H:%M} (Latvija)", '',
+            f"📊 Novērtētā varbūtība: {Decimal(value['ensemble_probability']) * 100:.1f}%",
+            f"📈 Vērtības pārsvars: {Decimal(value['edge']) * 100:+.1f} pp",
+            f"🧠 Analīzes signāli: {analysis_signals(value['selection_origin']['predictive_families'])}",
+            '', statistics_block(presentation['statistics'])))
+    basis = analysis_signals(value['selection_origin']['predictive_families'])
+    if basis == '—' and any(
+            signal.get('name') == 'CURRENT_MARKET_CONSENSUS' for signal in value.get('signals', [])):
+        basis = 'Tirgus konsenss'
+    ev = Decimal(str(value['expected_value'])) * 100
     return '\n'.join((TITLE, '', f"⚽ {team_pair(value)}",
         f"🎯 Likme: {MARKETS[value['market']]}",
         f"💰 Koeficients: {public_decimal(value['captured_odds'])}",
         f"⏰ Sākums: {kickoff:%d.%m.%Y %H:%M} (Latvija)", '',
         f"📊 Novērtētā varbūtība: {Decimal(value['ensemble_probability']) * 100:.1f}%",
-        f"📈 Vērtības pārsvars: {Decimal(value['edge']) * 100:+.1f} pp",
-        f"🧠 Analīzes signāli: {analysis_signals(value['selection_origin']['predictive_families'])}",
+        "🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, koef. ≥1.30)",
+        f"💹 EV: {ev:+.1f}% (diagnostikai)",
+        f"🧠 Analīzes pamats: {basis}",
         '', statistics_block(presentation['statistics'])))
 
 

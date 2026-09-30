@@ -907,6 +907,94 @@ def test_probability_first_single_selection_prefers_higher_probability_within_fi
         (1, "OVER_1_5"), (2, "HOME_WIN")]
 
 
+def test_accuracy_first_single_can_publish_high_probability_negative_ev_market_consensus(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    from app.lab_combo.repository import ComboRepository
+    candidate = _controlled_ready_candidate(NOW)
+    candidate.update(
+        candidate_id="accuracy-over-2-5",
+        market="OVER_2_5",
+        decision="REJECTED",
+        stage="REJECTED",
+        candidate_lane="REJECTED",
+        captured_odds="1.30",
+        offered_odds="1.30",
+        ensemble_probability="0.75",
+        edge=str(Decimal("0.75") - Decimal(1) / Decimal("1.30")),
+        expected_value=str(Decimal("0.75") * Decimal("1.30") - 1),
+        hard_failures=["NON_POSITIVE_VALUE"],
+        rejection_reasons=["NON_POSITIVE_VALUE"],
+        soft_findings=[
+            "ENSEMBLE_EDGE_BELOW_0_04",
+            "INSUFFICIENT_INDEPENDENT_SIGNALS",
+            "NO_INDEPENDENT_NON_MARKET_EVIDENCE",
+            "VALUE_BELOW_PROFILE_THRESHOLD",
+        ],
+        final_review_completed_at_utc=None,
+        predictive_families=[],
+        evidence_lane="NO_PREDICTIVE_EVIDENCE",
+        signals=[{
+            "name": "CURRENT_MARKET_CONSENSUS",
+            "market": "OVER_2_5",
+            "probability": "0.75",
+            "selection": "OVER_2_5",
+            "reliability": "0.90",
+            "availability": "AVAILABLE",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+        }],
+    )
+    bind_candidate_evidence(candidate)
+    low_odds = _controlled_ready_candidate(NOW)
+    low_odds.update(
+        candidate_id="accuracy-over-1-5-low-odds",
+        market="OVER_1_5",
+        decision="REJECTED",
+        stage="REJECTED",
+        candidate_lane="REJECTED",
+        captured_odds="1.10",
+        offered_odds="1.10",
+        ensemble_probability="0.87",
+        edge=str(Decimal("0.87") - Decimal(1) / Decimal("1.10")),
+        expected_value=str(Decimal("0.87") * Decimal("1.10") - 1),
+        hard_failures=["NON_POSITIVE_VALUE"],
+        rejection_reasons=["NON_POSITIVE_VALUE"],
+        soft_findings=[
+            "ENSEMBLE_EDGE_BELOW_0_04",
+            "INSUFFICIENT_INDEPENDENT_SIGNALS",
+            "NO_INDEPENDENT_NON_MARKET_EVIDENCE",
+            "VALUE_BELOW_PROFILE_THRESHOLD",
+        ],
+        final_review_completed_at_utc=None,
+        predictive_families=[],
+        evidence_lane="NO_PREDICTIVE_EVIDENCE",
+        signals=[{
+            "name": "CURRENT_MARKET_CONSENSUS",
+            "market": "OVER_1_5",
+            "probability": "0.87",
+            "selection": "OVER_1_5",
+            "reliability": "0.90",
+            "availability": "AVAILABLE",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+        }],
+    )
+    bind_candidate_evidence(low_odds)
+    ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
+    prepared = prepare_v2_publications({"candidate_markets": [low_odds, candidate]}, ledger, now=NOW)
+    assert [(item["market"], item["ensemble_probability"], item["captured_odds"])
+            for item in prepared["singles"]] == [("OVER_2_5", "0.75", "1.30")]
+    assert prepared["singles"][0]["expected_value"] == "-0.0250"
+    assert prepared["combos"] == []
+    assert prepared["accuracy_single_input_count"] == 1
+    assert prepared["minimum_published_decimal_odds"] == "1.30"
+    assert prepared["single_publication_blockers"][low_odds["candidate_id"]] == (
+        "LAB_PUBLICATION_ODDS_BELOW_1_30"
+    )
+    assert prepared["single_selection_policy"] == "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1"
+    ledger.close()
+
+
 def test_publication_blocks_low_probability_longshot_even_when_other_gates_pass(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     import app.lab_v2_shadow.publication as publication
@@ -931,7 +1019,7 @@ def test_publication_blocks_low_probability_longshot_even_when_other_gates_pass(
     assert prepared["singles"] == []
     assert prepared["combos"] == []
     assert prepared["minimum_published_probability"] == str(MIN_PUBLISHED_MARKET_PROBABILITY)
-    assert prepared["publication_blockers"][candidate["candidate_id"]] == (
+    assert prepared["single_publication_blockers"][candidate["candidate_id"]] == (
         "LAB_PUBLICATION_PROBABILITY_BELOW_0_55"
     )
     ledger.close()

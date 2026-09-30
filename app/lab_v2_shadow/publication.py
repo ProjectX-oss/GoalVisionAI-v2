@@ -14,13 +14,15 @@ from app.real_match_lab_analysis.fingerprint import fingerprint
 
 
 from .forward_evidence import current_quote
-from .publication_policy import review_publication, PUBLICATION_POLICY_VERSION
+from .publication_policy import (review_publication, review_accuracy_publication,
+    PUBLICATION_POLICY_VERSION, ACCURACY_PUBLICATION_POLICY_VERSION)
 
 
 MAX_SINGLES_PER_CYCLE = 3
 MAX_COMBOS_PER_CYCLE = 3
 MIN_PUBLISHED_MARKET_PROBABILITY = Decimal("0.55")
-SINGLE_SELECTION_POLICY = "LAB_SINGLE_PROBABILITY_FIRST_PER_FIXTURE_V2"
+MIN_PUBLISHED_DECIMAL_ODDS = Decimal("1.30")
+SINGLE_SELECTION_POLICY = "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1"
 
 
 def _single_rank(item: dict[str, object]) -> tuple:
@@ -49,39 +51,65 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                             label_origin: bool = False, football_context: object | None = None) -> dict[str, object]:
     """Persist only final-reviewed V2 READY singles and independent triples."""
     clock = now.astimezone(timezone.utc)
-    ready = []
+    combo_ready = []
+    single_pool = []
     publication_blockers = {}
     publication_reviews = {}
+    single_publication_blockers = {}
+    single_publication_reviews = {}
     for item in report.get("candidate_markets", []):
-        if (item.get("decision") != "APPROVED" or item.get("stage") != "READY_TO_PUBLISH"
-                or item.get("candidate_lane") == "TRACKING"):
-            continue
-        gate = review_publication(item, now=clock)
-        publication_reviews[item['candidate_id']] = gate
-        if not gate['eligible']:
-            publication_blockers[item['candidate_id']] = 'LAB_PUBLICATION_POLICY_REJECTED'
-            continue
+        candidate_id = str(item.get("candidate_id", item.get("fixture_id", "UNKNOWN")))
         try:
-            blocker=publication_blocker(clock,[item['kickoff_utc']])
+            blocker = publication_blocker(clock, [item["kickoff_utc"]])
             if blocker:
-                publication_blockers[str(item.get('candidate_id',item['fixture_id']))]=blocker
+                publication_blockers[candidate_id] = blocker
+                single_publication_blockers[candidate_id] = blocker
                 continue
-            if datetime.fromisoformat(item['kickoff_utc']) <= clock or not current_quote(item, clock):
+            if datetime.fromisoformat(item["kickoff_utc"]) <= clock or not current_quote(item, clock):
                 continue
             odds = Decimal(str(item["captured_odds"]))
             probability = Decimal(str(item["ensemble_probability"]))
         except (KeyError, ValueError, TypeError, InvalidOperation):
             continue
         if (not odds.is_finite() or odds <= Decimal(1)
-                or not probability.is_finite() or not Decimal(0) < probability < Decimal(1)
-                or probability * odds <= 1):
+                or not probability.is_finite() or not Decimal(0) < probability < Decimal(1)):
             continue
+
+        # SINGLE: accuracy-first. EV is diagnostic only. A candidate rejected
+        # solely for NON_POSITIVE_VALUE may still qualify if all identity,
+        # freshness, replay and severe-contradiction checks pass.
         if probability < MIN_PUBLISHED_MARKET_PROBABILITY:
-            publication_blockers[item["candidate_id"]] = "LAB_PUBLICATION_PROBABILITY_BELOW_0_55"
-            continue
-        ready.append({**item, "publication_policy_version": PUBLICATION_POLICY_VERSION,
-                      "publication_review": gate})
-    single_ready = _probability_first_single_candidates(ready)
+            single_publication_blockers[candidate_id] = "LAB_PUBLICATION_PROBABILITY_BELOW_0_55"
+        elif odds < MIN_PUBLISHED_DECIMAL_ODDS:
+            single_publication_blockers[candidate_id] = "LAB_PUBLICATION_ODDS_BELOW_1_30"
+        elif item.get("stage") in {"READY_TO_PUBLISH", "REJECTED"} and item.get("candidate_lane") != "TRACKING":
+            accuracy_gate = review_accuracy_publication(item, now=clock)
+            single_publication_reviews[candidate_id] = accuracy_gate
+            if accuracy_gate["eligible"]:
+                single_pool.append({
+                    **item,
+                    "accuracy_publication_policy_version": ACCURACY_PUBLICATION_POLICY_VERSION,
+                    "accuracy_publication_review": accuracy_gate,
+                })
+            else:
+                single_publication_blockers[candidate_id] = "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED"
+
+        # COMBO: unchanged positive-EV path.
+        if (item.get("decision") == "APPROVED" and item.get("stage") == "READY_TO_PUBLISH"
+                and item.get("candidate_lane") != "TRACKING"):
+            gate = review_publication(item, now=clock)
+            publication_reviews[candidate_id] = gate
+            if not gate["eligible"]:
+                publication_blockers[candidate_id] = "LAB_PUBLICATION_POLICY_REJECTED"
+                continue
+            if probability * odds <= 1:
+                continue
+            combo_ready.append({
+                **item,
+                "publication_policy_version": PUBLICATION_POLICY_VERSION,
+                "publication_review": gate,
+            })
+    single_ready = _probability_first_single_candidates(single_pool)
     consumed_keys = {
         value.get("publication_key") for value in ledger.all("single_prediction")
         if (
@@ -106,6 +134,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         value = _leg(candidate, clock)
         value["single_selection_policy"] = SINGLE_SELECTION_POLICY
         value["minimum_published_probability"] = str(MIN_PUBLISHED_MARKET_PROBABILITY)
+        value["minimum_published_decimal_odds"] = str(MIN_PUBLISHED_DECIMAL_ODDS)
         value["prediction_id"] = "lab-v2-single-" + fingerprint((
             candidate["policy"], key, candidate["candidate_id"],
             candidate["quote_provenance_fingerprint"],
@@ -136,7 +165,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
 
     combos = []
     remaining = sorted(
-        (_leg(candidate, clock) for candidate in ready),
+        (_leg(candidate, clock) for candidate in combo_ready),
         key=lambda item: (
             -Decimal(str(item.get("edge") or "-99")), item["kickoff_utc"],
             item["fixture_id"], item["market"], item["candidate_id"],
@@ -189,10 +218,14 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                      if int(item["fixture_id"]) not in consumed_fixtures
                      and not consumed_teams.intersection({str(item["home_team_id"]), str(item["away_team_id"])})]
     return {"publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION,
+            "single_publication_reviews": single_publication_reviews,
+            "single_accuracy_publication_policy_version": ACCURACY_PUBLICATION_POLICY_VERSION,
             "single_selection_policy": SINGLE_SELECTION_POLICY,
             "minimum_published_probability": str(MIN_PUBLISHED_MARKET_PROBABILITY),
+            "minimum_published_decimal_odds": str(MIN_PUBLISHED_DECIMAL_ODDS),
+            "single_publication_blockers": single_publication_blockers,
             "publication_blockers":publication_blockers,"singles": singles, "combos": combos,
-            "ready_input_count": len(ready)}
+            "ready_input_count": len(combo_ready), "accuracy_single_input_count": len(single_pool)}
 
 
 def v2_single_message(value: dict) -> str:
