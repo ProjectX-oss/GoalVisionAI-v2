@@ -19,7 +19,8 @@ from app.lab_v2_shadow.ensemble import EnsembleSignal, evaluate_ensemble
 from app.lab_v2_shadow.market_consensus import current_market_consensus
 from app.lab_v2_shadow.bookmakers import review_bookmaker_catalogue
 from app.lab_v2_shadow.publication import (prepare_v2_publications, v2_single_message,
-    _probability_first_single_candidates, SINGLE_SELECTION_POLICY)
+    _probability_first_single_candidates, SINGLE_SELECTION_POLICY,
+    MIN_PUBLISHED_MARKET_PROBABILITY)
 from app.lab_v2_shadow.quota import (
     DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE,
     adaptive_quota_budget, projected_daily_usage,
@@ -904,6 +905,36 @@ def test_probability_first_single_selection_prefers_higher_probability_within_fi
     selected = _probability_first_single_candidates(rows)
     assert [(item["fixture_id"], item["market"]) for item in selected] == [
         (1, "OVER_1_5"), (2, "HOME_WIN")]
+
+
+def test_publication_blocks_low_probability_longshot_even_when_other_gates_pass(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    import app.lab_v2_shadow.publication as publication
+    from app.lab_combo.repository import ComboRepository
+    ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
+    candidate = {
+        "candidate_id": "low-probability-longshot",
+        "fixture_id": 77,
+        "market": "HOME_WIN",
+        "decision": "APPROVED",
+        "stage": "READY_TO_PUBLISH",
+        "candidate_lane": "EXPERIMENTAL",
+        "kickoff_utc": (NOW + timedelta(minutes=30)).isoformat(),
+        "captured_odds": "29.00",
+        "ensemble_probability": "0.10",
+    }
+    monkeypatch.setattr(publication, "review_publication",
+                        lambda item, now: {"eligible": True, "rejection_reasons": []})
+    monkeypatch.setattr(publication, "publication_blocker", lambda *args, **kwargs: None)
+    monkeypatch.setattr(publication, "current_quote", lambda *args, **kwargs: True)
+    prepared = prepare_v2_publications({"candidate_markets": [candidate]}, ledger, now=NOW)
+    assert prepared["singles"] == []
+    assert prepared["combos"] == []
+    assert prepared["minimum_published_probability"] == str(MIN_PUBLISHED_MARKET_PROBABILITY)
+    assert prepared["publication_blockers"][candidate["candidate_id"]] == (
+        "LAB_PUBLICATION_PROBABILITY_BELOW_0_55"
+    )
+    ledger.close()
 
 
 def test_ready_publication_handoff_is_lab_only_and_exactly_once(tmp_path, monkeypatch):

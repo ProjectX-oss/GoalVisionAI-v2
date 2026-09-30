@@ -19,7 +19,8 @@ from .publication_policy import review_publication, PUBLICATION_POLICY_VERSION
 
 MAX_SINGLES_PER_CYCLE = 3
 MAX_COMBOS_PER_CYCLE = 3
-SINGLE_SELECTION_POLICY = "LAB_SINGLE_PROBABILITY_FIRST_PER_FIXTURE_V1"
+MIN_PUBLISHED_MARKET_PROBABILITY = Decimal("0.55")
+SINGLE_SELECTION_POLICY = "LAB_SINGLE_PROBABILITY_FIRST_PER_FIXTURE_V2"
 
 
 def _single_rank(item: dict[str, object]) -> tuple:
@@ -75,6 +76,9 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                 or not probability.is_finite() or not Decimal(0) < probability < Decimal(1)
                 or probability * odds <= 1):
             continue
+        if probability < MIN_PUBLISHED_MARKET_PROBABILITY:
+            publication_blockers[item["candidate_id"]] = "LAB_PUBLICATION_PROBABILITY_BELOW_0_55"
+            continue
         ready.append({**item, "publication_policy_version": PUBLICATION_POLICY_VERSION,
                       "publication_review": gate})
     single_ready = _probability_first_single_candidates(ready)
@@ -101,6 +105,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             continue
         value = _leg(candidate, clock)
         value["single_selection_policy"] = SINGLE_SELECTION_POLICY
+        value["minimum_published_probability"] = str(MIN_PUBLISHED_MARKET_PROBABILITY)
         value["prediction_id"] = "lab-v2-single-" + fingerprint((
             candidate["policy"], key, candidate["candidate_id"],
             candidate["quote_provenance_fingerprint"],
@@ -185,6 +190,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                      and not consumed_teams.intersection({str(item["home_team_id"]), str(item["away_team_id"])})]
     return {"publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION,
             "single_selection_policy": SINGLE_SELECTION_POLICY,
+            "minimum_published_probability": str(MIN_PUBLISHED_MARKET_PROBABILITY),
             "publication_blockers":publication_blockers,"singles": singles, "combos": combos,
             "ready_input_count": len(ready)}
 
