@@ -19,6 +19,29 @@ from .publication_policy import review_publication, PUBLICATION_POLICY_VERSION
 
 MAX_SINGLES_PER_CYCLE = 3
 MAX_COMBOS_PER_CYCLE = 3
+SINGLE_SELECTION_POLICY = "LAB_SINGLE_PROBABILITY_FIRST_PER_FIXTURE_V1"
+
+
+def _single_rank(item: dict[str, object]) -> tuple:
+    return (
+        -Decimal(str(item["ensemble_probability"])),
+        {"STRONG": 0, "STANDARD": 1, "EXPERIMENTAL": 2}.get(item.get("candidate_lane"), 3),
+        -Decimal(str(item.get("edge") or "-99")),
+        item.get("kickoff_utc", ""),
+        int(item["fixture_id"]),
+        str(item["market"]),
+    )
+
+
+def _probability_first_single_candidates(ready: list[dict[str, object]]) -> list[dict[str, object]]:
+    """Choose one highest-probability eligible market per fixture, then rank fixtures by probability."""
+    best_by_fixture: dict[int, dict[str, object]] = {}
+    for item in ready:
+        fixture_id = int(item["fixture_id"])
+        previous = best_by_fixture.get(fixture_id)
+        if previous is None or _single_rank(item) < _single_rank(previous):
+            best_by_fixture[fixture_id] = item
+    return sorted(best_by_fixture.values(), key=_single_rank)
 
 
 def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, *, now: datetime,
@@ -54,11 +77,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             continue
         ready.append({**item, "publication_policy_version": PUBLICATION_POLICY_VERSION,
                       "publication_review": gate})
-    ready.sort(key=lambda item: (
-        {"STRONG": 0, "STANDARD": 1, "EXPERIMENTAL": 2}.get(item.get("candidate_lane"), 3),
-        -Decimal(str(item.get("edge") or "-99")),
-        item["kickoff_utc"], item["fixture_id"], item["market"],
-    ))
+    single_ready = _probability_first_single_candidates(ready)
     consumed_keys = {
         value.get("publication_key") for value in ledger.all("single_prediction")
         if (
@@ -76,11 +95,12 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     }
     singles = []
     used_fixtures: set[int] = set()
-    for candidate in ready:
+    for candidate in single_ready:
         key = f"{candidate['fixture_id']}:{candidate['market']}"
         if key in consumed_keys or int(candidate["fixture_id"]) in used_fixtures:
             continue
         value = _leg(candidate, clock)
+        value["single_selection_policy"] = SINGLE_SELECTION_POLICY
         value["prediction_id"] = "lab-v2-single-" + fingerprint((
             candidate["policy"], key, candidate["candidate_id"],
             candidate["quote_provenance_fingerprint"],
@@ -163,7 +183,10 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         remaining = [item for item in remaining
                      if int(item["fixture_id"]) not in consumed_fixtures
                      and not consumed_teams.intersection({str(item["home_team_id"]), str(item["away_team_id"])})]
-    return {"publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION, "publication_blockers":publication_blockers,"singles": singles, "combos": combos, "ready_input_count": len(ready)}
+    return {"publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION,
+            "single_selection_policy": SINGLE_SELECTION_POLICY,
+            "publication_blockers":publication_blockers,"singles": singles, "combos": combos,
+            "ready_input_count": len(ready)}
 
 
 def v2_single_message(value: dict) -> str:

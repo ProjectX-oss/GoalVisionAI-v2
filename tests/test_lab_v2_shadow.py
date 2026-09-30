@@ -18,7 +18,8 @@ from app.lab_v2_shadow.context_signals import PlayerUsage, availability_impact, 
 from app.lab_v2_shadow.ensemble import EnsembleSignal, evaluate_ensemble
 from app.lab_v2_shadow.market_consensus import current_market_consensus
 from app.lab_v2_shadow.bookmakers import review_bookmaker_catalogue
-from app.lab_v2_shadow.publication import prepare_v2_publications, v2_single_message
+from app.lab_v2_shadow.publication import (prepare_v2_publications, v2_single_message,
+    _probability_first_single_candidates, SINGLE_SELECTION_POLICY)
 from app.lab_v2_shadow.quota import (
     DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE,
     adaptive_quota_budget, projected_daily_usage,
@@ -891,6 +892,20 @@ def test_approved_candidate_outside_final_window_remains_early():
     assert _stage(decision, fixture, NOW, {}) == "EARLY_CANDIDATE"
 
 
+def test_probability_first_single_selection_prefers_higher_probability_within_fixture():
+    rows = [
+        {"fixture_id": 1, "market": "DRAW", "ensemble_probability": "0.35", "edge": "0.12",
+         "candidate_lane": "EXPERIMENTAL", "kickoff_utc": "2026-09-30T12:00:00+00:00"},
+        {"fixture_id": 1, "market": "OVER_1_5", "ensemble_probability": "0.78", "edge": "0.05",
+         "candidate_lane": "EXPERIMENTAL", "kickoff_utc": "2026-09-30T12:00:00+00:00"},
+        {"fixture_id": 2, "market": "HOME_WIN", "ensemble_probability": "0.62", "edge": "0.09",
+         "candidate_lane": "STANDARD", "kickoff_utc": "2026-09-30T12:30:00+00:00"},
+    ]
+    selected = _probability_first_single_candidates(rows)
+    assert [(item["fixture_id"], item["market"]) for item in selected] == [
+        (1, "OVER_1_5"), (2, "HOME_WIN")]
+
+
 def test_ready_publication_handoff_is_lab_only_and_exactly_once(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     from app.lab_combo.repository import ComboRepository
@@ -900,6 +915,8 @@ def test_ready_publication_handoff_is_lab_only_and_exactly_once(tmp_path, monkey
     first = prepare_v2_publications(report, ledger, now=NOW)
     second = prepare_v2_publications(report, ledger, now=NOW)
     assert len(first["singles"]) == 1 and len(second["singles"]) == 1
+    assert first["single_selection_policy"] == SINGLE_SELECTION_POLICY
+    assert first["singles"][0]["single_selection_policy"] == SINGLE_SELECTION_POLICY
     assert len(ledger.all("single_prediction")) == 1
     assert Decimal(first["singles"][0]["expected_value"]) == Decimal(candidate["ensemble_probability"]) * Decimal(candidate["captured_odds"]) - 1
     message = v2_single_message(first["singles"][0])
