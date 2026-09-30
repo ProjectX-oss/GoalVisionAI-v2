@@ -21,6 +21,7 @@ from .output_contracts import CONTRACTS, expected_document
 MAX_LINE = 131072
 MAX_READ = 1048576
 MAX_ROWS = 128
+DISCOVERY_OUTPUT_WINDOW_SLOP_SECONDS = 10
 
 
 def command(args: list[str], timeout: float = 3, limit: int = MAX_READ) -> str:
@@ -153,6 +154,54 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
     except OSError:
         issues.append(coverage('stdout', now, 'READ_UNAVAILABLE'))
     return records, issues, state, total
+
+
+def discovery_output_window(path: Path, start: float, end: float) -> tuple[dict | None, bool]:
+    """Bounded direct proof for discovery's TIME_WINDOW_ONLY stdout contract.
+
+    This deliberately bypasses the streaming cursor when deciding absence: a
+    cursor/rotation/access hiccup must not manufacture MISSING_OUTPUT. Current
+    and previous uncompressed log files are enough for the latest invocation.
+    """
+    if not start or not end or end < start:
+        return None, False
+    available = False
+    lower = start - DISCOVERY_OUTPUT_WINDOW_SLOP_SECONDS
+    upper = end + DISCOVERY_OUTPUT_WINDOW_SLOP_SECONDS
+    for selected in (path, Path(str(path) + '.1')):
+        if not selected.exists():
+            continue
+        try:
+            stat = selected.stat()
+            available = True
+            with selected.open('rb') as handle:
+                offset = max(0, stat.st_size - MAX_READ)
+                handle.seek(offset)
+                if offset:
+                    handle.readline(MAX_LINE + 1)  # discard partial first line
+                count = 0
+                while count < 512:
+                    line = handle.readline(MAX_LINE + 1)
+                    if not line:
+                        break
+                    count += 1
+                    if len(line) > MAX_LINE or not line.endswith(b'\n'):
+                        continue
+                    try:
+                        doc = json.loads(line)
+                    except (ValueError, RecursionError):
+                        continue
+                    if not isinstance(doc, dict) or not expected_document(DISCOVERY, doc):
+                        continue
+                    stamp = epoch(doc.get('evaluated_at_utc'))
+                    if lower <= stamp <= upper:
+                        return ({'association': 'TIME_WINDOW_ONLY', 'contract_version': 1,
+                                 'output_timestamp': stamp,
+                                 'output_reference': 'stdout-window-' + digest((selected.name, stamp, doc.get('cycle_id')))},
+                                True)
+        except OSError:
+            return None, False
+    return None, available
 
 
 PROPERTIES = ('Id', 'LoadState', 'Result', 'ExecMainCode', 'ExecMainStatus', 'ActiveState', 'SubState',

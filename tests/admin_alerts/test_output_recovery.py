@@ -10,7 +10,8 @@ from app.admin_alerts.cli import scan
 from app.admin_alerts.delivery import SenderConfig, dispatch
 from app.admin_alerts.model import Event, UNITS
 from app.admin_alerts.output_contracts import CONTRACTS, expected_document
-from app.admin_alerts.sources import invocation_output, journal, service_rules
+from app.admin_alerts.sources import (invocation_output, journal, service_rules,
+    discovery_output_window)
 from app.admin_alerts.store import Store
 from test_monitor import Temporary, FakeTransport, NOW, props
 
@@ -197,3 +198,25 @@ class RecoveryTests(Temporary):
         self.assertFalse(any(e.rule == 'MISSING_OUTPUT' and e.healthy for e in events))
         self.assertFalse(state.get('output_proofs_v1'))
         self.assertEqual(invocation_output(UNITS[0], INV, NOW, lambda _: line(doc=record())), [])
+
+    def test_discovery_output_window_finds_valid_compact_record_and_bounds_old_data(self):
+        from test_monitor import record
+        path = self.root / 'discovery-output.log'
+        current = record()
+        current['evaluated_at_utc'] = time.strftime('%Y-%m-%dT%H:%M:%S+00:00', time.gmtime(NOW))
+        old = record()
+        old['evaluated_at_utc'] = time.strftime('%Y-%m-%dT%H:%M:%S+00:00', time.gmtime(NOW - 3600))
+        path.write_text(json.dumps(old) + '\n' + json.dumps(current) + '\n')
+        proof, available = discovery_output_window(path, NOW - 5, NOW + 5)
+        self.assertTrue(available)
+        self.assertEqual(proof['association'], 'TIME_WINDOW_ONLY')
+        self.assertEqual(proof['contract_version'], 1)
+        missing, available = discovery_output_window(path, NOW + 100, NOW + 200)
+        self.assertTrue(available)
+        self.assertIsNone(missing)
+
+    def test_discovery_output_window_unreadable_is_not_absence_proof(self):
+        path = self.root / 'missing-output.log'
+        proof, available = discovery_output_window(path, NOW - 5, NOW + 5)
+        self.assertIsNone(proof)
+        self.assertFalse(available)

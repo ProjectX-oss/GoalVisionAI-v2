@@ -13,7 +13,8 @@ from .delivery import DeliveryError, SenderConfig, Telegram, dispatch, run_deliv
 from .model import DISCOVERY, Event, coverage, digest, epoch, identity
 from .output_contracts import CONTRACTS, contract_report, expected_document
 from .rules import compact
-from .sources import command, health_rows, journal, service_rules, systemd, tail, unresolved, weekly_unresolved, invocation_output
+from .sources import (command, health_rows, journal, service_rules, systemd, tail,
+    unresolved, weekly_unresolved, invocation_output, discovery_output_window)
 from .store import Store, lock
 
 DEFAULT_STATE = Path('/var/lib/goalvision-admin-alerts')
@@ -106,14 +107,22 @@ def scan(config: dict, root: Path, *, no_send: bool = True, config_path: Path | 
                 pending = dict(list(pending.items())[-25:])
             cursors['pending_completed_evidence'] = pending
             discovery = states.get(DISCOVERY, {})
-            # Absence is assessable only for discovery's known compact-output contract.
-            # A window can prove a record exists, but not assign its release/cycle to an invocation.
-            output_time = cursors.get('last_compact_time', store.get('last_compact_time', 0))
-            if (discovery and not discovery['running'] and discovery['end'] > max(boot_time, started) and
-                    now - discovery['end'] > 180 and output_time < discovery['start']):
-                events.append(Event(DISCOVERY, 'MISSING_OUTPUT', discovery['invocation'], discovery['invocation'], now,
-                                    'stdout-window', invocation=discovery['invocation'],
-                                    facts={'association': 'ASSOCIATION_UNKNOWN', 'contract_version': 1}))
+            # Discovery stdout has no InvocationID. Decide absence from a bounded direct
+            # scan of the exact execution time window, not from the streaming cursor.
+            # If stdout is unreadable, absence is unprovable and coverage reports that fact.
+            if (discovery and not discovery['running'] and discovery['end'] > max(boot_time, started)
+                    and discovery['invocation'] != 'UNKNOWN'):
+                proof, output_available = discovery_output_window(
+                    Path(config['stdout']), discovery['start'], discovery['end'])
+                if proof:
+                    events.append(Event(DISCOVERY, 'MISSING_OUTPUT', discovery['invocation'],
+                                        discovery['invocation'], now, 'stdout-window',
+                                        invocation=discovery['invocation'], healthy=True, facts=proof))
+                elif output_available and now - discovery['end'] > 180:
+                    events.append(Event(DISCOVERY, 'MISSING_OUTPUT', discovery['invocation'],
+                                        discovery['invocation'], now, 'stdout-window',
+                                        invocation=discovery['invocation'],
+                                        facts={'association': 'TIME_WINDOW_ONLY', 'contract_version': 1}))
             for unit, state in states.items():
                 if (CONTRACTS[unit].source != 'STRUCTURED_JOURNAL_JSON'
                         or state['running'] or state['failed']):
