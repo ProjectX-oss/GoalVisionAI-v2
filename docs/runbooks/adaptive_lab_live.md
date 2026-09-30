@@ -171,6 +171,22 @@ labels are known before the next partition starts. Exact IDs/fingerprints are
 persisted. Consumed holdout IDs cannot be reused as future sealed holdout.
 They may later enter TRAIN when chronologically eligible, with that use audited.
 
+PREMATCH research first builds the unchanged immutable dataset and partition
+projection in memory. Before creating a cycle or any research evidence, a
+write-free preflight requires non-empty, single-stream TRAIN within the existing
+row limit and containing both binary classes, VALIDATION >= `POLICY.subgroup_min`
+(30, also used by validation comparison), and fresh SEALED_HOLDOUT >=
+`POLICY.holdout_min` (100). PURGED has no minimum. Candidate-specific calibration,
+history-window and model-family checks remain in training.
+
+An unready projection returns `RESEARCH_DATASET_NOT_READY`, its existing
+as-of dataset fingerprint, all four partition counts, required minimums, shared
+training contract facts and sorted `blocked_by` codes. It creates no cycle,
+dataset, split, spec, training, artifact, comparison, candidate or shadow evidence
+and consumes no cooldown or holdout. Replays at the same as-of time are identical;
+later calls with unchanged evidence remain write-free. Ready datasets follow the
+existing research path. LIVE execution, champion state and publication are unchanged.
+
 Only validation chooses the single holdout candidate. Holdout requires >=100
 fresh observations. It is never used to refit or rank alternative candidates.
 There can be zero approved challengers. Mandatory gates cover predictive quality,
