@@ -1260,7 +1260,8 @@ class LabV2ShadowRunner:
                         ("competition_state", not any(flag in fixture.get("flags", ()) for flag in ("IS_SECOND_LEG", "IS_KNOCKOUT"))),
                     ) if not present)
                     decision, profile_evidence = evaluate_profile(
-                        market, price.decimal_odds, signals, profile_policy, missing, contradiction=veto)
+                        market, price.decimal_odds, signals, profile_policy, missing,
+                        contradiction=veto, fixture_id=fixture_id)
                     adaptive_provenance = {}
                     if self.adaptive_learning is not None:
                         adapted, adaptive_provenance = self.adaptive_learning.prematch_signals(
@@ -1268,7 +1269,8 @@ class LabV2ShadowRunner:
                             now=now, quote_fingerprint=price.provenance_fingerprint, missing=missing, contradiction=veto)
                         if adaptive_provenance:
                             decision, profile_evidence = evaluate_profile(
-                                market, price.decimal_odds, adapted, profile_policy, missing, contradiction=veto)
+                                market, price.decimal_odds, adapted, profile_policy, missing,
+                                contradiction=veto, fixture_id=fixture_id)
 
                     if (fixture_id, market) in terminal_keys:
                         decision = replace(decision, decision='REJECTED', rejection_reasons=('MARKET_REVIEW_TERMINAL',))
@@ -1281,8 +1283,16 @@ class LabV2ShadowRunner:
                     from app.current_odds_forward_test.freshness import API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS
                     if (now - price.provider_origin_timestamp_utc).total_seconds() > API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS:
                         decision, profile_evidence = evaluate_profile(
-                            market, None, signals, profile_policy, missing, contradiction=veto)
+                            market, None, signals, profile_policy, missing,
+                            contradiction=veto, fixture_id=fixture_id)
                         profile_evidence.update(waiting_for_refresh=True)
+                    invalid_probability = profile_evidence.get("invalid_model_probability_evidence")
+                    if invalid_probability and api and api.raw_provider_probabilities:
+                        for source in invalid_probability.get("signals", []):
+                            if source.get("producer") == "API_FOOTBALL_PREDICTION":
+                                source["raw_provider_probability_before_normalization"] = (
+                                    api.raw_provider_probabilities.get(market)
+                                )
                     stage, readiness_reasons = _readiness(decision, fixture, now, review)
                     if profile_evidence["candidate_lane"] == "TRACKING" and stage not in {"REJECTED", "RESULT_TRACKING"}:
                         stage, readiness_reasons = "TRACKING", ("QUALITY_RISK_TRACKING",)
@@ -1346,7 +1356,7 @@ class LabV2ShadowRunner:
                         "rejection_reasons": list(decision.rejection_reasons),
                         "signals": [_plain(asdict(item)) for item in decision.signals],
                         "pi": _plain(asdict(pi)), "api_prediction_available": bool(api and api.available),
-                        "api_prediction_normalization": _plain(asdict(api)) if api else None,
+                        "api_prediction_normalization": _api_prediction_snapshot(api),
                         "market_consensus_bookmakers": consensus.bookmaker_count,
                         "market_consensus_dispersion": _plain(consensus.dispersion),
                         "availability_impact": _plain({key: asdict(value) for key, value in impacts.items()}),
@@ -1846,6 +1856,13 @@ def _counts(values) -> dict[str, int]:
     result: dict[str, int] = {}
     for value in values: result[str(value)] = result.get(str(value), 0) + 1
     return dict(sorted(result.items()))
+
+
+def _api_prediction_snapshot(value: ApiPredictionSignal | None) -> object:
+    if value is None: return None
+    snapshot=asdict(value)
+    snapshot.pop('raw_provider_probabilities',None)
+    return _plain(snapshot)
 
 
 def _plain(value: object) -> object:
