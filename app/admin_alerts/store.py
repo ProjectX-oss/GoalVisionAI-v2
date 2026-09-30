@@ -241,6 +241,13 @@ class Store:
                 considered += 1
                 due = (bool(activation_member) and not notifications) or row['notified_state'] != ('RECOVERED' if row['state'] == 'RECOVERED' else 'OPEN')
                 escalation = row['state'] == 'ESCALATED'
+                # Journal-derived database-lock incidents are evidence-driven. Do not
+                # keep re-sending the same historical lock every 30 minutes after
+                # it has already been acknowledged; a newer observed occurrence can
+                # still alert again, and recovery remains a separate state change.
+                if (row['rule'] == 'DATABASE_LOCK' and not due and not escalation
+                        and row['last_sent'] and row['last_seen'] <= row['last_sent']):
+                    continue
                 if not due and not escalation and (row['state'] == 'RECOVERED' or now - row['last_sent'] < 1800):
                     continue
                 pending = False

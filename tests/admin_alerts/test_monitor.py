@@ -285,6 +285,22 @@ class StoreTests(Temporary):
         self.store.enqueue(NOW+2)
         self.assertEqual(self.store.db.execute('SELECT count(*) FROM outbox').fetchone()[0], 0)
 
+    def test_database_lock_has_no_stale_timer_reminder_but_new_evidence_can_alert(self) -> None:
+        event = replace(self.event, service=UNITS[1], rule='DATABASE_LOCK', debounce=2,
+                        invocation='db-lock-inv-1')
+        self.store.ingest([event], {}, NOW)
+        self.store.ingest([replace(event, occurrence='db-lock-2', observed=NOW+1)], {}, NOW+1)
+        self.store.enqueue(NOW+1)
+        self.assertEqual(self.store.db.execute('SELECT count(*) FROM outbox').fetchone()[0], 1)
+        with self.store.db:
+            self.store.db.execute("UPDATE outbox SET state='SENT',attempts=1,acknowledged=1,receipt='{}'")
+            self.store.db.execute("UPDATE incidents SET last_sent=?,notified_state='OPEN'", (NOW+2,))
+        self.store.enqueue(NOW+4000)
+        self.assertEqual(self.store.db.execute('SELECT count(*) FROM outbox').fetchone()[0], 1)
+        self.store.ingest([replace(event, occurrence='db-lock-3', observed=NOW+5000)], {}, NOW+5000)
+        self.store.enqueue(NOW+5000)
+        self.assertEqual(self.store.db.execute('SELECT count(*) FROM outbox').fetchone()[0], 2)
+
     def test_no_growth_on_unchanged_state(self) -> None:
         for _ in range(100):
             self.store.ingest([self.event], {}, NOW)
