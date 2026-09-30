@@ -112,7 +112,7 @@ def test_scheduled_ticks_complete_prematch_autonomy_without_live(repo):
         assert not result['heavy_training'] and result['api_calls']==result['telegram_sends']==0
         research=AutoLearner(repo).run('PREMATCH',now=now)
         if count==99:assert not repo.all('model_specs') or len(repo.all('model_specs'))==1
-        if count==100:assert research['status']=='EARLY_RESEARCH_COMPLETE'
+        if count in (100,200):assert research['status']=='RESEARCH_DATASET_NOT_READY'
         if count==200:assert not repo.all('shadow_runs')
         previous=count
     assert research['status']=='SHADOW_RUNNING',research
@@ -209,8 +209,8 @@ def test_training_does_not_hold_database_write_lock(repo,monkeypatch):
     import app.adaptive_lab.automl as module
     from app.adaptive_lab.repository import AuditRepository
     ledger=Ledger()
-    for i in range(100):ledger.add(i)
-    observe(repo,ledger,now=START+timedelta(days=27))
+    for i in range(600):ledger.add(i)
+    observe(repo,ledger,now=START+timedelta(days=152))
     original=module.train;calls=[]
     def checked(spec,rows):
         assert not repo.connection.in_transaction
@@ -222,8 +222,8 @@ def test_training_does_not_hold_database_write_lock(repo,monkeypatch):
         calls.append(True)
         return original(spec,rows)
     monkeypatch.setattr(module,'train',checked)
-    result=AutoLearner(repo).run('PREMATCH',now=START+timedelta(days=27))
-    assert result['status']=='EARLY_RESEARCH_COMPLETE' and calls
+    result=AutoLearner(repo).run('PREMATCH',now=START+timedelta(days=152))
+    assert result['status']=='SHADOW_RUNNING' and calls
     assert list(repo.connection.execute('PRAGMA foreign_key_check'))==[]
     assert repo.connection.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
 

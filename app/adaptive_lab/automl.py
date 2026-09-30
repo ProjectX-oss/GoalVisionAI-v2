@@ -3,11 +3,36 @@ from __future__ import annotations
 from datetime import datetime
 from .contracts import digest, number, utc
 from .datasets import chronological_dataset
-from .models import candidate_specs, predict, train
+from .models import candidate_specs, predict, train, validate_training_rows
 from .policy import POLICY, eligibility
 from .comparison import compare, evaluated
 from .metrics import metrics
 from .repository import AuditRepository
+
+
+def dataset_readiness(dataset: dict) -> dict:
+    """Project PREMATCH readiness without writes, fitting, or holdout evaluation."""
+    parts = dataset['partitions']
+    counts = {name: len(parts[name]) for name in ('TRAIN', 'VALIDATION', 'SEALED_HOLDOUT', 'PURGED')}
+    blocked_by = []
+    try:
+        validate_training_rows(parts['TRAIN'])
+    except ValueError as exc:
+        blocked_by.append(str(exc))
+    if counts['VALIDATION'] < POLICY.subgroup_min:
+        blocked_by.append('VALIDATION_SAMPLE_INSUFFICIENT')
+    if counts['SEALED_HOLDOUT'] < POLICY.holdout_min:
+        blocked_by.append('INSUFFICIENT_FRESH_HOLDOUT')
+    return {
+        'status': 'RESEARCH_DATASET_NOT_READY' if blocked_by else 'RESEARCH_DATASET_READY',
+        'dataset_fingerprint': dataset['dataset_fingerprint'],
+        'counts': counts,
+        'required_minimums': {'TRAIN': 1, 'VALIDATION': POLICY.subgroup_min,
+                              'SEALED_HOLDOUT': POLICY.holdout_min, 'PURGED': 0},
+        'training_contract': {'required_classes': [0, 1], 'single_stream': True,
+                              'maximum_rows': POLICY.training_rows_limit},
+        'blocked_by': sorted(blocked_by),
+    }
 
 
 class AutoLearner:
@@ -40,6 +65,10 @@ class AutoLearner:
         # Do not repeatedly test the same sealed evidence across research cycles.
         consumed={oid for h in repo.all('holdout_results',stream) for oid in h['observation_ids']}
         dataset=chronological_dataset(rows,stream,now=now,consumed_holdout=consumed)
+        if stream == 'PREMATCH':
+            readiness = dataset_readiness(dataset)
+            if readiness['blocked_by']:
+                return readiness
         parts=dataset.pop('partitions')
         cycle_id='cycle-'+digest([stream,dataset['dataset_fingerprint'],POLICY.fingerprint])
         stamp=utc(now).isoformat()
@@ -87,7 +116,7 @@ class AutoLearner:
                         raise ValueError('VALIDATION_EMPTY')
                     m=metrics(evaluated(parts['VALIDATION'],probs),stream)
                     baseline=[number(r['frozen_model_probability']) for r in parts['VALIDATION']]
-                    comparison=compare(parts['VALIDATION'],baseline,probs,minimum=30)
+                    comparison=compare(parts['VALIDATION'],baseline,probs,minimum=POLICY.subgroup_min)
                     repo.append('validation_results',digest([aid,'validation']),stream,comparison,stamp,artifact_id=aid)
                     self.event(aid,stream,'VALIDATION_ELIGIBLE' if comparison['passed'] else 'REJECTED',stamp)
                     if comparison['passed']:

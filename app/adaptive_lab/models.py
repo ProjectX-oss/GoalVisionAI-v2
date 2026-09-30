@@ -88,21 +88,27 @@ def scope_key(row: dict, scope: str) -> str:
     return str(row.get('competition_profile'))+'|'+row['market']
 
 
+def validate_training_rows(rows: list[dict], *, require_class_diversity: bool = True) -> None:
+    """Check the shared row contract without fitting or creating model evidence."""
+    if not rows or len(rows)>POLICY.training_rows_limit or len({r['stream'] for r in rows})!=1:
+        raise ValueError('TRAINING_RESOURCE_OR_STREAM_CONTRACT')
+    if require_class_diversity and {r['target'] for r in rows}!={0,1}:
+        raise ValueError('TRAIN_CLASS_DIVERSITY_REQUIRED')
+
+
 def train(spec: dict, rows: list[dict]) -> dict:
     """Fit only caller's TRAIN partition with a hard row and iteration budget."""
     from .contracts import utc
     validate_spec(spec)
     rows = [r for r in rows if r['target'] is not None]
-    if not rows or len(rows)>POLICY.training_rows_limit or len({r['stream'] for r in rows})!=1:
-        raise ValueError('TRAINING_RESOURCE_OR_STREAM_CONTRACT')
+    validate_training_rows(rows, require_class_diversity=False)
     latest = max(utc(r['prediction_created_at']) for r in rows)
     if spec['history_days']:
         rows = [r for r in rows if (latest-utc(r['prediction_created_at'])).days <= spec['history_days']]
     if spec['family'] == 'CALIBRATED_ENSEMBLE' and len(rows) < POLICY.calibration_min:
         raise ValueError('CALIBRATION_SAMPLE_INSUFFICIENT')
+    validate_training_rows(rows)
     y = [r['target'] for r in rows]
-    if set(y)!={0,1}:
-        raise ValueError('TRAIN_CLASS_DIVERSITY_REQUIRED')
     raw = [_raw(r,spec) for r in rows]
     preprocessing = []
     for column in zip(*raw):
