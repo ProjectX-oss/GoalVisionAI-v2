@@ -97,7 +97,7 @@ def test_persistence_failure_retains_delivery_and_retry_never_resends(cycle, mon
         assert single_cohorts(ledger, start=NOW-timedelta(days=1), end=NOW+timedelta(days=1),
                               as_of=NOW+timedelta(hours=1))['forward_union']['published'] == 0
         # Direct service replay exercises the existing claim gate as well as the CLI retry.
-        replay = asyncio.run(LabComboService(ledger, None, clock=lambda: NOW).publish_experimental(
+        replay = asyncio.run(LabComboService(ledger, None, clock=lambda: NOW + timedelta(minutes=1)).publish_experimental(
             item['kind'], item['prediction_id'], cli.load_lab_telegram_config(), _RecordingTransport('fictional')))
         assert replay['status'] == 'DELIVERY_ALREADY_CLAIMED'
         assert not replay['transport_attempted']
@@ -264,13 +264,13 @@ def test_shutdown_failure_does_not_replace_delivery_failure(cycle, monkeypatch):
 @pytest.mark.parametrize('blocker', ['policy', 'existing_claim', 'claim_failure'])
 def test_other_pre_transport_boundaries_have_zero_attempts(cycle, monkeypatch, blocker):
     if blocker == 'policy':
-        from app.lab_v2_shadow.publication_policy import review_publication
+        from app.lab_v2_shadow.publication_policy import review_accuracy_publication
 
         def review(item, **kwargs):
-            result = review_publication(item, **kwargs)
+            result = review_accuracy_publication(item, **kwargs)
             return {**result, 'eligible': False} if 'prediction_id' in item else result
 
-        monkeypatch.setattr('app.lab_v2_shadow.publication_policy.review_publication', review)
+        monkeypatch.setattr('app.lab_v2_shadow.publication_policy.review_accuracy_publication', review)
     elif blocker == 'existing_claim':
         async def enter(self):
             ledger = ComboRepository(Path('var/lab_combo/ledger.db'))

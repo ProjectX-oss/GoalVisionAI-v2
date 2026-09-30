@@ -158,6 +158,15 @@ def review_accuracy_publication(candidate: dict, *, now: datetime) -> dict:
                                    if s.name == 'API_FOOTBALL_PREDICTION')):
                         reasons.add('PUBLICATION_API_PROBABILITY_INVALID')
         else:
+            # This branch has no ensemble evaluation to validate its signal contract.
+            if any(s.market != market or not s.reliability.is_finite() or s.reliability <= 0
+                   or s.availability not in {'AVAILABLE', 'LOW_SAMPLE'} or s.selection != market
+                   for s in signals if s.probability is not None):
+                raise ValueError('invalid retained consensus contract')
+            if _FAMILY.get(market) not in {'TOTAL_1_5', 'TOTAL_2_5', 'TOTAL_3_5', 'BTTS'}:
+                reasons.add('PUBLICATION_INDEPENDENT_EVIDENCE_REQUIRED')
+            if probability != consensus[0]:
+                reasons.add('PUBLICATION_PROBABILITY_REPLAY_MISMATCH')
             replay = consensus[0]
         if replay is None or abs(probability - replay) > Decimal('1e-25'):
             reasons.add('PUBLICATION_PROBABILITY_REPLAY_MISMATCH')

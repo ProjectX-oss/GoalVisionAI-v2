@@ -1305,7 +1305,7 @@ def _controlled_cycle_arguments(*, send: bool) -> list[str]:
         "--max-calls", "40",
         "--settlement-reserve", "100",
     ]
-    return [*values, "--send"] if send else values
+    return [*values, "--send", "--label-v2-selections"] if send else values
 
 
 def test_controlled_cycle_send_ready_candidate_is_exactly_once_end_to_end(

@@ -49,7 +49,7 @@ def _probability_first_single_candidates(ready: list[dict[str, object]]) -> list
 
 def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, *, now: datetime,
                             label_origin: bool = False, football_context: object | None = None) -> dict[str, object]:
-    """Persist only final-reviewed V2 READY singles and independent triples."""
+    """Persist accuracy-reviewed V2 singles and positive-EV independent triples."""
     clock = now.astimezone(timezone.utc)
     combo_ready = []
     single_pool = []
@@ -90,6 +90,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                     **item,
                     "accuracy_publication_policy_version": ACCURACY_PUBLICATION_POLICY_VERSION,
                     "accuracy_publication_review": accuracy_gate,
+                    "accuracy_review_completed_at_utc": clock.isoformat(),
                 })
             else:
                 single_publication_blockers[candidate_id] = "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED"

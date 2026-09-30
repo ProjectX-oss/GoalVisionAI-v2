@@ -187,7 +187,10 @@ class LabComboService:
                 return {'status': 'PUBLISHED_PREDICTION_AND_SETTLEMENT_REQUIRED', 'sent': False}
         if kind in {'single_prediction', 'combo_prediction'}:
             from app.lab_v2_shadow.origin import is_labelled
-            if 'selection_origin' in value and not is_labelled(value):
+            from app.lab_v2_shadow.publication import SINGLE_SELECTION_POLICY
+            accuracy_single = (kind == 'single_prediction'
+                               and value.get('single_selection_policy') == SINGLE_SELECTION_POLICY)
+            if (accuracy_single or 'selection_origin' in value) and not is_labelled(value):
                 return {'status': 'SELECTION_ORIGIN_OR_APPROVAL_INVALID', 'sent': False}
             if is_labelled(value):
                 from app.lab_v2_shadow.publication import v2_single_message
@@ -197,10 +200,11 @@ class LabComboService:
                 bot = getattr(transport, 'bot', None)
                 if '@' + (getattr(bot, 'username', None) or '') != LAB_BOT_USERNAME:
                     return {'status': 'LAB_BOT_IDENTITY_MISMATCH', 'sent': False}
-                if (value.get('decision') != 'APPROVED' or value.get('market') not in MARKETS
+                if ((not accuracy_single and value.get('decision') != 'APPROVED')
+                        or value.get('market') not in MARKETS
                         or value.get('candidate_lane') == 'TRACKING'
                         or not value.get('quote_provenance_fingerprint')
-                        or not value.get('predictive_family_count')
+                        or (not accuracy_single and not value.get('predictive_family_count'))
                         or origin['selector_policy'] != value.get('policy')
                         or origin['model_artifact'] != value.get('model_artifact_identity')
                         or origin['model_generation'] != value.get('model_generation')
@@ -209,7 +213,16 @@ class LabComboService:
                     return {'status': 'SELECTION_ORIGIN_OR_APPROVAL_INVALID', 'sent': False}
             candidates = [value] if kind == 'single_prediction' else value['legs']
             # Only the existing Lab V2 composition; settlements bypass new-pick policy.
-            if prediction_id.startswith('lab-v2-'):
+            if accuracy_single:
+                # A retained claim is terminal even after its review expires.
+                # The atomic claim below still owns concurrent first attempts.
+                if self.ledger.get('claim', kind + ':' + prediction_id) is not None:
+                    return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
+                review = _accuracy_delivery_review(value, self.clock())
+                if not review['eligible']:
+                    return {'status': 'LAB_PUBLICATION_POLICY_REJECTED', 'sent': False,
+                            'publication_reviews': [review]}
+            elif prediction_id.startswith('lab-v2-'):
                 from app.lab_v2_shadow.publication_policy import review_publication
                 reviews = [review_publication(item, now=self.clock()) for item in candidates]
                 if any(not review['eligible'] for review in reviews):
@@ -222,9 +235,11 @@ class LabComboService:
             if self.clock() >= kickoff:
                 return {'status': 'FIXTURE_ALREADY_STARTED', 'sent': False}
             candidates = [value] if kind == 'single_prediction' else value['legs']
-            if any(item.get('stage') != 'READY_TO_PUBLISH' for item in candidates):
+            if not accuracy_single and any(item.get('stage') != 'READY_TO_PUBLISH' for item in candidates):
                 return {'status': 'FINAL_REVIEW_REQUIRED', 'sent': False}
-            review_times = [item.get('final_review_completed_at_utc') for item in candidates]
+            review_field = ('accuracy_review_completed_at_utc' if accuracy_single
+                            else 'final_review_completed_at_utc')
+            review_times = [item.get(review_field) for item in candidates]
             if any(not review for review in review_times):
                 return {'status': 'FINAL_REVIEW_REQUIRED', 'sent': False}
             if any(not timedelta(0) <= self.clock() - datetime.fromisoformat(review)
@@ -453,3 +468,41 @@ def _fresh_captured_odds(value: dict, now: datetime) -> bool:
         ) == 'FRESH'
     except (KeyError, TypeError, ValueError):
         return False
+
+
+def _accuracy_delivery_review(value: dict, now: datetime) -> dict:
+    """Revalidate frozen accuracy evidence without rewriting source decisions."""
+    from decimal import Decimal, InvalidOperation
+    from app.lab_v2_shadow.publication import (
+        MIN_PUBLISHED_MARKET_PROBABILITY, MIN_PUBLISHED_DECIMAL_ODDS,
+    )
+    from app.lab_v2_shadow.publication_policy import (
+        ACCURACY_PUBLICATION_POLICY_VERSION, review_accuracy_publication,
+    )
+
+    review = review_accuracy_publication(value, now=now)
+    reasons = set(review['rejection_reasons'])
+    if (value.get('accuracy_publication_policy_version') != ACCURACY_PUBLICATION_POLICY_VERSION
+            or value.get('accuracy_publication_review') != {
+                'version': ACCURACY_PUBLICATION_POLICY_VERSION,
+                'eligible': True, 'rejection_reasons': []}):
+        reasons.add('ACCURACY_REVIEW_EVIDENCE_REQUIRED')
+    source_state = (value.get('decision'), value.get('stage'))
+    hard = set(value.get('hard_failures') or ()) | set(value.get('rejection_reasons') or ())
+    if (source_state != ('APPROVED', 'READY_TO_PUBLISH')
+            and not (source_state == ('REJECTED', 'REJECTED') and hard == {'NON_POSITIVE_VALUE'})):
+        reasons.add('ACCURACY_SOURCE_DECISION_INVALID')
+    try:
+        probability = Decimal(str(value['ensemble_probability']))
+        odds = Decimal(str(value['captured_odds']))
+        if not probability.is_finite() or probability < MIN_PUBLISHED_MARKET_PROBABILITY:
+            reasons.add('LAB_PUBLICATION_PROBABILITY_BELOW_0_55')
+        if not odds.is_finite() or odds < MIN_PUBLISHED_DECIMAL_ODDS:
+            reasons.add('LAB_PUBLICATION_ODDS_BELOW_1_30')
+        reviewed = datetime.fromisoformat(value['accuracy_review_completed_at_utc'])
+        if not timedelta(0) <= now - reviewed <= FINAL_REVIEW_REFRESH_MAX_AGE:
+            reasons.add('ACCURACY_REVIEW_EXPIRED')
+    except (KeyError, TypeError, ValueError, InvalidOperation):
+        reasons.add('ACCURACY_REVIEW_EVIDENCE_INVALID_OR_MISSING')
+    return {**review, 'eligible': review['eligible'] and not reasons,
+            'rejection_reasons': sorted(reasons)}

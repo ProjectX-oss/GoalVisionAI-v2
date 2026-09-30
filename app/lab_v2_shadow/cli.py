@@ -84,8 +84,7 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
         }
         if not args.send:
             return _persist_cycle_evidence(repository, report, clock)
-        ready = int(report.get("ready_candidate_count") or 0)
-        if ready == 0:
+        if not report.get("candidate_markets"):
             report["controlled_publication"]["reason"] = "NO_READY_SELECTIONS"
             return _persist_cycle_evidence(repository, report, clock)
         ledger = ComboRepository(args.ledger)
@@ -95,15 +94,19 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                 label_origin=bool(getattr(args, 'label_v2_selections', False)),
                 football_context=football_context,
             )
-            report['controlled_publication']['publication_blockers']=prepared['publication_blockers']
-            report['controlled_publication']['publication_reviews']=prepared['publication_reviews']
-            report['controlled_publication']['publication_policy_version']=prepared['publication_policy_version']
+            report['controlled_publication'].update({key: prepared[key] for key in (
+                'publication_blockers', 'publication_reviews', 'publication_policy_version',
+                'single_publication_blockers', 'single_publication_reviews',
+                'single_accuracy_publication_policy_version', 'single_selection_policy',
+                'minimum_published_probability', 'minimum_published_decimal_odds',
+            )})
             pending = [
                 *[("single_prediction", item["prediction_id"]) for item in prepared["singles"]],
                 *[("combo_prediction", item["prediction_id"]) for item in prepared["combos"]],
             ]
             if not pending:
-                reasons=set(prepared['publication_blockers'].values())
+                reasons = (set(prepared['publication_blockers'].values())
+                           | set(prepared['single_publication_blockers'].values()))
                 report["controlled_publication"]["reason"] = (next(iter(reasons)) if len(reasons)==1 else
                     'LAB_PUBLICATION_RULE_BLOCKED' if reasons else 'EXACTLY_ONCE_NO_NEW_PUBLICATIONS')
                 return _persist_cycle_evidence(repository, report, clock)
