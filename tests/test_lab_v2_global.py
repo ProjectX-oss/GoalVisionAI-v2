@@ -6,6 +6,8 @@ import asyncio
 import json
 from pathlib import Path
 import sqlite3
+import threading
+import time
 
 import pytest
 
@@ -137,6 +139,30 @@ def test_225_fixture_universe_persisted_and_restart_recovery(tmp_path,monkeypatc
     repo=ShadowEvidenceRepository(Path('var/global.db'))
     assert len(repo.latest_global_fixtures(now=NOW+timedelta(minutes=1)))==225
     repo.close()
+
+
+def test_shadow_repository_waits_for_short_writer_contention(tmp_path):
+    path=tmp_path/'busy.db'
+    initial=ShadowEvidenceRepository(path)
+    assert initial.connection.execute('PRAGMA busy_timeout').fetchone()[0] == 30000
+    initial.close()
+    blocker=sqlite3.connect(path)
+    blocker.execute('BEGIN IMMEDIATE')
+    result=[]
+    error=[]
+    def write():
+        try:
+            repo=ShadowEvidenceRepository(path)
+            result.append(repo.append('enrichment_service','x',{'fixture_id':1},created_at=NOW))
+            repo.close()
+        except Exception as exc:
+            error.append(exc)
+    thread=threading.Thread(target=write)
+    thread.start();time.sleep(.2);blocker.rollback();blocker.close();thread.join(timeout=3)
+    assert not thread.is_alive() and not error and result == [True]
+    verify=ShadowEvidenceRepository(path)
+    assert verify.get('enrichment_service','x') == {'fixture_id':1}
+    verify.close()
 
 
 def test_existing_schema_upgrade_replay_and_guards(tmp_path):
