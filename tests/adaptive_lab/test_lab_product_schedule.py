@@ -277,6 +277,23 @@ def test_current_week_status_and_weekly_preview_are_inert(tmp_path,monkeypatch,r
     assert not repo.all('weekly_reports') and not repo.all('weekly_claims')
 
 
+def test_health_status_exposes_current_single_and_combo_performance(tmp_path, monkeypatch, repo):
+    from app.adaptive_lab.health import status
+    import app.adaptive_lab.health as health
+    monkeypatch.setattr(health,'timer_state',lambda name:{'unit':name,'ActiveState':'inactive'})
+    ledger=Ledger()
+    for value in ('WON','LOST','VOID',None):ledger.add('single-'+str(value),status=value)
+    for value in ('WON','LOST','VOID',None):ledger.add('combo-'+str(value),combo=True,status=value)
+    result=status(repo,ledger,tmp_path/'absent.db',now=riga('2026-09-20T22:00'))
+    assert result['PERFORMANCE']['SINGLE']=={
+        'WON':1,'LOST':1,'VOID':1,'flat_unit_pnl':'0','roi':'0','pending_settlements':1}
+    assert result['PERFORMANCE']['COMBO']=={
+        'WON':1,'LOST':1,'VOID':1,'PARTIAL_VOID':0,'flat_unit_pnl':'2',
+        'roi':str(Decimal(2)/3),'pending_settlements':1}
+    assert result['raw_product_statistics']['pending']==1
+    assert result['COMBO']['pending']==1
+
+
 def test_losing_combo_with_void_leg_is_not_a_partial_win():
     l=Ledger();l.add('c',combo=True,status='LOST',partial=True)
     stats=statistics(l,week_start=riga('2026-09-14T00:00'),as_of=riga('2026-09-20T22:30'))['COMBO']

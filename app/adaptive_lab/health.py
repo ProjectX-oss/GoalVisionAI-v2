@@ -91,6 +91,15 @@ def status(repository: object, ledger: object, shadow_database: Path, *, now: da
     from .weekly import statistics as weekly_statistics,week_bounds,next_scheduled
     receipts=repository.all('weekly_receipts','PREMATCH')
     weekly=weekly_statistics(ledger,week_start=week_bounds(now)[0],as_of=now)
+    single=single_statistics(ledger)
+    combo=statistics(ledger,published_only=True)
+    performance={
+      'SINGLE':{'WON':single['WON'],'LOST':single['LOST'],'VOID':single['VOID'],
+        'flat_unit_pnl':single['hypothetical_profit_loss'],'roi':single['roi_yield'],
+        'pending_settlements':single['pending']},
+      'COMBO':{'WON':combo['WON'],'LOST':combo['LOST'],'VOID':combo['VOID'],
+        'PARTIAL_VOID':combo['PARTIAL_VOID'],'flat_unit_pnl':combo['hypothetical_profit_loss'],
+        'roi':combo['roi_yield'],'pending_settlements':combo['pending']}}
     return {'PUBLICATION_WINDOW':window_status(now),
       'WEEKLY_REPORT':{'last_sent':receipts[-1] if receipts else None,
         'next_scheduled':next_scheduled(now).isoformat(),'statistics':weekly,
@@ -104,12 +113,13 @@ def status(repository: object, ledger: object, shadow_database: Path, *, now: da
         'lanes':dict(sum((Counter(h['lanes']) for h in values),Counter())),
         'ready':sum(h['ready'] for h in values),'published':legacy['published'],
         'top_rejection_reasons':blockers.most_common(10),'new_health_records':len(recent)},
-      'raw_product_statistics':single_statistics(ledger),'valid_learning_metrics':metrics(rows,'PREMATCH'),
+      'PERFORMANCE':performance,
+      'raw_product_statistics':single,'valid_learning_metrics':metrics(rows,'PREMATCH'),
       'champion':repository.champion('PREMATCH'),'learning':eligibility(rows,'PREMATCH',now,
         previous=next((c for c in reversed(research) if c.get('kind')!='REVIEWED_BOOTSTRAP'),None)),
       'last_learning_cycle':research[-1] if research else None,
       'shadow':[Governance(repository).evidence(r['shadow_id']) for r in repository.all('shadow_runs','PREMATCH')],
-      'COMBO':statistics(ledger,published_only=True),'COMBO_TIMER':timer_state('goalvision-lab-combo-settle.timer'),
+      'COMBO':combo,'COMBO_TIMER':timer_state('goalvision-lab-combo-settle.timer'),
       'OBSERVER_TIMER':timer_state('goalvision-adaptive-learning-observer.timer'),
       'LEARNING_TIMER':timer_state('goalvision-adaptive-learning.timer'),
       'LIVE':'DISABLED','LIVE_TIMER':timer_state('goalvision-live-lab.timer')}

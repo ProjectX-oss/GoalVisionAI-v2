@@ -69,6 +69,8 @@ def test_complete_distribution_and_existing_rounding_tolerance(percent, availabl
         assert abs(sum(result.probabilities.values()) - 1) < Decimal('1e-25')
         assert result.comparison['form']['home'] == Decimal('.01')
         assert set(result.probabilities) == {'HOME_WIN', 'DRAW', 'AWAY_WIN'}
+        assert result.raw_provider_probabilities == {
+            'HOME_WIN': percent['home'], 'DRAW': percent['draw'], 'AWAY_WIN': percent['away']}
         assert result.expected_goals_home is result.expected_goals_away is None
     else:
         assert not result.probabilities

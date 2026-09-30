@@ -38,14 +38,14 @@ def test_zero_away_probability_preserves_rejection_and_following_evaluations(
     ):
         raw = signals(market, probability)
         original = tuple(raw)
-        baseline, evidence = evaluate_profile(market, odds, raw, policy, ())
+        baseline, evidence = evaluate_profile(market, odds, raw, policy, (), fixture_id=fixture_id)
         adapted, provenance = coordinator.prematch_signals(
             raw, baseline, evidence,
             {'fixture_id': fixture_id, 'competition_profile': policy.profile},
             market, odds, now=START, quote_fingerprint=f'q-{fixture_id}-{market}',
         )
         assert adapted is raw and tuple(raw) == original
-        decision, new_evidence = evaluate_profile(market, odds, adapted, policy, ())
+        decision, new_evidence = evaluate_profile(market, odds, adapted, policy, (), fixture_id=fixture_id)
         assert decision == baseline and new_evidence == evidence
         if probability == 0:
             assert baseline.ensemble_probability == 0
@@ -53,6 +53,14 @@ def test_zero_away_probability_preserves_rejection_and_following_evaluations(
             assert decision.decision == 'REJECTED'
             assert 'INVALID_MODEL_PROBABILITY' in decision.rejection_reasons
             assert new_evidence['candidate_lane'] == 'REJECTED'
+            diagnostic = new_evidence['invalid_model_probability_evidence']
+            assert diagnostic['fixture_id'] == fixture_id
+            assert diagnostic['market'] == market
+            assert diagnostic['ensemble_probability_before_validation'] == str(zero)
+            producer = next(row for row in diagnostic['signals']
+                            if row['producer'] == 'API_FOOTBALL_PREDICTION')
+            assert producer['raw_probability_before_ensemble_normalization'] == str(zero)
+            assert producer['provenance'] == 'CURRENT_/PREDICTIONS'
         else:
             assert provenance['model_generation'] == generation['generation_id']
             assert decision.ensemble_probability == probability

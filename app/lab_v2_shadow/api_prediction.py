@@ -30,6 +30,7 @@ class ApiPredictionSignal:
     source_fingerprint: str | None = None
     home_team_id: int | None = None
     away_team_id: int | None = None
+    raw_provider_probabilities: dict[str, str] | None = None
 
 
 def normalize_api_prediction(payload: object, *, fixture_id: int,
@@ -62,6 +63,13 @@ def normalize_api_prediction(payload: object, *, fixture_id: int,
     prediction = root.get("predictions") if isinstance(root.get("predictions"), dict) else {}
     winner = prediction.get("winner") if isinstance(prediction.get("winner"), dict) else {}
     percent = prediction.get("percent") if isinstance(prediction.get("percent"), dict) else {}
+    raw_provider_probabilities = {
+        market: raw.strip() for market, raw in (
+            ("HOME_WIN", percent.get("home")),
+            ("DRAW", percent.get("draw")),
+            ("AWAY_WIN", percent.get("away")),
+        ) if isinstance(raw, str)
+    }
     probabilities = {
         market: value for market, raw in (
             ("HOME_WIN", percent.get("home")),
@@ -94,6 +102,7 @@ def normalize_api_prediction(payload: object, *, fixture_id: int,
         comparison=comparison,
         unavailable_reason=None if available else "PREDICTION_NOT_COVERED",
         source_fingerprint=fingerprint(payload), home_team_id=actual_home, away_team_id=actual_away,
+        raw_provider_probabilities=raw_provider_probabilities,
     )
 
 

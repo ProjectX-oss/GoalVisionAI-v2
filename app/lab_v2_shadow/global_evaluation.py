@@ -20,7 +20,8 @@ FEATURES = {'PI_RATINGS': 'long_term_strength', 'CURRENT_MATCH_INTELLIGENCE': 'r
 
 
 def evaluate_profile(market: str, odds: Decimal | None, signals: list[EnsembleSignal], policy: ProfilePolicy,
-                     missing: tuple[str, ...], *, contradiction: bool = False) -> tuple[EnsembleDecision, dict]:
+                     missing: tuple[str, ...], *, contradiction: bool = False,
+                     fixture_id: int | str | None = None) -> tuple[EnsembleDecision, dict]:
     """Retain positive EV; existing uncertainty and agreement determine the lane.
 
     Quality findings cap confidence at LOW and the lane at EXPERIMENTAL.
@@ -80,11 +81,30 @@ def evaluate_profile(market: str, odds: Decimal | None, signals: list[EnsembleSi
                        confidence='LOW' if soft or waiting else decision.confidence,
                        approval_reasons=(*decision.approval_reasons, 'PROFILE_' + lane) if not hard else (),
                        rejection_reasons=tuple(sorted(set(hard))))
-    return decision, {'predictive_family_count': len(families), 'predictive_families': families, 'evidence_lane': 'SINGLE_MODEL_EXPERIMENTAL' if len(families) == 1 else 'MULTI_FAMILY' if families else 'NO_PREDICTIVE_EVIDENCE', 'candidate_lane': lane, 'waiting_for_refresh': waiting, 'profile_policy_version': policy.version,
-                      'uncertainty_penalty': str(uncertainty), 'soft_penalties': penalties,
-                      'missing_features': list(missing), 'hard_failures': sorted(set(hard)),
-                      'soft_findings': sorted(set(soft)), 'calibration_status': 'UNCALIBRATED_LAB_ENSEMBLE',
-                      'experimental_lane_edge': str(policy.experimental_edge + uncertainty)}
+    evidence = {'predictive_family_count': len(families), 'predictive_families': families,
+                'evidence_lane': 'SINGLE_MODEL_EXPERIMENTAL' if len(families) == 1 else 'MULTI_FAMILY' if families else 'NO_PREDICTIVE_EVIDENCE',
+                'candidate_lane': lane, 'waiting_for_refresh': waiting, 'profile_policy_version': policy.version,
+                'uncertainty_penalty': str(uncertainty), 'soft_penalties': penalties,
+                'missing_features': list(missing), 'hard_failures': sorted(set(hard)),
+                'soft_findings': sorted(set(soft)), 'calibration_status': 'UNCALIBRATED_LAB_ENSEMBLE',
+                'experimental_lane_edge': str(policy.experimental_edge + uncertainty)}
+    if 'INVALID_MODEL_PROBABILITY' in decision.rejection_reasons:
+        evidence['invalid_model_probability_evidence'] = {
+            'fixture_id': fixture_id,
+            'market': market,
+            'ensemble_probability_before_validation': str(p) if p is not None else None,
+            'signals': [{
+                'producer': signal.name,
+                'signal_market': signal.market,
+                'raw_probability_before_ensemble_normalization': (
+                    str(signal.probability) if signal.probability is not None else None
+                ),
+                'provenance': signal.provenance,
+                'availability': signal.availability,
+                'independence_group': signal.independence_group,
+            } for signal in signals],
+        }
+    return decision, evidence
 
 
 def next_refresh(kickoff: datetime, now: datetime, policy: ProfilePolicy) -> datetime | None:
