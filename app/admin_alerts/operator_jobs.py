@@ -14,13 +14,47 @@ if TYPE_CHECKING:
     from .store import Store
 
 
+def message(bundle: dict, status: dict, kind: str) -> str:
+    """Describe validated worker evidence; completion never claims deployment."""
+    mode = ('Tikai izpēte' if bundle['mode'] == 'DIAGNOSE_ONLY'
+            else 'Izpēte un labojuma sagatavošana izolētā kopijā')
+    icon, action = '⏳', 'Pagaidām tava rīcība nav vajadzīga.'
+    if kind == 'STARTED':
+        label = 'Sāk izpēti'
+    elif kind == 'RUNNING':
+        label = ('Turpina izpēti' if bundle['mode'] == 'DIAGNOSE_ONLY'
+                 else 'Turpina izpēti un labojuma sagatavošanu')
+    elif kind == 'COMPLETED' and status['outcome'] == 'PATCH_READY':
+        icon, label = '🛠️', 'Gaida pārbaudi un apstiprinājumu'
+        action = ('Labojums sagatavots izolētā kopijā. Jāpārbauda izmaiņas un testu '
+                  'rezultāti, tad jāapstiprina uzstādīšana. Produkcijā vēl nav uzstādīts.')
+    elif kind == 'COMPLETED':
+        icon = '📋'
+        label = ('Izpēte pabeigta' if status['outcome'] == 'DIAGNOSIS_ONLY'
+                 else 'Darbs pabeigts bez koda labojuma')
+        action = 'Jāpārskata izpētes rezultāts un jāizlemj nākamā rīcība.'
+    else:
+        icon = '⚠️'
+        label = {'STALLED': 'Nav svaiga progresa ziņojuma',
+                 'TIMEOUT': 'Sasniegts darba laika limits',
+                 'FAILED': 'Darbs beidzās ar kļūdu'}[kind]
+        action = ('Vairāk nekā 3 minūtes nav saņemts darba progresa apstiprinājums. '
+                  'Jāpārbauda darba stāvoklis.' if kind == 'STALLED' else
+                  'Nepieciešama darba kļūdas pārbaude; automātiska atkārtojuma nebūs.')
+    seconds = int(status['elapsed_seconds'])
+    return '\n'.join((f'{icon} GoalVision ADMIN • Auto-Repair',
+        f'Statuss: {label}', f'Režīms: {mode}', f'Darbība: {action}',
+        f"Mērķis: {bundle['target']}", f"Incidents: {bundle['incident_id']}",
+        f"Mainīti faili: {status['changed_files']}",
+        f'Ilgums: {seconds // 60} min {seconds % 60} s',
+        f"Kods: {kind} / {status['outcome'] or 'IN_PROGRESS'}",
+        f"Kļūmes kods: {status['failure'] if kind != 'STARTED' and status['failure'] else 'NAV'}",
+        f"Darbs: {bundle['job_id']}"))
+
+
 def notice(store: Store, bundle: dict, status: dict, kind: str, key: object, now: float) -> None:
     """Idempotent machine-only notification. No worker log/message is read here."""
-    icon = '✅' if kind == 'COMPLETED' else '⏳' if kind in ('STARTED', 'RUNNING') else '⚠️'
-    body = '\n'.join((f'{icon} GoalVision ADMIN • Repair job', f'State: {kind}' + (' • still working' if kind == 'RUNNING' else ''),
-        f"Incident: {bundle['incident_id']}", f"Target: {bundle['target']}", f"Mode: {bundle['mode']}",
-        f"Outcome: {status['outcome'] or 'IN_PROGRESS'}", f"Changed files: {status['changed_files']}",
-        f"Elapsed: {int(status['elapsed_seconds'])} seconds", f"Job: {bundle['job_id']}"))
+    body = message(bundle, status, kind)
     store.db.execute('''INSERT OR IGNORE INTO operator_outbox(id,job,kind,body,created,due)
         VALUES (?,?,?,?,?,?)''', (digest((bundle['job_id'], kind, key)), bundle['job_id'], kind, body, now, now))
 

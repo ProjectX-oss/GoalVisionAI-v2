@@ -120,11 +120,18 @@ reads the Codex log or final prose. It scans at most 100 tracked status files pe
 scan with a durable round-robin cursor. Sequence/time regression, future heartbeat,
 unknown fields, arbitrary outcomes and oversized files are rejected.
 
-- STARTED: one `⏳ GoalVision ADMIN • Repair job` notice, with incident/target/mode.
-- RUNNING: first still-working notice after ten minutes, then no more often than
-  every ten minutes; missed intervals do not generate catch-up spam.
-- COMPLETED: one `✅` notice, outcome, changed-file count, elapsed and job ID.
-- FAILED/TIMEOUT/STALLED: fixed machine warning and job ID.
+- All new operator messages use Latvian status/action text and retain incident,
+  target, job ID, machine outcome, failure code, changed-file count and elapsed time.
+- STARTED: `Sāk izpēti`, with the diagnosis-only or isolated-fix mode.
+- RUNNING: `Turpina izpēti` or `Turpina izpēti un labojuma sagatavošanu` after
+  ten minutes, then at most every ten minutes; missed intervals do not spam.
+  The current protocol cannot distinguish each individual edit/test phase.
+- COMPLETED/PATCH_READY: `Gaida pārbaudi un apstiprinājumu`; explicitly requires
+  code/test review and manual deployment approval. It does not claim tests passed,
+  that production was repaired, or that approval triggers automatic installation.
+- Other completion: diagnosis or no code change, with manual result review needed.
+- FAILED/TIMEOUT/STALLED: Latvian warning and required operator action.
+- Existing persisted notices, delivery identities and retry budgets are unchanged.
 - Heartbeat older than three minutes: one STALLED per continuous stale period.
   Fresh heartbeat permits further lifecycle transitions and a later distinct stall.
 - A job finishing between scans still creates STARTED then terminal notices.
@@ -359,3 +366,23 @@ The fake rehearsal produced PATCH_READY with an identical source hash and one
 STARTED plus one COMPLETED notification. HEAD remains the original
 `59f051834a4a69ed4941cc78b767f5db0a126c33`; no worktree commit/push, installation,
 service control, production state change or real credentials access occurred.
+
+
+## Latvian operator status update — 2026-10-01
+
+The narrow updater `operations/admin-autorepair/update_status_language.py` is
+packaged as `update.py` with `operator_jobs.py` and pinned `metadata.json`.
+It only accepts the installed R4 ADMIN module/route hashes, verifies the complete
+base Python manifest, creates a separate ADMIN release, and changes only the
+notification formatter. It drains ADMIN while its timer is paused, verifies the
+new route, and restores the timer's prior activity. A switching failure restores
+the previous route; failed staging releases are retained for review.
+
+Run the packaged updater without arguments for a read-only plan. Root
+`python3 update.py --apply` installs; `--apply --rollback` restores the saved
+R4 ADMIN drop-in. Neither command starts a manual ADMIN scan or sends a test
+message. Normal scheduled ADMIN delivery resumes according to its existing policy.
+Existing notification bodies and receipts are not rewritten or replayed.
+PREMATCH, worker configuration/source snapshots, activation baseline and spool
+remain on R4. The narrow release records its new source commit in
+`status-update.json`; worker source refresh remains a separate operation.
