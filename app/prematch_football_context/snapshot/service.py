@@ -25,16 +25,7 @@ def available_pins(repository: EvidenceRepository, receipt: DecisionReceipt,
     _receipt(repository, receipt)
     queries = (target_query(binding.fixture_id), history_query(binding.competition_id, binding.season),
                history_query(binding.competition_id, binding.season - 1))
-    pins: list[list[str]] = [[], [], []]
-    rows = repository.connection.execute(
-        "SELECT source_id FROM fc_receipts WHERE event='SOURCE' AND ordering<? ORDER BY ordering",
-        (receipt.ordering,))
-    for (identity,) in rows:
-        candidate = repository.load(identity, decision=receipt)
-        for index, (kind, query) in enumerate(zip(KINDS, queries)):
-            if (candidate.header.kind, candidate.header.query) == (kind, query):
-                pins[index].append(identity)
-    return tuple(tuple(sorted(group)) for group in pins)
+    return repository.scoped_source_ids(receipt, tuple(zip(KINDS, queries)))
 
 
 def assemble(repository: EvidenceRepository, opportunity: Opportunity, receipt: DecisionReceipt,

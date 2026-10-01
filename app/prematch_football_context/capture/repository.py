@@ -106,6 +106,8 @@ class EvidenceRepository:
             raise ValueError('REGISTRATION_CLOCK_REQUIRED')
         self.clock = clock
         self.writable = writable
+        self._scope_index_key: tuple[DecisionReceipt, tuple[int, int, int]] | None = None
+        self._scope_index: dict[tuple[SourceKind, Query], tuple[str, ...]] = {}
         self.connection = sqlite3.connect(path.resolve().as_uri() + ('?mode=rw' if writable else '?mode=ro'),
                                           uri=True, timeout=0.1, isolation_level=None)
         try:
@@ -246,6 +248,49 @@ class EvidenceRepository:
             return Candidate(header, material['content'])
         except (ValueError, TypeError, KeyError, AttributeError, OverflowError, sqlite3.DatabaseError) as exc:
             raise EvidenceUnavailable('EVIDENCE_UNAVAILABLE: INVALID_DURABLE_SOURCE') from exc
+
+    def _scope_revision(self) -> tuple[int, int, int]:
+        # data_version detects other connections; total_changes includes this
+        # connection's DML; schema_version also catches local DDL/tampering.
+        return (self.connection.execute('PRAGMA main.data_version').fetchone()[0],
+                self.connection.total_changes,
+                self.connection.execute('PRAGMA main.schema_version').fetchone()[0])
+
+    def scoped_source_ids(self, decision: DecisionReceipt,
+                          scopes: tuple[tuple[SourceKind, Query], ...]) -> tuple[tuple[str, ...], ...]:
+        """Reuse fully validated scope identities for one unchanged cutoff/store.
+
+        Only IDs and query headers are retained, never payloads or selections.
+        Every pre-cutoff source is fully loaded on a cold/revised index, including
+        unrelated scopes. Assembly still reloads and verifies every pinned unit.
+        The sole cached cutoff is discarded on any database/schema change.
+        """
+        revision = self._scope_revision()
+        key = (decision, revision)
+        if self.load_cutoff(decision.receipt_hash) != decision:
+            raise EvidenceUnavailable('EVIDENCE_UNAVAILABLE: DECISION_MISMATCH')
+        if self._scope_index_key != key:
+            self._scope_index_key = None
+            self._scope_index = {}
+            groups: dict[tuple[SourceKind, Query], list[str]] = {}
+            # Finish the receipt cursor before validation; no long reader lock.
+            identities = self.connection.execute(
+                "SELECT source_id FROM fc_receipts WHERE event='SOURCE' AND ordering<? ORDER BY ordering",
+                (decision.ordering,)).fetchall()
+            for (identity,) in identities:
+                candidate = self.load(identity, decision=decision)
+                scope = (candidate.header.kind, candidate.header.query)
+                groups.setdefault(scope, []).append(identity)
+            index = {scope: tuple(sorted(ids)) for scope, ids in groups.items()}
+        else:
+            index = self._scope_index
+        if revision != self._scope_revision():
+            self._scope_index_key = None
+            self._scope_index = {}
+            raise EvidenceUnavailable('EVIDENCE_UNAVAILABLE: SOURCE_INDEX_CHANGED')
+        self._scope_index = index
+        self._scope_index_key = key
+        return tuple(index.get(scope, ()) for scope in scopes)
 
     def load_cutoff(self, receipt_hash: str) -> DecisionReceipt:
         """Recover an exact durable decision marker after restart, without a clock."""

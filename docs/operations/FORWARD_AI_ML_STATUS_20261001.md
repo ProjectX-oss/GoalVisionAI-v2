@@ -31,17 +31,19 @@ Iziets cauri visiem plāna punktiem. Koda labojumi un research pamats ir sagatav
 - Current-results shadow probe: 1650 upcoming fixtures, 562 prognozes, 768 insufficient-team-history, 320 current-cache-unavailable. Pilnie ievaddati/fingerprints saglabāti saspiestā JSON; visi 562 artefakti atkārtoti validēti.
 - xG avotā 423 CMI snapshots; jaunākais 2026-09-15, jaunākajos 25 nav xG lauku. Īsta svaiga xG vietā nav izmantoti provider goal bounds vai izdomāti dati.
 
-## Jauns runtime šķērslis
+## Discovery CPU aizture — cēlonis atrasts un labojums sagatavots
 
 14:00 UTC discovery process pēc pēdējās provider atbildes 14:04:53 turpināja intensīvi izmantot CPU. Novērotā 17 minūšu intervāla lifetime CPU bija 87.3%; tas pats par sevi nepierāda SQLite lock.
 
 Precīzo 2106 kandidātu no-send publication replay ar tukšu atmiņas ledger un bez optional context observer aizņēma 3.869 profiled sekundes un sagatavoja trīs COMBO no 118 eligible fixtures. Šis replay neaizstāj dzīvo ledger/adaptive/context stāvokli un nenosaka live aiztures cēloni.
 
-Dzīvā Python stack nolasīšanu OS noraidīja ar ptrace Permission Denied. Paaugstināto tiesību apiešana, procesa signāls, restart vai production izmaiņas netika veiktas. Sagatavoti append-only ADAPTIVE_SHADOW un PUBLICATION_PREPARATION fāžu sākuma/beigu marķieri. Lai šo incidentu noslēgtu, vajadzīgs operatora veikts vai atļauts stack capture ar attiecīgajām OS tiesībām. Tas nav deploy apstiprinājums.
+Operators saglabāja live stack diagnostiku 15:27:44–15:27:55 UTC. Abi veiksmīgie paraugi rāda pilnu visu avotu validāciju available_pins ceļā pirms publication. 5594 avoti (91.6 MB) tika atkārtoti pārbaudīti katrai iespējai. Sagatavots viena cutoff avotu indekss ar datu/schema izmaiņu invalidāciju un pilnu sākotnējo validāciju. Reālo datu kopijā atkārtota meklēšana: 7.5567 s → mediāna 0.000093 s; auksta pārbaude joprojām 8.184 s. Trīs saglabāti snapshoti pilnīgi sakrīt pēc atkārtotas izveides. Tas vēl nav end-to-end production ātruma pierādījums. Divu failu discovery pakotne un rollback ir sagatavoti; deploy vajag atsevišķu operatora atļauju. Runbook: docs/operations/CONTEXT_SCOPE_CPU_FIX_20261001.md.
 
-Pilns jaunās COMBO politikas publication → receipt → settlement cikls vēl nav pierādīts. Pirmajā pēc-deploy ciklā kandidātu nebija; pašreizējā CPU aizture paliek atsevišķi izmeklējama.
+Pilns jaunās COMBO politikas publication → receipt → settlement cikls vēl nav pierādīts. Pirmajā pēc-deploy ciklā kandidātu nebija; CPU cēlonis un offline labojums pierādīti, dabīga pēc-deploy cikla pārbaude vēl vajadzīga.
 
 ## Testi
+
+- Pēc CPU labojuma: **1498 PASS + 34 subtests PASS**, 195.03 s; atsevišķi **6 installer PASS**, 0.30 s. Mērķētais context kopums **200 PASS**, 30.53 s (pārklājas).
 
 - Kopējais PREMATCH/adaptive/Lab V2/COMBO/football-context tests: **1481 PASS + 34 subtests PASS**, 178.55 s.
 - Pēc fāžu diagnostikas labojuma mērķētais kopums: **117 PASS**, 10.07 s; daļa pārklājas ar kopējo testu.
@@ -77,7 +79,7 @@ Komiti ir VPS worktrees; šajā darbā nav veikts push, merge vai deploy.
 
 ## Nākamie nepieciešamie pierādījumi
 
-1. Operatora live stack capture, lai noslēgtu discovery CPU incidentu.
+1. Operatora stack capture ir saņemts, CPU labojums testos PASS. Vajag atsevišķi apstiprināt tā deploy un pārbaudīt dabīgu nākamo ciklu.
 2. Atsevišķi apstiprināts izvēlēto labojumu deploy; sagatavotais kods vēl nav runtime.
 3. Nākamā dabiskā research attempt pārbaude. Taimera nākamais izsaukums ir 2026-10-02 02:12 UTC, bet cooldown var vēl neļaut research cycle.
 4. Turpināt resolved observations vākšanu līdz validation un calibration readiness PASS. Neapiet embargo vai minimumus.

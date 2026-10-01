@@ -1,0 +1,100 @@
+{
+  "deployed": false,
+  "diagnostic": {
+    "cpu_percent_at_sample": 93.4,
+    "elapsed_at_first_sample": "27:42",
+    "sampling_races": 1,
+    "sha256": "2bcebaf9d5f0725807840a3b16875178626f92fc652f701010b0f3a0ccbf5fe1",
+    "stack": [
+      "validate_retained_document",
+      "capture.repository._validate",
+      "EvidenceRepository.load",
+      "snapshot.service.available_pins",
+      "ProspectiveObservation._sources",
+      "ProspectiveObservation.observe",
+      "LearningCoordinator.shadow",
+      "lab_v2_shadow.cli._cycle"
+    ],
+    "successful_stack_samples": 2,
+    "utc_samples": [
+      "2026-10-01T15:27:44Z",
+      "2026-10-01T15:27:50Z",
+      "2026-10-01T15:27:55Z"
+    ]
+  },
+  "manual_provider_calls": 0,
+  "manual_telegram_sends": 0,
+  "mechanism": "Every opportunity rescanned and fully validated all pre-cutoff sources before exact scope filtering; diagnostics and assembly repeated the same scan.",
+  "offline_benchmark": {
+    "all_pins_exactly_equal": true,
+    "baseline_lookup_seconds": 7.556705093942583,
+    "cutoff_ordering": 5738,
+    "fixed_cold_lookup_seconds": 8.184018983971328,
+    "fixed_warm_calls": 100,
+    "fixed_warm_max_seconds": 0.00021869968622922897,
+    "fixed_warm_median_seconds": 9.311502799391747e-05,
+    "limitation": "Measures source lookup only, not end-to-end discovery or Telegram delivery. First full validation remains.",
+    "method": "SQLite online backup, read-only repository, same receipt and exact scope. Baseline uses pre-fix available_pins; fixed cold call plus 100 warm calls. No provider calls or publication execution.",
+    "pin_counts": [
+      1,
+      19,
+      0
+    ],
+    "pre_cutoff_sources": 5594,
+    "retained_material_bytes": 91613453,
+    "sqlite_copy_sha256": "1cb278493737746170a5b3107d9162f5b035fa4203db88a233167087d5e50386"
+  },
+  "package_tests": {
+    "passed": 6,
+    "seconds": 0.3
+  },
+  "persisted_snapshot_replays": [
+    {
+      "exact_snapshot_equality": true,
+      "pins": [
+        1,
+        12,
+        4
+      ],
+      "receipt_ordering": 5291,
+      "reproduction_verified": true,
+      "seconds": 8.248662256170064,
+      "snapshot_hash": "8786a248010935481baad8c5df4cff5b971d34cc8e747fcc33f5f28ade4a65bc"
+    },
+    {
+      "exact_snapshot_equality": true,
+      "pins": [
+        1,
+        19,
+        0
+      ],
+      "receipt_ordering": 4816,
+      "reproduction_verified": true,
+      "seconds": 7.489164168946445,
+      "snapshot_hash": "df74c38a1040dd0f66103f81bf656bfe8cfdcbbdbe381c029d2ddcb5e9814266"
+    },
+    {
+      "exact_snapshot_equality": true,
+      "pins": [
+        1,
+        7,
+        3
+      ],
+      "receipt_ordering": 3379,
+      "reproduction_verified": true,
+      "seconds": 4.747525442857295,
+      "snapshot_hash": "e997e63751837b71344ade78e105d96a2897a3d958bd34c7d7550263cc8f5353"
+    }
+  ],
+  "status": "PASS_OFFLINE_RUNTIME_PENDING_APPROVAL",
+  "targeted_tests": {
+    "passed": 200,
+    "seconds": 30.53
+  },
+  "wider_tests": {
+    "junit_sha256": "a99e1069a1d263da746f13a2e546a65658078471d0973a692b949a08a22ceed1",
+    "passed": 1498,
+    "seconds": 195.03,
+    "subtests_passed": 34
+  }
+}
