@@ -583,6 +583,20 @@ class LabV2ShadowRunner:
                     "market_consensus", f"{fixture_id}:{family}:{fingerprint(document)}",
                     document, created_at=clock,
                 )
+                # Pure research sibling after selection: no provider calls or
+                # changes to consensus, candidate probabilities, or publication.
+                if fixture_id in fixtures:
+                    from app.adaptive_lab.devig_research import capture
+                    capture_clock = self.runtime_clock() if self.runtime_clock else clock
+                    experiment = capture(document, captured_at=capture_clock,
+                                         kickoff=fixtures[fixture_id]["kickoff_utc"],
+                                         model_probabilities={c["market"]: {
+                                             "probability": c.get("ensemble_probability"),
+                                             "model_generation": c.get("model_generation"),
+                                             "model_artifact_identity": c.get("model_artifact_identity")}
+                                             for c in candidates if c["fixture_id"] == fixture_id})
+                    self.repository.append("devig_research", experiment["capture_id"],
+                                           experiment, created_at=capture_clock)
         shadow_captures = 0
         for analysis in self.analysis_evidence.values():
             self.repository.append("model_analysis", fingerprint(analysis), analysis, created_at=clock)
