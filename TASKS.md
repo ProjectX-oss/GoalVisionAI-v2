@@ -1,3 +1,13 @@
+## 2026-10-01 — ADMIN stdout rotation and worker startup
+
+- [x] Read operator-exported incidents: both RECOVERED; current stdout read degraded.
+- [x] Match directory-list permission failure to rotated-source lookup.
+- [x] Read explicit .1 predecessor without widening ACLs; preserve gap/read errors.
+- [x] Combine with tested 0770 worker startup fix in an isolated two-service package.
+- [x] 313 tests + 79 subtests and 11 deployment/rollback tests PASS.
+- [ ] Operator deploy and natural monitoring/worker lifecycle verification.
+- Runbook: docs/operations/ADMIN_IO_STARTUP_20261001.md.
+
 ## 2026-09-30 — ADMIN Auto-Repair and operator job status foundation
 
 - [x] Add disabled-by-default, episode-deduplicated sanitized spool handoff with immutable activation/maintenance exclusions and capacity limits.

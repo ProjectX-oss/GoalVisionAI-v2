@@ -221,6 +221,48 @@ class TailTests(Temporary):
         _, _, state, _ = tail(self.path, {}, NOW, running=False)
         self.assertFalse(tail(self.path, json.loads(json.dumps(state)), NOW+1, running=False)[0])
 
+    def test_rotation_needs_only_file_read_and_directory_traverse(self) -> None:
+        self.path.write_text(json.dumps(record())+'\n')
+        _, _, state, _ = tail(self.path, {}, NOW, running=False)
+        with self.path.open('a') as stream:
+            stream.write(json.dumps(record(cycle_id='old-unread'))+'\n')
+        self.path.rename(self.root/'output.log.1')
+        self.path.write_text(json.dumps(record(cycle_id='new-current'))+'\n')
+        with patch.object(Path, 'iterdir', side_effect=PermissionError('DIRECTORY_LIST_DENIED')):
+            values, issues, state, _ = tail(self.path, state, NOW+1, running=False)
+            self.assertEqual([v['cycle_id'] for v, _ in values], ['old-unread'])
+            self.assertFalse(issues)
+            values, issues, _, _ = tail(self.path, state, NOW+2, running=False)
+            self.assertEqual([v['cycle_id'] for v, _ in values], ['new-current'])
+            self.assertFalse(issues)
+
+    def test_lost_old_inode_reports_gap_and_reads_current_without_listing(self) -> None:
+        self.path.write_text(json.dumps(record())+'\n')
+        _, _, state, _ = tail(self.path, {}, NOW, running=False)
+        # A no-longer-supported older archive must not block current evidence.
+        self.path.rename(self.root/'output.log.2')
+        self.path.write_text(json.dumps(record(cycle_id='replacement'))+'\n')
+        with patch.object(Path, 'iterdir', side_effect=PermissionError):
+            values, issues, _, _ = tail(self.path, state, NOW+1, running=False)
+        self.assertEqual([v['cycle_id'] for v, _ in values], ['replacement'])
+        self.assertIn('ROTATED_INODE_LOST', [i.facts['reason'] for i in issues])
+
+    def test_unreadable_retained_archive_preserves_cursor_and_degrades(self) -> None:
+        self.path.write_text(json.dumps(record())+'\n')
+        _, _, state, _ = tail(self.path, {}, NOW, running=False)
+        self.path.rename(self.root/'output.log.1')
+        self.path.write_text(json.dumps(record(cycle_id='replacement'))+'\n')
+        real_open = Path.open
+        def denied(path, *args, **kwargs):
+            if path.name.endswith('.1'):
+                raise PermissionError('ARCHIVE_READ_DENIED')
+            return real_open(path, *args, **kwargs)
+        with patch.object(Path, 'open', denied):
+            values, issues, after, _ = tail(self.path, state, NOW+1, running=False)
+        self.assertFalse(values)
+        self.assertEqual(after, state)
+        self.assertEqual([i.facts['reason'] for i in issues], ['READ_UNAVAILABLE'])
+
 
 class StoreTests(Temporary):
     def setUp(self) -> None:

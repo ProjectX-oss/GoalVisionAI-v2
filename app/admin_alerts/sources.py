@@ -59,7 +59,7 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
          grace: float = 180) -> tuple[list[tuple[dict, str]], list[Event], dict, int]:
     """Keep offsets, not unsanitized trailing bytes. Re-read a bounded partial line.
 
-    Rename rotation drains the previous inode before opening the replacement.
+    Reviewed delaycompress rotation drains the .1 inode before the replacement.
     First start reads at most the last MiB. Old unresolved delivery is read separately.
     """
     state = dict(previous)
@@ -71,13 +71,16 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
         current_id = [current.st_dev, current.st_ino]
         selected = path
         if state and state.get('file') != current_id:
-            candidates = []
-            for index, entry in enumerate(path.parent.iterdir()):
-                if index >= 64:
-                    break
-                if entry.name.startswith(path.name) and entry.is_file():
-                    candidates.append(entry)
-            selected = next((p for p in candidates if [p.stat().st_dev, p.stat().st_ino] == state.get('file')), path)
+            # Reviewed logrotate uses delaycompress: only .1 is an eligible
+            # uncompressed predecessor, also used by discovery_output_window.
+            # File read/traverse ACLs do not imply directory-list permission.
+            rotated = Path(str(path) + '.1')
+            try:
+                old = rotated.stat()
+                if [old.st_dev, old.st_ino] == state.get('file'):
+                    selected = rotated
+            except FileNotFoundError:
+                pass
             if selected == path:
                 issues.append(coverage('stdout', now, 'ROTATED_INODE_LOST', object_id='stdout-rotation'))
                 state = {}

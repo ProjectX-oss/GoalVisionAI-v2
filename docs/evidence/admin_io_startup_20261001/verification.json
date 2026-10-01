@@ -1,0 +1,48 @@
+{
+  "confirmed_code_path": "Old tail lists parent directory on inode mismatch, which exceeds existing directory traverse-only access.",
+  "current_and_dot1_acl": "goalvision-admin-alerts:r--",
+  "current_stdout_issue": "READ_UNAVAILABLE",
+  "diagnostic_sha256": "35eee26af95c2ac219856a503bf1c36a897e182a7497e8c420b9840a785a86be",
+  "directory_acl": "goalvision-admin-alerts:--x",
+  "fix": "Read only the current file and explicit .1 uncompressed predecessor; report ROTATED_INODE_LOST if the retained predecessor is gone. Preserve READ_UNAVAILABLE on actual read failure.",
+  "health_cause": "Original unhealthy reason unavailable in recovered incident evidence; no attribution fabricated.",
+  "manual_provider_calls": 0,
+  "manual_telegram_sends": 0,
+  "observed_at_utc": "2026-10-01T17:08:22.829929+00:00",
+  "production_changes": false,
+  "reported_incidents": [
+    {
+      "id": "5551793c5b77956d7db042f5",
+      "last_seen_riga": "2026-10-01T19:42:35.192583+03:00",
+      "rule": "MONITORING_COVERAGE_DEGRADED",
+      "state": "RECOVERED"
+    },
+    {
+      "id": "421c8977ff14a1c4c99ebc27",
+      "last_seen_riga": "2026-10-01T19:05:31.533953+03:00",
+      "rule": "TIMER_INACTIVE",
+      "state": "RECOVERED"
+    }
+  ],
+  "rotation": "daily/maxsize 8M, 14 archives, compress/delaycompress",
+  "status": "SOFTWARE_AND_PACKAGE_TESTS_PASS_DEPLOYMENT_PENDING",
+  "tests": {
+    "admin_seconds": 28.25,
+    "admin_suite_passed": 313,
+    "subtests_passed": 79,
+    "upgrade_seconds": 0.15,
+    "upgrade_tests_passed": 11
+  },
+  "worker_issue": {
+    "RestrictSUIDSGID": true,
+    "deployed_mkdir": "02770",
+    "elapsed_seconds": 0,
+    "failure": "WORKER_INTERRUPTED",
+    "job_directory_exists": false,
+    "original_syscall_trace": "NOT_AVAILABLE",
+    "prepared_mkdir": "0770",
+    "recovery_status_not_actual_codex_timing": true,
+    "sequence": 1,
+    "source_commit": "UNKNOWN"
+  }
+}
