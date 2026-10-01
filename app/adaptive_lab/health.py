@@ -32,10 +32,16 @@ def cycle_health(report: dict, *, started: datetime, completed: datetime) -> dic
             'rejections':report.get('rejection_reasons',{}),'fixture_blockers':report.get('fixture_reason_counts',{}),
             'readiness_blockers':report.get('readiness_reasons',{}),'quota':quota,
             'quota_remaining':report.get('current_remaining_daily_quota'),
-            'publication':report.get('controlled_publication',{}),'LIVE':'DISABLED'}
+            'publication':report.get('controlled_publication',{}),'LIVE':'DISABLED',
+            'PERFORMANCE':report.get('PERFORMANCE', {'status':'UNAVAILABLE','reason':'LEGACY_CYCLE_WITHOUT_SNAPSHOT'}),
+            'timing_diagnostics':report.get('timing_diagnostics',{})}
 
 
-def persist_health(repository: object, report: dict, *, started: datetime, completed: datetime) -> dict:
+def persist_health(repository: object, report: dict, *, started: datetime, completed: datetime, ledger_path: Path | None = None) -> dict:
+    from .performance import snapshot_from_path, candidate_timing_diagnostics
+    report={**report, 'timing_diagnostics':candidate_timing_diagnostics(report.get('candidate_markets',[]), selected_at=started)}
+    if ledger_path is not None:
+        report['PERFORMANCE']=snapshot_from_path(ledger_path,now=completed)
     value=cycle_health(report,started=started,completed=completed)
     repository.append('cycle_health',digest(value),'PREMATCH',value,value['completed_at'])
     return value
@@ -93,13 +99,8 @@ def status(repository: object, ledger: object, shadow_database: Path, *, now: da
     weekly=weekly_statistics(ledger,week_start=week_bounds(now)[0],as_of=now)
     single=single_statistics(ledger)
     combo=statistics(ledger,published_only=True)
-    performance={
-      'SINGLE':{'WON':single['WON'],'LOST':single['LOST'],'VOID':single['VOID'],
-        'flat_unit_pnl':single['hypothetical_profit_loss'],'roi':single['roi_yield'],
-        'pending_settlements':single['pending']},
-      'COMBO':{'WON':combo['WON'],'LOST':combo['LOST'],'VOID':combo['VOID'],
-        'PARTIAL_VOID':combo['PARTIAL_VOID'],'flat_unit_pnl':combo['hypothetical_profit_loss'],
-        'roi':combo['roi_yield'],'pending_settlements':combo['pending']}}
+    from .performance import performance_snapshot
+    performance=performance_snapshot(ledger,now=now)
     return {'PUBLICATION_WINDOW':window_status(now),
       'WEEKLY_REPORT':{'last_sent':receipts[-1] if receipts else None,
         'next_scheduled':next_scheduled(now).isoformat(),'statistics':weekly,

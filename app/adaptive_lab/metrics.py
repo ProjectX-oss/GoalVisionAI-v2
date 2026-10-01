@@ -94,6 +94,10 @@ def segments(rows: list[dict], stream: str, *, limit: int = 500) -> list[dict]:
         for name, key in (('odds','offered_decimal_odds'),('probability','frozen_model_probability'),
                           ('edge','edge'),('EV','EV'),('uncertainty','uncertainty')):
             values[name+'_bucket'] = bucket(r.get(key),name)
+        if stream == 'PREMATCH':
+            from .performance import timing
+            captured = timing(r)
+            values.update({k: captured[k] for k in ('prematch_lead_minutes_bucket', 'odds_age_seconds_bucket')})
         if stream == 'LIVE':
             values.update(minute_band=minute_band(r['live_minute']),
                           score_state=f"{r['live_score_home']}:{r['live_score_away']}",

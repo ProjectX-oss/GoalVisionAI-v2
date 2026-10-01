@@ -39,6 +39,9 @@ def main(argv: list[str] | None = None) -> int:
                     from .health import status
                     result=status(repo,source,args.shadow_database,now=now)
             finally:source.close()
+        if 'PERFORMANCE' not in result:
+            from .performance import snapshot_from_path
+            result['PERFORMANCE']=snapshot_from_path(args.ledger,now=now)
         print(canonical(result))
     finally:repo.close()
     return 0

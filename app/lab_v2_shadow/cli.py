@@ -220,7 +220,7 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                 health_report={**health_report,'terminal_error':failure,
                                'api_calls_consumed':client.request_count}
             try:
-                persist_health(adaptive_repository,health_report,started=clock,completed=datetime.now(timezone.utc))
+                persist_health(adaptive_repository,health_report,started=clock,completed=datetime.now(timezone.utc), ledger_path=args.ledger)
             finally:
                 adaptive_repository.close()
 
@@ -340,7 +340,9 @@ def main(argv: list[str] | None = None) -> int:
                              or not getattr(args, 'adaptive_database', None)):
         parser.error('Observation requires an absolute stable root outside /tmp and --adaptive-database')
     if args.command == "audit":
+        from app.adaptive_lab.performance import snapshot_from_path
         value = {
+            "PERFORMANCE": snapshot_from_path(args.ledger,now=datetime.now(timezone.utc)),
             "bottleneck_audit": audit_recent_lab(args.ledger, args.analysis_database),
             "settled_loss_postmortems": settled_loss_postmortems(args.ledger, args.analysis_database),
         }

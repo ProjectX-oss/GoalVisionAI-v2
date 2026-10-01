@@ -312,8 +312,11 @@ def _leg(candidate: dict, now: datetime) -> dict:
     key = f"{candidate['fixture_id']}:{candidate['market']}"
     probability = Decimal(str(candidate["ensemble_probability"]))
     odds = Decimal(str(candidate["captured_odds"]))
+    from app.adaptive_lab.performance import timing
+    captured = (candidate.get("final_review_completed_at_utc") or candidate.get("goalvision_retrieved_at_utc") or now.isoformat())
     return {
         **candidate,
+        **timing(candidate, selected_at=captured),
         "observation_id": candidate["candidate_id"],
         "publication_key": key,
         "odds": candidate["captured_odds"],
