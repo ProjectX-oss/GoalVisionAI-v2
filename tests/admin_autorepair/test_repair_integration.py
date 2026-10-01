@@ -64,6 +64,37 @@ def test_installer_service_allowlist():
         installer().systemctl('stop',DISCOVERY)
 
 
+def test_snapshot_supports_linked_worktree_and_pins_exact_head(tmp_path):
+    module = installer()
+    repo = tmp_path/'repo'
+    review = tmp_path/'review'
+    snapshot = tmp_path/'snapshot.git'
+    repo.mkdir()
+    subprocess.run(['git','-C',str(repo),'init','-q'],check=True)
+    (repo/'code.py').write_text('BASE = 1\n')
+    subprocess.run(['git','-C',str(repo),'add','code.py'],check=True)
+    subprocess.run(['git','-C',str(repo),'-c','user.name=Test','-c','user.email=test@invalid',
+                    'commit','-qm','base'],check=True)
+    main_head = subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD']).decode().strip()
+    subprocess.run(['git','-C',str(repo),'worktree','add','-q','-b','review',str(review),'HEAD'],check=True)
+    (review/'code.py').write_text('BASE = 2\n')
+    (review/'untracked-secret.env').write_text('MUST_NOT_BE_SNAPSHOTTED\n')
+    subprocess.run(['git','-C',str(review),'add','code.py'],check=True)
+    subprocess.run(['git','-C',str(review),'-c','user.name=Test','-c','user.email=test@invalid',
+                    'commit','-qm','reviewed'],check=True)
+    reviewed_head = subprocess.check_output(['git','-C',str(review),'rev-parse','HEAD']).decode().strip()
+    assert reviewed_head != main_head
+    assert (review/'.git').is_file()
+    module.snapshot(review.resolve(), snapshot)
+    assert subprocess.check_output(['git','--git-dir='+str(snapshot),'rev-parse','HEAD']).decode().strip() == reviewed_head
+    assert subprocess.check_output(['git','--git-dir='+str(snapshot),'symbolic-ref','HEAD']).decode().strip() == (
+        'refs/heads/goalvision-reviewed-source')
+    tree = subprocess.check_output(['git','--git-dir='+str(snapshot),'ls-tree','-r','--name-only','HEAD']).decode()
+    assert 'code.py' in tree
+    assert 'untracked-secret.env' not in tree
+    assert not subprocess.check_output(['git','--git-dir='+str(snapshot),'remote']).strip()
+
+
 def test_units_have_readonly_sources_hidden_credentials_and_singleton():
     service=Path('operations/admin-autorepair/goalvision-admin-autorepair.service').read_text()
     timer=Path('operations/admin-autorepair/goalvision-admin-autorepair.timer').read_text()

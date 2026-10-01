@@ -80,15 +80,44 @@ def stage(source: Path, destination: Path, runner: Path) -> None:
 
 
 def snapshot(source: Path, destination: Path) -> None:
-    """Root-owned bare local Git source: no ignored DBs, environment or log files."""
-    if not source.is_absolute() or not source.is_dir():
+    """Root-owned bare snapshot pinned to the reviewed worktree HEAD.
+
+    Linked Git worktrees expose .git as a pointer file, which is not a robust
+    local-clone source under a root installer. Resolve the shared common Git
+    directory explicitly, clone only committed repository data from there, then
+    repoint snapshot HEAD to the exact reviewed worktree commit.
+    """
+    if not source.is_absolute() or not source.is_dir() or destination.exists():
         raise ValueError('INVALID_SOURCE_REPO')
-    subprocess.run(['git', '-c', 'safe.directory='+str(source.resolve()), '-c', 'core.hooksPath=/dev/null',
-        '-c', 'protocol.allow=never', '-c', 'protocol.file.allow=always', 'clone', '--bare', '--local',
-        '--no-hardlinks', '--dissociate', str(source.resolve()), str(destination)], check=True,
-        env={'PATH':'/usr/bin:/bin','GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'/dev/null'},
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.run(['git','-C',str(destination),'remote','remove','origin'],check=True)
+    source = source.resolve()
+    env={'PATH':'/usr/bin:/bin','GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'/dev/null'}
+    base=['git','-c','safe.directory='+str(source),'-c','core.hooksPath=/dev/null',
+          '-c','protocol.allow=never','-c','protocol.file.allow=always','-C',str(source)]
+    commit = subprocess.check_output([*base,'rev-parse','--verify','HEAD'], env=env).decode().strip()
+    common_raw = subprocess.check_output([*base,'rev-parse','--git-common-dir'], env=env).decode().strip()
+    common = Path(common_raw)
+    if not common.is_absolute():
+        common = (source/common).resolve()
+    if (not common.is_dir() or len(commit) not in (40,64)
+            or any(char not in '0123456789abcdef' for char in commit)):
+        raise ValueError('INVALID_SOURCE_REPO')
+    clone = ['git','-c','safe.directory='+str(common),'-c','core.hooksPath=/dev/null',
+             '-c','protocol.allow=never','-c','protocol.file.allow=always',
+             'clone','--bare','--local','--no-hardlinks','--dissociate',
+             str(common),str(destination)]
+    subprocess.run(clone, check=True, env=env, stdout=subprocess.DEVNULL,
+                   stderr=subprocess.PIPE, text=True)
+    subprocess.run(['git','--git-dir='+str(destination),'remote','remove','origin'],
+                   check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    branch='refs/heads/goalvision-reviewed-source'
+    subprocess.run(['git','--git-dir='+str(destination),'update-ref',branch,commit],
+                   check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    subprocess.run(['git','--git-dir='+str(destination),'symbolic-ref','HEAD',branch],
+                   check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    actual = subprocess.check_output(['git','--git-dir='+str(destination),'rev-parse','HEAD'],
+                                     env=env).decode().strip()
+    if actual != commit:
+        raise ValueError('SOURCE_SNAPSHOT_COMMIT_MISMATCH')
     for path in (destination, *destination.rglob('*')):
         os.chmod(path, 0o755 if path.is_dir() else 0o644)
 
