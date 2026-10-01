@@ -1,0 +1,301 @@
+{
+  "status": "PASS",
+  "scope": "TODAY_RIGA scheduled discovery and publication-date verification only",
+  "verified_at_riga": "2026-10-01T21:41:52.151417+03:00",
+  "release": "/opt/goalvision-prematch-today-scope-f5d7968-20261001",
+  "source_commit": "f5d79683dda72067fc5fae5a02f2db4cf38497d0",
+  "cycles": [
+    {
+      "discovery_identity": "lab-v2-cycle-5aa16faea0db3828422ec87dc497302ed61200ef1759a42b24ea2c4e09f55c41",
+      "started_at_riga": "2026-10-01T21:00:03.419262+03:00",
+      "discovery_day_scope": {
+        "excluded_fixture_count": 1630,
+        "fixture_query_timezone": "Europe/Riga",
+        "local_date": "2026-10-01",
+        "mode": "TODAY_RIGA",
+        "scoped_fixture_count": 135,
+        "timezone": "Europe/Riga"
+      },
+      "discovery_dates_requested": [
+        "2026-10-01"
+      ],
+      "fixtures_discovered": 135,
+      "current_odds_fixtures": 15,
+      "candidate_markets_evaluated": 157,
+      "ready_candidate_count": 12,
+      "api_calls_consumed": 63,
+      "publication_identity": "lab-v2-publication-cycle-70d2313691d74b79b9327dea4eabd952b2c1e2aff2f2e52c35ff2ead5b53c4c4",
+      "publication_completed_at_riga": "2026-10-01T21:02:02.574065+03:00",
+      "analysis_status": "COMPLETED",
+      "delivery_status": "COMPLETED",
+      "singles_sent": 3,
+      "combos_sent": 2,
+      "telegram_sends": 5,
+      "combo_diagnostics": {
+        "eligible_fixture_count": 7,
+        "policy": "LAB_COMBO_ACCURACY_FROM_SINGLES_V1",
+        "prepared_count": 2,
+        "reason": "COMBO_READY",
+        "rejection_counts": {
+          "COMBO_FIXTURE_ALREADY_CLAIMED": 4
+        }
+      },
+      "single_blocker_counts": {
+        "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 83,
+        "FIXTURE_AFTER_LAB_CUTOFF": 38,
+        "LAB_PUBLICATION_ODDS_BELOW_1_30": 10,
+        "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 1
+      },
+      "failure": null
+    },
+    {
+      "discovery_identity": "lab-v2-cycle-e98a2e2c0a3ee0d03464b6bff9a4a580a732c3bc231b7a454975d037eba512df",
+      "started_at_riga": "2026-10-01T21:30:03.718233+03:00",
+      "discovery_day_scope": {
+        "excluded_fixture_count": 1630,
+        "fixture_query_timezone": "Europe/Riga",
+        "local_date": "2026-10-01",
+        "mode": "TODAY_RIGA",
+        "scoped_fixture_count": 135,
+        "timezone": "Europe/Riga"
+      },
+      "discovery_dates_requested": [
+        "2026-10-01"
+      ],
+      "fixtures_discovered": 135,
+      "current_odds_fixtures": 15,
+      "candidate_markets_evaluated": 157,
+      "ready_candidate_count": 13,
+      "api_calls_consumed": 64,
+      "publication_identity": "lab-v2-publication-cycle-2076f0b6b6188a0708e65361d008a7c910ead4d4190690a0715c6d75bef114b4",
+      "publication_completed_at_riga": "2026-10-01T21:32:50.745516+03:00",
+      "analysis_status": "COMPLETED",
+      "delivery_status": "COMPLETED",
+      "singles_sent": 3,
+      "combos_sent": 0,
+      "telegram_sends": 3,
+      "combo_diagnostics": {
+        "eligible_fixture_count": 1,
+        "policy": "LAB_COMBO_ACCURACY_FROM_SINGLES_V1",
+        "prepared_count": 0,
+        "reason": "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES",
+        "rejection_counts": {
+          "COMBO_FIXTURE_ALREADY_CLAIMED": 10
+        }
+      },
+      "single_blocker_counts": {
+        "FIXTURE_AFTER_LAB_CUTOFF": 38,
+        "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 83,
+        "LAB_PUBLICATION_ODDS_BELOW_1_30": 10,
+        "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 1
+      },
+      "failure": null
+    }
+  ],
+  "verified_receipts": [
+    {
+      "kind": "single_prediction",
+      "prediction_id": "lab-v2-single-a88ab3503f3d946d3c28e0f2d81bd37e4fd718a15414ffc85c460eb2c9f71e81",
+      "message_id": 329,
+      "sent_at_riga": "2026-10-01T21:32:50.070491+03:00",
+      "receipt_matches_publication_cycle": true,
+      "ledger_fingerprints_valid": true,
+      "legs": [
+        {
+          "fixture_id": 1528921,
+          "home_team": "Rep. Of Ireland",
+          "away_team": "Austria",
+          "market": "OVER_1_5",
+          "kickoff_riga": "2026-10-01T21:45:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        }
+      ]
+    },
+    {
+      "kind": "single_prediction",
+      "prediction_id": "lab-v2-single-d0412bd502120615de2c346a396ea676ebb24656d929f71cf706ba248a1fed03",
+      "message_id": 330,
+      "sent_at_riga": "2026-10-01T21:32:50.418005+03:00",
+      "receipt_matches_publication_cycle": true,
+      "ledger_fingerprints_valid": true,
+      "legs": [
+        {
+          "fixture_id": 1528922,
+          "home_team": "Israel",
+          "away_team": "Kosovo",
+          "market": "UNDER_3_5",
+          "kickoff_riga": "2026-10-01T21:45:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        }
+      ]
+    },
+    {
+      "kind": "single_prediction",
+      "prediction_id": "lab-v2-single-db2c1763a49d92c4e1f21d25ac09e1907cf8dfd6e9b2464fa5d8ac61e10dc1fb",
+      "message_id": 331,
+      "sent_at_riga": "2026-10-01T21:32:50.741724+03:00",
+      "receipt_matches_publication_cycle": true,
+      "ledger_fingerprints_valid": true,
+      "legs": [
+        {
+          "fixture_id": 1638321,
+          "home_team": "Manchester City W",
+          "away_team": "Real Madrid W",
+          "market": "OVER_2_5",
+          "kickoff_riga": "2026-10-01T22:00:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        }
+      ]
+    },
+    {
+      "kind": "single_prediction",
+      "prediction_id": "lab-v2-single-e878877ff25b4252c1ab556056bfc757e837231587ec45223400592b61d31ad1",
+      "message_id": 324,
+      "sent_at_riga": "2026-10-01T21:02:01.532954+03:00",
+      "receipt_matches_publication_cycle": true,
+      "ledger_fingerprints_valid": true,
+      "legs": [
+        {
+          "fixture_id": 1350187,
+          "home_team": "Northern Ireland U21",
+          "away_team": "Georgia U21",
+          "market": "OVER_1_5",
+          "kickoff_riga": "2026-10-01T21:45:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        }
+      ]
+    },
+    {
+      "kind": "single_prediction",
+      "prediction_id": "lab-v2-single-c5932e66e12decfbd315f161e6550607d4bc2ecc257f4f8af76df949876103ba",
+      "message_id": 325,
+      "sent_at_riga": "2026-10-01T21:02:01.868894+03:00",
+      "receipt_matches_publication_cycle": true,
+      "ledger_fingerprints_valid": true,
+      "legs": [
+        {
+          "fixture_id": 1612072,
+          "home_team": "Vélez Sársfield Res.",
+          "away_team": "Argentinos Juniors Res.",
+          "market": "OVER_1_5",
+          "kickoff_riga": "2026-10-01T21:45:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        }
+      ]
+    },
+    {
+      "kind": "single_prediction",
+      "prediction_id": "lab-v2-single-15fa5b41175ec217102d8fbaa3b08230714f3e3f98354b9662286df13b145e63",
+      "message_id": 326,
+      "sent_at_riga": "2026-10-01T21:02:02.260665+03:00",
+      "receipt_matches_publication_cycle": true,
+      "ledger_fingerprints_valid": true,
+      "legs": [
+        {
+          "fixture_id": 1638330,
+          "home_team": "Paris Saint Germain W",
+          "away_team": "OH Leuven W",
+          "market": "OVER_2_5",
+          "kickoff_riga": "2026-10-01T22:00:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        }
+      ]
+    },
+    {
+      "kind": "combo_prediction",
+      "prediction_id": "lab-v2-combo-accuracy-43c1ef9a5b308e6c43232f1c9981dfa9ff5fccf0ddddb41f2cd39802ddf5ad9a",
+      "message_id": 327,
+      "sent_at_riga": "2026-10-01T21:02:02.419239+03:00",
+      "receipt_matches_publication_cycle": true,
+      "ledger_fingerprints_valid": true,
+      "legs": [
+        {
+          "fixture_id": 1528921,
+          "home_team": "Rep. Of Ireland",
+          "away_team": "Austria",
+          "market": "OVER_1_5",
+          "kickoff_riga": "2026-10-01T21:45:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        },
+        {
+          "fixture_id": 1528922,
+          "home_team": "Israel",
+          "away_team": "Kosovo",
+          "market": "UNDER_3_5",
+          "kickoff_riga": "2026-10-01T21:45:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        },
+        {
+          "fixture_id": 1638330,
+          "home_team": "Paris Saint Germain W",
+          "away_team": "OH Leuven W",
+          "market": "OVER_2_5",
+          "kickoff_riga": "2026-10-01T22:00:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        }
+      ]
+    },
+    {
+      "kind": "combo_prediction",
+      "prediction_id": "lab-v2-combo-accuracy-2a396cab9433fce5a56d8d5753c14d7a810620ed7ddec9e4daaf00f3470c6b0f",
+      "message_id": 328,
+      "sent_at_riga": "2026-10-01T21:02:02.566467+03:00",
+      "receipt_matches_publication_cycle": true,
+      "ledger_fingerprints_valid": true,
+      "legs": [
+        {
+          "fixture_id": 1528918,
+          "home_team": "Greece",
+          "away_team": "Netherlands",
+          "market": "UNDER_3_5",
+          "kickoff_riga": "2026-10-01T21:45:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        },
+        {
+          "fixture_id": 1528920,
+          "home_team": "Wales",
+          "away_team": "Norway",
+          "market": "OVER_2_5",
+          "kickoff_riga": "2026-10-01T21:45:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        },
+        {
+          "fixture_id": 1638321,
+          "home_team": "Manchester City W",
+          "away_team": "Real Madrid W",
+          "market": "OVER_2_5",
+          "kickoff_riga": "2026-10-01T22:00:00+03:00",
+          "same_riga_date": true,
+          "future_at_send": true
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "publications": 8,
+    "singles": 6,
+    "combos": 2,
+    "kickoff_entries_checked": 12,
+    "cross_date_kickoffs": 0,
+    "past_at_send_kickoffs": 0,
+    "receipt_mismatches": 0,
+    "fingerprint_failures": 0
+  },
+  "method": "Read-only SQLite evidence and systemd show; no source database writes, provider requests, service starts or test messages.",
+  "limitations": [
+    "This verifies date scope and delivery, not predictive quality.",
+    "Legacy 1.30 odds floor remains deployed; 10 candidates were blocked by it in each cycle. Its prepared removal is not part of this release.",
+    "Natural midnight rollover not observed here; DST and midnight paths covered by existing offline regressions."
+  ]
+}

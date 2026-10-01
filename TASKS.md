@@ -8,7 +8,7 @@
 - [x] Add bounded day-scope diagnostics and 525 passing adjacent regressions.
 - [x] Prepare discovery-only hash-pinned upgrade/rollback on the active CPU-fixed base.
 - [x] Operator deployment f5d7968; release hashes, TODAY_RIGA environment and routes PASS.
-- [ ] First post-deploy natural cycle (scheduled 21:00 Riga) and publication-date verification.
+- [x] Natural 21:00/21:30 cycles PASS: 6 SINGLE + 2 COMBO; all eight receipts and 12 kickoff entries verified for today in Riga.
 - Runbook: docs/operations/PREMATCH_TODAY_SCOPE_20261001.md.
 
 ## 2026-10-01 — Explicit Lab accuracy COMBO option

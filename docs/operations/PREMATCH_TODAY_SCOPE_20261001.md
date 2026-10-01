@@ -1,8 +1,8 @@
 # PREMATCH Lab: same-day discovery and publication — 2026-10-01
 
-Status: root cause, 525 offline regressions and operator deployment PASS.
-Natural runtime verification remains NEEDS_MORE_EVIDENCE until the first
-post-deployment scheduled cycle.
+Status: root cause, 525 offline regressions, operator deployment and the first
+two post-deployment natural cycles PASS. Date scope and receipts are verified;
+this is not a prediction-quality or broader AI/ML deployment approval.
 
 ## Root cause and observations
 
@@ -123,6 +123,49 @@ remain NEEDS_MORE_EVIDENCE. No cycle was forced and no test message was sent.
 
 Deployment evidence: docs/evidence/prematch_today_scope_20261001/deployment.json.
 
+## Natural runtime verification — 21:00 and 21:30 Riga
+
+Both scheduled cycles completed after the operator deployment. Each requested
+only 2026-10-01 in Europe/Riga, retained 135 same-day fixtures and excluded 1,630
+out-of-date fixtures before analysis. Each evaluated 157 candidate markets from
+15 current-odds fixtures. These counts are not numbers of published bets.
+
+| Scheduled cycle, Riga | Publication completed, Riga | SINGLE | COMBO | Provider calls | Status |
+| --- | --- | ---: | ---: | ---: | --- |
+| 21:00 | 21:02:02 | 3 | 2 | 63 | COMPLETED |
+| 21:30 | 21:32:50 | 3 | 0 | 64 | COMPLETED |
+
+Read-only ledger verification checked all eight persisted receipts (Telegram
+message IDs 324–331) against the publication-cycle evidence and their immutable
+prediction documents. All sixteen document fingerprints match. All six SINGLE
+kickoffs and all six COMBO leg entries are on 1 October in Riga and were in the
+future at their respective send times. There are zero receipt mismatches,
+cross-date legs or post-kickoff sends in this cohort.
+
+The 21:00 cycle prepared two triples from seven eligible fixtures. The 21:30
+cycle reports INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES with one eligible fixture
+remaining and ten COMBO_FIXTURE_ALREADY_CLAIMED rejections. No additional combo
+was forced. SINGLE/COMBO overlap exists in the intended approved-single combo
+policy; these 12 kickoff entries are not 12 independent fixtures or learning
+observations.
+
+Systemd confirms the 21:30 service exited successfully at 21:32:51 Riga, with
+ExecMainStatus=0. The timer remains active/waiting for 22:00 Riga. Server CEST
+wall-clock values are one hour behind Riga on this date.
+
+The deployed legacy 1.30 odds floor still blocks ten candidate markets per
+cycle. Its already-prepared removal and the unified performance, readiness and
+calibration work are not included in this date-scope deployment. Date/delivery
+PASS does not establish model quality, calibration or profitability.
+
+No manual provider calls, manual cycles, source-ledger changes, test messages
+or new deployments were performed for this verification. No code changed;
+the existing 525-test result remains the release regression evidence. Natural
+midnight rollover remains unobserved in this sample; its boundary paths and
+both DST transitions have offline coverage.
+
+Evidence: docs/evidence/prematch_today_scope_20261001/natural_cycles.json.
+
 ## Changed files and limitations
 
 New behavior:
@@ -146,9 +189,8 @@ No Official, LIVE, champion, historical bookmaker odds, bankroll or result-histo
 change. No other pending AI/ML batch changes are included. Existing selection
 thresholds are outside this date-scope fix.
 
-After operator deployment, verify TODAY_RIGA in the next natural cycle and
-confirm every new published fixture has the same Riga date as its send time.
-A no-pick result remains valid when no same-day candidate passes the gates.
+The first two natural post-deployment cycles now pass the date/receipt check
+below. A no-pick result remains valid when no same-day candidate passes the gates.
 
 Git commit: the commit containing this report on fix/prematch-today-20261001;
 the immutable operator package records its full source commit.
