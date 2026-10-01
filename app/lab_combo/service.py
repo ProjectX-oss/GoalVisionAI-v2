@@ -495,7 +495,7 @@ def _accuracy_delivery_review(value: dict, now: datetime) -> dict:
     """Revalidate frozen accuracy evidence without rewriting source decisions."""
     from decimal import Decimal, InvalidOperation
     from app.lab_v2_shadow.publication import (
-        MIN_PUBLISHED_MARKET_PROBABILITY, MIN_PUBLISHED_DECIMAL_ODDS,
+        MIN_PUBLISHED_MARKET_PROBABILITY, SINGLE_SELECTION_POLICY, LEGACY_SINGLE_SELECTION_POLICY,
     )
     from app.lab_v2_shadow.publication_policy import (
         ACCURACY_PUBLICATION_POLICY_VERSION, review_accuracy_publication,
@@ -518,8 +518,14 @@ def _accuracy_delivery_review(value: dict, now: datetime) -> dict:
         odds = Decimal(str(value['captured_odds']))
         if not probability.is_finite() or probability < MIN_PUBLISHED_MARKET_PROBABILITY:
             reasons.add('LAB_PUBLICATION_PROBABILITY_BELOW_0_55')
-        if not odds.is_finite() or odds < MIN_PUBLISHED_DECIMAL_ODDS:
-            reasons.add('LAB_PUBLICATION_ODDS_BELOW_1_30')
+        if not odds.is_finite() or odds <= 1:
+            reasons.add('INVALID_CURRENT_DECIMAL_ODDS')
+        selection_policy = value.get('single_selection_policy')
+        if selection_policy == LEGACY_SINGLE_SELECTION_POLICY:
+            if value.get('minimum_published_decimal_odds') != '1.30' or odds < Decimal('1.30'):
+                reasons.add('FROZEN_LEGACY_ODDS_CONTRACT_INVALID')
+        elif selection_policy != SINGLE_SELECTION_POLICY or value.get('minimum_published_decimal_odds') is not None:
+            reasons.add('ACCURACY_SELECTION_POLICY_INVALID')
         reviewed = datetime.fromisoformat(value['accuracy_review_completed_at_utc'])
         if not timedelta(0) <= now - reviewed <= FINAL_REVIEW_REFRESH_MAX_AGE:
             reasons.add('ACCURACY_REVIEW_EXPIRED')

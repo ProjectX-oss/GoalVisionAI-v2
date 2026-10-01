@@ -85,7 +85,7 @@ def test_exact_prediction_snapshot_and_zero_statistics(ledger):
 ⏰ Sākums: 26.09.2026 19:00 (Latvija)
 
 📊 Novērtētā varbūtība: 50.0%
-🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, koef. ≥1.30)
+🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, bez koeficienta minimuma)
 💹 EV: +14.0% (diagnostikai)
 🧠 Analīzes pamats: API-Football prognoze
 

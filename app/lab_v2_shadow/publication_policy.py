@@ -125,6 +125,13 @@ def review_accuracy_publication(candidate: dict, *, now: datetime) -> dict:
         if any((raw['probability'] is not None and signal.probability is None) or not signal.provenance
                for raw, signal in zip(candidate['signals'], signals)):
             raise ValueError('invalid signal')
+        if len({s.name for s in signals}) != len(signals):
+            reasons.add('PUBLICATION_DUPLICATE_SIGNAL_PRODUCER')
+        if any(s.probability is not None and (
+                s.market != market or not s.reliability.is_finite() or s.reliability <= 0
+                or s.availability not in {'AVAILABLE', 'LOW_SAMPLE'}
+                or not 0 < s.probability < 1) for s in signals):
+            reasons.add('PUBLICATION_SIGNAL_NOT_USABLE')
         consensus = [s.probability for s in signals
                      if s.name == 'CURRENT_MARKET_CONSENSUS' and s.probability is not None]
         predictive = [s for s in signals if s.name != 'CURRENT_MARKET_CONSENSUS'

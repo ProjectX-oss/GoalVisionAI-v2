@@ -1,0 +1,229 @@
+{
+  "calibration_status_counts": {
+    "UNCALIBRATED_LAB_ENSEMBLE": 9
+  },
+  "market_only": 8,
+  "negative_ev": 8,
+  "observations": [
+    {
+      "EV": "-0.0473130072384294801491555166",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1643167,
+      "independent_families": [],
+      "market": "UNDER_3_5",
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form",
+        "competition_state"
+      ],
+      "model_market_disagreement": "0E-28",
+      "odds": "1.30",
+      "prediction_id": "lab-v2-single-0c3cd0d8afa9c7a87d553d446bdd6d59889174cd293f83b2f90673faa5f6056a",
+      "probability": "0.732836148278131169116034218",
+      "published_at": "2026-10-01T12:05:38.070500+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    },
+    {
+      "EV": "-0.0586532140409735033477884716",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1545607,
+      "independent_families": [],
+      "market": "OVER_1_5",
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_market_disagreement": "0E-28",
+      "odds": "1.36",
+      "prediction_id": "lab-v2-single-297d77f9ebe789610614b6fb99ab0ac66474588e83de3c24abaa928a6c949926",
+      "probability": "0.6921667543816371298913320062",
+      "published_at": "2026-10-01T11:37:08.088608+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    },
+    {
+      "EV": "-0.0684698948849892246118661215",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1641715,
+      "independent_families": [],
+      "market": "UNDER_3_5",
+      "missing_features": [
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_market_disagreement": "0E-28",
+      "odds": "1.37",
+      "prediction_id": "lab-v2-single-5a558e056d34bc8d772899a9e7edb02305e06472aa3667b5bbf8305759a31811",
+      "probability": "0.6799489818357742886044772836",
+      "published_at": "2026-10-01T12:05:38.438326+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    },
+    {
+      "EV": "-0.0834768327561481221521785454",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1643166,
+      "independent_families": [],
+      "market": "UNDER_3_5",
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_market_disagreement": "0E-27",
+      "odds": "1.37",
+      "prediction_id": "lab-v2-single-7559074f87e94a48d6d1471e195c62fcffc124e77c4704fd3438bb3fc92bc192",
+      "probability": "0.668995012586753195509358726",
+      "published_at": "2026-10-01T12:05:38.777286+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    },
+    {
+      "EV": "-0.0345031062891099806419664164",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1641714,
+      "independent_families": [],
+      "market": "OVER_2_5",
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_market_disagreement": "0E-27",
+      "odds": "1.33",
+      "prediction_id": "lab-v2-single-a34a86657dab73e96160c5487849c26cb32f0e9e950e4a23ffa1047ef9ef5f01",
+      "probability": "0.725937514068338360419574123",
+      "published_at": "2026-10-01T11:37:07.706947+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    },
+    {
+      "EV": "0.184718270705255382010967301",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1594851,
+      "independent_families": [
+        "RESULT_HISTORY_MODEL_CONTEXT"
+      ],
+      "market": "OVER_1_5",
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings"
+      ],
+      "model_market_disagreement": "0.1659034691145523731549340139",
+      "odds": "1.50",
+      "prediction_id": "lab-v2-single-c0961c566121a72799c8ef8a041aca1bf273733d0c7b64891303e152173f87f6",
+      "probability": "0.7898121804701702546739782006",
+      "published_at": "2026-10-01T11:37:07.404921+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    },
+    {
+      "EV": "-0.0059157807976030552948304216",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1528916,
+      "independent_families": [],
+      "market": "BTTS_NO",
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_market_disagreement": "0E-28",
+      "odds": "1.35",
+      "prediction_id": "lab-v2-single-c31154dc18758d61f3ca92dfed7cc565159d414b5a01785ca1b1b0211e6f10bc",
+      "probability": "0.7363586808906644034853107988",
+      "published_at": "2026-10-01T11:04:53.066163+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    },
+    {
+      "EV": "-0.0360115913909198324634400002",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1528917,
+      "independent_families": [],
+      "market": "OVER_2_5",
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_market_disagreement": "0E-28",
+      "odds": "1.35",
+      "prediction_id": "lab-v2-single-ca7370d3e849b68e7b32ebea5d8311e97b6d1487086b13a262c28ce5a30f64e2",
+      "probability": "0.7140654878585779018789333332",
+      "published_at": "2026-10-01T11:04:53.303829+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    },
+    {
+      "EV": "-0.0273820044574950413393236302",
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "fixture_id": 1528922,
+      "independent_families": [],
+      "market": "OVER_1_5",
+      "missing_features": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_market_disagreement": "0E-28",
+      "odds": "1.32",
+      "prediction_id": "lab-v2-single-cee9f0ff2d6bc8bbd257c6c25987025989a6a5281bc553b6bec7a385badb7c92",
+      "probability": "0.7368318148049279989853608862",
+      "published_at": "2026-10-01T11:04:52.806725+00:00",
+      "quality_replay": {
+        "eligible": true,
+        "rejection_reasons": [],
+        "version": "LAB_ACCURACY_FIRST_PUBLICATION_V1"
+      }
+    }
+  ],
+  "published_count": 9,
+  "quality_replay_pass": 9,
+  "scope": "Confirmed Lab SINGLE publications on 2026-10-01 as read at 2026-10-01T13:44:41.808913+00:00"
+}
