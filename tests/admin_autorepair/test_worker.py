@@ -211,3 +211,20 @@ def test_timeout_outcome_survives_unreadable_clone(spool, source, tmp_path, monk
     result=worker.run_once(config(spool,source,fake(tmp_path,'sleep'),timeout_seconds=.5))
     assert result['state']=='TIMEOUT'
     assert result['outcome']=='TIMEOUT'
+
+
+def test_job_starts_without_requesting_special_permission_bits(spool, source, tmp_path, monkeypatch):
+    queue(spool)
+    executable = fake(tmp_path, "none")
+    original = Path.mkdir
+    requested = []
+    def restricted(path, mode=0o777, parents=False, exist_ok=False):
+        if path.parent == spool / "jobs":
+            requested.append(mode)
+            if mode & 0o6000:
+                raise PermissionError("RestrictSUIDSGID")
+        return original(path, mode=mode, parents=parents, exist_ok=exist_ok)
+    monkeypatch.setattr(Path, "mkdir", restricted)
+    result = worker.run_once(config(spool, source, executable))
+    assert result["outcome"] == "NO_CODE_CHANGE"
+    assert requested == [0o770]

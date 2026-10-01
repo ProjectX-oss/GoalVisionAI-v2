@@ -190,7 +190,9 @@ def execute(config: Config, bundle: dict, worker_lock: int) -> dict:
     """Produce immutable evidence in a fresh clone; never execute in a source repo."""
     spool = Path(config.spool)
     directory = spool / 'jobs' / bundle['job_id']
-    directory.mkdir(mode=0o2770)  # Existing artifacts are never overwritten or rerun.
+    # RestrictSUIDSGID forbids requesting special mode bits. The managed
+    # parent provides the group; never weaken the service sandbox.
+    directory.mkdir(mode=0o770)  # Existing artifacts are never overwritten or rerun.
     status = initial_status(bundle)
     publish(spool, status)
     deadline = time.monotonic() + config.timeout_seconds
