@@ -6,7 +6,8 @@
 - [x] 1475 tests + 34 subtests; 41 integration corrections; 74 stdout/performance; 17 installer (pārklājas).
 - [x] Read-only dati: TRAIN 583 / VALIDATION 10 / HOLDOUT 345 / PURGED 865; BLOCKED, bez treniņa.
 - [x] Īsa operatora pakotne ar četru PREMATCH maršrutu rollback un aizsargātiem ADMIN/weekly.
-- [ ] Atsevišķa operatora uzstādīšana un dabisko discovery/observer/research ciklu verification.
+- [x] Operators izvietoja 3ad346b 22:13 Riga; 805 moduļi, 4 route/timer un champion pārbaude PASS.
+- [ ] Dabisko discovery/observer/research ciklu verification pēc 22:13 deployment.
 - [ ] De-vig/xG/dynamic-strength pieslēgšana atsevišķā research posmā.
 - Runbook: docs/operations/PREMATCH_QUALITY_20261001.md.
 

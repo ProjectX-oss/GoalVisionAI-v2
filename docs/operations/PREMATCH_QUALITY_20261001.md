@@ -1,7 +1,8 @@
 # PREMATCH Lab kvalitātes pakotne — 2026-10-01
 
-Statuss: koda integrācija, testi un read-only pārbaude PASS. Operatora izvietošana
-un nākamie dabiskie cikli NEEDS_MORE_EVIDENCE. Šī pakotne vēl nav production.
+Statuss: koda integrācija, testi, read-only pārbaude un operatora izvietošana PASS.
+Pakotne izvietota 22:13 Riga. Jaunās versijas dabisko ciklu pārbaude vēl
+NEEDS_MORE_EVIDENCE; iepriekšējie pabeigtie cikli nav šī release runtime pierādījums.
 
 ## Ko pakotne maina
 
@@ -94,7 +95,7 @@ SINGLE kohortā noslēgušās tikai 3 likmes (2 W / 1 L; -0.32u); 23 vēl pendin
 | --- | --- |
 | INVALID_MODEL_PROBABILITY | PASS iepriekš izpētītajiem 63 incidentiem: provider raw 0%, ne Decimal bugs; rejection saglabājas bez clamp. |
 | Readiness | Kods PASS; svaigie dati BLOCKED; nākamais dabiskais research attempt vēl jāpārbauda pēc deploy. |
-| Performance snapshot | Kods, accounting un read-only snapshot PASS; runtime pieslēgums gaida deploy. |
+| Performance snapshot | Kods, accounting un read-only snapshot PASS; maršruti izvietoti, nākamā dabiskā cikla evidence vēl vajadzīga. |
 | Accuracy-first | Saderība un quality gates PASS testos; forward kvalitāte NEEDS_MORE_EVIDENCE. |
 | Lead time / odds age | Diagnostika PASS; publikācijas laika sliekšņi nemainās. |
 | Current-odds de-vig | Sagatavots atsevišķajā research zarā, šajā paketē nav aktivizēts. |
@@ -173,7 +174,33 @@ ADMIN, weekly un neaktīvā vecā discovery maršruti ir aizsargāti ar salīdzi
 5. Tikai pēc tam turpināt atsevišķo research comparatoru pieslēgšanu.
 
 Git zars: fix/prematch-quality-20261001. Pakotnes metadata.json satur pilno source
-commit. Nav push, merge, deploy, champion maiņas vai manuālu provider/send darbību.
+commit. Nav push, merge, champion maiņas vai manuālu provider/send darbību.
+Deploy operators veica ar atsevišķo --apply komandu; šī pārbaude bija read-only.
+
+## Operatora deployment pārbaudīts — 22:14 Riga
+
+Operators uzlika source commit 3ad346b29a2c9ee96291199d13c11c6f7fc1538f
+22:13:21 Europe/Riga. Aktīvais release:
+/opt/goalvision-prematch-quality-3ad346b-20261001.
+
+Read-only pārbaudē PASS: visu 805 Python moduļu SHA-256, release.env precīzais
+saturs, četru drop-in baiti un četru effective EnvironmentFiles maršruti.
+ExecStart/WorkingDirectory/User/Group un aizsargātie ADMIN/weekly/vecā discovery
+maršruti sakrīt ar sagatavoto snapshot. Visi četri taimeri ir active/waiting.
+PREMATCH champion fingerprint sakrīt ar pirms-deploy projekciju; holdout_results
+joprojām ir 0 un learning_cycles skaits 3.
+
+| Nākamais dabiskais darbs | Europe/Riga |
+| --- | --- |
+| Settlement | 1. oktobrī 22:15 |
+| Discovery | 1. oktobrī 22:30 |
+| Observer | 1. oktobrī 22:38 |
+| Research | 2. oktobrī 05:12 |
+
+Pārbaudes brīdī visi pēdējie service exit=0 bija pirms deployment; tos nevar
+uzskatīt par jaunās pakotnes execution pierādījumu. No verifikācijas nav veikts
+service start/stop, manuāls cikls, provider pieprasījums vai Telegram sūtījums.
+Evidence: docs/evidence/prematch_quality_20261001/deployment.json.
 
 ## Mainītie application faili
 

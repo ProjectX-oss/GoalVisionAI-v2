@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "scope": "Operator deployment integrity/routes/timers; natural runtime still requires post-deployment evidence",
+  "verified_at_riga": "2026-10-01T22:14:08.781636+03:00",
+  "source_commit": "3ad346b29a2c9ee96291199d13c11c6f7fc1538f",
+  "release": "/opt/goalvision-prematch-quality-3ad346b-20261001",
+  "python_modules_verified": 805,
+  "release_environment_exact": true,
+  "all_four_dropins_exact": true,
+  "all_four_effective_routes_match": true,
+  "protected_routes_unchanged": true,
+  "configured_commands_unchanged": true,
+  "dropin_installed_at_riga": {
+    "goalvision-lab-v2-discover.service": "2026-10-01T22:13:21.030257+03:00",
+    "goalvision-adaptive-learning-observer.service": "2026-10-01T22:13:21.033257+03:00",
+    "goalvision-lab-combo-settle.service": "2026-10-01T22:13:21.035257+03:00",
+    "goalvision-adaptive-learning.service": "2026-10-01T22:13:21.037257+03:00"
+  },
+  "states": {
+    "goalvision-lab-v2-discover.service": {
+      "Id": "goalvision-lab-v2-discover.service",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ExecMainStartTimestamp": "Thu 2026-10-01 21:00:01 CEST",
+      "ExecMainExitTimestamp": "Thu 2026-10-01 21:00:55 CEST"
+    },
+    "goalvision-adaptive-learning-observer.service": {
+      "Id": "goalvision-adaptive-learning-observer.service",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ExecMainStartTimestamp": "Thu 2026-10-01 21:08:01 CEST",
+      "ExecMainExitTimestamp": "Thu 2026-10-01 21:08:41 CEST"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "Id": "goalvision-lab-combo-settle.service",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ExecMainStartTimestamp": "Thu 2026-10-01 21:05:01 CEST",
+      "ExecMainExitTimestamp": "Thu 2026-10-01 21:05:44 CEST"
+    },
+    "goalvision-adaptive-learning.service": {
+      "Id": "goalvision-adaptive-learning.service",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "ExecMainStartTimestamp": "Thu 2026-10-01 04:12:01 CEST",
+      "ExecMainExitTimestamp": "Thu 2026-10-01 04:12:01 CEST"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "Id": "goalvision-lab-v2-discover.timer",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "NextElapseUSecRealtime": "Thu 2026-10-01 21:30:00 CEST",
+      "LastTriggerUSec": "Thu 2026-10-01 21:00:01 CEST"
+    },
+    "goalvision-adaptive-learning-observer.timer": {
+      "Id": "goalvision-adaptive-learning-observer.timer",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "NextElapseUSecRealtime": "Thu 2026-10-01 21:38:00 CEST",
+      "LastTriggerUSec": "Thu 2026-10-01 21:08:01 CEST"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "Id": "goalvision-lab-combo-settle.timer",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "NextElapseUSecRealtime": "Thu 2026-10-01 21:15:00 CEST",
+      "LastTriggerUSec": "Thu 2026-10-01 21:05:01 CEST"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "Id": "goalvision-adaptive-learning.timer",
+      "ActiveState": "active",
+      "SubState": "waiting",
+      "NextElapseUSecRealtime": "Fri 2026-10-02 04:12:00 CEST",
+      "LastTriggerUSec": "Thu 2026-10-01 04:12:01 CEST"
+    }
+  },
+  "provider_calls": 0,
+  "test_sends": 0,
+  "manual_cycles": 0,
+  "production_controls_by_verification": 0,
+  "champion_unchanged": true,
+  "adaptive_readback": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "champion_fingerprint": "56498b2c53657b8ad66a016c91a91a51b6dd640a5d364d2f615171775188fe11",
+    "holdout_results_count": 0,
+    "learning_cycles_count": 3
+  },
+  "next_scheduled_riga": {
+    "settlement": "2026-10-01T22:15:00+03:00",
+    "discovery": "2026-10-01T22:30:00+03:00",
+    "observer": "2026-10-01T22:38:00+03:00",
+    "research": "2026-10-02T05:12:00+03:00"
+  }
+}
