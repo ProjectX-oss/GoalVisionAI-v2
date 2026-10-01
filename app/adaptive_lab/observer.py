@@ -30,7 +30,8 @@ def observe(repository: object, ledger: object, *, now: datetime) -> dict:
             coordinator.governance.settle_shadow_result(pred['prediction_id'],payload,now=now)
     import_canonical(repository, now=now)
     state=coordinator.after_settlement('PREMATCH',now=now,train=False)
-    value={'created_at':utc(now).isoformat(),'stream':'PREMATCH','linkage':linkage,
+    from .performance import performance_snapshot
+    value={'PERFORMANCE':performance_snapshot(ledger,now=now),'created_at':utc(now).isoformat(),'stream':'PREMATCH','linkage':linkage,
            'state':state,'metrics':metrics(repository.all('learning_observations','PREMATCH'),'PREMATCH'),
            'LIVE':'DISABLED','api_calls':0,'telegram_sends':0,'heavy_training':False}
     repository.append('observer_runs',digest(value),'PREMATCH',value,value['created_at'])

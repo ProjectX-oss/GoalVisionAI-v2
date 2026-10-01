@@ -285,11 +285,13 @@ def test_health_status_exposes_current_single_and_combo_performance(tmp_path, mo
     for value in ('WON','LOST','VOID',None):ledger.add('single-'+str(value),status=value)
     for value in ('WON','LOST','VOID',None):ledger.add('combo-'+str(value),combo=True,status=value)
     result=status(repo,ledger,tmp_path/'absent.db',now=riga('2026-09-20T22:00'))
-    assert result['PERFORMANCE']['SINGLE']=={
+    assert {k:result['PERFORMANCE']['SINGLE'][k] for k in ('WON','LOST','VOID','flat_unit_pnl','roi','pending_settlements')}=={
         'WON':1,'LOST':1,'VOID':1,'flat_unit_pnl':'0','roi':'0','pending_settlements':1}
-    assert result['PERFORMANCE']['COMBO']=={
+    assert {k:result['PERFORMANCE']['COMBO'][k] for k in ('WON','LOST','VOID','PARTIAL_VOID','flat_unit_pnl','roi','pending_settlements')}=={
         'WON':1,'LOST':1,'VOID':1,'PARTIAL_VOID':0,'flat_unit_pnl':'2',
         'roi':str(Decimal(2)/3),'pending_settlements':1}
+    assert result['PERFORMANCE']['SINGLE']['total_settled']==3
+    assert result['PERFORMANCE']['SINGLE']['average_odds']=='2'
     assert result['raw_product_statistics']['pending']==1
     assert result['COMBO']['pending']==1
 

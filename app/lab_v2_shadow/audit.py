@@ -129,7 +129,25 @@ def settled_loss_postmortems(ledger_path: Path, analysis_path: Path) -> list[dic
         )]
         results = []
         for settled in losses:
-            prediction = predictions[settled["prediction_id"]]
+            prediction = predictions.get(settled["prediction_id"])
+            if prediction is None:
+                results.append({"prediction_id": settled["prediction_id"],
+                                "status": "FROZEN_PREDICTION_MISSING"})
+                continue
+            if "evaluated_at_utc" not in prediction:
+                # V2 has retained decision evidence, not a V1 intelligence snapshot.
+                results.append({"prediction_id": settled["prediction_id"],
+                    "status": "FROZEN_V2_EVIDENCE_NO_RETROSPECTIVE_REPLAY",
+                    "fixture_id": prediction.get("fixture_id"), "market": prediction.get("market"),
+                    "odds": prediction.get("captured_odds"), "outcome": settled["status"],
+                    "probability": prediction.get("ensemble_probability"),
+                    "expected_value": prediction.get("expected_value"),
+                    "model_generation": prediction.get("model_generation"),
+                    "calibration_status": prediction.get("calibration_status"),
+                    "missing_features": prediction.get("missing_features"),
+                    "source_rejection_reasons": prediction.get("rejection_reasons"),
+                    "accuracy_publication_review": prediction.get("accuracy_publication_review")})
+                continue
             evaluated = datetime.fromisoformat(prediction["evaluated_at_utc"])
             snapshot = _snapshot(analysis, prediction.get("snapshot_id"))
             fields = {item["name"]: item.get("value") for item in snapshot.get("fields", ())}
