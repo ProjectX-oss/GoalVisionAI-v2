@@ -103,21 +103,27 @@ def snapshot(source: Path, destination: Path) -> None:
         raise ValueError('INVALID_SOURCE_REPO')
     clone = ['git','-c','safe.directory='+str(common),'-c','core.hooksPath=/dev/null',
              '-c','protocol.allow=never','-c','protocol.file.allow=always',
-             'clone','--bare','--local','--no-hardlinks','--dissociate',
-             str(common),str(destination)]
-    subprocess.run(clone, check=True, env=env, stdout=subprocess.DEVNULL,
-                   stderr=subprocess.PIPE, text=True)
-    subprocess.run(['git','--git-dir='+str(destination),'remote','remove','origin'],
-                   check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-    branch='refs/heads/goalvision-reviewed-source'
-    subprocess.run(['git','--git-dir='+str(destination),'update-ref',branch,commit],
-                   check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-    subprocess.run(['git','--git-dir='+str(destination),'symbolic-ref','HEAD',branch],
-                   check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-    actual = subprocess.check_output(['git','--git-dir='+str(destination),'rev-parse','HEAD'],
-                                     env=env).decode().strip()
-    if actual != commit:
-        raise ValueError('SOURCE_SNAPSHOT_COMMIT_MISMATCH')
+             'clone','--bare','--no-local',str(common),str(destination)]
+    try:
+        result = subprocess.run(clone, check=False, env=env, stdout=subprocess.DEVNULL,
+                                stderr=subprocess.PIPE, text=True)
+        if result.returncode:
+            detail = ' '.join((result.stderr or '').strip().splitlines())[:500] or 'NO_STDERR'
+            raise ValueError('SOURCE_SNAPSHOT_CLONE_FAILED:'+detail)
+        subprocess.run(['git','--git-dir='+str(destination),'remote','remove','origin'],
+                       check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        branch='refs/heads/goalvision-reviewed-source'
+        subprocess.run(['git','--git-dir='+str(destination),'update-ref',branch,commit],
+                       check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        subprocess.run(['git','--git-dir='+str(destination),'symbolic-ref','HEAD',branch],
+                       check=True, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        actual = subprocess.check_output(['git','--git-dir='+str(destination),'rev-parse','HEAD'],
+                                         env=env).decode().strip()
+        if actual != commit:
+            raise ValueError('SOURCE_SNAPSHOT_COMMIT_MISMATCH')
+    except BaseException:
+        shutil.rmtree(destination, ignore_errors=True)
+        raise
     for path in (destination, *destination.rglob('*')):
         os.chmod(path, 0o755 if path.is_dir() else 0o644)
 
@@ -226,12 +232,23 @@ def install(args: argparse.Namespace) -> None:
     admin_config_text = ADMIN_CONFIG.read_text()  # Token path only; never open the token.
     admin_config = json.loads(admin_config_text)
     active = subprocess.run(['/usr/bin/systemctl','is-active','--quiet','goalvision-admin-alerts.timer'],check=False).returncode == 0
-    # Prepare all release files while ADMIN/PREMATCH continue running.
-    stage(source, admin_release, source/'operations/admin-alerts/run.py')
-    stage(source, worker_release, source/'operations/admin-autorepair/run.py')
-    sources.mkdir(parents=True)
-    snapshot(args.admin_source, sources/'ADMIN.git')
-    snapshot(args.prematch_source, sources/'PREMATCH.git')
+    # Prepare all release files while ADMIN/PREMATCH continue running. Until the
+    # transaction file exists these paths belong only to this attempt, so clean
+    # them if preparation fails instead of leaving a non-retryable half-release.
+    prepared = (admin_release, worker_release, sources)
+    try:
+        stage(source, admin_release, source/'operations/admin-alerts/run.py')
+        stage(source, worker_release, source/'operations/admin-autorepair/run.py')
+        sources.mkdir(parents=True)
+        snapshot(args.admin_source, sources/'ADMIN.git')
+        snapshot(args.prematch_source, sources/'PREMATCH.git')
+    except BaseException:
+        for path in reversed(prepared):
+            if path.is_symlink():
+                path.unlink(missing_ok=True)
+            elif path.exists():
+                shutil.rmtree(path)
+        raise
     for path in (SPOOL, *(SPOOL/name for name in ('queue','running','status','jobs','done'))):
         if path.is_symlink():
             raise ValueError('SPOOL_SYMLINK')

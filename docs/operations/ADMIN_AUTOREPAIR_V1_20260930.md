@@ -22,9 +22,10 @@ with incident work served first. Operator status cannot change active fault coun
 The worker never imports a sender, reads the ADMIN token or calls Telegram. It
 uses a minimal environment without inherited application credentials. Deployment
 creates root-owned **bare local source snapshots**, not links to producer
-worktrees. Workers clone the configured source HEAD with `--local --no-hardlinks
---dissociate`, check out the recorded commit detached, remove origin and disable
-Git hooks/global config/network protocols. Only local file cloning is allowed.
+worktrees. Workers clone the configured source HEAD with `--no-local` over the explicitly
+allowed local file transport, check out the recorded commit detached, remove origin
+and disable Git hooks/global config/network protocols. This avoids direct local
+object-store copying races while still forbidding network protocols.
 No source mutation, fetch, pull, push, commit or deployment is implemented.
 
 The provided systemd unit runs as `arvis:goalvision-admin-alerts`, with a read-only
@@ -211,8 +212,10 @@ source. Source acceptance/commit is a separate authorized workflow.
 Omit `--enable-autorepair` for a disabled installation. Default preview performs
 no writes or service calls. `--apply` requires root; no automatic sudo escalation.
 The installer refuses an existing v1 transaction/destination rather than silently
-overwriting a prior install. Partial failures leave an explicit transaction for
-rollback/review; do not rerun by deleting the transaction.
+overwriting a prior install. Failures during pre-transaction release/snapshot
+preparation remove only the versioned paths created by that attempt. Failures after
+the transaction is written leave explicit rollback/review state; do not rerun by
+deleting the transaction.
 
 The installer:
 

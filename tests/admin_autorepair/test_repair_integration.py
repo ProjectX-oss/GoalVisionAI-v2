@@ -95,6 +95,65 @@ def test_snapshot_supports_linked_worktree_and_pins_exact_head(tmp_path):
     assert not subprocess.check_output(['git','--git-dir='+str(snapshot),'remote']).strip()
 
 
+def test_snapshot_clone_failure_is_diagnostic_and_cleans_destination(tmp_path, monkeypatch):
+    module = installer()
+    repo = tmp_path/'repo'
+    snapshot = tmp_path/'snapshot.git'
+    repo.mkdir()
+    subprocess.run(['git','-C',str(repo),'init','-q'],check=True)
+    (repo/'code.py').write_text('VALUE = 1\n')
+    subprocess.run(['git','-C',str(repo),'add','code.py'],check=True)
+    subprocess.run(['git','-C',str(repo),'-c','user.name=Test','-c','user.email=test@invalid',
+                    'commit','-qm','base'],check=True)
+    real_run = subprocess.run
+
+    def fail_clone(argv, **kwargs):
+        if 'clone' in argv:
+            assert '--no-local' in argv
+            snapshot.mkdir()
+            return subprocess.CompletedProcess(argv, 128, stderr='fatal: simulated snapshot race\n')
+        return real_run(argv, **kwargs)
+
+    monkeypatch.setattr(module.subprocess, 'run', fail_clone)
+    with pytest.raises(ValueError, match='SOURCE_SNAPSHOT_CLONE_FAILED:fatal: simulated snapshot race'):
+        module.snapshot(repo.resolve(), snapshot)
+    assert not snapshot.exists()
+
+
+def test_pretransaction_failure_cleans_only_attempt_releases(tmp_path, monkeypatch):
+    module = installer()
+    for name in ('TRANSACTION','WORKER_CONFIG','OVERRIDE','WORKER_LINK','ADMIN_RELEASES',
+                 'WORKER_RELEASES','SOURCE_RELEASES','UNIT_ROOT','SPOOL'):
+        monkeypatch.setattr(module, name, tmp_path/name)
+    module.UNIT_ROOT.mkdir()
+    monkeypatch.setattr(module, 'ADMIN_CONFIG', tmp_path/'admin.json')
+    module.ADMIN_CONFIG.write_text('{}')
+    monkeypatch.setattr(module.pwd, 'getpwnam', lambda _: SimpleNamespace(pw_uid=123))
+    monkeypatch.setattr(module.grp, 'getgrnam', lambda _: SimpleNamespace(gr_gid=123))
+    monkeypatch.setattr(module.subprocess, 'run',
+                        lambda argv, **kwargs: subprocess.CompletedProcess(argv, 0))
+    monkeypatch.setattr(module, 'stage',
+                        lambda source, destination, runner: destination.mkdir(parents=True))
+
+    def fail_snapshot(source, destination):
+        destination.mkdir(parents=True)
+        raise ValueError('SNAPSHOT_PREP_FAILURE')
+
+    monkeypatch.setattr(module, 'snapshot', fail_snapshot)
+    source = tmp_path/'source'
+    source.mkdir()
+    args = SimpleNamespace(source=source, release='r3-fixture',
+                           admin_source=tmp_path/'admin-source',
+                           prematch_source=tmp_path/'prematch-source',
+                           enable_autorepair=False)
+    with pytest.raises(ValueError, match='SNAPSHOT_PREP_FAILURE'):
+        module.install(args)
+    assert not (module.ADMIN_RELEASES/'r3-fixture').exists()
+    assert not (module.WORKER_RELEASES/'r3-fixture').exists()
+    assert not (module.SOURCE_RELEASES/'r3-fixture').exists()
+    assert not module.TRANSACTION.exists()
+
+
 def test_units_have_readonly_sources_hidden_credentials_and_singleton():
     service=Path('operations/admin-autorepair/goalvision-admin-autorepair.service').read_text()
     timer=Path('operations/admin-autorepair/goalvision-admin-autorepair.timer').read_text()
