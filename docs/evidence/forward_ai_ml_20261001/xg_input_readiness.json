@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-10-01T14:13:54.873062+00:00",
+  "source_read_only": true,
+  "provider_calls": 0,
+  "cmi_snapshot_count": 423,
+  "latest_snapshot_at": "2026-09-15T14:30:41.448839+00:00",
+  "latest_25_with_xg": 0,
+  "status": "BLOCKED",
+  "reason": "NO_FRESH_GENUINE_XG_CONTEXT",
+  "synthetic_fallback_used": false
+}
