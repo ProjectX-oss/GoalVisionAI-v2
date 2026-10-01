@@ -1,8 +1,8 @@
 # PREMATCH Lab: same-day discovery and publication — 2026-10-01
 
-Status: root cause and offline regression PASS.
-Deployment requires the operator's separate authorization.
-Natural runtime verification remains NEEDS_MORE_EVIDENCE until deployment.
+Status: root cause, 525 offline regressions and operator deployment PASS.
+Natural runtime verification remains NEEDS_MORE_EVIDENCE until the first
+post-deployment scheduled cycle.
 
 ## Root cause and observations
 
@@ -103,6 +103,25 @@ timer. There is no kill or manual service start. Monitor, AutoRepair, settlement
 observer, research and weekly-statistics routes are checked unchanged.
 Any transaction failure restores the prior discovery route and timer state.
 Rollback removes only this package's drop-in and restores the previous release.
+
+## Operator deployment verification
+
+The operator deployed f5d79683dda72067fc5fae5a02f2db4cf38497d0 on 1 October at
+20:53:19 Europe/Riga (drop-in modification time). Verification at 20:54 Riga
+passed the full Python-tree hashes, exact release environment, drop-in bytes
+and effective discovery EnvironmentFiles route.
+
+Active release: /opt/goalvision-prematch-today-scope-f5d7968-20261001.
+Both GOALVISION_LAB_TODAY_ONLY=1 and GOALVISION_LAB_ACCURACY_COMBOS=1 are present.
+All protected service routes match the pre-deployment snapshot.
+
+The discovery timer is active/waiting. Its next scheduled run is 21:00 Riga
+(the server displays this as 20:00 CEST). The last completed cycle was the
+20:30 Riga run, before deployment; its exit 0 is not evidence for the new scope.
+The first natural TODAY_RIGA cycle and any new publication receipt dates
+remain NEEDS_MORE_EVIDENCE. No cycle was forced and no test message was sent.
+
+Deployment evidence: docs/evidence/prematch_today_scope_20261001/deployment.json.
 
 ## Changed files and limitations
 

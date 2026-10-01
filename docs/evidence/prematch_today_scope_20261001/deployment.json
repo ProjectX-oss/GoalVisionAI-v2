@@ -1,0 +1,37 @@
+{
+  "accuracy_combos_enabled": true,
+  "checked_at": "2026-10-01T20:54:40.117615+03:00",
+  "deployment_status": "PASS",
+  "discovery_release": "/opt/goalvision-prematch-today-scope-f5d7968-20261001",
+  "dropin": "PASS",
+  "effective_route": "PASS",
+  "environment": "PASS",
+  "forced_cycles": 0,
+  "full_python_tree_hashes": "PASS",
+  "installed_at_from_dropin_mtime": "2026-10-01T20:53:19.872436+03:00",
+  "last_observed_cycle_started_before_deployment": true,
+  "manual_provider_calls": 0,
+  "natural_cycle_status": "NEEDS_MORE_EVIDENCE",
+  "next_scheduled_cycle_riga": "2026-10-01T21:00:00+03:00",
+  "protected_routes_unchanged": true,
+  "source_commit": "f5d79683dda72067fc5fae5a02f2db4cf38497d0",
+  "test_telegram_sends": 0,
+  "today_only_enabled": true,
+  "units": {
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-today-scope-f5d7968-20261001/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Thu 2026-10-01 19:37:20 CEST",
+      "ExecMainStartTimestamp": "Thu 2026-10-01 19:30:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Thu 2026-10-01 20:00:00 CEST",
+      "Result": "success",
+      "SubState": "waiting"
+    }
+  }
+}
