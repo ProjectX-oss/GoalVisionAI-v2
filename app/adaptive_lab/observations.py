@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import json
 import sqlite3
+import time
 from typing import Protocol
 from .contracts import MARKETS, digest, number, side, stream_name, utc
 from .repository import AuditRepository
@@ -15,11 +16,34 @@ class EvidenceReader(Protocol):
 
 
 class ReadOnlyLedger:
-    """A consistent SQLite read transaction; never instantiates a migrating writer."""
-    def __init__(self, path: Path) -> None:
-        self.connection = sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)
-        self.connection.execute('PRAGMA query_only=ON')
-        self.connection.execute('BEGIN')
+    """A bounded private snapshot; source readers never span observer computation."""
+    def __init__(self, path: Path, *, snapshot_timeout: float = 5.0,
+                 max_snapshot_bytes: int = 256 * 1024 * 1024) -> None:
+        if snapshot_timeout <= 0 or max_snapshot_bytes <= 0:
+            raise ValueError('INVALID_SOURCE_SNAPSHOT_LIMIT')
+        snapshot = sqlite3.connect(':memory:', isolation_level=None)
+        source = None
+        deadline = time.monotonic() + snapshot_timeout
+        try:
+            source = sqlite3.connect(path.resolve().as_uri() + '?mode=ro',
+                                     uri=True, isolation_level=None, timeout=.1)
+            source.execute('PRAGMA query_only=ON')
+            page_size = source.execute('PRAGMA page_size').fetchone()[0]
+            def progress(status: int, remaining: int, total: int) -> None:
+                if total * page_size > max_snapshot_bytes:
+                    raise ValueError('SOURCE_SNAPSHOT_TOO_LARGE')
+                if time.monotonic() >= deadline:
+                    raise ValueError('SOURCE_SNAPSHOT_TIMEOUT')
+            progress(0, 0, source.execute('PRAGMA page_count').fetchone()[0])
+            source.backup(snapshot, pages=128, progress=progress, sleep=.01)
+            snapshot.execute('PRAGMA query_only=ON')
+        except BaseException:
+            snapshot.close()
+            raise
+        finally:
+            if source is not None:
+                source.close()
+        self.connection = snapshot
 
     def get(self, kind: str, identity: str) -> dict | None:
         row = self.connection.execute('SELECT document,fingerprint FROM evidence WHERE kind=? AND identity=?',
