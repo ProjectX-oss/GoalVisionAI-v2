@@ -1,3 +1,14 @@
+## 2026-10-01 — Protect current-odds page budget
+
+- [x] Trace three-page starvation to the priority analysis reservation.
+- [x] Protect up to 32 page attempts inside the existing adaptive cycle cap.
+- [x] Verify three-day sweep, restart gaps, low quota and unrelated delivery gates.
+- [x] Prepare discovery-only immutable upgrade with tested rollback and drain refusal.
+- [x] Network-blocked regression: 286 passed; no manual provider or Telegram calls.
+- [ ] Operator installation and naturally scheduled runtime verification.
+- Runbook: `docs/operations/PREMATCH_ODDS_PAGE_BUDGET_20261001.md`.
+- Ledger read-lock contention and AutoRepair startup remain separate known issues.
+
 ## 2026-09-27 — PREMATCH shared quota lock hardening
 
 - [x] Audit the exact failed invocation and every shared-audit writer boundary.

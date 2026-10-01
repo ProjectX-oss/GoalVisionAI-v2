@@ -140,7 +140,8 @@ def test_250_mixed_fixtures_retain_states_under_pagination_limit(tmp_path,monkey
     assert len({r['competition_profile'] for r in repo.all('global_fixture_state')})>5
     assert sum(r['odds_retryable'] for r in repo.all('global_fixture_state')) >= 230
     assert report['model_analysis_attempts'] == 250
-    assert report['current_odds_fixtures'] == 9  # bounded exact retries recover eight missing quotes
+    assert report['current_odds_fixtures'] == 7  # two calls now fund broader pages; six exact recoveries
+    assert report['odds_pagination']['page_calls'] == 4
     assert report['fixtures_rejected_for_stale_current_odds'] == 1
     repo.close()
 

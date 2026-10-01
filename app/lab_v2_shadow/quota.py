@@ -18,6 +18,23 @@ MINIMUM_ENRICHMENT_CALLS = 12
 DISCOVERY_CYCLES_PER_DAY_30_MINUTES = 28
 RIGA = ZoneInfo("Europe/Riga")
 PRIORITY_EXACT_RETRIES_PER_CYCLE = 20
+ODDS_PROTECTED_PAGE_CALLS = 32
+
+
+def protected_odds_page_calls(remaining: int, days: int, final_review_reserve: int) -> int:
+    """Protect current-price discovery from a large priority analysis backlog.
+
+    Fund up to 32 attempts from a quarter of the remaining cycle budget. At
+    low quota, final review and basic enrichment take precedence. This is an
+    allocation inside the existing cap, not additional provider permission.
+    """
+    if min(remaining, days, final_review_reserve) < 0:
+        raise ValueError('NEGATIVE_ODDS_BUDGET_INPUT')
+    if not days:
+        return 0
+    enrichment = min(MINIMUM_ENRICHMENT_CALLS, remaining // 2)
+    available = max(0, remaining - max(final_review_reserve, enrichment))
+    return min(ODDS_PROTECTED_PAGE_CALLS, max(days, remaining // 4), available)
 
 
 def discovery_cycles_remaining(now: datetime) -> int:

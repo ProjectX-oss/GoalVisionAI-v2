@@ -35,6 +35,7 @@ from .quota import (
     AdaptiveQuotaBudget,
     adaptive_quota_budget,
     projected_daily_usage, discovery_state, PRIORITY_EXACT_RETRIES_PER_CYCLE,
+    protected_odds_page_calls,
 )
 from .repository import ShadowEvidenceRepository
 from .tracking import load_reviews, new_review, restore_fixture
@@ -273,16 +274,21 @@ class LabV2ShadowRunner:
                      'final_review': False, 'response_fingerprint': fingerprint(payload)}, created_at=clock)
         priority = fair_order([item for item in upcoming if is_priority(item)],
                               self.repository, phase="priority_odds")
-        # Reserve analysis before date pagination can exhaust the cycle. Shared
-        # league history and provider prediction each cost at most one first call;
-        # exact misses are bounded separately and provider retries share the cap.
-        priority_reserve = min(max(0, self._remaining() - len(days)), len(priority) * 3)
+        # A priority backlog must not consume the entire price-discovery budget.
+        # Due exact reviews have already run; preserve their remaining reserve
+        # while funding pagination before further prediction/context requests.
         odds_discovery_final_review_reserve = min(
             _final_review_call_reserve(upcoming, clock), self._remaining() // 4)
+        odds_days = [] if near_only or not upcoming else days
+        protected_pages = protected_odds_page_calls(
+            self._remaining(), len(odds_days), odds_discovery_final_review_reserve)
+        priority_reserve = min(max(0, self._remaining() - protected_pages), len(priority) * 3)
         odds_evidence, odds_page_report = await self._date_odds(
-            [] if near_only or not upcoming else days, upcoming, clock, reserve_calls=max(priority_reserve, odds_discovery_final_review_reserve),
+            odds_days, upcoming, clock, reserve_calls=max(priority_reserve, odds_discovery_final_review_reserve),
             tracked_fixture_ids=frozenset(tracked_ids), priority_reserve=priority_reserve,
         )
+        odds_page_report['protected_page_call_allowance'] = protected_pages
+        odds_page_report['priority_analysis_reserve'] = priority_reserve
         odds_evidence.update(exact_evidence)
         histories, adapters, api_predictions = {}, {}, {}
         history_budget_skips = prediction_budget_skips = 0
