@@ -1,7 +1,8 @@
 # ADMIN stdout rotation and worker startup — 2026-10-01
 
 Status: deployment, stdout readback and natural monitor execution PASS.
-Full Auto-Repair execution BLOCKED by the newly exposed source-clone failure.
+The source-clone follow-up is now deployed; full Auto-Repair execution still
+NEEDS_MORE_EVIDENCE until a new legitimate job occurs.
 
 ## Findings
 
@@ -85,7 +86,7 @@ Natural worker jobs now create job artifacts and record the reviewed source HEAD
 Three observed jobs terminate with WORKER_ERROR, sequence 3, before any clone or
 Codex invocation artifact. Their exact old clone command reproduces Git's
 dubious-ownership rejection against the root-owned reviewed snapshot.
-This is a separate blocker, addressed by the prepared worker-only follow-up:
+This separate blocker is addressed by the operator-deployed worker-only follow-up:
 docs/operations/ADMIN_WORKER_CLONE_20261001.md.
 
 Deployment evidence: docs/evidence/admin_io_startup_20261001/deployment.json.

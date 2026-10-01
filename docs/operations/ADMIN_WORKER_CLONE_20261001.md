@@ -1,8 +1,7 @@
 # ADMIN worker reviewed-source clone fix — 2026-10-01
 
-Status: root cause reproduced, code and offline validation PASS.
-Production follow-up BLOCKED pending separate operator deployment.
-Natural end-to-end Codex execution still NEEDS_MORE_EVIDENCE.
+Status: root cause, offline validation and operator deployment PASS.
+Natural end-to-end Codex execution still NEEDS_MORE_EVIDENCE: no new job yet.
 
 ## Runtime findings
 
@@ -55,7 +54,7 @@ The established public worker status schema stays unchanged.
 
 Evidence: docs/evidence/admin_worker_clone_20261001/verification.json.
 
-## Prepared operator package
+## Operator package
 
 Package: /home/arvis/goalvision-operations/admin-worker-clone-20261001
 Entry point: /home/arvis/goalvision-operations/admin-clone-fix.py
@@ -83,6 +82,27 @@ No automatic deployment, job retries, manual discovery/research cycles, provider
 calls, Telegram tests, prediction policy changes, Official changes, LIVE enablement
 or champion promotion. After deployment, verify a new legitimate natural worker
 job; preserve the earlier failed-job history.
+
+## Post-deployment verification
+
+Operator deployment completed on 2026-10-01 at 20:34:07 Europe/Riga
+(drop-in modification time). Active worker release:
+ /opt/goalvision-admin-autorepair-releases/admin-worker-clone-eebed21-20261001
+
+Verification at 20:35:27 Europe/Riga passed the complete Python-tree hashes,
+manifest, exact drop-in content and effective WorkingDirectory/ExecStart.
+Monitor and all protected PREMATCH routes match the pre-deployment snapshot.
+Both ADMIN timers are active, service invocations exit 0, and RestrictSUIDSGID=yes
+remains set on both services.
+
+Three scheduled worker invocations after deployment reported IDLE at 20:34:16,
+20:34:47 and 20:35:18. No new job was observed during this window. These results
+prove successful service startup and an empty queue; they do not prove the
+complete clone/Codex/result lifecycle. That remains NEEDS_MORE_EVIDENCE until a
+new legitimate job occurs. Old failed jobs remain historical evidence.
+
+Structured evidence: docs/evidence/admin_worker_clone_20261001/deployment.json.
+No retry, manual job, provider cycle or test message was performed.
 
 ## Changed files
 

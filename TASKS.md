@@ -6,7 +6,7 @@
 - [x] Add bounded failure-phase evidence without leaking arbitrary exception data.
 - [x] 333 tests + 79 subtests PASS; real fixed clone HEAD/independence verification.
 - [x] Prepare worker-only hash-pinned deployment/rollback; monitor/PREMATCH protected.
-- [ ] Separate operator deployment.
+- [x] Operator deployed eebed21; hashes/route/protected routes and natural IDLE checks PASS.
 - [ ] New legitimate natural job completes the full Codex lifecycle.
 - Runbook: docs/operations/ADMIN_WORKER_CLONE_20261001.md.
 
@@ -18,7 +18,7 @@
 - [x] Combine with tested 0770 worker startup fix in an isolated two-service package.
 - [x] 313 tests + 79 subtests and 11 deployment/rollback tests PASS.
 - [x] Operator deploy, stdout readback and natural monitor exit-0 verification.
-- [ ] Full worker lifecycle: new root-owned-source clone blocker; see follow-up below.
+- [ ] Full worker lifecycle: clone fix deployed; awaiting a new legitimate job.
 - Runbook: docs/operations/ADMIN_IO_STARTUP_20261001.md.
 
 ## 2026-09-30 — ADMIN Auto-Repair and operator job status foundation
