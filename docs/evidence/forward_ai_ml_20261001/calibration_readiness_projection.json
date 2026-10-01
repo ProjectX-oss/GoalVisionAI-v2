@@ -1,0 +1,50 @@
+{
+  "as_of": "2026-10-01T14:19:43.599404+00:00",
+  "runtime_attempt": false,
+  "read_only_projection": true,
+  "dataset_readiness": {
+    "status": "RESEARCH_DATASET_NOT_READY",
+    "dataset_fingerprint": "cf28cfdf850a105b3adf475e1fc4df66683aa074039b19cfd86be9dc9777c739",
+    "counts": {
+      "TRAIN": 581,
+      "VALIDATION": 28,
+      "SEALED_HOLDOUT": 327,
+      "PURGED": 807
+    },
+    "required_minimums": {
+      "TRAIN": 1,
+      "VALIDATION": 30,
+      "SEALED_HOLDOUT": 100,
+      "PURGED": 0
+    },
+    "training_contract": {
+      "required_classes": [
+        0,
+        1
+      ],
+      "single_stream": true,
+      "maximum_rows": 20000
+    },
+    "blocked_by": [
+      "VALIDATION_SAMPLE_INSUFFICIENT"
+    ]
+  },
+  "calibration_readiness": {
+    "counts": {
+      "CALIBRATION_FIT": 0,
+      "VALIDATION_EVALUATION": 6,
+      "CALIBRATION_PURGED": 22
+    },
+    "boundary": "2026-09-24T08:36:07.057132+00:00",
+    "embargo_hours": 24,
+    "fingerprint": "6ee3296d52fe54ba9006da1c8c251dd9e80cbe6b71949e003545ff016ac1d092",
+    "status": "CALIBRATION_DATASET_NOT_READY",
+    "blocked_by": [
+      "CALIBRATION_FIT_SAMPLE_INSUFFICIENT",
+      "CALIBRATION_EVALUATION_SAMPLE_INSUFFICIENT",
+      "CALIBRATION_CLASS_DIVERSITY_INSUFFICIENT"
+    ]
+  },
+  "holdout_consumed": false,
+  "research_cycle_consumed": false
+}

@@ -1,7 +1,7 @@
 """Shadow evidence, atomic LAB champion activation and evidence-based rollback."""
 from __future__ import annotations
 from datetime import datetime
-from .contracts import digest, number, stream_name, utc
+from .contracts import digest, learning_source, number, stream_name, utc
 from .comparison import compare
 from .models import predict, validate_artifact
 from .policy import POLICY, eligibility
@@ -117,6 +117,8 @@ class Governance:
     def settle_shadow(self, observation: dict) -> None:
         """Join by immutable opportunity identity and recheck the exact frozen inputs."""
         stream=observation['stream']
+        if not learning_source(observation):
+            return
         for pred in self.repository.all('shadow_predictions',stream):
             if pred['opportunity_key']!=observation['opportunity_key']:
                 continue
@@ -182,6 +184,8 @@ class Governance:
                  if settled['observation_id'] else settled.get('shadow_observation'))
             if row is None or row['observation_fingerprint']!=settled['observation_fingerprint']:
                 raise ValueError('SHADOW_SOURCE_INTEGRITY_FAILURE')
+            if not learning_source(row):
+                continue
             rows.append(row); old.append(pred['champion_probability']); new.append(pred['challenger_probability'])
         days=(max(utc(r['prediction_created_at']) for r in rows)-min(utc(r['prediction_created_at']) for r in rows)).days if rows else 0
         comparison=compare(rows,old,new,minimum=POLICY.shadow_min) if rows else {'passed':False,'blocked_by':['NO_SHADOW_EVIDENCE']}
@@ -189,47 +193,105 @@ class Governance:
                 'observations':[r['observation_id'] for r in rows],
                 'passed':comparison['passed'] and days>=POLICY.shadow_days}
 
-    def promote(self, shadow_id: str, *, now: datetime) -> dict:
+    def recommend_promotion(self, shadow_id: str, *, now: datetime) -> dict:
+        """Read-only evidence recommendation; never activate or create approval."""
+        repo=self.repository
+        run=repo.get('shadow_runs',shadow_id)
+        if not run:
+            raise ValueError('SHADOW_NOT_FOUND')
+        stream=run['stream']
+        current=repo.champion(stream)
+        evidence=self.evidence(shadow_id)
+        holds=[h for h in repo.all('holdout_results',stream) if h['artifact_id']==run['artifact_id']]
+        validation=repo.get('validation_results',digest([run['artifact_id'],'validation'])) or {}
+        artifact=repo.get('model_artifacts',run['artifact_id'])
+        integrity=True
+        try:
+            validate_artifact(artifact)
+        except (ValueError,KeyError,TypeError):
+            integrity=False
+        eligible=eligibility(repo.all('learning_observations',stream),stream,now)
+        hold=holds[0] if len(holds)==1 else {}
+        dataset=repo.get('learning_datasets',hold['dataset_id']) if hold.get('dataset_id') else {}
+        assignments=(dataset or {}).get('assignments',{})
+        calibration=(artifact or {}).get('calibration_evidence',{})
+        calibration_pass=(integrity and (artifact or {}).get('family')=='CALIBRATED_PREMATCH_WRAPPER_V1'
+                          and calibration.get('quality_passed') is True
+                          and calibration.get('dataset_fingerprint')==(dataset or {}).get('dataset_fingerprint')
+                          and hold.get('calibration_quality_passed') is True
+                          and hold.get('calibration_fingerprint')==digest(calibration)
+                          and validation.get('calibration_fingerprint')==digest(calibration)
+                          and validation.get('calibration_quality_passed') is True)
+        gates={'global_evidence':eligible['automatic_eligible'],
+               'research_was_eligible':bool(len(holds)==1 and
+                   (repo.get('learning_cycles',hold['cycle_id']) or {}).get('eligibility',{}).get('resolved',0)>=POLICY.research_min),
+               'dataset_readiness':bool(assignments.get('TRAIN') and
+                   len(assignments.get('VALIDATION',[]))>=POLICY.subgroup_min and
+                   len(assignments.get('SEALED_HOLDOUT',[]))>=POLICY.holdout_min),
+               'calibration_quality':calibration_pass if stream=='PREMATCH' else True,
+               'artifact_integrity':integrity,
+               'validation_passed':validation.get('passed') is True,
+               'holdout_identity':bool(hold.get('observation_ids') and
+                   set(hold['observation_ids'])=={a[0] for a in assignments.get('SEALED_HOLDOUT',[])}),
+               'shadow_evidence':evidence['passed'],
+               'verified_previous_champion':current is not None,
+               'champion_unchanged':bool(current and current['generation_id']==run['champion_generation']),
+               'holdout_passed':bool(len(holds)==1 and hold.get('passed') and hold.get('chronology_verified')
+                                     and hold.get('deterministic_reproduction'))}
+        material={'shadow_id':shadow_id,'stream':stream,'artifact_id':run['artifact_id'],
+                  'champion_generation':(current or {}).get('generation_id'),'gates':gates,
+                  'evidence':evidence,'holdout_fingerprint':digest(hold),
+                  'calibration_fingerprint':digest(calibration),'passed':all(gates.values())}
+        return {**material,'recommendation_id':'recommendation-'+digest(material),
+                'created_at':utc(now).isoformat(),
+                'status':'PROMOTION_RECOMMENDED' if all(gates.values()) else 'PROMOTION_BLOCKED',
+                'blocked_by':sorted(k for k,v in gates.items() if not v)}
+
+    def promote(self, shadow_id: str, *, now: datetime, operator_approval: dict | None = None) -> dict:
+        """Explicit operator action bound to current evidence; no automatic promotion."""
         if isinstance(self.repository, AuditRepository):
-            batch = PreparedAudit(self.repository)
-            result = Governance(batch).promote(shadow_id, now=now)
+            batch=PreparedAudit(self.repository)
+            result=Governance(batch).promote(shadow_id,now=now,operator_approval=operator_approval)
             try:
                 batch.commit()
             except AuditSnapshotChanged:
-                return {'status': 'CONCURRENT_EVIDENCE_CHANGE'}
+                return {'status':'CONCURRENT_EVIDENCE_CHANGE'}
             return result
         repo=self.repository
+        run=repo.get('shadow_runs',shadow_id)
+        if not run:
+            raise ValueError('SHADOW_NOT_FOUND')
+        stream=run['stream']
+        current=repo.champion(stream)
+        if current and current.get('evidence',{}).get('shadow_id')==shadow_id:
+            return current
+        recommendation=self.recommend_promotion(shadow_id,now=now)
+        if not recommendation['passed']:
+            return recommendation
+        if operator_approval is None:
+            return {'status':'PROMOTION_APPROVAL_REQUIRED','recommendation':recommendation}
+        try:
+            valid=(operator_approval.get('action')=='PROMOTE_'+stream+'_CHAMPION'
+                   and operator_approval.get('recommendation_id')==recommendation['recommendation_id']
+                   and isinstance(operator_approval.get('operator'),str)
+                   and bool(operator_approval['operator'].strip())
+                   and 0 <= (utc(now)-utc(operator_approval['approved_at'])).total_seconds() <= 86400)
+        except (ValueError,KeyError,TypeError):
+            valid=False
+        if not valid:
+            return {'status':'PROMOTION_APPROVAL_INVALID','recommendation':recommendation}
+        stamp=utc(now).isoformat()
         with repo.transaction():
-            run=repo.get('shadow_runs',shadow_id)
-            if not run:
-                raise ValueError('SHADOW_NOT_FOUND')
-            stream=run['stream']
-            current=repo.champion(stream)
-            if current and current.get('evidence',{}).get('shadow_id')==shadow_id:
-                return current
-            evidence=self.evidence(shadow_id)
-            holds=[h for h in repo.all('holdout_results',stream) if h['artifact_id']==run['artifact_id']]
-            eligible=eligibility(repo.all('learning_observations',stream),stream,now)
-            gates={'global_evidence':eligible['automatic_eligible'],
-                   'research_was_eligible':bool(len(holds)==1 and
-                       (repo.get('learning_cycles',holds[0]['cycle_id']) or {}).get('eligibility',{}).get('resolved',0)>=POLICY.research_min),
-                   'shadow_evidence':evidence['passed'],
-                   'verified_previous_champion':current is not None,
-                   'champion_unchanged':bool(current and current['generation_id']==run['champion_generation']),
-                   'holdout_passed':len(holds)==1 and holds[0]['passed'] and holds[0]['chronology_verified'] and holds[0]['deterministic_reproduction']}
-            stamp=utc(now).isoformat()
-            gate={'shadow_id':shadow_id,'created_at':stamp,'gates':gates,'evidence':evidence,'passed':all(gates.values())}
+            gate={**recommendation,'operator_approval':operator_approval}
             repo.append('promotion_gates',digest(gate),stream,gate,stamp,shadow_id=shadow_id)
-            if not gate['passed']:
-                return {'status':'PROMOTION_BLOCKED','blocked_by':sorted(k for k,v in gates.items() if not v)}
-            artifact=repo.get('model_artifacts',run['artifact_id'])
-            validate_artifact(artifact)
             for status in ('SHADOW_EVIDENCE_READY','PROMOTION_ELIGIBLE'):
-                event={'artifact_id':run['artifact_id'],'status':status,'created_at':stamp,'gate_fingerprint':digest(gate)}
+                event={'artifact_id':run['artifact_id'],'status':status,'created_at':stamp,
+                       'gate_fingerprint':digest(gate)}
                 repo.append('candidate_events',digest(event),stream,event,stamp,artifact_id=run['artifact_id'])
             return self._activate(stream,run['artifact_id'],current['generation_id'],'PROMOTION',
-                                  {'shadow_id':shadow_id,'promotion_gate':digest(gate),
-                                   'holdout_fingerprint':digest(holds[0]),'shadow_evidence':evidence},stamp)
+                {'shadow_id':shadow_id,'promotion_gate':digest(gate),
+                 'holdout_fingerprint':recommendation['holdout_fingerprint'],
+                 'shadow_evidence':recommendation['evidence'],'operator_approval':operator_approval},stamp)
 
     def _activate(self, stream: str, artifact_id: str, previous: str | None, reason: str,
                   evidence: dict, stamp: str) -> dict:
@@ -292,7 +354,7 @@ class Governance:
                                   'days':span,'selection_ratio':ratio,'previous_selected':old_count,
                                   'champion_selected':new_count,'opportunity_keys':[r['opportunity_key'] for r in monitoring]}
             if not evidence:
-                rows=[r for r in repo.all('learning_observations',stream) if r.get('model_generation')==current['generation_id'] and r['target'] is not None and utc(r['settled_at'])<=utc(now)]
+                rows=[r for r in repo.all('learning_observations',stream) if learning_source(r) and r.get('model_generation')==current['generation_id'] and r['target'] is not None and utc(r['settled_at'])<=utc(now)]
                 days=(max(utc(r['prediction_created_at']) for r in rows)-min(utc(r['prediction_created_at']) for r in rows)).days if rows else 0
                 if len(rows)<POLICY.performance_rollback_min or days<POLICY.performance_rollback_days:
                     return {'status':'INSUFFICIENT_ROLLBACK_EVIDENCE','resolved':len(rows),'days':days}

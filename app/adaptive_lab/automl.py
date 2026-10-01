@@ -80,7 +80,17 @@ class AutoLearner:
         if dataset is None:
             consumed={oid for h in repo.all('holdout_results',stream) for oid in h['observation_ids']}
             dataset=chronological_dataset(rows,stream,now=now,consumed_holdout=consumed)
+        calibration = None
+        if stream == 'PREMATCH':
+            from .calibration_research import split_validation
+            calibration = split_validation(dataset['partitions']['VALIDATION'])
+            if calibration['blocked_by']:
+                return {'status':'CALIBRATION_DATASET_NOT_READY','counts':readiness['counts'],
+                        'calibration_readiness':{k:v for k,v in calibration.items() if k!='partitions'},
+                        'research_cycle_consumed':False,'holdout_consumed':False}
+            dataset['calibration_split'] = {k:v for k,v in calibration.items() if k!='partitions'}
         parts=dataset.pop('partitions')
+        validation_rows = calibration['partitions']['VALIDATION_EVALUATION'] if calibration else parts['VALIDATION']
         cycle_id='cycle-'+digest([stream,dataset['dataset_fingerprint'],POLICY.fingerprint])
         stamp=utc(now).isoformat()
         cycle={'cycle_id':cycle_id,'stream':stream,'created_at':stamp,'eligibility':eligible,
@@ -115,6 +125,19 @@ class AutoLearner:
                     reproduced=train(spec,parts['TRAIN'])
                     if artifact!=reproduced:
                         raise ValueError('DETERMINISTIC_REPRODUCTION_FAILED')
+                    if calibration is not None:
+                        from .calibration_research import research
+                        calibrated = research(artifact,parts['TRAIN'],calibration,
+                                              dataset_fingerprint=dataset['dataset_fingerprint'],now=now)
+                        if calibrated['artifact'] is None:
+                            failure={'status':'REJECTED','reason':'CALIBRATION_QUALITY_NOT_PROVEN',
+                                     'spec_id':spec_id,'calibration_evidence':calibrated['evidence']}
+                            repo.append('training_runs',digest(failure),stream,failure,stamp,spec_id=spec_id)
+                            continue
+                        if calibrated != research(reproduced,parts['TRAIN'],calibration,
+                                                  dataset_fingerprint=dataset['dataset_fingerprint'],now=now):
+                            raise ValueError('CALIBRATION_REPRODUCTION_FAILED')
+                        artifact = calibrated['artifact']
                     run_id='training-'+digest([spec_id,artifact['training_fingerprint']])
                     repo.append('training_runs',run_id,stream,{'run_id':run_id,'status':'TRAINED',
                         'training_fingerprint':artifact['training_fingerprint'],'reproduced':True},stamp,spec_id=spec_id)
@@ -122,12 +145,15 @@ class AutoLearner:
                     repo.append('model_artifacts',aid,stream,artifact,stamp,run_id=run_id)
                     self.event(aid,stream,'CREATED',stamp)
                     self.event(aid,stream,'TRAINED',stamp)
-                    probs=[predict(artifact,r) for r in parts['VALIDATION']]
+                    probs=[predict(artifact,r) for r in validation_rows]
                     if not probs:
                         raise ValueError('VALIDATION_EMPTY')
-                    m=metrics(evaluated(parts['VALIDATION'],probs),stream)
-                    baseline=[number(r['frozen_model_probability']) for r in parts['VALIDATION']]
-                    comparison=compare(parts['VALIDATION'],baseline,probs,minimum=POLICY.subgroup_min)
+                    m=metrics(evaluated(validation_rows,probs),stream)
+                    baseline=[number(r['frozen_model_probability']) for r in validation_rows]
+                    comparison=compare(validation_rows,baseline,probs,minimum=POLICY.subgroup_min)
+                    if calibration is not None:
+                        comparison['calibration_quality_passed']=True
+                        comparison['calibration_fingerprint']=digest(artifact['calibration_evidence'])
                     repo.append('validation_results',digest([aid,'validation']),stream,comparison,stamp,artifact_id=aid)
                     self.event(aid,stream,'VALIDATION_ELIGIBLE' if comparison['passed'] else 'REJECTED',stamp)
                     if comparison['passed']:
@@ -153,6 +179,9 @@ class AutoLearner:
                           cycle_id=cycle_id,artifact_id=aid,created_at=stamp,
                           chronology_verified=True,deterministic_reproduction=True,
                           automatic_eligible=eligible['automatic_eligible'])
+            if calibration is not None:
+                result['calibration_quality_passed']=True
+                result['calibration_fingerprint']=digest(artifact['calibration_evidence'])
             repo.append('holdout_results',digest([cycle_id,aid,'holdout']),stream,result,stamp,artifact_id=aid)
             repo.append('candidate_comparisons',digest([cycle_id,aid,'comparison']),stream,result,stamp,artifact_id=aid)
             if not result['passed']:

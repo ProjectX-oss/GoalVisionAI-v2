@@ -171,6 +171,10 @@ def train(spec: dict, rows: list[dict]) -> dict:
 
 
 def validate_artifact(artifact: dict) -> None:
+    if artifact.get('family') == 'CALIBRATED_PREMATCH_WRAPPER_V1':
+        from .calibration_research import validate
+        validate(artifact)
+        return
     if artifact.get('family') == 'EXISTING_PREMATCH_BASELINE_V1':
         from .baseline import validate
         validate(artifact)
@@ -210,6 +214,9 @@ def validate_artifact(artifact: dict) -> None:
 
 def predict(artifact: dict, row: dict) -> float:
     """One full predictive model per stream; no transport or threshold logic."""
+    if artifact.get("family") == "CALIBRATED_PREMATCH_WRAPPER_V1":
+        from .calibration_research import predict as calibrated_predict
+        return calibrated_predict(artifact,row)
     if artifact.get('family') == 'EXISTING_PREMATCH_BASELINE_V1':
         from .baseline import predict as baseline_predict
         return baseline_predict(artifact,row)

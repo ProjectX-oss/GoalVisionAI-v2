@@ -23,28 +23,49 @@ def baseline(stream):
 
 
 @pytest.mark.parametrize('stream',['PREMATCH','LIVE'])
-def test_full_synthetic_training_shadow_promotion_and_integrity_rollback(repo,stream):
+def test_full_synthetic_training_shadow_promotion_and_integrity_rollback(repo,stream,monkeypatch):
     governance=Governance(repo)
     old=governance.bootstrap(baseline(stream),now=START-timedelta(days=10))
     other='LIVE' if stream=='PREMATCH' else 'PREMATCH'
     untouched=governance.bootstrap(baseline(other),now=START-timedelta(days=10))
-    for i in range(600):
-        p,r,s=frozen(i,stream=stream,outcome='WON' if i%2 else 'LOST')
+    count=2500 if stream=='PREMATCH' else 600
+    if stream=='PREMATCH':
+        import app.adaptive_lab.automl as automl
+        specs=[s for s in candidate_specs(stream) if s['family']=='LOGISTIC' and s['scope']=='GLOBAL' and 'recent_form' in s['features'] and s['l2']==.01 and s['half_life_days']==0][:1]
+        monkeypatch.setattr(automl,'candidate_specs',lambda _: specs)
+    from random import Random
+    rng=Random(47)
+    def outcome(i):
+        if stream=='LIVE':
+            return 'WON' if i%2 else 'LOST'
+        return 'WON' if rng.random() < (.8 if i%2 else .2) else 'LOST'
+    for i in range(count):
+        p,r,s=frozen(i,stream=stream,outcome=outcome(i))
         ingest(repo,p,r,s,stream=stream,publication_id=p['prediction_id'])
-    now=START+timedelta(days=151)
+    now=START+timedelta(hours=count*6+24)
     result=AutoLearner(repo).run(stream,now=now)
-    assert result['status']=='SHADOW_RUNNING',result
+    assert result['status']=='SHADOW_RUNNING',(result,repo.all('training_runs',stream),repo.all('validation_results',stream))
     assert repo.champion(stream)==old
     assert governance.promote(result['shadow_id'],now=now)['status']=='PROMOTION_BLOCKED'
-    for i in range(610,750):
-        p,r,s=frozen(i,stream=stream,outcome='WON' if i%2 else 'LOST')
+    for i in range(count+10,count+150):
+        p,r,s=frozen(i,stream=stream,outcome=outcome(i))
         governance.observe(stream,opportunity(p,stream),now=utc(p['prepared_at_utc']))
         obs=ingest(repo,p,r,s,stream=stream,publication_id=p['prediction_id'])
         governance.settle_shadow(obs)
     evidence=governance.evidence(result['shadow_id'])
     assert evidence['resolved']==140 and evidence['days']>=30 and evidence['passed'],evidence
-    now=START+timedelta(days=190)
-    new=governance.promote(result['shadow_id'],now=now)
+    now=START+timedelta(hours=(count+160)*6)
+    recommendation=governance.recommend_promotion(result['shadow_id'],now=now)
+    assert recommendation['status']=='PROMOTION_RECOMMENDED',recommendation
+    assert governance.promote(result['shadow_id'],now=now)['status']=='PROMOTION_APPROVAL_REQUIRED'
+    approval={'action':'PROMOTE_'+stream+'_CHAMPION','operator':'synthetic-test-operator',
+              'approved_at':now.isoformat(),'recommendation_id':recommendation['recommendation_id']}
+    invalid={**approval,'recommendation_id':'stale-recommendation'}
+    assert governance.promote(result['shadow_id'],now=now,operator_approval=invalid)['status']=='PROMOTION_APPROVAL_INVALID'
+    expired={**approval,'approved_at':(now-timedelta(days=2)).isoformat()}
+    assert governance.promote(result['shadow_id'],now=now,operator_approval=expired)['status']=='PROMOTION_APPROVAL_INVALID'
+    assert repo.champion(stream)==old
+    new=governance.promote(result['shadow_id'],now=now,operator_approval=approval)
     assert new['reason']=='PROMOTION' and new['previous_generation']==old['generation_id']
     assert governance.promote(result['shadow_id'],now=now)==new
     assert repo.champion(other)==untouched
