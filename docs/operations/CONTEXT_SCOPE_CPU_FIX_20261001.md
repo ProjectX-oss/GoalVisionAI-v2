@@ -1,6 +1,13 @@
 # Discovery context CPU root cause and scoped hotfix — 2026-10-01
 
-Status: **PASS in offline verification; runtime NEEDS_MORE_EVIDENCE after separately authorized deployment.**
+Status: **Operator deployment verified at 16:13 UTC; natural runtime cycle NEEDS_MORE_EVIDENCE.**
+
+The operator activated release `goalvision-prematch-context-scope-1a18dc0-20261001`.
+Read-only checks confirmed the entire Python tree, release environment, drop-in,
+loaded discovery route and unchanged protected service routes. The accuracy-combo
+flag is preserved and the timer is active. Next scheduled run: 19:30 Europe/Riga.
+Only the two-file CPU fix is deployed; the wider AI/ML batch remains prepared.
+Deployment evidence: `docs/evidence/forward_ai_ml_20261001/context_scope_deployment.json`.
 
 ## Root cause
 
@@ -56,8 +63,9 @@ including hashes, and pass pinned reproduction.
 - 1498 wider PREMATCH/adaptive/Lab/COMBO tests + 34 subtests PASS (195.03 s).
 - 6 installer tests PASS (0.30 s), including no-kill drain refusal and rollback.
 - Counts overlap; do not sum them as distinct tests.
-- No production service control, manual provider request, Telegram send,
-  champion change, Official change or LIVE enablement was performed.
+- During pre-deployment verification no production service control, manual provider
+  request, Telegram send, champion change, Official change or LIVE enablement occurred.
+  The subsequent operator-approved deployment is recorded above.
 
 Structured evidence: `docs/evidence/forward_ai_ml_20261001/context_scope_cpu_fix.json`.
 

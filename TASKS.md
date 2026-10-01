@@ -5,9 +5,10 @@
 - [x] Detect same/other connection changes, corrupt unrelated sources and interrupted builds.
 - [x] Exact real snapshot replay and 1498 tests + 34 subtests; 6 installer tests.
 - [x] Prepare isolated two-file discovery package with no-kill drain refusal and rollback.
-- [ ] Separate operator deploy approval and natural post-deployment runtime evidence.
+- [x] Operator deploy approval, application hashes, loaded route and timer verified.
+- [ ] Natural post-deployment runtime evidence.
 - Runbook: docs/operations/CONTEXT_SCOPE_CPU_FIX_20261001.md.
-- No production activation, manual provider requests or Telegram sends.
+- Operator activated only the two-file CPU fix; no manual provider requests or Telegram sends.
 
 ## 2026-10-01 — Explicit Lab accuracy COMBO option
 

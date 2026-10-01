@@ -2,7 +2,7 @@
 
 Iziets cauri visiem plāna punktiem. Koda labojumi un research pamats ir sagatavoti atsevišķos Git zaros. Daļai punktu vēl vajag reālu nākamā cikla vai spēļu rezultātu evidence; tie nav marķēti kā production PASS.
 
-**Deploy nav veikts. Official nav mainīts. LIVE paliek DISABLED. Pašreizējais champion nav mainīts. Historical bookmaker odds nav izmantoti. Manuāli provider pieprasījumi un Telegram testa sūtījumi nav veikti.**
+**Operators uzlicis tikai divu failu discovery CPU labojumu `1a18dc0`; tā hashes un route pārbaudīti. Pārējais AI/ML darbu komplekts vēl nav deployots. Official, LIVE un champion nav mainīti. Historical bookmaker odds, manuāli provider pieprasījumi un Telegram testa sūtījumi nav izmantoti.**
 
 ## Statuss pa posmiem
 
@@ -37,7 +37,7 @@ Iziets cauri visiem plāna punktiem. Koda labojumi un research pamats ir sagatav
 
 Precīzo 2106 kandidātu no-send publication replay ar tukšu atmiņas ledger un bez optional context observer aizņēma 3.869 profiled sekundes un sagatavoja trīs COMBO no 118 eligible fixtures. Šis replay neaizstāj dzīvo ledger/adaptive/context stāvokli un nenosaka live aiztures cēloni.
 
-Operators saglabāja live stack diagnostiku 15:27:44–15:27:55 UTC. Abi veiksmīgie paraugi rāda pilnu visu avotu validāciju available_pins ceļā pirms publication. 5594 avoti (91.6 MB) tika atkārtoti pārbaudīti katrai iespējai. Sagatavots viena cutoff avotu indekss ar datu/schema izmaiņu invalidāciju un pilnu sākotnējo validāciju. Reālo datu kopijā atkārtota meklēšana: 7.5567 s → mediāna 0.000093 s; auksta pārbaude joprojām 8.184 s. Trīs saglabāti snapshoti pilnīgi sakrīt pēc atkārtotas izveides. Tas vēl nav end-to-end production ātruma pierādījums. Divu failu discovery pakotne un rollback ir sagatavoti; deploy vajag atsevišķu operatora atļauju. Runbook: docs/operations/CONTEXT_SCOPE_CPU_FIX_20261001.md.
+Operators saglabāja live stack diagnostiku 15:27:44–15:27:55 UTC. Abi veiksmīgie paraugi rāda pilnu visu avotu validāciju available_pins ceļā pirms publication. 5594 avoti (91.6 MB) tika atkārtoti pārbaudīti katrai iespējai. Sagatavots viena cutoff avotu indekss ar datu/schema izmaiņu invalidāciju un pilnu sākotnējo validāciju. Reālo datu kopijā atkārtota meklēšana: 7.5567 s → mediāna 0.000093 s; auksta pārbaude joprojām 8.184 s. Trīs saglabāti snapshoti pilnīgi sakrīt pēc atkārtotas izveides. Tas vēl nav end-to-end production ātruma pierādījums. Operators 19:12 pēc Latvijas laika uzlika divu failu discovery pakotni; kontrolsummas un aktīvais route ir PASS. Nākamais dabiskais cikls paredzēts 19:30; tā runtime pierādījumi vēl jāsaņem. Runbook: docs/operations/CONTEXT_SCOPE_CPU_FIX_20261001.md.
 
 Pilns jaunās COMBO politikas publication → receipt → settlement cikls vēl nav pierādīts. Pirmajā pēc-deploy ciklā kandidātu nebija; CPU cēlonis un offline labojums pierādīti, dabīga pēc-deploy cikla pārbaude vēl vajadzīga.
 
@@ -79,7 +79,7 @@ Komiti ir VPS worktrees; šajā darbā nav veikts push, merge vai deploy.
 
 ## Nākamie nepieciešamie pierādījumi
 
-1. Operatora stack capture ir saņemts, CPU labojums testos PASS. Vajag atsevišķi apstiprināt tā deploy un pārbaudīt dabīgu nākamo ciklu.
+1. CPU labojuma operatora deploy un read-only verifikācija ir PASS. Vajag dabīgā pēc-deploy cikla ātrdarbības un delivery pierādījumus.
 2. Atsevišķi apstiprināts izvēlēto labojumu deploy; sagatavotais kods vēl nav runtime.
 3. Nākamā dabiskā research attempt pārbaude. Taimera nākamais izsaukums ir 2026-10-02 02:12 UTC, bet cooldown var vēl neļaut research cycle.
 4. Turpināt resolved observations vākšanu līdz validation un calibration readiness PASS. Neapiet embargo vai minimumus.

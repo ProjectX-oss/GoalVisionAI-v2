@@ -1,0 +1,16 @@
+{
+  "accuracy_combos_enabled": true,
+  "application_hashes": "PASS",
+  "deployment": "PASS",
+  "discovery_route": "PASS",
+  "natural_post_deploy_cycle": "NEEDS_MORE_EVIDENCE",
+  "next_natural_cycle_riga": "2026-10-01T19:30:00+03:00",
+  "observed_at_utc": "2026-10-01T16:13:55.269315+00:00",
+  "operator_authorization": "Operator manually executed cpu-fix.py --apply and supplied successful deployment output.",
+  "protected_routes_fingerprint": "a43d96597474727dad6ca2bcba283a4670c12793d045351e6aeca0140956c06c",
+  "protected_routes_unchanged": true,
+  "release": "/opt/goalvision-prematch-context-scope-1a18dc0-20261001",
+  "scope": "Two-file discovery CPU fix only; remaining AI/ML batch not deployed.",
+  "source_commit": "1a18dc066316b720667ab30a0e82d569a6533a46",
+  "timer_active": true
+}
