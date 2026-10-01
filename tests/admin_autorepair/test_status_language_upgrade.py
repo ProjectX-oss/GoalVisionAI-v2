@@ -5,10 +5,10 @@ from pathlib import Path
 import pytest
 
 
-@pytest.fixture
-def upgrade(tmp_path, monkeypatch):
+@pytest.fixture(params=['update_status_language.py','update_delivery_cleanup.py'])
+def upgrade(tmp_path, monkeypatch, request):
     spec = importlib.util.spec_from_file_location('status_upgrade',
-        'operations/admin-autorepair/update_status_language.py')
+        'operations/admin-autorepair/'+request.param)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     base = tmp_path/'releases'/'base'
@@ -22,10 +22,10 @@ def upgrade(tmp_path, monkeypatch):
                        '\nExecStart='+str(base/'run.py')+'\n')
     package = tmp_path/'package'
     package.mkdir()
-    (package/'operator_jobs.py').write_text('NEW = 2\n')
+    (package/module.MODULE.name).write_text('NEW = 2\n')
     (package/'update.py').write_text('# fixture updater\n')
     (package/'metadata.json').write_text(json.dumps({
-        'source_commit':'a'*40, 'module_sha256':module.sha(package/'operator_jobs.py'),
+        'source_commit':'a'*40, 'module_sha256':module.sha(package/module.MODULE.name),
         'updater_sha256':module.sha(package/'update.py')}))
     monkeypatch.setattr(module, 'BASE', base)
     monkeypatch.setattr(module, 'OVERRIDE', override)
@@ -91,7 +91,7 @@ def test_route_failure_restores_previous_route_and_timer(upgrade):
 
 def test_package_drift_refused_before_service_control(upgrade):
     module, package, state, calls = upgrade
-    (package/'operator_jobs.py').write_text('TAMPERED = 1\n')
+    (package/module.MODULE.name).write_text('TAMPERED = 1\n')
     with pytest.raises(ValueError, match='PACKAGE_HASH'):
         module.apply(package)
     assert calls == []

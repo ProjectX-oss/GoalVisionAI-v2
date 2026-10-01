@@ -100,6 +100,18 @@ class Store:
             # The false incident remains a terminal tombstone. Future real faults
             # share a separate stable identity, including their receipt recovery.
             signature = digest((signature, 'ADMIN_DELIVERY_AFTER_IDLE_INVALIDATION_V1'))
+        if event.rule == 'DELIVERY_FAILURE':
+            audit = self.db.execute('SELECT evidence,original_incident FROM invalidations WHERE incident=?',
+                                    (signature,)).fetchone()
+            if audit and json.loads(audit['evidence']).get('reason') == 'PRETRANSPORT_REJECTION_NOT_DELIVERY_FAILURE_V1':
+                # Keep the proven false history terminal, but let later genuine
+                # faults and their recovery use a fresh, alertable identity.
+                proofs = json.loads(audit['evidence']).get('health_proofs', [])
+                old_replay = any(event.occurrence == event.source == event.cycle == 'health-'+p['health_id']
+                    and event.observed == p['observed'] and not event.healthy and event.facts == {}
+                    for p in proofs)
+                if not old_replay:
+                    signature = digest((signature, 'DELIVERY_AFTER_PRETRANSPORT_INVALIDATION_V1'))
         # Reuse a legacy source identity only for the same rule and execution.
         # V1.3 never folds independent source rules into one incident.
         if event.invocation != 'UNKNOWN' and event.rule in correlation.EXECUTION_RULES:

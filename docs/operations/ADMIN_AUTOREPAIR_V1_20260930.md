@@ -386,3 +386,28 @@ Existing notification bodies and receipts are not rewritten or replayed.
 PREMATCH, worker configuration/source snapshots, activation baseline and spool
 remain on R4. The narrow release records its new source commit in
 `status-update.json`; worker source refresh remains a separate operation.
+
+
+## Reviewed false delivery retirement — 2026-10-01
+
+Incident `bd52a22acbc330714271ae9a` retained nine old aggregate delivery errors.
+Read-only inspection of all nine immutable PREMATCH cycle-health records proved
+27 `REJECTED_BEFORE_TRANSPORT / SELECTION_ORIGIN_OR_APPROVAL_INVALID` outcomes
+and zero send attempts. R4 corrected new-event classification but did not retire
+the stored incident; the old incident therefore continued 30-minute reminders.
+
+The reviewed cleanup installs a narrow Store recurrence guard, then pauses/drains
+only ADMIN, takes its scan lock and SQLite backup, and rechecks the exact incident
+count/episode/generation, every retained source event and all nine source records.
+Only proven false classification is set to INVALIDATED with immutable original
+incident/outbox snapshots and source hashes. Sent, attempted and uncertain notices
+and receipts remain unchanged. Only unattempted pending reminders are superseded.
+There is no recovery notification or claimed Telegram delivery success.
+
+The guard preserves exact old evidence replays as tombstones; different genuine
+faults (including delayed evidence) and real recovery use a fresh stable identity.
+Do not roll back this guard after retirement: older Store versions would suppress
+that identity permanently. Failure before retirement can use normal route recovery.
+The wrapper `apply_delivery_cleanup.py`, packaged as `apply.py`, is repeatable
+after partial deployment. Use `sudo python3 apply.py --apply`; default is proof-only.
+It never sends a message, changes Lab timers, or writes producer databases.
