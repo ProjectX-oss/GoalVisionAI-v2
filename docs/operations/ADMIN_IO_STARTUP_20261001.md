@@ -1,6 +1,7 @@
 # ADMIN stdout rotation and worker startup — 2026-10-01
 
-Status: PASS in tests; deployment and natural monitoring/worker execution pending.
+Status: deployment, stdout readback and natural monitor execution PASS.
+Full Auto-Repair execution BLOCKED by the newly exposed source-clone failure.
 
 ## Findings
 
@@ -20,8 +21,8 @@ The reader now looks up .1 directly. It drains the saved inode before switching
 to the replacement, retains byte/line limits and explicit lost-inode evidence,
 and keeps real unreadable files degraded. ACLs and account groups are unchanged.
 
-The worker still requests mkdir(02770) before initial status and exception
-handling, under RestrictSUIDSGID=yes. The prepared 0770 change (994bdf8) keeps the
+The former worker requested mkdir(02770) before initial status and exception
+handling, under RestrictSUIDSGID=yes. The now-deployed 0770 change (994bdf8) keeps the
 sandbox intact. The missing job directory and synthetic zero-duration recovery
 status strongly match a pre-status failure; the original syscall trace remains
 unavailable. WORKER_INTERRUPTED is not proof that Codex itself executed.
@@ -72,10 +73,24 @@ routes only; it never rolls back databases or deletes historical evidence.
 
 ## Remaining evidence
 
-A successful deployed readback and next natural ADMIN scan must confirm stdout
-coverage recovery. Actual Auto-Repair execution remains unproven until a new
-legitimate job occurs. The package does not retry old recovered incidents or
-turn a historical generic failure into an unsupported root-cause claim.
+The operator applied both releases at admin-io-startup-0a3e42a-20261001.
+Full Python-tree hashes, manifests, dedicated drop-ins and effective routes PASS.
+Both timers are active; repeated natural monitor invocations finish with exit 0.
+The supplied pure readback reports read_available=true, 17 records, 37,111 bytes.
+ROTATED_INODE_LOST preserves a real historical log gap; it does not mean the
+current log remains unreadable. Current protected incident/source-access state
+has not been independently re-exported, so complete incident recovery is not claimed.
+
+Natural worker jobs now create job artifacts and record the reviewed source HEAD.
+Three observed jobs terminate with WORKER_ERROR, sequence 3, before any clone or
+Codex invocation artifact. Their exact old clone command reproduces Git's
+dubious-ownership rejection against the root-owned reviewed snapshot.
+This is a separate blocker, addressed by the prepared worker-only follow-up:
+docs/operations/ADMIN_WORKER_CLONE_20261001.md.
+
+Deployment evidence: docs/evidence/admin_io_startup_20261001/deployment.json.
+No failed jobs were retried, no manual service cycles or test messages were sent,
+and PREMATCH routes remain unchanged.
 
 Changed files: app/admin_alerts/sources.py; tests/admin_alerts/test_monitor.py;
 operations/admin-autorepair/update_io_startup.py;

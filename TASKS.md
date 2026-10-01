@@ -1,3 +1,15 @@
+## 2026-10-01 — ADMIN worker reviewed-source clone follow-up
+
+- [x] Observe natural post-deploy WORKER_ERROR jobs; preserve prior failed history.
+- [x] Reproduce Git child ownership rejection with the real reviewed source.
+- [x] Scope child trust to that exact source, retain independent disposable clones.
+- [x] Add bounded failure-phase evidence without leaking arbitrary exception data.
+- [x] 333 tests + 79 subtests PASS; real fixed clone HEAD/independence verification.
+- [x] Prepare worker-only hash-pinned deployment/rollback; monitor/PREMATCH protected.
+- [ ] Separate operator deployment.
+- [ ] New legitimate natural job completes the full Codex lifecycle.
+- Runbook: docs/operations/ADMIN_WORKER_CLONE_20261001.md.
+
 ## 2026-10-01 — ADMIN stdout rotation and worker startup
 
 - [x] Read operator-exported incidents: both RECOVERED; current stdout read degraded.
@@ -5,7 +17,8 @@
 - [x] Read explicit .1 predecessor without widening ACLs; preserve gap/read errors.
 - [x] Combine with tested 0770 worker startup fix in an isolated two-service package.
 - [x] 313 tests + 79 subtests and 11 deployment/rollback tests PASS.
-- [ ] Operator deploy and natural monitoring/worker lifecycle verification.
+- [x] Operator deploy, stdout readback and natural monitor exit-0 verification.
+- [ ] Full worker lifecycle: new root-owned-source clone blocker; see follow-up below.
 - Runbook: docs/operations/ADMIN_IO_STARTUP_20261001.md.
 
 ## 2026-09-30 — ADMIN Auto-Repair and operator job status foundation

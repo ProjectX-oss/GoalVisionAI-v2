@@ -29,6 +29,10 @@ SPECS = {
         'args': '',
     },
 }
+RELEASE_PREFIX = 'admin-io-startup'
+STATUS_PREFIX = 'ADMIN_IO_STARTUP'
+UNCHANGED_MESSAGE = 'PREMATCH routes unchanged. No job retry, manual cycle or test message.'
+
 PROTECTED = ('goalvision-lab-v2-discover.service', 'goalvision-lab-combo-settle.service',
              'goalvision-adaptive-learning-observer.service', 'goalvision-adaptive-learning.service',
              'goalvision-lab-weekly-stats.service')
@@ -85,7 +89,7 @@ def validate(package):
             raise ValueError('BASE_MANIFEST_DRIFT')
         if sha(package/'overlay'/name/spec['module']) != meta['files'][name]:
             raise ValueError('OVERLAY_HASH_MISMATCH')
-        targets[name] = base.parent/('admin-io-startup-'+commit[:7]+'-20261001')
+        targets[name] = base.parent/(RELEASE_PREFIX+'-'+commit[:7]+'-20261001')
     return meta, targets
 
 def verify_route(spec, target):
@@ -116,6 +120,9 @@ print(json.dumps({'read_available':'READ_UNAVAILABLE' not in reasons,'records':l
         raise ValueError('ADMIN_STDOUT_READBACK_FAILED')
     return evidence
 
+def post_route(targets):
+    print('ADMIN_STDOUT_READBACK='+json.dumps(readback(targets['monitor']),sort_keys=True))
+
 def stage(package, meta, targets):
     for name, spec in SPECS.items():
         target = targets[name]
@@ -131,7 +138,7 @@ def stage(package, meta, targets):
                             ignore=shutil.ignore_patterns('__pycache__'))
             shutil.copyfile(package/'overlay'/name/spec['module'], temporary/spec['module'])
             atomic(temporary/'manifest.json', (json.dumps(expected, sort_keys=True, indent=2)+'\n').encode())
-            atomic(temporary/'io-startup-package.json', (json.dumps(meta, sort_keys=True)+'\n').encode())
+            atomic(temporary/(RELEASE_PREFIX+'-package.json'), (json.dumps(meta, sort_keys=True)+'\n').encode())
             if tree(temporary) != expected:
                 raise ValueError('STAGE_HASH_MISMATCH')
             os.chmod(temporary, 0o755)
@@ -172,7 +179,7 @@ def route(targets, rollback=False):
         if protected_routes() != protected:
             raise ValueError('PREMATCH_ROUTE_CHANGED')
         if not rollback:
-            print('ADMIN_STDOUT_READBACK='+json.dumps(readback(targets['monitor']),sort_keys=True))
+            post_route(targets)
         for name, spec in SPECS.items():
             if active[name]:
                 control('start', spec['timer'])
@@ -205,7 +212,7 @@ def apply(package, rollback=False):
             verify_route(spec, targets[name])
         stage(package, meta, targets)  # Verify already staged immutable files.
         if not rollback:
-            print('ADMIN_IO_STARTUP_ALREADY_DEPLOYED')
+            print(STATUS_PREFIX+'_ALREADY_DEPLOYED')
             return
     else:
         if rollback:
@@ -214,10 +221,10 @@ def apply(package, rollback=False):
             verify_route(spec, spec['route_base'])
         stage(package, meta, targets)
     route(targets, rollback)
-    print('ADMIN_IO_STARTUP_ROLLBACK=PASS' if rollback else 'ADMIN_IO_STARTUP_DEPLOYED')
+    print(STATUS_PREFIX+'_ROLLBACK=PASS' if rollback else STATUS_PREFIX+'_DEPLOYED')
     for name, target in targets.items():
         print(name+'_release='+str(SPECS[name]['route_base'] if rollback else target))
-    print('PREMATCH routes unchanged. No job retry, manual cycle or test message.')
+    print(UNCHANGED_MESSAGE)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

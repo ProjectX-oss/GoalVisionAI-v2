@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import selectors
+import shlex
 import signal
 import subprocess
 import time
@@ -197,28 +198,41 @@ def execute(config: Config, bundle: dict, worker_lock: int) -> dict:
     publish(spool, status)
     deadline = time.monotonic() + config.timeout_seconds
     timed_out = False
+    phase = 'INCIDENT_WRITE'
     try:
         atomic_json(directory / 'incident.json', bundle)
         prompt = PROMPT + json.dumps(bundle, sort_keys=True, indent=2) + '\n'
         (directory / 'prompt.txt').write_text(prompt)
+        phase = 'SOURCE_HEAD'
         source = Path(config.source_repos[bundle['target']]).resolve()
         commit = git(source, 'rev-parse', '--verify', 'HEAD').decode().strip()
         if len(commit) not in (40, 64) or any(c not in '0123456789abcdef' for c in commit):
             raise ValueError('INVALID_SOURCE_HEAD')
         status['source_commit'] = commit
         publish(spool, status)
+        phase = 'SOURCE_CLONE'
         clone = directory / 'clone'
-        git(directory, '-c', 'safe.directory='+str(source), '-c', 'protocol.file.allow=always', 'clone', '--local', '--no-hardlinks',
-            '--no-checkout', '--no-recurse-submodules', '--dissociate', str(source), str(clone), timeout=min(55, max(.01, deadline-time.monotonic())))
+        # Git clears command-line repository trust before spawning upload-pack.
+        # The reviewed snapshot is root-owned: trust only that exact source in
+        # the child as well, and copy objects through the local file transport.
+        upload_pack = shlex.join(['/usr/bin/git', '-c', 'safe.directory='+str(source),
+            '-c', 'core.hooksPath=/dev/null', '-c', 'core.fsmonitor=false', 'upload-pack'])
+        git(directory, '-c', 'safe.directory='+str(source), '-c', 'protocol.file.allow=always',
+            'clone', '--no-local', '--upload-pack='+upload_pack, '--no-hardlinks',
+            '--no-checkout', '--no-recurse-submodules', '--dissociate', str(source), str(clone),
+            timeout=min(55, max(.01, deadline-time.monotonic())))
         publish(spool, status)
+        phase = 'CLONE_CHECKOUT'
         git(clone, 'remote', 'remove', 'origin')
         git(clone, 'checkout', '--detach', commit)
         publish(spool, status)
         before = tree_fingerprint(clone)
         index_before = git(clone, 'ls-files', '--stage', '-z')
         atomic_json(directory / 'source.json', {'source_commit': commit, 'target': bundle['target']})
+        phase = 'CODEX_INVOKE'
         code = invoke(config, clone, directory, status, bundle['mode'], worker_lock, deadline)
         timed_out = code is None
+        phase = 'RESULT_VERIFY'
         changed = git(clone, 'status', '--porcelain=v1', '-z', '--untracked-files=all', '--no-renames')
         status['changed_files'] = len([part for part in changed.split(b'\0') if part])
         try:
@@ -255,7 +269,16 @@ def execute(config: Config, bundle: dict, worker_lock: int) -> dict:
                 status.update(state='COMPLETED', outcome='PATCH_READY' if patch else 'NO_CODE_CHANGE')
     except subprocess.TimeoutExpired:
         status.update(state='TIMEOUT', outcome='TIMEOUT', failure='TIMEOUT')
-    except (OSError, ValueError, subprocess.SubprocessError):
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        # No paths, stderr, prompts or arbitrary exception text enter evidence.
+        failure = {'phase': phase, 'kind': 'OS_ERROR' if isinstance(exc, OSError)
+                   else 'SUBPROCESS_ERROR' if isinstance(exc, subprocess.SubprocessError)
+                   else 'VALUE_ERROR'}
+        if isinstance(exc, subprocess.CalledProcessError):
+            failure['returncode'] = exc.returncode
+        if isinstance(exc, OSError) and exc.errno is not None:
+            failure['errno'] = exc.errno
+        atomic_json(directory / 'failure.json', failure)
         if timed_out:
             status.update(state='TIMEOUT', outcome='TIMEOUT', failure='TIMEOUT')
         else:

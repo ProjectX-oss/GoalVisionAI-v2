@@ -1,0 +1,133 @@
+{
+  "checked_at": "2026-10-01T20:23:39.929363+03:00",
+  "deployed": false,
+  "local_codex_help": {
+    "exit_code": 0,
+    "required_flags_present": true
+  },
+  "protected_prematch_routes_unchanged": true,
+  "reproduction": {
+    "codex_job_invoked": false,
+    "fixed_clone_exit": 0,
+    "fixed_head": "fc4a740f4abfa5aaadc5effb105dcaf3381310f0",
+    "object_alternates": false,
+    "old_clone_exit": 128,
+    "old_failure": "GIT_DUBIOUS_OWNERSHIP",
+    "source_modified": false
+  },
+  "runtime_jobs": [
+    {
+      "bundle": {
+        "created_at": 1790874729.053878,
+        "episode": 1,
+        "facts": {
+          "acknowledgement_received": false,
+          "code": "SELECTION_ORIGIN_OR_APPROVAL_INVALID",
+          "receipt_persisted": false,
+          "reconciliation_required": false,
+          "transport_attempted": false
+        },
+        "incident_id": "0c24ae3a50054ffd92fa93d9",
+        "job_id": "746d9e37b6e30f6689a53447",
+        "mode": "FIX_ALLOWED",
+        "rule": "INTEGRITY_FAILURE",
+        "service": "goalvision-lab-v2-discover.service",
+        "target": "PREMATCH"
+      },
+      "job_artifacts": [
+        "incident.json",
+        "prompt.txt",
+        "result.json"
+      ],
+      "result": {
+        "elapsed_seconds": 0.024,
+        "failure": "WORKER_ERROR",
+        "outcome": "CODEX_FAILED",
+        "sequence": 3,
+        "source_commit": "fc4a740f4abfa5aaadc5effb105dcaf3381310f0",
+        "state": "FAILED"
+      }
+    },
+    {
+      "bundle": {
+        "created_at": 1790874796.7972345,
+        "episode": 1,
+        "facts": {
+          "acknowledgement_received": false,
+          "code": "SELECTION_ORIGIN_OR_APPROVAL_INVALID",
+          "receipt_persisted": false,
+          "reconciliation_required": false,
+          "transport_attempted": false
+        },
+        "incident_id": "34f728320e87af74f4c3ef01",
+        "job_id": "b939dc6ca454a86bd3a3cf3a",
+        "mode": "FIX_ALLOWED",
+        "rule": "INTEGRITY_FAILURE",
+        "service": "goalvision-lab-v2-discover.service",
+        "target": "PREMATCH"
+      },
+      "job_artifacts": [
+        "incident.json",
+        "prompt.txt",
+        "result.json"
+      ],
+      "result": {
+        "elapsed_seconds": 0.02,
+        "failure": "WORKER_ERROR",
+        "outcome": "CODEX_FAILED",
+        "sequence": 3,
+        "source_commit": "fc4a740f4abfa5aaadc5effb105dcaf3381310f0",
+        "state": "FAILED"
+      }
+    },
+    {
+      "bundle": {
+        "created_at": 1790874866.0468483,
+        "episode": 1,
+        "facts": {
+          "acknowledgement_received": false,
+          "code": "SELECTION_ORIGIN_OR_APPROVAL_INVALID",
+          "receipt_persisted": false,
+          "reconciliation_required": false,
+          "transport_attempted": false
+        },
+        "incident_id": "700f2007cf1668568b0c3277",
+        "job_id": "950d88dd0bed2183a4f4e383",
+        "mode": "FIX_ALLOWED",
+        "rule": "INTEGRITY_FAILURE",
+        "service": "goalvision-lab-v2-discover.service",
+        "target": "PREMATCH"
+      },
+      "job_artifacts": [
+        "incident.json",
+        "prompt.txt",
+        "result.json"
+      ],
+      "result": {
+        "elapsed_seconds": 0.02,
+        "failure": "WORKER_ERROR",
+        "outcome": "CODEX_FAILED",
+        "sequence": 3,
+        "source_commit": "fc4a740f4abfa5aaadc5effb105dcaf3381310f0",
+        "state": "FAILED"
+      }
+    }
+  ],
+  "source": {
+    "gid": 0,
+    "git_version": "2.43.0",
+    "head": "fc4a740f4abfa5aaadc5effb105dcaf3381310f0",
+    "mode": "0755",
+    "uid": 0
+  },
+  "status": "PASS_OFFLINE_BLOCKED_PENDING_OPERATOR_DEPLOY",
+  "tests": {
+    "passed": 333,
+    "scope": [
+      "tests/admin_alerts",
+      "tests/admin_autorepair"
+    ],
+    "seconds": 39.98,
+    "subtests_passed": 79
+  }
+}

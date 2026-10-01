@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import shlex
 from pathlib import Path
 import subprocess
 import threading
@@ -193,11 +194,13 @@ def test_bare_snapshot_and_no_hardlinks(spool, source, tmp_path):
     assert source_hash(bare)==before
     assert source_hash(source)==original
     clone=spool/'jobs'/value['job_id']/'clone'
-    for obj in (bare/'objects').glob('*/*'):
-        if obj.is_file():
-            copied=clone/'.git'/'objects'/obj.relative_to(bare/'objects')
-            assert copied.exists()
-            assert (copied.stat().st_dev,copied.stat().st_ino)!=(obj.stat().st_dev,obj.stat().st_ino)
+    source_inodes = {(p.stat().st_dev, p.stat().st_ino)
+                     for p in (bare/'objects').rglob('*') if p.is_file()}
+    clone_inodes = {(p.stat().st_dev, p.stat().st_ino)
+                    for p in (clone/'.git'/'objects').rglob('*') if p.is_file()}
+    assert source_inodes and clone_inodes and source_inodes.isdisjoint(clone_inodes)
+    assert not (clone/'.git'/'objects'/'info'/'alternates').exists()
+    assert run_git(clone, 'fsck', '--no-reflogs', '--full') == b''
 
 
 def test_timeout_outcome_survives_unreadable_clone(spool, source, tmp_path, monkeypatch):
@@ -228,3 +231,50 @@ def test_job_starts_without_requesting_special_permission_bits(spool, source, tm
     result = worker.run_once(config(spool, source, executable))
     assert result["outcome"] == "NO_CODE_CHANGE"
     assert requested == [0o770]
+
+
+def test_reviewed_source_trust_reaches_upload_pack(spool, source, tmp_path, monkeypatch):
+    # Model Git's separate child ownership check and exercise real Git with
+    # spaces/metacharacters. No root, global config or production source needed.
+    special = tmp_path / "reviewed source '$()' ;.git"
+    source.rename(special)
+    before = source_hash(special)
+    original = worker.subprocess.run
+    seen = []
+    def guarded(argv, **kwargs):
+        if 'clone' in argv:
+            child = next((a.split('=', 1)[1] for a in argv if a.startswith('--upload-pack=')), '')
+            child_args = shlex.split(child)
+            if '--no-local' not in argv or 'safe.directory='+str(special) not in child_args:
+                raise subprocess.CalledProcessError(128, ['git', 'clone'])
+            assert child_args == ['/usr/bin/git', '-c', 'safe.directory='+str(special),
+                                  '-c', 'core.hooksPath=/dev/null', '-c', 'core.fsmonitor=false', 'upload-pack']
+            assert 'protocol.allow=never' in argv and 'protocol.file.allow=always' in argv
+            assert '--no-recurse-submodules' in argv
+            assert not any(a == 'safe.directory=*' for a in argv + child_args)
+            seen.append(argv)
+        return original(argv, **kwargs)
+    monkeypatch.setattr(worker.subprocess, 'run', guarded)
+    value = queue(spool, 'DIAGNOSE_ONLY')
+    result = worker.run_once(config(spool, special, fake(tmp_path, 'none')))
+    assert result['outcome'] == 'DIAGNOSIS_ONLY'
+    assert len(seen) == 1 and source_hash(special) == before
+    assert not run_git(spool/'jobs'/value['job_id']/'clone', 'remote')
+
+
+def test_clone_failure_has_bounded_phase_evidence_and_no_retry(spool, source, tmp_path, monkeypatch):
+    value = queue(spool, 'DIAGNOSE_ONLY')
+    original = worker.git
+    def fail(repo, *args, **kwargs):
+        if 'clone' in args:
+            raise subprocess.CalledProcessError(128, ['SECRET_COMMAND'], stderr=b'SECRET_STDERR')
+        return original(repo, *args, **kwargs)
+    monkeypatch.setattr(worker, 'git', fail)
+    conf = config(spool, source, fake(tmp_path, 'none'))
+    result = worker.run_once(conf)
+    assert result['failure'] == 'WORKER_ERROR' and result['sequence'] == 3
+    evidence = json.loads((spool/'jobs'/value['job_id']/'failure.json').read_text())
+    assert evidence == {'phase':'SOURCE_CLONE', 'kind':'SUBPROCESS_ERROR', 'returncode':128}
+    assert 'SECRET' not in json.dumps(result) + json.dumps(evidence)
+    assert not (spool/'jobs'/value['job_id']/'invocation.json').exists()
+    assert worker.run_once(conf)['state'] == 'IDLE'

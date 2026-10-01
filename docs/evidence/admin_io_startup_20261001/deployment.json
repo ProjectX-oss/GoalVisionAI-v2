@@ -1,0 +1,146 @@
+{
+  "checked_at": "2026-10-01T20:23:39.929363+03:00",
+  "historical_log_gap": "ROTATED_INODE_LOST",
+  "monitor_execution": "PASS",
+  "operator_stdout_readback": {
+    "bytes": 37111,
+    "read_available": true,
+    "reasons": [
+      "ROTATED_INODE_LOST"
+    ],
+    "records": 17
+  },
+  "prematch_routes_unchanged": true,
+  "release_validation": {
+    "monitor": "PASS",
+    "worker": "PASS"
+  },
+  "source_commit": "0a3e42aab53c555de6a41fe95fbd6352337df4bd",
+  "units": {
+    "goalvision-admin-alerts.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Thu 2026-10-01 19:23:14 CEST",
+      "ExecMainStartTimestamp": "Thu 2026-10-01 19:23:13 CEST",
+      "ExecMainStatus": "0",
+      "RestrictSUIDSGID": "yes",
+      "Result": "success",
+      "WorkingDirectory": "/opt/goalvision-admin-alerts-releases/admin-io-startup-0a3e42a-20261001"
+    },
+    "goalvision-admin-alerts.timer": {
+      "ActiveState": "active",
+      "Result": "success"
+    },
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Thu 2026-10-01 19:23:13 CEST",
+      "ExecMainStartTimestamp": "Thu 2026-10-01 19:23:13 CEST",
+      "ExecMainStatus": "0",
+      "RestrictSUIDSGID": "yes",
+      "Result": "success",
+      "WorkingDirectory": "/opt/goalvision-admin-autorepair-releases/admin-io-startup-0a3e42a-20261001"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "active",
+      "Result": "success"
+    }
+  },
+  "worker_full_execution": "BLOCKED_SOURCE_CLONE",
+  "worker_new_job_evidence": [
+    {
+      "bundle": {
+        "created_at": 1790874729.053878,
+        "episode": 1,
+        "facts": {
+          "acknowledgement_received": false,
+          "code": "SELECTION_ORIGIN_OR_APPROVAL_INVALID",
+          "receipt_persisted": false,
+          "reconciliation_required": false,
+          "transport_attempted": false
+        },
+        "incident_id": "0c24ae3a50054ffd92fa93d9",
+        "job_id": "746d9e37b6e30f6689a53447",
+        "mode": "FIX_ALLOWED",
+        "rule": "INTEGRITY_FAILURE",
+        "service": "goalvision-lab-v2-discover.service",
+        "target": "PREMATCH"
+      },
+      "job_artifacts": [
+        "incident.json",
+        "prompt.txt",
+        "result.json"
+      ],
+      "result": {
+        "elapsed_seconds": 0.024,
+        "failure": "WORKER_ERROR",
+        "outcome": "CODEX_FAILED",
+        "sequence": 3,
+        "source_commit": "fc4a740f4abfa5aaadc5effb105dcaf3381310f0",
+        "state": "FAILED"
+      }
+    },
+    {
+      "bundle": {
+        "created_at": 1790874796.7972345,
+        "episode": 1,
+        "facts": {
+          "acknowledgement_received": false,
+          "code": "SELECTION_ORIGIN_OR_APPROVAL_INVALID",
+          "receipt_persisted": false,
+          "reconciliation_required": false,
+          "transport_attempted": false
+        },
+        "incident_id": "34f728320e87af74f4c3ef01",
+        "job_id": "b939dc6ca454a86bd3a3cf3a",
+        "mode": "FIX_ALLOWED",
+        "rule": "INTEGRITY_FAILURE",
+        "service": "goalvision-lab-v2-discover.service",
+        "target": "PREMATCH"
+      },
+      "job_artifacts": [
+        "incident.json",
+        "prompt.txt",
+        "result.json"
+      ],
+      "result": {
+        "elapsed_seconds": 0.02,
+        "failure": "WORKER_ERROR",
+        "outcome": "CODEX_FAILED",
+        "sequence": 3,
+        "source_commit": "fc4a740f4abfa5aaadc5effb105dcaf3381310f0",
+        "state": "FAILED"
+      }
+    },
+    {
+      "bundle": {
+        "created_at": 1790874866.0468483,
+        "episode": 1,
+        "facts": {
+          "acknowledgement_received": false,
+          "code": "SELECTION_ORIGIN_OR_APPROVAL_INVALID",
+          "receipt_persisted": false,
+          "reconciliation_required": false,
+          "transport_attempted": false
+        },
+        "incident_id": "700f2007cf1668568b0c3277",
+        "job_id": "950d88dd0bed2183a4f4e383",
+        "mode": "FIX_ALLOWED",
+        "rule": "INTEGRITY_FAILURE",
+        "service": "goalvision-lab-v2-discover.service",
+        "target": "PREMATCH"
+      },
+      "job_artifacts": [
+        "incident.json",
+        "prompt.txt",
+        "result.json"
+      ],
+      "result": {
+        "elapsed_seconds": 0.02,
+        "failure": "WORKER_ERROR",
+        "outcome": "CODEX_FAILED",
+        "sequence": 3,
+        "source_commit": "fc4a740f4abfa5aaadc5effb105dcaf3381310f0",
+        "state": "FAILED"
+      }
+    }
+  ]
+}
