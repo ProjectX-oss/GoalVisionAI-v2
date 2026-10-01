@@ -75,7 +75,7 @@ Zars: `fix/admin-worker-startup-20261001`
 | fb52837 | Research provenance, health kļūdas ceļš un nepabeigtu fāžu diagnostika. |
 | 994bdf8 | ADMIN startup permission labojums atsevišķajā zarā. |
 
-Komiti ir VPS worktrees; šajā darbā nav veikts push, merge vai deploy.
+Komiti ir VPS worktrees; push un merge nav veikts. Operators uzlicis tikai CPU labojumu `1a18dc0`; pārējie sagatavotie labojumi nav deployoti.
 
 ## Nākamie nepieciešamie pierādījumi
 
