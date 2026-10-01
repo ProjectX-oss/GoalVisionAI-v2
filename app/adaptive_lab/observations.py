@@ -5,7 +5,7 @@ import json
 import sqlite3
 import time
 from typing import Protocol
-from .contracts import MARKETS, digest, number, side, stream_name, utc
+from .contracts import MARKETS, digest, number, side, stream_name, utc, learning_source
 from .repository import AuditRepository
 from .features import captured_features
 
@@ -146,7 +146,9 @@ def freeze_observation(prediction: dict, receipt: dict, settlement: dict, *, str
 
 def ingest(repository: AuditRepository, prediction: dict, receipt: dict, settlement: dict, *,
            stream: str, publication_id: str, source_product: str = 'SINGLE') -> dict:
-    """Atomic evidence reference plus observation; idempotent across combo/single copies."""
+    """Atomic independent evidence reference plus observation; never combo training."""
+    if not learning_source({"source_product": source_product}):
+        raise ValueError("COMBO_NOT_LEARNING_OBSERVATION")
     if isinstance(repository, AuditRepository) and not repository.connection.in_transaction:
         from .prepared import PreparedAudit
         batch = PreparedAudit(repository)
@@ -159,12 +161,21 @@ def ingest(repository: AuditRepository, prediction: dict, receipt: dict, settlem
                                    publication_id=publication_id, source_product=source_product)
         # Canonical shadow and published copies of a fixture/market are one sample.
         for old in repository.matching_observations(stream, value['fixture_id'], value['market']):
+            if not learning_source(old):
+                continue
             if (old['fixture_id'], old['market']) == (value['fixture_id'], value['market']) and (
                     old.get('source_product') == 'SHADOW' or source_product == 'SHADOW'):
                 if old['outcome'] != value['outcome'] or old['final_score'] != value['final_score']:
                     raise ValueError('CONFLICTING_SETTLEMENT')
                 return old
         existing = repository.get('learning_observations', value['observation_id'])
+        if existing and not learning_source(existing):
+            # Preserve immutable legacy combo evidence without letting it shadow a
+            # subsequently captured independent publication of the same prediction.
+            value['observation_id'] = 'obs-' + digest([value['opportunity_key'], 'NON_COMBO'])
+            value['observation_fingerprint'] = digest({k: v for k, v in value.items()
+                                                       if k != 'observation_fingerprint'})
+            existing = repository.get('learning_observations', value['observation_id'])
         if existing:
             keys = ('outcome', 'final_score', 'frozen_model_probability', 'offered_decimal_odds', 'fixture_id', 'market')
             if any(existing[k] != value[k] for k in keys):
@@ -209,18 +220,7 @@ def import_prematch(ledger: EvidenceReader, repository: AuditRepository, *, now:
         record = combo_record(combo, result)
         repository.append('combo_analytics', pid, 'COMBO', record, result['settled_at_utc'])
         counts['combo_records'] += 1
-        for leg in combo['legs']:
-            identity = leg['observation_id']
-            resolved = ledger.get('leg_result', identity)
-            try:
-                if not resolved:
-                    raise ValueError('UNLINKED_SETTLEMENT')
-                before = len(repository.all('learning_observations', 'PREMATCH'))
-                ingest(repository, leg, receipt, resolved, stream='PREMATCH', publication_id=pid,
-                       source_product='COMBO_LEG')
-                counts['linked_combo_legs'] += len(repository.all('learning_observations', 'PREMATCH')) - before
-            except (ValueError, KeyError, TypeError) as exc:
-                _diagnostic(repository, counts, identity, str(exc), now)
+        # Combo settlement remains descriptive analytics, never learning evidence.
     return counts
 
 

@@ -1,7 +1,7 @@
 """Bounded chronological research. Only validation chooses the holdout candidate."""
 from __future__ import annotations
 from datetime import datetime
-from .contracts import digest, number, utc
+from .contracts import digest, number, utc, learning_source
 from .datasets import chronological_dataset
 from .models import candidate_specs, predict, train, validate_training_rows
 from .policy import POLICY, eligibility
@@ -52,23 +52,34 @@ class AutoLearner:
 
     def _run(self, stream: str, *, now: datetime) -> dict:
         repo=self.repository
-        rows=repo.all('learning_observations',stream)
+        rows=[r for r in repo.all('learning_observations',stream) if learning_source(r)]
         prior=[c for c in repo.all('learning_cycles',stream) if c.get('kind')!='REVIEWED_BOOTSTRAP']
         eligible=eligibility(rows,stream,now,previous=prior[-1] if prior else None)
+        # Every PREMATCH attempt reports readiness, even during cooldown. This
+        # projection never fits a model or consumes a cycle/holdout.
+        dataset = None
+        readiness = None
+        if stream == 'PREMATCH':
+            consumed={oid for h in repo.all('holdout_results',stream) for oid in h['observation_ids']}
+            try:
+                dataset=chronological_dataset(rows,stream,now=now,consumed_holdout=consumed)
+                readiness=dataset_readiness(dataset)
+            except ValueError as exc:
+                readiness={'status':'RESEARCH_DATASET_NOT_READY','blocked_by':[str(exc)],
+                           'counts':None,'split_unavailable':True}
         if not eligible['research_due']:
-            return eligible
+            return {**eligible, **({'dataset_readiness':readiness} if readiness is not None else {})}
         champion=repo.champion(stream)
         active=[r for r in repo.all('shadow_runs',stream)
                 if r.get('champion_generation')==(champion or {}).get('generation_id')]
         if active:
             return {'status':'CHALLENGER_ALREADY_IN_SHADOW','shadow_id':active[-1]['shadow_id']}
         # Do not repeatedly test the same sealed evidence across research cycles.
-        consumed={oid for h in repo.all('holdout_results',stream) for oid in h['observation_ids']}
-        dataset=chronological_dataset(rows,stream,now=now,consumed_holdout=consumed)
-        if stream == 'PREMATCH':
-            readiness = dataset_readiness(dataset)
-            if readiness['blocked_by']:
-                return readiness
+        if stream == 'PREMATCH' and readiness['blocked_by']:
+            return readiness
+        if dataset is None:
+            consumed={oid for h in repo.all('holdout_results',stream) for oid in h['observation_ids']}
+            dataset=chronological_dataset(rows,stream,now=now,consumed_holdout=consumed)
         parts=dataset.pop('partitions')
         cycle_id='cycle-'+digest([stream,dataset['dataset_fingerprint'],POLICY.fingerprint])
         stamp=utc(now).isoformat()

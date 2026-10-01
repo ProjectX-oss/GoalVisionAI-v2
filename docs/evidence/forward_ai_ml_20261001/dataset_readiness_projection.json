@@ -1,0 +1,60 @@
+{
+  "blocked_by": [
+    "VALIDATION_SAMPLE_INSUFFICIENT"
+  ],
+  "consumed_holdout_count": 0,
+  "counts": {
+    "PURGED": 807,
+    "SEALED_HOLDOUT": 327,
+    "TRAIN": 581,
+    "VALIDATION": 28
+  },
+  "created_at": "2026-10-01T13:28:03.748488+00:00",
+  "dataset_fingerprint": "74c097380b875f58b83230fb879ff511cd64cd62d1c1c53f5ae44b52c064af97",
+  "eligibility": {
+    "automatic_eligible": false,
+    "cycle_due": false,
+    "days_covered": 12,
+    "new_resolved": 230,
+    "next_threshold": {
+      "calendar_days": 90,
+      "resolved": 500
+    },
+    "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+    "policy_version": "LAB_ADAPTIVE_V2",
+    "reason": "CYCLE_COOLDOWN",
+    "research_due": false,
+    "resolved": 1743,
+    "stage": "CHALLENGER_RESEARCH",
+    "status": "RESEARCH_ELIGIBLE",
+    "stream": "PREMATCH"
+  },
+  "excluded_combo_records": 12,
+  "holdout_start": "2026-09-26T06:34:56.430340+00:00",
+  "leakage_checks": {
+    "TRAIN_SEALED_HOLDOUT_fixture_disjoint": true,
+    "TRAIN_SEALED_HOLDOUT_observation_disjoint": true,
+    "TRAIN_VALIDATION_fixture_disjoint": true,
+    "TRAIN_VALIDATION_observation_disjoint": true,
+    "VALIDATION_SEALED_HOLDOUT_fixture_disjoint": true,
+    "VALIDATION_SEALED_HOLDOUT_observation_disjoint": true
+  },
+  "required_minimums": {
+    "PURGED": 0,
+    "SEALED_HOLDOUT": 100,
+    "TRAIN": 1,
+    "VALIDATION": 30
+  },
+  "source_records": 1755,
+  "status": "RESEARCH_DATASET_NOT_READY",
+  "training_contract": {
+    "maximum_rows": 20000,
+    "required_classes": [
+      0,
+      1
+    ],
+    "single_stream": true
+  },
+  "validation_start": "2026-09-23T17:35:50.099876+00:00",
+  "verification_mode": "READ_ONLY_PROJECTION_NOT_RESEARCH_ATTEMPT"
+}

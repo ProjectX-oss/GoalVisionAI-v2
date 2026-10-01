@@ -46,8 +46,9 @@ def test_bad_linkage_fails_closed(repo,mutation,reason):
 def test_combo_leg_and_single_same_prediction_learn_once(repo):
     p,r,s=frozen()
     one=ingest(repo,p,r,s,stream='PREMATCH',publication_id='single')
-    two=ingest(repo,p,r,s,stream='PREMATCH',publication_id='combo',source_product='COMBO_LEG')
-    assert one==two and len(repo.all('learning_observations'))==1
+    with pytest.raises(ValueError,match='COMBO_NOT_LEARNING_OBSERVATION'):
+        ingest(repo,p,r,s,stream='PREMATCH',publication_id='combo',source_product='COMBO_LEG')
+    assert len(repo.all('learning_observations'))==1
     assert repo.all('learning_observations')[0]['source_product']=='SINGLE'
 
 
