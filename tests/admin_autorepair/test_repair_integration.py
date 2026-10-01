@@ -64,9 +64,10 @@ def test_installer_service_allowlist():
         installer().systemctl('stop',DISCOVERY)
 
 
-def test_snapshot_supports_linked_worktree_and_pins_exact_head(tmp_path):
+@pytest.mark.parametrize('foreign_owner', [False, True])
+def test_snapshot_supports_linked_worktree_and_pins_exact_head(tmp_path, monkeypatch, foreign_owner):
     module = installer()
-    repo = tmp_path/'repo'
+    repo = tmp_path/"repo with spaces ' ; $literal"
     review = tmp_path/'review'
     snapshot = tmp_path/'snapshot.git'
     repo.mkdir()
@@ -85,6 +86,31 @@ def test_snapshot_supports_linked_worktree_and_pins_exact_head(tmp_path):
     reviewed_head = subprocess.check_output(['git','-C',str(review),'rev-parse','HEAD']).decode().strip()
     assert reviewed_head != main_head
     assert (review/'.git').is_file()
+    if foreign_owner:
+        common = repo/'.git'
+        env = {'PATH':'/usr/bin:/bin', 'GIT_CONFIG_NOSYSTEM':'1',
+               'GIT_CONFIG_GLOBAL':'/dev/null', 'GIT_TEST_ASSUME_DIFFERENT_OWNER':'1'}
+        # Parent -c cannot authorize the child upload-pack process: reproduce
+        # the production failure using real Git before exercising the fix.
+        result = subprocess.run(['git','-c','safe.directory='+str(common),
+                                 'clone','--bare','--no-local',str(common),
+                                 str(tmp_path/'negative.git')], env=env,
+                                capture_output=True, text=True)
+        assert result.returncode == 128
+        assert 'dubious ownership' in result.stderr
+        real_run = subprocess.run
+
+        def foreign_owner_clone(argv, **kwargs):
+            if 'clone' in argv:
+                import shlex
+                upload_pack = next(arg.split('=',1)[1] for arg in argv
+                                   if arg.startswith('--upload-pack='))
+                assert shlex.split(upload_pack) == ['/usr/bin/git','-c',
+                    'safe.directory='+str(common),'-c','core.hooksPath=/dev/null','upload-pack']
+                kwargs['env'] = {**kwargs['env'], 'GIT_TEST_ASSUME_DIFFERENT_OWNER':'1'}
+            return real_run(argv, **kwargs)
+
+        monkeypatch.setattr(module.subprocess, 'run', foreign_owner_clone)
     module.snapshot(review.resolve(), snapshot)
     assert subprocess.check_output(['git','--git-dir='+str(snapshot),'rev-parse','HEAD']).decode().strip() == reviewed_head
     assert subprocess.check_output(['git','--git-dir='+str(snapshot),'symbolic-ref','HEAD']).decode().strip() == (

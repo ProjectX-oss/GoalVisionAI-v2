@@ -15,6 +15,7 @@ from pathlib import Path
 import pwd
 import re
 import shutil
+import shlex
 import sqlite3
 import subprocess
 import tempfile
@@ -101,9 +102,16 @@ def snapshot(source: Path, destination: Path) -> None:
     if (not common.is_dir() or len(commit) not in (40,64)
             or any(char not in '0123456789abcdef' for char in commit)):
         raise ValueError('INVALID_SOURCE_REPO')
+    # Nonlocal clone sanitizes repository config before starting upload-pack.
+    # Give that child its own exact-path ownership exception, shell-quoting
+    # every argument because Git executes --upload-pack through a shell.
+    # Never alter global config or trust unrelated repositories.
+    upload_pack = shlex.join(['/usr/bin/git','-c','safe.directory='+str(common),
+                             '-c','core.hooksPath=/dev/null','upload-pack'])
     clone = ['git','-c','safe.directory='+str(common),'-c','core.hooksPath=/dev/null',
              '-c','protocol.allow=never','-c','protocol.file.allow=always',
-             'clone','--bare','--no-local',str(common),str(destination)]
+             'clone','--bare','--no-local','--upload-pack='+upload_pack,
+             str(common),str(destination)]
     try:
         result = subprocess.run(clone, check=False, env=env, stdout=subprocess.DEVNULL,
                                 stderr=subprocess.PIPE, text=True)

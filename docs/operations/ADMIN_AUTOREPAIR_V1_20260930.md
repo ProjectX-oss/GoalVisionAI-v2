@@ -224,6 +224,14 @@ The installer:
   manifests; creates `/opt/goalvision-admin-autorepair` as a release symlink.
 - Creates root-owned bare snapshots in
   `/opt/goalvision-admin-autorepair-sources/<release>/{ADMIN,PREMATCH}.git`.
+  Nonlocal cloning supplies a shell-quoted `--upload-pack` command that passes
+  the exact resolved common Git directory as `safe.directory` to the child Git
+  process when root snapshots an arvis-owned repository. Parent command-line
+  `-c` and Git config environment alone do not cover the sanitized child. No
+  global Git configuration or wildcard ownership exception is used. The
+  regression test first reproduces the child rejection using real Git with a
+  forced foreign owner, then verifies exact linked-worktree HEAD, quoted paths
+  and untracked-file exclusion.
 - Creates `/var/lib/goalvision-admin-autorepair` and queue/running/status/jobs/done,
   owner arvis, group goalvision-admin-alerts, mode **2770**. Atomic spool files
   and shared locks are explicitly 0660 even under ADMIN's 0077 umask.
