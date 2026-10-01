@@ -1,6 +1,6 @@
 # Discovery context CPU root cause and scoped hotfix — 2026-10-01
 
-Status: **Operator deployment verified at 16:13 UTC; natural runtime cycle NEEDS_MORE_EVIDENCE.**
+Status: **PASS for deployment and first natural post-deployment cycle; settlement and longer-term stability NEEDS_MORE_EVIDENCE.**
 
 The operator activated release `goalvision-prematch-context-scope-1a18dc0-20261001`.
 Read-only checks confirmed the entire Python tree, release environment, drop-in,
@@ -107,3 +107,19 @@ A successful natural post-deployment cycle and delivery evidence remain required
 - `operations/context-scope/update.py`
 - `tests/test_prematch_context_scope_upgrade.py`
 - This runbook, structured evidence, integrated status and `TASKS.md`.
+
+## First natural post-deployment cycle
+
+2026-10-01 19:30:01–19:36:46 Europe/Riga: 405 seconds elapsed,
+246.099231 CPU seconds, exit 0 and service result success. The scheduled run
+evaluated 1391 candidate markets from 143 fixtures with current odds, using
+262 API calls. Accuracy COMBO found 72 eligible fixtures and prepared three.
+Three SINGLE and three COMBO messages were accepted and all six immutable
+receipt fingerprints/message IDs were independently verified in the read-only
+Lab ledger (SINGLE 305–307; COMBO 308–310). No terminal error or unknown delivery.
+
+This establishes natural publication/receipt success, not settlement or model
+quality. Different cycle workloads prevent attributing an exact end-to-end
+speedup factor. Optional context diagnostics still report 147 unavailable target
+snapshot attempts; data readiness is a separate remaining limitation.
+Evidence: `docs/evidence/forward_ai_ml_20261001/context_scope_natural_cycle.json`.

@@ -37,9 +37,9 @@ Iziets cauri visiem plāna punktiem. Koda labojumi un research pamats ir sagatav
 
 Precīzo 2106 kandidātu no-send publication replay ar tukšu atmiņas ledger un bez optional context observer aizņēma 3.869 profiled sekundes un sagatavoja trīs COMBO no 118 eligible fixtures. Šis replay neaizstāj dzīvo ledger/adaptive/context stāvokli un nenosaka live aiztures cēloni.
 
-Operators saglabāja live stack diagnostiku 15:27:44–15:27:55 UTC. Abi veiksmīgie paraugi rāda pilnu visu avotu validāciju available_pins ceļā pirms publication. 5594 avoti (91.6 MB) tika atkārtoti pārbaudīti katrai iespējai. Sagatavots viena cutoff avotu indekss ar datu/schema izmaiņu invalidāciju un pilnu sākotnējo validāciju. Reālo datu kopijā atkārtota meklēšana: 7.5567 s → mediāna 0.000093 s; auksta pārbaude joprojām 8.184 s. Trīs saglabāti snapshoti pilnīgi sakrīt pēc atkārtotas izveides. Tas vēl nav end-to-end production ātruma pierādījums. Operators 19:12 pēc Latvijas laika uzlika divu failu discovery pakotni; kontrolsummas un aktīvais route ir PASS. Nākamais dabiskais cikls paredzēts 19:30; tā runtime pierādījumi vēl jāsaņem. Runbook: docs/operations/CONTEXT_SCOPE_CPU_FIX_20261001.md.
+Operators saglabāja live stack diagnostiku 15:27:44–15:27:55 UTC. Abi veiksmīgie paraugi rāda pilnu visu avotu validāciju available_pins ceļā pirms publication. 5594 avoti (91.6 MB) tika atkārtoti pārbaudīti katrai iespējai. Sagatavots viena cutoff avotu indekss ar datu/schema izmaiņu invalidāciju un pilnu sākotnējo validāciju. Reālo datu kopijā atkārtota meklēšana: 7.5567 s → mediāna 0.000093 s; auksta pārbaude joprojām 8.184 s. Trīs saglabāti snapshoti pilnīgi sakrīt pēc atkārtotas izveides. Tas vēl nav end-to-end production ātruma pierādījums. Operators 19:12 pēc Latvijas laika uzlika divu failu discovery pakotni; kontrolsummas un aktīvais route ir PASS. Pirmais dabiskais cikls 19:30:01–19:36:46 ir PASS: 6 min 45 s, exit 0, trīs SINGLE un trīs COMBO ar sešiem datubāzē pārbaudītiem Telegram receipt ierakstiem. Runbook: docs/operations/CONTEXT_SCOPE_CPU_FIX_20261001.md.
 
-Pilns jaunās COMBO politikas publication → receipt → settlement cikls vēl nav pierādīts. Pirmajā pēc-deploy ciklā kandidātu nebija; CPU cēlonis un offline labojums pierādīti, dabīga pēc-deploy cikla pārbaude vēl vajadzīga.
+Jaunās COMBO politikas dabīga publication → receipt ķēde ir pierādīta: 19:30 ciklā trīs COMBO un trīs SINGLE. Pilns settlement cikls un prediction kvalitāte vēl nav pierādīti. CPU labojuma pirmais runtime cikls PASS; ilgāka stabilitāte vēl jānovēro. Optional football-context diagnostics joprojām ir 147 unavailable target snapshot mēģinājumi; tas paliek atsevišķs datu gatavības ierobežojums.
 
 ## Testi
 
@@ -79,7 +79,7 @@ Komiti ir VPS worktrees; push un merge nav veikts. Operators uzlicis tikai CPU l
 
 ## Nākamie nepieciešamie pierādījumi
 
-1. CPU labojuma operatora deploy un read-only verifikācija ir PASS. Vajag dabīgā pēc-deploy cikla ātrdarbības un delivery pierādījumus.
+1. CPU labojuma deploy un pirmais dabīgais pēc-deploy cikls PASS; receipt pārbaude PASS. Turpmāk jānovēro stabilitāte un jaunās COMBO politikas settlement.
 2. Atsevišķi apstiprināts izvēlēto labojumu deploy; sagatavotais kods vēl nav runtime.
 3. Nākamā dabiskā research attempt pārbaude. Taimera nākamais izsaukums ir 2026-10-02 02:12 UTC, bet cooldown var vēl neļaut research cycle.
 4. Turpināt resolved observations vākšanu līdz validation un calibration readiness PASS. Neapiet embargo vai minimumus.

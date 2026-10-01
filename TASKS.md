@@ -6,7 +6,8 @@
 - [x] Exact real snapshot replay and 1498 tests + 34 subtests; 6 installer tests.
 - [x] Prepare isolated two-file discovery package with no-kill drain refusal and rollback.
 - [x] Operator deploy approval, application hashes, loaded route and timer verified.
-- [ ] Natural post-deployment runtime evidence.
+- [x] First natural cycle: 405 s, exit 0, 3 SINGLE + 3 COMBO; six durable receipts verified.
+- [ ] Longer stability and completed accuracy-combo settlement evidence.
 - Runbook: docs/operations/CONTEXT_SCOPE_CPU_FIX_20261001.md.
 - Operator activated only the two-file CPU fix; no manual provider requests or Telegram sends.
 

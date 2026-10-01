@@ -1,0 +1,92 @@
+{
+  "combo_diagnostics": {
+    "accuracy_single_non_positive_ev_count": 0,
+    "eligible_fixture_count": 72,
+    "policy": "LAB_COMBO_ACCURACY_FROM_SINGLES_V1",
+    "prepared_count": 3,
+    "reason": "COMBO_READY"
+  },
+  "combos_sent": 3,
+  "cpu_seconds": 246.099231,
+  "cycle": {
+    "api_calls_consumed": 262,
+    "candidate_markets_evaluated": 1391,
+    "current_odds_fixtures": 143,
+    "cycle_id": "lab-v2-cycle-c2dc84da8d89ae555896cdf74686f89cd0a60b108ee30ef68580a82343de4952",
+    "delivery_status": "COMPLETED",
+    "evaluated_at_utc": "2026-10-01T16:30:03.576164+00:00",
+    "fixtures_discovered": 1743,
+    "terminal_error": null
+  },
+  "elapsed_seconds": 405,
+  "exit_riga": "2026-10-01T19:36:46+03:00",
+  "exit_status": 0,
+  "football_context_observation": {
+    "CAPTURE_NOT_SCOPED": 4,
+    "FINAL_EVALUATED_CANDIDATES": 1391,
+    "OLD_CANONICAL_NOT_ATTEMPTED": 266,
+    "REGULATION_NO_QUALIFYING_COMPETITION_EVIDENCE": 294,
+    "SNAPSHOT_UNAVAILABLE_SNAPSHOT": 147,
+    "SOURCE_CAPTURED": 11,
+    "SOURCE_UNAVAILABLE_UNSCOPED_QUERY": 246,
+    "TARGET_SOURCE_UNAVAILABLE": 147
+  },
+  "invocation_id": "16539f9a442146f594bf3e538c56ed1b",
+  "limits": [
+    "One completed natural cycle; workload differs from earlier long cycles, so this is not an isolated end-to-end speedup benchmark.",
+    "Optional football-context snapshots remain unavailable for 147 attempts; context-data readiness is not established by successful delivery.",
+    "Accuracy-combo publication and receipt verified; full settlement and prediction quality remain pending."
+  ],
+  "observed_at_utc": "2026-10-01T16:39:53.933566+00:00",
+  "receipts": [
+    {
+      "kind": "single_prediction",
+      "message_id": 305,
+      "persisted_receipt_verified": true,
+      "prediction_id": "lab-v2-single-8419aee2c9ff4b56a8b64f39f05450b34b3da122dc8aba8c659196ffa8aa61d0",
+      "sent_at_utc": "2026-10-01T16:36:41.262087+00:00"
+    },
+    {
+      "kind": "single_prediction",
+      "message_id": 306,
+      "persisted_receipt_verified": true,
+      "prediction_id": "lab-v2-single-50374f7ffc1432794c6331aa394c137da7aada7b8bcb20fd3a01bb5f982d5345",
+      "sent_at_utc": "2026-10-01T16:36:41.560133+00:00"
+    },
+    {
+      "kind": "single_prediction",
+      "message_id": 307,
+      "persisted_receipt_verified": true,
+      "prediction_id": "lab-v2-single-46206a841abf61225f14cd7910826027f2ca6f11f50367d552594c43db63ddac",
+      "sent_at_utc": "2026-10-01T16:36:41.935197+00:00"
+    },
+    {
+      "kind": "combo_prediction",
+      "message_id": 308,
+      "persisted_receipt_verified": true,
+      "prediction_id": "lab-v2-combo-accuracy-639a816b08eee071f7879cbc04b2ca40dd149a855a3680b9a6425a86aa54f83c",
+      "sent_at_utc": "2026-10-01T16:36:42.058808+00:00"
+    },
+    {
+      "kind": "combo_prediction",
+      "message_id": 309,
+      "persisted_receipt_verified": true,
+      "prediction_id": "lab-v2-combo-accuracy-27893c8e0f363e597e1dbc8ccfe7d88d8c4b95263f291def221a583a60c3b258",
+      "sent_at_utc": "2026-10-01T16:36:42.228721+00:00"
+    },
+    {
+      "kind": "combo_prediction",
+      "message_id": 310,
+      "persisted_receipt_verified": true,
+      "prediction_id": "lab-v2-combo-accuracy-4b0a301c19a6e61ccc7cff6a83c88c756a3cea4eaa9479b83f6a451f09e82145",
+      "sent_at_utc": "2026-10-01T16:36:46.395008+00:00"
+    }
+  ],
+  "release": "goalvision-prematch-context-scope-1a18dc0-20261001",
+  "service_result": "success",
+  "singles_sent": 3,
+  "source_commit": "1a18dc066316b720667ab30a0e82d569a6533a46",
+  "start_riga": "2026-10-01T19:30:01+03:00",
+  "status": "FIRST_NATURAL_CYCLE_PASS",
+  "verification": "Read-only systemd properties, compact cycle output, and direct mode=ro ledger receipt/fingerprint checks. No manually triggered cycle, provider request or Telegram send."
+}
