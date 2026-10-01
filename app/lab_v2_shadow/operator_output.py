@@ -125,4 +125,13 @@ def operator_cycle_summary(report: dict[str, object]) -> dict[str, object]:
         'failure': _failure(publication.get('failure')),
         'deliveries': [_delivery(item) for item in publication.get('deliveries', ())],
     }
+    combo = publication.get('combo_diagnostics')
+    if isinstance(combo, dict):
+        result['controlled_publication']['combo_diagnostics'] = {
+            'policy': _code(combo.get('policy')), 'reason': _code(combo.get('reason')),
+            'eligible_fixture_count': _integer(combo.get('eligible_fixture_count')) or 0,
+            'prepared_count': _integer(combo.get('prepared_count')) or 0,
+            'accuracy_single_non_positive_ev_count': _integer(
+                combo.get('accuracy_single_non_positive_ev_count')) or 0,
+        }
     return result

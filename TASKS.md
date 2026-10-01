@@ -1,3 +1,14 @@
+## 2026-10-01 — Explicit Lab accuracy COMBO option
+
+- Confirmed 9 SINGLE receipts, 8 non-positive EV selections and the legacy COMBO policy mismatch.
+- Added opt-in accuracy triples from the current approved SINGLE pool, immutable leg evidence,
+  fail-closed delivery review, diagnostic reasons, no repeated combo fixtures and legacy default.
+- Added offline full-cycle delivery, settlement and deployment/rollback regression coverage.
+- Prepared discovery-only immutable package; no real provider calls, manual Telegram sends,
+  source-ledger mutations, service controls or production activation performed.
+- Policy activation pending explicit approval under AGENTS.md section 13.
+- Runbook: docs/operations/LAB_ACCURACY_COMBO_20261001.md.
+
 ## 2026-10-01 — Protect current-odds page budget
 
 - [x] Trace three-page starvation to the priority analysis reservation.

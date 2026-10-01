@@ -190,6 +190,13 @@ class LabComboService:
             from app.lab_v2_shadow.publication import SINGLE_SELECTION_POLICY
             accuracy_single = (kind == 'single_prediction'
                                and value.get('single_selection_policy') == SINGLE_SELECTION_POLICY)
+            from app.lab_v2_shadow.accuracy_combo import POLICY as ACCURACY_COMBO_POLICY
+            accuracy_combo = (kind == 'combo_prediction'
+                              and value.get('combo_selection_policy') == ACCURACY_COMBO_POLICY)
+            if kind == 'combo_prediction' and (
+                    'combo_selection_policy' in value or prediction_id.startswith('lab-v2-combo-accuracy-')
+                    or value.get('policy') == ACCURACY_COMBO_POLICY) and not accuracy_combo:
+                return {'status': 'COMBO_POLICY_OR_IDENTITY_INVALID', 'sent': False}
             if (accuracy_single or 'selection_origin' in value) and not is_labelled(value):
                 return {'status': 'SELECTION_ORIGIN_OR_APPROVAL_INVALID', 'sent': False}
             if is_labelled(value):
@@ -222,6 +229,20 @@ class LabComboService:
                 if not review['eligible']:
                     return {'status': 'LAB_PUBLICATION_POLICY_REJECTED', 'sent': False,
                             'publication_reviews': [review]}
+            elif accuracy_combo:
+                from app.lab_v2_shadow.accuracy_combo import review_accuracy_combo
+                from app.lab_v2_shadow.publication import v2_combo_message
+                from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
+                if self.ledger.get('claim', kind + ':' + prediction_id) is not None:
+                    return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
+                review = review_accuracy_combo(value, now=self.clock())
+                if not review['eligible']:
+                    return {'status': 'LAB_PUBLICATION_POLICY_REJECTED', 'sent': False,
+                            'publication_reviews': [review]}
+                if '@' + (getattr(getattr(transport, 'bot', None), 'username', None) or '') != LAB_BOT_USERNAME:
+                    return {'status': 'LAB_BOT_IDENTITY_MISMATCH', 'sent': False}
+                if preview['message'] != v2_combo_message(value, value['combo_number']):
+                    return {'status': 'COMBO_PREVIEW_MISMATCH', 'sent': False}
             elif prediction_id.startswith('lab-v2-'):
                 from app.lab_v2_shadow.publication_policy import review_publication
                 reviews = [review_publication(item, now=self.clock()) for item in candidates]
@@ -235,9 +256,9 @@ class LabComboService:
             if self.clock() >= kickoff:
                 return {'status': 'FIXTURE_ALREADY_STARTED', 'sent': False}
             candidates = [value] if kind == 'single_prediction' else value['legs']
-            if not accuracy_single and any(item.get('stage') != 'READY_TO_PUBLISH' for item in candidates):
+            if not (accuracy_single or accuracy_combo) and any(item.get('stage') != 'READY_TO_PUBLISH' for item in candidates):
                 return {'status': 'FINAL_REVIEW_REQUIRED', 'sent': False}
-            review_field = ('accuracy_review_completed_at_utc' if accuracy_single
+            review_field = ('accuracy_review_completed_at_utc' if accuracy_single or accuracy_combo
                             else 'final_review_completed_at_utc')
             review_times = [item.get(review_field) for item in candidates]
             if any(not review for review in review_times):

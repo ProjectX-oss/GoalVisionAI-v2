@@ -48,8 +48,9 @@ def _probability_first_single_candidates(ready: list[dict[str, object]]) -> list
 
 
 def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, *, now: datetime,
-                            label_origin: bool = False, football_context: object | None = None) -> dict[str, object]:
-    """Persist accuracy-reviewed V2 singles and positive-EV independent triples."""
+                            label_origin: bool = False, football_context: object | None = None,
+                            accuracy_combos: bool = False) -> dict[str, object]:
+    """Persist accuracy singles and legacy or explicitly opted-in accuracy triples."""
     clock = now.astimezone(timezone.utc)
     combo_ready = []
     single_pool = []
@@ -166,7 +167,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
 
     combos = []
     remaining = sorted(
-        (_leg(candidate, clock) for candidate in combo_ready),
+        (_leg(candidate, clock) for candidate in ([] if accuracy_combos else combo_ready)),
         key=lambda item: (
             -Decimal(str(item.get("edge") or "-99")), item["kickoff_utc"],
             item["fixture_id"], item["market"], item["candidate_id"],
@@ -218,7 +219,26 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         remaining = [item for item in remaining
                      if int(item["fixture_id"]) not in consumed_fixtures
                      and not consumed_teams.intersection({str(item["home_team_id"]), str(item["away_team_id"])})]
-    return {"publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION,
+    from collections import Counter
+    combo_diagnostics = {
+        "policy": "LAB_V2_BROAD_COVERAGE_COMBO_V2",
+        "eligible_fixture_count": len({item["fixture_id"] for item in combo_ready}),
+        "prepared_count": len(combos),
+        "reason": ("COMBO_READY" if combos else "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES"
+                   if len({item["fixture_id"] for item in combo_ready}) < 3
+                   else "COMBO_NO_INDEPENDENT_NEW_TRIPLE"),
+        "rejection_counts": dict(Counter(reason for review in publication_reviews.values()
+                                        for reason in review["rejection_reasons"])),
+        "accuracy_single_non_positive_ev_count": sum(
+            Decimal(str(item["ensemble_probability"])) * Decimal(str(item["captured_odds"])) <= 1
+            for item in single_ready),
+    }
+    if accuracy_combos:
+        from .accuracy_combo import prepare_accuracy_combos
+        combos, combo_diagnostics = prepare_accuracy_combos(
+            single_ready, ledger, now=clock, label_origin=label_origin, football_context=football_context)
+    return {"combo_diagnostics": combo_diagnostics,
+            "publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION,
             "single_publication_reviews": single_publication_reviews,
             "single_accuracy_publication_policy_version": ACCURACY_PUBLICATION_POLICY_VERSION,
             "single_selection_policy": SINGLE_SELECTION_POLICY,
@@ -267,7 +287,11 @@ def v2_single_message(value: dict) -> str:
 
 
 def v2_combo_message(value: dict, number: int) -> str:
-    lines = [f"🧪 GoalVision AI Lab Combo #{number}"]
+    from .accuracy_combo import POLICY as ACCURACY_COMBO_POLICY
+    accuracy = value.get("combo_selection_policy") == ACCURACY_COMBO_POLICY
+    lines = [f"🧪 GoalVision AI Lab Combo #{value['combo_number'] if accuracy else number}"]
+    if accuracy:
+        lines.append("Eksperimentāls 3 spēļu combo no PREMATCH atlases.")
     for symbol, leg in zip(("1️⃣", "2️⃣", "3️⃣"), value["legs"], strict=True):
         lines.extend((
             f"{symbol} {leg['home_team']} – {leg['away_team']}",
@@ -279,6 +303,8 @@ def v2_combo_message(value: dict, number: int) -> str:
         f"🔥 Kopējais koef.: {public_decimal(value['combined_odds'])}",
         f"⏰ Pirmais starts: {latvia_time(first.isoformat())}",
     ))
+    if accuracy:
+        lines.append("Visām 3 likmēm jāuzvar. Atlase var būt ar negatīvu aprēķināto vērtību; peļņa nav garantēta.")
     return "\n".join(lines)
 
 

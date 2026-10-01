@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -81,11 +82,18 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             "publication_attempt_count": 0,
             "telegram_transport_constructed": False,
             "reason": "NO_SEND_VALIDATION" if not args.send else None,
+            "combo_diagnostics": {
+                "policy": ("LAB_COMBO_ACCURACY_FROM_SINGLES_V1" if getattr(args, "accuracy_combos", False)
+                           else "LAB_V2_BROAD_COVERAGE_COMBO_V2"),
+                "eligible_fixture_count": 0, "prepared_count": 0,
+                "reason": "COMBO_NOT_EVALUATED",
+            },
         }
         if not args.send:
             return _persist_cycle_evidence(repository, report, clock)
         if not report.get("candidate_markets"):
             report["controlled_publication"]["reason"] = "NO_READY_SELECTIONS"
+            report["controlled_publication"]["combo_diagnostics"]["reason"] = "COMBO_NO_CURRENT_CANDIDATES"
             return _persist_cycle_evidence(repository, report, clock)
         ledger = ComboRepository(args.ledger)
         try:
@@ -93,12 +101,14 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                 report, ledger, now=datetime.now(timezone.utc),
                 label_origin=bool(getattr(args, 'label_v2_selections', False)),
                 football_context=football_context,
+                accuracy_combos=bool(getattr(args, 'accuracy_combos', False)),
             )
             report['controlled_publication'].update({key: prepared[key] for key in (
                 'publication_blockers', 'publication_reviews', 'publication_policy_version',
                 'single_publication_blockers', 'single_publication_reviews',
                 'single_accuracy_publication_policy_version', 'single_selection_policy',
                 'minimum_published_probability', 'minimum_published_decimal_odds',
+                'combo_diagnostics',
             )})
             pending = [
                 *[("single_prediction", item["prediction_id"]) for item in prepared["singles"]],
@@ -312,8 +322,13 @@ def main(argv: list[str] | None = None) -> int:
                            help='Optional reviewed registry opened read-only and pinned before decisions')
         cycle.add_argument('--label-v2-selections', action='store_true',
                            help='Freeze truthful existing-selector attribution for new singles')
+        cycle.add_argument("--accuracy-combos", action="store_true",
+                           default=os.environ.get("GOALVISION_LAB_ACCURACY_COMBOS") == "1",
+                           help="Opt in to Lab triples from accuracy-approved singles; EV may be non-positive")
         cycle.add_argument("--send", action="store_true", help="Explicitly publish genuine READY picks to the fixed Lab chat")
     args = parser.parse_args(argv)
+    if getattr(args, 'accuracy_combos', False) and not getattr(args, 'label_v2_selections', False):
+        parser.error('--accuracy-combos requires --label-v2-selections')
     if getattr(args, 'football_context_registry', None) and not getattr(args, 'football_context_root', None):
         parser.error('--football-context-registry requires --football-context-root')
     root = getattr(args, 'football_context_root', None)
