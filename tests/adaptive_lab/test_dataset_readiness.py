@@ -139,22 +139,12 @@ def test_shared_training_contract(invalid: list[dict], reason: str) -> None:
         train(spec, invalid)
 
 
-def test_ready_dataset_trains_and_compares_without_changing_champion(repo: AuditRepository) -> None:
+def test_ready_raw_dataset_waits_for_disjoint_calibration_without_consuming_cycle(repo: AuditRepository) -> None:
     dataset = seed_dataset(repo, 500, validation_keep=POLICY.subgroup_min)
-    policy_fingerprint = POLICY.fingerprint
+    assert dataset_readiness(dataset)['status'] == 'RESEARCH_DATASET_READY'
+    before = list(repo.connection.iterdump())
     result = AutoLearner(repo).run('PREMATCH', now=NOW)
-    assert result['status'] == 'SHADOW_RUNNING'
-    assert len(repo.all('learning_cycles')) == len(repo.all('learning_datasets')) == 1
-    assert len(repo.all('split_assignments')) == 500
-    assert len(repo.all('model_specs')) == len(candidate_specs('PREMATCH'))
-    assert any(row['status'] == 'TRAINED' and row['reproduced'] for row in repo.all('training_runs'))
-    assert repo.all('model_artifacts') and repo.all('validation_results')
-    holdout = repo.all('holdout_results')[0]
-    assert len(holdout['observation_ids']) == POLICY.holdout_min
-    assert holdout['passed'] and holdout['chronology_verified'] and holdout['deterministic_reproduction']
-    assert repo.all('learning_datasets')[0]['dataset_fingerprint'] == dataset['dataset_fingerprint']
-    assert repo.all('candidate_comparisons') == [holdout]
-    assert len(repo.all('shadow_runs')) == 1 and repo.all('candidate_events')
+    assert result['status'] == 'CALIBRATION_DATASET_NOT_READY'
+    assert not result['research_cycle_consumed'] and not result['holdout_consumed']
+    assert list(repo.connection.iterdump()) == before
     assert repo.champion('PREMATCH') is None and repo.champion('LIVE') is None
-    assert POLICY.fingerprint == policy_fingerprint
-    assert list(repo.connection.execute('PRAGMA foreign_key_check')) == []

@@ -102,7 +102,7 @@ class Ledger:
         return p,r,s
 
 
-def test_scheduled_ticks_complete_prematch_autonomy_without_live(repo):
+def test_scheduled_ticks_block_unready_calibration_and_preserve_champion(repo):
     ledger=Ledger();old=Governance(repo).bootstrap(artifact(),now=START-timedelta(days=1))
     previous=0
     for count,day in ((99,26),(100,27),(200,52),(600,152)):
@@ -115,21 +115,15 @@ def test_scheduled_ticks_complete_prematch_autonomy_without_live(repo):
         if count in (100,200):assert research['status']=='RESEARCH_DATASET_NOT_READY'
         if count==200:assert not repo.all('shadow_runs')
         previous=count
-    assert research['status']=='SHADOW_RUNNING',research
-    assert AutoLearner(repo).run('PREMATCH',now=now+timedelta(days=8))['reason']=='NOT_ENOUGH_NEW_DATA'
-    coordinator=LearningCoordinator(repo)
-    for i in range(610,750):
-        p,r,s=ledger.add(i)
-        coordinator.shadow([p],stream='PREMATCH',now=utc(p['prepared_at_utc']))
+    assert research['status']=='CALIBRATION_DATASET_NOT_READY',research
+    assert research['research_cycle_consumed'] is False and research['holdout_consumed'] is False
+    assert not repo.all('shadow_runs') and not repo.all('holdout_results')
+    again=AutoLearner(repo).run('PREMATCH',now=now+timedelta(days=8))
+    assert again['status']=='CALIBRATION_DATASET_NOT_READY'
+    assert repo.champion('PREMATCH')==old
     final=observe(repo,ledger,now=START+timedelta(days=190))
-    current=repo.champion('PREMATCH')
-    assert current['reason']=='PROMOTION' and current['previous_generation']==old['generation_id'],final
+    assert repo.champion('PREMATCH')==old and not repo.all('promotion_gates')
     assert repo.champion('LIVE') is None and repo.all('learning_observations','LIVE')==[]
-    repo.connection.execute('DROP TRIGGER model_artifacts_no_update')
-    repo.connection.execute("UPDATE model_artifacts SET document='{}' WHERE id=?",(current['artifact_id'],))
-    observe(repo,ledger,now=START+timedelta(days=191))
-    assert repo.champion('PREMATCH')['reason']=='ROLLBACK'
-    assert repo.champion('PREMATCH')['artifact_id']==old['artifact_id']
     assert repo.connection.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
     assert list(repo.connection.execute('PRAGMA foreign_key_check'))==[]
 
@@ -209,8 +203,10 @@ def test_training_does_not_hold_database_write_lock(repo,monkeypatch):
     import app.adaptive_lab.automl as module
     from app.adaptive_lab.repository import AuditRepository
     ledger=Ledger()
-    for i in range(600):ledger.add(i)
-    observe(repo,ledger,now=START+timedelta(days=152))
+    for i in range(2500):ledger.add(i)
+    observe(repo,ledger,now=START+timedelta(days=626))
+    specs=[s for s in module.candidate_specs('PREMATCH') if s['family']=='LOGISTIC' and s['scope']=='GLOBAL'][:1]
+    monkeypatch.setattr(module,'candidate_specs',lambda _:specs)
     original=module.train;calls=[]
     def checked(spec,rows):
         assert not repo.connection.in_transaction
@@ -222,8 +218,8 @@ def test_training_does_not_hold_database_write_lock(repo,monkeypatch):
         calls.append(True)
         return original(spec,rows)
     monkeypatch.setattr(module,'train',checked)
-    result=AutoLearner(repo).run('PREMATCH',now=START+timedelta(days=152))
-    assert result['status']=='SHADOW_RUNNING' and calls
+    result=AutoLearner(repo).run('PREMATCH',now=START+timedelta(days=626))
+    assert result.get('cycle_id') and calls==[True,True]
     assert list(repo.connection.execute('PRAGMA foreign_key_check'))==[]
     assert repo.connection.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
 

@@ -47,7 +47,7 @@ class LearningCoordinator:
         rollback=self.governance.rollback(stream,now=now)
         promotions=[]
         for run in self.repository.all('shadow_runs',stream):
-            promotions.append(self.governance.promote(run['shadow_id'],now=now))
+            promotions.append(self.governance.recommend_promotion(run['shadow_id'],now=now))
         research=AutoLearner(self.repository).run(stream,now=now) if train else {'status':'DAILY_LEARNING_JOB_ONLY'}
         prior = [cycle for cycle in self.repository.all('learning_cycles', stream)
                  if cycle.get('kind') != 'REVIEWED_BOOTSTRAP']
