@@ -73,8 +73,8 @@ def summarize(rows: list[dict], *, product: str) -> dict:
     complete = len(pnl_values) == len(settled)
     pnl = sum(pnl_values, Decimal(0)) if complete else None
     odds = [r["odds"] for r in rows if r["odds"] is not None and r["odds"] > 1]
-    binary = [r for r in rows if r["status"] in {"WON", "LOST"}]
-    wins = counts["WON"]
+    binary = [r for r in rows if r["status"] in {"WON", "LOST"} and not r["partial_void"]]
+    wins = sum(r["status"] == "WON" for r in binary)
     pairs = [(float(r["probability"]), int(r["status"] == "WON")) for r in binary
              if r["probability"] is not None and 0 < r["probability"] < 1] if product == "SINGLE" else []
     result = {"total_published": len(rows), "total_settled": len(settled),
@@ -101,7 +101,14 @@ def dimensions(prediction: dict) -> dict:
     odds = finite(prediction.get("captured_odds"))
     market_p = finite(prediction.get("market_fair_probability"))
     t = timing(prediction)
-    return {"odds_band": band(odds, (1.5, 2, 3, 5, 10)),
+    # Preserve the selection-time buckets already frozen into new predictions.
+    t.update({key: prediction[key] for key in t if prediction.get(key) is not None})
+    families = prediction.get("predictive_families")
+    signal_basis = ("MISSING" if not isinstance(families, list) else
+                    "MARKET_ONLY" if not families else "NON_MARKET_EVIDENCE_PRESENT")
+    return {"signal_basis": signal_basis,
+            "probability_kind": str(prediction.get("probability_kind") or "MISSING"),
+            "selection_policy": str(prediction.get("single_selection_policy") or prediction.get("policy") or "MISSING"),"odds_band": band(odds, (1.5, 2, 3, 5, 10)),
             "probability_band": band(p, (.4, .5, .6, .7, .8, .9)),
             "market": str(prediction.get("market") or "MISSING"),
             "league": str(prediction.get("league_id") or prediction.get("league") or "MISSING"),
@@ -230,3 +237,30 @@ def snapshot_from_path(path, *, now: datetime) -> dict:
     finally:
         if reader is not None:
             reader.close()
+
+
+def operator_summary(snapshot: dict) -> dict:
+    """Keep scheduled stdout bounded; full health/observer evidence is persisted separately."""
+    from .contracts import digest
+    if snapshot.get("status") == "UNAVAILABLE":
+        return dict(snapshot)
+    scalar_keys = (
+        "total_published", "total_settled", "WON", "LOST", "VOID", "PARTIAL_VOID",
+        "partial_void_count", "pending", "hit_rate", "flat_unit_pnl", "flat_roi",
+        "average_odds", "median_odds", "average_combined_odds", "odds_sample",
+        "missing_pnl_count", "missing_probability_count", "probability_observations",
+        "brier", "log_loss", "ece", "mce", "predictive_calibration_observations",
+    )
+    def totals(value):
+        return {key: value[key] for key in scalar_keys if key in value}
+    result = {key: snapshot[key] for key in
+              ("version", "accounting", "as_of", "status", "roi_denominator",
+               "odds_population", "hit_rate_population", "diagnostics") if key in snapshot}
+    result.update({product: totals(snapshot.get(product, {})) for product in ("SINGLE", "COMBO")})
+    for cohort in ("negative_ev", "non_positive_ev"):
+        result[cohort] = {p: totals(v) for p,v in snapshot.get(cohort, {}).items()}
+    result["projection"] = "SCHEDULED_PERFORMANCE_TOTALS_V1"
+    result["full_snapshot_fingerprint"] = digest(snapshot)
+    result["segment_counts"] = {p: len(rows) for p,rows in snapshot.get("segments", {}).items()}
+    result["full_detail_access"] = "STATUS_OR_WHY_NO_PICKS_OR_FULL_PERFORMANCE_FLAG"
+    return result

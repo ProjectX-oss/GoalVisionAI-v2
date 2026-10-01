@@ -1,3 +1,15 @@
+## 2026-10-01 — Integrēts PREMATCH quality release
+
+- [x] Savienot TODAY_RIGA/CPU pamatu ar performance, timing, no-floor un evidence gates.
+- [x] COMBO learning izolācija, observer snapshot un dataset/calibration preflight.
+- [x] Tikai manuāla champion promotion ar pilnu evidence.
+- [x] 1475 tests + 34 subtests; 41 integration corrections; 74 stdout/performance; 17 installer (pārklājas).
+- [x] Read-only dati: TRAIN 583 / VALIDATION 10 / HOLDOUT 345 / PURGED 865; BLOCKED, bez treniņa.
+- [x] Īsa operatora pakotne ar četru PREMATCH maršrutu rollback un aizsargātiem ADMIN/weekly.
+- [ ] Atsevišķa operatora uzstādīšana un dabisko discovery/observer/research ciklu verification.
+- [ ] De-vig/xG/dynamic-strength pieslēgšana atsevišķā research posmā.
+- Runbook: docs/operations/PREMATCH_QUALITY_20261001.md.
+
 ## 2026-10-01 — PREMATCH Lab Riga same-day scope
 
 - [x] Reproduce both screenshot cases against the deployed hour-only gate.

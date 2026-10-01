@@ -1,0 +1,33 @@
+{
+  "integration": {
+    "tests": 1475,
+    "subtests": 34,
+    "elapsed_seconds": 264.27,
+    "status": "PASS",
+    "note": "Before final performance summary corrections; those covered by focused final checks"
+  },
+  "integration_corrections": {
+    "tests": 41,
+    "elapsed_seconds": 7.01,
+    "status": "PASS"
+  },
+  "output_and_performance": {
+    "tests": 74,
+    "elapsed_seconds": 1.74,
+    "status": "PASS"
+  },
+  "installer_final": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "17",
+    "time": "0.233",
+    "timestamp": "2026-10-01T21:07:23.561944+02:00",
+    "hostname": "vmi3558657"
+  },
+  "sets_overlap": true,
+  "manual_provider_calls": 0,
+  "test_telegram_sends": 0,
+  "production_controls": 0
+}

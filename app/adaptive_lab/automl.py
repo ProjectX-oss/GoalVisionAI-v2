@@ -73,7 +73,8 @@ class AutoLearner:
         active=[r for r in repo.all('shadow_runs',stream)
                 if r.get('champion_generation')==(champion or {}).get('generation_id')]
         if active:
-            return {'status':'CHALLENGER_ALREADY_IN_SHADOW','shadow_id':active[-1]['shadow_id']}
+            return {'status':'CHALLENGER_ALREADY_IN_SHADOW','shadow_id':active[-1]['shadow_id'],
+                    **({'dataset_readiness':readiness} if readiness is not None else {})}
         # Do not repeatedly test the same sealed evidence across research cycles.
         if stream == 'PREMATCH' and readiness['blocked_by']:
             return readiness

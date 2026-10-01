@@ -15,6 +15,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--ledger',type=Path,default=Path('var/lab_combo/ledger.db'))
     parser.add_argument('--shadow-database',type=Path,default=Path('var/lab_v2/shadow.db'))
     parser.add_argument('--json',action='store_true')
+    parser.add_argument('--full-performance',action='store_true',
+                        help='Include full performance segments in scheduled-command stdout')
     args=parser.parse_args(argv)
     if args.database.resolve() in {args.ledger.resolve(),args.shadow_database.resolve()}:
         parser.error('Dedicated adaptive database required')
@@ -42,6 +44,9 @@ def main(argv: list[str] | None = None) -> int:
         if 'PERFORMANCE' not in result:
             from .performance import snapshot_from_path
             result['PERFORMANCE']=snapshot_from_path(args.ledger,now=now)
+        if args.command in ('observe','research') and not args.full_performance:
+            from .performance import operator_summary
+            result={**result, 'PERFORMANCE':operator_summary(result['PERFORMANCE'])}
         print(canonical(result))
     finally:repo.close()
     return 0

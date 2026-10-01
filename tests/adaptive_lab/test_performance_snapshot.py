@@ -104,3 +104,49 @@ def test_persisted_health_has_explicit_snapshot_availability(repo, tmp_path):
                            ledger_path=tmp_path/"absent.db")
     assert value["PERFORMANCE"]["status"] == "UNAVAILABLE"
     assert value["timing_diagnostics"]["groups"] == []
+
+def test_losing_combo_with_void_leg_keeps_loss_but_is_not_binary_hit_rate():
+    ledger = Ledger()
+    for key, status, partial, pnl in (("a", "WON", False, "7"), ("b", "LOST", True, "-1")):
+        ledger.add("prediction", key, {"prediction_id": key, "combined_odds": "8", "legs": []})
+        ledger.add("receipt", "combo_prediction:"+key, {"status": "SENT", "sent_at_utc": START.isoformat()})
+        ledger.add("settlement", key, {"status": status, "partial_void": partial, "unit_result": pnl,
+                   "settled_at_utc": (START+timedelta(hours=3)).isoformat()})
+    s = performance_snapshot(ledger, now=START+timedelta(days=1))["COMBO"]
+    assert (s["WON"], s["LOST"], s["partial_void_count"], s["total_settled"]) == (1, 1, 1, 2)
+    assert s["hit_rate"] == 1 and s["flat_unit_pnl"] == "6" and s["flat_roi"] == 3
+
+def test_market_only_and_independent_evidence_segments_preserve_frozen_timing():
+    ledger = Ledger()
+    a = single(ledger, "a", "LOST")
+    a.update(predictive_families=[], probability_kind="MARKET_INCLUSIVE_UNCALIBRATED_ENSEMBLE",
+             prematch_lead_minutes_bucket="[10,25)", prematch_lead_minutes=24.9)
+    b = single(ledger, "b", "WON")
+    b.update(predictive_families=["RESULT_HISTORY_MODEL_CONTEXT"], probability_kind="INDEPENDENT_SINGLE_MODEL")
+    snapshot = performance_snapshot(ledger, now=START+timedelta(days=1))
+    groups = {(s["dimension"], s["value"]): s for s in snapshot["segments"]["SINGLE"]}
+    assert groups["signal_basis", "MARKET_ONLY"]["LOST"] == 1
+    assert groups["signal_basis", "NON_MARKET_EVIDENCE_PRESENT"]["WON"] == 1
+    assert groups["lead_time_bucket", "[10,25)"]["LOST"] == 1
+
+def test_scheduled_summary_is_bounded_and_does_not_mutate_full_evidence():
+    import json
+    from copy import deepcopy
+    from app.adaptive_lab.performance import operator_summary
+    ledger = Ledger()
+    single(ledger, "a", "LOST")
+    snapshot = performance_snapshot(ledger, now=START+timedelta(days=1))
+    snapshot["segments"]["SINGLE"] *= 1000
+    original = deepcopy(snapshot)
+    compact = operator_summary(snapshot)
+    assert len(json.dumps(compact).encode()) < 8192
+    assert compact["SINGLE"]["LOST"] == 1
+    assert compact["negative_ev"]["SINGLE"]["flat_unit_pnl"] == "-1"
+    assert compact["segment_counts"]["SINGLE"] == len(snapshot["segments"]["SINGLE"])
+    assert "segments" not in compact and "reliability_bins" not in compact["SINGLE"]
+    assert snapshot == original
+
+def test_unavailable_snapshot_stays_explicit_in_operator_summary():
+    from app.adaptive_lab.performance import operator_summary
+    snapshot = {"status":"UNAVAILABLE", "reason":"LAB_LEDGER_SNAPSHOT_UNAVAILABLE"}
+    assert operator_summary(snapshot) == snapshot

@@ -148,3 +148,18 @@ def test_ready_raw_dataset_waits_for_disjoint_calibration_without_consuming_cycl
     assert not result['research_cycle_consumed'] and not result['holdout_consumed']
     assert list(repo.connection.iterdump()) == before
     assert repo.champion('PREMATCH') is None and repo.champion('LIVE') is None
+
+def test_existing_shadow_still_reports_dataset_readiness_without_writes(repo, monkeypatch):
+    seed_dataset(repo, 500, validation_keep=0)
+    before = list(repo.connection.iterdump())
+    original_all = repo.all
+    def existing_shadow(table, stream=None):
+        if table == "shadow_runs":
+            return [{"shadow_id": "synthetic-existing-shadow", "champion_generation": None}]
+        return original_all(table, stream)
+    monkeypatch.setattr(repo, "all", existing_shadow)
+    result = AutoLearner(repo)._run("PREMATCH", now=NOW)
+    assert result["status"] == "CHALLENGER_ALREADY_IN_SHADOW"
+    assert result["dataset_readiness"]["counts"]["VALIDATION"] == 0
+    assert result["dataset_readiness"]["status"] == "RESEARCH_DATASET_NOT_READY"
+    assert list(repo.connection.iterdump()) == before

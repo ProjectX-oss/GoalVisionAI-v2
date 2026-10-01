@@ -1,0 +1,127 @@
+{
+  "as_of": "2026-10-01T19:04:05.860451+00:00",
+  "mode": "READ_ONLY_PROJECTION_NOT_A_RESEARCH_ATTEMPT",
+  "dataset_readiness": {
+    "status": "RESEARCH_DATASET_NOT_READY",
+    "dataset_fingerprint": "e6cc4018398aaab711c1ac892f27f2dfba067e363e4dc36eee2dd0b20b61bb87",
+    "counts": {
+      "TRAIN": 583,
+      "VALIDATION": 10,
+      "SEALED_HOLDOUT": 345,
+      "PURGED": 865
+    },
+    "required_minimums": {
+      "TRAIN": 1,
+      "VALIDATION": 30,
+      "SEALED_HOLDOUT": 100,
+      "PURGED": 0
+    },
+    "training_contract": {
+      "required_classes": [
+        0,
+        1
+      ],
+      "single_stream": true,
+      "maximum_rows": 20000
+    },
+    "blocked_by": [
+      "VALIDATION_SAMPLE_INSUFFICIENT"
+    ]
+  },
+  "calibration_readiness": {
+    "counts": {
+      "CALIBRATION_FIT": 0,
+      "VALIDATION_EVALUATION": 3,
+      "CALIBRATION_PURGED": 7
+    },
+    "assignments": {
+      "CALIBRATION_FIT": [],
+      "VALIDATION_EVALUATION": [
+        [
+          "obs-a6438ca02246e4ace717763329cae3e752a9ca5023bf85085a7e931f2f4c7062",
+          "16bdd220a350a5566fdc8daf33650864d483c1789b5667650a6701f67d442784"
+        ],
+        [
+          "obs-fee9e40434b4a79d80868babe6e812c92fbbee7e3194998d805646291e226330",
+          "5f81ff5b56dce2ea8813905635fe6a1fcfc75f90175edc36f51d9b503d0168e9"
+        ],
+        [
+          "obs-45f55474ffe5fe48465117788fe975be7d0f6fca9a1e97ca0ce025bc3dc2ff5a",
+          "20f4bb6c557c12415c71a05a0740b3419300952564f32c1b584fa6fb1a41441a"
+        ]
+      ],
+      "CALIBRATION_PURGED": [
+        [
+          "obs-0d286ab073663c55e2bdd54f50757e9f977af25815d29789599b63a876464845",
+          "f6f454b4237b4577a6938e48d75155c0e733ccf56535b46a634334ff14f978b4"
+        ],
+        [
+          "obs-856d9d13c21a446ed846ca5b45e1826b46265d2e7cc33c6bda3f158d00d72350",
+          "a8f3171f8bed04d101c86267027efc50d7dfbec14e7c5d606e4385906420e546"
+        ],
+        [
+          "obs-cb7d87302fa23a005e7c9f7de821b2d85931e033d722233ebd467c3fd62f9cc7",
+          "f597a693a01ab3f6b698947c84f005bcf9a9e0e1f2481dde9ea2d63dfb341de7"
+        ],
+        [
+          "obs-594d2ffaafe179cce13864a01c35697be487e2eda8cd0ae5fccbff93b87c4351",
+          "31ce6d4df69769e83c80e7382285350a4ca1989c1fd6bf4d6096fdadc1fe07af"
+        ],
+        [
+          "obs-d92088bd974c2026cbaecc63755225d58b778441fb6fbf4cdec739190f7b71bb",
+          "0c015cddaa02c9a4ba1968dcf8459a71f20776b79c11ae0aaa7901292c594603"
+        ],
+        [
+          "obs-ea745f64f5187b9386e387a9c0750a898a81c8fb5bb33dc75fc9a2a4a84beb9e",
+          "e86cb853b5a4d64229881b2c6e9efe44aa5d1a20cd0b379cad4876f4ad3a0cdc"
+        ],
+        [
+          "obs-af2e9ad476150741ad536ea1a29a80fc80a9f345bf1183cf472c933e88e9578b",
+          "5e63e7aa2521e43ff040fbbc8a07318e4b040111b315ec1a7458982e80ff8a95"
+        ]
+      ]
+    },
+    "boundary": "2026-09-24T12:38:17.598263+00:00",
+    "embargo_hours": 24,
+    "fingerprint": "85265d88c380f50675518c84f4fdcc5dd680bfb29d3df01acf495716974b89e3",
+    "status": "CALIBRATION_DATASET_NOT_READY",
+    "blocked_by": [
+      "CALIBRATION_FIT_SAMPLE_INSUFFICIENT",
+      "CALIBRATION_EVALUATION_SAMPLE_INSUFFICIENT",
+      "CALIBRATION_CLASS_DIVERSITY_INSUFFICIENT"
+    ]
+  },
+  "partition_overlaps": {
+    "TRAIN:VALIDATION": 0,
+    "SEALED_HOLDOUT:TRAIN": 0,
+    "SEALED_HOLDOUT:VALIDATION": 0,
+    "PURGED:TRAIN": 0,
+    "PURGED:VALIDATION": 0,
+    "PURGED:SEALED_HOLDOUT": 0
+  },
+  "chronology": {
+    "validation_start": "2026-09-23T18:35:54.526834+00:00",
+    "holdout_start": "2026-09-26T07:03:43.711682+00:00",
+    "embargo_hours": 24,
+    "fixture_overlaps": {
+      "TRAIN:VALIDATION": 0,
+      "SEALED_HOLDOUT:TRAIN": 0,
+      "SEALED_HOLDOUT:VALIDATION": 0,
+      "PURGED:TRAIN": 0,
+      "PURGED:VALIDATION": 0,
+      "PURGED:SEALED_HOLDOUT": 0
+    },
+    "train_labels_before_validation_embargo": true,
+    "validation_labels_before_holdout_embargo": true
+  },
+  "source_observations": 1815,
+  "accepted_learning_sources": 1803,
+  "learning_cycles_count": 3,
+  "holdout_results_count": 0,
+  "consumed_holdout_observations": 0,
+  "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+  "champion_fingerprint": "56498b2c53657b8ad66a016c91a91a51b6dd640a5d364d2f615171775188fe11",
+  "training_performed": false,
+  "holdout_evaluated": false,
+  "source_database_writes": 0
+}
