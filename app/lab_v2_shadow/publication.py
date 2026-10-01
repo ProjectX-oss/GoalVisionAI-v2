@@ -21,8 +21,9 @@ from .publication_policy import (review_publication, review_accuracy_publication
 MAX_SINGLES_PER_CYCLE = 3
 MAX_COMBOS_PER_CYCLE = 3
 MIN_PUBLISHED_MARKET_PROBABILITY = Decimal("0.55")
-MIN_PUBLISHED_DECIMAL_ODDS = Decimal("1.30")
-SINGLE_SELECTION_POLICY = "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1"
+MIN_PUBLISHED_DECIMAL_ODDS = None  # Lab has no economic odds floor; odds must still be > 1.
+SINGLE_SELECTION_POLICY = "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+LEGACY_SINGLE_SELECTION_POLICY = "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1"
 
 
 def _single_rank(item: dict[str, object]) -> tuple:
@@ -81,8 +82,6 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         # freshness, replay and severe-contradiction checks pass.
         if probability < MIN_PUBLISHED_MARKET_PROBABILITY:
             single_publication_blockers[candidate_id] = "LAB_PUBLICATION_PROBABILITY_BELOW_0_55"
-        elif odds < MIN_PUBLISHED_DECIMAL_ODDS:
-            single_publication_blockers[candidate_id] = "LAB_PUBLICATION_ODDS_BELOW_1_30"
         elif item.get("stage") in {"READY_TO_PUBLISH", "REJECTED"} and item.get("candidate_lane") != "TRACKING":
             accuracy_gate = review_accuracy_publication(item, now=clock)
             single_publication_reviews[candidate_id] = accuracy_gate
@@ -119,6 +118,14 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             or ledger.get("receipt", "single_prediction:" + value["prediction_id"])
         )
     }
+    consumed_single_fixtures = set()
+    for value in ledger.all("single_prediction"):
+        if any(ledger.get(kind, "single_prediction:" + value["prediction_id"])
+               for kind in ("claim", "receipt")):
+            # Legacy tickets may retain only fixture:market publication identity.
+            fid = value.get("fixture_id", str(value.get("publication_key", "")).partition(":")[0])
+            if str(fid).isdigit():
+                consumed_single_fixtures.add(int(fid))
     consumed_combo_keys = {
         tuple(sorted(leg["publication_key"] for leg in value["legs"]))
         for value in ledger.all("prediction")
@@ -131,12 +138,13 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     used_fixtures: set[int] = set()
     for candidate in single_ready:
         key = f"{candidate['fixture_id']}:{candidate['market']}"
-        if key in consumed_keys or int(candidate["fixture_id"]) in used_fixtures:
+        if (key in consumed_keys or int(candidate["fixture_id"]) in used_fixtures
+                or int(candidate["fixture_id"]) in consumed_single_fixtures):
             continue
         value = _leg(candidate, clock)
         value["single_selection_policy"] = SINGLE_SELECTION_POLICY
         value["minimum_published_probability"] = str(MIN_PUBLISHED_MARKET_PROBABILITY)
-        value["minimum_published_decimal_odds"] = str(MIN_PUBLISHED_DECIMAL_ODDS)
+        value["minimum_published_decimal_odds"] = MIN_PUBLISHED_DECIMAL_ODDS
         value["prediction_id"] = "lab-v2-single-" + fingerprint((
             candidate["policy"], key, candidate["candidate_id"],
             candidate["quote_provenance_fingerprint"],
@@ -243,7 +251,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             "single_accuracy_publication_policy_version": ACCURACY_PUBLICATION_POLICY_VERSION,
             "single_selection_policy": SINGLE_SELECTION_POLICY,
             "minimum_published_probability": str(MIN_PUBLISHED_MARKET_PROBABILITY),
-            "minimum_published_decimal_odds": str(MIN_PUBLISHED_DECIMAL_ODDS),
+            "minimum_published_decimal_odds": MIN_PUBLISHED_DECIMAL_ODDS,
             "single_publication_blockers": single_publication_blockers,
             "publication_blockers":publication_blockers,"singles": singles, "combos": combos,
             "ready_input_count": len(combo_ready), "accuracy_single_input_count": len(single_pool)}

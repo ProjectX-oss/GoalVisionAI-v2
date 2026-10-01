@@ -46,7 +46,7 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
         leg = _leg(candidate, now)
         leg.update(single_selection_policy=SINGLE_SELECTION_POLICY,
                    minimum_published_probability=str(MIN_PUBLISHED_MARKET_PROBABILITY),
-                   minimum_published_decimal_odds=str(MIN_PUBLISHED_DECIMAL_ODDS),
+                   minimum_published_decimal_odds=MIN_PUBLISHED_DECIMAL_ODDS,
                    selection_origin=freeze_origin(candidate, now=now, observer=football_context))
         review = _accuracy_delivery_review(leg, now)
         if not review["eligible"]:
@@ -110,7 +110,7 @@ def review_accuracy_combo(value: dict, *, now: datetime) -> dict:
     """Revalidate every leg, aggregate and identity before a durable send claim."""
     from app.lab_combo.service import _accuracy_delivery_review
     from .origin import is_labelled
-    from .publication import SINGLE_SELECTION_POLICY
+    from .publication import SINGLE_SELECTION_POLICY, LEGACY_SINGLE_SELECTION_POLICY
 
     reasons = set()
     try:
@@ -128,7 +128,7 @@ def review_accuracy_combo(value: dict, *, now: datetime) -> dict:
         for leg in legs:
             reasons.update(_accuracy_delivery_review(leg, now)["rejection_reasons"])
             origin = leg.get("selection_origin") or {}
-            if (not is_labelled(leg) or leg.get("single_selection_policy") != SINGLE_SELECTION_POLICY
+            if (not is_labelled(leg) or leg.get("single_selection_policy") not in {SINGLE_SELECTION_POLICY, LEGACY_SINGLE_SELECTION_POLICY}
                     or leg.get("candidate_lane") == "TRACKING"
                     or origin.get("selector_policy") != leg.get("policy")
                     or origin.get("model_artifact") != leg.get("model_artifact_identity")

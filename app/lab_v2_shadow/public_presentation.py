@@ -75,7 +75,9 @@ def prediction_message(value: dict) -> str:
         f"💰 Koeficients: {public_decimal(value['captured_odds'])}",
         f"⏰ Sākums: {kickoff:%d.%m.%Y %H:%M} (Latvija)", '',
         f"📊 Novērtētā varbūtība: {Decimal(value['ensemble_probability']) * 100:.1f}%",
-        "🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, koef. ≥1.30)",
+        ("🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, bez koeficienta minimuma)"
+         if value.get("single_selection_policy") == "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+         else "🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, koef. ≥1.30)"),
         f"💹 EV: {ev:+.1f}% (diagnostikai)",
         f"🧠 Analīzes pamats: {basis}",
         '', statistics_block(presentation['statistics'])))

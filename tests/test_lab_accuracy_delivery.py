@@ -88,7 +88,7 @@ def test_controlled_cycle_sends_labelled_accuracy_single_with_zero_ready(accurac
         assert publication['single_accuracy_publication_policy_version'] == value['accuracy_publication_policy_version']
         assert publication['single_selection_policy'] == value['single_selection_policy']
         assert publication['minimum_published_probability'] == '0.55'
-        assert publication['minimum_published_decimal_odds'] == '1.30'
+        assert publication['minimum_published_decimal_odds'] is None
     finally:
         ledger.close()
 
@@ -118,10 +118,10 @@ def test_zero_ready_no_pending_retains_both_policy_blockers(accuracy_cycle, monk
     assert summary['controlled_publication']['reason'] == publication['reason'] == reason
     assert bool(publication['single_publication_blockers']) is (blocker != 'legacy')
     assert bool(publication['publication_blockers']) is (blocker != 'accuracy')
-    assert publication['single_selection_policy'] == 'LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1'
+    assert publication['single_selection_policy'] == 'LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR'
     assert publication['single_accuracy_publication_policy_version'] == 'LAB_ACCURACY_FIRST_PUBLICATION_V1'
     assert publication['minimum_published_probability'] == '0.55'
-    assert publication['minimum_published_decimal_odds'] == '1.30'
+    assert publication['minimum_published_decimal_odds'] is None
     assert not summary['publication_attempt_count'] and not summary['telegram_sends']
     assert _RecordingTransport.constructed == _RecordingTransport.calls == 0
     ledger = ComboRepository(Path('var/lab_combo/ledger.db'))
@@ -209,7 +209,7 @@ def test_claimed_accuracy_single_replay_after_review_expires(ledger, monkeypatch
 
 
 @pytest.mark.parametrize('bad', [
-    'stale_quote', 'low_probability', 'low_odds', 'fixture', 'team', 'provenance',
+    'stale_quote', 'low_probability', 'invalid_odds', 'fixture', 'team', 'provenance',
     'contradiction', 'bot', 'preview', 'expired_review', 'future_review', 'missing_review',
     'wrong_policy_version', 'failed_review', 'replay', 'tiny_replay', 'signal_market',
     'signal_selection', 'signal_unavailable', 'signal_provenance', 'extra_hard_failure',
@@ -223,8 +223,8 @@ def test_accuracy_delivery_fails_before_claim(ledger, monkeypatch, bad):
     if bad == 'stale_quote': altered['provider_origin_timestamp_utc'] = (NOW - timedelta(hours=4)).isoformat()
     if bad == 'low_probability':
         altered['ensemble_probability'] = altered['signals'][0]['probability'] = '.54'
-    if bad == 'low_odds':
-        altered['captured_odds'] = '1.29'
+    if bad == 'invalid_odds':
+        altered['captured_odds'] = '1.00'
         bind_candidate_evidence(altered)
     if bad == 'fixture': altered['provider_metadata']['fixture']['id'] += 1
     if bad == 'team': altered['home_team_id'] = altered['away_team_id']

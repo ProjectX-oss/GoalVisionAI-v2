@@ -983,15 +983,13 @@ def test_accuracy_first_single_can_publish_high_probability_negative_ev_market_c
     ledger = ComboRepository(Path("var/lab_combo/ledger.db"))
     prepared = prepare_v2_publications({"candidate_markets": [low_odds, candidate]}, ledger, now=NOW)
     assert [(item["market"], item["ensemble_probability"], item["captured_odds"])
-            for item in prepared["singles"]] == [("OVER_2_5", "0.75", "1.30")]
-    assert prepared["singles"][0]["expected_value"] == "-0.0250"
+            for item in prepared["singles"]] == [("OVER_1_5", "0.87", "1.10")]
+    assert prepared["singles"][0]["expected_value"] == "-0.0430"
     assert prepared["combos"] == []
-    assert prepared["accuracy_single_input_count"] == 1
-    assert prepared["minimum_published_decimal_odds"] == "1.30"
-    assert prepared["single_publication_blockers"][low_odds["candidate_id"]] == (
-        "LAB_PUBLICATION_ODDS_BELOW_1_30"
-    )
-    assert prepared["single_selection_policy"] == "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1"
+    assert prepared["accuracy_single_input_count"] == 2
+    assert prepared["minimum_published_decimal_odds"] is None
+    assert low_odds["candidate_id"] not in prepared["single_publication_blockers"]
+    assert prepared["single_selection_policy"] == "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
     ledger.close()
 
 
