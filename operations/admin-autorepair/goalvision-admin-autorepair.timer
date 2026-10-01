@@ -1,0 +1,11 @@
+[Unit]
+Description=Poll GoalVision ADMIN repair spool without overlapping jobs
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=30s
+AccuracySec=5s
+Unit=goalvision-admin-autorepair.service
+
+[Install]
+WantedBy=timers.target

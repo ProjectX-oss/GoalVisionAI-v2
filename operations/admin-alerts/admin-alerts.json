@@ -10,5 +10,9 @@
     "bot_username": "",
     "private_chat_id": 0,
     "operator_confirmed_start": false
+  },
+  "autorepair": {
+    "enabled": false,
+    "spool": "/var/lib/goalvision-admin-autorepair"
   }
 }

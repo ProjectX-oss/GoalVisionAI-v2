@@ -181,6 +181,18 @@ def scan(config: dict, root: Path, *, no_send: bool = True, config_path: Path | 
             store.invalidate_legacy_output(now)
             store.invalidate_idle_delivery(now)
             store.enqueue(now)
+            repair_report = {'enabled': False}
+            repair = config.get('autorepair', {})
+            if repair.get('enabled') is True:
+                from . import autorepair, operator_jobs
+                from app.admin_autorepair.protocol import SPOOL
+                try:
+                    spool = Path(repair.get('spool', str(SPOOL)))
+                    operator_jobs.sync(store, spool, now)
+                    queued = autorepair.enqueue(store, spool, now)
+                    repair_report = {'enabled': True, 'status': 'READY', 'queued_job': queued}
+                except (OSError, ValueError):
+                    repair_report = {'enabled': True, 'status': 'SPOOL_UNAVAILABLE'}
             sent = 0
             delivery_report = None
             sender = SenderConfig(**config.get('sender', {}))
@@ -189,9 +201,19 @@ def scan(config: dict, root: Path, *, no_send: bool = True, config_path: Path | 
                     return {'status': 'DISABLED', 'telegram_sends': 0, 'football_api_calls': 0}
                 sent, delivery_report = run_delivery(store, sender, now, deadline=begin + 35,
                                                      factory=Telegram)
+                if repair.get('enabled') is True:
+                    from .operator_jobs import dispatch as dispatch_jobs
+                    try:
+                        # Count attempted sends, including failures, against this scan's budget.
+                        used = store.db.execute('SELECT count(*) FROM attempts WHERE started=?', (now,)).fetchone()[0]
+                        sent += dispatch_jobs(store, sender, Telegram(sender), now,
+                            scan_remaining=max(0, 5-used), deadline=begin + 35)
+                    except (DeliveryError, OSError):
+                        repair_report['delivery'] = 'CONFIGURATION_OR_TRANSPORT_UNAVAILABLE'
             store.retain(now)
             release = configured_release(Path(config['release_environment']))
             report = store.report(release)
+            report['autorepair'] = repair_report
             report['output_contracts'] = contract_report()
             report['source_access'] = {e.object_id: {**e.facts, 'read_available': e.healthy} for e in events if e.rule == 'MONITORING_COVERAGE_DEGRADED'}
             for source in ('ledger', 'weekly'):

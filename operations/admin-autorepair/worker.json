@@ -1,0 +1,10 @@
+{
+  "source_repos": {
+    "ADMIN": "/opt/goalvision-admin-source-reviewed",
+    "PREMATCH": "/opt/goalvision-prematch-source-reviewed"
+  },
+  "spool": "/var/lib/goalvision-admin-autorepair",
+  "codex": "/home/arvis/.local/bin/codex",
+  "timeout_seconds": 2700,
+  "heartbeat_seconds": 30
+}

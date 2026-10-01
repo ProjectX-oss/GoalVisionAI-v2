@@ -1,3 +1,17 @@
+## 2026-09-30 — ADMIN Auto-Repair and operator job status foundation
+
+- [x] Add disabled-by-default, episode-deduplicated sanitized spool handoff with immutable activation/maintenance exclusions and capacity limits.
+- [x] Add separate durable operator status/outbox/receipt tracking without incident-count or correlation changes.
+- [x] Add singleton clone-only Codex worker, diagnosis-only mutation rejection, timeout/heartbeat, patch and deterministic job evidence.
+- [x] Prepare hardened uninstalled units, versioned source/release installer, rollback, fake-Codex rehearsal and offline regression gate.
+- [x] Document operational boundaries, uncertainty handling and separate activation review.
+- [x] Gate worker activation on one ADMIN-user no-send baseline scan and verified
+  exclusions/empty spool; fail closed with rollback available.
+- [x] Consolidate worker sandbox mounts and expose Codex auth/standalone binary
+  read-only while hiding ADMIN credentials and production state/control sockets.
+- Runbook: `docs/operations/ADMIN_AUTOREPAIR_V1_20260930.md`.
+- No production changes, provider/Telegram calls, deployment, worktree commit or push.
+
 # ADMIN alerts v1.3.1 (2026-09-27)
 
 - [x] Separate idle delivery from receipt-backed health; preserve real delivery faults.

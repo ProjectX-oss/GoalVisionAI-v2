@@ -120,7 +120,8 @@ def dispatch(store: Store, config: SenderConfig, transport: Transport, now: floa
     state = store.get('delivery', {})
     if state.get('permanent') or state.get('next', 0) > now:
         return 0
-    used = store.db.execute('SELECT count(*) FROM attempts WHERE started>?', (now - 3600,)).fetchone()[0]
+    from .operator_jobs import hourly_attempts
+    used = hourly_attempts(store, now)
     budget = max(0, min(5, 20 - used))
     if not budget:
         return 0

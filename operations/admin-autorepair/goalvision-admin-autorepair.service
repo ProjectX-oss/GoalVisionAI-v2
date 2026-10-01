@@ -1,0 +1,49 @@
+[Unit]
+Description=GoalVision ADMIN isolated review-only repair worker
+ConditionPathExists=!/var/lib/goalvision-admin-autorepair/DISABLED
+ConditionPathExists=/etc/goalvision-admin-autorepair.json
+
+[Service]
+Type=oneshot
+User=arvis
+Group=goalvision-admin-alerts
+WorkingDirectory=/opt/goalvision-admin-autorepair
+ExecStart=/usr/bin/python3 -I /opt/goalvision-admin-autorepair/run.py
+TimeoutStartSec=47min
+TimeoutStopSec=10s
+KillMode=control-group
+SendSIGKILL=yes
+UMask=0007
+Nice=15
+IOSchedulingClass=idle
+CPUQuota=100%
+MemoryMax=2G
+MemorySwapMax=0
+TasksMax=128
+LimitFSIZE=256M
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=tmpfs
+# Mask host credentials, production state/logs and service-manager sockets.
+TemporaryFileSystem=/etc:ro /run:ro /var:ro
+# Codex's launcher symlink points into .codex/packages/standalone; expose both
+# read-only. Resolver targets are individual files, never the /run directory.
+BindReadOnlyPaths=/opt/goalvision-admin-autorepair-sources /home/arvis/.codex /home/arvis/.local/bin/codex /etc/ssl /etc/resolv.conf /etc/hosts /etc/nsswitch.conf /etc/passwd /etc/group -/etc/gai.conf -/etc/host.conf -/run/systemd/resolve/stub-resolv.conf -/run/systemd/resolve/resolv.conf /etc/goalvision-admin-autorepair.json
+BindPaths=/var/lib/goalvision-admin-autorepair
+ReadWritePaths=/var/lib/goalvision-admin-autorepair
+InaccessiblePaths=-/opt/goalvision-admin-alerts -/opt/goalvision-admin-alerts-releases
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+StandardOutput=journal
+StandardError=journal

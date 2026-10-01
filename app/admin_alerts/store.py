@@ -71,6 +71,8 @@ class Store:
             self.db.execute('ALTER TABLE outbox ADD COLUMN episode INTEGER')
             self.db.commit()
         correlation.initialize(self.db)
+        from .autorepair import initialize
+        initialize(self.db)
         os.chmod(path, 0o600)
 
     def close(self) -> None:
