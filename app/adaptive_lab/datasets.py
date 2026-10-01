@@ -2,7 +2,7 @@
 from __future__ import annotations
 from collections import defaultdict
 from datetime import datetime, timedelta
-from .contracts import digest, stream_name, utc
+from .contracts import digest, stream_name, utc, learning_source
 from .policy import POLICY
 
 
@@ -10,7 +10,7 @@ def chronological_dataset(rows: list[dict], stream: str, *, now: datetime,
                           consumed_holdout: set[str] | None = None) -> dict:
     stream_name(stream)
     consumed = consumed_holdout or set()
-    rows=sorted((r for r in rows if r['stream']==stream and r['target'] is not None and utc(r['settled_at'])<=utc(now)),
+    rows=sorted((r for r in rows if r['stream']==stream and learning_source(r) and r['target'] is not None and utc(r['settled_at'])<=utc(now)),
                 key=lambda r:(utc(r['prediction_created_at']),r['observation_id']))
     if len(rows)>POLICY.training_rows_limit or len({r['observation_id'] for r in rows})!=len(rows):
         raise ValueError('DATASET_BOUND_OR_DUPLICATE')

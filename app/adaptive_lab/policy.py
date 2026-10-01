@@ -2,7 +2,7 @@
 from __future__ import annotations
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from .contracts import digest, stream_name, utc
+from .contracts import digest, stream_name, utc, learning_source
 
 
 @dataclass(frozen=True)
@@ -48,7 +48,7 @@ POLICY = LearningPolicy()
 def eligibility(rows: list[dict], stream: str, now: datetime, *, previous: dict | None = None) -> dict:
     """Only this stream's real resolved binary observations count; voids do not."""
     stream_name(stream)
-    resolved = [r for r in rows if r['stream'] == stream and r['outcome'] in {'WON', 'LOST'}
+    resolved = [r for r in rows if r['stream'] == stream and learning_source(r) and r['outcome'] in {'WON', 'LOST'}
                 and utc(r['settled_at']) <= utc(now)]
     dates = [utc(r['prediction_created_at']) for r in resolved]
     days = (max(dates) - min(dates)).days if dates else 0

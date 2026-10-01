@@ -6,7 +6,7 @@ profile/market residuals. No eval, pickle, dynamic import or source generation.
 from __future__ import annotations
 from math import exp, log, sqrt
 from statistics import mean, median
-from .contracts import canonical, digest, number
+from .contracts import canonical, digest, number, learning_source
 from .features import BASE_FEATURES, CONTEXT_FEATURES, LIVE_FEATURES, SAFE_FEATURES, FEATURE_SCHEMA, features
 from .policy import POLICY
 
@@ -92,6 +92,8 @@ def validate_training_rows(rows: list[dict], *, require_class_diversity: bool = 
     """Check the shared row contract without fitting or creating model evidence."""
     if not rows or len(rows)>POLICY.training_rows_limit or len({r['stream'] for r in rows})!=1:
         raise ValueError('TRAINING_RESOURCE_OR_STREAM_CONTRACT')
+    if any(not learning_source(r) for r in rows):
+        raise ValueError('COMBO_NOT_LEARNING_OBSERVATION')
     if require_class_diversity and {r['target'] for r in rows}!={0,1}:
         raise ValueError('TRAIN_CLASS_DIVERSITY_REQUIRED')
 

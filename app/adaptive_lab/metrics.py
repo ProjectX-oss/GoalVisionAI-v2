@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from math import log, sqrt
 from statistics import mean
-from .contracts import number, stream_name, utc
+from .contracts import number, stream_name, utc, learning_source
 
 BUCKETS = {'odds': (1.5, 2., 3., 5., 10.), 'probability': (.4, .5, .6, .7, .8, .9),
            'edge': (0., .03, .07, .12, .2), 'EV': (0., .05, .1, .2, .4),
@@ -38,7 +38,7 @@ def wilson(wins: int, n: int) -> list[float] | None:
 def metrics(rows: list[dict], stream: str) -> dict:
     """One-unit ROI denominator includes void stakes; binary quality excludes voids."""
     stream_name(stream)
-    rows = sorted((r for r in rows if r['stream'] == stream), key=lambda r: (utc(r['settled_at']), r['observation_id']))
+    rows = sorted((r for r in rows if r['stream'] == stream and learning_source(r)), key=lambda r: (utc(r['settled_at']), r['observation_id']))
     binary = [r for r in rows if r['target'] is not None]
     n = len(binary)
     wins = sum(r['target'] for r in binary)
@@ -88,7 +88,7 @@ def segments(rows: list[dict], stream: str, *, limit: int = 500) -> list[dict]:
     dimensions = ('competition_profile','league_id','market','side','lane','model_generation','policy_version',
                   'classifier_version','evidence_family_count','primary_predictive_family')
     for r in rows:
-        if r['stream'] != stream:
+        if r['stream'] != stream or not learning_source(r):
             continue
         values = {k: str(r.get(k)) for k in dimensions}
         for name, key in (('odds','offered_decimal_odds'),('probability','frozen_model_probability'),

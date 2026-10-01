@@ -47,3 +47,8 @@ def side(market: str) -> str:
     if market not in MARKETS:
         raise ValueError('UNSUPPORTED_MARKET')
     return market.split('_')[0] if market != 'BTTS_YES' and market != 'BTTS_NO' else market[5:]
+
+
+def learning_source(row: dict) -> bool:
+    """Only independent SINGLE/SHADOW evidence may train or calibrate a model."""
+    return row.get("source_product", "SINGLE") in {"SINGLE", "SHADOW"}
