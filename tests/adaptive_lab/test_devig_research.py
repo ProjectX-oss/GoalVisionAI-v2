@@ -73,9 +73,16 @@ def test_capture_is_current_bound_immutable_and_not_a_selection_input():
 def test_forward_first_capture_no_duplicate_samples_no_early_result():
     c = capture(document(), captured_at=START, kickoff=START+timedelta(hours=1))
     result = {"fixture_id": 7, "status": "RESOLVED", "home_goals": 1, "away_goals": 0,
-              "settled_at": (START+timedelta(hours=3)).isoformat()}
+              "settled_at": (START+timedelta(hours=3)).isoformat(), "source_fingerprint":"synthetic-result-7"}
     assert forward_metrics([c], [result], now=START)["status"] == "NEEDS_MORE_EVIDENCE"
     m = forward_metrics([c, c], [result], now=START+timedelta(days=1))
     assert m["fixture_count"] == 1 and m["model_learning_observations"] == 0
     assert m["methods"]["SHIN"]["book_market_samples"] == 2
     assert m["methods"]["SHIN"]["probability_observations"] == 6
+
+
+def test_forward_capture_integrity_and_result_provenance():
+    c=capture(document(),captured_at=START,kickoff=START+timedelta(hours=1))
+    c["bookmakers"][0]["methods"]["SHIN"]["probabilities"]["HOME_WIN"]="0.99"
+    with pytest.raises(ValueError,match="RESEARCH_CAPTURE_REQUIRED"):
+        forward_metrics([c],[],now=START)

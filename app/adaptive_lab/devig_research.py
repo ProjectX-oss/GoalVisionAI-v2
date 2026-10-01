@@ -145,7 +145,9 @@ def forward_metrics(captures: list[dict], results: list[dict], *, now) -> dict:
         resolved[fid] = result
     first = {}
     for record in sorted(captures, key=lambda r: (r["captured_at"], r["capture_id"])):
-        if record.get("version") != VERSION or record.get("research_only") is not True:
+        if (record.get("version") != VERSION or record.get("research_only") is not True
+                or record.get("historical_bookmaker_odds_used") is not False
+                or record.get("capture_id") != "devig-"+digest({k:v for k,v in record.items() if k!="capture_id"})):
             raise ValueError("RESEARCH_CAPTURE_REQUIRED")
         if utc(record["captured_at"]) >= utc(record["kickoff_utc"]) or utc(record["captured_at"]) > utc(now):
             continue
@@ -158,7 +160,7 @@ def forward_metrics(captures: list[dict], results: list[dict], *, now) -> dict:
     fixture_ids, samples = set(), Counter()
     for (fid, _, _, _), (record, book) in first.items():
         result = resolved.get(fid)
-        if not result or result.get("status") != "RESOLVED":
+        if not result or result.get("status") != "RESOLVED" or not result.get("source_fingerprint"):
             continue
         if not utc(record["kickoff_utc"]) < utc(result["settled_at"]) <= utc(now):
             continue

@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-10-01T14:24:24.047166+00:00",
+  "service": "goalvision-lab-v2-discover.service",
+  "pid": 1562506,
+  "started_at": "2026-10-01T14:00:02Z",
+  "last_provider_response_at": "2026-10-01T14:04:53.217Z",
+  "observed_elapsed_seconds": 1066,
+  "observed_cpu_percent": 87.3,
+  "status": "NEEDS_MORE_EVIDENCE",
+  "live_stack_capture": "BLOCKED_OS_PTRACE_PERMISSION_DENIED",
+  "production_process_signalled": false,
+  "production_modified": false,
+  "offline_publication_replay": {
+    "read_only_source_cycle": "2026-10-01T14:00:03.913596Z",
+    "ledger": "EMPTY_IN_MEMORY_NO_SEND",
+    "candidate_count": 2106,
+    "eligible_fixture_count": 118,
+    "prepared_combos": 3,
+    "profiled_seconds": 3.869,
+    "context_observer": null
+  },
+  "inference": "The pure selection replay is insufficient to explain the long live CPU interval; optional context/adaptive/persistence phases still need exact runtime stack evidence."
+}

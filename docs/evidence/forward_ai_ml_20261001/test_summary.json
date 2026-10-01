@@ -1,0 +1,23 @@
+{
+  "as_of": "2026-10-01T14:26:12.209217+00:00",
+  "scope": "PREMATCH adaptive, Lab V2, combo, football context and current intelligence",
+  "pytest_reported_passed": 1481,
+  "pytest_reported_subtests_passed": 34,
+  "pytest_wall_seconds": 178.55,
+  "junit_suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "1515",
+      "time": "178.520",
+      "timestamp": "2026-10-01T16:21:52.721170+02:00",
+      "hostname": "vmi3558657"
+    }
+  ],
+  "admin_separate_worktree_passed": 104,
+  "deploy_performed": false,
+  "post_phase_diagnostics_targeted_tests_passed": 117,
+  "post_phase_diagnostics_test_seconds": 10.07
+}

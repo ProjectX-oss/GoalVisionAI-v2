@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import os
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -23,6 +24,29 @@ from .quota import DAILY_SAFETY_RESERVE, MAX_DISCOVERY_CALLS_PER_CYCLE, discover
 from .repository import ShadowEvidenceRepository
 from .runner import LabV2ShadowRunner, night_report
 from .summary import latest_cycle_summary
+
+
+@contextmanager
+def _cycle_phase(repository, phase: str, cycle_started: datetime):
+    """Persist bounded phase markers so an unfinished cycle is diagnosable."""
+    started = datetime.now(timezone.utc)
+    identity = fingerprint((cycle_started, phase))
+    repository.append("cycle_phase", identity+":start",
+                      {"phase":phase,"status":"STARTED","cycle_started_at":cycle_started.isoformat(),
+                       "started_at":started.isoformat()},created_at=started)
+    status = "COMPLETED"
+    try:
+        yield
+    except BaseException:
+        status = "FAILED"
+        raise
+    finally:
+        completed = datetime.now(timezone.utc)
+        repository.append("cycle_phase", identity+":end",
+                          {"phase":phase,"status":status,"cycle_started_at":cycle_started.isoformat(),
+                           "started_at":started.isoformat(),"completed_at":completed.isoformat(),
+                           "duration_seconds":max(0.,(completed-started).total_seconds())},
+                          created_at=completed)
 
 
 async def _cycle(args: argparse.Namespace, *, football_context: object | None = None) -> dict[str, object]:
@@ -65,7 +89,8 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                              and item.get('predictive_family_count',0)>0
                              and datetime.fromisoformat(item['kickoff_utc'])>shadow_now
                              and 'ODDS_STALE_WAITING_REFRESH' not in item.get('rejection_reasons',[])]
-            coordinator.shadow(shadow_inputs, stream='PREMATCH', now=datetime.now(timezone.utc))
+            with _cycle_phase(repository, "ADAPTIVE_SHADOW", clock):
+                coordinator.shadow(shadow_inputs, stream='PREMATCH', now=datetime.now(timezone.utc))
         report["analysis_status"] = "FAILED" if report.get("terminal_error") else "COMPLETED"
         report["delivery_status"] = "NOT_REQUESTED" if not args.send else "NOT_ATTEMPTED"
         report["analysis_mode"] = str(report.get("analysis_mode") or report.get("mode") or "LAB_V2_NO_SEND")
@@ -97,12 +122,13 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             return _persist_cycle_evidence(repository, report, clock)
         ledger = ComboRepository(args.ledger)
         try:
-            prepared = prepare_v2_publications(
-                report, ledger, now=datetime.now(timezone.utc),
-                label_origin=bool(getattr(args, 'label_v2_selections', False)),
-                football_context=football_context,
-                accuracy_combos=bool(getattr(args, 'accuracy_combos', False)),
-            )
+            with _cycle_phase(repository, "PUBLICATION_PREPARATION", clock):
+                prepared = prepare_v2_publications(
+                    report, ledger, now=datetime.now(timezone.utc),
+                    label_origin=bool(getattr(args, 'label_v2_selections', False)),
+                    football_context=football_context,
+                    accuracy_combos=bool(getattr(args, 'accuracy_combos', False)),
+                )
             report['controlled_publication'].update({key: prepared[key] for key in (
                 'publication_blockers', 'publication_reviews', 'publication_policy_version',
                 'single_publication_blockers', 'single_publication_reviews',
@@ -219,7 +245,7 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                 health_report={**health_report,'terminal_error':failure,
                                'api_calls_consumed':client.request_count}
             try:
-                persist_health(adaptive_repository,health_report,started=clock,completed=datetime.now(timezone.utc), ledger_path=args.ledger)
+                persist_health(adaptive_repository,health_report,started=clock,completed=datetime.now(timezone.utc), ledger_path=getattr(args,"ledger",None))
             finally:
                 adaptive_repository.close()
 
