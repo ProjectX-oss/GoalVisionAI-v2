@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.lab_combo.publication_window import publication_blocker
+from app.lab_combo.publication_window import publication_blocker, local as riga_local
 
 from dataclasses import asdict, replace
 from datetime import datetime, timedelta, timezone
@@ -117,6 +117,7 @@ class LabV2ShadowRunner:
         horizon_days: int = 3,
         publication_requested: bool = False,
         near_only: bool = False,
+        today_only: bool = False,
     ) -> dict[str, object]:
         """Produce and persist analysis evidence without crossing the send boundary.
 
@@ -181,15 +182,18 @@ class LabV2ShadowRunner:
         fixtures: dict[int, dict[str, object]] = {}
         discovery_exclusions: list[dict[str, object]] = []
         fixture_rows_seen = 0
-        days = _discovery_dates(clock, horizon_days)
+        # Research may retain a wider horizon. The active Lab route opts into
+        # one Riga calendar day, including fixtures restored from earlier cycles.
+        fixture_timezone = "Europe/Riga" if today_only else "UTC"
+        days = [riga_local(clock).date().isoformat()] if today_only else _discovery_dates(clock, horizon_days)
         dates_fetched: list[str] = []
         dates_failed: list[str] = []
         for day in ([] if near_only else days):
             if self._remaining() <= 0:
                 break
             payload, _ = await self._fetch(
-                "/fixtures", {"date": day, "timezone": "UTC"},
-                lambda value=day: self.client.fixtures_by_date(value, timezone_name="UTC"),
+                "/fixtures", {"date": day, "timezone": fixture_timezone},
+                lambda value=day: self.client.fixtures_by_date(value, timezone_name=fixture_timezone),
                 clock=clock, ttl=timedelta(minutes=5), use_cache=True,
             )
             dates_fetched.append(day)
@@ -222,7 +226,9 @@ class LabV2ShadowRunner:
             restored = restore_fixture(record, capabilities)
             if restored is not None and restored["kickoff_utc"] > clock:
                 fixtures.setdefault(record["fixture_id"], restored)
-        ordered = sorted(fixtures.values(), key=lambda item: (
+        scoped_fixtures = [item for item in fixtures.values()
+                           if not today_only or riga_local(item["kickoff_utc"]).date() == riga_local(clock).date()]
+        ordered = sorted(scoped_fixtures, key=lambda item: (
             resource_priority(item), item["kickoff_utc"], TIER_ORDER[item["capability_tier"]], item["fixture_id"],
         ))
 
@@ -280,6 +286,8 @@ class LabV2ShadowRunner:
         odds_discovery_final_review_reserve = min(
             _final_review_call_reserve(upcoming, clock), self._remaining() // 4)
         odds_days = [] if near_only or not upcoming else days
+        if today_only and odds_days:
+            odds_days = sorted({item["kickoff_utc"].date().isoformat() for item in upcoming})
         protected_pages = protected_odds_page_calls(
             self._remaining(), len(odds_days), odds_discovery_final_review_reserve)
         priority_reserve = min(max(0, self._remaining() - protected_pages), len(priority) * 3)
@@ -457,7 +465,15 @@ class LabV2ShadowRunner:
             "publication_enabled": bool(publication_requested),
             "publication_attempt_count": 0,
             "evaluated_at_utc": clock.isoformat(),
-            "fixtures_discovered": len(fixtures),
+            "fixtures_discovered": len(scoped_fixtures),
+            "discovery_day_scope": {
+                "mode": "TODAY_RIGA" if today_only else "RESEARCH_HORIZON",
+                "local_date": riga_local(clock).date().isoformat(),
+                "timezone": "Europe/Riga",
+                "fixture_query_timezone": fixture_timezone,
+                "scoped_fixture_count": len(scoped_fixtures),
+                "excluded_fixture_count": len(fixtures) - len(scoped_fixtures),
+            },
             "provider_fixture_rows": fixture_rows_seen,
             "discovery_dates_requested": days,
             "discovery_dates_fetched": dates_fetched,

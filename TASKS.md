@@ -1,3 +1,15 @@
+## 2026-10-01 — PREMATCH Lab Riga same-day scope
+
+- [x] Reproduce both screenshot cases against the deployed hour-only gate.
+- [x] Audit the three-day window and future fixtures restored from earlier cycles.
+- [x] Filter provider/restored fixtures to today in Riga before analysis work.
+- [x] Require same-day SINGLE/COMBO kickoffs at preparation and delivery.
+- [x] Preserve published history and later-day settlements.
+- [x] Add bounded day-scope diagnostics and 525 passing adjacent regressions.
+- [x] Prepare discovery-only hash-pinned upgrade/rollback on the active CPU-fixed base.
+- [ ] Separate operator deployment and next natural-cycle verification.
+- Runbook: docs/operations/PREMATCH_TODAY_SCOPE_20261001.md.
+
 ## 2026-10-01 — Explicit Lab accuracy COMBO option
 
 - Confirmed 9 SINGLE receipts, 8 non-positive EV selections and the legacy COMBO policy mismatch.

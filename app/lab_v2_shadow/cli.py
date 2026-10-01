@@ -55,6 +55,7 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             now=clock,
             horizon_days=args.horizon_days,
             publication_requested=bool(args.send),
+            **({'today_only': True} if getattr(args, 'today_only', False) else {}),
         )
         if coordinator is not None:
             from .publication import _leg
@@ -311,6 +312,9 @@ def main(argv: list[str] | None = None) -> int:
         cycle.add_argument("--ledger", type=Path, default=Path("var/lab_combo/ledger.db"))
         cycle.add_argument("--capability-cache", type=Path, default=Path("var/lab_v2/capabilities.json"))
         cycle.add_argument("--horizon-days", type=int, default=3)
+        cycle.add_argument("--today-only", action="store_true",
+                           default=os.environ.get("GOALVISION_LAB_TODAY_ONLY") == "1",
+                           help="Analyze only today's fixtures in Europe/Riga; overrides the discovery horizon")
         cycle.add_argument("--max-calls", type=int, default=MAX_DISCOVERY_CALLS_PER_CYCLE)
         cycle.add_argument("--settlement-reserve", "--daily-reserve", dest="daily_reserve", type=int,
                            choices=[DAILY_SAFETY_RESERVE], default=DAILY_SAFETY_RESERVE,

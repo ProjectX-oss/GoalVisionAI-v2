@@ -4,7 +4,7 @@ from datetime import datetime,timedelta
 from zoneinfo import ZoneInfo
 
 RIGA=ZoneInfo('Europe/Riga')
-POLICY_VERSION='LAB_RIGA_PUBLICATION_V2'
+POLICY_VERSION='LAB_RIGA_SAME_DAY_PUBLICATION_V3'
 
 
 def local(value: datetime | str) -> datetime:
@@ -16,11 +16,14 @@ def local(value: datetime | str) -> datetime:
 
 
 def publication_blocker(now: datetime, kickoffs: list[datetime | str]) -> str | None:
-    """Allow decisions and fixture kickoffs only within the Riga daytime window."""
-    if not 9 <= local(now).hour < 23:
+    """Allow new picks only for the same Riga date within the daytime window."""
+    clock = local(now)
+    if not 9 <= clock.hour < 23:
         return 'LAB_PUBLICATION_WINDOW_CLOSED'
     if any(not 9 <= local(k).hour < 23 for k in kickoffs):
         return 'FIXTURE_AFTER_LAB_CUTOFF'
+    if any(local(k).date() != clock.date() for k in kickoffs):
+        return 'FIXTURE_NOT_TODAY_RIGA'
     return None
 
 

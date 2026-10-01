@@ -115,6 +115,15 @@ def operator_cycle_summary(report: dict[str, object]) -> dict[str, object]:
     if 'code' in persistence:
         result['publication_cycle_persistence']['code'] = _code(persistence['code'])
     result.update({key: _integer(report.get(key)) or 0 for key in COUNTERS})
+    scope = report.get('discovery_day_scope')
+    if isinstance(scope, dict):
+        result['discovery_day_scope'] = {
+            'mode': _code(scope.get('mode')),
+            'local_date': _timestamp(scope.get('local_date')),
+            'timezone': 'Europe/Riga',
+            'scoped_fixture_count': _integer(scope.get('scoped_fixture_count')),
+            'excluded_fixture_count': _integer(scope.get('excluded_fixture_count')),
+        }
     result['controlled_publication'] = {
         'reason': _code(publication.get('reason')) or ('NIGHT_DISCOVERY_PAUSED' if paused else None),
         'status': _code(publication.get('status')) or result['delivery_status'],

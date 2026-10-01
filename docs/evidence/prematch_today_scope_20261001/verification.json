@@ -1,0 +1,116 @@
+{
+  "active_base_release": "/opt/goalvision-prematch-context-scope-1a18dc0-20261001",
+  "champion_changed": false,
+  "checked_at": "2026-10-01T20:50:49.899616+03:00",
+  "count_unit": "MARKET_CANDIDATES_NOT_MATCHES_OR_PUBLICATIONS",
+  "live_enabled": false,
+  "manual_provider_requests": 0,
+  "official_mutated": false,
+  "package_overlay": [
+    "app/lab_combo/publication_window.py",
+    "app/lab_v2_shadow/runner.py",
+    "app/lab_v2_shadow/cli.py",
+    "app/lab_v2_shadow/operator_output.py"
+  ],
+  "preserved_deployed_context_scope_files": [
+    "app/prematch_football_context/capture/repository.py",
+    "app/prematch_football_context/snapshot/service.py"
+  ],
+  "production_deployed": false,
+  "publication_history_mutated": false,
+  "root_causes": [
+    "THREE_DAY_UTC_DISCOVERY_DEFAULT",
+    "PUBLICATION_HOUR_GATE_WITHOUT_DATE_EQUALITY",
+    "RESTORED_FUTURE_FIXTURES_OUTSIDE_REQUESTED_DATES",
+    "PROBABILITY_RANKING_ACROSS_ALL_DATES"
+  ],
+  "runtime_cycles": [
+    {
+      "at": "2026-10-01T17:30:03.829198+00:00",
+      "candidate_dates": {
+        "2026-10-01": 186,
+        "2026-10-02": 956,
+        "2026-10-03": 197
+      },
+      "cycle": "lab-v2-cycle-7eb2fdc2c9cad51e23ce5fe44039d926010d123236a8525adc91f5c5655bbb5b",
+      "requested_dates": [
+        "2026-10-01",
+        "2026-10-02",
+        "2026-10-03"
+      ],
+      "today_stage_counts": {
+        "EARLY_CANDIDATE": 11,
+        "FINAL_REVIEW_REQUIRED": 4,
+        "READY_TO_PUBLISH": 11,
+        "REJECTED": 145,
+        "TRACKING": 15
+      }
+    },
+    {
+      "at": "2026-10-01T17:00:02.778340+00:00",
+      "candidate_dates": {
+        "2026-10-01": 186,
+        "2026-10-02": 956,
+        "2026-10-03": 219
+      },
+      "cycle": "lab-v2-cycle-48c1a959dbb323895c6471e8a1e1b5591c581be35701ab85f8394299b97f1159",
+      "requested_dates": [
+        "2026-10-01",
+        "2026-10-02",
+        "2026-10-03"
+      ],
+      "today_stage_counts": {
+        "EARLY_CANDIDATE": 24,
+        "FINAL_REVIEW_REQUIRED": 1,
+        "READY_TO_PUBLISH": 1,
+        "REJECTED": 145,
+        "TRACKING": 15
+      }
+    },
+    {
+      "at": "2026-10-01T16:30:03.576164+00:00",
+      "candidate_dates": {
+        "2026-10-01": 208,
+        "2026-10-02": 868,
+        "2026-10-03": 304,
+        "2026-10-04": 11
+      },
+      "cycle": "lab-v2-cycle-c2dc84da8d89ae555896cdf74686f89cd0a60b108ee30ef68580a82343de4952",
+      "requested_dates": [
+        "2026-10-01",
+        "2026-10-02",
+        "2026-10-03"
+      ],
+      "today_stage_counts": {
+        "EARLY_CANDIDATE": 26,
+        "READY_TO_PUBLISH": 1,
+        "REJECTED": 163,
+        "TRACKING": 18
+      }
+    }
+  ],
+  "screenshot_case_replay": [
+    {
+      "fixed_gate": "FIXTURE_NOT_TODAY_RIGA",
+      "fixture": "Al Ain – Ajman",
+      "kickoff_riga": "2026-10-02T16:15:00+03:00",
+      "old_gate": null,
+      "publication_riga": "2026-10-01T19:10:00+03:00"
+    },
+    {
+      "fixed_gate": "FIXTURE_NOT_TODAY_RIGA",
+      "fixture": "Switzerland – Slovenia",
+      "kickoff_riga": "2026-10-03T21:45:00+03:00",
+      "old_gate": null,
+      "publication_riga": "2026-10-01T19:36:00+03:00"
+    }
+  ],
+  "source_baseline": "c490866",
+  "status": "PASS_OFFLINE_PENDING_OPERATOR_DEPLOY",
+  "telegram_test_sends": 0,
+  "tests": {
+    "command": "python -m pytest -q tests/test_lab_today_scope.py tests/test_prematch_today_scope_upgrade.py tests/test_lab_accuracy_combo.py tests/test_lab_accuracy_delivery.py tests/test_lab_v2_*.py tests/test_lab_combo*.py tests/test_prematch_v2_enablement.py tests/test_prematch_odds_page_budget.py tests/adaptive_lab/test_lab_product_schedule.py",
+    "passed": 525,
+    "seconds": 41.94
+  }
+}
