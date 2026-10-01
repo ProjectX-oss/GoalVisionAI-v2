@@ -1,0 +1,2909 @@
+{
+  "candidate_count": 3481,
+  "clamping_applied": false,
+  "incident_count": 63,
+  "incidents": [
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-657373cb5ff9f7ffc01ef5238ccc74a4e076ef6210377e40858f99cd900ce411",
+      "ensemble": "0E+1",
+      "fixture": 1639967,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T12:00:42.372283+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639967,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.06874006423421321228375945438",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7389f67a1fb574021c11084f883f3504ac56098b3ca79f264e2176eca1f776a7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-96b08930e631dcd0e4776edd9e1207c14b8807f1a9ee3bfbe03c8ff62baf2a40",
+      "ensemble": "0E+1",
+      "fixture": 1639969,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T12:00:43.516535+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639969,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.08374978002304823142651957917",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:e79e01b5bb8b291f35968cc778b10f547ff0be5cb0b6179a48fba3d6c5cb5c80",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-fcb8de0245775700c28ad51870fd8dda0f7221c205f22f0cc7c1d004d7b2c0a9",
+      "ensemble": "0E+1",
+      "fixture": 1639972,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T12:00:45.536368+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639972,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.03357161548147150411195910318",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:8a0669cfbf7eac0c4b34f738c06746c6da981f196e6b0238f1b05eefdc86ac74",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-b4b533b21ca7b07fbab0ce5eb8cccebae87a768d3be3208e7788efda561bff16",
+      "ensemble": "0E+1",
+      "fixture": 1639979,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T12:01:48.012482+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639979,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.4983047645307720980581384070",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:318e60c14175bf64ff1d8d5ac99335e46150f2f736ecb5001422623d21d1c49a",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-3cd152609d9c688f33566acf59dc3f226828dccf4e27ee72e1b1808bd016bc90",
+      "ensemble": "0E+1",
+      "fixture": 1639980,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T12:01:52.563263+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639980,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2643711593609176566980745596",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:fc67434ab0d72d816fd2c2effac19a49bff634b80dd16ef0c3622ad8780261b7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-a18b7db97ffe3ae4a5d2c40e63c73a03c32a4bfecddfd8eded475425e86f3a9c",
+      "ensemble": "0E+1",
+      "fixture": 1641716,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T12:01:01.711219+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1641716,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1492700511653353920351031962",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:60ef336d86eed6177ad4b77fe510827e0c0cee43e797dac88893ab3c688af3b7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-0ede88459de9656b9548bb0b2ccb6590ffc2af1afb9960d23dce838577246199",
+      "ensemble": "0E+1",
+      "fixture": 1528922,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:32:07.383535+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528922,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.297121525654063958693843526",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:6027bf39f5c8ad8bb91c6ae4e4b2245084c39cdc30e8fe302672833222503fc4",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-f53657d2c4d3a57d5c3ecdde44a748d1fd1d91c1cb7916fc468402d5950b82e7",
+      "ensemble": "0E+1",
+      "fixture": 1528931,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:32:52.954929+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528931,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1651870575408422229340379648",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:395ea180709f979f8c3faa904012848e1db7086ff276da9a21c26beb6b1fbb38",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-77d65915b2cb4c44e07e152203babd10ef0e42ab5cda9250d9edd9fdbc7878bf",
+      "ensemble": "0E+1",
+      "fixture": 1545660,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:32:43.708989+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1545660,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1931804402990087851350564449",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:8f6cf312eaa06c9ce6e228cd878ccf04dc7b49631036302b8797c17a83afd2dc",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-e1b786a284c895a1ea8b1fe71bf42a2468672bd5aeba0c8e07d24f1a1de7f831",
+      "ensemble": "0E+1",
+      "fixture": 1639967,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:32:09.719141+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639967,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.06874006423421321228375945438",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7389f67a1fb574021c11084f883f3504ac56098b3ca79f264e2176eca1f776a7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-a394e99376128a4ba9742d72dccbfc7a9af1153e01174fbec98f50e1d59251aa",
+      "ensemble": "0E+1",
+      "fixture": 1639969,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:32:10.903415+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639969,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.08374978002304823142651957917",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:e79e01b5bb8b291f35968cc778b10f547ff0be5cb0b6179a48fba3d6c5cb5c80",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-7e4963494d98beaffc269c39fcfb826183e29389c5e35f4fe430afafcd395830",
+      "ensemble": "0E+1",
+      "fixture": 1639972,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:32:12.680291+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639972,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.03357161548147150411195910318",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:8a0669cfbf7eac0c4b34f738c06746c6da981f196e6b0238f1b05eefdc86ac74",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-10040cd91dc23cfc2e45ee4975b13ed18bf843b2aba52e3e109388068e0715ae",
+      "ensemble": "0E+1",
+      "fixture": 1350185,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:00:39.415523+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350185,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.03882380798752257713935840992",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:f2ee21fd2e09bd4c99d0af8cb1d020660d3eae3e1e3f4d58c0f22623e08c6c2d",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-442c3fb5eafbd8eae7e852146319b4740a05d4a1b4a727f1ddd2fdfd9a326be1",
+      "ensemble": "0E+1",
+      "fixture": 1350188,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:00:39.415523+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350188,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0416897595407597714000521864",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:ce5c955a496b88062fc2a686505c0f75851cfeb0c2ad3cc1ed7de125b9d836dd",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-3e730ad38dfb7ed0282dbd929188a09a98c0e92f61f88193f695fb0e4df8a929",
+      "ensemble": "0E+1",
+      "fixture": 1528922,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:00:32.401327+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528922,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.297121525654063958693843526",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:6027bf39f5c8ad8bb91c6ae4e4b2245084c39cdc30e8fe302672833222503fc4",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-07169d3d61c0a1c4d27671d26da37ba000c1cfd7da34c4926a64bde4cbba563d",
+      "ensemble": "0E+1",
+      "fixture": 1528925,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:01:18.822189+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528925,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1710444138925423563251538205",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:c62c544b29de460fe6c2c30676278cdb91597ddb82e589ae681179084f0b2eed",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-3d2e1b534f917c99bccefde919aa6fb84ca5a7cd24d77fbe8a9dd9652949ef9b",
+      "ensemble": "0E+1",
+      "fixture": 1639967,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:00:34.682213+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639967,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.06874006423421321228375945438",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7389f67a1fb574021c11084f883f3504ac56098b3ca79f264e2176eca1f776a7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-71195cb883da781fba45e17606adfa06984192fccd21caf2625db03af05671cb",
+      "ensemble": "0E+1",
+      "fixture": 1639969,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:00:35.819697+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639969,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.08374978002304823142651957917",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:e79e01b5bb8b291f35968cc778b10f547ff0be5cb0b6179a48fba3d6c5cb5c80",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-b790571c99c4ed790db4ff83d309c5970053fea72481991186c6f29c9c007132",
+      "ensemble": "0E+1",
+      "fixture": 1639972,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T11:00:37.550357+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639972,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.03357161548147150411195910318",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:8a0669cfbf7eac0c4b34f738c06746c6da981f196e6b0238f1b05eefdc86ac74",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-249759316e2f80c2baee955b65c7d73ad00105ac9de54dcd4e86f3e60fd42996",
+      "ensemble": "0E+1",
+      "fixture": 1350185,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:31:45.662113+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350185,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.03882380798752257713935840992",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:f2ee21fd2e09bd4c99d0af8cb1d020660d3eae3e1e3f4d58c0f22623e08c6c2d",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-22f88ec4d72540cbb36ddf1cfccef08957681cd0f8956ec1be28cbb543d9eb16",
+      "ensemble": "0E+1",
+      "fixture": 1350188,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:31:45.662113+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350188,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0416897595407597714000521864",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:ce5c955a496b88062fc2a686505c0f75851cfeb0c2ad3cc1ed7de125b9d836dd",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-85f39b134ac292334d17ecdd88fe0c3aecc3142225d6ec26ee2dde7d3ae30628",
+      "ensemble": "0E+1",
+      "fixture": 1528922,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:31:38.698535+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528922,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.297121525654063958693843526",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:6027bf39f5c8ad8bb91c6ae4e4b2245084c39cdc30e8fe302672833222503fc4",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-7e604e232b2034b0cc1ab111c8ebdeb1531e55acb3f64cb9de7be87b5c333d0d",
+      "ensemble": "0E+1",
+      "fixture": 1528934,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:32:33.742498+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528934,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0464617016946728753496925960",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7a6a28e299cc3854b696102c419e4aa10df9f027fd3063eba6d84b685789fd23",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-9e07b8e5e9ed8a5ac632111d8bedfac0e7cbddb3eb67b49dfc68f7c40c37b062",
+      "ensemble": "0E+1",
+      "fixture": 1528935,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:32:37.572765+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528935,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1278653755969723786226405254",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:250bea65f187e19132af397c8b01a191cdf0c86fa0ed1d47886bcc6ef72f058c",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-5bffc36a494cdb0a674dd6bed037f9c3c850b923889629ffe221e5df60774528",
+      "ensemble": "0E+1",
+      "fixture": 1545653,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:32:48.075112+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1545653,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1005213952681365921108578367",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:998c52aecf831179d54d0e9501d353164838e3fed830eeef7e79a18abe4a2c2e",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-0f814a3b065a14c770029cd631baa8d91f7971de02aa948f8d81630c354f2aff",
+      "ensemble": "0E+1",
+      "fixture": 1637963,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form",
+        "competition_state"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:34:54.416208+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1637963,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.4648144304462927641365061455",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:598c098bd42fcd4b4b1184a14254af5fd041458407f9002248a5456ea2d6d6b8",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-73e301be59f504ce2e68bfee620b670e412c985a9a842aa2db5060f0e7403315",
+      "ensemble": "0E+1",
+      "fixture": 1639967,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:31:40.951962+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639967,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.06874006423421321228375945438",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7389f67a1fb574021c11084f883f3504ac56098b3ca79f264e2176eca1f776a7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-e7ed11cb8357549f11b9b42bfc514d575c2166b307c303d79ba97e3fdcae80e0",
+      "ensemble": "0E+1",
+      "fixture": 1639969,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:31:42.081836+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639969,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.08374978002304823142651957917",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:e79e01b5bb8b291f35968cc778b10f547ff0be5cb0b6179a48fba3d6c5cb5c80",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-b8a177e154662b069e1499586bc8017fec308e7d3f93c23b1011aec06e6682b0",
+      "ensemble": "0E+1",
+      "fixture": 1639972,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:31:43.788192+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639972,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.03357161548147150411195910318",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:8a0669cfbf7eac0c4b34f738c06746c6da981f196e6b0238f1b05eefdc86ac74",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-33675e4d8eb5b310e02b30d8ab7301daee857a1c590314411c6df251ca75141b",
+      "ensemble": "0E+1",
+      "fixture": 1639979,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:32:15.342147+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639979,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.4983047645307720980581384070",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:318e60c14175bf64ff1d8d5ac99335e46150f2f736ecb5001422623d21d1c49a",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-ff0981728cbc95fe4ac730b39e54771172d15e1af28434dafc2198015e2960ec",
+      "ensemble": "0E+1",
+      "fixture": 1639980,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:32:19.111769+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639980,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2643711593609176566980745596",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:fc67434ab0d72d816fd2c2effac19a49bff634b80dd16ef0c3622ad8780261b7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-a3a6d9da961e313d0b41bcda9b2371ad7807fa879a138575ba4c0285fc0c530b",
+      "ensemble": "0E+1",
+      "fixture": 1642984,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:34:59.021778+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1642984,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0750907956189758874451303369",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:561ba62b4e4604874e93a05b725b7bacd60734a600e9b1f13850c10edd0af1ba",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-521d491fa0d5821a9e20bb97596ee27be1670237e631d58361679cd3de9e87f7",
+      "ensemble": "0E+1",
+      "fixture": 1642985,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T10:31:46.186652+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1642985,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.05246526904401074531947872894",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:f8b303d5f9d8131612ace307217609f65f92524ef53c2a4727547d96f0f388c1",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-e37fa5970663d87491a20ccbb4fb44c7328ea0a9870c3254a1e6a18035111758",
+      "ensemble": "0E+1",
+      "fixture": 1350185,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T09:01:41.524830+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350185,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0381570262527103406775102702",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:f2ee21fd2e09bd4c99d0af8cb1d020660d3eae3e1e3f4d58c0f22623e08c6c2d",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-1a515618325ed050f2b0951d6794f744d6f0a8ee3c02abd0bca48e9436180be2",
+      "ensemble": "0E+1",
+      "fixture": 1350188,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T09:01:41.524830+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350188,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0422081277767698529291196916",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:ce5c955a496b88062fc2a686505c0f75851cfeb0c2ad3cc1ed7de125b9d836dd",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-11d41cdce41744c7ff5c417ea8886cbae88e907b3b4c26151ddd01ef1b0cc979",
+      "ensemble": "0E+1",
+      "fixture": 1528922,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T09:01:34.737895+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528922,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.3024719520138419959010172397",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:6027bf39f5c8ad8bb91c6ae4e4b2245084c39cdc30e8fe302672833222503fc4",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-bb64db2494d9e4762aa5eeae041d043bf55e23d61d3ce7a39a99c245c32fb7e3",
+      "ensemble": "0E+1",
+      "fixture": 1639967,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T09:01:36.916819+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639967,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.06967479409281789337811922322",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7389f67a1fb574021c11084f883f3504ac56098b3ca79f264e2176eca1f776a7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-70cf0be8393bfdae303f7cbb97549545ec7e9f5c305e8fdbfa15d51c8bbaf945",
+      "ensemble": "0E+1",
+      "fixture": 1639969,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T09:01:38.002525+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639969,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.08440133512753150936468336803",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:e79e01b5bb8b291f35968cc778b10f547ff0be5cb0b6179a48fba3d6c5cb5c80",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-93ffad3fb5ae6f3fdfe9e41646329fd5f1978142354fcfeea400545e407d0354",
+      "ensemble": "0E+1",
+      "fixture": 1350185,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:31:59.411228+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350185,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0381570262527103406775102702",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:f2ee21fd2e09bd4c99d0af8cb1d020660d3eae3e1e3f4d58c0f22623e08c6c2d",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-f52407db66434ef696ec16b590b3a71fd9b7c993cc7023fd61c8ae329abd0c7d",
+      "ensemble": "0E+1",
+      "fixture": 1350188,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:31:59.411228+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350188,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0422081277767698529291196916",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:ce5c955a496b88062fc2a686505c0f75851cfeb0c2ad3cc1ed7de125b9d836dd",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-40b8dab5d49b9ef8054bc3b78668df7ec824babd8530680945445f6fa45f3ef7",
+      "ensemble": "0E+1",
+      "fixture": 1528922,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:31:52.755782+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528922,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.3024719520138419959010172397",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:6027bf39f5c8ad8bb91c6ae4e4b2245084c39cdc30e8fe302672833222503fc4",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-2d819807420df52b9d869b545535c1f32d876a9c41ee4a69735d71f042c68731",
+      "ensemble": "0E+1",
+      "fixture": 1639967,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:31:54.930359+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639967,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.06967479409281789337811922322",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7389f67a1fb574021c11084f883f3504ac56098b3ca79f264e2176eca1f776a7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-b97f7bad343e8381daa250be51dd3d17cbe76e66a0f3a424e422ffcf10ee0a9d",
+      "ensemble": "0E+1",
+      "fixture": 1639969,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:31:56.021773+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639969,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.08440133512753150936468336803",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:e79e01b5bb8b291f35968cc778b10f547ff0be5cb0b6179a48fba3d6c5cb5c80",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-790392b3fedef2393305bd4acfca695e3bb6822130ba3e2d689d0aa45ae2cac6",
+      "ensemble": "0E+1",
+      "fixture": 1640072,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:35:36.883441+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1640072,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1719623074255717369637233891",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:a9a603bc09dc6b522687fb24f3d69afdc86b374ab35e43741d0d417dd0433157",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-6bf29df10b834d0e6f056e0639ebf062c14b8461ff26b375139b6d8dc5df57a5",
+      "ensemble": "0E+1",
+      "fixture": 1350185,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:00:38.493454+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350185,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0381570262527103406775102702",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:ac6b5e40399f3e2c51a53b6505e06bfd20e177b115eefbb174446f44005c8292",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-98108717d73665697099daaee8f52615d75aeb87a1432ce53336ae88ffe6f278",
+      "ensemble": "0E+1",
+      "fixture": 1350188,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:00:38.493454+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350188,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0422081277767698529291196916",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:4bc5280bc2be06f35f65b2b350dfe8e36ee46354b235b77864974b50334cedaa",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-3fae1acac733f91293262761ed0550ece428b22b09272fc46677217856024f78",
+      "ensemble": "0E+1",
+      "fixture": 1528922,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:00:31.687004+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528922,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.3024719520138419959010172397",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:6027bf39f5c8ad8bb91c6ae4e4b2245084c39cdc30e8fe302672833222503fc4",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-3dfad735fe33c12e32bbc53e3a4628ba23a15b83958402d1976fe61c6c890c01",
+      "ensemble": "0E+1",
+      "fixture": 1639967,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:00:33.782060+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639967,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.06967479409281789337811922322",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7389f67a1fb574021c11084f883f3504ac56098b3ca79f264e2176eca1f776a7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-e88b7d405524feff44ff78c5b944c7333c46d3d5865f38e6eb341011afd66c6e",
+      "ensemble": "0E+1",
+      "fixture": 1639969,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:00:34.863745+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639969,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.08440133512753150936468336803",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:e79e01b5bb8b291f35968cc778b10f547ff0be5cb0b6179a48fba3d6c5cb5c80",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-55c7b6e24d8d3074cde001ce9980efa1283811ec88663e227e5785974b9a160c",
+      "ensemble": "0E+1",
+      "fixture": 1639972,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T08:00:36.478736+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639972,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.03100140908221603612523432347",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:8a0669cfbf7eac0c4b34f738c06746c6da981f196e6b0238f1b05eefdc86ac74",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-83529ca95d0b658de24356acdedf89d6c8c37573719ffe42fbe9618262626ca5",
+      "ensemble": "0E+1",
+      "fixture": 1350185,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:00.698751+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350185,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0381570262527103406775102702",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:ac6b5e40399f3e2c51a53b6505e06bfd20e177b115eefbb174446f44005c8292",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-ce338451af8c6ff29bc5c5905c7054acce18392ba8a338c074fe0c63d315b5d8",
+      "ensemble": "0E+1",
+      "fixture": 1350188,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:00.698751+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1350188,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0422081277767698529291196916",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:4bc5280bc2be06f35f65b2b350dfe8e36ee46354b235b77864974b50334cedaa",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-39b098398a6d6b11b17fe05f62ef7126792043b1026a19fd348178fd5c13ad4c",
+      "ensemble": "0E+1",
+      "fixture": 1528922,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:31:53.924083+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528922,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.3024719520138419959010172397",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:6027bf39f5c8ad8bb91c6ae4e4b2245084c39cdc30e8fe302672833222503fc4",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-8fd765fa9b35e37e6bf7e362b5979b2c7cd34474a6c8a9894e269444f7012a79",
+      "ensemble": "0E+1",
+      "fixture": 1528934,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:40.526342+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528934,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0464617016946728753496925960",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7a6a28e299cc3854b696102c419e4aa10df9f027fd3063eba6d84b685789fd23",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-be6ec8049e4179fa002886210063ae7d865c875d0130a932b0e6db324d958b51",
+      "ensemble": "0E+1",
+      "fixture": 1528935,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:44.264917+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528935,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1259429330220831287020229762",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:250bea65f187e19132af397c8b01a191cdf0c86fa0ed1d47886bcc6ef72f058c",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-ad5918c88e9d1e2cd9bf478790d33822b072d68b189ac799360b631f8fae68e7",
+      "ensemble": "0E+1",
+      "fixture": 1545653,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:55.411914+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1545653,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1017666237978713108076612705",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:998c52aecf831179d54d0e9501d353164838e3fed830eeef7e79a18abe4a2c2e",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-f89616209ffe035bd1f700ed141705b0622b5390deddbe8a4e0ac5b585e1a9a3",
+      "ensemble": "0E+1",
+      "fixture": 1639967,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:31:56.045072+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639967,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.06967479409281789337811922322",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:7389f67a1fb574021c11084f883f3504ac56098b3ca79f264e2176eca1f776a7",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-76a0b13294141bc45c1f2d585e3f9f7672c6763cd446aa06267d193ee3cb92b8",
+      "ensemble": "0E+1",
+      "fixture": 1639969,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:31:57.138356+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639969,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.08440133512753150936468336803",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:e79e01b5bb8b291f35968cc778b10f547ff0be5cb0b6179a48fba3d6c5cb5c80",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-56217006fc0dd56619fcef8dee0f5560dc81c63a8970025fa6257c8fe36b785c",
+      "ensemble": "0E+1",
+      "fixture": 1639972,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:31:58.733773+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639972,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.03100140908221603612523432347",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:8a0669cfbf7eac0c4b34f738c06746c6da981f196e6b0238f1b05eefdc86ac74",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-650cd08e3806fd18fe286277217edb49408cd45650ba6c15392f820e123b58ac",
+      "ensemble": "0E+1",
+      "fixture": 1640072,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:01.240608+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1640072,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.1719623074255717369637233891",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:632d11d7a4f7445b31b3f562124a034409fe3b92863e30f20e630a082eb12ea1",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-faf67bf6c05f786e4f56713649643d9ba469739fffbe05f0ad4e87f570400f3c",
+      "ensemble": "0E+1",
+      "fixture": 1640073,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:01.240608+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1640073,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.02611557856261761234081242532",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:1c960ceea86247b685293f02ac4b61ccd39389a84889715bfd5fa33d5fe3d159",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0E+1",
+        "DRAW": "0.5",
+        "HOME_WIN": "0.5"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-7499569e83a1ace6ede835ddb73085c328bbf04f1371344e7fcc416d56aa419b",
+      "ensemble": "0E+1",
+      "fixture": 1642984,
+      "market": "AWAY_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:01.758691+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1642984,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0707283558201563138644518124",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:9206c85a071546aec057757c53d6a15de0c6e24778f7449ab5fdee4ed7080191",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      }
+    },
+    {
+      "api_probabilities": {
+        "AWAY_WIN": "0.5",
+        "DRAW": "0.5",
+        "HOME_WIN": "0E+1"
+      },
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-46a6d4a3853fec3ed528941ef8387a64066fdca2cbbff1a7f61515f40d8fc344",
+      "ensemble": "0E+1",
+      "fixture": 1642985,
+      "market": "HOME_WIN",
+      "missing_inputs": [
+        "lineup",
+        "injuries",
+        "advanced_stats",
+        "standings",
+        "recent_form"
+      ],
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "quote_retrieved_at": "2026-10-01T07:32:01.758691+00:00",
+      "trace": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1642985,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.05532668663834510081396922982",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:f8b303d5f9d8131612ace307217609f65f92524ef53c2a4727547d96f0f388c1",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      }
+    }
+  ],
+  "mathematical_bug_found": false,
+  "root_cause": "PROVIDER_ZERO_PERCENT_PRESERVED",
+  "scope": "12 rehearsal cycles 2026-10-01T07:30Z through 13:00Z"
+}
