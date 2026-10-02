@@ -1,0 +1,1877 @@
+{
+  "capture": {
+    "bookmakers": [
+      {
+        "bookmaker": "1",
+        "bookmaker_id": 1,
+        "historical_bookmaker_odds_used": false,
+        "margin": "0.035714285714285714285714286",
+        "methods": {
+          "MULTIPLICATIVE": {
+            "parameters": {},
+            "probabilities": {
+              "AWAY_WIN": "0.2413793103448275862068965517",
+              "DRAW": "0.2758620689655172413793103447",
+              "HOME_WIN": "0.4827586206896551724137931036"
+            },
+            "status": "AVAILABLE"
+          },
+          "OO_EPC": {
+            "parameters": {
+              "z": 0.014768426571801585
+            },
+            "probabilities": {
+              "AWAY_WIN": "0.2372101674148947",
+              "DRAW": "0.2732326871614819",
+              "HOME_WIN": "0.4895571454236235"
+            },
+            "status": "AVAILABLE"
+          },
+          "POWER": {
+            "parameters": {
+              "exponent": 1.034636783579117
+            },
+            "probabilities": {
+              "AWAY_WIN": "0.2382794489397026",
+              "DRAW": "0.27358179113679465",
+              "HOME_WIN": "0.48813875992355144"
+            },
+            "status": "AVAILABLE"
+          },
+          "SHIN": {
+            "parameters": {
+              "insider_fraction": 0.017891311770295334
+            },
+            "probabilities": {
+              "AWAY_WIN": "0.2389379691142544",
+              "DRAW": "0.2743283961228072",
+              "HOME_WIN": "0.48673363476294756"
+            },
+            "status": "AVAILABLE"
+          }
+        },
+        "quote_fingerprints": [
+          "07dc762ce95a3fbcafe31185342516845ec2ef77d9c149d934246227e0368f29",
+          "9f444bfd58edabccd7ceeeb29c4c59ccf9709d71a56cd4c15fd2974ae9d8e397",
+          "b10667a6c2a55453173b8e218673a6688204fd5667d350ce9327c5c67ec25801"
+        ],
+        "research_only": true,
+        "status": "AVAILABLE",
+        "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+      },
+      {
+        "bookmaker": "2",
+        "bookmaker_id": 2,
+        "historical_bookmaker_odds_used": false,
+        "margin": "0.035714285714285714285714286",
+        "methods": {
+          "MULTIPLICATIVE": {
+            "parameters": {},
+            "probabilities": {
+              "AWAY_WIN": "0.2413793103448275862068965517",
+              "DRAW": "0.2758620689655172413793103447",
+              "HOME_WIN": "0.4827586206896551724137931036"
+            },
+            "status": "AVAILABLE"
+          },
+          "OO_EPC": {
+            "parameters": {
+              "z": 0.014768426571801585
+            },
+            "probabilities": {
+              "AWAY_WIN": "0.2372101674148947",
+              "DRAW": "0.2732326871614819",
+              "HOME_WIN": "0.4895571454236235"
+            },
+            "status": "AVAILABLE"
+          },
+          "POWER": {
+            "parameters": {
+              "exponent": 1.034636783579117
+            },
+            "probabilities": {
+              "AWAY_WIN": "0.2382794489397026",
+              "DRAW": "0.27358179113679465",
+              "HOME_WIN": "0.48813875992355144"
+            },
+            "status": "AVAILABLE"
+          },
+          "SHIN": {
+            "parameters": {
+              "insider_fraction": 0.017891311770295334
+            },
+            "probabilities": {
+              "AWAY_WIN": "0.2389379691142544",
+              "DRAW": "0.2743283961228072",
+              "HOME_WIN": "0.48673363476294756"
+            },
+            "status": "AVAILABLE"
+          }
+        },
+        "quote_fingerprints": [
+          "684a80f6e15a1c1b71093e310bb15c3171f4ff1de8ae50799a82d4cab47089f2",
+          "7a4058d5d44385fd6812a0f2a80ce9911d5a55e2eeabb8d653e2e736d7a99df0",
+          "ae0f6600805da480164875da73ae17ddc5abb8cc442f853508d3c6d472364d15"
+        ],
+        "research_only": true,
+        "status": "AVAILABLE",
+        "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+      }
+    ],
+    "capture_id": "devig-v2:7:1X2:c7b1084d1bcdd51b80bf0f27a227a17075c9c5bdfe1fe459d112d04013109c9a",
+    "captured_at": "2025-01-01T00:00:00+00:00",
+    "fixture_id": 7,
+    "historical_bookmaker_odds_used": false,
+    "kickoff_utc": "2025-01-01T01:00:00+00:00",
+    "market_family": "1X2",
+    "method_version": "ODDS_ONLY_MATH_V1",
+    "model_probabilities": {
+      "HOME_WIN": {
+        "candidate_id": "FICTIONAL_7",
+        "probability": ".6"
+      }
+    },
+    "policy_context": {
+      "single_policy": "CONTROLLED_SYNTHETIC_V3_130"
+    },
+    "research_only": true,
+    "selection_effect": "NONE",
+    "source_consensus": {
+      "bookmaker_count": 2,
+      "bookmaker_markets": [
+        {
+          "bookmaker_id": 1,
+          "bookmaker_name": "1",
+          "fair_probabilities": {
+            "AWAY_WIN": "0.2413793103448275862068965520",
+            "DRAW": "0.2758620689655172413793103447",
+            "HOME_WIN": "0.4827586206896551724137931033"
+          },
+          "margin": "0.035714285714285714285714286",
+          "market_family": "1X2"
+        },
+        {
+          "bookmaker_id": 2,
+          "bookmaker_name": "2",
+          "fair_probabilities": {
+            "AWAY_WIN": "0.2413793103448275862068965520",
+            "DRAW": "0.2758620689655172413793103447",
+            "HOME_WIN": "0.4827586206896551724137931033"
+          },
+          "margin": "0.035714285714285714285714286",
+          "market_family": "1X2"
+        }
+      ],
+      "dispersion": {
+        "AWAY_WIN": "0E-28",
+        "DRAW": "0E-28",
+        "HOME_WIN": "0E-28"
+      },
+      "fair_probabilities": {
+        "AWAY_WIN": "0.2413793103448275862068965520",
+        "DRAW": "0.2758620689655172413793103447",
+        "HOME_WIN": "0.4827586206896551724137931033"
+      },
+      "fixture_id": 7,
+      "historical_bookmaker_odds_used": false,
+      "market_family": "1X2",
+      "quote_count": 6,
+      "quotes": [
+        {
+          "bookmaker_id": 1,
+          "bookmaker_name": "1",
+          "decimal_odds": "4",
+          "fixture_id": 7,
+          "market": "AWAY_WIN",
+          "provenance_fingerprint": "9f444bfd58edabccd7ceeeb29c4c59ccf9709d71a56cd4c15fd2974ae9d8e397",
+          "provider_origin_timestamp_utc": "2025-01-01T00:00:00+00:00",
+          "raw_implied_probability": "0.25",
+          "retrieved_at_utc": "2025-01-01T00:00:00+00:00"
+        },
+        {
+          "bookmaker_id": 1,
+          "bookmaker_name": "1",
+          "decimal_odds": "3.5",
+          "fixture_id": 7,
+          "market": "DRAW",
+          "provenance_fingerprint": "07dc762ce95a3fbcafe31185342516845ec2ef77d9c149d934246227e0368f29",
+          "provider_origin_timestamp_utc": "2025-01-01T00:00:00+00:00",
+          "raw_implied_probability": "0.2857142857142857142857142857",
+          "retrieved_at_utc": "2025-01-01T00:00:00+00:00"
+        },
+        {
+          "bookmaker_id": 1,
+          "bookmaker_name": "1",
+          "decimal_odds": "2",
+          "fixture_id": 7,
+          "market": "HOME_WIN",
+          "provenance_fingerprint": "b10667a6c2a55453173b8e218673a6688204fd5667d350ce9327c5c67ec25801",
+          "provider_origin_timestamp_utc": "2025-01-01T00:00:00+00:00",
+          "raw_implied_probability": "0.5",
+          "retrieved_at_utc": "2025-01-01T00:00:00+00:00"
+        },
+        {
+          "bookmaker_id": 2,
+          "bookmaker_name": "2",
+          "decimal_odds": "4",
+          "fixture_id": 7,
+          "market": "AWAY_WIN",
+          "provenance_fingerprint": "684a80f6e15a1c1b71093e310bb15c3171f4ff1de8ae50799a82d4cab47089f2",
+          "provider_origin_timestamp_utc": "2025-01-01T00:00:00+00:00",
+          "raw_implied_probability": "0.25",
+          "retrieved_at_utc": "2025-01-01T00:00:00+00:00"
+        },
+        {
+          "bookmaker_id": 2,
+          "bookmaker_name": "2",
+          "decimal_odds": "3.5",
+          "fixture_id": 7,
+          "market": "DRAW",
+          "provenance_fingerprint": "ae0f6600805da480164875da73ae17ddc5abb8cc442f853508d3c6d472364d15",
+          "provider_origin_timestamp_utc": "2025-01-01T00:00:00+00:00",
+          "raw_implied_probability": "0.2857142857142857142857142857",
+          "retrieved_at_utc": "2025-01-01T00:00:00+00:00"
+        },
+        {
+          "bookmaker_id": 2,
+          "bookmaker_name": "2",
+          "decimal_odds": "2",
+          "fixture_id": 7,
+          "market": "HOME_WIN",
+          "provenance_fingerprint": "7a4058d5d44385fd6812a0f2a80ce9911d5a55e2eeabb8d653e2e736d7a99df0",
+          "provider_origin_timestamp_utc": "2025-01-01T00:00:00+00:00",
+          "raw_implied_probability": "0.5",
+          "retrieved_at_utc": "2025-01-01T00:00:00+00:00"
+        }
+      ],
+      "reason": null,
+      "source": "API_FOOTBALL_CURRENT_ODDS",
+      "status": "AVAILABLE"
+    },
+    "source_consensus_fingerprint": "7fec8cf5d7199b97c26199cc2dc1b0c9cba737278f18638c0dd0a81e82268a42",
+    "source_issues": [],
+    "status": "AVAILABLE",
+    "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+  },
+  "correlated_book_market_samples": 2,
+  "evidence_tier": "CONTROLLED_SYNTHETIC_OFFLINE_TEST_ONLY",
+  "genuine_forward_evidence": false,
+  "independent_fixture_count": 1,
+  "metrics": {
+    "as_of": "2025-01-02T00:00:00+00:00",
+    "blocked_reasons": {},
+    "capture_ids": [
+      "devig-v2:7:1X2:c7b1084d1bcdd51b80bf0f27a227a17075c9c5bdfe1fe459d112d04013109c9a"
+    ],
+    "captured_fixture_count": 1,
+    "common_book_market_samples": 2,
+    "counts": {
+      "blocked_book_markets": 0,
+      "blocked_captures": 0,
+      "captures": 1,
+      "duplicate_captures": 1,
+      "future_captures": 0,
+      "invalid_result_chronology_book_markets": 0,
+      "pending_book_markets": 0,
+      "repeat_book_markets": 0,
+      "void_book_markets": 0
+    },
+    "first_book_market_samples": 2,
+    "fixture_count": 1,
+    "historical_bookmaker_odds_used": false,
+    "methods": {
+      "MULTIPLICATIVE": {
+        "bias": {
+          "FAVOURITE": {
+            "brier": 0.26753864447086795,
+            "ece": 0.5172413793103448,
+            "log_loss": 0.7282385003712154,
+            "mce": 0.5172413793103448,
+            "mean_signed_error": -0.5172413793103448,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.5172413793103448,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4827586206896552,
+                "upper": 0.5
+              }
+            ]
+          },
+          "OTHER": {
+            "brier": 0.06718192627824018,
+            "ece": 0.25862068965517243,
+            "log_loss": 0.2995133844456046,
+            "mce": 0.25862068965517243,
+            "mean_signed_error": 0.25862068965517243,
+            "probability_observations": 4,
+            "reliability_bins": [
+              {
+                "error": 0.25862068965517243,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.25862068965517243,
+                "upper": 0.3
+              }
+            ]
+          }
+        },
+        "book_market_samples": 2,
+        "brier": 0.13396749900911611,
+        "capture_method_statuses": {
+          "AVAILABLE": 2
+        },
+        "common_cohort": {
+          "bias": {
+            "FAVOURITE": {
+              "brier": 0.26753864447086795,
+              "ece": 0.5172413793103448,
+              "log_loss": 0.7282385003712154,
+              "mce": 0.5172413793103448,
+              "mean_signed_error": -0.5172413793103448,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.5172413793103448,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.4827586206896552,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "OTHER": {
+              "brier": 0.06718192627824018,
+              "ece": 0.25862068965517243,
+              "log_loss": 0.2995133844456046,
+              "mce": 0.25862068965517243,
+              "mean_signed_error": 0.25862068965517243,
+              "probability_observations": 4,
+              "reliability_bins": [
+                {
+                  "error": 0.25862068965517243,
+                  "lower": 0.2,
+                  "n": 4,
+                  "observed": 0,
+                  "predicted": 0.25862068965517243,
+                  "upper": 0.3
+                }
+              ]
+            }
+          },
+          "book_market_samples": 2,
+          "brier": 0.13396749900911611,
+          "ece": 0.3448275862068965,
+          "fallback_samples": 0,
+          "fixture_count": 1,
+          "log_loss": 0.4424217564208082,
+          "mce": 0.5172413793103448,
+          "mean_difference_from_multiplicative": 0.0,
+          "mean_model_market_disagreement": 0.11724137931034478,
+          "missing_or_invalid_model_references": 4,
+          "model_paired_market_metrics": {
+            "brier": 0.26753864447086795,
+            "ece": 0.5172413793103448,
+            "log_loss": 0.7282385003712154,
+            "mce": 0.5172413793103448,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.5172413793103448,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4827586206896552,
+                "upper": 0.5
+              }
+            ]
+          },
+          "paired_model_metrics": {
+            "brier": 0.16000000000000003,
+            "ece": 0.4,
+            "log_loss": 0.5108256237659907,
+            "mce": 0.4,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.4,
+                "lower": 0.6,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.6,
+                "upper": 0.7
+              }
+            ]
+          },
+          "paired_multiplicative_metrics": {
+            "brier": 0.13396749900911611,
+            "ece": 0.3448275862068965,
+            "log_loss": 0.4424217564208082,
+            "mce": 0.5172413793103448,
+            "probability_observations": 6,
+            "reliability_bins": [
+              {
+                "error": 0.25862068965517243,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.25862068965517243,
+                "upper": 0.3
+              },
+              {
+                "error": -0.5172413793103448,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4827586206896552,
+                "upper": 0.5
+              }
+            ]
+          },
+          "probability_observations": 6,
+          "reliability_bins": [
+            {
+              "error": 0.25862068965517243,
+              "lower": 0.2,
+              "n": 4,
+              "observed": 0,
+              "predicted": 0.25862068965517243,
+              "upper": 0.3
+            },
+            {
+              "error": -0.5172413793103448,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.4827586206896552,
+              "upper": 0.5
+            }
+          ]
+        },
+        "ece": 0.3448275862068965,
+        "fallback_samples": 0,
+        "fixture_count": 1,
+        "log_loss": 0.4424217564208082,
+        "mce": 0.5172413793103448,
+        "mean_difference_from_multiplicative": 0.0,
+        "mean_model_market_disagreement": 0.11724137931034478,
+        "missing_or_invalid_model_references": 4,
+        "model_paired_market_metrics": {
+          "brier": 0.26753864447086795,
+          "ece": 0.5172413793103448,
+          "log_loss": 0.7282385003712154,
+          "mce": 0.5172413793103448,
+          "probability_observations": 2,
+          "reliability_bins": [
+            {
+              "error": -0.5172413793103448,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.4827586206896552,
+              "upper": 0.5
+            }
+          ]
+        },
+        "paired_model_metrics": {
+          "brier": 0.16000000000000003,
+          "ece": 0.4,
+          "log_loss": 0.5108256237659907,
+          "mce": 0.4,
+          "probability_observations": 2,
+          "reliability_bins": [
+            {
+              "error": -0.4,
+              "lower": 0.6,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.6,
+              "upper": 0.7
+            }
+          ]
+        },
+        "paired_multiplicative_metrics": {
+          "brier": 0.13396749900911611,
+          "ece": 0.3448275862068965,
+          "log_loss": 0.4424217564208082,
+          "mce": 0.5172413793103448,
+          "probability_observations": 6,
+          "reliability_bins": [
+            {
+              "error": 0.25862068965517243,
+              "lower": 0.2,
+              "n": 4,
+              "observed": 0,
+              "predicted": 0.25862068965517243,
+              "upper": 0.3
+            },
+            {
+              "error": -0.5172413793103448,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.4827586206896552,
+              "upper": 0.5
+            }
+          ]
+        },
+        "probability_observations": 6,
+        "reliability_bins": [
+          {
+            "error": 0.25862068965517243,
+            "lower": 0.2,
+            "n": 4,
+            "observed": 0,
+            "predicted": 0.25862068965517243,
+            "upper": 0.3
+          },
+          {
+            "error": -0.5172413793103448,
+            "lower": 0.4,
+            "n": 2,
+            "observed": 1,
+            "predicted": 0.4827586206896552,
+            "upper": 0.5
+          }
+        ]
+      },
+      "OO_EPC": {
+        "bias": {
+          "FAVOURITE": {
+            "brier": 0.26055190778807985,
+            "ece": 0.5104428545763765,
+            "log_loss": 0.7142540813869857,
+            "mce": 0.5104428545763765,
+            "mean_signed_error": -0.5104428545763765,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.5104428545763765,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4895571454236235,
+                "upper": 0.5
+              }
+            ]
+          },
+          "OTHER": {
+            "brier": 0.06546238242924331,
+            "ece": 0.2552214272881883,
+            "log_loss": 0.29496082598338624,
+            "mce": 0.2552214272881883,
+            "mean_signed_error": 0.2552214272881883,
+            "probability_observations": 4,
+            "reliability_bins": [
+              {
+                "error": 0.2552214272881883,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.2552214272881883,
+                "upper": 0.3
+              }
+            ]
+          }
+        },
+        "book_market_samples": 2,
+        "brier": 0.13049222421552215,
+        "capture_method_statuses": {
+          "AVAILABLE": 2
+        },
+        "common_cohort": {
+          "bias": {
+            "FAVOURITE": {
+              "brier": 0.26055190778807985,
+              "ece": 0.5104428545763765,
+              "log_loss": 0.7142540813869857,
+              "mce": 0.5104428545763765,
+              "mean_signed_error": -0.5104428545763765,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.5104428545763765,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.4895571454236235,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "OTHER": {
+              "brier": 0.06546238242924331,
+              "ece": 0.2552214272881883,
+              "log_loss": 0.29496082598338624,
+              "mce": 0.2552214272881883,
+              "mean_signed_error": 0.2552214272881883,
+              "probability_observations": 4,
+              "reliability_bins": [
+                {
+                  "error": 0.2552214272881883,
+                  "lower": 0.2,
+                  "n": 4,
+                  "observed": 0,
+                  "predicted": 0.2552214272881883,
+                  "upper": 0.3
+                }
+              ]
+            }
+          },
+          "book_market_samples": 2,
+          "brier": 0.13049222421552215,
+          "ece": 0.3402952363842511,
+          "fallback_samples": 0,
+          "fixture_count": 1,
+          "log_loss": 0.4347252444512527,
+          "mce": 0.5104428545763765,
+          "mean_difference_from_multiplicative": 0.004532349822645508,
+          "mean_model_market_disagreement": 0.11044285457637648,
+          "missing_or_invalid_model_references": 4,
+          "model_paired_market_metrics": {
+            "brier": 0.26055190778807985,
+            "ece": 0.5104428545763765,
+            "log_loss": 0.7142540813869857,
+            "mce": 0.5104428545763765,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.5104428545763765,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4895571454236235,
+                "upper": 0.5
+              }
+            ]
+          },
+          "paired_model_metrics": {
+            "brier": 0.16000000000000003,
+            "ece": 0.4,
+            "log_loss": 0.5108256237659907,
+            "mce": 0.4,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.4,
+                "lower": 0.6,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.6,
+                "upper": 0.7
+              }
+            ]
+          },
+          "paired_multiplicative_metrics": {
+            "brier": 0.13396749900911611,
+            "ece": 0.3448275862068965,
+            "log_loss": 0.4424217564208082,
+            "mce": 0.5172413793103448,
+            "probability_observations": 6,
+            "reliability_bins": [
+              {
+                "error": 0.25862068965517243,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.25862068965517243,
+                "upper": 0.3
+              },
+              {
+                "error": -0.5172413793103448,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4827586206896552,
+                "upper": 0.5
+              }
+            ]
+          },
+          "probability_observations": 6,
+          "reliability_bins": [
+            {
+              "error": 0.2552214272881883,
+              "lower": 0.2,
+              "n": 4,
+              "observed": 0,
+              "predicted": 0.2552214272881883,
+              "upper": 0.3
+            },
+            {
+              "error": -0.5104428545763765,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.4895571454236235,
+              "upper": 0.5
+            }
+          ]
+        },
+        "ece": 0.3402952363842511,
+        "fallback_samples": 0,
+        "fixture_count": 1,
+        "log_loss": 0.4347252444512527,
+        "mce": 0.5104428545763765,
+        "mean_difference_from_multiplicative": 0.004532349822645508,
+        "mean_model_market_disagreement": 0.11044285457637648,
+        "missing_or_invalid_model_references": 4,
+        "model_paired_market_metrics": {
+          "brier": 0.26055190778807985,
+          "ece": 0.5104428545763765,
+          "log_loss": 0.7142540813869857,
+          "mce": 0.5104428545763765,
+          "probability_observations": 2,
+          "reliability_bins": [
+            {
+              "error": -0.5104428545763765,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.4895571454236235,
+              "upper": 0.5
+            }
+          ]
+        },
+        "paired_model_metrics": {
+          "brier": 0.16000000000000003,
+          "ece": 0.4,
+          "log_loss": 0.5108256237659907,
+          "mce": 0.4,
+          "probability_observations": 2,
+          "reliability_bins": [
+            {
+              "error": -0.4,
+              "lower": 0.6,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.6,
+              "upper": 0.7
+            }
+          ]
+        },
+        "paired_multiplicative_metrics": {
+          "brier": 0.13396749900911611,
+          "ece": 0.3448275862068965,
+          "log_loss": 0.4424217564208082,
+          "mce": 0.5172413793103448,
+          "probability_observations": 6,
+          "reliability_bins": [
+            {
+              "error": 0.25862068965517243,
+              "lower": 0.2,
+              "n": 4,
+              "observed": 0,
+              "predicted": 0.25862068965517243,
+              "upper": 0.3
+            },
+            {
+              "error": -0.5172413793103448,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.4827586206896552,
+              "upper": 0.5
+            }
+          ]
+        },
+        "probability_observations": 6,
+        "reliability_bins": [
+          {
+            "error": 0.2552214272881883,
+            "lower": 0.2,
+            "n": 4,
+            "observed": 0,
+            "predicted": 0.2552214272881883,
+            "upper": 0.3
+          },
+          {
+            "error": -0.5104428545763765,
+            "lower": 0.4,
+            "n": 2,
+            "observed": 1,
+            "predicted": 0.4895571454236235,
+            "upper": 0.5
+          }
+        ]
+      },
+      "POWER": {
+        "bias": {
+          "FAVOURITE": {
+            "brier": 0.2620019290925998,
+            "ece": 0.5118612400764486,
+            "log_loss": 0.7171555694414753,
+            "mce": 0.5118612400764486,
+            "mean_signed_error": -0.5118612400764486,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.5118612400764486,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.48813875992355144,
+                "upper": 0.5
+              }
+            ]
+          },
+          "OTHER": {
+            "brier": 0.06581204611431253,
+            "ece": 0.2559306200382486,
+            "log_loss": 0.29590245309565577,
+            "mce": 0.2559306200382486,
+            "mean_signed_error": 0.2559306200382486,
+            "probability_observations": 4,
+            "reliability_bins": [
+              {
+                "error": 0.2559306200382486,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.2559306200382486,
+                "upper": 0.3
+              }
+            ]
+          }
+        },
+        "book_market_samples": 2,
+        "brier": 0.13120867377374162,
+        "capture_method_statuses": {
+          "AVAILABLE": 2
+        },
+        "common_cohort": {
+          "bias": {
+            "FAVOURITE": {
+              "brier": 0.2620019290925998,
+              "ece": 0.5118612400764486,
+              "log_loss": 0.7171555694414753,
+              "mce": 0.5118612400764486,
+              "mean_signed_error": -0.5118612400764486,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.5118612400764486,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.48813875992355144,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "OTHER": {
+              "brier": 0.06581204611431253,
+              "ece": 0.2559306200382486,
+              "log_loss": 0.29590245309565577,
+              "mce": 0.2559306200382486,
+              "mean_signed_error": 0.2559306200382486,
+              "probability_observations": 4,
+              "reliability_bins": [
+                {
+                  "error": 0.2559306200382486,
+                  "lower": 0.2,
+                  "n": 4,
+                  "observed": 0,
+                  "predicted": 0.2559306200382486,
+                  "upper": 0.3
+                }
+              ]
+            }
+          },
+          "book_market_samples": 2,
+          "brier": 0.13120867377374162,
+          "ece": 0.3412408267176486,
+          "fallback_samples": 0,
+          "fixture_count": 1,
+          "log_loss": 0.43632015854426226,
+          "mce": 0.5118612400764486,
+          "mean_difference_from_multiplicative": 0.0035867594892479426,
+          "mean_model_market_disagreement": 0.11186124007644854,
+          "missing_or_invalid_model_references": 4,
+          "model_paired_market_metrics": {
+            "brier": 0.2620019290925998,
+            "ece": 0.5118612400764486,
+            "log_loss": 0.7171555694414753,
+            "mce": 0.5118612400764486,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.5118612400764486,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.48813875992355144,
+                "upper": 0.5
+              }
+            ]
+          },
+          "paired_model_metrics": {
+            "brier": 0.16000000000000003,
+            "ece": 0.4,
+            "log_loss": 0.5108256237659907,
+            "mce": 0.4,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.4,
+                "lower": 0.6,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.6,
+                "upper": 0.7
+              }
+            ]
+          },
+          "paired_multiplicative_metrics": {
+            "brier": 0.13396749900911611,
+            "ece": 0.3448275862068965,
+            "log_loss": 0.4424217564208082,
+            "mce": 0.5172413793103448,
+            "probability_observations": 6,
+            "reliability_bins": [
+              {
+                "error": 0.25862068965517243,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.25862068965517243,
+                "upper": 0.3
+              },
+              {
+                "error": -0.5172413793103448,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4827586206896552,
+                "upper": 0.5
+              }
+            ]
+          },
+          "probability_observations": 6,
+          "reliability_bins": [
+            {
+              "error": 0.2559306200382486,
+              "lower": 0.2,
+              "n": 4,
+              "observed": 0,
+              "predicted": 0.2559306200382486,
+              "upper": 0.3
+            },
+            {
+              "error": -0.5118612400764486,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.48813875992355144,
+              "upper": 0.5
+            }
+          ]
+        },
+        "ece": 0.3412408267176486,
+        "fallback_samples": 0,
+        "fixture_count": 1,
+        "log_loss": 0.43632015854426226,
+        "mce": 0.5118612400764486,
+        "mean_difference_from_multiplicative": 0.0035867594892479426,
+        "mean_model_market_disagreement": 0.11186124007644854,
+        "missing_or_invalid_model_references": 4,
+        "model_paired_market_metrics": {
+          "brier": 0.2620019290925998,
+          "ece": 0.5118612400764486,
+          "log_loss": 0.7171555694414753,
+          "mce": 0.5118612400764486,
+          "probability_observations": 2,
+          "reliability_bins": [
+            {
+              "error": -0.5118612400764486,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.48813875992355144,
+              "upper": 0.5
+            }
+          ]
+        },
+        "paired_model_metrics": {
+          "brier": 0.16000000000000003,
+          "ece": 0.4,
+          "log_loss": 0.5108256237659907,
+          "mce": 0.4,
+          "probability_observations": 2,
+          "reliability_bins": [
+            {
+              "error": -0.4,
+              "lower": 0.6,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.6,
+              "upper": 0.7
+            }
+          ]
+        },
+        "paired_multiplicative_metrics": {
+          "brier": 0.13396749900911611,
+          "ece": 0.3448275862068965,
+          "log_loss": 0.4424217564208082,
+          "mce": 0.5172413793103448,
+          "probability_observations": 6,
+          "reliability_bins": [
+            {
+              "error": 0.25862068965517243,
+              "lower": 0.2,
+              "n": 4,
+              "observed": 0,
+              "predicted": 0.25862068965517243,
+              "upper": 0.3
+            },
+            {
+              "error": -0.5172413793103448,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.4827586206896552,
+              "upper": 0.5
+            }
+          ]
+        },
+        "probability_observations": 6,
+        "reliability_bins": [
+          {
+            "error": 0.2559306200382486,
+            "lower": 0.2,
+            "n": 4,
+            "observed": 0,
+            "predicted": 0.2559306200382486,
+            "upper": 0.3
+          },
+          {
+            "error": -0.5118612400764486,
+            "lower": 0.4,
+            "n": 2,
+            "observed": 1,
+            "predicted": 0.48813875992355144,
+            "upper": 0.5
+          }
+        ]
+      },
+      "SHIN": {
+        "bias": {
+          "FAVOURITE": {
+            "brier": 0.26344236168365526,
+            "ece": 0.5132663652370524,
+            "log_loss": 0.7200382567373679,
+            "mce": 0.5132663652370524,
+            "mean_signed_error": -0.5132663652370524,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.5132663652370524,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.48673363476294756,
+                "upper": 0.5
+              }
+            ]
+          },
+          "OTHER": {
+            "brier": 0.0661737110018781,
+            "ece": 0.2566331826185308,
+            "log_loss": 0.2968490574292604,
+            "mce": 0.2566331826185308,
+            "mean_signed_error": 0.2566331826185308,
+            "probability_observations": 4,
+            "reliability_bins": [
+              {
+                "error": 0.2566331826185308,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.2566331826185308,
+                "upper": 0.3
+              }
+            ]
+          }
+        },
+        "book_market_samples": 2,
+        "brier": 0.13192992789580382,
+        "capture_method_statuses": {
+          "AVAILABLE": 2
+        },
+        "common_cohort": {
+          "bias": {
+            "FAVOURITE": {
+              "brier": 0.26344236168365526,
+              "ece": 0.5132663652370524,
+              "log_loss": 0.7200382567373679,
+              "mce": 0.5132663652370524,
+              "mean_signed_error": -0.5132663652370524,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.5132663652370524,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.48673363476294756,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "OTHER": {
+              "brier": 0.0661737110018781,
+              "ece": 0.2566331826185308,
+              "log_loss": 0.2968490574292604,
+              "mce": 0.2566331826185308,
+              "mean_signed_error": 0.2566331826185308,
+              "probability_observations": 4,
+              "reliability_bins": [
+                {
+                  "error": 0.2566331826185308,
+                  "lower": 0.2,
+                  "n": 4,
+                  "observed": 0,
+                  "predicted": 0.2566331826185308,
+                  "upper": 0.3
+                }
+              ]
+            }
+          },
+          "book_market_samples": 2,
+          "brier": 0.13192992789580382,
+          "ece": 0.3421775768247047,
+          "fallback_samples": 0,
+          "fixture_count": 1,
+          "log_loss": 0.4379121238652962,
+          "mce": 0.5132663652370524,
+          "mean_difference_from_multiplicative": 0.00265000938219187,
+          "mean_model_market_disagreement": 0.11326636523705241,
+          "missing_or_invalid_model_references": 4,
+          "model_paired_market_metrics": {
+            "brier": 0.26344236168365526,
+            "ece": 0.5132663652370524,
+            "log_loss": 0.7200382567373679,
+            "mce": 0.5132663652370524,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.5132663652370524,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.48673363476294756,
+                "upper": 0.5
+              }
+            ]
+          },
+          "paired_model_metrics": {
+            "brier": 0.16000000000000003,
+            "ece": 0.4,
+            "log_loss": 0.5108256237659907,
+            "mce": 0.4,
+            "probability_observations": 2,
+            "reliability_bins": [
+              {
+                "error": -0.4,
+                "lower": 0.6,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.6,
+                "upper": 0.7
+              }
+            ]
+          },
+          "paired_multiplicative_metrics": {
+            "brier": 0.13396749900911611,
+            "ece": 0.3448275862068965,
+            "log_loss": 0.4424217564208082,
+            "mce": 0.5172413793103448,
+            "probability_observations": 6,
+            "reliability_bins": [
+              {
+                "error": 0.25862068965517243,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.25862068965517243,
+                "upper": 0.3
+              },
+              {
+                "error": -0.5172413793103448,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4827586206896552,
+                "upper": 0.5
+              }
+            ]
+          },
+          "probability_observations": 6,
+          "reliability_bins": [
+            {
+              "error": 0.2566331826185308,
+              "lower": 0.2,
+              "n": 4,
+              "observed": 0,
+              "predicted": 0.2566331826185308,
+              "upper": 0.3
+            },
+            {
+              "error": -0.5132663652370524,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.48673363476294756,
+              "upper": 0.5
+            }
+          ]
+        },
+        "ece": 0.3421775768247047,
+        "fallback_samples": 0,
+        "fixture_count": 1,
+        "log_loss": 0.4379121238652962,
+        "mce": 0.5132663652370524,
+        "mean_difference_from_multiplicative": 0.00265000938219187,
+        "mean_model_market_disagreement": 0.11326636523705241,
+        "missing_or_invalid_model_references": 4,
+        "model_paired_market_metrics": {
+          "brier": 0.26344236168365526,
+          "ece": 0.5132663652370524,
+          "log_loss": 0.7200382567373679,
+          "mce": 0.5132663652370524,
+          "probability_observations": 2,
+          "reliability_bins": [
+            {
+              "error": -0.5132663652370524,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.48673363476294756,
+              "upper": 0.5
+            }
+          ]
+        },
+        "paired_model_metrics": {
+          "brier": 0.16000000000000003,
+          "ece": 0.4,
+          "log_loss": 0.5108256237659907,
+          "mce": 0.4,
+          "probability_observations": 2,
+          "reliability_bins": [
+            {
+              "error": -0.4,
+              "lower": 0.6,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.6,
+              "upper": 0.7
+            }
+          ]
+        },
+        "paired_multiplicative_metrics": {
+          "brier": 0.13396749900911611,
+          "ece": 0.3448275862068965,
+          "log_loss": 0.4424217564208082,
+          "mce": 0.5172413793103448,
+          "probability_observations": 6,
+          "reliability_bins": [
+            {
+              "error": 0.25862068965517243,
+              "lower": 0.2,
+              "n": 4,
+              "observed": 0,
+              "predicted": 0.25862068965517243,
+              "upper": 0.3
+            },
+            {
+              "error": -0.5172413793103448,
+              "lower": 0.4,
+              "n": 2,
+              "observed": 1,
+              "predicted": 0.4827586206896552,
+              "upper": 0.5
+            }
+          ]
+        },
+        "probability_observations": 6,
+        "reliability_bins": [
+          {
+            "error": 0.2566331826185308,
+            "lower": 0.2,
+            "n": 4,
+            "observed": 0,
+            "predicted": 0.2566331826185308,
+            "upper": 0.3
+          },
+          {
+            "error": -0.5132663652370524,
+            "lower": 0.4,
+            "n": 2,
+            "observed": 1,
+            "predicted": 0.48673363476294756,
+            "upper": 0.5
+          }
+        ]
+      }
+    },
+    "model_learning_observations": 0,
+    "promotion_eligible": false,
+    "quality_verdict": "NEEDS_MORE_EVIDENCE",
+    "resolved_book_market_samples": 2,
+    "result_counts": {
+      "duplicate_results": 0,
+      "excluded_combo_results": 0,
+      "future_results": 0,
+      "invalid_results": 0
+    },
+    "result_links": [
+      {
+        "bookmaker": "1",
+        "bookmaker_id": 1,
+        "capture_id": "devig-v2:7:1X2:c7b1084d1bcdd51b80bf0f27a227a17075c9c5bdfe1fe459d112d04013109c9a",
+        "result_fingerprint": "7ad9bbbf1bf3d875f90f1dde9a8ba637d5a18c891ba2ae0032407d62c458d69b"
+      },
+      {
+        "bookmaker": "2",
+        "bookmaker_id": 2,
+        "capture_id": "devig-v2:7:1X2:c7b1084d1bcdd51b80bf0f27a227a17075c9c5bdfe1fe459d112d04013109c9a",
+        "result_fingerprint": "7ad9bbbf1bf3d875f90f1dde9a8ba637d5a18c891ba2ae0032407d62c458d69b"
+      }
+    ],
+    "sampling": "FIRST_FORWARD_FIXTURE_BOOK_FAMILY",
+    "sampling_limitations": [
+      "RESULT_COVERAGE_DEPENDS_ON_EXISTING_SINGLE_AND_SHADOW_TRACKING",
+      "BOOKMAKERS_AND_OUTCOMES_ARE_CORRELATED_NOT_INDEPENDENT_SAMPLES",
+      "DESCRIPTIVE_FORWARD_EVIDENCE_NOT_A_NEW_HOLDOUT"
+    ],
+    "segments": [
+      {
+        "market_family": "1X2",
+        "methods": {
+          "MULTIPLICATIVE": {
+            "bias": {
+              "FAVOURITE": {
+                "brier": 0.26753864447086795,
+                "ece": 0.5172413793103448,
+                "log_loss": 0.7282385003712154,
+                "mce": 0.5172413793103448,
+                "mean_signed_error": -0.5172413793103448,
+                "probability_observations": 2,
+                "reliability_bins": [
+                  {
+                    "error": -0.5172413793103448,
+                    "lower": 0.4,
+                    "n": 2,
+                    "observed": 1,
+                    "predicted": 0.4827586206896552,
+                    "upper": 0.5
+                  }
+                ]
+              },
+              "OTHER": {
+                "brier": 0.06718192627824018,
+                "ece": 0.25862068965517243,
+                "log_loss": 0.2995133844456046,
+                "mce": 0.25862068965517243,
+                "mean_signed_error": 0.25862068965517243,
+                "probability_observations": 4,
+                "reliability_bins": [
+                  {
+                    "error": 0.25862068965517243,
+                    "lower": 0.2,
+                    "n": 4,
+                    "observed": 0,
+                    "predicted": 0.25862068965517243,
+                    "upper": 0.3
+                  }
+                ]
+              }
+            },
+            "book_market_samples": 2,
+            "brier": 0.13396749900911611,
+            "ece": 0.3448275862068965,
+            "fallback_samples": 0,
+            "fixture_count": 1,
+            "log_loss": 0.4424217564208082,
+            "mce": 0.5172413793103448,
+            "mean_difference_from_multiplicative": 0.0,
+            "mean_model_market_disagreement": 0.11724137931034478,
+            "missing_or_invalid_model_references": 4,
+            "model_paired_market_metrics": {
+              "brier": 0.26753864447086795,
+              "ece": 0.5172413793103448,
+              "log_loss": 0.7282385003712154,
+              "mce": 0.5172413793103448,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.5172413793103448,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.4827586206896552,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "paired_model_metrics": {
+              "brier": 0.16000000000000003,
+              "ece": 0.4,
+              "log_loss": 0.5108256237659907,
+              "mce": 0.4,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.4,
+                  "lower": 0.6,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.6,
+                  "upper": 0.7
+                }
+              ]
+            },
+            "paired_multiplicative_metrics": {
+              "brier": 0.13396749900911611,
+              "ece": 0.3448275862068965,
+              "log_loss": 0.4424217564208082,
+              "mce": 0.5172413793103448,
+              "probability_observations": 6,
+              "reliability_bins": [
+                {
+                  "error": 0.25862068965517243,
+                  "lower": 0.2,
+                  "n": 4,
+                  "observed": 0,
+                  "predicted": 0.25862068965517243,
+                  "upper": 0.3
+                },
+                {
+                  "error": -0.5172413793103448,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.4827586206896552,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "probability_observations": 6,
+            "reliability_bins": [
+              {
+                "error": 0.25862068965517243,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.25862068965517243,
+                "upper": 0.3
+              },
+              {
+                "error": -0.5172413793103448,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4827586206896552,
+                "upper": 0.5
+              }
+            ]
+          },
+          "OO_EPC": {
+            "bias": {
+              "FAVOURITE": {
+                "brier": 0.26055190778807985,
+                "ece": 0.5104428545763765,
+                "log_loss": 0.7142540813869857,
+                "mce": 0.5104428545763765,
+                "mean_signed_error": -0.5104428545763765,
+                "probability_observations": 2,
+                "reliability_bins": [
+                  {
+                    "error": -0.5104428545763765,
+                    "lower": 0.4,
+                    "n": 2,
+                    "observed": 1,
+                    "predicted": 0.4895571454236235,
+                    "upper": 0.5
+                  }
+                ]
+              },
+              "OTHER": {
+                "brier": 0.06546238242924331,
+                "ece": 0.2552214272881883,
+                "log_loss": 0.29496082598338624,
+                "mce": 0.2552214272881883,
+                "mean_signed_error": 0.2552214272881883,
+                "probability_observations": 4,
+                "reliability_bins": [
+                  {
+                    "error": 0.2552214272881883,
+                    "lower": 0.2,
+                    "n": 4,
+                    "observed": 0,
+                    "predicted": 0.2552214272881883,
+                    "upper": 0.3
+                  }
+                ]
+              }
+            },
+            "book_market_samples": 2,
+            "brier": 0.13049222421552215,
+            "ece": 0.3402952363842511,
+            "fallback_samples": 0,
+            "fixture_count": 1,
+            "log_loss": 0.4347252444512527,
+            "mce": 0.5104428545763765,
+            "mean_difference_from_multiplicative": 0.004532349822645508,
+            "mean_model_market_disagreement": 0.11044285457637648,
+            "missing_or_invalid_model_references": 4,
+            "model_paired_market_metrics": {
+              "brier": 0.26055190778807985,
+              "ece": 0.5104428545763765,
+              "log_loss": 0.7142540813869857,
+              "mce": 0.5104428545763765,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.5104428545763765,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.4895571454236235,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "paired_model_metrics": {
+              "brier": 0.16000000000000003,
+              "ece": 0.4,
+              "log_loss": 0.5108256237659907,
+              "mce": 0.4,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.4,
+                  "lower": 0.6,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.6,
+                  "upper": 0.7
+                }
+              ]
+            },
+            "paired_multiplicative_metrics": {
+              "brier": 0.13396749900911611,
+              "ece": 0.3448275862068965,
+              "log_loss": 0.4424217564208082,
+              "mce": 0.5172413793103448,
+              "probability_observations": 6,
+              "reliability_bins": [
+                {
+                  "error": 0.25862068965517243,
+                  "lower": 0.2,
+                  "n": 4,
+                  "observed": 0,
+                  "predicted": 0.25862068965517243,
+                  "upper": 0.3
+                },
+                {
+                  "error": -0.5172413793103448,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.4827586206896552,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "probability_observations": 6,
+            "reliability_bins": [
+              {
+                "error": 0.2552214272881883,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.2552214272881883,
+                "upper": 0.3
+              },
+              {
+                "error": -0.5104428545763765,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.4895571454236235,
+                "upper": 0.5
+              }
+            ]
+          },
+          "POWER": {
+            "bias": {
+              "FAVOURITE": {
+                "brier": 0.2620019290925998,
+                "ece": 0.5118612400764486,
+                "log_loss": 0.7171555694414753,
+                "mce": 0.5118612400764486,
+                "mean_signed_error": -0.5118612400764486,
+                "probability_observations": 2,
+                "reliability_bins": [
+                  {
+                    "error": -0.5118612400764486,
+                    "lower": 0.4,
+                    "n": 2,
+                    "observed": 1,
+                    "predicted": 0.48813875992355144,
+                    "upper": 0.5
+                  }
+                ]
+              },
+              "OTHER": {
+                "brier": 0.06581204611431253,
+                "ece": 0.2559306200382486,
+                "log_loss": 0.29590245309565577,
+                "mce": 0.2559306200382486,
+                "mean_signed_error": 0.2559306200382486,
+                "probability_observations": 4,
+                "reliability_bins": [
+                  {
+                    "error": 0.2559306200382486,
+                    "lower": 0.2,
+                    "n": 4,
+                    "observed": 0,
+                    "predicted": 0.2559306200382486,
+                    "upper": 0.3
+                  }
+                ]
+              }
+            },
+            "book_market_samples": 2,
+            "brier": 0.13120867377374162,
+            "ece": 0.3412408267176486,
+            "fallback_samples": 0,
+            "fixture_count": 1,
+            "log_loss": 0.43632015854426226,
+            "mce": 0.5118612400764486,
+            "mean_difference_from_multiplicative": 0.0035867594892479426,
+            "mean_model_market_disagreement": 0.11186124007644854,
+            "missing_or_invalid_model_references": 4,
+            "model_paired_market_metrics": {
+              "brier": 0.2620019290925998,
+              "ece": 0.5118612400764486,
+              "log_loss": 0.7171555694414753,
+              "mce": 0.5118612400764486,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.5118612400764486,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.48813875992355144,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "paired_model_metrics": {
+              "brier": 0.16000000000000003,
+              "ece": 0.4,
+              "log_loss": 0.5108256237659907,
+              "mce": 0.4,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.4,
+                  "lower": 0.6,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.6,
+                  "upper": 0.7
+                }
+              ]
+            },
+            "paired_multiplicative_metrics": {
+              "brier": 0.13396749900911611,
+              "ece": 0.3448275862068965,
+              "log_loss": 0.4424217564208082,
+              "mce": 0.5172413793103448,
+              "probability_observations": 6,
+              "reliability_bins": [
+                {
+                  "error": 0.25862068965517243,
+                  "lower": 0.2,
+                  "n": 4,
+                  "observed": 0,
+                  "predicted": 0.25862068965517243,
+                  "upper": 0.3
+                },
+                {
+                  "error": -0.5172413793103448,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.4827586206896552,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "probability_observations": 6,
+            "reliability_bins": [
+              {
+                "error": 0.2559306200382486,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.2559306200382486,
+                "upper": 0.3
+              },
+              {
+                "error": -0.5118612400764486,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.48813875992355144,
+                "upper": 0.5
+              }
+            ]
+          },
+          "SHIN": {
+            "bias": {
+              "FAVOURITE": {
+                "brier": 0.26344236168365526,
+                "ece": 0.5132663652370524,
+                "log_loss": 0.7200382567373679,
+                "mce": 0.5132663652370524,
+                "mean_signed_error": -0.5132663652370524,
+                "probability_observations": 2,
+                "reliability_bins": [
+                  {
+                    "error": -0.5132663652370524,
+                    "lower": 0.4,
+                    "n": 2,
+                    "observed": 1,
+                    "predicted": 0.48673363476294756,
+                    "upper": 0.5
+                  }
+                ]
+              },
+              "OTHER": {
+                "brier": 0.0661737110018781,
+                "ece": 0.2566331826185308,
+                "log_loss": 0.2968490574292604,
+                "mce": 0.2566331826185308,
+                "mean_signed_error": 0.2566331826185308,
+                "probability_observations": 4,
+                "reliability_bins": [
+                  {
+                    "error": 0.2566331826185308,
+                    "lower": 0.2,
+                    "n": 4,
+                    "observed": 0,
+                    "predicted": 0.2566331826185308,
+                    "upper": 0.3
+                  }
+                ]
+              }
+            },
+            "book_market_samples": 2,
+            "brier": 0.13192992789580382,
+            "ece": 0.3421775768247047,
+            "fallback_samples": 0,
+            "fixture_count": 1,
+            "log_loss": 0.4379121238652962,
+            "mce": 0.5132663652370524,
+            "mean_difference_from_multiplicative": 0.00265000938219187,
+            "mean_model_market_disagreement": 0.11326636523705241,
+            "missing_or_invalid_model_references": 4,
+            "model_paired_market_metrics": {
+              "brier": 0.26344236168365526,
+              "ece": 0.5132663652370524,
+              "log_loss": 0.7200382567373679,
+              "mce": 0.5132663652370524,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.5132663652370524,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.48673363476294756,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "paired_model_metrics": {
+              "brier": 0.16000000000000003,
+              "ece": 0.4,
+              "log_loss": 0.5108256237659907,
+              "mce": 0.4,
+              "probability_observations": 2,
+              "reliability_bins": [
+                {
+                  "error": -0.4,
+                  "lower": 0.6,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.6,
+                  "upper": 0.7
+                }
+              ]
+            },
+            "paired_multiplicative_metrics": {
+              "brier": 0.13396749900911611,
+              "ece": 0.3448275862068965,
+              "log_loss": 0.4424217564208082,
+              "mce": 0.5172413793103448,
+              "probability_observations": 6,
+              "reliability_bins": [
+                {
+                  "error": 0.25862068965517243,
+                  "lower": 0.2,
+                  "n": 4,
+                  "observed": 0,
+                  "predicted": 0.25862068965517243,
+                  "upper": 0.3
+                },
+                {
+                  "error": -0.5172413793103448,
+                  "lower": 0.4,
+                  "n": 2,
+                  "observed": 1,
+                  "predicted": 0.4827586206896552,
+                  "upper": 0.5
+                }
+              ]
+            },
+            "probability_observations": 6,
+            "reliability_bins": [
+              {
+                "error": 0.2566331826185308,
+                "lower": 0.2,
+                "n": 4,
+                "observed": 0,
+                "predicted": 0.2566331826185308,
+                "upper": 0.3
+              },
+              {
+                "error": -0.5132663652370524,
+                "lower": 0.4,
+                "n": 2,
+                "observed": 1,
+                "predicted": 0.48673363476294756,
+                "upper": 0.5
+              }
+            ]
+          }
+        },
+        "single_policy": "CONTROLLED_SYNTHETIC_V3_130"
+      }
+    ],
+    "selection_effect": "NONE",
+    "snapshot_fingerprint": "882a4bc6e189b1d96dc24d9428526681ea74e971bdd35eb706e7f5c5a7fc44cb",
+    "status": "AVAILABLE",
+    "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+  },
+  "promotion_authorized": false,
+  "selection_effect": "NONE"
+}

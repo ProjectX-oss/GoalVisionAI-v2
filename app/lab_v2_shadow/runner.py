@@ -10,6 +10,7 @@ from decimal import Decimal, localcontext
 from itertools import combinations
 from math import factorial
 import json
+import os
 from pathlib import Path
 import sqlite3
 from typing import Callable
@@ -618,6 +619,18 @@ class LabV2ShadowRunner:
             actual_hard_rejects=sum(bool(i.get("hard_failures")) for i in candidates),
             positive_ev_shadow_observations=shadow_captures,
         )
+        if os.environ.get("GOALVISION_LAB_DEVIG_RESEARCH", "0") == "1":
+            # Optional research is outside all core selection/persistence guards.
+            try:
+                from app.adaptive_lab.devig_integration import capture_cycle
+                report["devig_research"] = capture_cycle(
+                    self.repository, odds_evidence, fixtures, candidates, clock=clock,
+                    runtime_clock=self.runtime_clock, today_only=today_only)
+            except Exception:
+                report["devig_research"] = {
+                    "status": "UNAVAILABLE", "reason": "RESEARCH_CAPTURE_UNAVAILABLE",
+                    "selection_effect": "NONE", "additional_provider_calls": 0,
+                    "model_learning_observations": 0}
         persisted_report = {key: value for key, value in report.items() if key != "candidate_markets"}
         persisted_report.update({
             "candidate_document_kind": "candidate",

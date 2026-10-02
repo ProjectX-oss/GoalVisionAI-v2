@@ -124,6 +124,15 @@ def operator_cycle_summary(report: dict[str, object]) -> dict[str, object]:
             'scoped_fixture_count': _integer(scope.get('scoped_fixture_count')),
             'excluded_fixture_count': _integer(scope.get('excluded_fixture_count')),
         }
+    research = report.get("devig_research")
+    if isinstance(research, dict):
+        result["devig_research"] = {
+            "status": _code(research.get("status")), "reason": _code(research.get("reason")),
+            "selection_effect": "NONE",
+            "persisted": _integer((research.get("counts") or {}).get("persisted")) or 0,
+            "available": _integer((research.get("counts") or {}).get("AVAILABLE")) or 0,
+            "blocked": _integer((research.get("counts") or {}).get("BLOCKED")) or 0,
+        }
     result['controlled_publication'] = {
         'reason': _code(publication.get('reason')) or ('NIGHT_DISCOVERY_PAUSED' if paused else None),
         'status': _code(publication.get('status')) or result['delivery_status'],

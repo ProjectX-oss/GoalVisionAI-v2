@@ -1,0 +1,16 @@
+{
+  "champion_pointers": [
+    [
+      "PREMATCH",
+      "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a"
+    ]
+  ],
+  "counts": {
+    "activation_events": 1,
+    "champion_generations": 1,
+    "holdout_results": 0,
+    "learning_cycles": 3,
+    "live_publications": 0
+  },
+  "cutoff": "2026-10-02T10:47:48.173829+00:00"
+}

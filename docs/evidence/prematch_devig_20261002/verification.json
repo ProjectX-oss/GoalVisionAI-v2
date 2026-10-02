@@ -1,0 +1,72 @@
+{
+  "application_delta": [
+    "app/adaptive_lab/devig_integration.py",
+    "app/adaptive_lab/devig_metrics.py",
+    "app/adaptive_lab/devig_research.py",
+    "app/adaptive_lab/observer.py",
+    "app/adaptive_lab/prematch.py",
+    "app/lab_v2_shadow/operator_output.py",
+    "app/lab_v2_shadow/runner.py"
+  ],
+  "base_commit": "29e4cb84ac4be9a99facae354718e5efeb69d894",
+  "champion_promotion": false,
+  "compile_and_imports": "PASS",
+  "deployment": "NOT_PERFORMED",
+  "engineering_verdict": "PASS",
+  "forward_quality_verdict": "NEEDS_MORE_EVIDENCE",
+  "historical_bookmaker_odds_used": false,
+  "initial_test_findings": [
+    "V1 blanket-rejection regression retained for tampered source; healthy incomplete-book sibling remains separately eligible",
+    "New test harness paths corrected to existing var/cache and var/lab_combo contracts",
+    "Consensus Decimal spelling made byte-consistent with the existing persisted source",
+    "Full metrics moved to separate immutable devig_metrics rows to preserve installed ADMIN health size limits",
+    "First-family/first-valid-book sampling uses existing primary-key index to avoid repeated timer-capture growth",
+    "Sampling guard test corrected to distinguish backdated history from simultaneous first-capture conflict"
+  ],
+  "manual_operational_cycles": 0,
+  "manual_provider_calls": 0,
+  "network_disabled": true,
+  "real_telegram_sends": 0,
+  "remaining_limits": [
+    "No genuine V2 comparator captures until separate operator deployment",
+    "Resolved coverage uses existing SINGLE/canonical/shadow facts; no new result polling",
+    "Reader fails explicitly at 50000 rows, 256MiB or five-second SQL snapshot budget; no partial metrics",
+    "Bookmaker/outcome rows correlated; no independent learning observations or superiority claim",
+    "Scores use existing outcome-level binary Brier/log loss; market-family segments retained"
+  ],
+  "research_source_commit": "938402ae7e2279f2e36a5abd8cb8124e793d7495",
+  "runtime_base": "f81aa2c2c1aae4af8decaa9b454d182c82f74af8",
+  "runtime_protected_state": "UNCHANGED",
+  "suites": {
+    "final": {
+      "devig_tests": 47,
+      "log_sha256": "6bc9839afba1807c70d8f5ae95704c78864b94c20900762c01c77b445a52e674",
+      "summary": {
+        "errors": "0",
+        "failures": "0",
+        "hostname": "vmi3558657",
+        "name": "pytest",
+        "skipped": "0",
+        "tests": "312",
+        "time": "11.409",
+        "timestamp": "2026-10-02T13:06:12.416642+02:00"
+      },
+      "test_count": 312
+    },
+    "regression": {
+      "devig_tests": 39,
+      "log_sha256": "596e9bd74d7024d7ee0cde6f6c88aaed8d3b990a774c1dc69aa2e96c863dc211",
+      "summary": {
+        "errors": "0",
+        "failures": "0",
+        "hostname": "vmi3558657",
+        "name": "pytest",
+        "skipped": "0",
+        "tests": "879",
+        "time": "108.044",
+        "timestamp": "2026-10-02T12:46:26.060879+02:00"
+      },
+      "test_count": 879
+    }
+  }
+}

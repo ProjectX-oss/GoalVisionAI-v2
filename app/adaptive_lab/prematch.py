@@ -36,7 +36,7 @@ def main(argv: list[str] | None = None) -> int:
             try:
                 if args.command=='observe':
                     from .observer import observe
-                    result=observe(repo,source,now=now)
+                    result=observe(repo,source,now=now,shadow_database=args.shadow_database)
                 else:
                     from .health import status
                     result=status(repo,source,args.shadow_database,now=now)
@@ -44,9 +44,24 @@ def main(argv: list[str] | None = None) -> int:
         if 'PERFORMANCE' not in result:
             from .performance import snapshot_from_path
             result['PERFORMANCE']=snapshot_from_path(args.ledger,now=now)
+        if args.command in ("status", "why-no-picks", "research"):
+            from .devig_integration import enabled, observed_snapshot
+            if enabled():
+                source = None
+                try:
+                    source = ReadOnlyLedger(args.ledger)
+                    result["DEVIG_RESEARCH"] = observed_snapshot(repo, source, args.shadow_database, now=now)
+                except Exception:
+                    result["DEVIG_RESEARCH"] = {"status": "UNAVAILABLE", "reason": "RESEARCH_EVALUATION_UNAVAILABLE"}
+                finally:
+                    if source is not None:
+                        source.close()
         if args.command in ('observe','research') and not args.full_performance:
             from .performance import operator_summary
             result={**result, 'PERFORMANCE':operator_summary(result['PERFORMANCE'])}
+            if "DEVIG_RESEARCH" in result:
+                from .devig_metrics import operator_summary as devig_summary
+                result["DEVIG_RESEARCH"] = devig_summary(result["DEVIG_RESEARCH"])
         print(canonical(result))
     finally:repo.close()
     return 0

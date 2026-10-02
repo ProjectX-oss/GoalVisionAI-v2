@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-@pytest.fixture(params=["prematch-settlement", "prematch-single-floor"])
+@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig"])
 def rig(tmp_path, monkeypatch, request):
     source = Path(__file__).parents[1] / "operations" / request.param / "update.py"
     spec = importlib.util.spec_from_file_location("quality_update", source)
@@ -230,7 +230,7 @@ def test_rollback_keeps_compatible_reader_sources(rig):
     before = m.tree(target / 'application')
     m.apply(rig.package, rollback=True)
     assert m.tree(target / 'application') == before
-    expected_early = b'1' if 'app/lab_v2_shadow/single_odds_policy.py' in m.FILES else b'0'
+    expected_early = b'1' if ('app/lab_v2_shadow/single_odds_policy.py' in m.FILES or 'app/adaptive_lab/devig_research.py' in m.FILES) else b'0'
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=' + expected_early + b'\n' in (target / 'rollback.env').read_bytes()
     assert all('rollback.env' in p.read_text() for p in rig.overrides.values())
 
@@ -259,3 +259,15 @@ def test_old_or_mixed_base_route_refused_before_controls(rig, scope):
     assert rig.calls == []
     assert not any(p.exists() for p in rig.overrides.values())
     assert not rig.mod.validate(rig.package)[1].exists()
+
+
+def test_devig_rollback_only_disables_research(rig):
+    m = rig.mod
+    if 'app/adaptive_lab/devig_research.py' not in m.FILES:
+        return
+    target = m.validate(rig.package)[1]
+    enabled = m.environment(target)
+    disabled = m.environment(target, True)
+    assert enabled.replace(b'GOALVISION_LAB_DEVIG_RESEARCH=1', b'GOALVISION_LAB_DEVIG_RESEARCH=0') == disabled
+    for flag in ('SINGLE_MIN_ODDS_130', 'TODAY_ONLY', 'EARLY_COMBO_LOSS', 'ACCURACY_COMBOS'):
+        assert ('GOALVISION_LAB_'+flag+'=1\n').encode() in disabled

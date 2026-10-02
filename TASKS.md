@@ -1,9 +1,20 @@
+## 2026-10-02 — Current-odds de-vig research integration
+
+- [x] Read handoff/instructions; verify actual f81aa2c routes, flags and disabled ADMIN Codex.
+- [x] Isolated V2 current-quote captures with exact provenance, optional failure isolation and no added provider calls.
+- [x] Existing observer result join, paired/common cohorts, missingness, policy/market segments and bounded stdout.
+- [x] 879 affected regressions and final 312-test slice (47 de-vig), network disabled; counts overlap.
+- [x] Tested exact-base operator package and research-only rollback source prepared.
+- [ ] Separate operator deployment, natural capture/observer readback and sufficient genuine forward outcomes.
+- Report: docs/operations/PREMATCH_DEVIG_INTEGRATION_20261002.md.
+- SINGLE >=1.30, COMBO no floor, today-only and early settlement retained. Official unchanged; LIVE/ADMIN Codex disabled.
+
 ## 2026-10-02 — Segmented forward selection quality
 
 - [x] Reconcile 165 SINGLE / 53 COMBO publications; separate policy cohorts and partial maturity.
 - [x] Paired old-ensemble vs frozen market probability comparison; analyze negative EV without cross-policy causal claims.
 - [x] Full market/odds/probability/league/timing/disagreement evidence saved; no threshold changes.
-- [ ] Current-odds de-vig research wiring; genuine validation/calibration readiness.
+- [x] Current-odds de-vig research wiring completed in the latest entry; genuine validation/calibration readiness remains pending.
 - [ ] Evaluate V2/V3 cohorts once results are available; no resolved V2/V3 tickets at 12:50 Riga.
 - Report: docs/operations/PREMATCH_SEGMENTED_QUALITY_20261002.md.
 
@@ -14,7 +25,7 @@
 - [x] All result receipts present; no duplicate message IDs or unreceipted claims.
 - [x] Dayrout fixture identified as rescheduled to today 15:30 Riga (provider NS).
 - [x] Segmented forward quality review: policy/market/odds/EV/timing/league and paired market baseline reconciled.
-- [ ] Resolved V2/V3 outcomes, dataset/calibration readiness and current-odds comparator wiring.
+- [ ] Resolved V2/V3 outcomes and dataset/calibration readiness; comparator wiring completed in the latest entry.
 - Report: docs/operations/PREMATCH_FLOOR_NATURAL_AUDIT_20261002.md.
 
 ## 2026-10-02 — SINGLE-floor installer after settlement deployment

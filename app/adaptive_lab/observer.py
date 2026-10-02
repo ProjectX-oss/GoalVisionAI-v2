@@ -1,12 +1,15 @@
 """PREMATCH-only settlement observer; no transport, provider client, or training."""
 from __future__ import annotations
 from datetime import datetime
+from pathlib import Path
+import os
 from .contracts import digest,utc
 from .coordinator import LearningCoordinator
 from .metrics import metrics
 
 
-def observe(repository: object, ledger: object, *, now: datetime) -> dict:
+def observe(repository: object, ledger: object, *, now: datetime,
+            shadow_database: Path | None = None) -> dict:
     """Recover immutable settlements and shadow labels from existing result evidence."""
     coordinator=LearningCoordinator(repository)
     from .observations import import_prematch
@@ -34,6 +37,17 @@ def observe(repository: object, ledger: object, *, now: datetime) -> dict:
     value={'PERFORMANCE':performance_snapshot(ledger,now=now),'created_at':utc(now).isoformat(),'stream':'PREMATCH','linkage':linkage,
            'state':state,'metrics':metrics(repository.all('learning_observations','PREMATCH'),'PREMATCH'),
            'LIVE':'DISABLED','api_calls':0,'telegram_sends':0,'heavy_training':False}
+    if shadow_database is not None and os.environ.get("GOALVISION_LAB_DEVIG_RESEARCH", "0") == "1":
+        try:
+            from .devig_integration import observed_snapshot, persist_metrics
+            from .devig_metrics import operator_summary
+            snapshot = observed_snapshot(repository, ledger, shadow_database, now=now)
+            if "snapshot_fingerprint" in snapshot:
+                persist_metrics(shadow_database, snapshot, now=now)
+            value["DEVIG_RESEARCH"] = operator_summary(snapshot)
+        except Exception:
+            value["DEVIG_RESEARCH"] = {"status": "UNAVAILABLE", "reason": "RESEARCH_EVALUATION_UNAVAILABLE",
+                                       "selection_effect": "NONE", "model_learning_observations": 0}
     repository.append('observer_runs',digest(value),'PREMATCH',value,value['created_at'])
     return value
 
