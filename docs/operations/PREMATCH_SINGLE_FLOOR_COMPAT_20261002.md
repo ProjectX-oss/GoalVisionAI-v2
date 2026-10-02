@@ -66,3 +66,20 @@ cycle, provider request or Telegram test send was performed.
 
 After the operator command, verify its deployment readback and the next natural
 PREMATCH cycle. Offline validation alone does not establish runtime activation.
+
+## Prepared package readback
+
+Source commit: `f81aa2c2c1aae4af8decaa9b454d182c82f74af8`.
+Package: `/home/arvis/goalvision-operations/prematch-single-floor-f81aa2c-20261002`.
+Three reviewed overlays; complete application manifest: 807 Python modules.
+
+```text
+PREMATCH_SINGLE_FLOOR_PLAN_VALIDATED=/opt/goalvision-prematch-single-floor-f81aa2c-20261002
+current_mode=BASE; ADMIN_CODEX_DISABLED=PASS
+```
+
+Metadata SHA-256: `4a3a870ef03fc7d2093ce833e0b1a4128a3a1d6d2aec512dde6e1812593606bb`.
+Wrapper SHA-256: `7449b07ff683425bf56fcac68145f6f935bb804134c2ac809ca5d49d038c59b7`.
+The original operator entry point remains byte-for-byte unchanged.
+Final verdict: **PASS** for the compatibility fix, 126 tests and read-only VPS preflight.
+**BLOCKED pending operator activation** for SINGLE minimum enforcement on the running system.
