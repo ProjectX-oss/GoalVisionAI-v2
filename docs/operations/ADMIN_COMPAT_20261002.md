@@ -1,6 +1,8 @@
 # ADMIN incident flood — 2026-10-02
 
-Status: code/regression/replay PASS; production deployment and subsequent natural scans NEEDS_MORE_EVIDENCE.
+Source fix commit: `813f33c79e04514d60fc18c13e7c32580db7f201`.
+
+Status: code/regression/replay/package preflight PASS; production deployment and subsequent natural scans NEEDS_MORE_EVIDENCE.
 
 ## Findings
 
@@ -32,7 +34,7 @@ Tests: tests/admin_alerts/test_quality_compatibility.py, tests/admin_autorepair/
 
 ## Operator handoff
 
-The prepared, hash-validated package updates only the two ADMIN releases. It preserves prior startup/clone fixes, active timer states, source releases and rollback. It waits for in-flight ADMIN work; it never kills or retries jobs. A running job can produce ADMIN_JOB_RUNNING_RETRY_AFTER_COMPLETION; retry the same installer only after natural completion.
+The prepared, hash-validated package at /home/arvis/goalvision-operations/admin-compat-20261002 updates only the two ADMIN releases (admin-compat-813f33c-20261002). It preserves prior startup/clone fixes, active timer states, source releases and rollback. It waits for in-flight ADMIN work; it never kills or retries jobs. A running job can produce ADMIN_JOB_RUNNING_RETRY_AFTER_COMPLETION; retry the same installer only after natural completion.
 
 ```bash
 sudo python3 ~/goalvision-operations/admin-alert-fix.py --apply
