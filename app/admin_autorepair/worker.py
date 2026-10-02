@@ -137,11 +137,16 @@ def invoke(config: Config, clone: Path, directory: Path, status: dict, mode: str
     help_text = subprocess.run([config.codex, 'exec', '--help'], env=environment(),
         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=min(10, max(.01, deadline-time.monotonic())),
         check=True).stdout.decode(errors='replace')
-    required = ('--approve-for-me', '--ignore-user-config', '--ignore-rules')
+    required = ('--sandbox', '--strict-config', '--approve-for-me', '--ignore-user-config', '--ignore-rules')
     if not all(flag in help_text for flag in required):
         raise ValueError('UNSUPPORTED_CODEX')
+    if mode not in ('DIAGNOSE_ONLY', 'FIX_ALLOWED'):
+        raise ValueError('UNSUPPORTED_REPAIR_MODE')
     sandbox = 'read-only' if mode == 'DIAGNOSE_ONLY' else 'workspace-write'
-    args = [config.codex, 'exec', '--sandbox', sandbox, '--approve-for-me',
+    # --approve-for-me is a workspace-write preset and conflicts with --sandbox.
+    # Set its reviewer explicitly so diagnosis keeps the read-only sandbox.
+    args = [config.codex, 'exec', '--sandbox', sandbox, '--strict-config',
+            '-c', 'approval_policy="on-request"', '-c', 'approvals_reviewer="auto_review"',
             '--ignore-user-config', '--ignore-rules', '--color', 'never',
             '-c', 'sandbox_workspace_write.network_access=false',
             '-c', 'sandbox_workspace_write.exclude_tmpdir_env_var=true',

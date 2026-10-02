@@ -21,6 +21,8 @@ from .output_contracts import CONTRACTS, expected_document
 MAX_LINE = 131072
 MAX_READ = 1048576
 MAX_ROWS = 128
+# Bound raw JSON independently of the 128 KiB monitor projection.
+MAX_HEALTH_SOURCE = 4 * MAX_READ
 DISCOVERY_OUTPUT_WINDOW_SLOP_SECONDS = 10
 
 
@@ -310,7 +312,7 @@ def service_rules(properties: dict, previous: dict, now: float, boot_time: float
 
 def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[Event], dict]:
     """Read only allowlisted units, including systemd's UNIT manager fields."""
-    args = ['journalctl', '--quiet', '--no-pager', '-o', 'json', '--output-fields=__CURSOR,__REALTIME_TIMESTAMP,_BOOT_ID,_SYSTEMD_INVOCATION_ID,INVOCATION_ID,_SYSTEMD_UNIT,UNIT,MESSAGE_ID,MESSAGE,RESULT,EXIT_CODE,EXIT_STATUS', '-n', '+256']
+    args = ['journalctl', '--quiet', '--no-pager', '--all', '-o', 'json', '--output-fields=__CURSOR,__REALTIME_TIMESTAMP,_BOOT_ID,_SYSTEMD_INVOCATION_ID,INVOCATION_ID,_SYSTEMD_UNIT,UNIT,MESSAGE_ID,MESSAGE,RESULT,EXIT_CODE,EXIT_STATUS', '-n', '+256']
     for unit in UNITS:
         args.extend(['-u', unit])
     if previous.get('cursor'):
@@ -381,7 +383,7 @@ def journal(previous: dict, now: float, read: Callable = command) -> tuple[list[
             if result in ('exit-code', 'signal', 'timeout', 'oom-kill', 'core-dump'):
                 events.append(Event(unit, 'SERVICE_FAILURE', 'pipeline', inv if inv != 'UNKNOWN' else digest(cursor),
                     stamp, 'journal-' + digest(cursor), 3 if result == 'oom-kill' else 2, inv, facts={'result': result}))
-            if isinstance(message, str) and len(message) <= MAX_LINE:
+            if isinstance(message, str) and len(message.encode('utf-8')) <= MAX_LINE:
                 try:
                     doc = json.loads(message)
                 except ValueError:
@@ -440,7 +442,7 @@ def invocation_output(unit: str, invocation: str, now: float, read: Callable = c
         return []
 
     def exact_read(unused: list[str]) -> str:
-        output = read(['journalctl', '--quiet', '--no-pager', '-o', 'json', '-n', '100',
+        output = read(['journalctl', '--quiet', '--no-pager', '--all', '-o', 'json', '-n', '100',
                        '_SYSTEMD_UNIT=' + unit, '_SYSTEMD_INVOCATION_ID=' + invocation])
         # Validate even injected readers, and bound parser work independently of journalctl.
         entries = [json.loads(line) for line in output.splitlines()[:100]]
@@ -475,7 +477,12 @@ def readonly(path: Path) -> sqlite3.Connection:
 
 
 def health_rows(path: Path, previous: dict, now: float) -> tuple[list[Event], dict]:
-    """Indexed append-only health cursors, 128 rows and 128 KiB per document."""
+    """Read bounded health projections; persisted performance evidence is untouched.
+
+    PERFORMANCE is not consumed by completed_health. Only that root key may be
+    omitted from an oversized, valid document. All failure/publication facts
+    retain the existing 128 KiB limit; raw source JSON is capped at 4 MiB.
+    """
     state = dict(previous)
     events = []
     connection = None
@@ -483,10 +490,22 @@ def health_rows(path: Path, previous: dict, now: float) -> tuple[list[Event], di
         connection = readonly(path)
         for table, service in (('cycle_health', DISCOVERY), ('observer_runs', UNITS[2])):
             last = state.get(table, [datetime.fromtimestamp(now - 900, timezone.utc).isoformat(), ''])
-            query = f'''SELECT id,created_at,CASE WHEN length(CAST(document AS BLOB))<=? THEN document ELSE NULL END
+            query = f'''WITH batch AS MATERIALIZED (
+                SELECT id,created_at,
+                    CASE WHEN length(CAST(document AS BLOB))<=? THEN document ELSE NULL END AS document
                 FROM {table} INDEXED BY {table}_stream_time WHERE stream='PREMATCH'
-                AND (created_at,id)>(?,?) ORDER BY created_at,id LIMIT ?'''
-            rows = connection.execute(query, (MAX_LINE, *last, MAX_ROWS)).fetchall()
+                AND (created_at,id)>(?,?) ORDER BY created_at,id LIMIT ?
+            ), projected AS MATERIALIZED (
+                SELECT id,created_at,
+                    CASE WHEN length(CAST(document AS BLOB))>? AND json_valid(document)
+                         THEN json_remove(document,'$.PERFORMANCE') ELSE document END AS document
+                FROM batch
+            )
+            SELECT id,created_at,
+                CASE WHEN length(CAST(document AS BLOB))<=? THEN document ELSE NULL END
+            FROM projected ORDER BY created_at,id'''
+            rows = connection.execute(query, (MAX_HEALTH_SOURCE, *last, MAX_ROWS,
+                                               MAX_LINE, MAX_LINE)).fetchall()
             for key, stamp, document in rows:
                 state[table] = [stamp, key]
                 if document is None:

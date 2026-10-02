@@ -1,0 +1,27 @@
+{
+  "all_changed_files_zero": true,
+  "codex_failure": "--sandbox conflicts with --approve-for-me",
+  "codex_version": "0.158.0",
+  "coverage_incident": "5551793c5b77956d7db042f5",
+  "coverage_source": "health",
+  "elapsed_seconds_max": 1.039,
+  "elapsed_seconds_min": 0.579,
+  "exact_telegram_notification_count": "UNAVAILABLE_ROOT_DATABASE_NOT_READ",
+  "failed_jobs": 40,
+  "failure_counts": {
+    "CODEX_EXIT": 40
+  },
+  "first_utc": "2026-10-01T19:33:44.484808+00:00",
+  "fixed_empty_stdin_parser_exit": 1,
+  "fixed_empty_stdin_parser_result": "No prompt provided via stdin.",
+  "incident_rule_counts": {
+    "ADMIN_DELIVERY_DEGRADED": 1,
+    "MISSING_OUTPUT": 20,
+    "MONITORING_COVERAGE_DEGRADED": 19
+  },
+  "last_utc": "2026-10-02T04:42:29.376216+00:00",
+  "model_requests_started": 0,
+  "observed_at_utc": "2026-10-02T04:53:02.198290+00:00",
+  "old_empty_stdin_parser_exit": 2,
+  "since_utc": "2026-10-01T19:13:00+00:00"
+}

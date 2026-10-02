@@ -1,3 +1,15 @@
+## 2026-10-02 — ADMIN quality-output compatibility and alert flood
+
+- [x] Diagnose repeated health OVERSIZED_RECORD and observer MISSING_OUTPUT.
+- [x] Read full bounded journal JSON; preserve exact invocation attribution/recovery.
+- [x] Project oversized health without PERFORMANCE; preserve persisted evidence and all delivery/failure facts.
+- [x] Recognize structured research/calibration blocked outcomes as final output.
+- [x] Remove conflicting Codex preset; keep explicit sandbox and automatic approval review.
+- [x] Replay real existing evidence read-only; offline regressions and rollback transaction tests.
+- [ ] Operator deployment and natural monitor/observer verification.
+- [ ] Full future legitimate worker lifecycle; no manual retry authorized.
+- Runbook: docs/operations/ADMIN_COMPAT_20261002.md.
+
 ## 2026-10-01 — ADMIN worker reviewed-source clone follow-up
 
 - [x] Observe natural post-deploy WORKER_ERROR jobs; preserve prior failed history.

@@ -53,10 +53,13 @@ def fake(tmp_path, action='patch'):
     executable.write_text('''#!/usr/bin/python3
 import pathlib, sys, time, subprocess, signal
 if '--help' in sys.argv:
-    print('--approve-for-me --ignore-user-config --ignore-rules --ephemeral')
+    print('--sandbox --strict-config --approve-for-me --ignore-user-config --ignore-rules --ephemeral')
     raise SystemExit(0)
 assert '--sandbox' in sys.argv and any(mode in sys.argv for mode in ('workspace-write','read-only'))
-assert '--approve-for-me' in sys.argv
+assert '--approve-for-me' not in sys.argv
+assert '--strict-config' in sys.argv
+assert 'approval_policy="on-request"' in sys.argv
+assert 'approvals_reviewer="auto_review"' in sys.argv
 assert '--ephemeral' in sys.argv
 assert 'sandbox_workspace_write.network_access=false' in sys.argv
 prompt = sys.stdin.read()

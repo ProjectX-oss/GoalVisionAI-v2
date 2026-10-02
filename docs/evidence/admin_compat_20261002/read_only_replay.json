@@ -1,0 +1,53 @@
+{
+  "health": {
+    "cycle_health": {
+      "over_128kib_before_projection": 1,
+      "rows": 1,
+      "source_document_hashes": [
+        "479eeeeda1124bc390e91d5bf806d08f539891d655ad49a59a58ce2e3988c091"
+      ]
+    },
+    "observer_runs": {
+      "over_128kib_before_projection": 19,
+      "rows": 19,
+      "source_document_hashes": [
+        "5c91202edc206faa7c00d9b807b33a74cb3ebaa2081fd0e8d1c0d766c02ae5a8",
+        "66314b5ae1647c70f228070cd0e7aba19b0d42a171fc6dfba014bbb002b14483",
+        "cf3d5e724f1c40895ee1121c78f1e5b120581bef14e344fa32dfb7fdf55964cd",
+        "dd91e49e536e2a52e6745373eaa9e04ba11e31e33e00d6b0d7b245790190e7e6",
+        "36be0999bc19fdbc6b0a3dc84c2ea533ee2500dc964f446ede6ed8020d468ceb",
+        "25ebfbb9109d9042c620b8378c7a0cb1c81bee264142bd966b0aa9254ef3db18",
+        "74c078624fe2138c8d9448b274aaa0e3d3530445a08988af12b65d27965c535c",
+        "d69514421395d9f2e451beb691029db7460377f10448d716b8417c81babadcdb",
+        "921ecc291678c5b823ad349f0c21252f75473f74b03903a17b3f8da82a361c63",
+        "0c2055db0486a89a3a08fbfb03d061321b4eecd6924707d643fb021fe8c1a85c",
+        "94478813a560467da497707a648fe7936055b63b9aaeba567881e1f8ae9c9e15",
+        "d17bc4f34d2401d27e502e3938c78fc2aacb148a10e826421dd624a0ce6e9a93",
+        "a73e6fd12f82d08e188a4a5a70afe29a48e813d528918d306f930fe6c84da34e",
+        "52f6572dd6b46843ce8a4c6d8445e20d548591e90021190060d745869371533e",
+        "bea500d6a56f3c4f8ea0b1bda6be13248e567d3e9a1bd584cd026f0960199540",
+        "842400bbd876e2a70f12d0107dbc76274e96f39705465e19f91dcc138388c4c5",
+        "d9ca8dfe1fd9b50217705fa2b8b19c34037f6703188f60eb0079dc7f976ffb6b",
+        "245fc5d128ec489bb19a1f5c1fd48df07b0fe5f8f83cc953b5b70acc9eed4814",
+        "28ebd646c59c695ae85011a335cf00a479d5050898557b6c3de586b2ce50e4e8"
+      ]
+    }
+  },
+  "health_replay": {
+    "coverage_errors": 0,
+    "elapsed_seconds": 0.0117,
+    "events_identical_to_full_documents": true,
+    "real_fault_rules": [],
+    "source_copy_unchanged": true
+  },
+  "observed_at_utc": "2026-10-02T04:51:56.001632+00:00",
+  "observer_journal": {
+    "message_bytes_max": 6913,
+    "message_bytes_min": 6822,
+    "null_messages_without_all": 19,
+    "recognized_exact_invocations": 19,
+    "records": 19,
+    "unique_exact_invocations": 19
+  },
+  "since_utc": "2026-10-01T19:13:00+00:00"
+}

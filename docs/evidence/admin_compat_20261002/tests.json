@@ -1,0 +1,15 @@
+{
+  "exit_code": 0,
+  "provider_calls": 0,
+  "real_codex_calls": 0,
+  "real_network_attempts": 0,
+  "subtests_passed": 79,
+  "telegram_calls": 0,
+  "test_paths": [
+    "tests/admin_alerts",
+    "tests/admin_autorepair"
+  ],
+  "tests_passed": 352,
+  "updater_test_exit": 0,
+  "updater_tests_passed": 15
+}

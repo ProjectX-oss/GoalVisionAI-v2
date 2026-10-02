@@ -1,3 +1,7 @@
+> 2026-10-02 compatibility correction: the original combined `--sandbox` /
+> `--approve-for-me` invocation was rejected by Codex 0.158.0. See
+> [ADMIN compatibility fix](ADMIN_COMPAT_20261002.md) for verified arguments.
+
 # ADMIN Auto-Repair + Operator Job Status v1 — 2026-09-30
 
 Status: implemented locally from ADMIN `59f051834a4a69ed4941cc78b767f5db0a126c33`.
@@ -41,7 +45,8 @@ without exposing the service-manager directory or sockets.
 **Use the hardened service for real Codex; direct CLI invocation is for
 offline fake-Codex rehearsal/inspection.** Do not weaken confinement to fix startup.
 
-Codex is invoked with `exec --approve-for-me`, `--ignore-user-config`,
+Codex now uses explicit sandbox and automatic reviewer configuration (see
+`ADMIN_COMPAT_20261002.md`), `--ignore-user-config`,
 `--ignore-rules`, `--ephemeral` when supported, disabled web search/apps and shell
 sandbox network access. `FIX_ALLOWED` uses `--sandbox workspace-write` and
 `DIAGNOSE_ONLY` uses `--sandbox read-only`. No sandbox-bypass fallback exists.

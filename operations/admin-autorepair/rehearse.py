@@ -51,7 +51,7 @@ def main() -> int:
         executable.write_text('''#!/usr/bin/python3
 import pathlib,sys
 if '--help' in sys.argv:
-    print('--approve-for-me --ignore-user-config --ignore-rules --ephemeral')
+    print('--sandbox --strict-config --approve-for-me --ignore-user-config --ignore-rules --ephemeral')
 else:
     sys.stdin.read()
     pathlib.Path('example.py').write_text('VALUE = 2\\n')
