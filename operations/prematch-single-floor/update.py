@@ -1,4 +1,4 @@
-"""Reviewed PREMATCH SINGLE floor and settlement upgrade with compatible feature rollback. Default is read-only; --apply is operator-only."""
+"""Reviewed PREMATCH SINGLE floor upgrade from the installed settlement release. Default is read-only; --apply is operator-only."""
 import argparse
 import fcntl
 import hashlib
@@ -11,7 +11,7 @@ import subprocess
 import tempfile
 import time
 
-BASE = Path('/opt/goalvision-prematch-quality-3ad346b-20261001')
+BASE = Path('/opt/goalvision-prematch-settlement-04a0751-20261002')
 SERVICES = ('goalvision-lab-v2-discover.service', 'goalvision-adaptive-learning-observer.service',
             'goalvision-lab-combo-settle.service', 'goalvision-adaptive-learning.service')
 ROUTE_BASES = {unit: BASE / 'release.env' for unit in SERVICES}
@@ -19,10 +19,8 @@ TIMERS = tuple(u.replace('.service', '.timer') for u in SERVICES)
 OVERRIDES = {u: Path('/etc/systemd/system') / (u + '.d') / 'zzzzzzz-single-floor-20261002.conf' for u in SERVICES}
 PROTECTED = ('goalvision-lab-weekly-stats.service', 'goalvision-admin-alerts.service',
              'goalvision-admin-autorepair.service', 'goalvision-lab-combo-discover.service')
-FILES = ('app/lab_combo/service.py', 'app/lab_combo/settlement.py',
-         'app/lab_combo/presentation.py', 'app/lab_combo/cli.py',
-         'app/lab_combo/result_diagnostics.py', 'app/adaptive_lab/metrics.py',
-         'app/lab_v2_shadow/publication.py', 'app/lab_v2_shadow/single_odds_policy.py')
+FILES = ('app/lab_combo/service.py', 'app/lab_v2_shadow/publication.py',
+         'app/lab_v2_shadow/single_odds_policy.py')
 BUSY = {'active', 'activating', 'deactivating', 'reloading'}
 ROUTE_KEYS = ('EnvironmentFiles', 'WorkingDirectory', 'DropInPaths')
 INVARIANT_KEYS = ('WorkingDirectory', 'ExecStart', 'User', 'Group')
@@ -61,11 +59,11 @@ def stable_commands(units):
 
 def base_environment(target):
     return ('PYTHONPATH=' + str(target / 'application') + '\n'
-            'GOALVISION_LAB_ACCURACY_COMBOS=1\nGOALVISION_LAB_TODAY_ONLY=1\n').encode()
+            'GOALVISION_LAB_ACCURACY_COMBOS=1\nGOALVISION_LAB_TODAY_ONLY=1\n'
+            'GOALVISION_LAB_EARLY_COMBO_LOSS=1\n').encode()
 
 def environment(target, rollback=False):
-    return base_environment(target) + ('GOALVISION_LAB_SINGLE_MIN_ODDS_130=' + ('0' if rollback else '1') + '\n'
-                                      'GOALVISION_LAB_EARLY_COMBO_LOSS=' + ('0' if rollback else '1') + '\n').encode()
+    return base_environment(target) + ('GOALVISION_LAB_SINGLE_MIN_ODDS_130=' + ('0' if rollback else '1') + '\n').encode()
 
 def dropin(target, rollback=False):
     env = target / ('rollback.env' if rollback else 'release.env')
@@ -266,7 +264,7 @@ def apply(package, *, rollback=False):
     print('PREMATCH_SINGLE_FLOOR_COMPAT_ROLLBACK' if rollback else 'PREMATCH_SINGLE_FLOOR_DEPLOYED')
     print('prematch_release=' + str(target))
     print('PREMATCH SINGLE minimum=' + ('NONE' if rollback else '1.30') + '; COMBO total and legs have no odds floor.')
-    print('Early COMBO loss=' + ('DISABLED' if rollback else 'ENABLED') + '; compatible readers and remaining-leg tracking retained.')
+    print('Early COMBO loss=ENABLED; installed settlement behavior and remaining-leg tracking retained.')
     print('ADMIN Codex remains DISABLED; ADMIN and weekly routes unchanged.')
     print('No manual cycle, provider call or test send.')
 

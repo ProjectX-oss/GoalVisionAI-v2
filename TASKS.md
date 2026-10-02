@@ -1,3 +1,11 @@
+## 2026-10-02 — SINGLE-floor installer after settlement deployment
+
+- [x] Verify installed settlement source, enabled early-loss flag and failed-upgrade non-mutation.
+- [x] Pin the new base, preserve settlement behavior on rollback, reject mixed/old routes.
+- [x] 126 focused offline tests PASS; application source unchanged.
+- [ ] Operator runs `prematch-policy-compat.py --apply`; natural-cycle readback follows.
+- Report: docs/operations/PREMATCH_SINGLE_FLOOR_COMPAT_20261002.md.
+
 ## 2026-10-02 — PREMATCH SINGLE minimum 1.30; COMBO without minimum
 
 - [x] User-authorized inclusive SINGLE floor at preparation and delivery.
@@ -14,7 +22,8 @@
 - [x] Compatible adaptive readers, immutable late detail and bounded unresolved-result evidence.
 - [x] 206 network-disabled tests; exact replay of 21 historical COMBO settlements and two known losses.
 - [x] Four-route operator upgrade and compatible flag-off rollback prepared.
-- [ ] Operator deployment and next natural settlement/observer verification.
+- [x] Operator deployed settlement 04a0751 on 2026-10-02; release hashes and four routes verified.
+- [ ] Next natural settlement/observer verification.
 - Report: docs/operations/PREMATCH_SETTLEMENT_FIX_20261002.md.
 
 ## 2026-10-01 — Integrēts PREMATCH quality release

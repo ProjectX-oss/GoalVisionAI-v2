@@ -1,3 +1,7 @@
+> Superseded operator instructions after the separate settlement deployment: use
+> `docs/operations/PREMATCH_SINGLE_FLOOR_COMPAT_20261002.md` and `prematch-policy-compat.py`.
+> The original package and evidence below remain historical records.
+
 # PREMATCH Lab SINGLE minimum 1.30 — 2026-10-02
 
 Implementation and offline verification: **PASS**.

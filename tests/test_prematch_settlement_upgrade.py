@@ -86,7 +86,7 @@ def rig(tmp_path, monkeypatch, request):
     meta["protected_routes"] = mod.routes(mod.PROTECTED)
     (package / "metadata.json").write_text(json.dumps(meta))
     return SimpleNamespace(mod=mod, package=package, meta=meta, state=state, busy=busy,
-                           calls=calls, failure=failure, overrides=overrides, base=base)
+                           calls=calls, failure=failure, overrides=overrides, base=base, loaded=loaded)
 
 def test_apply_replay_rollback_preserves_mixed_timer_states(rig):
     m = rig.mod
@@ -105,7 +105,7 @@ def test_apply_replay_rollback_preserves_mixed_timer_states(rig):
     m.verify_routes(target, rollback=True)
     assert rig.state == before
     assert all(p.read_bytes() == m.dropin(target, True) for p in rig.overrides.values())
-    assert (target / 'rollback.env').read_bytes().endswith(b'GOALVISION_LAB_EARLY_COMBO_LOSS=0\n')
+    assert (target / 'rollback.env').read_bytes() == m.environment(target, True)
     m.apply(rig.package)
     m.verify_routes(target)
     assert target.exists()  # Evidence/release retained for review.
@@ -230,7 +230,8 @@ def test_rollback_keeps_compatible_reader_sources(rig):
     before = m.tree(target / 'application')
     m.apply(rig.package, rollback=True)
     assert m.tree(target / 'application') == before
-    assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=0' in (target / 'rollback.env').read_bytes()
+    expected_early = b'1' if 'app/lab_v2_shadow/single_odds_policy.py' in m.FILES else b'0'
+    assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=' + expected_early + b'\n' in (target / 'rollback.env').read_bytes()
     assert all('rollback.env' in p.read_text() for p in rig.overrides.values())
 
 
@@ -243,4 +244,18 @@ def test_single_floor_environment_is_explicit_and_rollback_compatible(rig):
     assert b'GOALVISION_LAB_SINGLE_MIN_ODDS_130=1\n' in m.environment(target)
     assert b'GOALVISION_LAB_SINGLE_MIN_ODDS_130=0\n' in m.environment(target, True)
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=1\n' in m.environment(target)
+    assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=1\n' in m.environment(target, True)
+    assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=1\n' in m.base_environment(m.BASE)
     assert b'GOALVISION_LAB_ACCURACY_COMBOS=1\n' in m.environment(target, True)
+
+
+@pytest.mark.parametrize('scope', ['one_route', 'all_routes'])
+def test_old_or_mixed_base_route_refused_before_controls(rig, scope):
+    units = rig.mod.SERVICES[:1] if scope == 'one_route' else rig.mod.SERVICES
+    for unit in units:
+        rig.loaded[unit] = '/opt/unreviewed-earlier-release/release.env (ignore_errors=no)'
+    with pytest.raises(ValueError, match='PREMATCH_ROUTE_MISMATCH'):
+        rig.mod.apply(rig.package)
+    assert rig.calls == []
+    assert not any(p.exists() for p in rig.overrides.values())
+    assert not rig.mod.validate(rig.package)[1].exists()

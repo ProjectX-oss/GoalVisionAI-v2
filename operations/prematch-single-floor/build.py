@@ -40,12 +40,12 @@ def main():
                 'environment_sha256': mod.sha(mod.BASE/'release.env'), 'manifest': manifest}},
             'expected_commands': mod.stable_commands(mod.SERVICES+mod.PROTECTED),
             'protected_routes': mod.routes(mod.PROTECTED),
-            'rollback_semantics': 'DISABLE_SINGLE_FLOOR_AND_NEW_EARLY_LOSSES_RETAIN_COMPATIBLE_READERS'}
+            'rollback_semantics': 'DISABLE_SINGLE_FLOOR_RETAIN_INSTALLED_EARLY_LOSS_AND_COMPATIBLE_READERS'}
     (package/'metadata.json').write_text(json.dumps(meta, indent=2, sort_keys=True)+'\n')
     mod.validate(package)
     hashes = {str(p.relative_to(package)): mod.sha(p) for p in package.rglob('*') if p.is_file()}
     (package/'SHA256SUMS').write_text(''.join(f'{digest}  {name}\n' for name, digest in sorted(hashes.items())))
-    wrapper = Path('/home/arvis/goalvision-operations/prematch-policy-fix.py')
+    wrapper = Path('/home/arvis/goalvision-operations/prematch-policy-compat.py')
     if wrapper.exists():
         raise ValueError('EXISTING_WRAPPER_REVIEW_REQUIRED')
     wrapper.write_text('''"""Pinned GoalVision SINGLE floor and settlement operator entry point."""
@@ -61,9 +61,9 @@ for name, digest in PINS.items():
 runpy.run_path(str(PACKAGE/'update.py'), run_name='__main__')
 ''')
     print('PACKAGE_PREPARED='+str(package))
-    print('READ_ONLY: python3 ~/goalvision-operations/prematch-policy-fix.py')
-    print('OPERATOR_APPLY: sudo python3 ~/goalvision-operations/prematch-policy-fix.py --apply')
-    print('COMPAT_ROLLBACK: sudo python3 ~/goalvision-operations/prematch-policy-fix.py --apply --rollback')
+    print('READ_ONLY: python3 ~/goalvision-operations/prematch-policy-compat.py')
+    print('OPERATOR_APPLY: sudo python3 ~/goalvision-operations/prematch-policy-compat.py --apply')
+    print('COMPAT_ROLLBACK: sudo python3 ~/goalvision-operations/prematch-policy-compat.py --apply --rollback')
 
 
 if __name__ == '__main__':
