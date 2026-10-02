@@ -1,3 +1,12 @@
+## 2026-10-02 — Natural SINGLE-floor and settlement audit
+
+- [x] Actual 12:00 publication, today scope, SINGLE floor and COMBO independence PASS.
+- [x] All 131 SINGLE and 23 COMBO settlements reconcile with observer and settlement totals.
+- [x] All result receipts present; no duplicate message IDs or unreceipted claims.
+- [x] Dayrout fixture identified as rescheduled to today 15:30 Riga (provider NS).
+- [ ] Segmented forward selection-quality analysis and dataset readiness progression.
+- Report: docs/operations/PREMATCH_FLOOR_NATURAL_AUDIT_20261002.md.
+
 ## 2026-10-02 — SINGLE-floor installer after settlement deployment
 
 - [x] Verify installed settlement source, enabled early-loss flag and failed-upgrade non-mutation.
@@ -5,7 +14,7 @@
 - [x] 126 focused offline tests PASS; application source unchanged.
 - [x] Operator deployed f81aa2c at 11:54 Riga; full release/configuration/timer readback PASS.
 - [x] Natural settlement service exited successfully at 11:55:38 Riga.
-- [ ] First natural discovery/publication evidence after deployment.
+- [x] 12:00 discovery: three SINGLE >=1.30 and three COMBO, including a 1.17 leg; six receipts verified.
 - Deployment report: docs/operations/PREMATCH_SINGLE_FLOOR_DEPLOYED_20261002.md.
 - Report: docs/operations/PREMATCH_SINGLE_FLOOR_COMPAT_20261002.md.
 
@@ -17,7 +26,7 @@
 - [x] Offline boundary, complete-cycle, settlement and operator rollback tests.
 - [x] Combined operator package includes the pending settlement correction.
 - [x] Operator deployment and configuration readback PASS (f81aa2c).
-- [ ] First natural discovery/publication evidence after deployment.
+- [x] 12:00 discovery: three SINGLE >=1.30 and three COMBO, including a 1.17 leg; six receipts verified.
 - Report: docs/operations/PREMATCH_SINGLE_FLOOR_20261002.md.
 
 ## 2026-10-02 — PREMATCH early COMBO loss and result diagnostics
@@ -27,7 +36,8 @@
 - [x] 206 network-disabled tests; exact replay of 21 historical COMBO settlements and two known losses.
 - [x] Four-route operator upgrade and compatible flag-off rollback prepared.
 - [x] Operator deployed settlement 04a0751 on 2026-10-02; release hashes and four routes verified.
-- [ ] Next natural settlement/observer verification.
+- [x] 12:08 observer and 12:25 settlement independently reconciled; two early losses recorded/delivered once.
+- [ ] Remaining future legs of early financial losses: natural full-detail completion.
 - Report: docs/operations/PREMATCH_SETTLEMENT_FIX_20261002.md.
 
 ## 2026-10-01 — Integrēts PREMATCH quality release

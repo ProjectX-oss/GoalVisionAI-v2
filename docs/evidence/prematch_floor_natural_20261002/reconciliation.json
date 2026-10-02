@@ -1,0 +1,431 @@
+{
+  "accounting": {
+    "COMBO": {
+      "LOST": 21,
+      "VOID": 0,
+      "WON": 2,
+      "missing_result_receipts": [],
+      "pending": 30,
+      "pnl": "-6.588824",
+      "published": 53,
+      "roi": "-0.2864706086956521739130434783",
+      "settled": 23
+    },
+    "SINGLE": {
+      "LOST": 90,
+      "VOID": 0,
+      "WON": 41,
+      "missing_result_receipts": [],
+      "pending": 34,
+      "pnl": "-27.35",
+      "published": 165,
+      "roi": "-0.2087786259541984732824427481",
+      "settled": 131
+    }
+  },
+  "as_of_utc": "2026-10-02T09:28:11.565065+00:00",
+  "claims_without_receipts": [],
+  "discovery": {
+    "analysis_status": "COMPLETED",
+    "combos_sent": 3,
+    "created_at_utc": "2026-10-02T09:03:02.232154+00:00",
+    "delivery_status": "COMPLETED",
+    "fingerprint": "62caea48e03b6745867a825333770fabcb6452bb0673f220282428740d3b19ac",
+    "independent_validation_errors": [],
+    "minimum_odds": "1.30",
+    "published": [
+      {
+        "combined_odds": null,
+        "id": "lab-v2-single-7c3dfbd3c5db31819a48dfeff8e917cb50e83aa1f9f44d7adca92204f383a585",
+        "kind": "single_prediction",
+        "legs": [
+          {
+            "away": "Kerry",
+            "fixture_id": 1492987,
+            "home": "Finn Harps",
+            "kickoff_riga": "2026-10-02T21:45:00+03:00",
+            "market": "OVER_1_5",
+            "minimum_odds": "1.30",
+            "odds": "1.36",
+            "probability": "0.7261234967024069862044363826",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V3_MIN_ODDS_130"
+          }
+        ],
+        "message_id": 383,
+        "minimum_odds": "1.30",
+        "sent_at": "2026-10-02T09:02:54.804977+00:00",
+        "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V3_MIN_ODDS_130"
+      },
+      {
+        "combined_odds": null,
+        "id": "lab-v2-single-abbf5bc2a3691a40dd80700811895d0f526bbf5caebeddac5a5a3af4e67f6e2b",
+        "kind": "single_prediction",
+        "legs": [
+          {
+            "away": "Suwon FMC W",
+            "fixture_id": 1533782,
+            "home": "Gumi Sportstoto W",
+            "kickoff_riga": "2026-10-02T13:00:00+03:00",
+            "market": "UNDER_3_5",
+            "minimum_odds": "1.30",
+            "odds": "1.53",
+            "probability": "0.7156824675948924865909802849",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V3_MIN_ODDS_130"
+          }
+        ],
+        "message_id": 384,
+        "minimum_odds": "1.30",
+        "sent_at": "2026-10-02T09:02:55.270994+00:00",
+        "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V3_MIN_ODDS_130"
+      },
+      {
+        "combined_odds": null,
+        "id": "lab-v2-single-ad620c034a99149dbac05141ab18bcbac4a69ca0e570809e34c79dc7970f825e",
+        "kind": "single_prediction",
+        "legs": [
+          {
+            "away": "Floridsdorfer AC",
+            "fixture_id": 1642912,
+            "home": "Sturm Graz",
+            "kickoff_riga": "2026-10-02T14:00:00+03:00",
+            "market": "OVER_2_5",
+            "minimum_odds": "1.30",
+            "odds": "1.33",
+            "probability": "0.710359049005337214944201844",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V3_MIN_ODDS_130"
+          }
+        ],
+        "message_id": 385,
+        "minimum_odds": "1.30",
+        "sent_at": "2026-10-02T09:02:55.596634+00:00",
+        "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V3_MIN_ODDS_130"
+      },
+      {
+        "combined_odds": "4.134060",
+        "id": "lab-v2-combo-accuracy-3f6c81c22e3a1aec27a4fc0c6ceca8964f1e3b55c63acbd776d9a873af770cc9",
+        "kind": "combo_prediction",
+        "legs": [
+          {
+            "away": "Hwacheon KSPO W",
+            "fixture_id": 1533781,
+            "home": "Incheon Red Angels W",
+            "kickoff_riga": "2026-10-02T13:00:00+03:00",
+            "market": "BTTS_NO",
+            "minimum_odds": null,
+            "odds": "1.93",
+            "probability": "0.6940821917558201581445316732",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          },
+          {
+            "away": "Suwon FMC W",
+            "fixture_id": 1533782,
+            "home": "Gumi Sportstoto W",
+            "kickoff_riga": "2026-10-02T13:00:00+03:00",
+            "market": "UNDER_3_5",
+            "minimum_odds": null,
+            "odds": "1.53",
+            "probability": "0.7156824675948924865909802849",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          },
+          {
+            "away": "BSC Young Boys",
+            "fixture_id": 1642923,
+            "home": "FC Aarau",
+            "kickoff_riga": "2026-10-02T17:30:00+03:00",
+            "market": "OVER_2_5",
+            "minimum_odds": null,
+            "odds": "1.40",
+            "probability": "0.6888674533906732910600575257",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          }
+        ],
+        "message_id": 386,
+        "minimum_odds": null,
+        "sent_at": "2026-10-02T09:02:55.762943+00:00",
+        "single_policy": null
+      },
+      {
+        "combined_odds": "2.227680",
+        "id": "lab-v2-combo-accuracy-fc44c39a333c84021f757513ae396f8b1074a397465d4ca7f0ab7aaf8dca37a7",
+        "kind": "combo_prediction",
+        "legs": [
+          {
+            "away": "Nyköping",
+            "fixture_id": 1511236,
+            "home": "Smedby",
+            "kickoff_riga": "2026-10-02T20:00:00+03:00",
+            "market": "OVER_1_5",
+            "minimum_odds": null,
+            "odds": "1.17",
+            "probability": "0.6777993868535411757589207942",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          },
+          {
+            "away": "Saham",
+            "fixture_id": 1636203,
+            "home": "Al-Shabab",
+            "kickoff_riga": "2026-10-02T17:25:00+03:00",
+            "market": "UNDER_3_5",
+            "minimum_odds": null,
+            "odds": "1.36",
+            "probability": "0.6749737310978116862350952532",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          },
+          {
+            "away": "SKU Amstetten",
+            "fixture_id": 1642921,
+            "home": "Ried",
+            "kickoff_riga": "2026-10-02T16:00:00+03:00",
+            "market": "OVER_2_5",
+            "minimum_odds": null,
+            "odds": "1.40",
+            "probability": "0.669907344013875576247204345",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          }
+        ],
+        "message_id": 387,
+        "minimum_odds": null,
+        "sent_at": "2026-10-02T09:02:55.928189+00:00",
+        "single_policy": null
+      },
+      {
+        "combined_odds": "2.822400",
+        "id": "lab-v2-combo-accuracy-649c275d7e28ea5ba6012dc410f0f3b486ce67cf7b44266284f3eb6207d6e393",
+        "kind": "combo_prediction",
+        "legs": [
+          {
+            "away": "Kickers Offenbach",
+            "fixture_id": 1587182,
+            "home": "Stuttgarter Kickers",
+            "kickoff_riga": "2026-10-02T20:00:00+03:00",
+            "market": "BTTS_YES",
+            "minimum_odds": null,
+            "odds": "1.44",
+            "probability": "0.6604581512046241602006850182",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          },
+          {
+            "away": "Yverdon Sport",
+            "fixture_id": 1642918,
+            "home": "Grasshoppers",
+            "kickoff_riga": "2026-10-02T15:30:00+03:00",
+            "market": "BTTS_YES",
+            "minimum_odds": null,
+            "odds": "1.40",
+            "probability": "0.665925371037969942413034318",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          },
+          {
+            "away": "Voitsberg",
+            "fixture_id": 1642922,
+            "home": "Wolfsberger AC",
+            "kickoff_riga": "2026-10-02T16:30:00+03:00",
+            "market": "OVER_2_5",
+            "minimum_odds": null,
+            "odds": "1.40",
+            "probability": "0.6695208506983910484706120077",
+            "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+          }
+        ],
+        "message_id": 388,
+        "minimum_odds": null,
+        "sent_at": "2026-10-02T09:03:02.225571+00:00",
+        "single_policy": null
+      }
+    ],
+    "record_id": "lab-v2-publication-cycle-96bd3dc547ddcce19db1a14f7d5c1365d74addb71de0912466b4d2bffff8a006",
+    "single_blocker_counts": {
+      "FIXTURE_AFTER_LAB_CUTOFF": 16,
+      "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 31,
+      "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 918,
+      "LAB_SINGLE_ODDS_BELOW_1_30": 67
+    },
+    "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V3_MIN_ODDS_130",
+    "singles_sent": 3
+  },
+  "duplicate_message_ids": [],
+  "early_combos": [
+    {
+      "frozen_statistics": {
+        "LOST": 21,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 2,
+        "average_combined_odds": "28.78627792",
+        "hypothetical_profit_loss": "-6.588824",
+        "hypothetical_units_wagered": "50",
+        "pending": 27,
+        "roi_yield": "-0.2864706086956521739130434783",
+        "total_published": 50,
+        "total_settled": 23,
+        "units": "-6.588824",
+        "win_rate": "0.08695652173913043478260869565"
+      },
+      "pending_legs": [
+        {
+          "away_team": "Czechia",
+          "fixture_id": 1528936,
+          "home_team": "Spain",
+          "kickoff_utc": "2026-10-03T18:45:00+00:00",
+          "market": "OVER_2_5",
+          "observation_id": "lab-v2-candidate-0c44d08fbd5546131245f7df2523c75e82a1ade04224be59334b6b2d4e3756db"
+        },
+        {
+          "away_team": "Lugo",
+          "fixture_id": 1570771,
+          "home_team": "Real Avilés",
+          "kickoff_utc": "2026-10-02T17:00:00+00:00",
+          "market": "UNDER_3_5",
+          "observation_id": "lab-v2-candidate-dad3bbcd7d507a208ccd8ad426390246cd797088efbab7f30f8f403e6b8bebb0"
+        }
+      ],
+      "prediction_id": "lab-v2-combo-accuracy-27893c8e0f363e597e1dbc8ccfe7d88d8c4b95263f291def221a583a60c3b258",
+      "receipt": {
+        "chat_id": "-1003510920417",
+        "message_id": 381,
+        "sent": true,
+        "sent_at_utc": "2026-10-02T08:55:37.785791+00:00",
+        "status": "SENT"
+      },
+      "settled_at_utc": "2026-10-02T08:55:04.258664+00:00",
+      "status": "LOST",
+      "unit_result": "-1"
+    },
+    {
+      "frozen_statistics": {
+        "LOST": 21,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 2,
+        "average_combined_odds": "28.78627792",
+        "hypothetical_profit_loss": "-6.588824",
+        "hypothetical_units_wagered": "50",
+        "pending": 27,
+        "roi_yield": "-0.2864706086956521739130434783",
+        "total_published": 50,
+        "total_settled": 23,
+        "units": "-6.588824",
+        "win_rate": "0.08695652173913043478260869565"
+      },
+      "pending_legs": [
+        {
+          "away_team": "Sohar",
+          "fixture_id": 1636204,
+          "home_team": "Al-Nahda",
+          "kickoff_utc": "2026-10-02T14:30:00+00:00",
+          "market": "UNDER_3_5",
+          "observation_id": "lab-v2-candidate-71ab58f96142b153f5e6596e996b55a7f5c08759b021ce6f989189d7ba1e6335"
+        },
+        {
+          "away_team": "Ajman",
+          "fixture_id": 1636372,
+          "home_team": "Al Ain",
+          "kickoff_utc": "2026-10-02T13:15:00+00:00",
+          "market": "OVER_2_5",
+          "observation_id": "lab-v2-candidate-03f642c8dd377ad48a87e9041a3ac2cde1544ddb944575d9046a6e8d27e577d6"
+        }
+      ],
+      "prediction_id": "lab-v2-combo-accuracy-693fb9e2fd409887723c78a2bf55a1d408db9c3800c88fd90535af3714199d5b",
+      "receipt": {
+        "chat_id": "-1003510920417",
+        "message_id": 382,
+        "sent": true,
+        "sent_at_utc": "2026-10-02T08:55:37.899825+00:00",
+        "status": "SENT"
+      },
+      "settled_at_utc": "2026-10-02T08:55:04.258664+00:00",
+      "status": "LOST",
+      "unit_result": "-1"
+    }
+  ],
+  "eligibility_after_kickoff_minutes": 90,
+  "fingerprint_errors": [],
+  "independent_math_errors": [],
+  "known_lost_pending_combos": [],
+  "latest_settlement_run": {
+    "combo_detail_completed": [],
+    "completed": [],
+    "diagnostics": {
+      "observed_at_utc": "2026-10-02T09:25:05.996961+00:00",
+      "records": [
+        {
+          "fixture_id": 1594851,
+          "frozen_kickoff_utc": "2026-10-01T12:30:00+00:00",
+          "observed_at_utc": "2026-10-02T09:25:05.996961+00:00",
+          "provider_kickoff_utc": "2026-10-02T12:30:00+00:00",
+          "provider_status": "NS",
+          "reason": "RESCHEDULED_FUTURE_KICKOFF",
+          "schedule_changed": true
+        }
+      ],
+      "total_unresolved": 1,
+      "truncated": false,
+      "version": "LAB_UNRESOLVED_RESULT_V1"
+    },
+    "id": "2026-10-02T09:25:41.119225+00:00",
+    "single_completed": []
+  },
+  "ledger_manifest_fingerprint": "b2517eecf4a729c6809a4a89d82cd7566bb7bed5e1cfc13602d588902e961c91",
+  "ledger_record_counts": {
+    "claim": 372,
+    "economic_claim": 161,
+    "fixture_watch": 359,
+    "leg_result": 70,
+    "prediction": 57,
+    "preview": 57,
+    "receipt": 372,
+    "run": 2412,
+    "settlement": 23,
+    "settlement_diagnostic": 4,
+    "settlement_preview": 23,
+    "single_candidate": 3949,
+    "single_prediction": 211,
+    "single_preview": 211,
+    "single_settlement": 131,
+    "single_settlement_preview": 131,
+    "v2_segmentation": 251
+  },
+  "limitations": [
+    "Receipt proves Telegram acceptance, not subsequent channel retention.",
+    "Independent arithmetic checks retained provider scores, not a new score fetch.",
+    "Remaining future legs of early financial losses require later natural result-detail evidence.",
+    "This is operational validation, not predictive-quality evidence."
+  ],
+  "observer": {
+    "LIVE": "DISABLED",
+    "api_calls": 0,
+    "combo_predictive_calibration_observations": 0,
+    "created_at": "2026-10-02T09:08:01.348435+00:00",
+    "fingerprint": "eeeddc87130ad4cb525b15d8c0390988292d8442968aa5bd21df6206aad39dde",
+    "heavy_training": false,
+    "id": "eeeddc87130ad4cb525b15d8c0390988292d8442968aa5bd21df6206aad39dde",
+    "performance_status": "COMPLETE",
+    "telegram_sends": 0
+  },
+  "receipt_count": 372,
+  "receipt_issues": [],
+  "release": "/opt/goalvision-prematch-single-floor-f81aa2c-20261002",
+  "source_mode": "READ_ONLY_SQLITE_AND_SYSTEMD_NO_MANUAL_CYCLES",
+  "started_unresolved_combo_legs": [
+    {
+      "fixture_id": 1641717,
+      "kickoff": "2026-10-02T08:00:00+00:00",
+      "prediction_id": "lab-v2-combo-accuracy-7fd1faaa32c3095ba7cc5236bfab0c83ebcc0918ba45180a2489fdb8230bdb1e"
+    },
+    {
+      "fixture_id": 1642901,
+      "kickoff": "2026-10-02T09:00:00+00:00",
+      "prediction_id": "lab-v2-combo-accuracy-423b1787a90509bb7d45cd89a748a52a85473296cab55e382d1e54318136c12d"
+    },
+    {
+      "fixture_id": 1640106,
+      "kickoff": "2026-10-02T09:00:00+00:00",
+      "prediction_id": "lab-v2-combo-accuracy-8e751f14704f7923b0fc124b312e1da2bbe40e667960bb4597493451b0e07b20"
+    },
+    {
+      "fixture_id": 1643212,
+      "kickoff": "2026-10-02T09:00:00+00:00",
+      "prediction_id": "lab-v2-combo-accuracy-f77618f218b546b431cbd2bdb3d96c6c6bee0160e346460c00c038a76d64b71a"
+    }
+  ]
+}
