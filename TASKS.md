@@ -1,9 +1,18 @@
+## 2026-10-02 — ADMIN monitor-only follow-up, Codex stays disabled
+
+- [x] Confirm combined package rolled back; all five PREMATCH/weekly routes unchanged.
+- [x] Fix guard comparing runtime ExecStart timestamps/PIDs with configuration.
+- [x] Prepare monitor-only deployment with mandatory disabled-Codex guards.
+- [x] 64 focused regression tests PASS.
+- [ ] Operator monitor-only deployment and natural output recovery.
+- Runbook: docs/operations/ADMIN_MONITOR_COMPAT_20261002.md.
+
 ## 2026-10-02 — Operator requested ADMIN Codex disconnection
 
 - [x] Prepare explicit disable of queue/status dispatch, worker timer and worker service.
 - [x] Preserve ordinary monitoring, credentials, PREMATCH routes and history.
 - [x] Five isolated idempotency/preservation/failure/preview tests PASS.
-- [ ] Operator runs sudo command and returns ADMIN_CODEX_DISABLED readback.
+- [x] Operator disabled Codex; direct worker/timer/marker checks and provided config readback PASS.
 - Automatic worker re-enablement is not authorized; combined compatibility deployment is superseded for this request.
 - Runbook: docs/operations/ADMIN_CODEX_OFF_20261002.md.
 

@@ -1,0 +1,49 @@
+{
+  "attempted_overrides_absent": {
+    "monitor": true,
+    "worker": true
+  },
+  "autorepair_enabled_false_evidence": "OPERATOR_SUPPLIED_ADMIN_AUTOREPAIR_READBACK",
+  "deploy_performed": false,
+  "disabled_marker": true,
+  "monitor_timer": "active",
+  "observed_at_utc": "2026-10-02T05:11:39.659255+00:00",
+  "static_protected_route_comparison": {
+    "goalvision-adaptive-learning-observer.service": {
+      "DropInPaths": true,
+      "EnvironmentFiles": true,
+      "ExecStart": true,
+      "WorkingDirectory": true
+    },
+    "goalvision-adaptive-learning.service": {
+      "DropInPaths": true,
+      "EnvironmentFiles": true,
+      "ExecStart": true,
+      "WorkingDirectory": true
+    },
+    "goalvision-lab-combo-settle.service": {
+      "DropInPaths": true,
+      "EnvironmentFiles": true,
+      "ExecStart": true,
+      "WorkingDirectory": true
+    },
+    "goalvision-lab-v2-discover.service": {
+      "DropInPaths": true,
+      "EnvironmentFiles": true,
+      "ExecStart": true,
+      "WorkingDirectory": true
+    },
+    "goalvision-lab-weekly-stats.service": {
+      "DropInPaths": true,
+      "EnvironmentFiles": true,
+      "ExecStart": true,
+      "WorkingDirectory": true
+    }
+  },
+  "test_exit": 0,
+  "tests_passed": 64,
+  "worker_main_pid": "0",
+  "worker_service": "inactive",
+  "worker_timer": "inactive",
+  "worker_timer_enablement": "disabled"
+}

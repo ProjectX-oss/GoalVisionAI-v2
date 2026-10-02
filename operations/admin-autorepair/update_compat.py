@@ -4,6 +4,7 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import signal
@@ -50,8 +51,25 @@ def control(*args):
 def prop(unit, name):
     return control('show', unit, '-p', name, '--value')
 
+def configured_exec(value):
+    """Compare command configuration, not systemd's last-execution bookkeeping.
+
+    daemon-reload can reset start/stop/PID/status without changing a route.
+    Only the reviewed single-command representation is accepted; unknown
+    formatting or multiple commands fail closed instead of losing argv checks.
+    """
+    match = re.fullmatch(
+        r'\{ path=([^{}]+?) ; argv\[\]=([^{}]+?) ; ignore_errors=(yes|no) ; '
+        r'start_time=\[[^\]]*\] ; stop_time=\[[^\]]*\] ; '
+        r'pid=[0-9]+ ; code=[^;{}]+ ; status=[^;{}]+ \}', value.strip())
+    if match is None:
+        raise ValueError('UNSUPPORTED_EXECSTART_REPRESENTATION')
+    return {'path': match[1], 'argv': match[2], 'ignore_errors': match[3]}
+
+
 def protected_routes():
-    return {unit: {k: prop(unit, k) for k in ('WorkingDirectory', 'EnvironmentFiles', 'DropInPaths', 'ExecStart')}
+    return {unit: {**{k: prop(unit, k) for k in ('WorkingDirectory', 'EnvironmentFiles', 'DropInPaths')},
+                   'ExecStart': configured_exec(prop(unit, 'ExecStart'))}
             for unit in PROTECTED}
 
 def dropin(spec, target):

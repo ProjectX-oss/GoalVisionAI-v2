@@ -6,6 +6,13 @@ from pathlib import Path
 import pytest
 
 
+def exec_property(argv='/bin/python -m protected', *, live=False, ignore_errors='no'):
+    stamp = 'Fri 2026-10-02 06:55:01 CEST' if live else 'n/a'
+    return ('{ path='+argv.split()[0]+' ; argv[]='+argv+' ; ignore_errors='+ignore_errors+
+            ' ; start_time=['+stamp+'] ; stop_time=['+stamp+'] ; pid='+('123' if live else '0')+
+            ' ; code='+('exited' if live else '(null)')+' ; status='+('0' if live else '0/0')+' }')
+
+
 @pytest.fixture
 def installation(tmp_path, monkeypatch):
     source = Path(__file__).parents[2]/'operations/admin-autorepair/update_compat.py'
@@ -55,7 +62,9 @@ def installation(tmp_path, monkeypatch):
                     if key == 'WorkingDirectory':
                         return str(target)
                     if key == 'ExecStart':
-                        return '/usr/bin/python3 -I '+str(target/'run.py')+s['args']
+                        return exec_property('/usr/bin/python3 -I '+str(target/'run.py')+s['args'])
+            if key == 'ExecStart':
+                return exec_property()
             return 'protected-unchanged'
         if args[0] in ('start','stop'):
             assert args[1] in {s['timer'] for s in specs.values()}
@@ -209,3 +218,97 @@ def test_missing_diagnostic_database_never_created(installation,tmp_path):
     path=tmp_path/'missing.sqlite'
     assert m.diagnostic(path)=={'status':'READ_UNAVAILABLE'}
     assert not path.exists()
+
+def test_execstart_runtime_fields_do_not_change_route_identity(installation):
+    m,*_=installation
+    assert m.configured_exec(exec_property(live=True)) == m.configured_exec(exec_property(live=False))
+    assert m.configured_exec(exec_property()) != m.configured_exec(exec_property('/bin/python -m changed'))
+    assert m.configured_exec(exec_property()) != m.configured_exec(exec_property(ignore_errors='yes'))
+
+
+@pytest.mark.parametrize('value',['', 'unexpected', exec_property()+' '+exec_property(),
+    exec_property().replace(' ; ignore_errors=no','')])
+def test_unknown_execstart_format_fails_closed(installation,value):
+    m,*_=installation
+    with pytest.raises(ValueError,match='UNSUPPORTED_EXECSTART'):
+        m.configured_exec(value)
+
+
+@pytest.mark.parametrize('actual_change',[False,True])
+def test_daemon_reload_runtime_reset_vs_real_command_drift(installation,monkeypatch,actual_change):
+    m,package,states,flags,calls,probes=installation
+    original=m.control
+    reloads=[]
+    def control(*args):
+        if args[0]=='daemon-reload':
+            reloads.append(True)
+        if args[0]=='show' and args[1] in m.PROTECTED and args[3]=='ExecStart':
+            argv='/bin/python -m changed' if actual_change and reloads else '/bin/python -m protected'
+            return exec_property(argv,live=not bool(reloads))
+        return original(*args)
+    monkeypatch.setattr(m,'control',control)
+    if actual_change:
+        with pytest.raises(ValueError,match='PREMATCH_ROUTE_CHANGED'):
+            m.apply(package)
+        assert all(not s['override'].exists() for s in m.SPECS.values())
+    else:
+        m.apply(package)
+        assert all(s['override'].exists() for s in m.SPECS.values())
+    assert all(states[s['timer']]=='active' for s in m.SPECS.values())
+
+
+@pytest.fixture
+def monitor_installation(installation,tmp_path,monkeypatch):
+    m,package,states,flags,calls,probes=installation
+    source=Path(__file__).parents[2]/'operations/admin-autorepair/update_monitor_compat.py'
+    spec=importlib.util.spec_from_file_location('monitor_only_update',source)
+    wrapper=importlib.util.module_from_spec(spec); spec.loader.exec_module(wrapper)
+    monkeypatch.setattr(wrapper,'OVERRIDE',m.SPECS['monitor']['override'])
+    config=tmp_path/'monitor.json'; config.write_text(json.dumps({'autorepair':{'enabled':False}}))
+    marker=tmp_path/'DISABLED'; marker.touch()
+    monkeypatch.setattr(wrapper,'CONFIG',config)
+    monkeypatch.setattr(wrapper,'MARKER',marker)
+    worker=m.SPECS['worker']
+    states[worker['timer']]='inactive'
+    original=m.control
+    def control(*args):
+        if args[0]=='show' and args[1]==wrapper.TIMER and args[3]=='UnitFileState':
+            return 'disabled'
+        if args[0]=='show' and args[1]==wrapper.WORKER and args[3]=='MainPID':
+            return '0'
+        return original(*args)
+    monkeypatch.setattr(m,'control',control)
+    wrapper.configure(m)
+    meta=json.loads((package/'metadata.json').read_text())
+    meta['files']={'monitor':meta['files']['monitor']}
+    (package/'metadata.json').write_text(json.dumps(meta))
+    return m,package,states,calls,wrapper,worker,config,marker
+
+
+def test_monitor_only_apply_and_rollback_preserve_disabled_codex(monitor_installation):
+    m,package,states,calls,w,worker,config,marker=monitor_installation
+    before=config.read_bytes()
+    source=m.tree(worker['base'])
+    w.require_codex_disabled(m)
+    m.apply(package)
+    w.require_codex_disabled(m)
+    m.apply(package,rollback=True)
+    assert states[worker['timer']]=='inactive' and states[worker['service']]=='inactive'
+    assert not worker['override'].exists()
+    assert config.read_bytes()==before and marker.exists()
+    assert m.tree(worker['base'])==source
+    assert all(c[1] not in (worker['timer'],worker['service'])
+               for c in calls if c[0] in ('start','stop','enable','disable'))
+    assert len(m.SPECS)==1 and w.WORKER in m.PROTECTED
+
+
+@pytest.mark.parametrize('condition',['enabled_config','missing_marker','active_timer','active_worker'])
+def test_monitor_update_requires_disabled_codex(monitor_installation,condition):
+    m,package,states,calls,w,worker,config,marker=monitor_installation
+    if condition=='enabled_config': config.write_text(json.dumps({'autorepair':{'enabled':True}}))
+    if condition=='missing_marker': marker.unlink()
+    if condition=='active_timer': states[worker['timer']]='active'
+    if condition=='active_worker': states[worker['service']]='active'
+    with pytest.raises(ValueError,match='ADMIN_CODEX_NOT_DISABLED'):
+        w.require_codex_disabled(m)
+    assert not any(c[0] in ('start','stop') for c in calls)
