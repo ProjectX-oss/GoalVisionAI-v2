@@ -2,7 +2,7 @@
 
 Source/package commit: `a28f2a6ef1aa7ba1e477f662950703d4cc06bca6`.
 
-Status: code, 64 focused tests, read-only route comparison and package preflight PASS. Monitor deployment awaits the operator. ADMIN Codex disconnection is already verified.
+Status: code, 64 focused tests, read-only route comparison and package preflight PASS. Operator deployed the monitor-only package. Release hash/route checks, preserved PREMATCH/worker routes, and natural monitor exit-0 verification PASS. ADMIN Codex disconnection remains verified.
 
 ## What happened
 
@@ -55,3 +55,12 @@ sudo python3 ~/goalvision-operations/admin-monitor-fix.py --apply --rollback
 ```
 
 Codex must remain disabled during rollback as well.
+
+
+## Deployment readback — 08:14 Europe/Riga
+
+The operator reported ADMIN_MONITOR_COMPAT_DEPLOYED and ADMIN_CODEX_STILL_DISABLED. Direct host readback confirms the exact release manifest, all protected configured routes, monitor timer enabled/active and a natural successful monitor run ending at 08:14:24 Riga. Worker is inactive with MainPID=0, its timer disabled/inactive, and DISABLED marker present.
+
+The operator's root-only diagnostic confirms 160 receipt-backed messages since 2026-10-01 22:13 Riga: 80 ordinary ADMIN messages and 80 Auto-Repair status messages. ADMIN delivery is RECOVERED / HEALTHY. These counts are messages, not 160 independent application failures.
+
+Status: deployment PASS. Historical incident recovery and the next natural observer output remain forward checks; no manual scan or test send was initiated. No further operator command is currently required.

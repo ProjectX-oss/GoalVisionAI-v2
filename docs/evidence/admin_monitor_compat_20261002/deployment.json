@@ -1,0 +1,32 @@
+{
+  "disabled_marker": true,
+  "manifest_match": true,
+  "manual_cycle_or_test_send": 0,
+  "manual_model_or_provider_calls": 0,
+  "monitor_last_exit_status": "0",
+  "monitor_last_exit_timestamp": "Fri 2026-10-02 07:15:26 CEST",
+  "monitor_last_result": "success",
+  "natural_observer_after_deploy": "PENDING",
+  "observed_at_utc": "2026-10-02T05:15:51.684230+00:00",
+  "operator_supplied_diagnostic": {
+    "admin_delivery": [
+      {
+        "code": "HEALTHY",
+        "state": "RECOVERED"
+      }
+    ],
+    "attempts": {
+      "RECEIPT_PERSISTED": 80
+    },
+    "confirmed_messages_since_20261001_1913_utc": 160,
+    "operator_attempts": {
+      "RECEIPT_PERSISTED": 80
+    }
+  },
+  "protected_routes_match": true,
+  "release": "/opt/goalvision-admin-alerts-releases/admin-monitor-compat-a28f2a6-20261002",
+  "worker_main_pid": "0",
+  "worker_state": "inactive",
+  "worker_timer_enablement": "disabled",
+  "worker_timer_state": "inactive"
+}

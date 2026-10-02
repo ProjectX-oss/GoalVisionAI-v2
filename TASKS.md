@@ -4,7 +4,8 @@
 - [x] Fix guard comparing runtime ExecStart timestamps/PIDs with configuration.
 - [x] Prepare monitor-only deployment with mandatory disabled-Codex guards.
 - [x] 64 focused regression tests PASS.
-- [ ] Operator monitor-only deployment and natural output recovery.
+- [x] Operator monitor-only deployment, hash/route checks and natural monitor exit-0 PASS.
+- [ ] Next natural observer output and completion of historical incident recovery.
 - Runbook: docs/operations/ADMIN_MONITOR_COMPAT_20261002.md.
 
 ## 2026-10-02 — Operator requested ADMIN Codex disconnection
