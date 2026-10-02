@@ -159,6 +159,17 @@ Model comparison.
 
 Never affects Official statistics.
 
+## PREMATCH Lab policy update authorized 2026-10-02
+
+For the separately approved operator release, new PREMATCH Lab SINGLE bets require
+current decimal odds >= 1.30 (inclusive, without display rounding). COMBOs have no
+economic odds floor, either per leg or on the combined odds; odds must remain valid
+and all existing quality, freshness, independence and correlation checks still apply.
+The SINGLE floor applies before market ranking and again before a new delivery claim.
+Already published bets retain their immutable history, settlement and statistics.
+Official and LIVE rules are unaffected. Deployment remains an explicit operator action.
+
+
 ---
 
 # 8. PREDICTIONS

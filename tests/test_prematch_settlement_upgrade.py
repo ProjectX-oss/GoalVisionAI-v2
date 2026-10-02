@@ -5,9 +5,9 @@ from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-@pytest.fixture
-def rig(tmp_path, monkeypatch):
-    source = Path(__file__).parents[1] / "operations/prematch-settlement/update.py"
+@pytest.fixture(params=["prematch-settlement", "prematch-single-floor"])
+def rig(tmp_path, monkeypatch, request):
+    source = Path(__file__).parents[1] / "operations" / request.param / "update.py"
     spec = importlib.util.spec_from_file_location("quality_update", source)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
@@ -232,3 +232,15 @@ def test_rollback_keeps_compatible_reader_sources(rig):
     assert m.tree(target / 'application') == before
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=0' in (target / 'rollback.env').read_bytes()
     assert all('rollback.env' in p.read_text() for p in rig.overrides.values())
+
+
+
+def test_single_floor_environment_is_explicit_and_rollback_compatible(rig):
+    m = rig.mod
+    if 'app/lab_v2_shadow/single_odds_policy.py' not in m.FILES:
+        return
+    target = m.validate(rig.package)[1]
+    assert b'GOALVISION_LAB_SINGLE_MIN_ODDS_130=1\n' in m.environment(target)
+    assert b'GOALVISION_LAB_SINGLE_MIN_ODDS_130=0\n' in m.environment(target, True)
+    assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=1\n' in m.environment(target)
+    assert b'GOALVISION_LAB_ACCURACY_COMBOS=1\n' in m.environment(target, True)

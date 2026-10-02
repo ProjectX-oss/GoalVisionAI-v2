@@ -13,6 +13,7 @@ from app.lab_combo.publication_window import publication_blocker
 from app.real_match_lab_analysis.fingerprint import fingerprint
 
 
+from .single_odds_policy import FLOOR_SELECTION_POLICY, minimum_single_odds, single_odds_blocker
 from .forward_evidence import current_quote
 from .publication_policy import (review_publication, review_accuracy_publication,
     PUBLICATION_POLICY_VERSION, ACCURACY_PUBLICATION_POLICY_VERSION)
@@ -21,7 +22,7 @@ from .publication_policy import (review_publication, review_accuracy_publication
 MAX_SINGLES_PER_CYCLE = 3
 MAX_COMBOS_PER_CYCLE = 3
 MIN_PUBLISHED_MARKET_PROBABILITY = Decimal("0.55")
-MIN_PUBLISHED_DECIMAL_ODDS = None  # Lab has no economic odds floor; odds must still be > 1.
+MIN_PUBLISHED_DECIMAL_ODDS = None  # Frozen V2 / COMBO-leg contract; SINGLE uses the active policy.
 SINGLE_SELECTION_POLICY = "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
 LEGACY_SINGLE_SELECTION_POLICY = "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1"
 
@@ -54,7 +55,11 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     """Persist accuracy singles and legacy or explicitly opted-in accuracy triples."""
     clock = now.astimezone(timezone.utc)
     combo_ready = []
+    accuracy_pool = []
     single_pool = []
+    single_minimum = minimum_single_odds()
+    single_policy = FLOOR_SELECTION_POLICY if single_minimum is not None else SINGLE_SELECTION_POLICY
+    single_minimum_text = str(single_minimum) if single_minimum is not None else None
     publication_blockers = {}
     publication_reviews = {}
     single_publication_blockers = {}
@@ -77,21 +82,28 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                 or not probability.is_finite() or not Decimal(0) < probability < Decimal(1)):
             continue
 
-        # SINGLE: accuracy-first. EV is diagnostic only. A candidate rejected
+        # Shared accuracy quality review. EV is diagnostic only. A candidate rejected
         # solely for NON_POSITIVE_VALUE may still qualify if all identity,
-        # freshness, replay and severe-contradiction checks pass.
+        # freshness, replay and severe-contradiction checks pass. Apply the SINGLE
+        # floor before its per-fixture ranking; keep all approved COMBO candidates.
         if probability < MIN_PUBLISHED_MARKET_PROBABILITY:
             single_publication_blockers[candidate_id] = "LAB_PUBLICATION_PROBABILITY_BELOW_0_55"
         elif item.get("stage") in {"READY_TO_PUBLISH", "REJECTED"} and item.get("candidate_lane") != "TRACKING":
             accuracy_gate = review_accuracy_publication(item, now=clock)
             single_publication_reviews[candidate_id] = accuracy_gate
             if accuracy_gate["eligible"]:
-                single_pool.append({
+                reviewed_candidate = {
                     **item,
                     "accuracy_publication_policy_version": ACCURACY_PUBLICATION_POLICY_VERSION,
                     "accuracy_publication_review": accuracy_gate,
                     "accuracy_review_completed_at_utc": clock.isoformat(),
-                })
+                }
+                accuracy_pool.append(reviewed_candidate)
+                floor_blocker = single_odds_blocker(odds, minimum=single_minimum)
+                if floor_blocker:
+                    single_publication_blockers[candidate_id] = floor_blocker
+                else:
+                    single_pool.append(reviewed_candidate)
             else:
                 single_publication_blockers[candidate_id] = "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED"
 
@@ -142,13 +154,13 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
                 or int(candidate["fixture_id"]) in consumed_single_fixtures):
             continue
         value = _leg(candidate, clock)
-        value["single_selection_policy"] = SINGLE_SELECTION_POLICY
+        value["single_selection_policy"] = single_policy
         value["minimum_published_probability"] = str(MIN_PUBLISHED_MARKET_PROBABILITY)
-        value["minimum_published_decimal_odds"] = MIN_PUBLISHED_DECIMAL_ODDS
+        value["minimum_published_decimal_odds"] = single_minimum_text
         value["prediction_id"] = "lab-v2-single-" + fingerprint((
             candidate["policy"], key, candidate["candidate_id"],
             candidate["quote_provenance_fingerprint"],
-        ))
+        ) + ((single_policy,) if single_minimum is not None else ()))
         value["accounting"] = "LAB_ONLY_HYPOTHETICAL_ONE_UNIT"
         existing = ledger.get('single_prediction', value['prediction_id'])
         if existing is not None:
@@ -244,17 +256,18 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     if accuracy_combos:
         from .accuracy_combo import prepare_accuracy_combos
         combos, combo_diagnostics = prepare_accuracy_combos(
-            single_ready, ledger, now=clock, label_origin=label_origin, football_context=football_context)
+            accuracy_pool, ledger, now=clock, label_origin=label_origin, football_context=football_context)
     return {"combo_diagnostics": combo_diagnostics,
             "publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION,
             "single_publication_reviews": single_publication_reviews,
             "single_accuracy_publication_policy_version": ACCURACY_PUBLICATION_POLICY_VERSION,
-            "single_selection_policy": SINGLE_SELECTION_POLICY,
+            "single_selection_policy": single_policy,
             "minimum_published_probability": str(MIN_PUBLISHED_MARKET_PROBABILITY),
-            "minimum_published_decimal_odds": MIN_PUBLISHED_DECIMAL_ODDS,
+            "minimum_published_decimal_odds": single_minimum_text,
             "single_publication_blockers": single_publication_blockers,
             "publication_blockers":publication_blockers,"singles": singles, "combos": combos,
-            "ready_input_count": len(combo_ready), "accuracy_single_input_count": len(single_pool)}
+            "ready_input_count": len(combo_ready), "accuracy_single_input_count": len(single_pool),
+            "accuracy_quality_input_count": len(accuracy_pool)}
 
 
 def v2_single_message(value: dict) -> str:

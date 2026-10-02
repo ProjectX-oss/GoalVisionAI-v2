@@ -1,3 +1,13 @@
+## 2026-10-02 — PREMATCH SINGLE minimum 1.30; COMBO without minimum
+
+- [x] User-authorized inclusive SINGLE floor at preparation and delivery.
+- [x] Independent COMBO candidate pool, including legs below 1.30.
+- [x] Historical previews, claims and low-odds settlement preserved.
+- [x] Offline boundary, complete-cycle, settlement and operator rollback tests.
+- [x] Combined operator package includes the pending settlement correction.
+- [ ] Operator deployment and next natural-cycle readback.
+- Report: docs/operations/PREMATCH_SINGLE_FLOOR_20261002.md.
+
 ## 2026-10-02 — PREMATCH early COMBO loss and result diagnostics
 
 - [x] Financial LOST once after confirmed losing leg; outstanding leg audit continues.
