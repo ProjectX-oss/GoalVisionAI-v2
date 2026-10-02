@@ -3,7 +3,10 @@
 - [x] Verify installed settlement source, enabled early-loss flag and failed-upgrade non-mutation.
 - [x] Pin the new base, preserve settlement behavior on rollback, reject mixed/old routes.
 - [x] 126 focused offline tests PASS; application source unchanged.
-- [ ] Operator runs `prematch-policy-compat.py --apply`; natural-cycle readback follows.
+- [x] Operator deployed f81aa2c at 11:54 Riga; full release/configuration/timer readback PASS.
+- [x] Natural settlement service exited successfully at 11:55:38 Riga.
+- [ ] First natural discovery/publication evidence after deployment.
+- Deployment report: docs/operations/PREMATCH_SINGLE_FLOOR_DEPLOYED_20261002.md.
 - Report: docs/operations/PREMATCH_SINGLE_FLOOR_COMPAT_20261002.md.
 
 ## 2026-10-02 — PREMATCH SINGLE minimum 1.30; COMBO without minimum
@@ -13,7 +16,8 @@
 - [x] Historical previews, claims and low-odds settlement preserved.
 - [x] Offline boundary, complete-cycle, settlement and operator rollback tests.
 - [x] Combined operator package includes the pending settlement correction.
-- [ ] Operator deployment and next natural-cycle readback.
+- [x] Operator deployment and configuration readback PASS (f81aa2c).
+- [ ] First natural discovery/publication evidence after deployment.
 - Report: docs/operations/PREMATCH_SINGLE_FLOOR_20261002.md.
 
 ## 2026-10-02 — PREMATCH early COMBO loss and result diagnostics

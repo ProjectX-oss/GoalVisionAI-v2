@@ -1,3 +1,6 @@
+> Operator deployed this package on 2026-10-02 at 11:54 Riga. Deployment readback PASS;
+> see `PREMATCH_SINGLE_FLOOR_DEPLOYED_20261002.md`. The preparation record below is retained.
+
 # PREMATCH SINGLE floor — settlement deployment compatibility (2026-10-02)
 
 Implementation and offline verification: **PASS**. Activation still requires the operator command below.
