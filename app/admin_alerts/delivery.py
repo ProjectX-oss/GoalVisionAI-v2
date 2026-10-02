@@ -10,7 +10,7 @@ from typing import Protocol
 import urllib.error
 import urllib.request
 
-from .model import digest
+from .model import digest, acknowledged_rotation_gap, rotation_gap_reason
 from .store import Store
 from .correlation import groups, deliverable
 
@@ -203,6 +203,10 @@ def delivery_work(store: Store, now: float) -> list:
         ORDER BY i.severity DESC,o.created""", (now,))
     result = []
     for row in rows:
+        incident = store.db.execute("SELECT * FROM incidents WHERE id=?", (row["incident"],)).fetchone()
+        if incident is not None and (acknowledged_rotation_gap(incident) or
+                (rotation_gap_reason(incident) and row["generation"] != incident["generation"])):
+            continue  # Also guard queued/uncertain reminders retained from older code.
         if deliverable(store.db, row['incident'], projections, row):
             result.append(row)
             if len(result) == 1000:

@@ -1,0 +1,80 @@
+{
+  "base_commit": "a3aa0866ccb0b2e22d9e43ebbf55893ea0f9106f",
+  "controlled_synthetic_replay": {
+    "candidate_after": {
+      "fake_messages": 1,
+      "first_seen": 1790874729.0,
+      "incident": "c7df1386cf441d629cbc83b9",
+      "incident_state": "OPEN",
+      "last_seen": 1790874729.0,
+      "occurrences": 1,
+      "real_sends": 0,
+      "synthetic": true
+    },
+    "installed_before": {
+      "fake_messages": 4,
+      "first_seen": 1790874729.0,
+      "incident": "c7df1386cf441d629cbc83b9",
+      "incident_state": "OPEN",
+      "last_seen": 1790874729.0,
+      "occurrences": 1,
+      "real_sends": 0,
+      "synthetic": true
+    }
+  },
+  "current_admin_database_access": "ROOT_REQUIRED; sudo -n reports password required",
+  "deployment": "NOT_PERFORMED",
+  "exact_current_reason_and_receipt_count": "NOT_READ; operator diagnostic required",
+  "installed_base": "/opt/goalvision-admin-alerts-releases/admin-monitor-compat-a28f2a6-20261002",
+  "manual_scans": 0,
+  "preserved": [
+    "PREMATCH routes and policies",
+    "Official",
+    "LIVE disabled",
+    "ADMIN Codex disabled",
+    "incident history",
+    "receipt and attempt history",
+    "activation epoch",
+    "genuine ongoing fault reminders"
+  ],
+  "provider_calls": 0,
+  "real_sends": 0,
+  "remaining_checks": [
+    "Operator incident diagnostic",
+    "Separate operator apply",
+    "Natural next monitor readback; no forced send or scan"
+  ],
+  "reported_incident": "c7df1386cf441d629cbc83b9",
+  "reported_local_time": "2026-10-01T20:12:09+03:00",
+  "reported_occurrence_count": 1,
+  "scope": [
+    "app/admin_alerts/model.py",
+    "app/admin_alerts/sources.py",
+    "app/admin_alerts/store.py",
+    "app/admin_alerts/delivery.py"
+  ],
+  "signature_match": {
+    "object_id": "stdout-rotation",
+    "rule": "MONITORING_COVERAGE_DEGRADED",
+    "service": "monitor",
+    "version": 1
+  },
+  "verification": {
+    "compile": "PASS",
+    "log_sha256": "4a98b496642fdaf64e77f7fead53e3102446f8497ba61721ba7c1220dc9cdc4c",
+    "network": "DISABLED",
+    "pytest_seconds": 22.95,
+    "subtests": 79,
+    "tests": 292,
+    "xml_summary": {
+      "errors": "0",
+      "failures": "0",
+      "hostname": "vmi3558657",
+      "name": "pytest",
+      "skipped": "0",
+      "tests": "371",
+      "time": "22.593",
+      "timestamp": "2026-10-02T20:21:32.266177+02:00"
+    }
+  }
+}

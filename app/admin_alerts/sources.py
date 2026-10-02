@@ -68,6 +68,15 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
     records: list[tuple[dict, str]] = []
     issues: list[Event] = []
     total = 0
+    serial = previous.get("rotation_serial", 0)
+    serial = serial if type(serial) is int and serial >= 0 else 0
+    def rotation_issue(reason: str) -> None:
+        nonlocal serial
+        serial += 1
+        occurrence = "rotation-v2-" + digest((serial, reason, previous.get("file"),
+            previous.get("offset"), previous.get("anchor"), current_id))
+        issues.append(Event("monitor", "MONITORING_COVERAGE_DEGRADED", "stdout-rotation",
+            occurrence, now, "stdout", facts={"reason": reason, "occurrence_version": 2}))
     try:
         current = path.stat()
         current_id = [current.st_dev, current.st_ino]
@@ -84,7 +93,7 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
             except FileNotFoundError:
                 pass
             if selected == path:
-                issues.append(coverage('stdout', now, 'ROTATED_INODE_LOST', object_id='stdout-rotation'))
+                rotation_issue("ROTATED_INODE_LOST")
                 state = {}
         stat = selected.stat()
         fid = [stat.st_dev, stat.st_ino]
@@ -94,7 +103,7 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
             if start:
                 issues.append(coverage('stdout', now, 'INITIAL_WINDOW_BOUNDED', object_id='stdout-history'))
         if stat.st_size < state.get('offset', 0):
-            issues.append(coverage('stdout', now, 'FILE_TRUNCATED', object_id='stdout-rotation'))
+            rotation_issue("FILE_TRUNCATED")
             state = {'file': fid, 'offset': 0}
         with selected.open('rb') as handle:
             if [os.fstat(handle.fileno()).st_dev, os.fstat(handle.fileno()).st_ino] != fid:
@@ -102,7 +111,7 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
             if state.get('anchor') and state['offset'] >= state.get('anchor_size', 0):
                 handle.seek(state['offset'] - state['anchor_size'])
                 if digest(handle.read(state['anchor_size']).hex()) != state['anchor']:
-                    issues.append(coverage('stdout', now, 'FILE_REWRITTEN', object_id='stdout-rotation'))
+                    rotation_issue("FILE_REWRITTEN")
                     state = {'file': fid, 'offset': 0}
             handle.seek(state['offset'])
             count = 0
@@ -158,6 +167,8 @@ def tail(path: Path, previous: dict, now: float, *, running: bool,
             issues.append(coverage('stdout', now, 'SCAN_BACKLOG', object_id='stdout-backlog'))
     except OSError:
         issues.append(coverage('stdout', now, 'READ_UNAVAILABLE'))
+    if state and serial:
+        state["rotation_serial"] = serial
     return records, issues, state, total
 
 

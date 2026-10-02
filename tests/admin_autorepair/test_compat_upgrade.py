@@ -257,10 +257,10 @@ def test_daemon_reload_runtime_reset_vs_real_command_drift(installation,monkeypa
     assert all(states[s['timer']]=='active' for s in m.SPECS.values())
 
 
-@pytest.fixture
-def monitor_installation(installation,tmp_path,monkeypatch):
+@pytest.fixture(params=["update_monitor_compat.py","update_rotation_alerts.py"])
+def monitor_installation(installation,tmp_path,monkeypatch,request):
     m,package,states,flags,calls,probes=installation
-    source=Path(__file__).parents[2]/'operations/admin-autorepair/update_monitor_compat.py'
+    source=Path(__file__).parents[2]/'operations/admin-autorepair'/request.param
     spec=importlib.util.spec_from_file_location('monitor_only_update',source)
     wrapper=importlib.util.module_from_spec(spec); spec.loader.exec_module(wrapper)
     monkeypatch.setattr(wrapper,'OVERRIDE',m.SPECS['monitor']['override'])
@@ -278,9 +278,17 @@ def monitor_installation(installation,tmp_path,monkeypatch):
             return '0'
         return original(*args)
     monkeypatch.setattr(m,'control',control)
+    if hasattr(wrapper,"BASE"):
+        monkeypatch.setattr(wrapper,"BASE",m.SPECS["monitor"]["base"])
+        base=m.SPECS["monitor"]["base"]
+        for name in wrapper.MODULES:
+            path=base/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text("old = True\n")
+            path=package/"overlay/monitor"/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text("new = True\n")
+        (base/"manifest.json").write_text(json.dumps(m.tree(base)))
     wrapper.configure(m)
     meta=json.loads((package/'metadata.json').read_text())
-    meta['files']={'monitor':meta['files']['monitor']}
+    meta['base_manifests']["monitor"]=m.tree(m.SPECS["monitor"]["base"])
+    meta['files']={'monitor':{name:m.sha(package/"overlay/monitor"/name) for name in m.SPECS["monitor"]["modules"]}}
     (package/'metadata.json').write_text(json.dumps(meta))
     return m,package,states,calls,wrapper,worker,config,marker
 
@@ -312,3 +320,25 @@ def test_monitor_update_requires_disabled_codex(monitor_installation,condition):
     with pytest.raises(ValueError,match='ADMIN_CODEX_NOT_DISABLED'):
         w.require_codex_disabled(m)
     assert not any(c[0] in ('start','stop') for c in calls)
+
+
+def test_rotation_diagnostic_is_readonly_bounded_and_redacted(tmp_path):
+    source=Path(__file__).parents[2]/"operations/admin-autorepair/update_rotation_alerts.py"
+    spec=importlib.util.spec_from_file_location("rotation_diag",source)
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    from app.admin_alerts.store import Store
+    from app.admin_alerts.model import coverage
+    root=tmp_path/"admin";root.mkdir()
+    store=Store(root)
+    event=coverage("stdout",100,"ROTATED_INODE_LOST",object_id="stdout-rotation")
+    store.ingest([event],{},100);store.enqueue(100)
+    store.close()
+    before=(root/"admin.sqlite").read_bytes()
+    result=module.incident_diagnostic(root/"admin.sqlite")
+    assert result["identity_verified"] and result["reason"]=="ROTATED_INODE_LOST"
+    assert result["notification_counts"]=={"PENDING":{"rows":1,"acknowledged":0}}
+    assert (root/"admin.sqlite").read_bytes()==before
+    assert "evidence" not in result and "body" not in json.dumps(result)
+    missing=tmp_path/"missing.sqlite"
+    assert module.incident_diagnostic(missing)["status"]=="READ_UNAVAILABLE"
+    assert not missing.exists()

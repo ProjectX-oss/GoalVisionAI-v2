@@ -9,7 +9,7 @@ from pathlib import Path
 import sqlite3
 from typing import Iterator
 
-from .model import Event, alert, digest
+from .model import acknowledged_rotation_gap, rotation_gap_reason, Event, alert, digest
 from . import correlation
 from .invalidation import eligible, REASON, idle_eligible, IDLE_REASON
 from .output_contracts import CONTRACTS
@@ -166,6 +166,11 @@ class Store:
                 state = 'OPEN' if event.debounce == 1 else 'PENDING'
                 streak = 1
             changed = state != row['state'] and (state in ('OPEN', 'ESCALATED') or row['state'] == 'PENDING')
+            # A distinct physical gap must not inherit an older reminder's body
+            # or uncertain delivery. Occurrence replay was already rejected above.
+            if rotation_gap_reason({"service": event.service, "rule": event.rule,
+                    "object_id": event.object_id, "evidence": json.dumps(event.document())}):
+                changed = True
             self.db.execute('''UPDATE incidents SET state=?,severity=?,count=count+1,last_seen=?,evidence=?,
                 invocation=?,streak=?,generation=generation+?,episode=? WHERE id=?''',
                 (state, severity, event.observed, json.dumps(event.document()), event.invocation, streak, int(changed), episode, signature))
@@ -236,6 +241,17 @@ class Store:
                 # rewritten by recovery, escalation or generation supersession.
                 notifications = [n for n in self.db.execute('SELECT * FROM outbox WHERE incident=?', (row['id'],))
                                  if not correlation.epoch_hold(self.db, dict(row), n)]
+                if rotation_gap_reason(row):
+                    for notification in notifications:
+                        if notification["generation"] != row["generation"]:
+                            correlation.supersede(self.db, notification,
+                                "ROTATION_GAP_NEW_EVIDENCE", now)
+                    notifications = [n for n in notifications if n["generation"] == row["generation"]]
+                if acknowledged_rotation_gap(row):
+                    for notification in notifications:
+                        correlation.supersede(self.db, notification,
+                            "ACKNOWLEDGED_ROTATION_GAP_NO_NEW_EVIDENCE", now)
+                    continue
                 attempted = any(n['attempts'] > 0 for n in notifications)
                 activation_member = self.db.execute('SELECT 1 FROM epoch_incidents WHERE incident=?', (row['id'],)).fetchone()
                 last_sent = row['last_sent'] if not activation_member or attempted else 0

@@ -1,3 +1,12 @@
+## 2026-10-02 — ADMIN historical rotation reminder correction
+
+- [x] Identify c7df1386cf441d629cbc83b9 as stdout-rotation; reproduce old reminder loop.
+- [x] Preserve first alert/history; suppress acknowledged duplicate reminders and retain new physical-gap alerts.
+- [x] 292 tests + 79 subtests PASS; offline reproduction four fake sends before / one after.
+- [x] Prepare monitor-only source, disabled-Codex guards and bounded exact-incident diagnostic.
+- [ ] Separate operator deployment, protected incident readback and natural monitor verification.
+- Report: docs/operations/ADMIN_ROTATION_ALERTS_20261002.md.
+
 ## 2026-10-02 — ADMIN monitor-only follow-up, Codex stays disabled
 
 - [x] Confirm combined package rolled back; all five PREMATCH/weekly routes unchanged.

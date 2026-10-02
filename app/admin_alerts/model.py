@@ -100,19 +100,48 @@ def coverage(source: str, now: float, reason: str, *, object_id: str | None = No
                  reason, now, source, facts={'reason': reason})
 
 
+ROTATION_GAP_REASONS = frozenset(("ROTATED_INODE_LOST", "FILE_TRUNCATED", "FILE_REWRITTEN"))
+
+
+def rotation_gap_reason(row: dict) -> str | None:
+    """Classify only retained stdout rotation gaps; unknown faults stay alertable."""
+    if (row["service"] != "monitor" or row["rule"] != "MONITORING_COVERAGE_DEGRADED"
+            or row["object_id"] != "stdout-rotation"):
+        return None
+    try:
+        evidence = json.loads(row["evidence"])
+        reason = evidence.get("facts", {}).get("reason")
+        if evidence.get("source") == "stdout" and reason in ROTATION_GAP_REASONS:
+            return reason
+    except (ValueError, TypeError, AttributeError):
+        pass
+    return None
+
+
+def acknowledged_rotation_gap(row: dict) -> bool:
+    """A historical gap remains recorded, but needs no timer-only reminder."""
+    return bool(rotation_gap_reason(row) and row["state"] in ("OPEN", "REPEATED", "ESCALATED")
+                and row["notified_state"] == "OPEN" and row["last_sent"] > 0
+                and row["last_seen"] <= row["last_sent"])
+
+
 def alert(row: dict, group: dict | None = None) -> str:
     """Concise Latvian plain text; includes identifiers useful after forwarding."""
     restored = row['state'] == 'RECOVERED'
     heading = '✅ GoalVision ADMIN • Darbība atjaunota' if restored else '🚨 GoalVision ADMIN • PREMATCH'
     when = datetime.fromtimestamp(row['last_seen'], timezone.utc).astimezone(ZoneInfo('Europe/Riga'))
     quota = row['rule'] == 'QUOTA_DB_CONTENTION'
+    gap_reason = rotation_gap_reason(row) if not restored else None
     members = group['members'] if group else [row]
     status = 'darbība atjaunota' if restored else 'cikls beidzās ar kļūdu' if any(r['rule'] == 'SERVICE_FAILURE' for r in members) else 'nepieciešama pārbaude'
     codes = sorted({json.loads(r['evidence']).get('facts', {}).get('code', r['rule']) for r in members})
+    if gap_reason:
+        codes = [gap_reason]
+        status = 'žurnāla nepilnība saglabāta pārbaudei'
     return '\n'.join((heading, f"Kļūda: {LABELS[row['rule']]}",
         f"Serviss: {'PREMATCH Discovery' if row['service'] == DISCOVERY else row['service']}",
         f"Posms: {row['rule']}",
-        'Ietekme: šis API pieprasījums netika sākts' if quota else 'Ietekme: darbība atjaunota' if restored else 'Ietekme: rezultāts jāpārbauda',
+        'Ietekme: šis API pieprasījums netika sākts' if quota else 'Ietekme: darbība atjaunota' if restored else 'Ietekme: daļu agrākās izvades nevar pārbaudīt' if gap_reason else 'Ietekme: rezultāts jāpārbauda',
         'Statuss: kvotas datubāze bija aizņemta ilgāk par drošo 500 ms robežu' if quota else f"Statuss: {status}",
         'Pierādījumi: ' + ', '.join(codes), f"Incidents: {row['id']}",
         f"Invocation: {group['invocation'] if group else row['invocation']}",
