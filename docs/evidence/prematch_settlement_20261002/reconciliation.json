@@ -1,0 +1,320 @@
+{
+  "as_of_utc": "2026-10-02T05:44:27.578075+00:00",
+  "boundaries": {
+    "deployment": false,
+    "manual_cycles": 0,
+    "manual_provider_calls": 0,
+    "runtime_mutations": 0,
+    "telegram_sends": 0,
+    "training": false
+  },
+  "claim_without_receipt": [],
+  "combo_cohorts": {
+    "accuracy": {
+      "outcomes": {
+        "LOST": 1,
+        "WON": 1
+      },
+      "pnl": "0.984100",
+      "published": 13,
+      "settled": 2
+    },
+    "all": {
+      "outcomes": {
+        "LOST": 19,
+        "WON": 2
+      },
+      "pnl": "-4.588824",
+      "published": 32,
+      "settled": 21
+    }
+  },
+  "cycle": {
+    "at": "2026-10-02T05:35:30.605507+00:00",
+    "combo_statistics": {
+      "LOST": 19,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 2,
+      "average_combined_odds": "44.01714134375",
+      "hypothetical_profit_loss": "-4.588824",
+      "hypothetical_units_wagered": "32",
+      "pending": 11,
+      "roi_yield": "-0.2185154285714285714285714286",
+      "total_published": 32,
+      "total_settled": 21,
+      "units": "-4.588824",
+      "win_rate": "0.09523809523809523809523809524"
+    }
+  },
+  "due_unresolved_combo_legs": 0,
+  "duplicate_receipt_message_ids": [],
+  "errors": [],
+  "independent_reconciliation": {
+    "COMBO": {
+      "LOST": 19,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 2,
+      "pending": 11,
+      "pnl": "-4.588824",
+      "published": 32,
+      "roi": "-0.2185154285714285714285714286",
+      "settled": 21
+    },
+    "SINGLE": {
+      "LOST": 90,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 40,
+      "pending": 14,
+      "pnl": "-27.72",
+      "published": 144,
+      "roi": "-0.2132307692307692307692307692",
+      "settled": 130
+    }
+  },
+  "known_lost_pending_combos": [
+    {
+      "losing_legs": [
+        {
+          "away_team": "Serbia",
+          "captured_odds": "1.35",
+          "fixture_id": 1528917,
+          "fulltime_away": 0,
+          "fulltime_home": 2,
+          "home_team": "Germany",
+          "market": "OVER_2_5",
+          "observation_id": "lab-v2-candidate-a3a284aef28ceb8a4cf297a666d2bbc84a88224011e3dcc1ff8f8dc3126503ac",
+          "outcome": "LOST",
+          "provider": "API_FOOTBALL",
+          "provider_status": "FT",
+          "retrieved_at_utc": "2026-10-01T20:45:04.740626+00:00",
+          "rule_version": "lab-combo-regulation-v1",
+          "source_fingerprint": "8f60fa9c8ce976617312982a8dbe2810d422099a32f2fceb6b496bcbb39ffe91"
+        }
+      ],
+      "prediction_id": "lab-v2-combo-accuracy-27893c8e0f363e597e1dbc8ccfe7d88d8c4b95263f291def221a583a60c3b258",
+      "prediction_message_id": 309
+    },
+    {
+      "losing_legs": [
+        {
+          "away_team": "Montserrat",
+          "captured_odds": "1.50",
+          "fixture_id": 1639967,
+          "fulltime_away": 2,
+          "fulltime_home": 0,
+          "home_team": "British Virgin Islands",
+          "market": "OVER_2_5",
+          "observation_id": "lab-v2-candidate-d373532a8b222350a7d131fb6c14b8ae4816e61a1d41fdd780a6a200f259a186",
+          "outcome": "LOST",
+          "provider": "API_FOOTBALL",
+          "provider_status": "FT",
+          "retrieved_at_utc": "2026-10-01T21:55:04.584441+00:00",
+          "rule_version": "lab-combo-regulation-v1",
+          "source_fingerprint": "fc1fb263fdb92209e556d2a6c86c137b01e9ffcb6335d34574248a68d8808f6a"
+        }
+      ],
+      "prediction_id": "lab-v2-combo-accuracy-693fb9e2fd409887723c78a2bf55a1d408db9c3800c88fd90535af3714199d5b",
+      "prediction_message_id": 301
+    }
+  ],
+  "known_outcome_projection_only": {
+    "LOST": 21,
+    "WON": 2,
+    "decided": 23,
+    "pending_without_known_loss": 9,
+    "pnl": "-6.588824",
+    "published": 32,
+    "roi": "-0.2864706086956521739130434783"
+  },
+  "latest_combo_result": {
+    "prediction_id": "lab-v2-combo-accuracy-43c1ef9a5b308e6c43232f1c9981dfa9ff5fccf0ddddb41f2cd39802ddf5ad9a",
+    "receipt": {
+      "chat_id": "-1003510920417",
+      "message_id": 342,
+      "sent": true,
+      "sent_at_utc": "2026-10-01T20:55:33.096642+00:00",
+      "status": "SENT"
+    },
+    "statistics": {
+      "LOST": 19,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 2,
+      "average_combined_odds": "44.01714134375",
+      "hypothetical_profit_loss": "-4.588824",
+      "hypothetical_units_wagered": "32",
+      "pending": 11,
+      "roi_yield": "-0.2185154285714285714285714286",
+      "total_published": 32,
+      "total_settled": 21,
+      "units": "-4.588824",
+      "win_rate": "0.09523809523809523809523809524"
+    }
+  },
+  "missing_result_receipts": [],
+  "observer": {
+    "COMBO": {
+      "LOST": 19,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 2,
+      "average_combined_odds": "44.01714134375",
+      "average_odds": "44.01714134375",
+      "brier": null,
+      "ece": null,
+      "flat_roi": -0.21851542857142858,
+      "flat_unit_pnl": "-4.588824",
+      "hit_rate": 0.09523809523809523,
+      "log_loss": null,
+      "mce": null,
+      "median_odds": "12.961038",
+      "missing_pnl_count": 0,
+      "missing_probability_count": 19,
+      "odds_sample": 32,
+      "partial_void_count": 0,
+      "pending": 11,
+      "pending_settlements": 11,
+      "predictive_calibration_observations": 0,
+      "probability_observations": 0,
+      "reliability_bins": [],
+      "roi": "-0.2185154285714285714285714286",
+      "total_published": 32,
+      "total_settled": 21
+    },
+    "created_at": "2026-10-02T05:38:01.438773+00:00",
+    "id": "4079676739899b68dd3006450e955701f753fae68ee26c70a1de58d957fae0bf"
+  },
+  "overdue_by_frozen_kickoff": [
+    "lab-v2-single-c0961c566121a72799c8ef8a041aca1bf273733d0c7b64891303e152173f87f6"
+  ],
+  "pending_single": [
+    {
+      "away_team": "Japan W",
+      "fixture_id": 1643167,
+      "home_team": "Korea DPR W",
+      "kickoff_utc": "2026-10-02T10:30:00+00:00",
+      "market": "UNDER_3_5",
+      "prediction_id": "lab-v2-single-0c3cd0d8afa9c7a87d553d446bdd6d59889174cd293f83b2f90673faa5f6056a"
+    },
+    {
+      "away_team": "Moldova",
+      "fixture_id": 1528923,
+      "home_team": "Kazakhstan",
+      "kickoff_utc": "2026-10-02T14:00:00+00:00",
+      "market": "OVER_1_5",
+      "prediction_id": "lab-v2-single-37a41a7bf1375b55a2d217f2acb15afce861a920253d4f0895716b3e90f11dad"
+    },
+    {
+      "away_team": "Palestine",
+      "fixture_id": 1637598,
+      "home_team": "China",
+      "kickoff_utc": "2026-10-02T11:35:00+00:00",
+      "market": "OVER_1_5",
+      "prediction_id": "lab-v2-single-46206a841abf61225f14cd7910826027f2ca6f11f50367d552594c43db63ddac"
+    },
+    {
+      "away_team": "Slovenia",
+      "fixture_id": 1545653,
+      "home_team": "Switzerland",
+      "kickoff_utc": "2026-10-03T18:45:00+00:00",
+      "market": "OVER_1_5",
+      "prediction_id": "lab-v2-single-50374f7ffc1432794c6331aa394c137da7aada7b8bcb20fd3a01bb5f982d5345"
+    },
+    {
+      "away_team": "Ajman",
+      "fixture_id": 1636372,
+      "home_team": "Al Ain",
+      "kickoff_utc": "2026-10-02T13:15:00+00:00",
+      "market": "OVER_2_5",
+      "prediction_id": "lab-v2-single-5070cd6993a10596cb7dad7b741ea7569dc16fbe3fb3b1c7965b80d20fe0b93c"
+    },
+    {
+      "away_team": "Sohar",
+      "fixture_id": 1636204,
+      "home_team": "Al-Nahda",
+      "kickoff_utc": "2026-10-02T14:30:00+00:00",
+      "market": "UNDER_3_5",
+      "prediction_id": "lab-v2-single-53638e96d18f63577696aea8db3d679c6623de49c850d8977218653523866fca"
+    },
+    {
+      "away_team": "South Korea W",
+      "fixture_id": 1643166,
+      "home_team": "China W",
+      "kickoff_utc": "2026-10-02T06:00:00+00:00",
+      "market": "UNDER_3_5",
+      "prediction_id": "lab-v2-single-7559074f87e94a48d6d1471e195c62fcffc124e77c4704fd3438bb3fc92bc192"
+    },
+    {
+      "away_team": "Dynamo Dresden",
+      "fixture_id": 1638579,
+      "home_team": "Teplice",
+      "kickoff_utc": "2026-10-02T16:00:00+00:00",
+      "market": "OVER_2_5",
+      "prediction_id": "lab-v2-single-8419aee2c9ff4b56a8b64f39f05450b34b3da122dc8aba8c659196ffa8aa61d0"
+    },
+    {
+      "away_team": "Armenia",
+      "fixture_id": 1528930,
+      "home_team": "Cyprus",
+      "kickoff_utc": "2026-10-02T16:00:00+00:00",
+      "market": "OVER_1_5",
+      "prediction_id": "lab-v2-single-b6355a54460cecee11c80223e1950f1e5ca99543d790f537e51f0afe691f5cda"
+    },
+    {
+      "away_team": "Ismaily SC",
+      "fixture_id": 1594851,
+      "home_team": "Dayrout",
+      "kickoff_utc": "2026-10-01T12:30:00+00:00",
+      "market": "OVER_1_5",
+      "prediction_id": "lab-v2-single-c0961c566121a72799c8ef8a041aca1bf273733d0c7b64891303e152173f87f6"
+    },
+    {
+      "away_team": "Czechia",
+      "fixture_id": 1528936,
+      "home_team": "Spain",
+      "kickoff_utc": "2026-10-03T18:45:00+00:00",
+      "market": "OVER_2_5",
+      "prediction_id": "lab-v2-single-cbce24d9b931db26254798c7fe8e61b7d4563bf9d9f803c2e56bf3b9a6377f00"
+    },
+    {
+      "away_team": "Mega Sport",
+      "fixture_id": 1595144,
+      "home_team": "Kahraba Ismailia",
+      "kickoff_utc": "2026-10-02T12:30:00+00:00",
+      "market": "OVER_1_5",
+      "prediction_id": "lab-v2-single-cbfb544e741bf9b8000ecdeecafde4b45906920f6a0b2a4aea2246ec0900590a"
+    },
+    {
+      "away_team": "Croatia U21",
+      "fixture_id": 1350192,
+      "home_team": "Ukraine U21",
+      "kickoff_utc": "2026-10-02T16:00:00+00:00",
+      "market": "UNDER_3_5",
+      "prediction_id": "lab-v2-single-e2786758f2c9436a40e635c474c156aa23cf69914cbe337083517b5bf64e6030"
+    },
+    {
+      "away_team": "Lugo",
+      "fixture_id": 1570771,
+      "home_team": "Real Avil\u00e9s",
+      "kickoff_utc": "2026-10-02T17:00:00+00:00",
+      "market": "UNDER_3_5",
+      "prediction_id": "lab-v2-single-e348903f55ba898c92b42456b4a9fd93e37945d97591cb3452e7865955451ede"
+    }
+  ],
+  "receipt_issues": [],
+  "scope": "PREMATCH_LAB_READ_ONLY",
+  "service": {
+    "exit_status": 0,
+    "last_exit_utc": "2026-10-02T05:35:30+00:00",
+    "last_start_utc": "2026-10-02T05:35:00+00:00",
+    "main_pid": 0,
+    "maximum_postdeploy_completion_gap_minutes": 10.147338783333334,
+    "name": "goalvision-lab-combo-settle.service",
+    "postdeploy_persisted_runs": 63,
+    "timer_active": true
+  },
+  "source_limitation": "Scheduled unresolved fixture payloads are not retained by check_results; HTTP 200 proves retrieval, not fixture terminal status. No external result substituted into the ledger."
+}
