@@ -80,3 +80,10 @@ Rollback disables new early-loss decisions while retaining the compatible reader
 After operator installation, inspect the next successful natural settlement and observer cycles. The two known losses should each enter financial statistics once and receive at most one accepted result notification; the other legs remain audited until completion. Provider-derived unresolved evidence should explain Dayrout status/date without extra manual requests. Champion/promotion, learning datasets/holdout and selection thresholds are outside this change.
 
 No deployment, timer control, manual research/discovery/settlement cycle, provider request, Telegram send, model training, promotion or Official mutation was executed during implementation.
+
+## Prepared package readback
+
+Source commit: 04a075134b1c3d825bb3dbd029db77e20d3a6953. Package: /home/arvis/goalvision-operations/prematch-settlement-04a0751-20261002.
+
+Read-only plan and SHA256SUMS: PASS. Expected application modules: 806.
+Current route mode: BASE; ADMIN_CODEX_DISABLED=PASS. No operator installation has occurred.

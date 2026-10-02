@@ -2,6 +2,16 @@
   "deployment": "PENDING_OPERATOR_AUTHORIZATION",
   "natural_cycle_evidence": "PENDING_DEPLOYMENT",
   "network_disabled": true,
+  "operator_package": {
+    "admin_codex_disabled": "PASS",
+    "current_mode": "BASE",
+    "deployment_performed": false,
+    "modules_in_expected_release": 806,
+    "path": "/home/arvis/goalvision-operations/prematch-settlement-04a0751-20261002",
+    "read_only_plan": "PASS",
+    "sha256sums": "PASS",
+    "source_commit": "04a075134b1c3d825bb3dbd029db77e20d3a6953"
+  },
   "real_ledger_read_only_replay": {
     "legacy_settlements_reproduced": 21,
     "live_database_writes": 0,
