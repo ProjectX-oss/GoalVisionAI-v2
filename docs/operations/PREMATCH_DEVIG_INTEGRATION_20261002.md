@@ -176,6 +176,21 @@ There is no provider/send/manual-cycle step in installation or rollback.
 After separately authorized installation, inspect route/flag readback and the
 next natural discovery/observer pair; a clock time cannot establish sample quality.
 
+### Prepared package readback
+
+- Implementation commit: `83958d1f6505fd5f6687b250cbd19e96f7e5c060`.
+- Package: `/home/arvis/goalvision-operations/prematch-devig-83958d1-20261002`.
+- Read-only wrapper validation: PASS, `current_mode=BASE; ADMIN_CODEX_DISABLED=PASS`.
+- SHA256SUMS: all nine files PASS. Exact 807-module installed base; 810-module
+  candidate tree, with seven reviewed overlays (three new modules).
+- No apply, rollback or service-control command was executed; the candidate
+  release is not installed. Runtime remains the SINGLE-floor release.
+- Champion pointer, activation/generation/learning-cycle/holdout counts and zero
+  LIVE publications match the pre-change readback.
+- Package hashes and wrapper/source pins: `docs/evidence/prematch_devig_20261002/operator_package.json`.
+- Genuine forward verdict remains NEEDS_MORE_EVIDENCE. Installation and natural
+  evidence readback are the next separately authorized operator step.
+
 ## Mathematics references
 
 Checked primary descriptions on 2026-10-02:

@@ -1,0 +1,27 @@
+{
+  "apply_executed": false,
+  "base_python_modules": 807,
+  "candidate_python_modules": 810,
+  "checked_at_utc": "2026-10-02T11:10:07.820939+00:00",
+  "checksums_sha256": "d027643c0386cf0d05629a59e78ad61a93c03bfb6115f4ede1e8624a10dded16",
+  "metadata_sha256": "28352599de519f9147459547b1a8ab6f63b7db2daeb96cca8eebf1bf3f47b86f",
+  "overlay_files": {
+    "app/adaptive_lab/devig_integration.py": "cc3dd26b2b918dd23a9d6c0db0f5180837eb567edf15cccf25b088d3dab31188",
+    "app/adaptive_lab/devig_metrics.py": "98750557a6a49aec8c8977c7285789071512015b0123c1b57cefb5f7542b24be",
+    "app/adaptive_lab/devig_research.py": "9681a2d8ed66ace2456b18e9c39568be8ef73502dc324e4dfd067dad1304bd23",
+    "app/adaptive_lab/observer.py": "da0564613e18616ca56b4f46f8decbe0595f3960fcb5d9b8c2729168a72cb591",
+    "app/adaptive_lab/prematch.py": "853dd5b001acb65b3200ff22381a0b1a4824dc0d8ee81c395bd5625faba7cab2",
+    "app/lab_v2_shadow/operator_output.py": "ddebc0fa8c2b871b5abba8e58b22298b0c43fbc178a52a3f7717a84c82cf822b",
+    "app/lab_v2_shadow/runner.py": "6e67c348a6a226ecb4103566372a71fa6fe9486ef8a07da5eb6d3ebc5d74cfa9"
+  },
+  "package": "/home/arvis/goalvision-operations/prematch-devig-83958d1-20261002",
+  "read_only_validation": "PREMATCH_DEVIG_PLAN_VALIDATED=/opt/goalvision-prematch-devig-83958d1-20261002\ncurrent_mode=BASE; ADMIN_CODEX_DISABLED=PASS",
+  "rollback_executed": false,
+  "rollback_semantics": "DISABLE_DEVIG_ONLY_RETAIN_SINGLE_130_TODAY_EARLY_LOSS_AND_EVIDENCE",
+  "service_controls_executed": false,
+  "sha256sum_verification": "metadata.json: OK\noverlay/app/adaptive_lab/devig_integration.py: OK\noverlay/app/adaptive_lab/devig_metrics.py: OK\noverlay/app/adaptive_lab/devig_research.py: OK\noverlay/app/adaptive_lab/observer.py: OK\noverlay/app/adaptive_lab/prematch.py: OK\noverlay/app/lab_v2_shadow/operator_output.py: OK\noverlay/app/lab_v2_shadow/runner.py: OK\nupdate.py: OK",
+  "source_commit": "83958d1f6505fd5f6687b250cbd19e96f7e5c060",
+  "target_release_installed": false,
+  "wrapper": "/home/arvis/goalvision-operations/devig-shadow.py",
+  "wrapper_sha256": "a43a41ef82af7e114d5b1c5f2feadfd987afd4d9d9d6af37d8140fff895512f9"
+}

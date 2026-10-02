@@ -4,7 +4,7 @@
 - [x] Isolated V2 current-quote captures with exact provenance, optional failure isolation and no added provider calls.
 - [x] Existing observer result join, paired/common cohorts, missingness, policy/market segments and bounded stdout.
 - [x] 879 affected regressions and final 312-test slice (47 de-vig), network disabled; counts overlap.
-- [x] Tested exact-base operator package and research-only rollback source prepared.
+- [x] Exact-base operator package from commit 83958d1 prepared; read-only validation and nine checksum entries PASS; no deployment.
 - [ ] Separate operator deployment, natural capture/observer readback and sufficient genuine forward outcomes.
 - Report: docs/operations/PREMATCH_DEVIG_INTEGRATION_20261002.md.
 - SINGLE >=1.30, COMBO no floor, today-only and early settlement retained. Official unchanged; LIVE/ADMIN Codex disabled.
