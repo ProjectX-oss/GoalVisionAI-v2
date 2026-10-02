@@ -1,9 +1,20 @@
+## 2026-10-02 — Fixed-calendar calibration research candidate
+
+- [x] Add opt-in immutable 14/7/7/7-day research schedule with 24-hour gaps and exact model/policy cohort.
+- [x] Preserve prior sealed/consumed holdout, fixture grouping, chronology and independent sample minima.
+- [x] Add query-only audit CLI; synthetic fitter integration and 654 tests + 42 subtests PASS.
+- [x] Read-only real comparison: TRAIN 1,804 / 560 fixtures; fitting/evaluation/holdout remain future and BLOCKED. Reserve all 156 old holdout fixtures.
+- [x] Commit prospective plan before fitting starts; independent replay and unchanged runtime/champion evidence retained.
+- [ ] Collect natural evidence for the frozen plan, then offline calibration/holdout/shadow evaluation if all readiness gates pass.
+- [ ] Any scheduled-research integration or deployment requires separate review; no automatic promotion.
+- Report: docs/operations/CALIBRATION_CALENDAR_RESEARCH_20261002.md.
+
 ## 2026-10-02 — Calibration readiness and chronological window bottleneck
 
 - [x] Read-only installed-code projection: 2,293 eligible observations / 773 fixtures; VALIDATION 0 after the retained 24-hour embargo.
 - [x] Confirm existing Platt/temperature/isotonic research implementation; no fitting or sealed holdout evaluation invoked.
 - [x] Diagnose all 155 provisional validation fixtures excluded by label-availability timing; preserve current champion and production state.
-- [ ] Isolated calendar-window research candidate, frozen boundaries and clustered-date/late-settlement/leakage regressions; no automatic deployment.
+- [x] Isolated calendar-window candidate, immutable prospective plan and clustered-date/late-settlement/leakage regressions; no runtime wiring or deployment.
 - [ ] Genuine independent calibration/evaluation and later shadow evidence once data readiness passes; promotion remains separately approved.
 - Report: docs/operations/CALIBRATION_READINESS_20261002.md.
 

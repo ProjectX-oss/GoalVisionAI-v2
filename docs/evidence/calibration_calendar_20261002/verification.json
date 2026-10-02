@@ -1,0 +1,70 @@
+{
+  "as_of": "2026-10-02T19:19:50.384098+00:00",
+  "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+  "champion_unchanged": true,
+  "deterministic_replay_reversed_input": "PASS",
+  "fitting_invoked": false,
+  "fixture_overlap_count": 0,
+  "holdout_evaluated": false,
+  "independent_assignment_timestamp_cohort_embargo_checks": "PASS",
+  "input_rows": 2314,
+  "module_sha256": {
+    "app/adaptive_lab/calendar_audit.py": "2d6bb005069fd253920f36ab1db49d6ea3077c924495471daabc2602f34bd73a",
+    "app/adaptive_lab/calendar_research.py": "608179f6d1ebf48b506a1e24535f7ec9d5bdeba9c46a08fc8cd10df818ef77ab"
+  },
+  "plan_fingerprint": "9b154abc5b1ca4f18187150c2ca0a8d4d37b93b9c3893e97b2e61457329ca439",
+  "prediction_metrics_claimed": false,
+  "protected_counts": {
+    "activation_events": 1,
+    "champion_generations": 1,
+    "holdout_results": 0,
+    "learning_cycles": 3,
+    "live_publications": 0,
+    "model_artifacts": 59,
+    "shadow_runs": 0,
+    "training_runs": 133
+  },
+  "protected_counts_before_after_equal": true,
+  "regression": {
+    "network": "libseccomp blocks socket/connect/send syscalls including child processes",
+    "new_focused_tests_included": 35,
+    "passed": 654,
+    "seconds": 124.35,
+    "subtests_passed": 42
+  },
+  "row_conservation_no_duplicates": "PASS",
+  "runtime_imports_changed": false,
+  "runtime_readback": {
+    "admin_worker": {
+      "ActiveState": "inactive",
+      "MainPID": "0"
+    },
+    "admin_worker_timer": {
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    },
+    "agent_deployment": false,
+    "configured_route_deltas": {},
+    "manual_cycle": false,
+    "provider_call": false,
+    "test_send": false
+  },
+  "sealed_reservations_and_consumed_fixtures_preserved": "PASS",
+  "source_base_commit": "666307b",
+  "source_snapshot_fingerprint": "7fb6277d6426f1a0ad1a5ce6219ea64ae981a40a84710a74a0b1ffb82990425b",
+  "verification_command": [
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "docs/operations/offline_test_runner.py",
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/adaptive_lab",
+    "tests/test_calibration_fitting.py",
+    "tests/test_probability_calibration.py",
+    "tests/test_probability_calibration_engine.py",
+    "tests/test_calibration_registry.py",
+    "tests/test_calibration_quality_review.py",
+    "--junitxml=var/calendar-tests/regression.xml"
+  ]
+}
