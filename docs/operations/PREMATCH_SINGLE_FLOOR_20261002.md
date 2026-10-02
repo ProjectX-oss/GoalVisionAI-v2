@@ -105,3 +105,25 @@ It does not return to an older binary that cannot read those immutable records.
 
 After operator deployment, verify the four route/environment readbacks and the next natural
 publication/settlement evidence. Runtime success is not established by offline tests alone.
+
+## Prepared package evidence
+
+Source commit: `d73359111532fb2bbf0bc2e2e3d6a94f465b3f29`.
+Branch: `fix/prematch-single-floor-20261002`.
+Package: `/home/arvis/goalvision-operations/prematch-single-floor-d733591-20261002`.
+Pinned wrapper: `/home/arvis/goalvision-operations/prematch-policy-fix.py`.
+Target on operator deployment: `/opt/goalvision-prematch-single-floor-d733591-20261002`.
+Eight reviewed runtime overlay files; complete expected tree: **807 Python modules**.
+
+Read-only preflight returned:
+
+```text
+PREMATCH_SINGLE_FLOOR_PLAN_VALIDATED=/opt/goalvision-prematch-single-floor-d733591-20261002
+current_mode=BASE; ADMIN_CODEX_DISABLED=PASS
+```
+
+Metadata SHA-256: `994d8212ce41efe5abfc2365e93feebb76716f1d5576ddf379745062c01b549f`.
+Wrapper SHA-256: `8cc5b13716248ce7b5d87c406975a65c153e91e5ec309a466097e2be09fc9906`.
+The package retains its own SHA256SUMS and pinned source/configuration metadata.
+Final result: **PASS** for implementation, 373 tests and read-only package validation;
+**BLOCKED pending operator activation** for production and subsequent natural-cycle verification.
