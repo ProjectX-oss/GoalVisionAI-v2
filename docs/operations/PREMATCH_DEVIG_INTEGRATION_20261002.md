@@ -220,3 +220,48 @@ verification is PENDING; forward quality remains NEEDS_MORE_EVIDENCE.
 No manual cycle, provider request, Telegram test or service control was executed
 during this verification. Evidence: `deployment_readback.json` in the evidence
 directory above.
+
+
+## Natural-cycle verification — 2026-10-02 evening
+
+Readback cutoff: 20:44:32 Europe/Riga; latest persisted metrics: 20:38:01.
+Natural integration: **PASS**. Predictive quality: **NEEDS_MORE_EVIDENCE**.
+
+- 13 natural discovery cycles (14:30–20:30) all recorded CAPTURED.
+- 13 natural observer cycles (14:38–20:38) all retained linked immutable metrics;
+  no UNAVAILABLE snapshot. The initial five correctly had no settled outcomes.
+- 1,459 capture records across 251 attempted fixtures: 608 AVAILABLE and 851
+  BLOCKED. Valid bookmaker evidence covers 122 unique fixtures.
+- Blocked evidence: 830 unavailable quotes, 16 no complete valid bookmaker,
+  five stale sources. These are explicit source exclusions, not integration errors.
+- The only outside-today capture family belongs to future-dated fixture 1587495;
+  all five family records are BLOCKED/CURRENT_QUOTES_UNAVAILABLE and excluded.
+  Current discovery scope remains TODAY_RIGA.
+- First-valid sampling retains 2,294 book/market samples: 342 resolved and 1,952
+  pending. Resolved unique fixtures: **18**, not 342 independent matches.
+- Pure offline reproduction of all 1,459 captures, hashes for 13 metrics and all
+  13 observer links PASS. No future-capture or invalid-result-chronology samples.
+- Readable discovery/observer/settlement journals contain no research-unavailable,
+  traceback, error-priority or process-failure entries in the inspected window.
+  ADMIN emitted no application journal entries in the readable scope; its latest
+  service readback is success and its timer remains active.
+- Runtime preflight PASS; protected champion/activation/learning-cycle/holdout
+  counts unchanged. LIVE and ADMIN Codex remain disabled; Official mutations zero.
+  SINGLE 1.30, COMBO no floor, today-only and early-loss flags remain pinned.
+
+Descriptive results on the same 18 fixtures / 342 correlated book-market rows
+(lower is better; these are probability errors, not win rate):
+
+| Method | Brier | Log loss | ECE |
+| --- | ---: | ---: | ---: |
+| Multiplicative | 0.202271 | 0.590682 | 0.044611 |
+| Shin | 0.201254 | 0.587962 | 0.050511 |
+| Power | 0.200754 | 0.586321 | 0.052570 |
+| OO-EPC | 0.200726 | 0.586528 | 0.061712 |
+
+Small Brier/log-loss differences coexist with worse ECE on this tiny correlated
+sample. No method is approved as superior. No threshold, selector, champion or
+deployment changed. Next evidence step: allow remaining naturally tracked matches
+to settle, then review broader forward coverage and stability across days/families.
+
+Evidence: `docs/evidence/prematch_devig_20261002/natural_cycles_evening.json`.
