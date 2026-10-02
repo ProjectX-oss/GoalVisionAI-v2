@@ -1,0 +1,259 @@
+{
+  "discovery": {
+    "all_51_candidates_loaded": true,
+    "candidate_odds_below_1_30": 4,
+    "completed_at": "2026-10-01T19:32:17.141906+00:00",
+    "failure": null,
+    "fixture_kickoffs": {
+      "1549614": "2026-10-01T20:30:00+00:00",
+      "1612070": "2026-10-01T20:00:00+00:00",
+      "1635842": "2026-10-01T20:00:00+00:00",
+      "1636701": "2026-10-01T20:30:00+00:00",
+      "1639968": "2026-10-01T20:00:00+00:00"
+    },
+    "fixtures": 135,
+    "fixtures_evaluated": 5,
+    "health_id": "479eeeeda1124bc390e91d5bf806d08f539891d655ad49a59a58ce2e3988c091",
+    "markets": 51,
+    "provider_calls": 25,
+    "publication": {
+      "combo_diagnostics": {
+        "eligible_fixture_count": 0,
+        "policy": "LAB_COMBO_ACCURACY_FROM_SINGLES_V1",
+        "prepared_count": 0,
+        "reason": "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES",
+        "rejection_counts": {}
+      },
+      "combos_sent": 0,
+      "minimum_published_decimal_odds": null,
+      "minimum_published_probability": "0.55",
+      "publication_attempt_count": 0,
+      "reason": "FIXTURE_AFTER_LAB_CUTOFF",
+      "single_selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR",
+      "singles_sent": 0,
+      "telegram_transport_constructed": false
+    },
+    "published": 0,
+    "ready": 2,
+    "result": "DEGRADED",
+    "started_at": "2026-10-01T19:30:03.361505+00:00"
+  },
+  "integrity": {
+    "configured_commands_match": true,
+    "environment_match": true,
+    "four_routes_match": true,
+    "modules_verified": 805,
+    "release": "/opt/goalvision-prematch-quality-3ad346b-20261001",
+    "timers": {
+      "goalvision-adaptive-learning-observer.timer": "active",
+      "goalvision-adaptive-learning.timer": "active",
+      "goalvision-lab-combo-settle.timer": "active",
+      "goalvision-lab-v2-discover.timer": "active"
+    }
+  },
+  "manual_cycles": 0,
+  "manual_provider_or_model_calls": 0,
+  "observer": {
+    "all_observer_read_only_contracts": true,
+    "all_performance_complete": true,
+    "first_created_at": "2026-10-01T19:38:02.077860+00:00",
+    "first_journal_invocation": "c671d9fcfd324190b5f11744b19d4ca7",
+    "first_journal_output_at": "2026-10-01T19:38:23.947223+00:00",
+    "last_created_at": "2026-10-02T05:08:01.763065+00:00",
+    "latest_published_lab_totals": {
+      "COMBO": {
+        "LOST": 19,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 2,
+        "average_combined_odds": "44.01714134375",
+        "average_odds": "44.01714134375",
+        "brier": null,
+        "ece": null,
+        "flat_roi": -0.21851542857142858,
+        "flat_unit_pnl": "-4.588824",
+        "hit_rate": 0.09523809523809523,
+        "log_loss": null,
+        "mce": null,
+        "median_odds": "12.961038",
+        "missing_pnl_count": 0,
+        "missing_probability_count": 19,
+        "odds_sample": 32,
+        "partial_void_count": 0,
+        "pending": 11,
+        "pending_settlements": 11,
+        "predictive_calibration_observations": 0,
+        "probability_observations": 0,
+        "roi": "-0.2185154285714285714285714286",
+        "total_published": 32,
+        "total_settled": 21
+      },
+      "SINGLE": {
+        "LOST": 90,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 40,
+        "average_odds": "3.814375",
+        "brier": 0.2370862332108091,
+        "ece": 0.19435602213981854,
+        "flat_roi": -0.21323076923076922,
+        "flat_unit_pnl": "-27.72",
+        "hit_rate": 0.3076923076923077,
+        "log_loss": 0.6664726992872774,
+        "mce": 0.4950812551618739,
+        "median_odds": "2.95",
+        "missing_pnl_count": 0,
+        "missing_probability_count": 3,
+        "odds_sample": 144,
+        "partial_void_count": 0,
+        "pending": 14,
+        "pending_settlements": 14,
+        "probability_observations": 127,
+        "roi": "-0.2132307692307692307692307692",
+        "total_published": 144,
+        "total_settled": 130
+      }
+    },
+    "old_missing_frozen_evidence": 3,
+    "snapshot_count": 20
+  },
+  "production_changes": 0,
+  "research": {
+    "at_utc": "2026-10-02T02:12:02.033549+00:00",
+    "chronology_replay": {
+      "all_labels_available_as_of_attempt": true,
+      "embargo_hours": 24,
+      "fixture_disjoint": true,
+      "holdout_start": "2026-09-26T09:03:25.777214+00:00",
+      "holdout_unconsumed": true,
+      "learning_sources_only": true,
+      "partition_summary": {
+        "PURGED": {
+          "fixtures": 328,
+          "prediction_max": "2026-09-28T18:31:26.450359+00:00",
+          "prediction_min": "2026-09-21T13:35:43.509712+00:00",
+          "rows": 984,
+          "settled_max": "2026-10-02T00:45:06.569270+00:00",
+          "source_products": [
+            "SHADOW",
+            "SINGLE"
+          ]
+        },
+        "SEALED_HOLDOUT": {
+          "fixtures": 127,
+          "prediction_max": "2026-10-01T18:31:59.677875+00:00",
+          "prediction_min": "2026-09-26T09:03:25.777214+00:00",
+          "rows": 313,
+          "settled_max": "2026-10-02T02:05:06.539841+00:00",
+          "source_products": [
+            "SHADOW",
+            "SINGLE"
+          ]
+        },
+        "TRAIN": {
+          "fixtures": 176,
+          "prediction_max": "2026-09-21T16:03:49.067957+00:00",
+          "prediction_min": "2026-09-17T20:15:48.859539+00:00",
+          "rows": 626,
+          "settled_max": "2026-09-23T03:10:08.930187+00:00",
+          "source_products": [
+            "SHADOW",
+            "SINGLE"
+          ]
+        },
+        "VALIDATION": {
+          "fixtures": 3,
+          "prediction_max": "2026-09-24T15:31:55.491259+00:00",
+          "prediction_min": "2026-09-24T12:38:17.598263+00:00",
+          "rows": 3,
+          "settled_max": "2026-09-24T18:10:18.982468+00:00",
+          "source_products": [
+            "SINGLE"
+          ]
+        }
+      },
+      "read_only": true,
+      "readiness": {
+        "blocked_by": [
+          "VALIDATION_SAMPLE_INSUFFICIENT"
+        ],
+        "counts": {
+          "PURGED": 984,
+          "SEALED_HOLDOUT": 313,
+          "TRAIN": 626,
+          "VALIDATION": 3
+        },
+        "dataset_fingerprint": "341b842716d2dbbd3a848d4908070dfcf9f241ebba1000740b23c0631387436c",
+        "required_minimums": {
+          "PURGED": 0,
+          "SEALED_HOLDOUT": 100,
+          "TRAIN": 1,
+          "VALIDATION": 30
+        },
+        "status": "RESEARCH_DATASET_NOT_READY",
+        "training_contract": {
+          "maximum_rows": 20000,
+          "required_classes": [
+            0,
+            1
+          ],
+          "single_stream": true
+        }
+      },
+      "train_boundary_safe": true,
+      "training_invoked": false,
+      "validation_boundary_safe": true,
+      "validation_start": "2026-09-24T12:38:17.598263+00:00"
+    },
+    "exact_readiness_reproduced": true,
+    "invocation": "b939d811cb9642a79d32115d05282a28",
+    "result": {
+      "automatic_eligible": false,
+      "cycle_due": false,
+      "dataset_readiness": {
+        "blocked_by": [
+          "VALIDATION_SAMPLE_INSUFFICIENT"
+        ],
+        "counts": {
+          "PURGED": 984,
+          "SEALED_HOLDOUT": 313,
+          "TRAIN": 626,
+          "VALIDATION": 3
+        },
+        "dataset_fingerprint": "341b842716d2dbbd3a848d4908070dfcf9f241ebba1000740b23c0631387436c",
+        "required_minimums": {
+          "PURGED": 0,
+          "SEALED_HOLDOUT": 100,
+          "TRAIN": 1,
+          "VALIDATION": 30
+        },
+        "status": "RESEARCH_DATASET_NOT_READY",
+        "training_contract": {
+          "maximum_rows": 20000,
+          "required_classes": [
+            0,
+            1
+          ],
+          "single_stream": true
+        }
+      },
+      "days_covered": 13,
+      "new_resolved": 412,
+      "next_threshold": {
+        "calendar_days": 90,
+        "resolved": 500
+      },
+      "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+      "policy_version": "LAB_ADAPTIVE_V2",
+      "reason": "CYCLE_COOLDOWN",
+      "research_due": false,
+      "resolved": 1926,
+      "stage": "CHALLENGER_RESEARCH",
+      "status": "RESEARCH_ELIGIBLE",
+      "stream": "PREMATCH"
+    },
+    "unit": "goalvision-adaptive-learning.service"
+  },
+  "test_telegram_sends": 0,
+  "verified_at_riga": "2026-10-02T08:26:42.357757+03:00"
+}
