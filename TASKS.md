@@ -1,3 +1,12 @@
+## 2026-10-02 — Operator requested ADMIN Codex disconnection
+
+- [x] Prepare explicit disable of queue/status dispatch, worker timer and worker service.
+- [x] Preserve ordinary monitoring, credentials, PREMATCH routes and history.
+- [x] Five isolated idempotency/preservation/failure/preview tests PASS.
+- [ ] Operator runs sudo command and returns ADMIN_CODEX_DISABLED readback.
+- Automatic worker re-enablement is not authorized; combined compatibility deployment is superseded for this request.
+- Runbook: docs/operations/ADMIN_CODEX_OFF_20261002.md.
+
 ## 2026-10-02 — ADMIN quality-output compatibility and alert flood
 
 - [x] Diagnose repeated health OVERSIZED_RECORD and observer MISSING_OUTPUT.
