@@ -1,3 +1,12 @@
+## 2026-10-02 — Calibration readiness and chronological window bottleneck
+
+- [x] Read-only installed-code projection: 2,293 eligible observations / 773 fixtures; VALIDATION 0 after the retained 24-hour embargo.
+- [x] Confirm existing Platt/temperature/isotonic research implementation; no fitting or sealed holdout evaluation invoked.
+- [x] Diagnose all 155 provisional validation fixtures excluded by label-availability timing; preserve current champion and production state.
+- [ ] Isolated calendar-window research candidate, frozen boundaries and clustered-date/late-settlement/leakage regressions; no automatic deployment.
+- [ ] Genuine independent calibration/evaluation and later shadow evidence once data readiness passes; promotion remains separately approved.
+- Report: docs/operations/CALIBRATION_READINESS_20261002.md.
+
 ## 2026-10-02 — Current-odds de-vig research integration
 
 - [x] Read handoff/instructions; verify actual f81aa2c routes, flags and disabled ADMIN Codex.

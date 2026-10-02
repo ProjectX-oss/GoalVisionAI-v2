@@ -1,0 +1,143 @@
+{
+  "as_of": "2026-10-02T19:02:32.099333+00:00",
+  "as_of_riga": "2026-10-02T22:02:32.099333+03:00",
+  "calibration_independent_fixtures": {
+    "CALIBRATION_FIT": 0,
+    "CALIBRATION_PURGED": 0,
+    "VALIDATION_EVALUATION": 0
+  },
+  "calibration_minimums": {
+    "embargo_hours": 24,
+    "evaluation_observations": 30,
+    "fit_observations": 300,
+    "isotonic_fit_observations": 1000
+  },
+  "calibration_readiness": {
+    "blocked_by": [
+      "CALIBRATION_SPLIT_UNAVAILABLE"
+    ],
+    "counts": {
+      "CALIBRATION_FIT": 0,
+      "CALIBRATION_PURGED": 0,
+      "VALIDATION_EVALUATION": 0
+    },
+    "status": "CALIBRATION_DATASET_NOT_READY"
+  },
+  "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+  "cooldown_ends_at": "2026-10-05T02:15:03.169810+00:00",
+  "dataset_readiness": {
+    "blocked_by": [
+      "VALIDATION_SAMPLE_INSUFFICIENT"
+    ],
+    "counts": {
+      "PURGED": 1086,
+      "SEALED_HOLDOUT": 311,
+      "TRAIN": 896,
+      "VALIDATION": 0
+    },
+    "dataset_fingerprint": "e39c50ce23901963f08d4f7fb2bceaf4862d22f38c182a7f4d372c42fe64d7dc",
+    "required_minimums": {
+      "PURGED": 0,
+      "SEALED_HOLDOUT": 100,
+      "TRAIN": 1,
+      "VALIDATION": 30
+    },
+    "status": "RESEARCH_DATASET_NOT_READY",
+    "training_contract": {
+      "maximum_rows": 20000,
+      "required_classes": [
+        0,
+        1
+      ],
+      "single_stream": true
+    }
+  },
+  "eligibility": {
+    "automatic_eligible": false,
+    "cycle_due": false,
+    "days_covered": 14,
+    "new_resolved": 779,
+    "next_threshold": {
+      "calendar_days": 90,
+      "resolved": 500
+    },
+    "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+    "policy_version": "LAB_ADAPTIVE_V2",
+    "reason": "CYCLE_COOLDOWN",
+    "research_due": false,
+    "resolved": 2293,
+    "stage": "CHALLENGER_RESEARCH",
+    "status": "RESEARCH_ELIGIBLE",
+    "stream": "PREMATCH"
+  },
+  "eligible_observation_count": 2293,
+  "fixture_intersections": {
+    "TRAIN__SEALED_HOLDOUT": 0,
+    "TRAIN__VALIDATION": 0,
+    "VALIDATION__SEALED_HOLDOUT": 0
+  },
+  "holdout_consumed": false,
+  "independent_eligible_fixtures": 773,
+  "independent_fixture_counts": {
+    "PURGED": 324,
+    "SEALED_HOLDOUT": 155,
+    "TRAIN": 294,
+    "VALIDATION": 0
+  },
+  "inspected_module_sha256": {
+    "app/adaptive_lab/automl.py": "9d695a09ad1011604164498bbcf11375c0b1df174ef7bb8d5a35e7d3f3df0be6",
+    "app/adaptive_lab/calibration_research.py": "dc242453fbc460eb03ee32c18b4be33ac193b5360710010158d8d7c6efc320c8",
+    "app/adaptive_lab/datasets.py": "ab3c0d9556f0e25b5c9d7717533fe2db4240fe85aa309ba01b31ce36cdffcdec",
+    "app/adaptive_lab/policy.py": "f149e04dd8103a464468f56bdc10106e0080ee7ea45921b95d4690e14bd1088a"
+  },
+  "learning_observation_count": 2305,
+  "limits": [
+    "Readiness-only audit; no model fit or sealed holdout performance evaluation.",
+    "Multiple market observations per fixture are correlated: report both observation and fixture counts.",
+    "Thresholds and embargo were not relaxed; no production database writes."
+  ],
+  "model_generation_counts": {
+    "None": 10,
+    "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a": 2283
+  },
+  "network_disabled": true,
+  "policy_version_counts": {
+    "LAB_COMPETITION_POLICY_V2": 2293
+  },
+  "previous_research_created_at": "2026-09-28T02:15:03.169810+00:00",
+  "promotion_invoked": false,
+  "protected_counts": {
+    "activation_events": 1,
+    "champion_generations": 1,
+    "holdout_results": 0,
+    "learning_cycles": 3,
+    "live_publications": 0,
+    "model_artifacts": 59,
+    "shadow_runs": 0,
+    "training_runs": 133
+  },
+  "read_only_projection": true,
+  "research_cycle_consumed": false,
+  "runtime_attempt": false,
+  "runtime_release": "/opt/goalvision-prematch-devig-83958d1-20261002",
+  "source_commit": "3451fa0fa41088f9cb3d26d6afaee4ba30adfab0",
+  "source_counts": {
+    "COMBO_LEG": 12,
+    "SHADOW": 2118,
+    "SINGLE": 175
+  },
+  "training_invoked": false,
+  "validation_purge_diagnosis": {
+    "earliest_validation_settlement": "2026-09-26T10:10:21.276173+00:00",
+    "fixture_reason_counts_overlap": {
+      "LABEL_NOT_AVAILABLE_BEFORE_EMBARGO_CUTOFF": 155,
+      "PREDICTION_INSIDE_EMBARGO": 134
+    },
+    "holdout_start": "2026-09-27T07:33:57.492641+00:00",
+    "latest_allowed_settlement_exclusive": "2026-09-26T07:33:57.492641+00:00",
+    "latest_validation_settlement": "2026-10-02T07:05:07.368550+00:00",
+    "provisional_fixtures": 155,
+    "provisional_observations": 531,
+    "validation_start": "2026-09-26T07:03:43.711682+00:00"
+  }
+}
