@@ -1,0 +1,34 @@
+{
+  "candidate_release_exists": false,
+  "checked_at_utc": "2026-10-02T18:25:31.987235+00:00",
+  "checksum_file_sha256": "ee3f5eeb772e537212fbe8b9d0511aac4985bfb9cbf2a30c0da9e02670eda6e9",
+  "checksum_verification": [
+    "metadata.json: OK",
+    "overlay/monitor/app/admin_alerts/delivery.py: OK",
+    "overlay/monitor/app/admin_alerts/model.py: OK",
+    "overlay/monitor/app/admin_alerts/sources.py: OK",
+    "overlay/monitor/app/admin_alerts/store.py: OK",
+    "update.py: OK",
+    "update_compat.py: OK"
+  ],
+  "deployment": "NOT_PERFORMED",
+  "entry": "/home/arvis/goalvision-operations/admin-rotation-fix.py",
+  "entry_sha256": "37d96154d0d663d0efd28ab4959a1392fac8fc8fe1e3ce7a64537e6fc0d29dc4",
+  "metadata_sha256": "012a7112732712b9e4d587ee8427f42880e5cc8613220829bf7e04959e3090ea",
+  "monitor_current_release": "/opt/goalvision-admin-alerts-releases/admin-monitor-compat-a28f2a6-20261002",
+  "package": "/home/arvis/goalvision-operations/admin-rotation-alerts-6a37787-20261002",
+  "prematch_preflight": "PREMATCH_DEVIG_PLAN_VALIDATED=/opt/goalvision-prematch-devig-83958d1-20261002\ncurrent_mode=ENABLED; ADMIN_CODEX_DISABLED=PASS",
+  "read_only_validation": "PLAN_VALIDATED={\"monitor\": \"/opt/goalvision-admin-alerts-releases/admin-rotation-alerts-6a37787-20261002\"}",
+  "source_commit": "6a377873fc573831f526b110af73afc81520d984",
+  "worker": {
+    "goalvision-admin-autorepair.service": [
+      "MainPID=0",
+      "ActiveState=inactive",
+      "UnitFileState=static"
+    ],
+    "goalvision-admin-autorepair.timer": [
+      "ActiveState=inactive",
+      "UnitFileState=disabled"
+    ]
+  }
+}

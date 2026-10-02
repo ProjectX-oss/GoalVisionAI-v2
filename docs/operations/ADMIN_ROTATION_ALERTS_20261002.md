@@ -107,3 +107,19 @@ retained. It also restores the previous reminder behavior.
 
 Evidence: `docs/evidence/admin_rotation_20261002/verification.json` and JUnit.
 Operator readback/package pins are recorded after package preparation.
+
+
+## Prepared package readback
+
+- Implementation commit: `6a377873fc573831f526b110af73afc81520d984`.
+- Package: `/home/arvis/goalvision-operations/admin-rotation-alerts-6a37787-20261002`.
+- Read-only package validation PASS; all seven SHA256SUMS entries PASS.
+- Existing ADMIN release still a28f2a6; candidate release not installed.
+- Current de-vig PREMATCH preflight PASS with current_mode=ENABLED.
+- ADMIN Codex service PID 0, inactive; worker timer disabled/inactive.
+- Runtime deployment, real sends, manual scans, incident invalidation and source
+  permission changes: none.
+- Exact live incident subreason/receipt readback remains root-only. Operator apply
+  prints the sanitized diagnostic; standalone --diagnostic is also available.
+
+Pins and readbacks: `docs/evidence/admin_rotation_20261002/operator_package.json`.
