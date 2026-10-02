@@ -1,6 +1,8 @@
 # ADMIN monitor-only compatibility follow-up — 2026-10-02
 
-Status: code, 64 focused tests and read-only route comparison PASS. Monitor deployment awaits the operator. ADMIN Codex disconnection is already verified.
+Source/package commit: `a28f2a6ef1aa7ba1e477f662950703d4cc06bca6`.
+
+Status: code, 64 focused tests, read-only route comparison and package preflight PASS. Monitor deployment awaits the operator. ADMIN Codex disconnection is already verified.
 
 ## What happened
 
