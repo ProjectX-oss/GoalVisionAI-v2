@@ -1,3 +1,12 @@
+## 2026-10-02 — PREMATCH early COMBO loss and result diagnostics
+
+- [x] Financial LOST once after confirmed losing leg; outstanding leg audit continues.
+- [x] Compatible adaptive readers, immutable late detail and bounded unresolved-result evidence.
+- [x] 206 network-disabled tests; exact replay of 21 historical COMBO settlements and two known losses.
+- [x] Four-route operator upgrade and compatible flag-off rollback prepared.
+- [ ] Operator deployment and next natural settlement/observer verification.
+- Report: docs/operations/PREMATCH_SETTLEMENT_FIX_20261002.md.
+
 ## 2026-10-01 — Integrēts PREMATCH quality release
 
 - [x] Savienot TODAY_RIGA/CPU pamatu ar performance, timing, no-floor un evidence gates.

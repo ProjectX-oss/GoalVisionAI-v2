@@ -139,8 +139,8 @@ def diagnostics(row: dict) -> list[str]:
 
 def combo_record(combo: dict, result: dict) -> dict:
     """Combo outcomes never become binary calibration targets."""
-    from app.lab_combo.settlement import aggregate
-    reproduced = aggregate(combo,result['legs'],utc(result['settled_at_utc']))
+    from app.lab_combo.settlement import economic_settlement
+    reproduced = economic_settlement(combo,result['legs'],utc(result['settled_at_utc']))
     if reproduced != result:
         raise ValueError('CONFLICTING_COMBO_SETTLEMENT')
     return {'prediction_id':combo['prediction_id'],'outcome':result['status'],

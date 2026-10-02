@@ -16,18 +16,35 @@ from .presentation import combo_result_message, single_result_message
 
 def resolve_leg(leg: dict, payload: dict, now: datetime) -> dict | None:
     """Use regulation-time scores, leave postponed/malformed results unresolved."""
+    if not isinstance(payload, dict):
+        return None
     rows = payload.get('response')
     if payload.get('errors') or not isinstance(rows, list) or len(rows) != 1:
         return None
     row = rows[0]
+    if not isinstance(row, dict):
+        return None
     fixture = row.get('fixture') or {}
+    if not isinstance(fixture, dict):
+        return None
     if str(fixture.get('id')) != str(leg['fixture_id']):
         return None
     if now < datetime.fromisoformat(leg['kickoff_utc']):
         return None
-    status = (fixture.get('status') or {}).get('short')
+    if fixture.get('date') is not None:
+        from .result_diagnostics import _timestamp
+        provider_kickoff = _timestamp(fixture['date'])
+        if provider_kickoff is None or now < datetime.fromisoformat(provider_kickoff):
+            return None
+    status_doc = fixture.get('status') or {}
+    status = status_doc.get('short') if isinstance(status_doc, dict) else None
+    if not isinstance(status, str):
+        return None
     nonplayable = DEFAULT_FIXTURE_STATUS_POLICY.classify_non_playable(status or '')
-    score = (row.get('score') or {}).get('fulltime') or {}
+    score_doc = row.get('score') or {}
+    score = score_doc.get('fulltime') or {} if isinstance(score_doc, dict) else {}
+    if not isinstance(score, dict):
+        score = {}
     home, away = score.get('home'), score.get('away')
     if nonplayable and nonplayable[0].value == 'VOID':
         outcome = 'VOID'
@@ -60,6 +77,63 @@ def aggregate(combo: dict, results: list[dict], now: datetime) -> dict:
     return {'prediction_id': combo['prediction_id'], 'legs': results, 'status': status,
             'partial_void': 0 < outcomes.count('VOID') < 3, 'effective_combined_odds': str(effective),
             'unit_result': str(net), 'settled_at_utc': now.isoformat()}
+
+
+EARLY_LOSS_VERSION = 'LAB_COMBO_CONFIRMED_LOSS_V1'
+
+
+def economic_settlement(combo: dict, results: list[dict], now: datetime) -> dict | None:
+    """Decide a loss from confirmed evidence; never invent remaining leg results.
+
+    Complete-set records retain their original format for immutable replay. An
+    early loss is final accounting; later leg completion is a separate record.
+    """
+    if len(results) == 3:
+        return aggregate(combo, results, now)
+    legs = {leg['observation_id']: leg for leg in combo['legs']}
+    if len(legs) != 3 or len({r['observation_id'] for r in results}) != len(results):
+        raise ValueError('Invalid combo result identities')
+    by_id = {}
+    for result in results:
+        leg = legs.get(result['observation_id'])
+        if (leg is None or str(result.get('fixture_id')) != str(leg['fixture_id'])
+                or result.get('market') != leg['market']
+                or result.get('captured_odds') != leg['odds']
+                or result.get('outcome') not in {'WON', 'LOST', 'VOID'}):
+            raise ValueError('Unbound combo leg result')
+        by_id[result['observation_id']] = result
+    losing = [r for r in results if r['outcome'] == 'LOST']
+    if not losing:
+        return None
+    for result in losing:
+        leg = legs[result['observation_id']]
+        h, a = result.get('fulltime_home'), result.get('fulltime_away')
+        if (result.get('provider_status') not in {'FT', 'AET', 'PEN'}
+                or not all(type(x) is int and 0 <= x <= 30 for x in (h, a))
+                or _won(leg['market'], h, a)
+                or not result.get('source_fingerprint')
+                or not datetime.fromisoformat(leg['kickoff_utc'])
+                    <= datetime.fromisoformat(result['retrieved_at_utc']) <= now):
+            raise ValueError('Confirmed regulation-time losing leg required')
+    ordered = [by_id[leg['observation_id']] for leg in combo['legs']
+               if leg['observation_id'] in by_id]
+    pending = [{key: leg.get(key) for key in
+                ('observation_id', 'fixture_id', 'home_team', 'away_team', 'market', 'kickoff_utc')}
+               for leg in combo['legs'] if leg['observation_id'] not in by_id]
+    return {'prediction_id': combo['prediction_id'], 'legs': ordered,
+            'pending_legs': pending, 'status': 'LOST', 'unit_result': '-1',
+            'settlement_version': EARLY_LOSS_VERSION,
+            'settlement_reason': 'CONFIRMED_LOSING_LEG', 'leg_audit_complete': False,
+            'partial_void': any(r['outcome'] == 'VOID' for r in ordered),
+            'effective_combined_odds': None, 'quoted_combined_odds': combo['combined_odds'],
+            'settled_at_utc': now.isoformat()}
+
+
+def combo_needs_results(ledger: ComboRepository, combo: dict) -> bool:
+    """Financial settlement does not stop the outstanding leg audit."""
+    settled = ledger.get('settlement', combo['prediction_id'])
+    return settled is None or (settled.get('settlement_version') == EARLY_LOSS_VERSION
+                              and ledger.get('combo_result_detail', combo['prediction_id']) is None)
 
 
 def statistics(repository: ComboRepository, *, published_only: bool = False) -> dict:

@@ -1,0 +1,42 @@
+{
+  "deployment": "PENDING_OPERATOR_AUTHORIZATION",
+  "natural_cycle_evidence": "PENDING_DEPLOYMENT",
+  "network_disabled": true,
+  "real_ledger_read_only_replay": {
+    "legacy_settlements_reproduced": 21,
+    "live_database_writes": 0,
+    "manual_cycles": 0,
+    "new_early_loss_decisions": [
+      {
+        "pending_legs": 2,
+        "prediction_id": "lab-v2-combo-accuracy-27893c8e0f363e597e1dbc8ccfe7d88d8c4b95263f291def221a583a60c3b258",
+        "publication_message_id": 309,
+        "status": "LOST",
+        "unit_result": "-1"
+      },
+      {
+        "pending_legs": 2,
+        "prediction_id": "lab-v2-combo-accuracy-693fb9e2fd409887723c78a2bf55a1d408db9c3800c88fd90535af3714199d5b",
+        "publication_message_id": 301,
+        "status": "LOST",
+        "unit_result": "-1"
+      }
+    ],
+    "provider_requests": 0,
+    "status": "PASS",
+    "telegram_sends": 0,
+    "total_unit_adjustment": "-2"
+  },
+  "rollback": "COMPATIBLE_READERS_EARLY_LOSS_FLAG_OFF",
+  "runtime_files": [
+    "app/lab_combo/service.py",
+    "app/lab_combo/settlement.py",
+    "app/lab_combo/presentation.py",
+    "app/lab_combo/cli.py",
+    "app/lab_combo/result_diagnostics.py",
+    "app/adaptive_lab/metrics.py"
+  ],
+  "status": "PASS",
+  "test_output_tail": "206 passed in 6.65s",
+  "tests_passed": 206
+}

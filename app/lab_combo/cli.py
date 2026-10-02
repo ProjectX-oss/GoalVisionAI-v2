@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import sqlite3
@@ -63,6 +64,7 @@ async def cycle(args: argparse.Namespace) -> dict:
         image_directory = getattr(args, 'result_image_directory', Path('app/lab_combo/assets/results'))
         service = LabComboService(
             ledger, None, result_images=ResultImagePaths.from_directory(image_directory),
+            early_combo_loss=os.environ.get('GOALVISION_LAB_EARLY_COMBO_LOSS') == '1',
         )
         if args.command == 'settle':
             stage = 'SETTLEMENT'
@@ -319,12 +321,15 @@ def _known_kickoff(ledger: ComboRepository, selected: list[dict], fixture_id: in
 
 def _settlement_work_relevant(ledger: ComboRepository, now: datetime) -> bool:
     from .experimental import SETTLEMENT_RELEVANCE_AFTER_KICKOFF
+    from .settlement import combo_needs_results
     singles = any(ledger.get('receipt', 'single_prediction:' + value['prediction_id'])
                   and not ledger.get('single_settlement', value['prediction_id'])
                   and now >= datetime.fromisoformat(value['kickoff_utc']) + SETTLEMENT_RELEVANCE_AFTER_KICKOFF
                   for value in ledger.all('single_prediction'))
     combos = any(ledger.get('receipt', 'combo_prediction:' + value['prediction_id'])
-                 and not ledger.get('settlement', value['prediction_id'])
-                 and now >= min(datetime.fromisoformat(leg['kickoff_utc']) for leg in value['legs']) + SETTLEMENT_RELEVANCE_AFTER_KICKOFF
+                 and combo_needs_results(ledger, value)
+                 and any(not ledger.get('leg_result', leg['observation_id'])
+                         and now >= datetime.fromisoformat(leg['kickoff_utc']) + SETTLEMENT_RELEVANCE_AFTER_KICKOFF
+                         for leg in value['legs'])
                  for value in ledger.all('prediction'))
     return singles or combos

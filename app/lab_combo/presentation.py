@@ -127,14 +127,19 @@ def combo_result_message(value: dict, stats: dict) -> str:
     lines = ["🧪 GoalVision AI Lab Combo", OUTCOME_LABELS[value["status"]]]
     for index, leg in enumerate(value["legs"], 1):
         teams = team_pair(leg)
+        marker = "•" if value.get('pending_legs') else f"{index}."
         lines.append(
-            f"{index}. {teams} · {market_label(leg['market'])} · "
+            f"{marker} {teams} · {market_label(leg['market'])} · "
             f"{OUTCOME_LABELS[leg['outcome']]} · {score(leg)}"
         )
-    lines.extend((
-        f"🔥 Gala koef.: {public_decimal(value['effective_combined_odds'])}",
-        statistics_line("Combo", stats),
-    ))
+    if value.get('pending_legs'):
+        lines.append("Zaudējums apstiprināts; pārējo spēļu rezultātus vēl gaidām.")
+        for leg in value['pending_legs']:
+            lines.append(f"⏳ {team_pair(leg)} · {market_label(leg['market'])} · GAIDA REZULTĀTU")
+        lines.append(f"💰 Sākotnējais koef.: {public_decimal(value['quoted_combined_odds'])}")
+    else:
+        lines.append(f"🔥 Gala koef.: {public_decimal(value['effective_combined_odds'])}")
+    lines.append(statistics_line("Combo", stats))
     return "\n".join(lines)
 
 

@@ -23,7 +23,7 @@ from .repository import ComboRepository
 from .publication_window import publication_blocker
 from .settlement import (
     resolve_leg, resolve_single, aggregate, statistics, single_statistics,
-    settlement_message,
+    settlement_message, economic_settlement, combo_needs_results, EARLY_LOSS_VERSION,
 )
 
 
@@ -60,9 +60,11 @@ class LabComboService:
 
     def __init__(self, ledger: ComboRepository, singles: SQLiteForwardTestRepository,
                  *, clock: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
-                 result_images: ResultImagePaths | None = None) -> None:
+                 result_images: ResultImagePaths | None = None,
+                 early_combo_loss: bool = False) -> None:
         self.ledger, self.singles, self.clock = ledger, singles, clock
         self.result_images = result_images or ResultImagePaths()
+        self.early_combo_loss = early_combo_loss
 
     def prepare(self, observation_ids: list[str]) -> dict:
         now = self.clock()
@@ -185,6 +187,16 @@ class LabComboService:
                     and str(receipt.get('chat_id')) == str(LAB_CHAT_ID)
                     and type(receipt.get('message_id')) is int and receipt['message_id'] > 0):
                 return {'status': 'PUBLISHED_PREDICTION_AND_SETTLEMENT_REQUIRED', 'sent': False}
+            if kind == 'combo_settlement' and value.get('settlement_version') == EARLY_LOSS_VERSION:
+                combo = self.ledger.get('prediction', prediction_id)
+                # Reproduce the frozen partial decision even after later legs finish.
+                if (combo is None
+                        or economic_settlement(combo, value['legs'],
+                                               datetime.fromisoformat(value['settled_at_utc'])) != value
+                        or any(self.ledger.get('leg_result', r['observation_id']) != r
+                               for r in value['legs'])
+                        or preview['message'] != combo_result_message(value, preview['statistics'])):
+                    return {'status': 'COMBO_SETTLEMENT_EVIDENCE_INVALID', 'sent': False}
         if kind in {'single_prediction', 'combo_prediction'}:
             from app.lab_v2_shadow.origin import is_labelled
             from app.lab_v2_shadow.publication import SINGLE_SELECTION_POLICY
@@ -389,22 +401,38 @@ class LabComboService:
         if hasattr(client, 'restrict_requests'):
             client.restrict_requests(client.request_count + maximum_calls)
         now = self.clock()
-        cache, completed, single_completed = {}, [], []
+        from .result_diagnostics import MAX_RECORDS, VERSION, unresolved_result
+        from app.real_match_lab_analysis.fingerprint import fingerprint
+        cache, completed, single_completed, detail_completed = {}, [], [], []
+        failed_requests, diagnostics, diagnostic_count = set(), [], 0
         start = client.request_count
+
+        def unresolved(prediction):
+            nonlocal diagnostic_count
+            diagnostic_count += 1
+            fixture = str(prediction['fixture_id'])
+            state = ('REQUEST_FAILED' if fixture in failed_requests else
+                     'CALL_BUDGET_EXHAUSTED' if fixture not in cache else 'RESPONSE_RECEIVED')
+            if len(diagnostics) < MAX_RECORDS:
+                diagnostics.append(unresolved_result(prediction, cache.get(fixture), now,
+                                                     request_state=state))
         for prediction in self.ledger.all('single_prediction'):
             identity = prediction['prediction_id']
             if (self.ledger.get('single_settlement', identity)
                     or self.ledger.get('receipt', 'single_prediction:' + identity) is None
                     or now < datetime.fromisoformat(prediction['kickoff_utc']) + SETTLEMENT_RELEVANCE_AFTER_KICKOFF):
                 continue
-            fixture = prediction['fixture_id']
+            fixture = str(prediction['fixture_id'])
             if fixture not in cache and client.request_count - start < maximum_calls:
                 try:
                     _require(client, 1, 20)
                     cache[fixture] = await client.fixture(int(fixture))
                 except Exception:
                     cache[fixture] = {}
+                    failed_requests.add(fixture)
             result = resolve_single(prediction, cache.get(fixture, {}), now)
+            if result is None:
+                unresolved(prediction)
             if result and self.ledger.append('single_settlement', identity, result):
                 single_completed.append(identity)
                 stats = self._single_preview_statistics(result)
@@ -412,7 +440,7 @@ class LabComboService:
                     'message': self._single_result_message(result, stats), 'statistics': stats})
         for combo in self.ledger.all('prediction'):
             identity = combo['prediction_id']
-            if (self.ledger.get('settlement', identity)
+            if (not combo_needs_results(self.ledger, combo)
                     or self.ledger.get('receipt', 'combo_prediction:' + identity) is None
                     or now < min(datetime.fromisoformat(leg['kickoff_utc']) for leg in combo['legs']) + SETTLEMENT_RELEVANCE_AFTER_KICKOFF):
                 continue
@@ -420,24 +448,36 @@ class LabComboService:
             for leg in combo['legs']:
                 result = self.ledger.get('leg_result', leg['observation_id'])
                 if result is None and now >= datetime.fromisoformat(leg['kickoff_utc']) + SETTLEMENT_RELEVANCE_AFTER_KICKOFF:
-                    fixture = leg['fixture_id']
+                    fixture = str(leg['fixture_id'])
                     if fixture not in cache:
                         if client.request_count - start >= maximum_calls:
+                            unresolved(leg)
                             continue
                         try:
                             _require(client, 1, 20)
                             cache[fixture] = await client.fixture(int(fixture))
                         except Exception:
                             cache[fixture] = {}
+                            failed_requests.add(fixture)
                     result = resolve_leg(leg, cache[fixture], now)
                     if result:
                         self.ledger.append('leg_result', leg['observation_id'], result)
+                    else:
+                        unresolved(leg)
                 if result:
                     results.append(result)
-            if len(results) == 3:
-                value = aggregate(combo, results, now)
-                self.ledger.append('settlement', identity, value)
-                completed.append(identity)
+            existing = self.ledger.get('settlement', identity)
+            if existing is None:
+                value = (economic_settlement(combo, results, now) if self.early_combo_loss
+                         else aggregate(combo, results, now) if len(results) == 3 else None)
+                if value and self.ledger.append('settlement', identity, value):
+                    completed.append(identity)
+            elif existing.get('settlement_version') == EARLY_LOSS_VERSION and len(results) == 3:
+                detail = aggregate(combo, results, now)
+                if detail['status'] != existing['status'] or detail['unit_result'] != existing['unit_result']:
+                    raise ValueError('COMBO_FINAL_DETAIL_ACCOUNTING_CONFLICT')
+                if self.ledger.append('combo_result_detail', identity, detail):
+                    detail_completed.append(identity)
         # Recover a crash between settlement persistence and preview preparation.
         for value in self.ledger.all('single_settlement'):
             identity = value['prediction_id']
@@ -452,7 +492,14 @@ class LabComboService:
                 self.ledger.append('settlement_preview', identity, {'message': combo_result_message(value, stats), 'statistics': stats})
         if adaptive_learning is not None:
             adaptive_learning.sync_prematch(self.ledger, now=self.clock(), train=False)
+        diagnostic_report = {'version': VERSION, 'observed_at_utc': now.isoformat(),
+                             'records': diagnostics, 'total_unresolved': diagnostic_count,
+                             'truncated': diagnostic_count > len(diagnostics)}
+        if diagnostics:
+            self.ledger.append('settlement_diagnostic', fingerprint(diagnostic_report), diagnostic_report)
         return {'completed': completed, 'single_completed': single_completed,
+                'combo_detail_completed': detail_completed,
+                'settlement_diagnostics': diagnostic_report,
                 'api_calls': client.request_count - start,
                 'single_statistics': single_statistics(self.ledger),
                 'combo_statistics': statistics(self.ledger, published_only=True),
