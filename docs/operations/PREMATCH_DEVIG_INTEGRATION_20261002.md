@@ -1,7 +1,9 @@
 # PREMATCH current-odds de-vig integration — 2026-10-02
 
 Engineering: **PASS**. Forward predictive quality: **NEEDS_MORE_EVIDENCE**.
-Production deployment: **NOT PERFORMED**. Champion promotion: **NOT AUTHORIZED**.
+Production deployment: **OPERATOR DEPLOYED; READBACK PASS**.
+Champion promotion: **NOT AUTHORIZED**.
+The package-preparation section below records the earlier, pre-deployment state.
 
 ## Scope and reviewed base
 
@@ -199,3 +201,22 @@ Checked primary descriptions on 2026-10-02:
 
 Only the odds-only formulae are used, with bounded bracketed numerical roots.
 No historical bookmaker-odds dataset, FL-GLM fitting or provider download was used.
+
+
+## Operator deployment readback — 2026-10-02 14:16 Europe/Riga
+
+The operator applied the prepared package and supplied PREMATCH_DEVIG_DEPLOYED.
+Independent read-only validation confirms all four PREMATCH routes use
+`/opt/goalvision-prematch-devig-83958d1-20261002/release.env` and all expected
+flags remain enabled. The pinned wrapper validates with current_mode=ENABLED.
+All four timers are enabled/active; ADMIN Codex remains disabled, while the ADMIN
+monitor is enabled and healthy. The post-deployment 14:15 settlement service
+finished successfully. Champion pointers and protected activation/learning/holdout
+counts match the earlier snapshot; LIVE remains DISABLED in the latest observer.
+
+At readback there are zero de-vig captures/metric rows: the first new discovery
+is due at 14:30 and the observer at 14:38 Europe/Riga. Natural-cycle integration
+verification is PENDING; forward quality remains NEEDS_MORE_EVIDENCE.
+No manual cycle, provider request, Telegram test or service control was executed
+during this verification. Evidence: `deployment_readback.json` in the evidence
+directory above.

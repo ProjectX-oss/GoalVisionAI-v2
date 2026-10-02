@@ -5,7 +5,8 @@
 - [x] Existing observer result join, paired/common cohorts, missingness, policy/market segments and bounded stdout.
 - [x] 879 affected regressions and final 312-test slice (47 de-vig), network disabled; counts overlap.
 - [x] Exact-base operator package from commit 83958d1 prepared; read-only validation and nine checksum entries PASS; no deployment.
-- [ ] Separate operator deployment, natural capture/observer readback and sufficient genuine forward outcomes.
+- [x] Operator deployed de-vig release 83958d1; independent readback PASS at 14:16 Riga.
+- [ ] First natural 14:30 discovery / 14:38 observer readback and sufficient genuine forward outcomes.
 - Report: docs/operations/PREMATCH_DEVIG_INTEGRATION_20261002.md.
 - SINGLE >=1.30, COMBO no floor, today-only and early settlement retained. Official unchanged; LIVE/ADMIN Codex disabled.
 
