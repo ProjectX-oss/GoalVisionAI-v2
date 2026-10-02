@@ -1,10 +1,20 @@
+## 2026-10-02 — Segmented forward selection quality
+
+- [x] Reconcile 165 SINGLE / 53 COMBO publications; separate policy cohorts and partial maturity.
+- [x] Paired old-ensemble vs frozen market probability comparison; analyze negative EV without cross-policy causal claims.
+- [x] Full market/odds/probability/league/timing/disagreement evidence saved; no threshold changes.
+- [ ] Current-odds de-vig research wiring; genuine validation/calibration readiness.
+- [ ] Evaluate V2/V3 cohorts once results are available; no resolved V2/V3 tickets at 12:50 Riga.
+- Report: docs/operations/PREMATCH_SEGMENTED_QUALITY_20261002.md.
+
 ## 2026-10-02 — Natural SINGLE-floor and settlement audit
 
 - [x] Actual 12:00 publication, today scope, SINGLE floor and COMBO independence PASS.
 - [x] All 131 SINGLE and 23 COMBO settlements reconcile with observer and settlement totals.
 - [x] All result receipts present; no duplicate message IDs or unreceipted claims.
 - [x] Dayrout fixture identified as rescheduled to today 15:30 Riga (provider NS).
-- [ ] Segmented forward selection-quality analysis and dataset readiness progression.
+- [x] Segmented forward quality review: policy/market/odds/EV/timing/league and paired market baseline reconciled.
+- [ ] Resolved V2/V3 outcomes, dataset/calibration readiness and current-odds comparator wiring.
 - Report: docs/operations/PREMATCH_FLOOR_NATURAL_AUDIT_20261002.md.
 
 ## 2026-10-02 — SINGLE-floor installer after settlement deployment
