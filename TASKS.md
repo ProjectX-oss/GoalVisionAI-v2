@@ -4,7 +4,9 @@
 - [x] Preserve first alert/history; suppress acknowledged duplicate reminders and retain new physical-gap alerts.
 - [x] 292 tests + 79 subtests PASS; offline reproduction four fake sends before / one after.
 - [x] Prepare monitor-only source, disabled-Codex guards and bounded exact-incident diagnostic.
-- [ ] Separate operator deployment, protected incident readback and natural monitor verification.
+- [x] Operator deployed; supplied diagnostic confirms one ROTATED_INODE_LOST occurrence / 49 acknowledged sends. Independent release/protected-route hashes and natural monitor exit-0 PASS.
+- [ ] Later protected receipt readback, if needed, to confirm post-deployment count stability; historical OPEN is intentionally retained.
+- Old de-vig apply/rollback package pins the prior ADMIN route; review current route before any future reuse.
 - Report: docs/operations/ADMIN_ROTATION_ALERTS_20261002.md.
 
 ## 2026-10-02 — ADMIN monitor-only follow-up, Codex stays disabled
