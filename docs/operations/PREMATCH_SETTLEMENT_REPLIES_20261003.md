@@ -90,3 +90,16 @@ No new channel, weekly route or statistics reset is included.
 Telegram primary references:
 https://core.telegram.org/bots/api#replyparameters
 https://docs.python-telegram-bot.org/en/stable/telegram.replyparameters.html
+
+## Prepared package
+
+Source commit: 2436d39fcab122c70febafe048b1af6a98ce4215
+
+Package: /home/arvis/goalvision-operations/settlement-replies-2436d39-20261003
+
+Pinned entry point: /home/arvis/goalvision-operations/settlement-replies.py
+
+Five package checksum entries verified. Read-only preflight PASS, current mode
+BASE. Existing COMBO configuration and ReplyParameters dependency locally valid.
+Operator apply and the first natural threaded result remain pending. No deployment
+or test send performed. Evidence: operator_package.json in the evidence folder.

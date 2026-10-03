@@ -5,7 +5,7 @@
 - [x] Retain terminal claims, early COMBO loss/remaining-leg details, immutable results/statistics and both 1.30 floors.
 - [x] Offline matrix: 744 passed, one inherited inapplicable installer case skipped; 818-file exact-base parity PASS.
 - [x] Review exact 9a3b198-base operator updater; rollback disables reply attachment only, preserving COMBO routing and all current policies.
-- [ ] Commit source, build/pin package and verify read-only preflight.
+- [x] Source commit 2436d39; pinned package built, five checksum entries and read-only exact-base preflight PASS.
 - [ ] Operator apply and independent release/natural-result readback. No automatic deployment or test send.
 - Report: docs/operations/PREMATCH_SETTLEMENT_REPLIES_20261003.md.
 - Official/champion unchanged; LIVE and ADMIN Codex remain disabled. SINGLE 1.50 stays pending.

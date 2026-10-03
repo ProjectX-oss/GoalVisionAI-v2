@@ -1,0 +1,20 @@
+{
+  "automatic_deployment": false,
+  "checksum_entries": 5,
+  "existing_combo_configuration_and_reply_api": "LOCAL_VALIDATION_PASS",
+  "hashes": {
+    "metadata.json": "6804d266ea1457cd84ee90538ee5e1d9c727d20c09a0ded38250b52cef5ce38c",
+    "overlay/app/lab_combo/presentation.py": "a0f27a6a19d531fff46fa08e987fea68c3e7a8da94467c08def1c707786469ef",
+    "overlay/app/lab_combo/service.py": "a2dc996d8e52eafd5e5e2127fd658a980380ff6c3022198ab98287340459f40f",
+    "overlay/app/lab_combo/settlement_reply.py": "4b70b92f6a915ba26987ceaa33cb4410add36a45072c22612528382293e1550b",
+    "update.py": "060c676dd5681e8de1a0f0ae67608b106f722089a20a2a85d151d24adfea2740"
+  },
+  "operator_apply": "PENDING",
+  "package": "/home/arvis/goalvision-operations/settlement-replies-2436d39-20261003",
+  "read_only_preflight": "SETTLEMENT_REPLIES_PLAN_VALIDATED=/opt/goalvision-prematch-settlement-replies-2436d39-20261003\ncurrent_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS\nROOT_GUARD=CHECKED_AT_APPLY",
+  "source_commit": "2436d39fcab122c70febafe048b1af6a98ce4215",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "wrapper": "/home/arvis/goalvision-operations/settlement-replies.py",
+  "wrapper_sha256": "21af5142466955a5b46510ed374bc9296fde219ece71a0c4bf27361417acc664"
+}
