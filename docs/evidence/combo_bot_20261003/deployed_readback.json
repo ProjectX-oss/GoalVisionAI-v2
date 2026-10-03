@@ -1,0 +1,114 @@
+{
+  "admin": {
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "MainPID": "0",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    }
+  },
+  "checked_at_utc": "2026-10-03T10:52:34.911176+00:00",
+  "configuration_check": "COMBO_CONFIGURATION_VALID; bot=@GoalVision_AI_Combo_Bot",
+  "deployed_at_utc": "2026-10-03T10:51:12.375562+00:00",
+  "flags": [
+    "PYTHONPATH=/opt/goalvision-prematch-combo-bot-9a3b198-20261003/application",
+    "GOALVISION_LAB_ACCURACY_COMBOS=1",
+    "GOALVISION_LAB_TODAY_ONLY=1",
+    "GOALVISION_LAB_EARLY_COMBO_LOSS=1",
+    "GOALVISION_LAB_SINGLE_MIN_ODDS_130=1",
+    "GOALVISION_LAB_DEVIG_RESEARCH=1",
+    "GOALVISION_LAB_CALIBRATION_READINESS=1",
+    "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130=1",
+    "GOALVISION_COMBO_BOT_ROUTING=1"
+  ],
+  "manual_cycles": 0,
+  "manual_provider_calls": 0,
+  "new_bot_first_prediction": "PENDING",
+  "new_bot_receipts_in_latest_200": [],
+  "next_cycles_riga": {
+    "discovery": "2026-10-03 14:00",
+    "observer": "2026-10-03 14:08",
+    "settlement": "2026-10-03 13:55"
+  },
+  "postdeployment_natural_cycle_evidence": "PENDING; last listed service exits predate deployment",
+  "preflight": "COMBO_BOT_PLAN_VALIDATED=/opt/goalvision-prematch-combo-bot-9a3b198-20261003\ncurrent_mode=ENABLED; ADMIN_CODEX_SYSTEMD_DISABLED=PASS\nROOT_GUARD=CHECKED_AT_APPLY",
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "release": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003",
+  "services": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 12:38:53 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 12:38:02 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 04:12:04 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 04:12:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 12:45:54 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 12:45:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 12:36:23 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 12:30:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    }
+  },
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "timers": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 13:08:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 04:12:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 12:55:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 13:00:00 CEST",
+      "UnitFileState": "enabled"
+    }
+  }
+}

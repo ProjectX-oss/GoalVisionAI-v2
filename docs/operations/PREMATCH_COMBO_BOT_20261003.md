@@ -1,6 +1,6 @@
 # Separate COMBO bot — 2026-10-03
 
-Status: IMPLEMENTED / OFFLINE VERIFIED; NOT CONFIGURED / NOT DEPLOYED.
+Status: OPERATOR CONFIGURED / DEPLOYED / READBACK PASS; first natural COMBO-bot delivery pending.
 Authorized user: Arvis. Bot: @GoalVision_AI_Combo_Bot.
 Channel deferred by the user. Initial destination: operator-verified private
 conversation, explicitly confirmed during enrollment before any routing change.
@@ -121,3 +121,22 @@ Pinned entry point: /home/arvis/goalvision-operations/combo-bot.py
 8 package checksum entries verified. Read-only preflight PASS, current mode BASE.
 Enrollment contract loaded under network denial; token/recipient remain unconfigured.
 No deployment or Telegram calls performed.
+
+
+## Operator deployment and independent readback
+
+Operator applied the pinned 9a3b198 package on 2026-10-03 at 13:51 Riga.
+Readback at 13:52 Riga verified the complete installed release manifest, both
+environment contracts, all four loaded service routes and active/enabled timers.
+GOALVISION_COMBO_BOT_ROUTING=1; both odds floors remain 1.30. The no-network
+credential/recipient validator reports COMBO_CONFIGURATION_VALID for the named bot.
+ADMIN Codex is inactive with MainPID=0 and its timer disabled; protected model
+counts and champion are unchanged. The protected ADMIN/weekly routes still match.
+
+No COMBO-bot receipt was present in the latest 200 receipts at this readback.
+All listed service exits preceded the deployment and are not claimed as proof of
+the new bot's first delivery. Next scheduled settlement 13:55, discovery 14:00
+and observer 14:08 Riga. First qualifying new COMBO and result remain pending;
+no manual operational cycle, provider call, Telegram read or test send was made.
+
+Evidence: docs/evidence/combo_bot_20261003/deployed_readback.json.
