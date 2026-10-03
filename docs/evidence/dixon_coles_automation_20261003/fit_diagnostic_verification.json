@@ -1,0 +1,29 @@
+{
+  "all_pre_diagnostic_records_still_present": true,
+  "code_hashes": {
+    "app/dixon_coles_research/contracts.py": "8e277a696edf9ad2405f214e5ed2fe78db0f621e454b808e3033171d6b54b21a",
+    "app/dixon_coles_research/model.py": "06cc4239564f0abb162e9e01b9c7250f8e93b4ae2f7576a2d3f8d644a3240b02",
+    "app/dixon_coles_research/plan_20261003.json": "4081cb5c399a965cddcbac194a1b086fb5f88d6fe18e0762fb1558841c352ffc",
+    "app/dixon_coles_research/sources.py": "fb610c7f9da2cd214d9efd7afa7a5c661a5e3de3cd65fc6d351797d2dba15ea4"
+  },
+  "cpu_limit_seconds": 12,
+  "deployed": false,
+  "diagnostic_report_sha256": "1d8567a5e3fd90a9ff486a9b0ca0e32cbb3c8746953b1129efd7bbdaddf0e805",
+  "exit_code": 0,
+  "final_reproducible_run_fit_replays": 2,
+  "historical_bookmaker_odds_used": false,
+  "manual_production_or_research_service_cycles": 0,
+  "natural_cycle_appended_during_diagnosis": true,
+  "network_disabled": true,
+  "nice": 10,
+  "observed_at": "2026-10-03T16:43:52.661673+00:00",
+  "policy_or_model_code_changed": false,
+  "protected_state_unchanged": true,
+  "provider_calls": 0,
+  "read_only_runtime_validation": "PASS",
+  "recorded_failures_reproduced": 2,
+  "research_database_writes": 0,
+  "script_sha256": "675ff8dd7654fdbec9091cd2a805bee9926b647a77b0b3cce102ae08cadb0302",
+  "telegram_requests": 0,
+  "total_successful_diagnostic_fit_replays_this_task": 4
+}

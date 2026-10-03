@@ -8,7 +8,10 @@
 - [x] Source commit e5b02e4; pinned operator package built; 831 checksums and read-only preflight PASS. Research service/timer remain not installed.
 - [x] Operator activated e5b02e4; independent release/unit/resource/seed/route/champion readback PASS. All 10 original research records retained; timer active/enabled.
 - [x] First natural timer run 19:10:30–19:10:36 Riga completed, exit 0; 13 research records verified and original 10 preserved. No new forecast: one fixture/two families explicitly unavailable (FIT_DID_NOT_CONVERGE). One original fixture remains pending.
-- [ ] Review subsequent natural coverage/non-convergence and genuine resolved/cross-day quality evidence; no frozen-plan tuning or promotion.
+- [x] Reproduce both fit failures offline: 43 results/11 teams, line search stalls at fixed rate ceiling 8.0 in iterations 50/52; no policy/code change, no DB writes or new forecasts. Diagnostic report: docs/evidence/dixon_coles_automation_20261003/FIT_DIAGNOSIS_20261003.md.
+- [x] Second natural cycle 19:40 succeeds and adds fixture 1498855 TOTAL_3_5; two pending fixtures/five families/11 market comparisons, all prior evidence retained.
+- [ ] Prepare a separately declared constrained-optimizer research candidate with bounded deterministic tests; keep current experiment immutable.
+- [ ] Review genuine resolved/cross-day quality evidence and ongoing coverage; no automatic promotion.
 - Runbook: docs/operations/DIXON_COLES_AUTOMATION_20261003.md.
 - Evidence: docs/evidence/dixon_coles_automation_20261003/verification.json.
 - No deployment, manual production cycle, provider/Telegram request or automatic promotion during preparation.

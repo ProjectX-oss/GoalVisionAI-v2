@@ -1,0 +1,95 @@
+{
+  "all_record_fingerprints_verified": true,
+  "cycle": {
+    "automatic_promotion": false,
+    "capture": {
+      "counts": {
+        "forecast": 1
+      },
+      "details": [],
+      "fingerprint": "da8d773ec9c869569beb661871a3767f2913c6ae083a889c2364215e82016cda",
+      "source_diagnostics": {
+        "before_declaration": 476,
+        "capture_rows_examined": 500,
+        "not_upcoming_evaluation": 15,
+        "older_captures_not_scanned": 1,
+        "stale_capture": 8
+      }
+    },
+    "evaluation": {
+      "counts": {
+        "forecast_families": 5
+      },
+      "fingerprint": "3bb460e690c394a0cdc6292e037d4bd7d55eed558a0013e6d93854751d07a147",
+      "fixtures": 0,
+      "kickoff_dates": 0,
+      "lifecycle": {
+        "PENDING": 2,
+        "RESOLVED": 0,
+        "VOID": 0
+      },
+      "market_rows": 0,
+      "quality_verdict": "NEEDS_MORE_EVIDENCE"
+    },
+    "fingerprint": "b9aa9f5cfd6b49a20ba442e27c742bd2aa7838bbf49d2395f1724f6cca43a8ca",
+    "finished_at": "2026-10-03T16:40:35.788615+00:00",
+    "priority": "NORMAL",
+    "provider_calls": 0,
+    "selection_effect": "NONE",
+    "started_at": "2026-10-03T16:40:34.193926+00:00",
+    "status": "COMPLETED",
+    "telegram_sends": 0,
+    "version": "DC_AUTOMATION_V1"
+  },
+  "metrics_fingerprint": "3bb460e690c394a0cdc6292e037d4bd7d55eed558a0013e6d93854751d07a147",
+  "new_forecasts": [
+    {
+      "family": "TOTAL_3_5",
+      "fingerprint": "08ef543ede6699356aad439ebca76c2c0e48b259c5f3e9c6735dea2f5c7d5e6c",
+      "fit": {
+        "converged": true,
+        "gradient_inf": 6.395669804569741e-07,
+        "initial_objective": 2.4370764437439494,
+        "iterations": 77,
+        "objective": 2.0865819408575303
+      },
+      "fixture_id": 1498855,
+      "forecast_at": "2026-10-03T16:40:35.505383+00:00",
+      "kickoff_utc": "2026-10-03T18:00:00+00:00",
+      "model_fingerprint": "ae9fdadeeeb1ce41cd40c5f046f40685c6080903d34d139e6e866a0c66f6a5e4"
+    }
+  ],
+  "no_manual_cycle": true,
+  "no_provider_request": true,
+  "no_quality_claim": true,
+  "no_telegram_request": true,
+  "observed_at": "2026-10-03T16:43:52.645831+00:00",
+  "original_10_records_preserved": true,
+  "prospective_coverage": {
+    "families": 5,
+    "paired_market_comparisons": 11,
+    "pending": 2,
+    "resolved": 0,
+    "unique_fixtures": 2,
+    "void": 0
+  },
+  "record_count": 16,
+  "selection_effect": "NONE",
+  "service": {
+    "ActiveState": "inactive",
+    "CPUUsageNSec": "1621504000",
+    "ExecMainExitTimestamp": "Sat 2026-10-03 19:40:36 EEST",
+    "ExecMainStartTimestamp": "Sat 2026-10-03 19:40:30 EEST",
+    "ExecMainStatus": "0",
+    "InvocationID": "a39e34211aa14b45a95bc92231022233",
+    "LoadState": "loaded",
+    "Result": "success"
+  },
+  "timer": {
+    "ActiveState": "active",
+    "LastTriggerUSec": "Sat 2026-10-03 19:40:30 EEST",
+    "NextElapseUSecRealtime": "Sat 2026-10-03 20:10:30 EEST",
+    "UnitFileState": "enabled"
+  },
+  "trigger": "NATURAL_TIMER"
+}
