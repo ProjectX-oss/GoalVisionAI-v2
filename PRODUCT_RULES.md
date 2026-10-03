@@ -195,6 +195,17 @@ statistics context; never erase past losses or reset learning evidence.
 See docs/operations/PREMATCH_SINGLE_150_COMBO_SPLIT_PLAN_20261003.md for scope,
 source findings, cutover requirements and offline acceptance coverage.
 
+
+## COMBO bot connection authorized 2026-10-03
+
+Use @GoalVision_AI_Combo_Bot for new COMBO predictions/results after explicit
+operator enrollment and deployment. The channel is deferred; initial private
+recipient must be verified through a unique START challenge and operator confirmation.
+Start a prospective COMBO statistics period without deleting prior results.
+Keep pre-cutover settlement in the original destination and period. Pause rollback
+must retain readers/credentials for already published COMBO bets. SINGLE remains
+>=1.30 in this change; the future SINGLE 1.50 test remains separate.
+
 ---
 
 # 8. PREDICTIONS

@@ -1,0 +1,60 @@
+{
+  "base_files": 815,
+  "candidate_files": 817,
+  "deployment": "NOT_PERFORMED",
+  "enrollment": "TOKEN_AND_RECIPIENT_REQUIRED",
+  "installed_base": "/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003",
+  "manual_operational_cycles": 0,
+  "manual_provider_calls": 0,
+  "overlay": [
+    "app/lab_combo/bot_routing.py",
+    "app/lab_combo/bot_delivery.py",
+    "app/lab_combo/service.py",
+    "app/lab_combo/cli.py",
+    "app/lab_v2_shadow/cli.py"
+  ],
+  "overlay_sha256": {
+    "app/lab_combo/bot_delivery.py": "d6168a8cb2b483f4d59dbcf3c832dda1bac9fa8f5205156dd505abf7a73f003e",
+    "app/lab_combo/bot_routing.py": "f77bfe0b9e6838794935a36ea3b32d8171e912aba6b10ac485a75fcbbfa81e1d",
+    "app/lab_combo/cli.py": "8f38922b263a29eee6988567ebdf7c2c1e3feb798092df357630102b0c891b34",
+    "app/lab_combo/service.py": "c25e3b9008015bea8130871520101d8831c51445a18a904d6de3931972a07ed6",
+    "app/lab_v2_shadow/cli.py": "ae069e99eb754c42b75728ad5ddfd5242207c26fed58be992e5498e80c3325df"
+  },
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "source_base": "ead9a0b9b89ea30bf6d7a13d1d5a439ff88884d2",
+  "status": "PASS",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "tests": {
+    "files": [
+      "tests/test_combo_bot_routing.py",
+      "tests/test_prematch_settlement_upgrade.py",
+      "tests/test_lab_delivery_accounting.py",
+      "tests/test_lab_accuracy_combo.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/test_lab_combo.py",
+      "tests/test_prematch_v2_enablement.py",
+      "tests/test_lab_v2_shadow.py",
+      "tests/test_lab_combo_integrity.py",
+      "tests/test_lab_accuracy_delivery.py",
+      "tests/test_prematch_single_odds_floor.py",
+      "tests/test_lab_probability_delivery_hardening.py"
+    ],
+    "network": "DENIED_BY_OFFLINE_RUNNER",
+    "passed": 622,
+    "skipped": 1
+  }
+}

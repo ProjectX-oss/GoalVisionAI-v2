@@ -1,8 +1,21 @@
+## 2026-10-03 — Separate COMBO Telegram bot and prospective statistics
+
+- [x] User identified @GoalVision_AI_Combo_Bot, deferred the channel and requested system connection.
+- [x] Read-only natural 13:00 floor proof: 3 SINGLE + 3 COMBO, all nine legs >=1.30; today-only and receipt fingerprints verified.
+- [x] Dedicated bot/configuration/recipient contract; private START challenge verification and hidden credential enrollment.
+- [x] Original-route settlement, independent prospective COMBO statistics, unchanged economic claims and compatible pause rollback.
+- [x] Offline matrix: 622 passed, one inherited inapplicable case skipped; 817-file exact-base parity PASS.
+- [ ] Build pinned operator package from committed sources and verify read-only preflight.
+- [ ] Operator enrollment, apply, readback and first qualifying natural COMBO-bot prediction/result.
+- Report: docs/operations/PREMATCH_COMBO_BOT_20261003.md.
+- SINGLE remains >=1.30; COMBO legs >=1.30. SINGLE 1.50 and channel/weekly COMBO delivery remain later work.
+- Official/champion unchanged; LIVE and ADMIN Codex disabled; no automatic deployment or test send.
+
 ## 2026-10-03 — Planned SINGLE 1.50 test and separate COMBO Telegram stream
 
 - [x] Record the user's future SINGLE >=1.50 test and proposed COMBO bot/channel separation with a new COMBO statistics period.
 - [x] Inspect existing shared destination, receipt validation and all-time statistics boundaries; document safe cutover and old-bet continuity.
-- [ ] Complete the pending natural-cycle verification of the currently installed 1.30 policy.
+- [x] Verify natural 13:00 publication and 13:08 observer evidence for the installed 1.30 policy.
 - [ ] Implement versioned SINGLE >=1.50 independently of COMBO legs >=1.30; no additional combined-odds minimum.
 - [ ] Establish the exact COMBO destination and publishing bot; implement product-specific prediction/result routing and immutable period membership.
 - [ ] Preserve prior history and original-route settlement, prevent cross-channel duplicates, and test compatible rollback with open bets.
@@ -19,7 +32,7 @@
 - [x] Commit e355b51; R2 package prepared with 15 checksum entries and read-only preflight PASS for both installed sources.
 - [x] Operator deployed R2 e355b51 at 12:39 Riga; independent release/flags/four routes/timers/disabled ADMIN readback PASS.
 - [x] Natural 12:38 readiness observer succeeded on the previously installed calibration release; immutable report verified.
-- [ ] First post-R2 natural discovery at 13:00 Riga and observer at 13:08; no manual cycles/provider calls/test sends.
+- [x] Post-R2 natural 13:00 discovery: 3 SINGLE + 3 COMBO, all nine legs >=1.30; 13:08 observer report verified. No manual cycles/provider calls/test sends.
 - Report: docs/operations/PREMATCH_COMBO_LEG_FLOOR_R2_20261003.md.
 
 ## 2026-10-03 — COMBO per-leg minimum 1.30
@@ -33,7 +46,7 @@
 - [x] Combine pending approved readiness integration and leg floor into one reviewed operator package implementation.
 - [x] Source commit ff55669; pinned package prepared, 15 checksums and read-only preflight PASS; installed mode remains BASE.
 - [x] Operator applied R2 e355b51 after calibration deployment; see latest readback above.
-- [ ] Post-R2 natural discovery evidence; no manual cycle, provider call or test send.
+- [x] Post-R2 natural discovery evidence recorded in docs/evidence/combo_bot_20261003/natural_floor_readback.json.
 - Report: docs/operations/PREMATCH_COMBO_LEG_FLOOR_20261003.md.
 - Official unchanged; LIVE/ADMIN Codex disabled; champion unchanged.
 

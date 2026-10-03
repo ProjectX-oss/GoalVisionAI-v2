@@ -194,21 +194,16 @@ async def cycle(args: argparse.Namespace) -> dict:
             if validate_lab_telegram_config(config) is None:
                 from .secure_logging import install_lab_secret_redaction
                 install_lab_secret_redaction(config.token)
-                transport = LabTelegramTransport(config.token)
-                async with transport.bot:
-                    from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
-                    if '@' + (transport.bot.username or '') != LAB_BOT_USERNAME:
-                        output['send_blocker'] = 'LAB_BOT_IDENTITY_MISMATCH'
-                    else:
-                        output['deliveries'] = []
-                        for kind, identity in pending:
-                            result = await service.publish_experimental(kind, identity, config, transport)
-                            output['deliveries'].append({'kind': kind, 'prediction_id': identity, **result})
-                            if result['sent']:
-                                output['lab_telegram_sent'] = True
-                        from .settlement import single_statistics, statistics
-                        output['single_statistics'] = single_statistics(ledger)
-                        output['combo_statistics'] = statistics(ledger, published_only=True)
+                from .bot_delivery import deliver_batch
+                output['deliveries'], failure = await deliver_batch(
+                    service, pending, config, LabTelegramTransport)
+                output['lab_telegram_sent'] = any(item.get('sent') for item in output['deliveries'])
+                if failure:
+                    output['send_blocker'] = failure['code']
+                    output['delivery_failure'] = failure
+                from .settlement import single_statistics, statistics
+                output['single_statistics'] = single_statistics(ledger)
+                output['combo_statistics'] = statistics(ledger, published_only=True)
             else:
                 output['send_blocker'] = 'LAB_CREDENTIAL_NOT_CONFIGURED'
         return output

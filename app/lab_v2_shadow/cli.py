@@ -157,47 +157,11 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                 return _persist_cycle_evidence(repository, report, clock)
             from app.lab_combo.secure_logging import install_lab_secret_redaction
             install_lab_secret_redaction(config.token)
-            transport = LabTelegramTransport(config.token)
             report["telegram_transport_constructed"] = True
             report["controlled_publication"]["telegram_transport_constructed"] = True
             service = LabComboService(ledger, None, clock=lambda: datetime.now(timezone.utc))
-            deliveries = []
-            phase = 'INITIALIZATION'
-            failure = None
-            try:
-                # PTB's context manager shuts requests down if initialize/getMe fails.
-                async with transport.bot:
-                    phase = 'PUBLICATION'
-                    if "@" + (transport.bot.username or "") != LAB_BOT_USERNAME:
-                        failure = {'stage': phase, 'code': 'LAB_BOT_IDENTITY_MISMATCH'}
-                    else:
-                        for kind, identity in pending:
-                            try:
-                                outcome = await service.publish_experimental(kind, identity, config, transport)
-                            except DeliveryFailure as exc:
-                                deliveries.append(exc.outcome)
-                                failure = {'stage': exc.outcome['stage'], 'code': exc.outcome['status'],
-                                           'kind': kind, 'prediction_id': identity}
-                                break
-                            deliveries.append({"kind": kind, "prediction_id": identity, **outcome})
-                    phase = 'SHUTDOWN'
-            except Exception as exc:
-                # Never persist exception text/URLs/tokens. No batch or send retry.
-                from telegram.error import TimedOut
-                lifecycle_failure = {'stage': phase, 'code': 'LAB_TELEGRAM_' + phase + '_FAILED',
-                                     'kind': 'TIMEOUT' if isinstance(exc, (TimedOut, TimeoutError)) else 'ERROR'}
-                if failure is None:
-                    failure = lifecycle_failure
-                else:
-                    failure['lifecycle_failure'] = lifecycle_failure
-                # A failed shutdown may leave one request pool open. Closing is
-                # idempotent and cannot resend; never retry initialize or publish.
-                try:
-                    await transport.bot.shutdown()
-                except Exception:
-                    failure['cleanup'] = 'FAILED'
-                else:
-                    failure['cleanup'] = 'COMPLETED'
+            from app.lab_combo.bot_delivery import deliver_batch
+            deliveries, failure = await deliver_batch(service, pending, config, LabTelegramTransport)
             report['delivery_status'] = ('DEGRADED' if failure and failure['stage'] == 'SHUTDOWN' else
                                          'FAILED' if failure else
                                          'DEGRADED' if any(not d.get('sent') for d in deliveries) else 'COMPLETED')

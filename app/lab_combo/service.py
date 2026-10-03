@@ -7,7 +7,6 @@ from datetime import datetime, timedelta, timezone
 from typing import Callable
 
 from app.current_odds_forward_test.repository import SQLiteForwardTestRepository
-from app.lab_telegram.service import validate_lab_telegram_config
 from app.real_match_lab_analysis.models import LAB_CHAT_ID
 
 from .engine import load_leg, select_combo, prediction_message
@@ -20,6 +19,10 @@ from .presentation import (
     single_result_message,
 )
 from .repository import ComboRepository
+from .bot_routing import (
+    RoutingBlocked, delivery_route, validate_delivery, route_message,
+    cohort_statistics, frozen_route, BOT_USERNAME as COMBO_BOT_USERNAME,
+)
 from .publication_window import publication_blocker
 from .odds_policy import combo_odds_blocker, minimum_combo_leg_odds
 from .settlement import (
@@ -167,8 +170,18 @@ class LabComboService:
 
     async def _publish_experimental(self, kind: str, prediction_id: str, config: object,
                                     transport: object, facts: DeliveryFacts) -> dict:
-        if validate_lab_telegram_config(config) is not None:
-            return {'status': 'LAB_CONFIGURATION_REJECTED', 'sent': False}
+        if self.ledger.get('claim', kind + ':' + prediction_id) is not None:
+            return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
+        try:
+            route = delivery_route(self.ledger, kind, prediction_id)
+        except RoutingBlocked as exc:
+            return {'status': str(exc), 'sent': False}
+        blocker = validate_delivery(config, transport, route, now=self.clock())
+        if blocker:
+            return {'status': blocker, 'sent': False}
+        destination = route['chat_id'] if route else LAB_CHAT_ID
+        from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
+        expected_bot = COMBO_BOT_USERNAME if route else LAB_BOT_USERNAME
         mapping = {
             'single_prediction': ('single_prediction', 'single_preview'),
             'combo_prediction': ('prediction', 'preview'),
@@ -185,7 +198,7 @@ class LabComboService:
             prefix = 'single_prediction:' if kind == 'single_settlement' else 'combo_prediction:'
             receipt = self.ledger.get('receipt', prefix + prediction_id)
             if not (receipt and receipt.get('sent') is True and receipt.get('status') == 'SENT'
-                    and str(receipt.get('chat_id')) == str(LAB_CHAT_ID)
+                    and str(receipt.get('chat_id')) == str(destination)
                     and type(receipt.get('message_id')) is int and receipt['message_id'] > 0):
                 return {'status': 'PUBLISHED_PREDICTION_AND_SETTLEMENT_REQUIRED', 'sent': False}
             if kind == 'combo_settlement' and value.get('settlement_version') == EARLY_LOSS_VERSION:
@@ -233,7 +246,7 @@ class LabComboService:
                 from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
                 origin = value['selection_origin']
                 bot = getattr(transport, 'bot', None)
-                if '@' + (getattr(bot, 'username', None) or '') != LAB_BOT_USERNAME:
+                if '@' + (getattr(bot, 'username', None) or '') != expected_bot:
                     return {'status': 'LAB_BOT_IDENTITY_MISMATCH', 'sent': False}
                 if ((not accuracy_single and value.get('decision') != 'APPROVED')
                         or value.get('market') not in MARKETS
@@ -267,7 +280,7 @@ class LabComboService:
                 if not review['eligible']:
                     return {'status': 'LAB_PUBLICATION_POLICY_REJECTED', 'sent': False,
                             'publication_reviews': [review]}
-                if '@' + (getattr(getattr(transport, 'bot', None), 'username', None) or '') != LAB_BOT_USERNAME:
+                if '@' + (getattr(getattr(transport, 'bot', None), 'username', None) or '') != expected_bot:
                     return {'status': 'LAB_BOT_IDENTITY_MISMATCH', 'sent': False}
                 if preview['message'] != v2_combo_message(value, value['combo_number']):
                     return {'status': 'COMBO_PREVIEW_MISMATCH', 'sent': False}
@@ -297,10 +310,12 @@ class LabComboService:
             if any(not _fresh_captured_odds(item, self.clock()) for item in candidates):
                 return {'status': 'STALE_CURRENT_ODDS', 'sent': False}
         identity = kind + ':' + prediction_id
-        message = preview['message']
+        message = route_message(preview['message'], route)
         if len(message) > 4096:
             return {'status': 'TELEGRAM_MESSAGE_TOO_LONG', 'sent': False}
-        claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}
+        claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': destination}
+        if route is not None:
+            claim['delivery_route'] = route
         claimed = (self.ledger.claim_publication(kind, value, claim)
                    if kind in {'single_prediction', 'combo_prediction'}
                    else self.ledger.append('claim', identity, claim))
@@ -319,12 +334,12 @@ class LabComboService:
         try:
             if use_photo:
                 operation = transport.send_photo_receipt(
-                    chat_id=LAB_CHAT_ID, image_path=image, caption=message, timeout_seconds=10)
+                    chat_id=destination, image_path=image, caption=message, timeout_seconds=10)
             else:
                 operation = transport.send_message_receipt(
-                    chat_id=LAB_CHAT_ID, text=message, parse_mode=None, timeout_seconds=10)
+                    chat_id=destination, text=message, parse_mode=None, timeout_seconds=10)
             receipt = await asyncio.wait_for(operation, timeout=11)
-            if receipt.chat_id != LAB_CHAT_ID or type(receipt.message_id) is not int or receipt.message_id <= 0:
+            if receipt.chat_id != destination or type(receipt.message_id) is not int or receipt.message_id <= 0:
                 raise ValueError('Invalid receipt')
         except Exception as exc:
             from telegram.error import TimedOut
@@ -345,6 +360,8 @@ class LabComboService:
         facts.stage = 'RECEIPT_PERSISTENCE'
         result = {'status': 'SENT', 'sent': True, 'chat_id': receipt.chat_id,
                   'message_id': receipt.message_id, 'sent_at_utc': self.clock().isoformat()}
+        if route is not None:
+            result['delivery_route'] = route
         try:
             self.ledger.append('receipt', identity, result)
         except Exception:
@@ -357,8 +374,16 @@ class LabComboService:
 
     async def publish(self, prediction_id: str, config: object, transport: object, *, settlement: bool = False) -> dict:
         """Recheck gates, durably claim once, never retry an ambiguous Telegram send."""
-        if validate_lab_telegram_config(config) is not None:
-            return {'status': 'LAB_CONFIGURATION_REJECTED', 'sent': False}
+        if self.ledger.get('claim', ('settlement:' if settlement else 'prediction:') + prediction_id) is not None:
+            return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
+        try:
+            route = delivery_route(self.ledger, 'settlement' if settlement else 'prediction', prediction_id)
+        except RoutingBlocked as exc:
+            return {'status': str(exc), 'sent': False}
+        blocker = validate_delivery(config, transport, route, now=self.clock())
+        if blocker:
+            return {'status': blocker, 'sent': False}
+        destination = route['chat_id'] if route else LAB_CHAT_ID
         combo = self.ledger.get('prediction', prediction_id)
         if combo is None:
             raise ValueError('Unknown Lab Combo')
@@ -387,11 +412,13 @@ class LabComboService:
             preview = self.ledger.get('preview', prediction_id)
             if preview is None or preview['message'] != prediction_message(combo):
                 return {'status': 'PREDICTION_MESSAGE_CONFLICT', 'sent': False}
-        message = preview['message']
+        message = route_message(preview['message'], route)
         if len(message) > 4096:
             return {'status': 'TELEGRAM_MESSAGE_TOO_LONG', 'sent': False}
         identity = ('settlement:' if settlement else 'prediction:') + prediction_id
-        claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': LAB_CHAT_ID}
+        claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': destination}
+        if route is not None:
+            claim['delivery_route'] = route
         claimed = (self.ledger.append('claim', identity, claim) if settlement
                    else self.ledger.claim_publication('prediction', combo, claim))
         if not claimed:
@@ -403,14 +430,16 @@ class LabComboService:
                     self.ledger.append('publication_blocked',identity,{'status':blocker,'sent':False})
                     return {'status':blocker,'sent':False}
             receipt = await asyncio.wait_for(transport.send_message_receipt(
-                chat_id=LAB_CHAT_ID, text=message, parse_mode=None, timeout_seconds=10), timeout=11)
-            if receipt.chat_id != LAB_CHAT_ID or type(receipt.message_id) is not int or receipt.message_id <= 0:
+                chat_id=destination, text=message, parse_mode=None, timeout_seconds=10), timeout=11)
+            if receipt.chat_id != destination or type(receipt.message_id) is not int or receipt.message_id <= 0:
                 raise ValueError('Invalid receipt')
         except Exception:
             self.ledger.append('delivery_unknown', identity, {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED'})
             return {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED', 'sent': False}
         value = {'status': 'SENT', 'sent': True, 'chat_id': receipt.chat_id, 'message_id': receipt.message_id,
                  'sent_at_utc':self.clock().isoformat()}
+        if route is not None:
+            value['delivery_route'] = route
         self.ledger.append('receipt', identity, value)
         return value
 
@@ -509,7 +538,8 @@ class LabComboService:
         for value in self.ledger.all('settlement'):
             identity = value['prediction_id']
             if not self.ledger.get('settlement_preview', identity):
-                stats = statistics(self.ledger, published_only=True)
+                route = frozen_route(self.ledger, identity)
+                stats = cohort_statistics(self.ledger, route)
                 self.ledger.append('settlement_preview', identity, {'message': combo_result_message(value, stats), 'statistics': stats})
         if adaptive_learning is not None:
             adaptive_learning.sync_prematch(self.ledger, now=self.clock(), train=False)

@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer", "combo-leg-floor"])
+@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer", "combo-leg-floor", "combo-bot"])
 def rig(tmp_path, monkeypatch, request):
     source = Path(__file__).parents[1] / "operations" / request.param / "update.py"
     spec = importlib.util.spec_from_file_location("quality_update", source)
@@ -15,6 +15,10 @@ def rig(tmp_path, monkeypatch, request):
     (base / "application/app").mkdir(parents=True)
     (base / "application/app/original.py").write_text("BASE = True\n")
     monkeypatch.setattr(mod, "BASE", base)
+    if hasattr(mod, "check_configuration"):
+        plan = base / "application" / mod.PLAN_ASSET
+        plan.parent.mkdir(parents=True)
+        plan.write_text('{"frozen": true}')
     (base / "release.env").write_bytes(mod.base_environment(base))
     route_bases = {u: base / "release.env" for u in mod.SERVICES}
     monkeypatch.setattr(mod, "ROUTE_BASES", route_bases)
@@ -49,6 +53,10 @@ def rig(tmp_path, monkeypatch, request):
             "manifest": mod.tree(env.parent / "application"),
         } for env in set(route_bases.values())},
     }
+    if hasattr(mod, "check_configuration"):
+        (package / "configure.py").write_text("REVIEWED = True\n")
+        meta["configure_sha256"] = mod.sha(package / "configure.py")
+        monkeypatch.setattr(mod, "check_configuration", lambda package: None)
     (package / "metadata.json").write_text(json.dumps(meta))
     state = {t: "active" for t in mod.TIMERS}
     busy = set()
@@ -243,7 +251,7 @@ def test_rollback_keeps_compatible_reader_sources(rig):
     before = m.tree(target / 'application')
     m.apply(rig.package, rollback=True)
     assert m.tree(target / 'application') == before
-    expected_early = b'1' if ('app/lab_v2_shadow/single_odds_policy.py' in m.FILES or 'app/adaptive_lab/devig_research.py' in m.FILES or 'app/adaptive_lab/calendar_monitor.py' in m.FILES) else b'0'
+    expected_early = b'1' if ('app/lab_v2_shadow/single_odds_policy.py' in m.FILES or 'app/adaptive_lab/devig_research.py' in m.FILES or 'app/adaptive_lab/calendar_monitor.py' in m.FILES or 'app/lab_combo/bot_routing.py' in m.FILES) else b'0'
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=' + expected_early + b'\n' in (target / 'rollback.env').read_bytes()
     assert all('rollback.env' in p.read_text() for p in rig.overrides.values())
 
@@ -411,3 +419,38 @@ def test_r2_does_not_accept_prior_all_devig_route_state(rig):
     with pytest.raises(ValueError,match="PREMATCH_ROUTE_MISMATCH"):
         rig.mod.apply(rig.package)
     assert not rig.calls and not any(p.exists() for p in rig.overrides.values())
+
+
+def test_combo_bot_missing_configuration_prevents_every_mutation(rig,monkeypatch):
+    m=rig.mod
+    if not hasattr(m,"check_configuration"):
+        return
+    def blocked(package):
+        raise ValueError("COMBO_PRIVATE_RECIPIENT_CONFIGURATION_REQUIRED")
+    monkeypatch.setattr(m,"check_configuration",blocked)
+    with pytest.raises(ValueError,match="COMBO_PRIVATE_RECIPIENT"):
+        m.apply(rig.package)
+    assert not rig.calls and not any(p.exists() for p in rig.overrides.values())
+    assert not m.validate(rig.package)[1].exists()
+
+
+def test_combo_bot_setup_hash_cannot_be_replaced(rig):
+    m=rig.mod
+    if not hasattr(m,"check_configuration"):
+        return
+    (rig.package/"configure.py").write_text("UNREVIEWED = True\n")
+    with pytest.raises(ValueError,match="CONFIGURE_HASH_MISMATCH"):
+        m.validate(rig.package)
+    assert not rig.calls
+
+
+def test_combo_bot_rollback_pauses_new_sends_and_keeps_both_floors(rig):
+    m=rig.mod
+    if not hasattr(m,"check_configuration"):
+        return
+    m.apply(rig.package)
+    m.apply(rig.package,rollback=True)
+    content=(m.validate(rig.package)[1]/"rollback.env").read_text()
+    for flag in ("GOALVISION_LAB_SINGLE_MIN_ODDS_130=1","GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130=1",
+                 "GOALVISION_LAB_EARLY_COMBO_LOSS=1","GOALVISION_COMBO_BOT_ROUTING=0"):
+        assert flag in content
