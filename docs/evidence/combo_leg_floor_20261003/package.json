@@ -1,0 +1,43 @@
+{
+  "approved_readiness_included": true,
+  "as_of": "2026-10-03T07:42:31.022891+00:00",
+  "checksum_entries": 15,
+  "checksum_validation": "PASS",
+  "deployment_performed": false,
+  "earlier_calibration_package_superseded_for_pending_deployment": true,
+  "intended_release": "/opt/goalvision-prematch-combo-leg-floor-ff55669-20261003",
+  "operational_cycles_invoked": 0,
+  "operator_apply": "sudo python3 ~/goalvision-operations/combo-leg-floor.py --apply",
+  "package": "/home/arvis/goalvision-operations/combo-leg-floor-ff55669-20261003",
+  "package_files": {
+    "SHA256SUMS": "37b788e4ae1d75deebbda2061651bf31abe17c434c4ef40bc4b0da0467cc2f7b",
+    "metadata.json": "32324493acf8d789498948e9fd68bd9ea9335443212c8939373e43dfd709a4fa",
+    "overlay/app/adaptive_lab/calendar_audit.py": "6b37c6733fd820ee58884c7d37d2eb6eab8a9750d4a2e66016aefd0f70a367d9",
+    "overlay/app/adaptive_lab/calendar_monitor.py": "fe1c68d4f61b018739c151586291e9838c2441011c57803f5f5678b29cdff361",
+    "overlay/app/adaptive_lab/calendar_plan_20261002.json": "20538b9a2ee8d2308b0192bfdc706fc042be3c722ae46a52f64622d0ca573795",
+    "overlay/app/adaptive_lab/calendar_research.py": "608179f6d1ebf48b506a1e24535f7ec9d5bdeba9c46a08fc8cd10df818ef77ab",
+    "overlay/app/adaptive_lab/observer.py": "d9c6fcfa84303b3232bb23bceb63748a94393061c81cc8e2097c3a43a617f8a7",
+    "overlay/app/lab_combo/engine.py": "fe8306f675f0d6ddfc9203b18a0d87366db7422176c9014dbcd5506fb18b9169",
+    "overlay/app/lab_combo/experimental.py": "fee4591df64a7bfbe528feab34f891f1a71ae8c20837a5d596375b69a24474a1",
+    "overlay/app/lab_combo/odds_policy.py": "ea38f2d6ad3427997b8c230e1dfeec6d0c64970edf1a7be019c3bab6a2f2b5d5",
+    "overlay/app/lab_combo/service.py": "8aec73a1130780cbf30f2bcad0b332fff3a263d673eb00638302da85e079ba82",
+    "overlay/app/lab_v2_shadow/accuracy_combo.py": "e4bff411a0a8e486837ed79cf8036e88e3c3306b2645726d4fa0391097f1829e",
+    "overlay/app/lab_v2_shadow/cli.py": "bf035b06fe257d9cf1f1c901ac511cb0865092f6f47841290a193a844439ab62",
+    "overlay/app/lab_v2_shadow/operator_output.py": "e7e197ae19b2c8224b97ef2244ae1cce008123d7a26f2359427c858f71305363",
+    "overlay/app/lab_v2_shadow/publication.py": "465c7a173d2494180f39b0163bc7b08cc38037a02af611e64f16ed25ac3246ed",
+    "update.py": "fa88d69096b14240d94b048386dfef8857260542db93155fc162103a17791aec"
+  },
+  "protected_routes_unchanged": true,
+  "provider_calls": 0,
+  "readonly_preflight": [
+    "COMBO_LEG_FLOOR_PLAN_VALIDATED=/opt/goalvision-prematch-combo-leg-floor-ff55669-20261003",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "rollback": "sudo python3 ~/goalvision-operations/combo-leg-floor.py --apply --rollback",
+  "root_guard_checked": false,
+  "source_commit": "ff55669330e99d7f26e7e470000959ae1395853a",
+  "test_sends": 0,
+  "wrapper": "/home/arvis/goalvision-operations/combo-leg-floor.py",
+  "wrapper_sha256": "4ad86be17464f350a7fcfd9de32dfe751c2a4a200bcf02157daf950e7e0d7d9d"
+}

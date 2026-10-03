@@ -125,3 +125,18 @@ natural discovery/observer evidence; do not run a manual cycle or test send.
 
 Package pins and the source commit are recorded in
 `docs/evidence/combo_leg_floor_20261003/package.json`.
+
+## Prepared release
+
+Source commit: `ff55669330e99d7f26e7e470000959ae1395853a`.
+
+Package:
+`/home/arvis/goalvision-operations/combo-leg-floor-ff55669-20261003`.
+
+All 15 checksum entries and the read-only pinned-wrapper preflight pass.
+Current mode remains BASE; ADMIN Codex systemd disabled guard passes.
+Root-owned guard files will be checked at apply. Protected routes match.
+The intended release is
+`/opt/goalvision-prematch-combo-leg-floor-ff55669-20261003`.
+It has not been installed. Use the single new operator command above to
+install both the COMBO leg floor and the previously approved readiness observer.

@@ -7,6 +7,7 @@
 - [x] Offline integration matrix: 1,147 passed, one inherited inapplicable single-route installer case skipped.
 - [x] Source parity: 13 overlays reproduce the installed base plus the candidate; previously approved readiness files remain byte-identical.
 - [x] Combine pending approved readiness integration and leg floor into one reviewed operator package implementation.
+- [x] Source commit ff55669; pinned package prepared, 15 checksums and read-only preflight PASS; installed mode remains BASE.
 - [ ] Operator apply and next natural discovery/observer verification; no automatic deployment, manual cycle, provider call or test send.
 - Report: docs/operations/PREMATCH_COMBO_LEG_FLOOR_20261003.md.
 - Official unchanged; LIVE/ADMIN Codex disabled; champion unchanged.
