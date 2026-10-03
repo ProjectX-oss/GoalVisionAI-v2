@@ -112,3 +112,12 @@ A failure appears in this separate service/status file; ADMIN routes are unchang
 SINGLE >=1.50 publishes to the existing Lab destination; COMBO legs >=1.30 keep
 the separate bot/period, no combined floor. Today-only, Reply results and early
 COMBO loss/remaining-leg tracking remain installed. LIVE and ADMIN Codex stay disabled.
+
+## Preparation evidence
+
+Source commit: `e5b02e4b35bb29720b3500d20d874ab8ad368474`.
+104 offline tests passed (45 automation/installer checks), systemd verify passed.
+All 831 package checksums and pinned-wrapper read-only preflight passed.
+No research service/timer is installed; activation and natural-run proof remain pending.
+Evidence: `docs/evidence/dixon_coles_automation_20261003/verification.json` and
+`docs/evidence/dixon_coles_automation_20261003/package_preflight.json`.

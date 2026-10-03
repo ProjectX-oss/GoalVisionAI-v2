@@ -5,7 +5,7 @@
 - [x] Reuse capture/evaluate logic; first forecasts retained, duplicate-safe cycles, results still evaluated after the frozen capture window or a capture-input failure.
 - [x] Operator-only pinned package builder/updater; SQLite consistent seed backup; pause rollback preserves all research; existing production routes/timers untouched.
 - [x] 104 offline tests passed (45 automation/installer checks); systemd unit verification PASS; frozen plans and all non-research application files unchanged.
-- [ ] Build pinned package from source commit and record read-only preflight.
+- [x] Source commit e5b02e4; pinned operator package built; 831 checksums and read-only preflight PASS. Research service/timer remain not installed.
 - [ ] Operator activation, first natural run and genuine cross-day quality review.
 - Runbook: docs/operations/DIXON_COLES_AUTOMATION_20261003.md.
 - Evidence: docs/evidence/dixon_coles_automation_20261003/verification.json.

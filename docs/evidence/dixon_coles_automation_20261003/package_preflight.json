@@ -1,0 +1,26 @@
+{
+  "all_checksums_pass": true,
+  "application_file_count": 829,
+  "checksums_count": 831,
+  "checksums_file_sha256": "7d7fd74111d9ed78e0444e5ca5a639af8e12080b7a96e22ea60dc75fa5547656",
+  "existing_production_routes_verified_by_preflight": true,
+  "no_manual_cycle_provider_call_or_test_send": true,
+  "observed_at": "2026-10-03T15:41:26.335785+00:00",
+  "operator_activation_pending": true,
+  "package": "/home/arvis/goalvision-operations/dixon-coles-automation-e5b02e4-20261003",
+  "preflight": {
+    "no_deployment": true,
+    "root_guard_checked": false,
+    "seed_records": 10,
+    "source_commit": "e5b02e4b35bb29720b3500d20d874ab8ad368474",
+    "status": "READ_ONLY_PREFLIGHT_PASS",
+    "target": "/opt/goalvision-dixon-coles-e5b02e4-20261003"
+  },
+  "source_commit": "e5b02e4b35bb29720b3500d20d874ab8ad368474",
+  "systemd_unit_states": {
+    "goalvision-dixon-coles-research.service": "not-found",
+    "goalvision-dixon-coles-research.timer": "not-found"
+  },
+  "wrapper": "/home/arvis/goalvision-operations/dixon-coles-automation.py",
+  "wrapper_sha256": "87c4cea525868436d4e580c0c8dfa9fd20ec25ed46a67fa66f803b4e58a25a49"
+}
