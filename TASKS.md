@@ -7,7 +7,7 @@
 - [x] Update de-vig provenance to the actual SINGLE policy; no research selection or champion change.
 - [x] Offline matrix: 883 passed, one inherited inapplicable installer case skipped; full 818-file exact-base parity PASS.
 - [x] GitHub/forum source review compared against existing capabilities; document Dixon–Coles/uncertainty/confirmed-XI options and source/license limits. No external installation or model change.
-- [ ] Commit source and evidence, build/pin exact-base operator package, verify read-only preflight.
+- [x] Source/evidence committed as e1263e7; pinned exact-base operator package built, eight checksums and read-only BASE preflight PASS. Operator apply remains pending.
 - [ ] Operator apply and first qualifying natural 1.50 SINGLE readback. Unattended sudo unavailable; no manual cycles/provider calls/test sends.
 - Runbook: docs/operations/PREMATCH_SINGLE_150_20261003.md.
 - Research: docs/research/CURRENT_DATA_QUALITY_OPTIONS_20261003.md.

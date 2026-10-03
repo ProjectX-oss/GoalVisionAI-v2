@@ -1,0 +1,33 @@
+{
+  "recorded_at_utc": "2026-10-03T12:44:54.600127+00:00",
+  "source_commit": "e1263e7f3e5aeb3291cc2e506d1115020fc27cac",
+  "operator_package": "/home/arvis/goalvision-operations/single-floor-150-e1263e7-20261003",
+  "entry_point": "/home/arvis/goalvision-operations/single-floor-150.py",
+  "entry_point_sha256": "ad236f80979446bfd439c2a97d0bb6ffa69a46c301d352dea65cad6f3e08c43e",
+  "package_checksum_entries": 8,
+  "checksums": [
+    "metadata.json: OK",
+    "overlay/app/adaptive_lab/devig_integration.py: OK",
+    "overlay/app/lab_combo/service.py: OK",
+    "overlay/app/lab_v2_shadow/public_presentation.py: OK",
+    "overlay/app/lab_v2_shadow/publication.py: OK",
+    "overlay/app/lab_v2_shadow/single_odds_policy.py: OK",
+    "overlay/app/lab_v2_shadow/statistics.py: OK",
+    "update.py: OK"
+  ],
+  "read_only_preflight_exit": 0,
+  "read_only_preflight": [
+    "SINGLE_150_PLAN_VALIDATED=/opt/goalvision-prematch-single-floor-150-e1263e7-20261003",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "operator_apply": "PENDING_REQUIRES_OPERATOR_SUDO_PASSWORD",
+  "production_release_at_preflight": "/opt/goalvision-prematch-settlement-replies-2436d39-20261003",
+  "manual_production_cycles": 0,
+  "provider_calls": 0,
+  "telegram_api_calls": 0,
+  "test_sends": 0,
+  "automatic_deployment": false,
+  "champion_promotion": false,
+  "git_push": false
+}

@@ -98,3 +98,21 @@ pending until apply/readback; tests alone are not live-publication proof.
 
 Evidence: docs/evidence/single_150_20261003/.
 Related source review: docs/research/CURRENT_DATA_QUALITY_OPTIONS_20261003.md.
+
+## Prepared package evidence
+
+Source commit: e1263e7f3e5aeb3291cc2e506d1115020fc27cac
+
+Pinned package: /home/arvis/goalvision-operations/single-floor-150-e1263e7-20261003
+
+All eight package checksum entries passed. Read-only operator preflight exited 0:
+
+```text
+SINGLE_150_PLAN_VALIDATED=/opt/goalvision-prematch-single-floor-150-e1263e7-20261003
+current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS
+ROOT_GUARD=CHECKED_AT_APPLY
+```
+
+This verifies the prepared package against the installed base; no apply occurred.
+The operator command above remains the next step. Package evidence is stored in
+`docs/evidence/single_150_20261003/operator_package.json`.
