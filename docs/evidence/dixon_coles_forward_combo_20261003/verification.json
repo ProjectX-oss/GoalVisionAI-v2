@@ -1,0 +1,129 @@
+{
+  "automatic_promotion": false,
+  "declaration_commit": "8b51f67",
+  "deployment": false,
+  "manual_service_cycles": 0,
+  "new_service": {
+    "ActiveState": "inactive",
+    "FragmentPath": "",
+    "LoadState": "not-found"
+  },
+  "new_timer": {
+    "ActiveState": "inactive",
+    "LoadState": "not-found",
+    "UnitFileState": ""
+  },
+  "observed_at": "2026-10-03T17:49:40.975766+00:00",
+  "original_research": {
+    "all_reviewed_records_preserved": true,
+    "files": 829,
+    "latest": {
+      "automatic_promotion": false,
+      "capture": {
+        "counts": {
+          "forecast": 4
+        },
+        "details": [],
+        "fingerprint": "44427f156d20b4356577d1f4d0b99f8eeeb0a8578f7d06d7ecc0b6fb9fbe108a",
+        "source_diagnostics": {
+          "before_declaration": 472,
+          "capture_rows_examined": 500,
+          "not_upcoming_evaluation": 15,
+          "older_captures_not_scanned": 1,
+          "stale_capture": 9
+        }
+      },
+      "evaluation": {
+        "counts": {
+          "forecast_families": 9
+        },
+        "fingerprint": "7e6cde716540156bc2b7ac2f17f16d5e159468ad0e9c048d641a5771b48ba7d5",
+        "fixtures": 0,
+        "kickoff_dates": 0,
+        "lifecycle": {
+          "PENDING": 3,
+          "RESOLVED": 0,
+          "VOID": 0
+        },
+        "market_rows": 0,
+        "quality_verdict": "NEEDS_MORE_EVIDENCE"
+      },
+      "fingerprint": "b974ca11069edf9687b8137f98860c7ca135921fec87a556a6c43451a9541c6b",
+      "finished_at": "2026-10-03T17:40:35.934420+00:00",
+      "priority": "NORMAL",
+      "provider_calls": 0,
+      "selection_effect": "NONE",
+      "started_at": "2026-10-03T17:40:34.120055+00:00",
+      "status": "COMPLETED",
+      "telegram_sends": 0,
+      "version": "DC_AUTOMATION_V1"
+    },
+    "pinned_package_validation": "PASS",
+    "records_after": 26,
+    "release": "/opt/goalvision-dixon-coles-e5b02e4-20261003",
+    "reviewed_records_before": 26
+  },
+  "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+  "priority": "NORMAL",
+  "production_application": {
+    "all_byte_identical": true,
+    "files": 818,
+    "release": "/opt/goalvision-prematch-single-floor-150-e1263e7-20261003"
+  },
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "scope": "CONSTRAINED_MODEL_AND_PAIRED_COMBO_SHADOW_ONLY",
+  "selection_effect": "NONE",
+  "status": "OFFLINE_VERIFICATION_PASS",
+  "synthetic_replay": {
+    "artifact_sha256": "9b3b6db61421b77076cbed7c5454e3a5934c6d4523219b8fff1a18a61d172010",
+    "combos_per_policy": 10,
+    "fixtures": 30,
+    "kickoff_dates": 10,
+    "market_rows": 60,
+    "predictive_improvement_demonstrated": false
+  },
+  "systemd_analyze_verify": {
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "telegram_sends": 0,
+  "tests": {
+    "command": [
+      "nice",
+      "-n",
+      "10",
+      "/home/arvis/GoalVisionAI/.venv/bin/python",
+      "docs/operations/offline_test_runner.py",
+      "/home/arvis/GoalVisionAI/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_dixon_coles_research.py",
+      "tests/test_dixon_coles_sources.py",
+      "tests/test_dixon_coles_constrained.py",
+      "tests/test_dixon_coles_automation.py",
+      "tests/test_dixon_coles_forward.py",
+      "tests/test_dixon_coles_forward_install.py",
+      "tests/test_lab_accuracy_combo.py",
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_combo_bot_routing.py"
+    ],
+    "failed": 0,
+    "passed": 338
+  }
+}

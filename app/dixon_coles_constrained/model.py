@@ -47,6 +47,16 @@ def fit(rows: list[dict], *, league_id: int, as_of: datetime, plan: dict,
     protocol=load_protocol()
     if plan["fingerprint"]!=protocol["baseline_plan_fingerprint"]:
         raise ValueError("BASELINE_PLAN_MISMATCH")
+    components=fit_components(rows,league_id=league_id,as_of=as_of,plan=plan,
+                              additional_reserved=additional_reserved)
+    return seal({"version":VERSION,"purpose":"DEVELOPMENT_ONLY","forward_eligible":False,
+        "protocol_fingerprint":protocol["fingerprint"],"baseline_plan_fingerprint":plan["fingerprint"],
+        **components,"selection_effect":"NONE","historical_bookmaker_odds_used":False})
+
+def fit_components(rows: list[dict], *, league_id: int, as_of: datetime, plan: dict,
+                   additional_reserved: frozenset[int]=frozenset()) -> dict:
+    """Pure solver output; no artifact version, purpose or forward eligibility."""
+    protocol=load_protocol()
     normalized,excluded=normalize_results(rows,league_id=league_id,as_of=as_of,
                                           plan=plan,additional_reserved=additional_reserved)
     teams,training,counts=prepare(normalized,as_of);n=len(teams)
@@ -64,13 +74,10 @@ def fit(rows: list[dict], *, league_id: int, as_of: datetime, plan: dict,
         # Only initialization changes; predicted/fitted rates are never clipped.
         initial=[0.0]*len(initial);initialization="STRICTLY_FEASIBLE_UNIT_RATES"
     theta,diagnostics=solve(initial,function,protocol["solver"])
-    return seal({"version":VERSION,"purpose":"DEVELOPMENT_ONLY","forward_eligible":False,
-        "protocol_fingerprint":protocol["fingerprint"],"baseline_plan_fingerprint":plan["fingerprint"],
-        "policy":dict(POLICY),"league_id":league_id,"input_as_of":utc(as_of).isoformat(),
-        "training_matches":normalized,"training_counts":counts,"team_ids":teams,
-        "excluded":excluded,"optimizer_theta":theta,"parameters":parameters(theta,teams),
-        "initialization":initialization,"fit":diagnostics,"selection_effect":"NONE",
-        "historical_bookmaker_odds_used":False})
+    return {"policy":dict(POLICY),"league_id":league_id,"input_as_of":utc(as_of).isoformat(),
+            "training_matches":normalized,"training_counts":counts,"team_ids":teams,
+            "excluded":excluded,"optimizer_theta":theta,"parameters":parameters(theta,teams),
+            "initialization":initialization,"fit":diagnostics}
 
 def verify_artifact(artifact: dict, *, plan: dict,
                     additional_reserved: frozenset[int]=frozenset()) -> dict:
@@ -84,6 +91,12 @@ def verify_artifact(artifact: dict, *, plan: dict,
             or artifact["fit"]["criterion"]!="LOCAL_APPROXIMATE_KKT"
             or artifact["historical_bookmaker_odds_used"] is not False):
         raise ValueError("CONSTRAINED_ARTIFACT_CONTRACT")
+    return verify_components(artifact,plan=plan,additional_reserved=additional_reserved)
+
+def verify_components(artifact: dict, *, plan: dict,
+                      additional_reserved: frozenset[int]=frozenset()) -> dict:
+    """Recompute numerical evidence; artifact contract is the caller's responsibility."""
+    protocol=load_protocol()
     normalized,_=normalize_results(artifact["training_matches"],league_id=artifact["league_id"],
                 as_of=utc(artifact["input_as_of"]),plan=plan,additional_reserved=additional_reserved)
     if normalized!=artifact["training_matches"]: raise ValueError("TRAINING_REFERENCE_MISMATCH")
@@ -105,6 +118,14 @@ def predict(artifact: dict, *, home_team_id: int, away_team_id: int,
             league_id: int, neutral: bool, as_of: datetime, kickoff: datetime,
             plan: dict, additional_reserved: frozenset[int]=frozenset()) -> dict:
     verify_artifact(artifact,plan=plan,additional_reserved=additional_reserved)
+    distributions=predict_components(artifact,home_team_id=home_team_id,away_team_id=away_team_id,
+        league_id=league_id,neutral=neutral,as_of=as_of,kickoff=kickoff)
+    return {"version":VERSION,"purpose":"DEVELOPMENT_ONLY","forward_eligible":False,
+            "selection_effect":"NONE",**distributions}
+
+def predict_components(artifact: dict, *, home_team_id: int, away_team_id: int,
+                       league_id: int, neutral: bool, as_of: datetime, kickoff: datetime) -> dict:
+    """Predict from verified parameters; perform target and chronology guards."""
     integer(home_team_id);integer(away_team_id)
     if (home_team_id==away_team_id or type(neutral) is not bool
             or league_id!=artifact["league_id"]
@@ -115,6 +136,5 @@ def predict(artifact: dict, *, home_team_id: int, away_team_id: int,
         raise ValueError("INSUFFICIENT_TARGET_TEAM_RESULTS")
     lam=exp(p["base"]+p["attack"][h]+p["defense"][a]+(0 if neutral else p["home_advantage"]))
     mu=exp(p["base"]+p["attack"][a]+p["defense"][h])
-    return {"version":VERSION,"purpose":"DEVELOPMENT_ONLY","forward_eligible":False,
-            "selection_effect":"NONE","dixon_coles":baseline.markets(lam,mu,p["rho"]),
+    return {"dixon_coles":baseline.markets(lam,mu,p["rho"]),
             "independent_poisson_ablation":baseline.markets(lam,mu,0)}

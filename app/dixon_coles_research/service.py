@@ -10,7 +10,8 @@ from .repository import ResearchStore
 from app.adaptive_lab.devig_research import verify_capture, capture as recapture
 from app.current_odds_forward_test.freshness import API_FOOTBALL_PREMATCH_MAX_AGE_SECONDS, RETRIEVAL_MAX_AGE_SECONDS
 
-def forecast(item: dict, *, artifact: dict, plan: dict, now: datetime) -> dict:
+def forecast(item: dict, *, artifact: dict, plan: dict, now: datetime, predictor: Callable | None = None,
+             record_version: str = VERSION) -> dict:
     """Freeze DC, a same-rate Poisson ablation, and exact paired current references."""
     verify_plan(plan); verify(artifact)
     capture=item["capture"]; verify_capture(capture); cutoff=utc(now)
@@ -46,7 +47,7 @@ def forecast(item: dict, *, artifact: dict, plan: dict, now: datetime) -> dict:
     if any(r["fixture_id"]==capture["fixture_id"] for r in artifact["training_matches"]):
         raise ValueError("TARGET_IN_TRAINING")
     if artifact["league_id"]!=first["league_id"]: raise ValueError("LEAGUE_MISMATCH")
-    values=predict(artifact,home_team_id=first["home_team_id"],away_team_id=first["away_team_id"],
+    values=(predictor or predict)(artifact,home_team_id=first["home_team_id"],away_team_id=first["away_team_id"],
                    league_id=first["league_id"],neutral="IS_NEUTRAL_VENUE" in first.get("flags",[]),
                    as_of=cutoff,kickoff=utc(capture["kickoff_utc"]),plan=plan)
     books=[b for b in current["bookmakers"] if b["status"]=="AVAILABLE"]
@@ -69,7 +70,7 @@ def forecast(item: dict, *, artifact: dict, plan: dict, now: datetime) -> dict:
             else: missing[name+":"+method["status"]]+=1
         comparisons[market]=methods
     if not comparisons: raise ValueError("NO_PAIRED_MODEL_MARKETS")
-    return seal({"version":VERSION,"plan_fingerprint":plan["fingerprint"],
+    return seal({"version":record_version,"plan_fingerprint":plan["fingerprint"],
         "fixture_id":capture["fixture_id"],"league_id":first["league_id"],
         "market_family":capture["market_family"],"competition_profile":first["competition_profile"],
         "kickoff_utc":capture["kickoff_utc"],"forecast_at":cutoff.isoformat(),
@@ -84,7 +85,8 @@ def forecast(item: dict, *, artifact: dict, plan: dict, now: datetime) -> dict:
         "historical_bookmaker_odds_used":False})
 
 def intake(snapshot: dict, store: ResearchStore, *, plan: dict,
-           clock: Callable[[],datetime]) -> dict:
+           clock: Callable[[],datetime], fit_model: Callable | None = None,
+           make_forecast: Callable | None = None, record_version: str = VERSION) -> dict:
     verify_plan(plan)
     store.append("plan",plan["fingerprint"],plan)
     counts=Counter(); details=[]
@@ -102,22 +104,22 @@ def intake(snapshot: dict, store: ResearchStore, *, plan: dict,
             cache_key=(league,capture["captured_at"])
             artifact=models.get(cache_key)
             if artifact is None:
-                artifact=fit(item["training_results"],league_id=league,as_of=utc(capture["captured_at"]),
+                artifact=(fit_model or fit)(item["training_results"],league_id=league,as_of=utc(capture["captured_at"]),
                              plan=plan,additional_reserved=reserved)
                 models[cache_key]=artifact
                 store.append("model",artifact["fingerprint"],artifact)
-            result=forecast(item,artifact=artifact,plan=plan,now=clock())
+            result=(make_forecast or forecast)(item,artifact=artifact,plan=plan,now=clock())
             if store.append("forecast",key,result): counts["forecast"]+=1
             else: counts["already_forecast"]+=1
         except (ValueError,KeyError,TypeError,ArithmeticError) as exc:
             reason=str(exc) if isinstance(exc,ValueError) and str(exc).isupper() else "RESEARCH_INPUT_UNAVAILABLE"
             counts["unavailable"]+=1
-            diagnostic=seal({"version":VERSION,"fixture_id":fid,"capture_id":capture["capture_id"],
+            diagnostic=seal({"version":record_version,"fixture_id":fid,"capture_id":capture["capture_id"],
                              "plan_fingerprint":plan["fingerprint"],"reason":reason,
                              "observed_at":utc(clock()).isoformat()})
             store.append("diagnostic",diagnostic["fingerprint"],diagnostic)
             details.append({"fixture_id":fid,"reason":reason})
-    return seal({"version":VERSION,"status":"COMPLETED","counts":dict(counts),
+    return seal({"version":record_version,"status":"COMPLETED","counts":dict(counts),
                  "source_diagnostics":snapshot["diagnostics"],"details":details,
                  "selection_effect":"NONE","provider_calls":0,"telegram_sends":0,
                  "priority":"NORMAL","automatic_promotion":False})

@@ -2,8 +2,9 @@
 
 - [x] Inspect installed research/PREMATCH and current COMBO ranking/quality review.
 - [x] Declare separate prospective cohort and conservative COMBO shadow rank before implementation/capture.
-- [ ] Implement/test bounded worker, immutable comparisons and operator-only package.
-- [ ] Record offline evidence and read-only preflight; deliver operator command.
+- [x] Implement bounded independent worker, immutable paired model/COMBO comparisons and operator-only package; 338 offline tests and synthetic replay pass.
+- [x] Record offline evidence, systemd unit verification and unchanged installed production/original research.
+- [ ] Build pinned package after source commit, verify read-only preflight and deliver operator command.
 
 ## 2026-10-03 — Separate constrained Dixon–Coles development candidate
 
