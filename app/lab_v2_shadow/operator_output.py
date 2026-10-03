@@ -152,4 +152,14 @@ def operator_cycle_summary(report: dict[str, object]) -> dict[str, object]:
             'accuracy_single_non_positive_ev_count': _integer(
                 combo.get('accuracy_single_non_positive_ev_count')) or 0,
         }
+        if combo.get('minimum_combo_leg_decimal_odds') == '1.30':
+            counts = combo.get('rejection_counts')
+            counts = counts if isinstance(counts, dict) else {}
+            result['controlled_publication']['combo_diagnostics'].update({
+                'minimum_combo_leg_decimal_odds': '1.30',
+                'combo_leg_odds_policy': _code(combo.get('combo_leg_odds_policy')),
+                'rejection_counts': {key: counts[key] for key in (
+                    'LAB_COMBO_LEG_ODDS_BELOW_1_30', 'INVALID_CURRENT_DECIMAL_ODDS')
+                    if _integer(counts.get(key)) is not None and counts[key] > 0},
+            })
     return result

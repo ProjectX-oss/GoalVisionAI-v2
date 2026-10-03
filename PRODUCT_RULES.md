@@ -169,6 +169,19 @@ The SINGLE floor applies before market ranking and again before a new delivery c
 Already published bets retain their immutable history, settlement and statistics.
 Official and LIVE rules are unaffected. Deployment remains an explicit operator action.
 
+## PREMATCH Lab policy update authorized 2026-10-03
+
+The user superseded the preceding COMBO no-floor rule: every newly selected
+PREMATCH Lab COMBO leg must have current decimal odds >= 1.30, inclusive and
+without display rounding. Apply this before per-fixture ranking and again before
+a new delivery claim. There is no additional combined-odds minimum. SINGLE
+remains >= 1.30. Existing quality, freshness, independence/correlation, today-only
+and early settlement/remaining-leg tracking rules remain in force. Already
+published low-odds bets retain settlement, result notifications and history.
+Official is unchanged; LIVE and ADMIN Codex remain disabled. Deployment remains
+an explicit operator action.
+
+
 
 ---
 

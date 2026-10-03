@@ -21,6 +21,7 @@ from .presentation import (
 )
 from .repository import ComboRepository
 from .publication_window import publication_blocker
+from .odds_policy import combo_odds_blocker, minimum_combo_leg_odds
 from .settlement import (
     resolve_leg, resolve_single, aggregate, statistics, single_statistics,
     settlement_message, economic_settlement, combo_needs_results, EARLY_LOSS_VERSION,
@@ -211,12 +212,18 @@ class LabComboService:
                     return {'status': blocker, 'sent': False}
             accuracy_single = (kind == 'single_prediction'
                                and value.get('single_selection_policy') in {SINGLE_SELECTION_POLICY, FLOOR_SELECTION_POLICY})
-            from app.lab_v2_shadow.accuracy_combo import POLICY as ACCURACY_COMBO_POLICY
+            if kind == 'combo_prediction':
+                if self.ledger.get('claim', kind + ':' + prediction_id) is not None:
+                    return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
+                blocker = combo_odds_blocker(value, minimum=minimum_combo_leg_odds())
+                if blocker:
+                    return {'status': blocker, 'sent': False}
+            from app.lab_v2_shadow.accuracy_combo import SUPPORTED_POLICIES as ACCURACY_COMBO_POLICIES
             accuracy_combo = (kind == 'combo_prediction'
-                              and value.get('combo_selection_policy') == ACCURACY_COMBO_POLICY)
+                              and value.get('combo_selection_policy') in ACCURACY_COMBO_POLICIES)
             if kind == 'combo_prediction' and (
                     'combo_selection_policy' in value or prediction_id.startswith('lab-v2-combo-accuracy-')
-                    or value.get('policy') == ACCURACY_COMBO_POLICY) and not accuracy_combo:
+                    or value.get('policy') in ACCURACY_COMBO_POLICIES) and not accuracy_combo:
                 return {'status': 'COMBO_POLICY_OR_IDENTITY_INVALID', 'sent': False}
             if (accuracy_single or 'selection_origin' in value) and not is_labelled(value):
                 return {'status': 'SELECTION_ORIGIN_OR_APPROVAL_INVALID', 'sent': False}
@@ -366,6 +373,11 @@ class LabComboService:
             if preview['message'] != settlement_message(settled, preview['statistics']):
                 return {'status': 'SETTLEMENT_MESSAGE_CONFLICT', 'sent': False}
         else:
+            if self.ledger.get('claim', 'prediction:' + prediction_id) is not None:
+                return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
+            blocker = combo_odds_blocker(combo, minimum=minimum_combo_leg_odds())
+            if blocker:
+                return {'status': blocker, 'sent': False}
             blocker=publication_blocker(self.clock(),[leg['kickoff_utc'] for leg in combo['legs']])
             if blocker:return {'status':blocker,'sent':False}
             for leg in combo['legs']:

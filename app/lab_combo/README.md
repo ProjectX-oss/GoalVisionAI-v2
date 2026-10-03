@@ -11,11 +11,15 @@ singles and three disjoint three-leg combinations when all evidence gates pass.
 Missing confirmed lineups remain eligible for a later near-kickoff recheck and
 do not prevent early quality scoring, but they prevent final publication.
 
-LAB does not impose a hard minimum decimal-odds floor on singles, combo legs or
-combined combo odds. Decimal prices must still be current, fresh, finite and
-greater than 1, and low odds do not bypass value, evidence, agreement, lineup,
-final-review, independence, correlation, exposure or duplicate-publication
-checks. The experimental upper safety limits remain fail-closed safeguards.
+The reviewed PREMATCH release requires SINGLE odds >=1.30 and, under the
+2026-10-03 COMBO policy, **every COMBO leg >=1.30**. No additional combined-odds
+minimum applies. These operator flags are independent; legacy/rollback readers
+retain no-floor compatibility. Comparisons use exact captured Decimal odds
+before ranking and before a new publication claim. Current valid odds, quality,
+freshness, independence and correlation checks still apply. Existing published
+bets and their settlement history are unchanged. See
+`docs/operations/PREMATCH_COMBO_LEG_FLOOR_20261003.md`.
+
 
 Every supported Lab market is currently treated as lineup-sensitive. Evidence
 may be retained as `EARLY_CANDIDATE`, but publication requires a forced final

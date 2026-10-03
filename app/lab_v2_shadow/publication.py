@@ -13,6 +13,8 @@ from app.lab_combo.publication_window import publication_blocker
 from app.real_match_lab_analysis.fingerprint import fingerprint
 
 
+from app.lab_combo.odds_policy import (LEG_POLICY, FLOOR_POLICY as COMBO_FLOOR_POLICY,
+    minimum_combo_leg_odds, combo_leg_odds_blocker, floor_metadata)
 from .single_odds_policy import FLOOR_SELECTION_POLICY, minimum_single_odds, single_odds_blocker
 from .forward_evidence import current_quote
 from .publication_policy import (review_publication, review_accuracy_publication,
@@ -22,7 +24,7 @@ from .publication_policy import (review_publication, review_accuracy_publication
 MAX_SINGLES_PER_CYCLE = 3
 MAX_COMBOS_PER_CYCLE = 3
 MIN_PUBLISHED_MARKET_PROBABILITY = Decimal("0.55")
-MIN_PUBLISHED_DECIMAL_ODDS = None  # Frozen V2 / COMBO-leg contract; SINGLE uses the active policy.
+MIN_PUBLISHED_DECIMAL_ODDS = None  # Base review contract; product-specific floors are checked separately.
 SINGLE_SELECTION_POLICY = "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
 LEGACY_SINGLE_SELECTION_POLICY = "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1"
 
@@ -57,10 +59,12 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     combo_ready = []
     accuracy_pool = []
     single_pool = []
+    combo_minimum = minimum_combo_leg_odds()
     single_minimum = minimum_single_odds()
     single_policy = FLOOR_SELECTION_POLICY if single_minimum is not None else SINGLE_SELECTION_POLICY
     single_minimum_text = str(single_minimum) if single_minimum is not None else None
     publication_blockers = {}
+    combo_odds_rejections = {}
     publication_reviews = {}
     single_publication_blockers = {}
     single_publication_reviews = {}
@@ -85,7 +89,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         # Shared accuracy quality review. EV is diagnostic only. A candidate rejected
         # solely for NON_POSITIVE_VALUE may still qualify if all identity,
         # freshness, replay and severe-contradiction checks pass. Apply the SINGLE
-        # floor before its per-fixture ranking; keep all approved COMBO candidates.
+        # floor before its per-fixture ranking; COMBO applies its own leg floor.
         if probability < MIN_PUBLISHED_MARKET_PROBABILITY:
             single_publication_blockers[candidate_id] = "LAB_PUBLICATION_PROBABILITY_BELOW_0_55"
         elif item.get("stage") in {"READY_TO_PUBLISH", "REJECTED"} and item.get("candidate_lane") != "TRACKING":
@@ -107,7 +111,14 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             else:
                 single_publication_blockers[candidate_id] = "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED"
 
-        # COMBO: unchanged positive-EV path.
+        # The independent COMBO floor applies before grouping/ranking.
+        combo_blocker = combo_leg_odds_blocker(odds, minimum=combo_minimum)
+        if combo_blocker:
+            publication_blockers[candidate_id] = combo_blocker
+            combo_odds_rejections[candidate_id] = combo_blocker
+            continue
+
+        # COMBO: retained positive-EV path.
         if (item.get("decision") == "APPROVED" and item.get("stage") == "READY_TO_PUBLISH"
                 and item.get("candidate_lane") != "TRACKING"):
             gate = review_publication(item, now=clock)
@@ -221,8 +232,9 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             "prediction_id": "lab-v2-combo-" + fingerprint((
                 "LAB_V2", key, tuple(item["candidate_id"] for item in group),
                 tuple(item["quote_provenance_fingerprint"] for item in group),
-            )),
+            ) + ((LEG_POLICY,) if combo_minimum is not None else ())),
             "policy": "LAB_V2_BROAD_COVERAGE_COMBO_V2",
+            **floor_metadata(combo_minimum),
             "publication_policy_version": PUBLICATION_POLICY_VERSION,
             "created_at_utc": max(item["prepared_at_utc"] for item in group),
             "legs": [dict(item) for item in group],
@@ -242,13 +254,15 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     from collections import Counter
     combo_diagnostics = {
         "policy": "LAB_V2_BROAD_COVERAGE_COMBO_V2",
+        **floor_metadata(combo_minimum),
         "eligible_fixture_count": len({item["fixture_id"] for item in combo_ready}),
         "prepared_count": len(combos),
         "reason": ("COMBO_READY" if combos else "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES"
                    if len({item["fixture_id"] for item in combo_ready}) < 3
                    else "COMBO_NO_INDEPENDENT_NEW_TRIPLE"),
         "rejection_counts": dict(Counter(reason for review in publication_reviews.values()
-                                        for reason in review["rejection_reasons"])),
+                                        for reason in review["rejection_reasons"])
+                                 + Counter(combo_odds_rejections.values())),
         "accuracy_single_non_positive_ev_count": sum(
             Decimal(str(item["ensemble_probability"])) * Decimal(str(item["captured_odds"])) <= 1
             for item in single_ready),
@@ -308,11 +322,13 @@ def v2_single_message(value: dict) -> str:
 
 
 def v2_combo_message(value: dict, number: int) -> str:
-    from .accuracy_combo import POLICY as ACCURACY_COMBO_POLICY
-    accuracy = value.get("combo_selection_policy") == ACCURACY_COMBO_POLICY
+    from .accuracy_combo import SUPPORTED_POLICIES as ACCURACY_COMBO_POLICIES
+    accuracy = value.get("combo_selection_policy") in ACCURACY_COMBO_POLICIES
     lines = [f"🧪 GoalVision AI Lab Combo #{value['combo_number'] if accuracy else number}"]
     if accuracy:
         lines.append("Eksperimentāls 3 spēļu combo no PREMATCH atlases.")
+        if value.get("combo_selection_policy") == COMBO_FLOOR_POLICY:
+            lines.append("Katras likmes koef. ≥1.30.")
     for symbol, leg in zip(("1️⃣", "2️⃣", "3️⃣"), value["legs"], strict=True):
         lines.extend((
             f"{symbol} {leg['home_team']} – {leg['away_team']}",

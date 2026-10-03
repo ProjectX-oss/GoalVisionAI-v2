@@ -1,0 +1,64 @@
+{
+  "as_of": "2026-10-03T07:41:17.336277+00:00",
+  "command_prefix": [
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "docs/operations/offline_test_runner.py",
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "counts_overlap": true,
+  "full_source_manifest_match": true,
+  "network_denied": true,
+  "operational_cycles_invoked": 0,
+  "production_state_unchanged": true,
+  "provider_calls": 0,
+  "regression": {
+    "log_sha256": "084fc584d957efbdebab0475c97150f78b5951356c2555ce7720a28bb92bad0d",
+    "passed": 1147,
+    "seconds": 121.47,
+    "skipped": 1,
+    "targets": [
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/test_prematch_single_odds_floor.py",
+      "tests/test_lab_accuracy_combo.py",
+      "tests/test_lab_accuracy_delivery.py",
+      "tests/test_lab_no_minimum_odds_policy.py",
+      "tests/test_lab_combo.py",
+      "tests/test_lab_combo_integrity.py",
+      "tests/test_lab_experimental_selection.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_lab_today_scope.py",
+      "tests/test_prematch_settlement_upgrade.py",
+      "tests/test_lab_v2_operator_output.py",
+      "tests/adaptive_lab",
+      "tests/test_lab_v2_shadow.py",
+      "tests/test_prematch_v2_enablement.py",
+      "tests/test_lab_probability_delivery_hardening.py",
+      "tests/test_lab_delivery_accounting.py"
+    ]
+  },
+  "skip_reason": "Inherited multi-route partial-override case does not apply to the single-route calendar installer.",
+  "targeted": {
+    "log_sha256": "5cd7d0f258175a66cb2b6ff63c09f4f231063837dcd467e2f8b6afbc1e22b342",
+    "passed": 426,
+    "seconds": 12.89,
+    "skipped": 1,
+    "targets": [
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/test_prematch_single_odds_floor.py",
+      "tests/test_lab_accuracy_combo.py",
+      "tests/test_lab_accuracy_delivery.py",
+      "tests/test_lab_no_minimum_odds_policy.py",
+      "tests/test_lab_combo.py",
+      "tests/test_lab_combo_integrity.py",
+      "tests/test_lab_experimental_selection.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_lab_today_scope.py",
+      "tests/test_prematch_settlement_upgrade.py",
+      "tests/test_lab_v2_operator_output.py"
+    ]
+  },
+  "test_sends": 0
+}

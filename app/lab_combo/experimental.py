@@ -4,6 +4,7 @@ The score is an explicitly uncalibrated experimental signal.  It is never
 used by, or represented as, the production probability/calibration chain.
 """
 from __future__ import annotations
+from .odds_policy import LEG_POLICY, minimum_combo_leg_odds, combo_leg_odds_blocker, floor_metadata
 
 from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
@@ -183,10 +184,12 @@ def select_single_predictions(
 
 def select_combo_batch(candidates: list[dict], *, used_leg_keys: set[str], now: datetime) -> list[dict]:
     """Greedily choose the best deterministic disjoint independent triples."""
+    minimum = minimum_combo_leg_odds()
     remaining = [item for item in rank_candidates(candidates)
                  if item["decision"] == "APPROVED"
                  and item.get("stage", "READY_TO_PUBLISH") == "READY_TO_PUBLISH"
-                 and publication_key(item) not in used_leg_keys]
+                 and publication_key(item) not in used_leg_keys
+                 and not combo_leg_odds_blocker(item.get("captured_odds"), minimum=minimum)]
     selected = []
     while len(selected) < MAX_COMBOS_PER_DISCOVERY_CYCLE:
         choices = []
@@ -210,8 +213,9 @@ def select_combo_batch(candidates: list[dict], *, used_leg_keys: set[str], now: 
         _, group, combined = min(choices, key=lambda item: item[0])
         leg_keys = tuple(publication_key(item) for item in group)
         combo = {
-            "prediction_id": "lab-combo-" + fingerprint((POLICY_VERSION, leg_keys)),
+            "prediction_id": "lab-combo-" + fingerprint((POLICY_VERSION, leg_keys) + ((LEG_POLICY,) if minimum is not None else ())),
             "policy": POLICY_VERSION, "created_at_utc": now.astimezone(timezone.utc).isoformat(),
+            **floor_metadata(minimum),
             "legs": [dict(item) for item in group], "combined_odds": str(combined),
             "accounting": "LAB_ONLY_HYPOTHETICAL_ONE_UNIT",
             "correlation_review": "PASSED_DISTINCT_FIXTURES_TEAMS_AND_DISJOINT_BATCH",

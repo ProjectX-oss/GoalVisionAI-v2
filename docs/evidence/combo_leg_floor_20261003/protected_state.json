@@ -1,0 +1,38 @@
+{
+  "after": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "as_of": "2026-10-03T07:41:17.336052+00:00",
+  "baseline_as_of": "2026-10-03T07:13:07.649539+00:00",
+  "baseline_source": "docs/evidence/calibration_observer_20261003/readonly_snapshot.json",
+  "before": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "deployment_performed": false,
+  "operational_cycles_invoked": 0,
+  "provider_calls": 0,
+  "query_method": "SQLite mode=ro, query_only=ON; count protected tables and read PREMATCH champion_pointers.",
+  "read_only": true,
+  "test_sends": 0,
+  "unchanged": true
+}

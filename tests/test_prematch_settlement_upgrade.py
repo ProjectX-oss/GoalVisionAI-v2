@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer"])
+@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer", "combo-leg-floor"])
 def rig(tmp_path, monkeypatch, request):
     source = Path(__file__).parents[1] / "operations" / request.param / "update.py"
     spec = importlib.util.spec_from_file_location("quality_update", source)
@@ -277,7 +277,7 @@ def test_devig_rollback_only_disables_research(rig):
 
 def test_calendar_rollback_only_disables_readiness_and_keeps_all_other_flags(rig):
     m=rig.mod
-    if "app/adaptive_lab/calendar_monitor.py" not in m.FILES:
+    if "app/adaptive_lab/calendar_monitor.py" not in m.FILES or len(m.SERVICES) != 1:
         return
     assert m.SERVICES==("goalvision-adaptive-learning-observer.service",)
     assert {"goalvision-lab-v2-discover.service","goalvision-lab-combo-settle.service",
@@ -326,3 +326,17 @@ def test_protected_route_drift_blocks_before_timer_controls(rig):
     with pytest.raises(ValueError,match="PREPARED_CONFIGURATION_DRIFT"):
         rig.mod.apply(rig.package)
     assert rig.calls==[]
+
+
+def test_combo_leg_floor_rollback_retains_approved_readiness_and_other_flags(rig):
+    m=rig.mod
+    if "app/lab_combo/odds_policy.py" not in m.FILES:
+        return
+    assert set(m.SERVICES)=={"goalvision-lab-v2-discover.service",
+        "goalvision-adaptive-learning-observer.service","goalvision-lab-combo-settle.service",
+        "goalvision-adaptive-learning.service"}
+    target=m.validate(rig.package)[1]
+    assert m.environment(target).replace(b"COMBO_LEG_MIN_ODDS_130=1",b"COMBO_LEG_MIN_ODDS_130=0")==m.environment(target,True)
+    for flag in ("CALIBRATION_READINESS","DEVIG_RESEARCH","SINGLE_MIN_ODDS_130",
+                 "TODAY_ONLY","EARLY_COMBO_LOSS","ACCURACY_COMBOS"):
+        assert ("GOALVISION_LAB_"+flag+"=1\n").encode() in m.environment(target,True)

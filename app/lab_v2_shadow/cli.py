@@ -1,6 +1,8 @@
 """Manual Lab V2 audit, no-send validation and controlled Lab-only cycle."""
 
 from __future__ import annotations
+from .accuracy_combo import active_policy as active_combo_policy
+from app.lab_combo.odds_policy import floor_metadata, minimum_combo_leg_odds
 
 import argparse
 import asyncio
@@ -109,7 +111,8 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             "telegram_transport_constructed": False,
             "reason": "NO_SEND_VALIDATION" if not args.send else None,
             "combo_diagnostics": {
-                "policy": ("LAB_COMBO_ACCURACY_FROM_SINGLES_V1" if getattr(args, "accuracy_combos", False)
+                **floor_metadata(minimum_combo_leg_odds()),
+                "policy": (active_combo_policy() if getattr(args, "accuracy_combos", False)
                            else "LAB_V2_BROAD_COVERAGE_COMBO_V2"),
                 "eligible_fixture_count": 0, "prepared_count": 0,
                 "reason": "COMBO_NOT_EVALUATED",

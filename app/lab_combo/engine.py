@@ -1,5 +1,6 @@
 """Deterministic combination selection over immutable, reviewed singles."""
 from __future__ import annotations
+from .odds_policy import LEG_POLICY, minimum_combo_leg_odds, combo_leg_odds_blocker, floor_metadata
 
 import json
 from datetime import datetime
@@ -69,8 +70,12 @@ def independent(legs: tuple[dict, ...]) -> bool:
 
 def select_combo(legs: list[dict], now: datetime) -> tuple[dict | None, list[str]]:
     """Select exactly three reviewed legs, never relaxing single-market gates."""
+    minimum = minimum_combo_leg_odds()
+    rejected = {reason for leg in legs
+                if (reason := combo_leg_odds_blocker(leg.get('odds'), minimum=minimum))}
+    legs = [leg for leg in legs if not combo_leg_odds_blocker(leg.get('odds'), minimum=minimum)]
     if len(legs) < 3:
-        return None, ['FEWER_THAN_THREE_ELIGIBLE_SINGLES']
+        return None, sorted(rejected) or ['FEWER_THAN_THREE_ELIGIBLE_SINGLES']
     choices = []
     independent_count = 0
     for group in combinations(sorted(legs, key=lambda leg: leg['observation_id']), 3):
@@ -90,10 +95,10 @@ def select_combo(legs: list[dict], now: datetime) -> tuple[dict | None, list[str
     if not choices:
         return None, ['COMBINED_ODDS_ABOVE_EXPERIMENTAL_SAFETY_LIMIT' if independent_count else 'CORRELATION_OR_BOOKMAKER_CONFLICT']
     _, group, odds = min(choices, key=lambda item: item[0])
-    identity = {'policy': 'lab-combo-v2', 'legs': [leg['observation_id'] for leg in group]}
+    identity = {'policy': 'lab-combo-v2', 'legs': [leg['observation_id'] for leg in group], **floor_metadata(minimum)}
     return {'prediction_id': 'lab-combo-' + fingerprint(identity), 'policy': identity['policy'],
             'environment': 'LAB', 'created_at_utc': now.isoformat(), 'legs': list(group),
-            'combined_odds': str(odds), 'accounting': 'LAB_ONLY_HYPOTHETICAL_ONE_UNIT'}, []
+            'combined_odds': str(odds), 'accounting': 'LAB_ONLY_HYPOTHETICAL_ONE_UNIT', **floor_metadata(minimum)}, []
 
 
 def prediction_message(combo: dict) -> str:

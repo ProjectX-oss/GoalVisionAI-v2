@@ -1,3 +1,16 @@
+## 2026-10-03 — COMBO per-leg minimum 1.30
+
+- [x] Apply the user's clarified rule: each COMBO selection >=1.30, not an aggregate 1.30 threshold.
+- [x] Exact pre-ranking filter, qualifying alternative-market selection, versioned identity/metadata and preclaim delivery guard across current/legacy Lab paths.
+- [x] Preserve SINGLE >=1.30, all quality/chronology/correlation checks, published history, early settlement and remaining-leg tracking.
+- [x] Persist bounded floor diagnostics in full and compact cycle evidence; retain old-policy reader/rollback compatibility.
+- [x] Offline integration matrix: 1,147 passed, one inherited inapplicable single-route installer case skipped.
+- [x] Source parity: 13 overlays reproduce the installed base plus the candidate; previously approved readiness files remain byte-identical.
+- [x] Combine pending approved readiness integration and leg floor into one reviewed operator package implementation.
+- [ ] Operator apply and next natural discovery/observer verification; no automatic deployment, manual cycle, provider call or test send.
+- Report: docs/operations/PREMATCH_COMBO_LEG_FLOOR_20261003.md.
+- Official unchanged; LIVE/ADMIN Codex disabled; champion unchanged.
+
 ## 2026-10-03 — Optional calibration readiness in PREMATCH observer
 
 - [x] Read current de-vig routes and disabled ADMIN Codex; preserve existing frozen calendar plan.

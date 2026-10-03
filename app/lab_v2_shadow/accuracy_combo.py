@@ -11,14 +11,21 @@ from decimal import Decimal, InvalidOperation
 from itertools import combinations
 
 from app.real_match_lab_analysis.fingerprint import fingerprint
+from app.lab_combo.odds_policy import (FLOOR_POLICY, COMBO_LEG_ODDS_FLOOR,
+    minimum_combo_leg_odds, combo_leg_odds_blocker, combo_odds_blocker, floor_metadata)
 
 POLICY = "LAB_COMBO_ACCURACY_FROM_SINGLES_V1"
+SUPPORTED_POLICIES = frozenset({POLICY, FLOOR_POLICY})
 
 
-def combo_identity(legs: list[dict]) -> str:
+def active_policy() -> str:
+    return FLOOR_POLICY if minimum_combo_leg_odds() is not None else POLICY
+
+
+def combo_identity(legs: list[dict], *, policy: str = POLICY) -> str:
     binding = tuple(sorted((leg["publication_key"], leg["candidate_id"],
                             leg["quote_provenance_fingerprint"]) for leg in legs))
-    return "lab-v2-combo-accuracy-" + fingerprint((POLICY, binding))
+    return "lab-v2-combo-accuracy-" + fingerprint((policy, binding))
 
 
 def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: datetime,
@@ -29,14 +36,23 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
     from .origin import freeze_origin
     from app.lab_combo.service import _accuracy_delivery_review
 
+    minimum = minimum_combo_leg_odds()
+    policy = FLOOR_POLICY if minimum is not None else POLICY
     blockers: Counter[str] = Counter()
+    qualified = []
+    for candidate in candidates:
+        blocker = combo_leg_odds_blocker(candidate.get("captured_odds"), minimum=minimum)
+        if blocker:
+            blockers[blocker] += 1
+        else:
+            qualified.append(candidate)
     ready = []
     used_fixtures = set()
     for previous in ledger.all("prediction"):
         if any(ledger.get(kind, prefix + previous["prediction_id"])
                for kind in ("claim", "receipt") for prefix in ("combo_prediction:", "prediction:")):
             used_fixtures.update(int(leg["fixture_id"]) for leg in previous["legs"])
-    for candidate in _probability_first_single_candidates(candidates):
+    for candidate in _probability_first_single_candidates(qualified):
         if not label_origin:
             blockers["COMBO_SELECTION_ORIGIN_REQUIRED"] += 1
             continue
@@ -76,15 +92,15 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
         for leg in legs:
             combined *= Decimal(leg["odds"])
             joint *= Decimal(leg["probability"])
-        value = dict(prediction_id=combo_identity(legs), policy=POLICY,
-                     combo_selection_policy=POLICY, created_at_utc=now.isoformat(),
+        value = dict(prediction_id=combo_identity(legs, policy=policy), policy=policy,
+                     combo_selection_policy=policy, created_at_utc=now.isoformat(),
                      legs=legs, combined_odds=str(combined),
                      estimated_probability_if_independent=str(joint),
                      estimated_ev_if_independent=str(joint * combined - 1),
                      probability_assumption="INDEPENDENCE_ASSUMED_NOT_VERIFIED",
                      accounting="LAB_ONLY_HYPOTHETICAL_ONE_UNIT",
                      correlation_review="PASSED_DISTINCT_FIXTURES_TEAMS_AND_DISJOINT_BATCH",
-                     combo_number=len(combos) + 1)
+                     combo_number=len(combos) + 1, **floor_metadata(minimum))
         existing = ledger.get("prediction", value["prediction_id"])
         if existing is not None:
             # Never renew a frozen review timestamp or rewrite a preview on replay.
@@ -94,14 +110,15 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
             ledger.append("preview", value["prediction_id"],
                           {"message": v2_combo_message(value, value["combo_number"])})
             ledger.append("v2_segmentation", value["prediction_id"],
-                          {"kind": "COMBO", "combo_selection_policy": POLICY,
+                          {"kind": "COMBO", "combo_selection_policy": policy,
+                           **floor_metadata(minimum),
                            "source_candidate_ids": [leg["candidate_id"] for leg in legs]})
         combos.append(value)
         ready = [item for item in ready if int(item["fixture_id"]) not in fixtures
                  and not teams.intersection({str(item["home_team_id"]), str(item["away_team_id"])})]
     reason = ("COMBO_READY" if combos else "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES"
               if initial_count < 3 else "COMBO_NO_INDEPENDENT_NEW_TRIPLE")
-    return combos, {"policy": POLICY, "eligible_fixture_count": initial_count,
+    return combos, {"policy": policy, **floor_metadata(minimum), "eligible_fixture_count": initial_count,
                     "prepared_count": len(combos), "reason": reason,
                     "rejection_counts": dict(sorted(blockers.items()))}
 
@@ -115,11 +132,18 @@ def review_accuracy_combo(value: dict, *, now: datetime) -> dict:
     reasons = set()
     try:
         legs = value["legs"]
-        if (value.get("policy") != POLICY or value.get("combo_selection_policy") != POLICY
-                or len(legs) != 3 or value["prediction_id"] != combo_identity(legs)
+        policy = value.get("combo_selection_policy")
+        if (policy not in SUPPORTED_POLICIES or value.get("policy") != policy
+                or len(legs) != 3 or value["prediction_id"] != combo_identity(legs, policy=policy)
                 or value.get("accounting") != "LAB_ONLY_HYPOTHETICAL_ONE_UNIT"
                 or type(value.get("combo_number")) is not int or not 1 <= value["combo_number"] <= 3):
             reasons.add("COMBO_POLICY_OR_IDENTITY_INVALID")
+        if policy == FLOOR_POLICY:
+            if any(value.get(k) != v for k, v in floor_metadata(COMBO_LEG_ODDS_FLOOR).items()):
+                reasons.add("COMBO_FLOOR_POLICY_INVALID")
+            blocker = combo_odds_blocker(value, minimum=COMBO_LEG_ODDS_FLOOR)
+            if blocker:
+                reasons.add(blocker)
         fixtures = {int(leg["fixture_id"]) for leg in legs}
         teams = {str(leg[key]) for leg in legs for key in ("home_team_id", "away_team_id")}
         if len(fixtures) != 3 or len(teams) != 6:
@@ -149,4 +173,4 @@ def review_accuracy_combo(value: dict, *, now: datetime) -> dict:
             reasons.add("COMBO_AGGREGATE_MISMATCH")
     except (KeyError, TypeError, ValueError, InvalidOperation, AttributeError):
         reasons.add("COMBO_EVIDENCE_INVALID_OR_MISSING")
-    return {"version": POLICY, "eligible": not reasons, "rejection_reasons": sorted(reasons)}
+    return {"version": value.get("combo_selection_policy", POLICY), "eligible": not reasons, "rejection_reasons": sorted(reasons)}
