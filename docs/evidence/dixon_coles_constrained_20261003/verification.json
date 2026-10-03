@@ -1,0 +1,69 @@
+{
+  "all_existing_application_files_unchanged": true,
+  "all_four_development_cases_available": true,
+  "all_original_records_preserved": true,
+  "baseline_repository_commit": "1ace0df2f2d0d93875b2344f698df2ddb2e81c76",
+  "code_hashes": {
+    "app/dixon_coles_constrained/__init__.py": "01651fd4b8cf2d03b205196f3ebd3472e77cfaeb7d03a16571bb0bdcbf46bba6",
+    "app/dixon_coles_constrained/geometry.py": "8a29b04da057325692838215c4d646c2611dee9973c69f27e05d019c8f772aec",
+    "app/dixon_coles_constrained/model.py": "62704eb8a47eb70bb39bd54642575fca49d6603b27fd44e9f69defad532bfd83",
+    "app/dixon_coles_constrained/protocol_20261003.json": "bdee07ae1ee60740d7b5c75bcbe7e3f71c49d2e6f3a29e83ae95a692626f15b0",
+    "app/dixon_coles_constrained/solver.py": "828d97a320c4eb106e4ca48e9a08e2b0cd64138084a07c126ee4a2cd12c0eb30",
+    "docs/evidence/dixon_coles_constrained_20261003/verify_offline.py": "2438bb4b183cd8ccff7931d8dae42345338379a4135a0fc517cd496ab68d5e92",
+    "tests/test_dixon_coles_constrained.py": "b97cf85178db39361076ba7bf67140aac19b3f5cd5619120804ae16aefcb6580"
+  },
+  "declaration_commit": "bf7c107",
+  "development_evidence_exit_code": 0,
+  "evidence_sha256": "a4546de03b95693ece031fd98c399eb74f24c80d63ac2ddd0ea2f3f2f9665978",
+  "forecast_writes": 0,
+  "frozen_plans": {
+    "app/adaptive_lab/calendar_plan_20261002.json": "20538b9a2ee8d2308b0192bfdc706fc042be3c722ae46a52f64622d0ca573795",
+    "app/dixon_coles_research/plan_20261003.json": "4081cb5c399a965cddcbac194a1b086fb5f88d6fe18e0762fb1558841c352ffc"
+  },
+  "manual_production_or_research_service_cycles": 0,
+  "model_store_writes": 0,
+  "new_candidate_tests": 31,
+  "nice": 10,
+  "no_deployment_or_promotion": true,
+  "no_global_or_forecast_quality_claim": true,
+  "no_historical_bookmaker_odds": true,
+  "observed_at": "2026-10-03T17:12:40.254868+00:00",
+  "offline_network_blocked": true,
+  "original_application_file_count": 829,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_state_unchanged": true,
+  "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+  "provider_calls": 0,
+  "purpose": "DEVELOPMENT_ONLY",
+  "read_only_runtime_validation": "PASS",
+  "replay_cases": 4,
+  "research_records_at_readback": 16,
+  "research_records_before": 16,
+  "runtime_release": "/opt/goalvision-dixon-coles-e5b02e4-20261003",
+  "synthetic_capacity": {
+    "cpu_seconds": 1.5189424029999998,
+    "matches": 500,
+    "status": "AVAILABLE_DEVELOPMENT_ONLY",
+    "teams": 64
+  },
+  "telegram_requests": 0,
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "seconds": 2.699,
+    "tests": 135
+  },
+  "unique_genuine_development_fixtures": 3
+}

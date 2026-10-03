@@ -1,3 +1,16 @@
+## 2026-10-03 — Separate constrained Dixon–Coles development candidate
+
+- [x] User approved calculation improvements at normal priority; verify installed V1, preserve fixed plans/current cohort and protected routes/champion.
+- [x] Declare development-only protocol bf7c107 before implementation/evaluation; no forward eligibility or automatic integration.
+- [x] Identifiable analytic likelihood/constraint derivatives, feasible log-barrier damped Newton, explicit local KKT certificate and bounded failure modes.
+- [x] Separate sealed model version, certificate recomputation, chronology/target/holdout guards and incompatible V1 readers; no stored forecast/model writes.
+- [x] Offline matrix: 135 passed (31 new checks). Both recorded failure families of one fixture recover within unchanged bounds; two genuine interior cases remain compatible.
+- [x] Synthetic 30-fixture/90-market replay, deterministic reverse order and maximum-size 500-match/64-team fit; no real predictive-quality or global-optimum claim.
+- [x] All 829 existing application/plan files, installed routes and protected state unchanged; original research records preserved. No provider/Telegram request, manual service cycle, deployment or promotion.
+- [ ] Separately declare and implement a prospective paired cohort/integration with whole-cycle resource guards; preserve V1 and exclude development backfill.
+- Report: docs/research/DIXON_COLES_CONSTRAINED_20261003.md.
+- Evidence: docs/evidence/dixon_coles_constrained_20261003/verification.json and development_comparison.json.
+
 ## 2026-10-03 — Dixon–Coles automation preparation, normal priority
 
 - [x] Verify actual SINGLE 1.50 release, 818 hashes, timer grid and unchanged protected champion/LIVE/ADMIN state.
@@ -10,7 +23,7 @@
 - [x] First natural timer run 19:10:30–19:10:36 Riga completed, exit 0; 13 research records verified and original 10 preserved. No new forecast: one fixture/two families explicitly unavailable (FIT_DID_NOT_CONVERGE). One original fixture remains pending.
 - [x] Reproduce both fit failures offline: 43 results/11 teams, line search stalls at fixed rate ceiling 8.0 in iterations 50/52; no policy/code change, no DB writes or new forecasts. Diagnostic report: docs/evidence/dixon_coles_automation_20261003/FIT_DIAGNOSIS_20261003.md.
 - [x] Second natural cycle 19:40 succeeds and adds fixture 1498855 TOTAL_3_5; two pending fixtures/five families/11 market comparisons, all prior evidence retained.
-- [ ] Prepare a separately declared constrained-optimizer research candidate with bounded deterministic tests; keep current experiment immutable.
+- [x] Separate constrained-optimizer development candidate prepared under bf7c107 protocol; 135 tests pass. See the dedicated task/report above; current experiment unchanged.
 - [ ] Review genuine resolved/cross-day quality evidence and ongoing coverage; no automatic promotion.
 - Runbook: docs/operations/DIXON_COLES_AUTOMATION_20261003.md.
 - Evidence: docs/evidence/dixon_coles_automation_20261003/verification.json.

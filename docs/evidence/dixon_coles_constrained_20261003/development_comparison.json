@@ -1,0 +1,492 @@
+{
+  "baseline_plan_fingerprint": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+  "cases": [
+    {
+      "baseline_error": "FIT_DID_NOT_CONVERGE",
+      "baseline_objective": null,
+      "baseline_status": "UNAVAILABLE",
+      "candidate_fingerprint": "b08c00687375c0bc996cfa57626f843baa829fdc58fe705b7bdf2d90b00dce6f",
+      "candidate_fit": {
+        "certificate": {
+          "barrier_weight": 1e-08,
+          "complementarity_inf": 1e-08,
+          "complementarity_sum": 3.44e-06,
+          "constraints": 344,
+          "dual_feasible": true,
+          "global_optimum_claim": false,
+          "maximum_fitted_rate": 7.999951651703489,
+          "maximum_multiplier": 0.0016546551591974624,
+          "minimum_low_cell_factor": 0.18032212956683769,
+          "minimum_slack": 6.043555325963013e-06,
+          "objective": 2.648174210267267,
+          "stationarity_inf": 4.4245397737285863e-07,
+          "strictly_feasible": true
+        },
+        "converged": true,
+        "criterion": "LOCAL_APPROXIMATE_KKT",
+        "evaluations": 111,
+        "initial_objective": 3.5498455726370164,
+        "maximum_hessian_damping": 0.0,
+        "stages": [
+          {
+            "stationarity_inf": 3.0168902098726136e-10,
+            "steps": 6,
+            "weight": 0.01
+          },
+          {
+            "stationarity_inf": 5.685404242880554e-07,
+            "steps": 7,
+            "weight": 0.001
+          },
+          {
+            "stationarity_inf": 3.467379806887383e-09,
+            "steps": 6,
+            "weight": 0.0001
+          },
+          {
+            "stationarity_inf": 3.430400435933123e-08,
+            "steps": 6,
+            "weight": 1e-05
+          },
+          {
+            "stationarity_inf": 1.2809336207009192e-07,
+            "steps": 6,
+            "weight": 1e-06
+          },
+          {
+            "stationarity_inf": 4.6814151860585795e-09,
+            "steps": 7,
+            "weight": 1e-07
+          },
+          {
+            "stationarity_inf": 4.4245397737285863e-07,
+            "steps": 6,
+            "weight": 1e-08
+          }
+        ],
+        "steps": 44
+      },
+      "candidate_status": "AVAILABLE_DEVELOPMENT_ONLY",
+      "cpu_seconds": 0.15100158200000002,
+      "family": "TOTAL_2_5",
+      "fixture_id": 1602097,
+      "input_as_of": "2026-10-03T16:03:45.353626+00:00",
+      "input_fingerprint": "51b3660a83d0743c9dbc88eea6f4d58d54ebb5366d15e1db187ae881c75605a5",
+      "league_id": 1141,
+      "maximum_probability_delta_vs_baseline": null,
+      "objective_delta_vs_baseline": null,
+      "predictions_are_development_only": true,
+      "role": "KNOWN_DEVELOPMENT_FAILURE",
+      "training_matches": 43,
+      "training_teams": 11
+    },
+    {
+      "baseline_error": "FIT_DID_NOT_CONVERGE",
+      "baseline_objective": null,
+      "baseline_status": "UNAVAILABLE",
+      "candidate_fingerprint": "fc58e1cfd2919da2a86d1fddacd57e53695bbdd6e6e38d37bd6495b2377c431d",
+      "candidate_fit": {
+        "certificate": {
+          "barrier_weight": 1e-08,
+          "complementarity_inf": 1e-08,
+          "complementarity_sum": 3.44e-06,
+          "constraints": 344,
+          "dual_feasible": true,
+          "global_optimum_claim": false,
+          "maximum_fitted_rate": 7.999951651703492,
+          "maximum_multiplier": 0.001654655159319049,
+          "minimum_low_cell_factor": 0.18032212956683724,
+          "minimum_slack": 6.043555325518923e-06,
+          "objective": 2.648174210267268,
+          "stationarity_inf": 4.424540990741188e-07,
+          "strictly_feasible": true
+        },
+        "converged": true,
+        "criterion": "LOCAL_APPROXIMATE_KKT",
+        "evaluations": 111,
+        "initial_objective": 3.5498455726370164,
+        "maximum_hessian_damping": 0.0,
+        "stages": [
+          {
+            "stationarity_inf": 3.016890973150943e-10,
+            "steps": 6,
+            "weight": 0.01
+          },
+          {
+            "stationarity_inf": 5.6854042444765e-07,
+            "steps": 7,
+            "weight": 0.001
+          },
+          {
+            "stationarity_inf": 3.4673798970930036e-09,
+            "steps": 6,
+            "weight": 0.0001
+          },
+          {
+            "stationarity_inf": 3.430400446341464e-08,
+            "steps": 6,
+            "weight": 1e-05
+          },
+          {
+            "stationarity_inf": 1.2809336067537425e-07,
+            "steps": 6,
+            "weight": 1e-06
+          },
+          {
+            "stationarity_inf": 4.681415123608534e-09,
+            "steps": 7,
+            "weight": 1e-07
+          },
+          {
+            "stationarity_inf": 4.424540990741188e-07,
+            "steps": 6,
+            "weight": 1e-08
+          }
+        ],
+        "steps": 44
+      },
+      "candidate_status": "AVAILABLE_DEVELOPMENT_ONLY",
+      "cpu_seconds": 0.157983035,
+      "family": "1X2",
+      "fixture_id": 1602097,
+      "input_as_of": "2026-10-03T16:03:45.342687+00:00",
+      "input_fingerprint": "51b3660a83d0743c9dbc88eea6f4d58d54ebb5366d15e1db187ae881c75605a5",
+      "league_id": 1141,
+      "maximum_probability_delta_vs_baseline": null,
+      "objective_delta_vs_baseline": null,
+      "predictions_are_development_only": true,
+      "role": "KNOWN_DEVELOPMENT_FAILURE",
+      "training_matches": 43,
+      "training_teams": 11
+    },
+    {
+      "baseline_error": null,
+      "baseline_objective": 2.0865819408575303,
+      "baseline_status": "AVAILABLE",
+      "candidate_fingerprint": "ce1d08f433addb3d3fa36f23d28c45d9775d09f080e974ef0d68453f712136e6",
+      "candidate_fit": {
+        "certificate": {
+          "barrier_weight": 1e-08,
+          "complementarity_inf": 1e-08,
+          "complementarity_sum": 7.76e-06,
+          "constraints": 776,
+          "dual_feasible": true,
+          "global_optimum_claim": false,
+          "maximum_fitted_rate": 3.88467165403233,
+          "maximum_multiplier": 1.849337604215032e-08,
+          "minimum_low_cell_factor": 0.5407341514635954,
+          "minimum_slack": 0.5407341513635954,
+          "objective": 2.0865819407629904,
+          "stationarity_inf": 1.926606704033551e-11,
+          "strictly_feasible": true
+        },
+        "converged": true,
+        "criterion": "LOCAL_APPROXIMATE_KKT",
+        "evaluations": 42,
+        "initial_objective": 2.4370764437439494,
+        "maximum_hessian_damping": 0.0,
+        "stages": [
+          {
+            "stationarity_inf": 5.800844103155678e-08,
+            "steps": 5,
+            "weight": 0.01
+          },
+          {
+            "stationarity_inf": 7.195849206428906e-09,
+            "steps": 4,
+            "weight": 0.001
+          },
+          {
+            "stationarity_inf": 1.4496581018930144e-12,
+            "steps": 3,
+            "weight": 0.0001
+          },
+          {
+            "stationarity_inf": 1.6604193540936674e-10,
+            "steps": 2,
+            "weight": 1e-05
+          },
+          {
+            "stationarity_inf": 1.924491433227815e-07,
+            "steps": 1,
+            "weight": 1e-06
+          },
+          {
+            "stationarity_inf": 1.9173799579302875e-09,
+            "steps": 1,
+            "weight": 1e-07
+          },
+          {
+            "stationarity_inf": 1.926606704033551e-11,
+            "steps": 1,
+            "weight": 1e-08
+          }
+        ],
+        "steps": 17
+      },
+      "candidate_status": "AVAILABLE_DEVELOPMENT_ONLY",
+      "cpu_seconds": 0.1999989379999999,
+      "family": "TOTAL_3_5",
+      "fixture_id": 1498855,
+      "input_as_of": "2026-10-03T16:35:08.249973+00:00",
+      "input_fingerprint": "3dda9d1a24674e6ccf50afda1cbf151ae515f5e946d10282ac11326556d6837e",
+      "league_id": 129,
+      "maximum_probability_delta_vs_baseline": 4.046494985310289e-06,
+      "objective_delta_vs_baseline": -9.453993143893058e-11,
+      "predictions_are_development_only": true,
+      "role": "KNOWN_DEVELOPMENT_INTERIOR",
+      "training_matches": 97,
+      "training_teams": 36
+    },
+    {
+      "baseline_error": null,
+      "baseline_objective": 2.8921024629311436,
+      "baseline_status": "AVAILABLE",
+      "candidate_fingerprint": "d73e44b53c72422b648d8cd227db511aabcfd03b3aedbab185ec239ecaad3bf0",
+      "candidate_fit": {
+        "certificate": {
+          "barrier_weight": 1e-08,
+          "complementarity_inf": 1e-08,
+          "complementarity_sum": 7.76e-06,
+          "constraints": 776,
+          "dual_feasible": true,
+          "global_optimum_claim": false,
+          "maximum_fitted_rate": 6.401722199322157,
+          "maximum_multiplier": 4.486830155568741e-08,
+          "minimum_low_cell_factor": 0.8027827050273024,
+          "minimum_slack": 0.22287449386932323,
+          "objective": 2.89210246291781,
+          "stationarity_inf": 2.2962165155404612e-11,
+          "strictly_feasible": true
+        },
+        "converged": true,
+        "criterion": "LOCAL_APPROXIMATE_KKT",
+        "evaluations": 40,
+        "initial_objective": 3.2808813002322,
+        "maximum_hessian_damping": 0.0,
+        "stages": [
+          {
+            "stationarity_inf": 4.180702659062341e-12,
+            "steps": 5,
+            "weight": 0.01
+          },
+          {
+            "stationarity_inf": 5.189457457505098e-11,
+            "steps": 4,
+            "weight": 0.001
+          },
+          {
+            "stationarity_inf": 8.429942025380346e-07,
+            "steps": 2,
+            "weight": 0.0001
+          },
+          {
+            "stationarity_inf": 1.2629280086995376e-10,
+            "steps": 2,
+            "weight": 1e-05
+          },
+          {
+            "stationarity_inf": 2.2836606489206115e-07,
+            "steps": 1,
+            "weight": 1e-06
+          },
+          {
+            "stationarity_inf": 2.285357140942995e-09,
+            "steps": 1,
+            "weight": 1e-07
+          },
+          {
+            "stationarity_inf": 2.2962165155404612e-11,
+            "steps": 1,
+            "weight": 1e-08
+          }
+        ],
+        "steps": 16
+      },
+      "candidate_status": "AVAILABLE_DEVELOPMENT_ONLY",
+      "cpu_seconds": 0.1149781470000002,
+      "family": "1X2",
+      "fixture_id": 1641278,
+      "input_as_of": "2026-10-03T14:04:41.920391+00:00",
+      "input_fingerprint": "f65fbd326634a7360d487d84c560c42d7ad22c183453d17cd43c4b1b9c46d915",
+      "league_id": 1107,
+      "maximum_probability_delta_vs_baseline": 4.975677961871483e-07,
+      "objective_delta_vs_baseline": -1.333377852574813e-11,
+      "predictions_are_development_only": true,
+      "role": "KNOWN_DEVELOPMENT_INTERIOR",
+      "training_matches": 97,
+      "training_teams": 15
+    }
+  ],
+  "controlled_checks": {
+    "baseline": {
+      "brier": 0.2263555715994195,
+      "ece": 0.06511227354481007,
+      "log_loss": 0.645808034066464,
+      "mce": 0.323882373154412,
+      "probability_observations": 90,
+      "reliability_bins": [
+        {
+          "error": -0.038077035407733495,
+          "lower": 0.2,
+          "n": 44,
+          "observed": 0.29545454545454547,
+          "predicted": 0.257377510046812,
+          "upper": 0.3
+        },
+        {
+          "error": -0.057030125071644566,
+          "lower": 0.3,
+          "n": 22,
+          "observed": 0.4090909090909091,
+          "predicted": 0.35206078401926455,
+          "upper": 0.4
+        },
+        {
+          "error": 0.06898107598654696,
+          "lower": 0.4,
+          "n": 19,
+          "observed": 0.3684210526315789,
+          "predicted": 0.4374021286181259,
+          "upper": 0.5
+        },
+        {
+          "error": 0.323882373154412,
+          "lower": 0.5,
+          "n": 5,
+          "observed": 0.2,
+          "predicted": 0.523882373154412,
+          "upper": 0.6
+        }
+      ]
+    },
+    "candidate": {
+      "brier": 0.22635553363954036,
+      "ece": 0.06511207905507715,
+      "log_loss": 0.6458079300896025,
+      "mce": 0.3238820514917657,
+      "probability_observations": 90,
+      "reliability_bins": [
+        {
+          "error": -0.038076691106119,
+          "lower": 0.2,
+          "n": 44,
+          "observed": 0.29545454545454547,
+          "predicted": 0.25737785434842647,
+          "upper": 0.3
+        },
+        {
+          "error": -0.057030415854965266,
+          "lower": 0.3,
+          "n": 22,
+          "observed": 0.4090909090909091,
+          "predicted": 0.35206049323594385,
+          "upper": 0.4
+        },
+        {
+          "error": 0.06898070000103385,
+          "lower": 0.4,
+          "n": 19,
+          "observed": 0.3684210526315789,
+          "predicted": 0.4374017526326128,
+          "upper": 0.5
+        },
+        {
+          "error": 0.3238820514917657,
+          "lower": 0.5,
+          "n": 5,
+          "observed": 0.2,
+          "predicted": 0.5238820514917657,
+          "upper": 0.6
+        }
+      ]
+    },
+    "independent_synthetic_fixtures": 30,
+    "kickoff_dates": 3,
+    "market_rows": 90,
+    "maximum_capacity_case": {
+      "cpu_seconds": 1.5189424029999998,
+      "fit": {
+        "certificate": {
+          "barrier_weight": 1e-08,
+          "complementarity_inf": 1e-08,
+          "complementarity_sum": 4e-05,
+          "constraints": 4000,
+          "dual_feasible": true,
+          "global_optimum_claim": false,
+          "maximum_fitted_rate": 3.8847933012935547,
+          "maximum_multiplier": 1.3843287492991477e-08,
+          "minimum_low_cell_factor": 0.736820918167351,
+          "minimum_slack": 0.7223717635758673,
+          "objective": 2.6011059028987074,
+          "stationarity_inf": 3.9641514094738983e-10,
+          "strictly_feasible": true
+        },
+        "converged": true,
+        "criterion": "LOCAL_APPROXIMATE_KKT",
+        "evaluations": 54,
+        "initial_objective": 2.7529203852887125,
+        "maximum_hessian_damping": 0.1,
+        "stages": [
+          {
+            "stationarity_inf": 7.0842379046309745e-09,
+            "steps": 6,
+            "weight": 0.01
+          },
+          {
+            "stationarity_inf": 1.2950840857627738e-09,
+            "steps": 6,
+            "weight": 0.001
+          },
+          {
+            "stationarity_inf": 2.4040219786213013e-08,
+            "steps": 3,
+            "weight": 0.0001
+          },
+          {
+            "stationarity_inf": 3.258737979786562e-08,
+            "steps": 2,
+            "weight": 1e-05
+          },
+          {
+            "stationarity_inf": 4.465906377343343e-12,
+            "steps": 2,
+            "weight": 1e-06
+          },
+          {
+            "stationarity_inf": 3.966576647609216e-08,
+            "steps": 1,
+            "weight": 1e-07
+          },
+          {
+            "stationarity_inf": 3.9641514094738983e-10,
+            "steps": 1,
+            "weight": 1e-08
+          }
+        ],
+        "steps": 21
+      },
+      "status": "AVAILABLE_DEVELOPMENT_ONLY",
+      "teams": 64,
+      "training_matches": 500
+    },
+    "maximum_probability_delta": 1.60084801309468e-06,
+    "not_real_predictive_quality_evidence": true,
+    "synthetic_only": true
+  },
+  "forecast_writes": 0,
+  "historical_bookmaker_odds_used": false,
+  "model_store_writes": 0,
+  "no_backfill": true,
+  "no_deployment": true,
+  "no_global_optimum_claim": true,
+  "observed_at": "2026-10-03T17:07:55.269885+00:00",
+  "priority": "NORMAL",
+  "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+  "provider_calls": 0,
+  "quality_verdict": "NOT_EVALUATED_DEVELOPMENT_ONLY",
+  "research_database_writes": 0,
+  "reversed_order_replay_exact": true,
+  "telegram_requests": 0,
+  "version": "DC_CONSTRAINED_DEVELOPMENT_COMPARISON_V1"
+}
