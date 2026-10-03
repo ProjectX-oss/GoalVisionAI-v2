@@ -1,3 +1,15 @@
+## 2026-10-03 — Planned SINGLE 1.50 test and separate COMBO Telegram stream
+
+- [x] Record the user's future SINGLE >=1.50 test and proposed COMBO bot/channel separation with a new COMBO statistics period.
+- [x] Inspect existing shared destination, receipt validation and all-time statistics boundaries; document safe cutover and old-bet continuity.
+- [ ] Complete the pending natural-cycle verification of the currently installed 1.30 policy.
+- [ ] Implement versioned SINGLE >=1.50 independently of COMBO legs >=1.30; no additional combined-odds minimum.
+- [ ] Establish the exact COMBO destination and publishing bot; implement product-specific prediction/result routing and immutable period membership.
+- [ ] Preserve prior history and original-route settlement, prevent cross-channel duplicates, and test compatible rollback with open bets.
+- [ ] Offline tests/evidence/commit, then reviewed exact-base operator package; no automatic deployment or promotion.
+- Plan: docs/operations/PREMATCH_SINGLE_150_COMBO_SPLIT_PLAN_20261003.md.
+- Documentation only: installed policy/routes unchanged; Official unchanged; LIVE/ADMIN Codex disabled.
+
 ## 2026-10-03 — COMBO installer after calibration deployment
 
 - [x] Verify calibration observer c4daf63 is installed; the rejected ff55669 COMBO attempt created no release or overrides.

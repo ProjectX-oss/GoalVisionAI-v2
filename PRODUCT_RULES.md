@@ -183,6 +183,18 @@ an explicit operator action.
 
 
 
+
+## Future PREMATCH test direction recorded 2026-10-03
+
+The user requested a later PREMATCH SINGLE minimum-odds test at 1.50 and proposed
+moving COMBO predictions/results to a separate COMBO Telegram destination with
+a new prospective statistics period. This records future work, not a change to
+the installed policy. COMBO legs remain >=1.30 with no combined-odds floor.
+Keep historical results and old open bets in their original publication and
+statistics context; never erase past losses or reset learning evidence.
+See docs/operations/PREMATCH_SINGLE_150_COMBO_SPLIT_PLAN_20261003.md for scope,
+source findings, cutover requirements and offline acceptance coverage.
+
 ---
 
 # 8. PREDICTIONS
