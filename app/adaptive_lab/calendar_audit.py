@@ -21,7 +21,7 @@ PROTECTED_TABLES = ("learning_cycles", "training_runs", "model_artifacts", "hold
                     "shadow_runs", "activation_events", "champion_generations", "live_publications")
 
 
-def read_snapshot(database: Path) -> dict:
+def read_snapshot(database: Path, *, include_forecasts: bool = False) -> dict:
     """One bounded SQLite read transaction; close before any dataset computation."""
     repo = AuditRepository(database, readonly=True)
     try:
@@ -37,7 +37,14 @@ def read_snapshot(database: Path) -> dict:
         by_id = {r["observation_id"]: str(r["fixture_id"]) for r in rows}
         if not consumed <= by_id.keys():
             raise ValueError("CONSUMED_HOLDOUT_PROVENANCE_MISSING")
-        return {"rows": rows, "consumed_observations": consumed,
+        forecasts = {}
+        if include_forecasts:
+            for table in ("canonical_opportunities", "canonical_results"):
+                count = repo.connection.execute("SELECT count(*) FROM " + table + " WHERE stream='PREMATCH'").fetchone()[0]
+                if count > POLICY.training_rows_limit:
+                    raise ValueError("CALENDAR_FORECAST_BOUND")
+                forecasts[table] = repo.all(table, "PREMATCH")
+        return {**forecasts, "rows": rows, "consumed_observations": consumed,
                 "consumed_fixtures": {by_id[oid] for oid in consumed},
                 "champion_generation": repo.pointer("PREMATCH"),
                 "protected_counts": {table: repo.connection.execute("SELECT count(*) FROM " + table).fetchone()[0]

@@ -1,0 +1,44 @@
+{
+  "as_of": "2026-10-03T07:16:27.098599+00:00",
+  "command_prefix": [
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "docs/operations/offline_test_runner.py",
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "counts_overlap": true,
+  "installed_admin_output_contract": "PASS",
+  "installed_observer_timeout": "10min",
+  "network_denied": true,
+  "observed_readiness_readonly_probe": "PASS",
+  "production_runtime_changed": false,
+  "provider_calls": 0,
+  "real_operational_cycles_invoked": 0,
+  "regression": {
+    "log_sha256": "22512a22806f6fcf9cfe9f3699044d379a1f532bb47424c3a4391f14cdb01a01",
+    "passed": 876,
+    "seconds": 110.6,
+    "skipped": 1,
+    "targets": [
+      "tests/adaptive_lab",
+      "tests/test_prematch_settlement_upgrade.py",
+      "tests/test_prematch_single_odds_floor.py",
+      "tests/test_lab_today_scope.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_lab_no_minimum_odds_policy.py",
+      "tests/test_lab_accuracy_combo.py",
+      "tests/test_lab_accuracy_delivery.py",
+      "tests/test_lab_v2_operator_output.py"
+    ]
+  },
+  "skip_reason": "One-route installer has no partial multi-route state; this inherited multi-route-only case is inapplicable.",
+  "targeted": {
+    "log_sha256": "bcf09fdf7763f3fe82bbcde7ae9b8960b423f321fbb757fbc29ee7acf95764f4",
+    "passed": 169,
+    "seconds": 10.76,
+    "skipped": 1
+  },
+  "telegram_sends": 0
+}

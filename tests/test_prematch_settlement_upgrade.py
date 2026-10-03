@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig"])
+@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer"])
 def rig(tmp_path, monkeypatch, request):
     source = Path(__file__).parents[1] / "operations" / request.param / "update.py"
     spec = importlib.util.spec_from_file_location("quality_update", source)
@@ -117,10 +117,10 @@ def test_partial_change_failure_restores_all_routes_and_timers(rig, monkeypatch,
     if failure_kind == "reload":
         rig.failure["reload"] = True
     elif failure_kind == "timer":
-        rig.failure["start"] = m.TIMERS[1]
+        rig.failure["start"] = m.TIMERS[min(1, len(m.TIMERS)-1)]
     else:
         original = m.atomic
-        target = rig.overrides[m.SERVICES[1]]
+        target = rig.overrides[m.SERVICES[min(1, len(m.SERVICES)-1)]]
         def fail_once(path, data):
             if path == target:
                 raise RuntimeError("synthetic atomic failure")
@@ -133,7 +133,7 @@ def test_partial_change_failure_restores_all_routes_and_timers(rig, monkeypatch,
     assert not any(p.exists() for p in rig.overrides.values())
 
 def test_busy_service_is_not_killed_and_all_timers_restored(rig, monkeypatch):
-    rig.busy.add(rig.mod.SERVICES[1])
+    rig.busy.add(rig.mod.SERVICES[min(1, len(rig.mod.SERVICES)-1)])
     monkeypatch.setattr(rig.mod, "DRAIN_SECONDS", 0)
     with pytest.raises(TimeoutError, match="PREMATCH_RUNNING"):
         rig.mod.apply(rig.package)
@@ -180,6 +180,8 @@ def test_symlinks_refused(rig, where):
     assert rig.calls == []
 
 def test_partial_existing_override_refuses_without_controls(rig):
+    if len(rig.mod.SERVICES) == 1:
+        pytest.skip('A single route cannot have a partial multi-route override')
     target = rig.mod.validate(rig.package)[1]
     rig.overrides[rig.mod.SERVICES[0]].write_bytes(rig.mod.dropin(target))
     with pytest.raises(ValueError, match="PARTIAL_OR_UNREVIEWED"):
@@ -189,7 +191,7 @@ def test_partial_existing_override_refuses_without_controls(rig):
 def test_rollback_refuses_changed_dropin(rig):
     m = rig.mod
     m.apply(rig.package)
-    rig.overrides[m.SERVICES[1]].write_text("[Service]\nEnvironmentFile=/unreviewed\n")
+    rig.overrides[m.SERVICES[min(1, len(m.SERVICES)-1)]].write_text("[Service]\nEnvironmentFile=/unreviewed\n")
     count = len(rig.calls)
     with pytest.raises(ValueError, match="PARTIAL_OR_UNREVIEWED_OVERRIDE"):
         m.apply(rig.package, rollback=True)
@@ -230,7 +232,7 @@ def test_rollback_keeps_compatible_reader_sources(rig):
     before = m.tree(target / 'application')
     m.apply(rig.package, rollback=True)
     assert m.tree(target / 'application') == before
-    expected_early = b'1' if ('app/lab_v2_shadow/single_odds_policy.py' in m.FILES or 'app/adaptive_lab/devig_research.py' in m.FILES) else b'0'
+    expected_early = b'1' if ('app/lab_v2_shadow/single_odds_policy.py' in m.FILES or 'app/adaptive_lab/devig_research.py' in m.FILES or 'app/adaptive_lab/calendar_monitor.py' in m.FILES) else b'0'
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=' + expected_early + b'\n' in (target / 'rollback.env').read_bytes()
     assert all('rollback.env' in p.read_text() for p in rig.overrides.values())
 
@@ -271,3 +273,56 @@ def test_devig_rollback_only_disables_research(rig):
     assert enabled.replace(b'GOALVISION_LAB_DEVIG_RESEARCH=1', b'GOALVISION_LAB_DEVIG_RESEARCH=0') == disabled
     for flag in ('SINGLE_MIN_ODDS_130', 'TODAY_ONLY', 'EARLY_COMBO_LOSS', 'ACCURACY_COMBOS'):
         assert ('GOALVISION_LAB_'+flag+'=1\n').encode() in disabled
+
+
+def test_calendar_rollback_only_disables_readiness_and_keeps_all_other_flags(rig):
+    m=rig.mod
+    if "app/adaptive_lab/calendar_monitor.py" not in m.FILES:
+        return
+    assert m.SERVICES==("goalvision-adaptive-learning-observer.service",)
+    assert {"goalvision-lab-v2-discover.service","goalvision-lab-combo-settle.service",
+            "goalvision-adaptive-learning.service","goalvision-admin-alerts.service"} <= set(m.PROTECTED)
+    target=m.validate(rig.package)[1]
+    assert m.environment(target).replace(b"CALIBRATION_READINESS=1",b"CALIBRATION_READINESS=0")==m.environment(target,True)
+    for flag in ("DEVIG_RESEARCH","SINGLE_MIN_ODDS_130","TODAY_ONLY","EARLY_COMBO_LOSS","ACCURACY_COMBOS"):
+        assert ("GOALVISION_LAB_"+flag+"=1\n").encode() in m.environment(target,True)
+
+
+def test_calendar_plan_asset_is_hashed_in_release_and_rollback(rig):
+    m=rig.mod
+    if not hasattr(m,"PLAN_ASSET"):
+        return
+    m.apply(rig.package)
+    target=m.validate(rig.package)[1]
+    (target/"application"/m.PLAN_ASSET).write_text("{}")
+    controls=len(rig.calls)
+    with pytest.raises(ValueError,match="RELEASE_DRIFT"):
+        m.apply(rig.package,rollback=True)
+    assert len(rig.calls)==controls
+
+
+@pytest.mark.parametrize("guard",["enabled","missing_marker","valid"])
+def test_calendar_root_guard_inspects_installed_admin_files(rig,monkeypatch,tmp_path,guard):
+    m=rig.mod
+    if not hasattr(m,"ADMIN_CONFIG"):
+        return
+    config,marker=tmp_path/"admin.json",tmp_path/"DISABLED"
+    config.write_text(json.dumps({"autorepair":{"enabled":guard=="enabled"}}))
+    if guard!="missing_marker":
+        marker.write_text("")
+    monkeypatch.setattr(m,"ADMIN_CONFIG",config)
+    monkeypatch.setattr(m,"ADMIN_DISABLED",marker)
+    monkeypatch.setattr(m.os,"geteuid",lambda:0)
+    if guard=="valid":
+        m.disabled_worker()
+    else:
+        with pytest.raises(ValueError,match="ADMIN_CODEX_ROOT_GUARD"):
+            m.apply(rig.package)
+        assert rig.calls==[]
+
+
+def test_protected_route_drift_blocks_before_timer_controls(rig):
+    rig.loaded[rig.mod.PROTECTED[0]]="unreviewed"
+    with pytest.raises(ValueError,match="PREPARED_CONFIGURATION_DRIFT"):
+        rig.mod.apply(rig.package)
+    assert rig.calls==[]

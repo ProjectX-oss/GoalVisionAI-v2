@@ -1,3 +1,16 @@
+## 2026-10-03 — Optional calibration readiness in PREMATCH observer
+
+- [x] Read current de-vig routes and disabled ADMIN Codex; preserve existing frozen calendar plan.
+- [x] Add bounded query-only readiness and fixture lifecycle progress to the existing observer behind an explicit flag.
+- [x] Keep canonical/SINGLE economic dedup, no COMBO learning inflation, strict cohort/holdout/chronology guards, sanitized optional failure.
+- [x] Offline regressions: 876 passed, one inapplicable multi-route case skipped; installed ADMIN output contract PASS.
+- [x] Query-only evidence: TRAIN 1,804 / 560 fixtures; FIT 312 opportunities / 101 upcoming fixtures, zero eligible resolved. No training/holdout/champion change.
+- [x] Prepare reviewed observer-only operator implementation with full application and plan hashes, atomic recovery and compatible flag rollback.
+- [ ] Operator apply and next natural observer readback; no automatic deployment or manual cycle.
+- [ ] Natural calendar evidence, then separately reviewed offline calibration/evaluation if all gates pass.
+- Report: docs/operations/CALIBRATION_OBSERVER_20261003.md.
+- SINGLE >=1.30; COMBO no floor; today-only/early COMBO settlement retained. Official unchanged; LIVE/ADMIN Codex disabled.
+
 ## 2026-10-02 — Fixed-calendar calibration research candidate
 
 - [x] Add opt-in immutable 14/7/7/7-day research schedule with 24-hour gaps and exact model/policy cohort.

@@ -48,6 +48,14 @@ def observe(repository: object, ledger: object, *, now: datetime,
         except Exception:
             value["DEVIG_RESEARCH"] = {"status": "UNAVAILABLE", "reason": "RESEARCH_EVALUATION_UNAVAILABLE",
                                        "selection_effect": "NONE", "model_learning_observations": 0}
+    if os.environ.get("GOALVISION_LAB_CALIBRATION_READINESS", "0") == "1":
+        try:
+            from .calendar_monitor import observed_readiness
+            value["CALIBRATION_READINESS"] = observed_readiness(repository, ledger, now=now)
+        except Exception:
+            value["CALIBRATION_READINESS"] = {
+                "status": "UNAVAILABLE", "reason": "CALIBRATION_READINESS_UNAVAILABLE",
+                "selection_effect": "NONE", "training_invoked": False, "promotion_allowed": False}
     repository.append('observer_runs',digest(value),'PREMATCH',value,value['created_at'])
     return value
 

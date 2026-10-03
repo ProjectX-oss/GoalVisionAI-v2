@@ -1,0 +1,161 @@
+{
+  "admin_max_line_bytes": 131072,
+  "admin_output_contract_compatible": true,
+  "as_of": "2026-10-03T07:13:07.649539+00:00",
+  "duration_seconds": 1.76,
+  "evidence_fingerprint": "5513d5f2f9bd8788c6f8375d625e4c0e831106f73c2f28030cd0256d5618096c",
+  "existing_natural_observer_created_at": "2026-10-03T07:08:01.517404+00:00",
+  "operational_cycles_invoked": 0,
+  "plan_sha256": "20538b9a2ee8d2308b0192bfdc706fc042be3c722ae46a52f64622d0ca573795",
+  "production_runtime_changed": false,
+  "projected_stdout_bytes": 11180,
+  "protected_after": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_before": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "read_only": true,
+  "readiness": {
+    "as_of": "2026-10-03T07:13:07.649539+00:00",
+    "blocked_by": [
+      "CALIBRATION_CLASS_DIVERSITY_INSUFFICIENT",
+      "CALIBRATION_FIT_INDEPENDENT_FIXTURES_INSUFFICIENT",
+      "CALIBRATION_FIT_SAMPLE_INSUFFICIENT",
+      "CALIBRATION_FIT_WINDOW_NOT_CLOSED",
+      "SEALED_HOLDOUT_INDEPENDENT_FIXTURES_INSUFFICIENT",
+      "SEALED_HOLDOUT_SAMPLE_INSUFFICIENT",
+      "SEALED_HOLDOUT_WINDOW_NOT_CLOSED",
+      "VALIDATION_EVALUATION_INDEPENDENT_FIXTURES_INSUFFICIENT",
+      "VALIDATION_EVALUATION_SAMPLE_INSUFFICIENT",
+      "VALIDATION_EVALUATION_WINDOW_NOT_CLOSED"
+    ],
+    "dataset_fingerprint": "623d7ae1f31172f6d24ef400128d3f67b5a5ac6c0641d975d5070cbae7375a93",
+    "excluded_forecast_fixture_reasons": {
+      "COHORT_MISMATCH_OR_MIXED_FIXTURE": 4,
+      "OUTSIDE_OR_CROSSING_WINDOWS": 134,
+      "RESOLVED_EVIDENCE_EXCLUDED": 103,
+      "SEALED_HOLDOUT_RESERVATION": 117
+    },
+    "excluded_observation_reasons": {
+      "COHORT_MISMATCH_OR_MIXED_FIXTURE": 10,
+      "LABEL_NOT_AVAILABLE_BEFORE_EMBARGO": 356,
+      "OUTSIDE_WINDOWS_OR_EMBARGO_GAP": 59,
+      "SEALED_HOLDOUT_RESERVATION": 285,
+      "SOURCE_NOT_INDEPENDENT_PREMATCH": 12
+    },
+    "holdout_evaluated": false,
+    "learning_snapshot_fingerprint": "3530112bfc00231e1506d8978b4c75021c1039e495dd7a605480cc1ca4223899",
+    "plan_fingerprint": "9b154abc5b1ca4f18187150c2ca0a8d4d37b93b9c3893e97b2e61457329ca439",
+    "promotion_allowed": false,
+    "selection_effect": "NONE",
+    "snapshot_fingerprint": "f62b2742b0b0a4e98332bcd69f7ed19d5a40001f463c4776f7340d6ee5e8a2f3",
+    "status": "BLOCKED",
+    "training_invoked": false,
+    "version": "PREMATCH_CALIBRATION_READINESS_OBSERVER_V1",
+    "windows": {
+      "CALIBRATION_FIT": {
+        "eligible_resolved_fixtures": 0,
+        "eligible_resolved_observations": 0,
+        "end_exclusive": "2026-10-10T00:00:00+00:00",
+        "missing_independent_fixtures": 300,
+        "missing_observations": 300,
+        "progress": {
+          "awaiting_result_fixtures": 0,
+          "completed_fixtures": 0,
+          "excluded_fixtures": 0,
+          "observed_fixtures": 101,
+          "observed_opportunities": 312,
+          "pending_fixtures": 101,
+          "result_awaiting_linkage_fixtures": 0,
+          "upcoming_fixtures": 101
+        },
+        "required_observations_and_fixtures": 300,
+        "start": "2026-10-03T00:00:00+00:00",
+        "window_state": "OPEN"
+      },
+      "SEALED_HOLDOUT": {
+        "eligible_resolved_fixtures": 0,
+        "eligible_resolved_observations": 0,
+        "end_exclusive": "2026-10-26T00:00:00+00:00",
+        "missing_independent_fixtures": 100,
+        "missing_observations": 100,
+        "progress": {
+          "awaiting_result_fixtures": 0,
+          "completed_fixtures": 0,
+          "excluded_fixtures": 0,
+          "observed_fixtures": 0,
+          "observed_opportunities": 0,
+          "pending_fixtures": 0,
+          "result_awaiting_linkage_fixtures": 0,
+          "upcoming_fixtures": 0
+        },
+        "required_observations_and_fixtures": 100,
+        "start": "2026-10-19T00:00:00+00:00",
+        "window_state": "FUTURE"
+      },
+      "TRAIN": {
+        "eligible_resolved_fixtures": 560,
+        "eligible_resolved_observations": 1804,
+        "end_exclusive": "2026-10-02T00:00:00+00:00",
+        "missing_independent_fixtures": 0,
+        "missing_observations": 0,
+        "progress": {
+          "awaiting_result_fixtures": 376,
+          "completed_fixtures": 560,
+          "excluded_fixtures": 224,
+          "observed_fixtures": 1264,
+          "observed_opportunities": 4007,
+          "pending_fixtures": 480,
+          "result_awaiting_linkage_fixtures": 0,
+          "upcoming_fixtures": 104
+        },
+        "required_observations_and_fixtures": 1,
+        "start": "2026-09-18T00:00:00+00:00",
+        "window_state": "CLOSED"
+      },
+      "VALIDATION_EVALUATION": {
+        "eligible_resolved_fixtures": 0,
+        "eligible_resolved_observations": 0,
+        "end_exclusive": "2026-10-18T00:00:00+00:00",
+        "missing_independent_fixtures": 30,
+        "missing_observations": 30,
+        "progress": {
+          "awaiting_result_fixtures": 0,
+          "completed_fixtures": 0,
+          "excluded_fixtures": 0,
+          "observed_fixtures": 0,
+          "observed_opportunities": 0,
+          "pending_fixtures": 0,
+          "result_awaiting_linkage_fixtures": 0,
+          "upcoming_fixtures": 0
+        },
+        "required_observations_and_fixtures": 30,
+        "start": "2026-10-11T00:00:00+00:00",
+        "window_state": "FUTURE"
+      }
+    }
+  },
+  "telegram_sends": 0
+}
