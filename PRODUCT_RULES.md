@@ -491,3 +491,7 @@ with existing cached chronological results; preserve the deployed model/plan,
 selection and champion. Development replays are not prospective forecasts.
 No deployment, provider requests, Telegram sends, historical bookmaker odds
 or automatic promotion. A later forward comparison needs its own declaration.
+
+## Forward solver and COMBO selection preparation authorized 2026-10-03
+
+The user requested installation preparation for the improved calculation and COMBO selection improvements. Prepare a separate prospective constrained-model and paired COMBO shadow comparison at normal priority; preserve actual selection/champion and existing research. New declaration precedes prospective capture and excludes development fixtures. Operator activation is separate; no automatic deployment or promotion.

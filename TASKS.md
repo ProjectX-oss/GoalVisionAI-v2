@@ -1,3 +1,10 @@
+## 2026-10-03 — Forward solver and COMBO shadow integration
+
+- [x] Inspect installed research/PREMATCH and current COMBO ranking/quality review.
+- [x] Declare separate prospective cohort and conservative COMBO shadow rank before implementation/capture.
+- [ ] Implement/test bounded worker, immutable comparisons and operator-only package.
+- [ ] Record offline evidence and read-only preflight; deliver operator command.
+
 ## 2026-10-03 — Separate constrained Dixon–Coles development candidate
 
 - [x] User approved calculation improvements at normal priority; verify installed V1, preserve fixed plans/current cohort and protected routes/champion.
