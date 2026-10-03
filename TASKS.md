@@ -6,7 +6,8 @@
 - [x] Operator-only pinned package builder/updater; SQLite consistent seed backup; pause rollback preserves all research; existing production routes/timers untouched.
 - [x] 104 offline tests passed (45 automation/installer checks); systemd unit verification PASS; frozen plans and all non-research application files unchanged.
 - [x] Source commit e5b02e4; pinned operator package built; 831 checksums and read-only preflight PASS. Research service/timer remain not installed.
-- [ ] Operator activation, first natural run and genuine cross-day quality review.
+- [x] Operator activated e5b02e4; independent release/unit/resource/seed/route/champion readback PASS. All 10 original research records retained; timer active/enabled.
+- [ ] First natural run (initial next slot 2026-10-03 19:10:30 Riga), then genuine cross-day quality review.
 - Runbook: docs/operations/DIXON_COLES_AUTOMATION_20261003.md.
 - Evidence: docs/evidence/dixon_coles_automation_20261003/verification.json.
 - No deployment, manual production cycle, provider/Telegram request or automatic promotion during preparation.

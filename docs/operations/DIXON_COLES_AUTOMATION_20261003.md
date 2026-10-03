@@ -121,3 +121,19 @@ All 831 package checksums and pinned-wrapper read-only preflight passed.
 No research service/timer is installed; activation and natural-run proof remain pending.
 Evidence: `docs/evidence/dixon_coles_automation_20261003/verification.json` and
 `docs/evidence/dixon_coles_automation_20261003/package_preflight.json`.
+
+## Operator deployment readback — 2026-10-03 19:02 Riga
+
+The operator activated `e5b02e4`. Independent non-root readback confirms the
+829 application files and exact unit templates, active/enabled timer, resource
+and network restrictions, all 10 original research records and unchanged
+production routes/environment/champion. State directory mode is 0700 and DB 0600.
+ADMIN worker/timer remain inactive/disabled; root guard files were checked by the
+operator apply and are not independently readable by this non-root session.
+
+The service has not yet run: no start timestamp, no timer trigger, no latest status.
+Its initial next natural slot is **2026-10-03 19:10:30 Europe/Riga**.
+Default systemd Result=success/ExecMainStatus=0 is not evidence of a completed cycle.
+First natural-run proof and resolved/cross-day quality evidence remain pending.
+Readback: `docs/evidence/dixon_coles_automation_20261003/deployed_readback.json`.
+No manual cycle, provider call, Telegram request, redeployment or promotion.

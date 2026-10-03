@@ -1,0 +1,81 @@
+{
+  "admin_codex_systemd_disabled": true,
+  "all_release_hashes_and_unit_bytes_match_package": true,
+  "combo_leg_minimum": "1.30",
+  "database_mode": "0o600",
+  "directory_mode": "0o700",
+  "eight_production_and_protected_routes_match_package": true,
+  "first_natural_cycle": "PENDING_NOT_YET_TRIGGERED",
+  "independent_readback": "PASS",
+  "installed_release": "/opt/goalvision-dixon-coles-e5b02e4-20261003",
+  "latest_status_exists": false,
+  "no_additional_deployment_or_promotion": true,
+  "no_manual_cycle": true,
+  "no_provider_call": true,
+  "no_telegram_request": true,
+  "observed_at": "2026-10-03T16:02:43.831471+00:00",
+  "production_818_application_files_and_environment_unchanged": true,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_state_matches_preparation": true,
+  "release_application_file_count": 829,
+  "research_counts": {
+    "forecast": 4,
+    "metrics": 1,
+    "model": 4,
+    "plan": 1
+  },
+  "research_fixture_ids": [
+    1641278
+  ],
+  "research_units": {
+    "goalvision-dixon-coles-research.service": {
+      "ActiveState": "inactive",
+      "CPUQuotaPerSecUSec": "250ms",
+      "CPUWeight": "10",
+      "ExecMainExitTimestamp": "",
+      "ExecMainStartTimestamp": "",
+      "ExecMainStatus": "0",
+      "IOWeight": "10",
+      "LoadState": "loaded",
+      "MainPID": "0",
+      "MemoryMax": "268435456",
+      "Nice": "10",
+      "PrivateNetwork": "yes",
+      "ProtectHome": "read-only",
+      "ProtectSystem": "strict",
+      "ReadWritePaths": "/var/lib/goalvision-dixon-coles",
+      "RestrictAddressFamilies": "AF_UNIX",
+      "Result": "success",
+      "TasksMax": "16",
+      "TimeoutStartUSec": "50s",
+      "UnitFileState": "static",
+      "WorkingDirectory": "/opt/goalvision-dixon-coles-e5b02e4-20261003/application"
+    },
+    "goalvision-dixon-coles-research.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "",
+      "LoadState": "loaded",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 19:10:30 EEST",
+      "Persistent": "no",
+      "TimersCalendar": "{ OnCalendar=*-*-* *:10,40:30 Europe/Riga ; next_elapse=Sat 2026-10-03 19:10:30 EEST }",
+      "UnitFileState": "enabled"
+    }
+  },
+  "root_admin_guard": "OPERATOR_APPLY_REPORTED_PASS; NOT_READABLE_IN_INDEPENDENT_NONROOT_READBACK",
+  "seed_records_retained": true,
+  "single_minimum": "1.50",
+  "source_commit": "e5b02e4b35bb29720b3500d20d874ab8ad368474",
+  "state_directory": "/var/lib/goalvision-dixon-coles"
+}
