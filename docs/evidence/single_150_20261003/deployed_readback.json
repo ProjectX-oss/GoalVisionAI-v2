@@ -1,0 +1,129 @@
+{
+  "admin": {
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "MainPID": "0",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "MainPID": "",
+      "UnitFileState": "disabled"
+    }
+  },
+  "admin_systemd_guard": "PASS",
+  "checked_at_utc": "2026-10-03T13:15:52.801992+00:00",
+  "current_mode": "ENABLED",
+  "evidence_completed_at_utc": "2026-10-03T13:19:32.719960+00:00",
+  "first_natural_single_150_publication": "PENDING_NEXT_QUALIFYING_SCHEDULED_CYCLE",
+  "flags": [
+    "PYTHONPATH=/opt/goalvision-prematch-single-floor-150-e1263e7-20261003/application",
+    "GOALVISION_LAB_ACCURACY_COMBOS=1",
+    "GOALVISION_LAB_TODAY_ONLY=1",
+    "GOALVISION_LAB_EARLY_COMBO_LOSS=1",
+    "GOALVISION_LAB_SINGLE_MIN_ODDS_130=1",
+    "GOALVISION_LAB_DEVIG_RESEARCH=1",
+    "GOALVISION_LAB_CALIBRATION_READINESS=1",
+    "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130=1",
+    "GOALVISION_COMBO_BOT_ROUTING=1",
+    "GOALVISION_LAB_SETTLEMENT_REPLIES=1",
+    "GOALVISION_LAB_SINGLE_MIN_ODDS_150=1"
+  ],
+  "last_discovery_publication": {
+    "before_installation": true,
+    "created_at_utc": "2026-10-03T13:04:41.652849+00:00",
+    "identity": "lab-v2-publication-cycle-cf6051fbb485c826a95f2e0cbdb256506a757adb6024ec355f95ea41f2a1b8fd",
+    "minimum_published_decimal_odds": "1.30",
+    "publication_attempt_count": 6,
+    "single_selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V3_MIN_ODDS_130",
+    "telegram_sends": 6
+  },
+  "manual_operational_cycles": 0,
+  "manual_provider_calls": 0,
+  "next_discovery_riga": "2026-10-03T16:30:00+03:00",
+  "preflight": "SINGLE_150_PLAN_VALIDATED=/opt/goalvision-prematch-single-floor-150-e1263e7-20261003\ncurrent_mode=ENABLED; ADMIN_CODEX_SYSTEMD_DISABLED=PASS\nROOT_GUARD=CHECKED_AT_APPLY",
+  "protected_routes_verified": true,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "read_only_databases": true,
+  "release": "/opt/goalvision-prematch-single-floor-150-e1263e7-20261003",
+  "release_manifest_entries": 818,
+  "release_manifest_verified": true,
+  "root_guard": "NOT_REOPENED_WITHOUT_ROOT; OPERATOR_APPLY_REPORTED_SUCCESS",
+  "route_files_modified_at_utc": "2026-10-03T13:04:47.105876+00:00",
+  "services": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-single-floor-150-e1263e7-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 15:08:42 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 15:08:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-single-floor-150-e1263e7-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 04:12:04 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 04:12:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-single-floor-150-e1263e7-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 15:16:00 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 15:15:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-single-floor-150-e1263e7-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 15:04:42 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 15:00:02 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    }
+  },
+  "single_150_predictions_prepared_at_readback": 0,
+  "source_commit": "e1263e7f3e5aeb3291cc2e506d1115020fc27cac",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "timers": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 15:38:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 04:12:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 15:30:00 CEST",
+      "UnitFileState": "enabled"
+    }
+  }
+}

@@ -93,8 +93,9 @@ de-vig research and calibration readiness stay enabled.
 
 Official and weekly routes remain unchanged. LIVE and ADMIN Codex remain disabled.
 No automatic champion promotion, git push or historical bookmaker-odds work.
-Operator installation and the first qualifying natural 1.50 publication remain
-pending until apply/readback; tests alone are not live-publication proof.
+Operator installed the release at 16:04 Riga; independent deployment readback
+passed. The first qualifying natural 1.50 publication remains pending; tests and
+release validation alone are not live-publication proof.
 
 Evidence: docs/evidence/single_150_20261003/.
 Related source review: docs/research/CURRENT_DATA_QUALITY_OPTIONS_20261003.md.
@@ -113,6 +114,21 @@ current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS
 ROOT_GUARD=CHECKED_AT_APPLY
 ```
 
-This verifies the prepared package against the installed base; no apply occurred.
-The operator command above remains the next step. Package evidence is stored in
+At package preparation, this verified the installed base without applying.
+The operator subsequently installed it; see deployment readback below. Package evidence is stored in
 `docs/evidence/single_150_20261003/operator_package.json`.
+
+## Operator deployment readback
+
+The operator deployed the pinned e1263e7 release on 2026-10-03 at 16:04 Riga.
+Read-only preflight reports current_mode=ENABLED. All 818 application/plan files,
+release and rollback environment bytes, and all four service routes match the
+reviewed package. Timers are enabled and active. ADMIN Codex remains disabled,
+protected ADMIN/weekly routes match, and champion/model counts are unchanged.
+
+The 16:00 discovery publication completed before installation; no V4 1.50
+prediction was present at readback. The next scheduled discovery is 16:30 Riga.
+A first qualifying 1.50 publication remains to be observed; no manual cycle,
+provider request or Telegram request/send was made for this verification.
+
+Evidence: `docs/evidence/single_150_20261003/deployed_readback.json`.

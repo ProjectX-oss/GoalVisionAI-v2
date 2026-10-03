@@ -8,7 +8,8 @@
 - [x] Offline matrix: 883 passed, one inherited inapplicable installer case skipped; full 818-file exact-base parity PASS.
 - [x] GitHub/forum source review compared against existing capabilities; document Dixon–Coles/uncertainty/confirmed-XI options and source/license limits. No external installation or model change.
 - [x] Source/evidence committed as e1263e7; pinned exact-base operator package built, eight checksums and read-only BASE preflight PASS. Operator apply remains pending.
-- [ ] Operator apply and first qualifying natural 1.50 SINGLE readback. Unattended sudo unavailable; no manual cycles/provider calls/test sends.
+- [x] Operator deployed e1263e7 at 16:04 Riga; independent 818-file release/flags/four routes/timers/disabled ADMIN/protected champion readback PASS. Evidence: docs/evidence/single_150_20261003/deployed_readback.json.
+- [ ] First qualifying natural 1.50 SINGLE publication. At readback no V4 prediction exists; the last 16:00 cycle finished before installation. Next scheduled discovery 16:30 Riga. No manual cycles/provider calls/test sends.
 - Runbook: docs/operations/PREMATCH_SINGLE_150_20261003.md.
 - Research: docs/research/CURRENT_DATA_QUALITY_OPTIONS_20261003.md.
 - Official/weekly unchanged; LIVE and ADMIN Codex disabled; no automatic deployment/promotion or historical bookmaker odds.
