@@ -1,0 +1,69 @@
+{
+  "as_of": "2026-10-03T14:08:22.814403+00:00",
+  "fingerprint": "fe87242904a68fca60cc7016cde55efb3b57102e568056c4e7f43bddeea23632",
+  "fits": [
+    {
+      "duration_seconds": 0.0293,
+      "excluded": {},
+      "fit": {
+        "converged": true,
+        "gradient_inf": 9.443686261032035e-07,
+        "initial_objective": 3.0794610223840486,
+        "iterations": 60,
+        "objective": 2.707756990261153
+      },
+      "input_results": 99,
+      "league_id": 300,
+      "model_fingerprint": "7ef7642dd9c50c98289eb6a6e6f19599d829fc44024a80d0a5c1bfc9b1a4ea8e",
+      "retained_results": 99,
+      "season": 2026,
+      "status": "FITTED",
+      "training_data_fingerprint": "72aeec32b2ae3e95ce8ac831a6ba0c8aecbaf8260427d33b20360d602fbc36a6"
+    },
+    {
+      "duration_seconds": 0.0185,
+      "excluded": {
+        "outside_frozen_training_window": 1
+      },
+      "fit": {
+        "converged": true,
+        "gradient_inf": 5.020157114801749e-07,
+        "initial_objective": 2.7364861482864753,
+        "iterations": 38,
+        "objective": 2.5142228544533283
+      },
+      "input_results": 99,
+      "league_id": 240,
+      "model_fingerprint": "74c2ef87c8b78125a160e5defc3d60e879ca87bf0d4883c002d75777a1f9a64d",
+      "retained_results": 98,
+      "season": 2026,
+      "status": "FITTED",
+      "training_data_fingerprint": "b6a59a4d321e4593f196097986a51766ecc07bdfacfc2b87593eaca020a9ac6b"
+    },
+    {
+      "duration_seconds": 0.0285,
+      "excluded": {},
+      "fit": {
+        "converged": true,
+        "gradient_inf": 4.999069923026568e-07,
+        "initial_objective": 2.6711575935443332,
+        "iterations": 47,
+        "objective": 2.4775331225573707
+      },
+      "input_results": 99,
+      "league_id": 75,
+      "model_fingerprint": "65b01477b4952904f579656e17a6ff210df5c76068195e7761aa0a3eb085fb63",
+      "retained_results": 99,
+      "season": 2026,
+      "status": "FITTED",
+      "training_data_fingerprint": "037dd363aa4e649be4aa9bf5bec0378ce2c77f21baea10350172adae3661ebad"
+    }
+  ],
+  "plan_fingerprint": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+  "predictive_quality_verdict": "NOT_EVALUATED; FITTING_IS_NOT_FORWARD_PERFORMANCE",
+  "production_model_registry_changed": false,
+  "provider_calls": 0,
+  "sampling": "LATEST_THREE_DISTINCT_LEAGUE_SEASONS_WITHIN_30_CACHE_ROWS",
+  "source_mode": "EXISTING_CACHED_REGULATION_RESULTS_QUERY_ONLY",
+  "telegram_calls": 0
+}

@@ -1,0 +1,771 @@
+{
+  "fingerprint": "9d29b811c66497acdac66ee201e42f8d2c8a68432134fa3b279ade1b05adea4f",
+  "fit": {
+    "converged": true,
+    "gradient_inf": 5.194833570228499e-07,
+    "initial_objective": 2.846525673056113,
+    "iterations": 16,
+    "objective": 2.822264558804414
+  },
+  "held_out_fixtures": 30,
+  "lifecycle": {
+    "PENDING": 0,
+    "RESOLVED": 30,
+    "VOID": 0
+  },
+  "metrics_fingerprint": "d03fa201f92f6ea0fb293198ee371765319dfdbda2ca4939471ce7fc79a35d95",
+  "model_fingerprint": "eea9c27b6db2a3e44a73e9e5b4921cc52a8985db352b3ad9ea61d925743d73bb",
+  "overall_metrics": {
+    "common": {
+      "DIXON_COLES": {
+        "brier": 0.22016860606110558,
+        "ece": 0.053061214227991114,
+        "log_loss": 0.6321116803518558,
+        "mce": 0.3761225655344081,
+        "probability_observations": 90,
+        "reliability_bins": [
+          {
+            "error": 0.011269818057501296,
+            "lower": 0.2,
+            "n": 45,
+            "observed": 0.24444444444444444,
+            "predicted": 0.25571426250194573,
+            "upper": 0.3
+          },
+          {
+            "error": -0.028590687856360153,
+            "lower": 0.3,
+            "n": 30,
+            "observed": 0.4,
+            "predicted": 0.37140931214363987,
+            "upper": 0.4
+          },
+          {
+            "error": -0.15300340045687966,
+            "lower": 0.4,
+            "n": 10,
+            "observed": 0.6,
+            "predicted": 0.4469965995431203,
+            "upper": 0.5
+          },
+          {
+            "error": 0.3761225655344081,
+            "lower": 0.5,
+            "n": 5,
+            "observed": 0.2,
+            "predicted": 0.5761225655344081,
+            "upper": 0.6
+          }
+        ]
+      },
+      "EXISTING_ENSEMBLE": {
+        "brier": 0.21055555555555558,
+        "ece": 0.03333333333333334,
+        "log_loss": 0.6116731119690721,
+        "mce": 0.050000000000000044,
+        "probability_observations": 90,
+        "reliability_bins": [
+          {
+            "error": -0.024999999999999994,
+            "lower": 0.2,
+            "n": 60,
+            "observed": 0.25,
+            "predicted": 0.225,
+            "upper": 0.3
+          },
+          {
+            "error": 0.050000000000000044,
+            "lower": 0.5,
+            "n": 30,
+            "observed": 0.5,
+            "predicted": 0.55,
+            "upper": 0.6
+          }
+        ]
+      },
+      "MULTIPLICATIVE": {
+        "brier": 0.20906328444972916,
+        "ece": 0.011494252873563222,
+        "log_loss": 0.60777433013664,
+        "mce": 0.017241379310344807,
+        "probability_observations": 90,
+        "reliability_bins": [
+          {
+            "error": 0.008620689655172431,
+            "lower": 0.2,
+            "n": 60,
+            "observed": 0.25,
+            "predicted": 0.25862068965517243,
+            "upper": 0.3
+          },
+          {
+            "error": -0.017241379310344807,
+            "lower": 0.4,
+            "n": 30,
+            "observed": 0.5,
+            "predicted": 0.4827586206896552,
+            "upper": 0.5
+          }
+        ]
+      },
+      "OO_EPC": {
+        "brier": 0.20900438048007375,
+        "ece": 0.006961903050917706,
+        "log_loss": 0.6076763986209541,
+        "mce": 0.010442854576376503,
+        "probability_observations": 90,
+        "reliability_bins": [
+          {
+            "error": 0.005221427288188307,
+            "lower": 0.2,
+            "n": 60,
+            "observed": 0.25,
+            "predicted": 0.2552214272881883,
+            "upper": 0.3
+          },
+          {
+            "error": -0.010442854576376503,
+            "lower": 0.4,
+            "n": 30,
+            "observed": 0.5,
+            "predicted": 0.4895571454236235,
+            "upper": 0.5
+          }
+        ]
+      },
+      "POISSON_SAME_RATES": {
+        "brier": 0.22056329889987664,
+        "ece": 0.05837303003811087,
+        "log_loss": 0.6329650431404142,
+        "mce": 0.37151963291505,
+        "probability_observations": 90,
+        "reliability_bins": [
+          {
+            "error": 0.017093070825327544,
+            "lower": 0.2,
+            "n": 45,
+            "observed": 0.24444444444444444,
+            "predicted": 0.261537515269772,
+            "upper": 0.3
+          },
+          {
+            "error": -0.034533564593887345,
+            "lower": 0.3,
+            "n": 30,
+            "observed": 0.4,
+            "predicted": 0.3654664354061127,
+            "upper": 0.4
+          },
+          {
+            "error": -0.15907794138983683,
+            "lower": 0.4,
+            "n": 10,
+            "observed": 0.6,
+            "predicted": 0.44092205861016315,
+            "upper": 0.5
+          },
+          {
+            "error": 0.37151963291505,
+            "lower": 0.5,
+            "n": 5,
+            "observed": 0.2,
+            "predicted": 0.57151963291505,
+            "upper": 0.6
+          }
+        ]
+      },
+      "POWER": {
+        "brier": 0.20900363531547692,
+        "ece": 0.00790749338431527,
+        "log_loss": 0.6076640900450934,
+        "mce": 0.011861240076448565,
+        "probability_observations": 90,
+        "reliability_bins": [
+          {
+            "error": 0.005930620038248624,
+            "lower": 0.2,
+            "n": 60,
+            "observed": 0.25,
+            "predicted": 0.2559306200382486,
+            "upper": 0.3
+          },
+          {
+            "error": -0.011861240076448565,
+            "lower": 0.4,
+            "n": 30,
+            "observed": 0.5,
+            "predicted": 0.48813875992355144,
+            "upper": 0.5
+          }
+        ]
+      },
+      "SHIN": {
+        "brier": 0.20902330557737114,
+        "ece": 0.008844243491371343,
+        "log_loss": 0.6077045681699008,
+        "mce": 0.013266365237052435,
+        "probability_observations": 90,
+        "reliability_bins": [
+          {
+            "error": 0.006633182618530797,
+            "lower": 0.2,
+            "n": 60,
+            "observed": 0.25,
+            "predicted": 0.2566331826185308,
+            "upper": 0.3
+          },
+          {
+            "error": -0.013266365237052435,
+            "lower": 0.4,
+            "n": 30,
+            "observed": 0.5,
+            "predicted": 0.48673363476294756,
+            "upper": 0.5
+          }
+        ]
+      }
+    },
+    "common_market_rows": 90,
+    "fixtures": 30,
+    "kickoff_dates": 2,
+    "market_rows": 90,
+    "paired": {
+      "DIXON_COLES": {
+        "fixtures": 30,
+        "method": {
+          "brier": 0.22016860606110558,
+          "ece": 0.053061214227991114,
+          "log_loss": 0.6321116803518558,
+          "mce": 0.3761225655344081,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.011269818057501296,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.25571426250194573,
+              "upper": 0.3
+            },
+            {
+              "error": -0.028590687856360153,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.37140931214363987,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15300340045687966,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.4469965995431203,
+              "upper": 0.5
+            },
+            {
+              "error": 0.3761225655344081,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.5761225655344081,
+              "upper": 0.6
+            }
+          ]
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": 0.22016860606110558,
+          "ece": 0.053061214227991114,
+          "log_loss": 0.6321116803518558,
+          "mce": 0.3761225655344081,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.011269818057501296,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.25571426250194573,
+              "upper": 0.3
+            },
+            {
+              "error": -0.028590687856360153,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.37140931214363987,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15300340045687966,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.4469965995431203,
+              "upper": 0.5
+            },
+            {
+              "error": 0.3761225655344081,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.5761225655344081,
+              "upper": 0.6
+            }
+          ]
+        }
+      },
+      "EXISTING_ENSEMBLE": {
+        "fixtures": 30,
+        "method": {
+          "brier": 0.21055555555555558,
+          "ece": 0.03333333333333334,
+          "log_loss": 0.6116731119690721,
+          "mce": 0.050000000000000044,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": -0.024999999999999994,
+              "lower": 0.2,
+              "n": 60,
+              "observed": 0.25,
+              "predicted": 0.225,
+              "upper": 0.3
+            },
+            {
+              "error": 0.050000000000000044,
+              "lower": 0.5,
+              "n": 30,
+              "observed": 0.5,
+              "predicted": 0.55,
+              "upper": 0.6
+            }
+          ]
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": 0.22016860606110558,
+          "ece": 0.053061214227991114,
+          "log_loss": 0.6321116803518558,
+          "mce": 0.3761225655344081,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.011269818057501296,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.25571426250194573,
+              "upper": 0.3
+            },
+            {
+              "error": -0.028590687856360153,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.37140931214363987,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15300340045687966,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.4469965995431203,
+              "upper": 0.5
+            },
+            {
+              "error": 0.3761225655344081,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.5761225655344081,
+              "upper": 0.6
+            }
+          ]
+        }
+      },
+      "MULTIPLICATIVE": {
+        "fixtures": 30,
+        "method": {
+          "brier": 0.20906328444972916,
+          "ece": 0.011494252873563222,
+          "log_loss": 0.60777433013664,
+          "mce": 0.017241379310344807,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.008620689655172431,
+              "lower": 0.2,
+              "n": 60,
+              "observed": 0.25,
+              "predicted": 0.25862068965517243,
+              "upper": 0.3
+            },
+            {
+              "error": -0.017241379310344807,
+              "lower": 0.4,
+              "n": 30,
+              "observed": 0.5,
+              "predicted": 0.4827586206896552,
+              "upper": 0.5
+            }
+          ]
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": 0.22016860606110558,
+          "ece": 0.053061214227991114,
+          "log_loss": 0.6321116803518558,
+          "mce": 0.3761225655344081,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.011269818057501296,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.25571426250194573,
+              "upper": 0.3
+            },
+            {
+              "error": -0.028590687856360153,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.37140931214363987,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15300340045687966,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.4469965995431203,
+              "upper": 0.5
+            },
+            {
+              "error": 0.3761225655344081,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.5761225655344081,
+              "upper": 0.6
+            }
+          ]
+        }
+      },
+      "OO_EPC": {
+        "fixtures": 30,
+        "method": {
+          "brier": 0.20900438048007375,
+          "ece": 0.006961903050917706,
+          "log_loss": 0.6076763986209541,
+          "mce": 0.010442854576376503,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.005221427288188307,
+              "lower": 0.2,
+              "n": 60,
+              "observed": 0.25,
+              "predicted": 0.2552214272881883,
+              "upper": 0.3
+            },
+            {
+              "error": -0.010442854576376503,
+              "lower": 0.4,
+              "n": 30,
+              "observed": 0.5,
+              "predicted": 0.4895571454236235,
+              "upper": 0.5
+            }
+          ]
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": 0.22016860606110558,
+          "ece": 0.053061214227991114,
+          "log_loss": 0.6321116803518558,
+          "mce": 0.3761225655344081,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.011269818057501296,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.25571426250194573,
+              "upper": 0.3
+            },
+            {
+              "error": -0.028590687856360153,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.37140931214363987,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15300340045687966,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.4469965995431203,
+              "upper": 0.5
+            },
+            {
+              "error": 0.3761225655344081,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.5761225655344081,
+              "upper": 0.6
+            }
+          ]
+        }
+      },
+      "POISSON_SAME_RATES": {
+        "fixtures": 30,
+        "method": {
+          "brier": 0.22056329889987664,
+          "ece": 0.05837303003811087,
+          "log_loss": 0.6329650431404142,
+          "mce": 0.37151963291505,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.017093070825327544,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.261537515269772,
+              "upper": 0.3
+            },
+            {
+              "error": -0.034533564593887345,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.3654664354061127,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15907794138983683,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.44092205861016315,
+              "upper": 0.5
+            },
+            {
+              "error": 0.37151963291505,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.57151963291505,
+              "upper": 0.6
+            }
+          ]
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": 0.22016860606110558,
+          "ece": 0.053061214227991114,
+          "log_loss": 0.6321116803518558,
+          "mce": 0.3761225655344081,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.011269818057501296,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.25571426250194573,
+              "upper": 0.3
+            },
+            {
+              "error": -0.028590687856360153,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.37140931214363987,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15300340045687966,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.4469965995431203,
+              "upper": 0.5
+            },
+            {
+              "error": 0.3761225655344081,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.5761225655344081,
+              "upper": 0.6
+            }
+          ]
+        }
+      },
+      "POWER": {
+        "fixtures": 30,
+        "method": {
+          "brier": 0.20900363531547692,
+          "ece": 0.00790749338431527,
+          "log_loss": 0.6076640900450934,
+          "mce": 0.011861240076448565,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.005930620038248624,
+              "lower": 0.2,
+              "n": 60,
+              "observed": 0.25,
+              "predicted": 0.2559306200382486,
+              "upper": 0.3
+            },
+            {
+              "error": -0.011861240076448565,
+              "lower": 0.4,
+              "n": 30,
+              "observed": 0.5,
+              "predicted": 0.48813875992355144,
+              "upper": 0.5
+            }
+          ]
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": 0.22016860606110558,
+          "ece": 0.053061214227991114,
+          "log_loss": 0.6321116803518558,
+          "mce": 0.3761225655344081,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.011269818057501296,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.25571426250194573,
+              "upper": 0.3
+            },
+            {
+              "error": -0.028590687856360153,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.37140931214363987,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15300340045687966,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.4469965995431203,
+              "upper": 0.5
+            },
+            {
+              "error": 0.3761225655344081,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.5761225655344081,
+              "upper": 0.6
+            }
+          ]
+        }
+      },
+      "SHIN": {
+        "fixtures": 30,
+        "method": {
+          "brier": 0.20902330557737114,
+          "ece": 0.008844243491371343,
+          "log_loss": 0.6077045681699008,
+          "mce": 0.013266365237052435,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.006633182618530797,
+              "lower": 0.2,
+              "n": 60,
+              "observed": 0.25,
+              "predicted": 0.2566331826185308,
+              "upper": 0.3
+            },
+            {
+              "error": -0.013266365237052435,
+              "lower": 0.4,
+              "n": 30,
+              "observed": 0.5,
+              "predicted": 0.48673363476294756,
+              "upper": 0.5
+            }
+          ]
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": 0.22016860606110558,
+          "ece": 0.053061214227991114,
+          "log_loss": 0.6321116803518558,
+          "mce": 0.3761225655344081,
+          "probability_observations": 90,
+          "reliability_bins": [
+            {
+              "error": 0.011269818057501296,
+              "lower": 0.2,
+              "n": 45,
+              "observed": 0.24444444444444444,
+              "predicted": 0.25571426250194573,
+              "upper": 0.3
+            },
+            {
+              "error": -0.028590687856360153,
+              "lower": 0.3,
+              "n": 30,
+              "observed": 0.4,
+              "predicted": 0.37140931214363987,
+              "upper": 0.4
+            },
+            {
+              "error": -0.15300340045687966,
+              "lower": 0.4,
+              "n": 10,
+              "observed": 0.6,
+              "predicted": 0.4469965995431203,
+              "upper": 0.5
+            },
+            {
+              "error": 0.3761225655344081,
+              "lower": 0.5,
+              "n": 5,
+              "observed": 0.2,
+              "predicted": 0.5761225655344081,
+              "upper": 0.6
+            }
+          ]
+        }
+      }
+    }
+  },
+  "production_training_registration": false,
+  "real_world_quality_evidence": false,
+  "replay_identical": true,
+  "segment_counts": {
+    "family": 1,
+    "lead": 1,
+    "league": 1,
+    "market": 3,
+    "odds": 2
+  },
+  "source_mode": "CONTROLLED_SYNTHETIC_RESEARCH_ONLY",
+  "telegram_calls": 0,
+  "train_evaluation_fixture_overlap": 0,
+  "train_matches": 120
+}

@@ -1,0 +1,232 @@
+{
+  "as_of": "2026-10-03T14:10:42.998949+00:00",
+  "automatic_promotion": false,
+  "betting_metrics": "NOT_APPLICABLE_NO_RESEARCH_BET_SELECTION",
+  "counts": {
+    "forecast_families": 4
+  },
+  "fingerprint": "f55fe8ec06ebd461daafb899e45e0aeccb6b1245e6d5bc8a0c7c37bbf5857293",
+  "lifecycle": {
+    "PENDING": 1,
+    "RESOLVED": 0,
+    "VOID": 0
+  },
+  "overall": {
+    "common": {
+      "DIXON_COLES": {
+        "brier": null,
+        "ece": null,
+        "log_loss": null,
+        "mce": null,
+        "probability_observations": 0,
+        "reliability_bins": []
+      },
+      "EXISTING_ENSEMBLE": {
+        "brier": null,
+        "ece": null,
+        "log_loss": null,
+        "mce": null,
+        "probability_observations": 0,
+        "reliability_bins": []
+      },
+      "MULTIPLICATIVE": {
+        "brier": null,
+        "ece": null,
+        "log_loss": null,
+        "mce": null,
+        "probability_observations": 0,
+        "reliability_bins": []
+      },
+      "OO_EPC": {
+        "brier": null,
+        "ece": null,
+        "log_loss": null,
+        "mce": null,
+        "probability_observations": 0,
+        "reliability_bins": []
+      },
+      "POISSON_SAME_RATES": {
+        "brier": null,
+        "ece": null,
+        "log_loss": null,
+        "mce": null,
+        "probability_observations": 0,
+        "reliability_bins": []
+      },
+      "POWER": {
+        "brier": null,
+        "ece": null,
+        "log_loss": null,
+        "mce": null,
+        "probability_observations": 0,
+        "reliability_bins": []
+      },
+      "SHIN": {
+        "brier": null,
+        "ece": null,
+        "log_loss": null,
+        "mce": null,
+        "probability_observations": 0,
+        "reliability_bins": []
+      }
+    },
+    "common_market_rows": 0,
+    "fixtures": 0,
+    "kickoff_dates": 0,
+    "market_rows": 0,
+    "paired": {
+      "DIXON_COLES": {
+        "fixtures": 0,
+        "method": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        }
+      },
+      "EXISTING_ENSEMBLE": {
+        "fixtures": 0,
+        "method": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        }
+      },
+      "MULTIPLICATIVE": {
+        "fixtures": 0,
+        "method": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        }
+      },
+      "OO_EPC": {
+        "fixtures": 0,
+        "method": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        }
+      },
+      "POISSON_SAME_RATES": {
+        "fixtures": 0,
+        "method": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        }
+      },
+      "POWER": {
+        "fixtures": 0,
+        "method": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        }
+      },
+      "SHIN": {
+        "fixtures": 0,
+        "method": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "missing_market_rows": 0,
+        "paired_dixon_coles": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        }
+      }
+    }
+  },
+  "plan_fingerprint": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+  "quality_verdict": "NEEDS_MORE_EVIDENCE",
+  "segments": {
+    "family": {},
+    "lead": {},
+    "league": {},
+    "market": {},
+    "odds": {}
+  },
+  "selection_effect": "NONE",
+  "unit_of_independence": "FIXTURE_AND_KICKOFF_DATE; COMPLEMENTS_ARE_CORRELATED",
+  "version": "DIXON_COLES_RESEARCH_V1"
+}

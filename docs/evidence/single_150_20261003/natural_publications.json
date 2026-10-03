@@ -1,0 +1,94 @@
+{
+  "checked_at_utc": "2026-10-03T14:14:29.673500+00:00",
+  "manual_cycles": 0,
+  "policy_statistics_snapshot_verified": {
+    "as_of": "2026-10-03T14:04:55.743832+00:00",
+    "minimum_published_decimal_odds": "1.50",
+    "selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150",
+    "totals": {
+      "LOST": 0,
+      "VOID": 0,
+      "WON": 0,
+      "flat_unit_pnl": "0",
+      "flat_unit_roi": null,
+      "hit_rate": null,
+      "pending": 3,
+      "published": 3,
+      "roi_convention": "1u per settled single including VOID; pending excluded",
+      "roi_denominator_units": 0,
+      "sample_size": 3,
+      "settled": 0
+    },
+    "version": "LAB_V2_PUBLIC_SINGLE_POLICY_STATISTICS_V1"
+  },
+  "provider_calls": 0,
+  "publications": [
+    {
+      "existing_lab_destination_verified": true,
+      "message_id": 624,
+      "odds": "1.50",
+      "prediction_id": "lab-v2-single-c2848195e1da52b0abacf2383b26dfc86c08db301fa3c27bbbfd026929549c40",
+      "prediction_receipt_fingerprints": "PASS",
+      "prepared_at_utc": "2026-10-03T13:32:41.340730+00:00",
+      "receipt_status": "SENT",
+      "selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150",
+      "sent_at_utc": "2026-10-03T13:35:35.585727+00:00"
+    },
+    {
+      "existing_lab_destination_verified": true,
+      "message_id": 625,
+      "odds": "1.50",
+      "prediction_id": "lab-v2-single-67a11f0960cc71d27bbf175b82ab00bf9fee40814804e27c6fb5fdac9b82d2fd",
+      "prediction_receipt_fingerprints": "PASS",
+      "prepared_at_utc": "2026-10-03T13:32:24.513660+00:00",
+      "receipt_status": "SENT",
+      "selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150",
+      "sent_at_utc": "2026-10-03T13:35:36.432834+00:00"
+    },
+    {
+      "existing_lab_destination_verified": true,
+      "message_id": 626,
+      "odds": "1.53",
+      "prediction_id": "lab-v2-single-02163a88ac7bdc63302c356c21362703fe090371b919c9b923de88f37cadc894",
+      "prediction_receipt_fingerprints": "PASS",
+      "prepared_at_utc": "2026-10-03T13:32:24.513660+00:00",
+      "receipt_status": "SENT",
+      "selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150",
+      "sent_at_utc": "2026-10-03T13:35:37.069311+00:00"
+    },
+    {
+      "existing_lab_destination_verified": true,
+      "message_id": 632,
+      "odds": "2.10",
+      "prediction_id": "lab-v2-single-60576221e35166ce1648e5b85249bf052874ffaddc77b0dd67bce2ad58658562",
+      "prediction_receipt_fingerprints": "PASS",
+      "prepared_at_utc": "2026-10-03T14:00:43.915202+00:00",
+      "receipt_status": "SENT",
+      "selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150",
+      "sent_at_utc": "2026-10-03T14:04:59.741908+00:00"
+    },
+    {
+      "existing_lab_destination_verified": true,
+      "message_id": 633,
+      "odds": "1.50",
+      "prediction_id": "lab-v2-single-80ad42983a182a2c22675dee3bc8dbf734648e7a0e2c8e09d0afd5723596cb72",
+      "prediction_receipt_fingerprints": "PASS",
+      "prepared_at_utc": "2026-10-03T14:01:40.616698+00:00",
+      "receipt_status": "SENT",
+      "selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150",
+      "sent_at_utc": "2026-10-03T14:05:00.515575+00:00"
+    },
+    {
+      "existing_lab_destination_verified": true,
+      "message_id": 634,
+      "odds": "1.53",
+      "prediction_id": "lab-v2-single-0da42261acddd0b18236a0bea3b977cee5f4192c6371fcc985220862f7264401",
+      "prediction_receipt_fingerprints": "PASS",
+      "prepared_at_utc": "2026-10-03T14:01:09.760261+00:00",
+      "receipt_status": "SENT",
+      "selection_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150",
+      "sent_at_utc": "2026-10-03T14:05:01.302003+00:00"
+    }
+  ],
+  "telegram_calls": 0
+}

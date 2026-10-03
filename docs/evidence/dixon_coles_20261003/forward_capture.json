@@ -1,0 +1,237 @@
+{
+  "admin_codex_systemd_disabled": true,
+  "automatic_deployment": false,
+  "automatic_promotion": false,
+  "capture_report": {
+    "automatic_promotion": false,
+    "counts": {
+      "forecast": 4
+    },
+    "details": [],
+    "fingerprint": "c47a6051e28448803ba79fb9df8a5e2fbe25e879e1f061186bcb7b4a801c0602",
+    "priority": "NORMAL",
+    "provider_calls": 0,
+    "selection_effect": "NONE",
+    "source_diagnostics": {
+      "before_declaration": 496,
+      "capture_rows_examined": 500,
+      "older_captures_not_scanned": 1
+    },
+    "status": "COMPLETED",
+    "telegram_sends": 0,
+    "version": "DIXON_COLES_RESEARCH_V1"
+  },
+  "evaluation_fingerprint": "f55fe8ec06ebd461daafb899e45e0aeccb6b1245e6d5bc8a0c7c37bbf5857293",
+  "evaluation_lifecycle": {
+    "PENDING": 1,
+    "RESOLVED": 0,
+    "VOID": 0
+  },
+  "forecasts": [
+    {
+      "capture_id": "devig-v2:1641278:1X2:9db21a8e82f99844d966c64f0f53fb1461aa8036962bdc89e3b7d68de1783be1",
+      "comparison_probabilities": {
+        "AWAY_WIN": {
+          "DIXON_COLES": 0.24630338094768853,
+          "EXISTING_ENSEMBLE": 0.2776057471845163,
+          "MULTIPLICATIVE": 0.1960281870595772,
+          "OO_EPC": 0.1718766668645742,
+          "POISSON_SAME_RATES": 0.2419422204783019,
+          "POWER": 0.17850287476373713,
+          "SHIN": 0.18280431024094165
+        },
+        "DRAW": {
+          "DIXON_COLES": 0.30100442910097625,
+          "EXISTING_ENSEMBLE": 0.25121700961975246,
+          "MULTIPLICATIVE": 0.25944907110826393,
+          "OO_EPC": 0.24615539877597215,
+          "POISSON_SAME_RATES": 0.3097267500397495,
+          "POWER": 0.24609889184694508,
+          "SHIN": 0.2520081236805882
+        },
+        "HOME_WIN": {
+          "DIXON_COLES": 0.4526921899513352,
+          "EXISTING_ENSEMBLE": 0.47117724319573123,
+          "MULTIPLICATIVE": 0.5445227418321589,
+          "OO_EPC": 0.5819679343594536,
+          "POISSON_SAME_RATES": 0.4483310294819486,
+          "POWER": 0.5753982333892885,
+          "SHIN": 0.5651875660785449
+        }
+      },
+      "fixture_id": 1641278,
+      "forecast_at_utc": "2026-10-03T14:09:44.093468+00:00",
+      "forecast_fingerprint": "b2dbe8909b206e3a1787f25c60b65b6c5ad1748cc0db45e8baf041324a397563",
+      "input_as_of_utc": "2026-10-03T14:04:41.920391+00:00",
+      "kickoff_utc": "2026-10-03T18:00:00+00:00",
+      "league_id": 1107,
+      "market_family": "1X2",
+      "model_fingerprint": "11d420973a29134cd1811a461f5aac2e8df5c0abb2f82874bbdb41aa6c3cfe09",
+      "paired_markets": [
+        "AWAY_WIN",
+        "DRAW",
+        "HOME_WIN"
+      ]
+    },
+    {
+      "capture_id": "devig-v2:1641278:BTTS:0d31350f824d95efcc1f4b43111455a021022b654e37c33670b273264f57db15",
+      "comparison_probabilities": {
+        "BTTS_NO": {
+          "DIXON_COLES": 0.6430099928093533,
+          "EXISTING_ENSEMBLE": 0.2789799455848303,
+          "MULTIPLICATIVE": 0.4489247311827957,
+          "OO_EPC": 0.44186027779321335,
+          "POISSON_SAME_RATES": 0.6386488323399668,
+          "POWER": 0.44196215215416157,
+          "SHIN": 0.44450124141960284
+        },
+        "BTTS_YES": {
+          "DIXON_COLES": 0.3569900071906466,
+          "EXISTING_ENSEMBLE": 0.7210200544151697,
+          "MULTIPLICATIVE": 0.5510752688172043,
+          "OO_EPC": 0.5581397222067868,
+          "POISSON_SAME_RATES": 0.3613511676600332,
+          "POWER": 0.5580378478458395,
+          "SHIN": 0.5554987585804027
+        }
+      },
+      "fixture_id": 1641278,
+      "forecast_at_utc": "2026-10-03T14:09:44.133868+00:00",
+      "forecast_fingerprint": "31e09195d871b9a2f5cd2bca6d867b458531ff9e6bf8ada13ec66db3fdbce064",
+      "input_as_of_utc": "2026-10-03T14:04:41.924901+00:00",
+      "kickoff_utc": "2026-10-03T18:00:00+00:00",
+      "league_id": 1107,
+      "market_family": "BTTS",
+      "model_fingerprint": "043334841c4eec92a19e5b1760a3902389ab7382b0a0e9bc797b5dbc7a1474fd",
+      "paired_markets": [
+        "BTTS_NO",
+        "BTTS_YES"
+      ]
+    },
+    {
+      "capture_id": "devig-v2:1641278:TOTAL_2_5:6a3083d5d294aad7dfb2f691b71fa4a9afe3a95e8e6100dc9c16a2d4b700863f",
+      "comparison_probabilities": {
+        "OVER_2_5": {
+          "DIXON_COLES": 0.2961979036066971,
+          "EXISTING_ENSEMBLE": 0.7430992585755937,
+          "MULTIPLICATIVE": 0.5614973262032086,
+          "OO_EPC": 0.5699394777284128,
+          "POISSON_SAME_RATES": 0.2961979036066971,
+          "POWER": 0.5698157453138301,
+          "SHIN": 0.5667828106852463
+        },
+        "UNDER_2_5": {
+          "DIXON_COLES": 0.7038020963933029,
+          "EXISTING_ENSEMBLE": 0.25690074142440633,
+          "MULTIPLICATIVE": 0.4385026737967914,
+          "OO_EPC": 0.4300605222715872,
+          "POISSON_SAME_RATES": 0.7038020963933029,
+          "POWER": 0.43018425468617955,
+          "SHIN": 0.43321718931474573
+        }
+      },
+      "fixture_id": 1641278,
+      "forecast_at_utc": "2026-10-03T14:09:44.163224+00:00",
+      "forecast_fingerprint": "b11985bce8afe2845340ed3dd3b15afa861b89a3d6cc651740b1caa2277f56d6",
+      "input_as_of_utc": "2026-10-03T14:04:41.929706+00:00",
+      "kickoff_utc": "2026-10-03T18:00:00+00:00",
+      "league_id": 1107,
+      "market_family": "TOTAL_2_5",
+      "model_fingerprint": "b3868910694f2bd8f29b15c64a419e3e011624e614776431a796c0a93c884031",
+      "paired_markets": [
+        "OVER_2_5",
+        "UNDER_2_5"
+      ]
+    },
+    {
+      "capture_id": "devig-v2:1641278:TOTAL_3_5:4bee3c7bbbdbcdcc1f68b0165ab95e9db58c7155d136259bb18460b6b48df864",
+      "comparison_probabilities": {
+        "OVER_3_5": {
+          "DIXON_COLES": 0.12524602027235143,
+          "EXISTING_ENSEMBLE": 0.5418601956309156,
+          "MULTIPLICATIVE": 0.35768261964735515,
+          "OO_EPC": 0.3353801196324526,
+          "POISSON_SAME_RATES": 0.12524602027235143,
+          "POWER": 0.33564817755730086,
+          "SHIN": 0.34396575531621737
+        },
+        "UNDER_3_5": {
+          "DIXON_COLES": 0.8747539797276486,
+          "EXISTING_ENSEMBLE": 0.45813980436908447,
+          "MULTIPLICATIVE": 0.6423173803526449,
+          "OO_EPC": 0.6646198803675474,
+          "POISSON_SAME_RATES": 0.8747539797276486,
+          "POWER": 0.6643518224427115,
+          "SHIN": 0.6560342446837926
+        }
+      },
+      "fixture_id": 1641278,
+      "forecast_at_utc": "2026-10-03T14:09:44.188613+00:00",
+      "forecast_fingerprint": "02107f87b89c35420cd6c312b68d76af7f8e9a3ed1480a26b712c1e3c271a9b3",
+      "input_as_of_utc": "2026-10-03T14:04:41.933454+00:00",
+      "kickoff_utc": "2026-10-03T18:00:00+00:00",
+      "league_id": 1107,
+      "market_family": "TOTAL_3_5",
+      "model_fingerprint": "c3994ac9e6631b9dc274ad55064fc556ae679bd09d906710f3410ad2f9a8f903",
+      "paired_markets": [
+        "OVER_3_5",
+        "UNDER_3_5"
+      ]
+    }
+  ],
+  "independent_fixtures": 1,
+  "isolated_research_capture_invocations": 1,
+  "manual_production_cycles": 0,
+  "paired_market_count": 9,
+  "plan_declaration_commit": "3de240d",
+  "plan_fingerprint": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+  "production_release": "/opt/goalvision-prematch-single-floor-150-e1263e7-20261003",
+  "production_release_818_hashes_verified": true,
+  "protected_state_after": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_state_before": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "quality_verdict": "NEEDS_MORE_EVIDENCE",
+  "readiness_before_next_natural_cycle": {
+    "diagnostics": {
+      "before_declaration": 500,
+      "capture_rows_examined": 500,
+      "older_captures_not_scanned": 1
+    },
+    "eligible_fixture_families": 0,
+    "fingerprint": "89908fecb46ad6c8745a6180e36d167867127693607dbe4735158885fc1c03ad",
+    "priority": "NORMAL",
+    "provider_calls": 0,
+    "read_only": true,
+    "telegram_sends": 0
+  },
+  "recorded_at_utc": "2026-10-03T14:14:29.672560+00:00",
+  "research_database": "/home/arvis/goalvision-worktrees/dixon-coles-research-20261003/var/dixon_coles_forward.db",
+  "source_databases_read_only": true,
+  "source_mode": "GENUINE_CURRENT_NATURAL_CAPTURE_RESEARCH_ONLY",
+  "systemd_units_changed": false,
+  "telegram_calls": 0
+}

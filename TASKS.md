@@ -1,3 +1,18 @@
+## 2026-10-03 — Dixon–Coles isolated research, normal priority
+
+- [x] User approved the next research comparison without maximum priority; existing Lab publication remains active.
+- [x] Freeze prospective plan before fitting (3de240d), preserve calendar plan/reserved and consumed holdouts.
+- [x] Standard-library joint Dixon–Coles fit, JSON artifacts, tail-safe probabilities and explicit unavailable outcomes.
+- [x] Bounded query-only natural-input adapters, separate append-only store and manual paired capture/evaluate CLI.
+- [x] Final offline matrix: 249 passed; deterministic 30-fixture synthetic held-out replay; three genuine cached-result league fits converged.
+- [x] First genuine prospective evidence: fixture 1641278, four families/nine paired markets captured at 17:09 Riga; result pending.
+- [x] Production release/routes/818 hashes/ADMIN guard and protected champion/model counts unchanged; no deployment, timer, provider call or Telegram request.
+- [x] Verify first natural SINGLE 1.50 publications from the 16:30/17:00 cycles; six confirmed receipts and separate V4 statistics.
+- [ ] Genuine resolved/cross-day comparison and coverage review. No automatic research job installed; scheduling is a separate reviewed operator task.
+- Report: docs/research/DIXON_COLES_RESEARCH_20261003.md.
+- Commands: app/dixon_coles_research/README.md.
+- Research-only; no claim of improved win rate or model/selection activation.
+
 ## 2026-10-03 — SINGLE 1.50 with normal Lab publication
 
 - [x] User explicitly approved SINGLE >=1.50 and continued actual publication to the existing Lab conversation; COMBO legs remain >=1.30.
@@ -9,7 +24,7 @@
 - [x] GitHub/forum source review compared against existing capabilities; document Dixon–Coles/uncertainty/confirmed-XI options and source/license limits. No external installation or model change.
 - [x] Source/evidence committed as e1263e7; pinned exact-base operator package built, eight checksums and read-only BASE preflight PASS. Operator apply remains pending.
 - [x] Operator deployed e1263e7 at 16:04 Riga; independent 818-file release/flags/four routes/timers/disabled ADMIN/protected champion readback PASS. Evidence: docs/evidence/single_150_20261003/deployed_readback.json.
-- [ ] First qualifying natural 1.50 SINGLE publication. At readback no V4 prediction exists; the last 16:00 cycle finished before installation. Next scheduled discovery 16:30 Riga. No manual cycles/provider calls/test sends.
+- [x] First natural 1.50 publication verified: 16:30/17:00 cycles, six confirmed SINGLE receipts, all odds >=1.50 and V4 statistics. Evidence: docs/evidence/single_150_20261003/natural_publications.json. No manual cycles/provider calls/test sends.
 - Runbook: docs/operations/PREMATCH_SINGLE_150_20261003.md.
 - Research: docs/research/CURRENT_DATA_QUALITY_OPTIONS_20261003.md.
 - Official/weekly unchanged; LIVE and ADMIN Codex disabled; no automatic deployment/promotion or historical bookmaker odds.

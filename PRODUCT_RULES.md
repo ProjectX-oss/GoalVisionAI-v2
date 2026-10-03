@@ -465,3 +465,11 @@ Scalability
 Long-term trust
 
 These principles are permanent.
+## Dixon–Coles research authorized 2026-10-03
+
+Implement the planned isolated comparison at normal priority using existing
+chronological football results and current quote evidence. Preserve all frozen
+calendar/holdout boundaries. Manual research capture/evaluation may write only
+the dedicated research store. This does not authorize selection/champion changes,
+production deployment, new provider requests, Telegram sends or automatic jobs.
+SINGLE >=1.50 and COMBO legs >=1.30 keep their installed publication routes.

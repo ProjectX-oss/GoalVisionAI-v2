@@ -94,8 +94,8 @@ de-vig research and calibration readiness stay enabled.
 Official and weekly routes remain unchanged. LIVE and ADMIN Codex remain disabled.
 No automatic champion promotion, git push or historical bookmaker-odds work.
 Operator installed the release at 16:04 Riga; independent deployment readback
-passed. The first qualifying natural 1.50 publication remains pending; tests and
-release validation alone are not live-publication proof.
+passed. The first qualifying natural 1.50 publications were independently verified
+in the 16:30 and 17:00 Riga cycles; see the natural receipt evidence below.
 
 Evidence: docs/evidence/single_150_20261003/.
 Related source review: docs/research/CURRENT_DATA_QUALITY_OPTIONS_20261003.md.
@@ -132,3 +132,12 @@ A first qualifying 1.50 publication remains to be observed; no manual cycle,
 provider request or Telegram request/send was made for this verification.
 
 Evidence: `docs/evidence/single_150_20261003/deployed_readback.json`.
+
+## Natural publication verification
+
+The 16:30/17:00 scheduled cycles delivered six V4 SINGLEs to the existing Lab
+destination, with odds 1.50, 1.50, 1.53, 2.10, 1.50 and 1.53. Confirmed receipt
+IDs are 624–626 and 632–634. Prediction/receipt fingerprints and the immutable
+1.50 policy-statistics snapshot passed. No manual cycle, provider call or
+Telegram request was made. See
+`docs/evidence/single_150_20261003/natural_publications.json`.
