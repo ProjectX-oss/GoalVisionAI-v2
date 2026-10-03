@@ -1,3 +1,16 @@
+## 2026-10-03 — Dixon–Coles automation preparation, normal priority
+
+- [x] Verify actual SINGLE 1.50 release, 818 hashes, timer grid and unchanged protected champion/LIVE/ADMIN state.
+- [x] Separate :10:30/:40:30 research worker with busy/slot/lock guards, CPU/memory/deadline limits, isolated writes and no network.
+- [x] Reuse capture/evaluate logic; first forecasts retained, duplicate-safe cycles, results still evaluated after the frozen capture window or a capture-input failure.
+- [x] Operator-only pinned package builder/updater; SQLite consistent seed backup; pause rollback preserves all research; existing production routes/timers untouched.
+- [x] 104 offline tests passed (45 automation/installer checks); systemd unit verification PASS; frozen plans and all non-research application files unchanged.
+- [ ] Build pinned package from source commit and record read-only preflight.
+- [ ] Operator activation, first natural run and genuine cross-day quality review.
+- Runbook: docs/operations/DIXON_COLES_AUTOMATION_20261003.md.
+- Evidence: docs/evidence/dixon_coles_automation_20261003/verification.json.
+- No deployment, manual production cycle, provider/Telegram request or automatic promotion during preparation.
+
 ## 2026-10-03 — Dixon–Coles isolated research, normal priority
 
 - [x] User approved the next research comparison without maximum priority; existing Lab publication remains active.

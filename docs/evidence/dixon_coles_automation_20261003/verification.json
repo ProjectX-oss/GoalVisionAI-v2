@@ -1,0 +1,104 @@
+{
+  "base_research_commit": "a8df4252eafe79ab8345e8e1e86cc532e873c4db",
+  "code_hashes": {
+    "app/dixon_coles_research/cli.py": "67c368259c93c963472a0a022b62ab1f2cda5aa9ed91267014fb06b1627ff33c",
+    "app/dixon_coles_research/worker.py": "a15be568dc2f8c902d17e3fe39c8dc556906be75360bfb5e22fa7e8a74d7bbbf",
+    "operations/dixon-coles-automation/build.py": "98a58e47fd1b767b19b5905ce1306a095812af4739af2c4c7c74f794e41f33c9",
+    "operations/dixon-coles-automation/update.py": "1c2d36e2e2793ba82f32dfc07175debce96f63779d0ab250b53cf0dfb367daaf",
+    "tests/test_dixon_coles_automation.py": "dcff36af3fc7c2a2336196d09bff91e6f15713d6e3d9e66ff0ceac838d45c25b"
+  },
+  "constraints": {
+    "catchup": false,
+    "cpu_quota_percent": 25,
+    "max_candidates_per_cycle": 12,
+    "max_cycle_seconds": 45,
+    "max_database_mib": 512,
+    "memory_max_mib": 256,
+    "network": "PRIVATE_NAMESPACE_AF_UNIX_ONLY",
+    "nice": 10,
+    "systemd_timeout_seconds": 50
+  },
+  "frozen_plans": {
+    "app/adaptive_lab/calendar_plan_20261002.json": "20538b9a2ee8d2308b0192bfdc706fc042be3c722ae46a52f64622d0ca573795",
+    "app/dixon_coles_research/plan_20261003.json": "4081cb5c399a965cddcbac194a1b086fb5f88d6fe18e0762fb1558841c352ffc"
+  },
+  "limitations": [
+    "Operator activation and first natural sandboxed run remain pending.",
+    "Research quality verdict remains NEEDS_MORE_EVIDENCE.",
+    "Bounded sampling may omit inputs; unavailable/skip reasons remain visible."
+  ],
+  "network_disabled_during_tests": true,
+  "new_automation_tests": 45,
+  "no_deployment_or_promotion": true,
+  "no_manual_production_cycles": true,
+  "no_provider_calls": true,
+  "no_telegram_requests": true,
+  "observed_at": "2026-10-03T15:39:28.241938+00:00",
+  "preserved_seed": {
+    "fixture_ids": [
+      1641278
+    ],
+    "kind_counts": {
+      "forecast": 4,
+      "metrics": 1,
+      "model": 4,
+      "plan": 1
+    },
+    "migration_executed": false,
+    "paired_market_rows": 9,
+    "record_count": 10,
+    "record_hashes": {
+      "[\"forecast\", \"ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918:1641278:1X2\"]": "a5b97e4c004b9e0b34cd05fa06968aab1855e3206faba139278f8d90ada2f65f",
+      "[\"forecast\", \"ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918:1641278:BTTS\"]": "9e2578b4f97eea21e57c0ccd29557944fdda74fe1e1b6bd4a8b8787984b1a3ac",
+      "[\"forecast\", \"ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918:1641278:TOTAL_2_5\"]": "78677dbbbbaa77ce8b16b4b9a80f89d73bfc257d5208cdf57240b9104ff2f8c8",
+      "[\"forecast\", \"ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918:1641278:TOTAL_3_5\"]": "962000fd526da93f61bff2911cf7fc720f269dc84037a0966ca75a9621291bc4",
+      "[\"metrics\", \"f55fe8ec06ebd461daafb899e45e0aeccb6b1245e6d5bc8a0c7c37bbf5857293\"]": "4b16afedab7cbbe422bcbf4c310e64439ea8e50f23c2b6e81ef85e95393e9a50",
+      "[\"model\", \"043334841c4eec92a19e5b1760a3902389ab7382b0a0e9bc797b5dbc7a1474fd\"]": "ff955730831d123ac938b6eaa00f174f1617196d75b3af18841e0791b8e6f5ec",
+      "[\"model\", \"11d420973a29134cd1811a461f5aac2e8df5c0abb2f82874bbdb41aa6c3cfe09\"]": "1e08a945bd9c2bffe41eb50a04246f012bd3fb975bda1d0656976522dfe62a34",
+      "[\"model\", \"b3868910694f2bd8f29b15c64a419e3e011624e614776431a796c0a93c884031\"]": "2dec32ddf3669f720f28ac97469473db4a0bc8a2f4961823112b60518a2c7a36",
+      "[\"model\", \"c3994ac9e6631b9dc274ad55064fc556ae679bd09d906710f3410ad2f9a8f903\"]": "8e2eee154ec953da5d767a1b87efe1f22aaccc84a2d980565282111988043f49",
+      "[\"plan\", \"ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918\"]": "83ee27857991d0f97fe08d8f73e20134002e5a86c13ea4f914973f990137c96c"
+    },
+    "source": "/home/arvis/goalvision-worktrees/dixon-coles-research-20261003/var/dixon_coles_forward.db",
+    "unique_fixtures": 1
+  },
+  "production_source_parity": "ALL_NON_RESEARCH_APPLICATION_FILES_IDENTICAL",
+  "runtime": {
+    "admin_worker_guard": "SYSTEMD_DISABLED; ROOT_FILES_DEFERRED_TO_OPERATOR_APPLY",
+    "combo_leg_minimum": "1.30",
+    "exact_installed_file_count": 818,
+    "file_and_environment_verification": "PASS",
+    "installed_release": "/opt/goalvision-prematch-single-floor-150-e1263e7-20261003",
+    "protected_state_after": {
+      "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "counts": {
+        "activation_events": 1,
+        "champion_generations": 1,
+        "holdout_results": 0,
+        "learning_cycles": 3,
+        "live_publications": 0,
+        "model_artifacts": 59,
+        "shadow_runs": 0,
+        "training_runs": 133
+      }
+    },
+    "protected_state_unchanged": true,
+    "research_service_installed": false,
+    "single_minimum": "1.50"
+  },
+  "schedule_riga": "*-*-* *:10,40:30 Europe/Riga",
+  "scope": "PREPARED_NOT_DEPLOYED",
+  "systemd_verify_returncode": 0,
+  "systemd_version": "255.4-1ubuntu8.17",
+  "test_priority_nice": 10,
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "seconds": 1.94,
+    "tests": 104
+  },
+  "unit_templates": {
+    "goalvision-dixon-coles-research.service": "0bd3a0f63b590d6f447c2dbfd06d3e7984482e9156552e623723c00847f8eae4",
+    "goalvision-dixon-coles-research.timer": "0e239c85c9369e6a475f40cfc2391cc99db5563bed5c5c4128ae08100b462781"
+  }
+}

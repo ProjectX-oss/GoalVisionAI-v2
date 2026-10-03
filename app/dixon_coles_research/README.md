@@ -115,3 +115,10 @@ See docs/research/DIXON_COLES_RESEARCH_20261003.md and
 docs/evidence/dixon_coles_20261003/. Tests use controlled fixtures. The cached
 result fit check uses genuine previously captured scores, which demonstrates
 input compatibility and numerical convergence only, not predictive superiority.
+
+## Prepared automation
+
+An independent, operator-activated worker now wraps the same capture/evaluate
+operations with busy/slot/lock/deadline guards. It is not installed by preparation.
+See `docs/operations/DIXON_COLES_AUTOMATION_20261003.md` for the bounded schedule,
+first-forecast migration, read-only preflight, activation and pause commands.

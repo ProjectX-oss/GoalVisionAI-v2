@@ -473,3 +473,12 @@ calendar/holdout boundaries. Manual research capture/evaluation may write only
 the dedicated research store. This does not authorize selection/champion changes,
 production deployment, new provider requests, Telegram sends or automatic jobs.
 SINGLE >=1.50 and COMBO legs >=1.30 keep their installed publication routes.
+
+## Dixon–Coles automation preparation authorized 2026-10-03
+
+The user approved preparing a separately scheduled, resource-bounded research
+capture/evaluation job at normal priority. Operator installation remains separate;
+preparation does not activate the timer or run production cycles. Existing cached
+results/current quotes only, dedicated append-only state, frozen plan/holdouts,
+no provider/Telegram calls and no selection/champion or publication changes.
+Preserve the first prospective research records across installation and rollback.
