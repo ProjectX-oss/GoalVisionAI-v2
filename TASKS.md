@@ -4,6 +4,7 @@
 - [x] Retain exact-route guards and pin both installed source/environment contracts; runtime application files remain identical.
 - [x] Mixed-source apply/rollback/failure recovery and drift rejection: 157 installer tests passed, one inapplicable inherited case skipped; network disabled.
 - [x] Prepare a distinct R2 pinned entry point; preserve earlier packages and wrappers unchanged.
+- [x] Commit e355b51; R2 package prepared with 15 checksum entries and read-only preflight PASS for both installed sources.
 - [ ] Operator R2 apply, then next natural discovery/observer readback. No automatic deployment, manual cycles, provider calls or test sends.
 - Report: docs/operations/PREMATCH_COMBO_LEG_FLOOR_R2_20261003.md.
 

@@ -87,3 +87,16 @@ Normal-user preflight verifies the source, routes and systemd disabled guard.
 Root-owned ADMIN config and DISABLED marker remain mandatory at apply.
 No separate calibration command is needed. After apply, verify the loaded
 route and the next natural discovery/observer outputs.
+
+## Prepared R2 package
+
+Installer source commit: `e355b519e68ae256f8e6ece4ae314e819b36de15`.
+
+Package:
+`/home/arvis/goalvision-operations/combo-leg-floor-e355b51-20261003`.
+
+All 15 checksum entries pass. The new pinned wrapper's read-only preflight
+passes against both installed sources and reports BASE plus
+ADMIN_CODEX_SYSTEMD_DISABLED=PASS. All 13 application overlay hashes match the
+previous ff55669 package exactly. Earlier wrappers/package pins and protected
+routes remain unchanged. Root apply and the target release remain pending.
