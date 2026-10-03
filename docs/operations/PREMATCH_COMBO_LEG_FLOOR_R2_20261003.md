@@ -100,3 +100,26 @@ passes against both installed sources and reports BASE plus
 ADMIN_CODEX_SYSTEMD_DISABLED=PASS. All 13 application overlay hashes match the
 previous ff55669 package exactly. Earlier wrappers/package pins and protected
 routes remain unchanged. Root apply and the target release remain pending.
+
+## Operator deployment and independent readback
+
+Operator applied R2 successfully at approximately 12:39 Riga. Independent
+read-only preflight reports ENABLED, verifies the full release and environment
+hashes, and confirms all four PREMATCH routes point to
+`/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003`.
+
+SINGLE minimum 1.30 and COMBO per-leg minimum 1.30 are enabled, together with
+readiness, de-vig, today-only and early COMBO settlement. All four timers are
+active. ADMIN Codex remains disabled; protected weekly/ADMIN routes and champion
+state are unchanged.
+
+The natural observer at 12:38 Riga completed successfully and persisted an
+integrity-verified readiness report: TRAIN 1,804 observations / 560 fixtures;
+FIT 348 pending fixtures (328 upcoming, 20 awaiting result), no eligible resolved
+FIT sample. BLOCKED is the expected data/window readiness state, not a service
+error. De-vig is AVAILABLE. This observer invocation preceded the 12:39 COMBO
+deployment, so it proves the calibration installation, not a new COMBO selection.
+
+The next scheduled discovery is 13:00 Riga and observer 13:08 Riga. Natural
+discovery under the new per-leg floor remains pending; no manual cycle was
+started. Evidence: `deployed_readback.json` in the R2 evidence directory.

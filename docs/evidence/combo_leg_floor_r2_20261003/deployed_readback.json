@@ -1,0 +1,279 @@
+{
+  "admin_codex": {
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "MainPID": "0"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    }
+  },
+  "as_of": "2026-10-03T09:41:44.066409+00:00",
+  "combo_floor_natural_discovery_verified": false,
+  "installed_preflight": [
+    "COMBO_LEG_FLOOR_PLAN_VALIDATED=/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003",
+    "current_mode=ENABLED; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "latest_natural_observer": {
+    "CALIBRATION_READINESS": {
+      "as_of": "2026-10-03T09:38:01.304762+00:00",
+      "blocked_by": [
+        "CALIBRATION_CLASS_DIVERSITY_INSUFFICIENT",
+        "CALIBRATION_FIT_INDEPENDENT_FIXTURES_INSUFFICIENT",
+        "CALIBRATION_FIT_SAMPLE_INSUFFICIENT",
+        "CALIBRATION_FIT_WINDOW_NOT_CLOSED",
+        "SEALED_HOLDOUT_INDEPENDENT_FIXTURES_INSUFFICIENT",
+        "SEALED_HOLDOUT_SAMPLE_INSUFFICIENT",
+        "SEALED_HOLDOUT_WINDOW_NOT_CLOSED",
+        "VALIDATION_EVALUATION_INDEPENDENT_FIXTURES_INSUFFICIENT",
+        "VALIDATION_EVALUATION_SAMPLE_INSUFFICIENT",
+        "VALIDATION_EVALUATION_WINDOW_NOT_CLOSED"
+      ],
+      "dataset_fingerprint": "4c5c33a5242e46736598ae03ba8df207c9a9d54d69044afadcefec8c7d28e59a",
+      "excluded_forecast_fixture_reasons": {
+        "COHORT_MISMATCH_OR_MIXED_FIXTURE": 4,
+        "OUTSIDE_OR_CROSSING_WINDOWS": 158,
+        "RESOLVED_EVIDENCE_EXCLUDED": 113,
+        "SEALED_HOLDOUT_RESERVATION": 117
+      },
+      "excluded_observation_reasons": {
+        "COHORT_MISMATCH_OR_MIXED_FIXTURE": 10,
+        "LABEL_NOT_AVAILABLE_BEFORE_EMBARGO": 402,
+        "OUTSIDE_WINDOWS_OR_EMBARGO_GAP": 59,
+        "SEALED_HOLDOUT_RESERVATION": 285,
+        "SOURCE_NOT_INDEPENDENT_PREMATCH": 12
+      },
+      "holdout_evaluated": false,
+      "learning_snapshot_fingerprint": "edab3ca6e91017c56836dee0fa7bb42d526cd96d35f4f7b9176bc175c8b2d5e2",
+      "plan_fingerprint": "9b154abc5b1ca4f18187150c2ca0a8d4d37b93b9c3893e97b2e61457329ca439",
+      "promotion_allowed": false,
+      "selection_effect": "NONE",
+      "snapshot_fingerprint": "6675b68c09793449a2d17cf6b82e0a6198f28e9dbc6f5466130a2eb0fda55fe8",
+      "status": "BLOCKED",
+      "training_invoked": false,
+      "version": "PREMATCH_CALIBRATION_READINESS_OBSERVER_V1",
+      "windows": {
+        "CALIBRATION_FIT": {
+          "eligible_resolved_fixtures": 0,
+          "eligible_resolved_observations": 0,
+          "end_exclusive": "2026-10-10T00:00:00+00:00",
+          "missing_independent_fixtures": 300,
+          "missing_observations": 300,
+          "progress": {
+            "awaiting_result_fixtures": 20,
+            "completed_fixtures": 0,
+            "excluded_fixtures": 0,
+            "observed_fixtures": 348,
+            "observed_opportunities": 1118,
+            "pending_fixtures": 348,
+            "result_awaiting_linkage_fixtures": 0,
+            "upcoming_fixtures": 328
+          },
+          "required_observations_and_fixtures": 300,
+          "start": "2026-10-03T00:00:00+00:00",
+          "window_state": "OPEN"
+        },
+        "SEALED_HOLDOUT": {
+          "eligible_resolved_fixtures": 0,
+          "eligible_resolved_observations": 0,
+          "end_exclusive": "2026-10-26T00:00:00+00:00",
+          "missing_independent_fixtures": 100,
+          "missing_observations": 100,
+          "progress": {
+            "awaiting_result_fixtures": 0,
+            "completed_fixtures": 0,
+            "excluded_fixtures": 0,
+            "observed_fixtures": 0,
+            "observed_opportunities": 0,
+            "pending_fixtures": 0,
+            "result_awaiting_linkage_fixtures": 0,
+            "upcoming_fixtures": 0
+          },
+          "required_observations_and_fixtures": 100,
+          "start": "2026-10-19T00:00:00+00:00",
+          "window_state": "FUTURE"
+        },
+        "TRAIN": {
+          "eligible_resolved_fixtures": 560,
+          "eligible_resolved_observations": 1804,
+          "end_exclusive": "2026-10-02T00:00:00+00:00",
+          "missing_independent_fixtures": 0,
+          "missing_observations": 0,
+          "progress": {
+            "awaiting_result_fixtures": 369,
+            "completed_fixtures": 560,
+            "excluded_fixtures": 234,
+            "observed_fixtures": 1240,
+            "observed_opportunities": 3946,
+            "pending_fixtures": 446,
+            "result_awaiting_linkage_fixtures": 0,
+            "upcoming_fixtures": 77
+          },
+          "required_observations_and_fixtures": 1,
+          "start": "2026-09-18T00:00:00+00:00",
+          "window_state": "CLOSED"
+        },
+        "VALIDATION_EVALUATION": {
+          "eligible_resolved_fixtures": 0,
+          "eligible_resolved_observations": 0,
+          "end_exclusive": "2026-10-18T00:00:00+00:00",
+          "missing_independent_fixtures": 30,
+          "missing_observations": 30,
+          "progress": {
+            "awaiting_result_fixtures": 0,
+            "completed_fixtures": 0,
+            "excluded_fixtures": 0,
+            "observed_fixtures": 0,
+            "observed_opportunities": 0,
+            "pending_fixtures": 0,
+            "result_awaiting_linkage_fixtures": 0,
+            "upcoming_fixtures": 0
+          },
+          "required_observations_and_fixtures": 30,
+          "start": "2026-10-11T00:00:00+00:00",
+          "window_state": "FUTURE"
+        }
+      }
+    },
+    "DEVIG_RESEARCH": {
+      "common_book_market_samples": 1277,
+      "counts": {
+        "blocked_book_markets": 28,
+        "blocked_captures": 6303,
+        "captures": 9362,
+        "duplicate_captures": 0,
+        "future_captures": 0,
+        "invalid_result_chronology_book_markets": 0,
+        "pending_book_markets": 9806,
+        "repeat_book_markets": 115,
+        "void_book_markets": 0
+      },
+      "first_book_market_samples": 11083,
+      "fixture_count": 63,
+      "model_learning_observations": 0,
+      "quality_verdict": "NEEDS_MORE_EVIDENCE",
+      "reason": null,
+      "resolved_book_market_samples": 1277,
+      "selection_effect": "NONE",
+      "snapshot_fingerprint": "3648b2ac119e56dd1589d30078d0acd91dc64b46131bf51c27b47cdca1ef7555",
+      "status": "AVAILABLE",
+      "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+    },
+    "LIVE": "DISABLED",
+    "api_calls": 0,
+    "created_at": "2026-10-03T09:38:01.304762+00:00",
+    "heavy_training": false,
+    "telegram_sends": 0
+  },
+  "manual_cycles_invoked": 0,
+  "natural_observer_document_integrity": "PASS",
+  "natural_observer_precedes_combo_release": true,
+  "next_discovery_riga": "2026-10-03T13:00:00+03:00",
+  "next_observer_riga": "2026-10-03T13:08:00+03:00",
+  "operator_deployment_verified": true,
+  "protected_model_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_routes_unchanged": true,
+  "provider_calls_by_readback": 0,
+  "read_only": true,
+  "release": "/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003",
+  "release_created_at": "2026-10-03T09:39:10.035069+00:00",
+  "release_env": {
+    "GOALVISION_LAB_ACCURACY_COMBOS": "1",
+    "GOALVISION_LAB_CALIBRATION_READINESS": "1",
+    "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130": "1",
+    "GOALVISION_LAB_DEVIG_RESEARCH": "1",
+    "GOALVISION_LAB_EARLY_COMBO_LOSS": "1",
+    "GOALVISION_LAB_SINGLE_MIN_ODDS_130": "1",
+    "GOALVISION_LAB_TODAY_ONLY": "1",
+    "PYTHONPATH": "/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003/application"
+  },
+  "routes": {
+    "goalvision-adaptive-learning-observer.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning-observer.service.d/90-reviewed-prematch-v2.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/93-probability-first-singles.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/95-accuracy-first-singles-20260930.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/98-accuracy-delivery-r4-20261001.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzz-quality-20261001.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzz-settlement-20261002.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzz-single-floor-20261002.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzz-devig-20261002.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzz-calendar-readiness-20261003.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzzz-combo-leg-floor-20261003.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-adaptive-learning.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning.service.d/90-quota-lock-hardening.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzz-quality-20261001.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzz-settlement-20261002.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzz-single-floor-20261002.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzz-devig-20261002.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzzzz-combo-leg-floor-20261003.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-lab-combo-settle.service.d/90-reviewed-prematch-v2.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/93-probability-first-singles.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/95-accuracy-first-singles-20260930.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/98-accuracy-delivery-r4-20261001.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/99-goalvision-settlement-guard.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzz-quality-20261001.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzz-settlement-20261002.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzz-single-floor-20261002.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzz-devig-20261002.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzzzz-combo-leg-floor-20261003.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-lab-v2-discover.service.d/90-reviewed-prematch-v2.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/93-probability-first-singles.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/95-accuracy-first-singles-20260930.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/98-accuracy-delivery-r4-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/99-odds-budget-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zz-accuracy-combo-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzz-context-scope-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzz-today-scope-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzz-quality-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzz-settlement-20261002.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzz-single-floor-20261002.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzz-devig-20261002.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzzzz-combo-leg-floor-20261003.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-leg-floor-e355b51-20261003/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    }
+  },
+  "service_states": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 11:38:48 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 11:38:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 04:12:04 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 04:12:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 11:35:00 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 11:35:00 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 11:36:28 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 11:30:02 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success"
+    }
+  },
+  "test_sends": 0,
+  "timers": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sat 2026-10-03 11:38:01 CEST",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 12:08:00 CEST"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sat 2026-10-03 04:12:01 CEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 04:12:00 CEST"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sat 2026-10-03 11:35:00 CEST",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 11:45:00 CEST"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sat 2026-10-03 11:30:01 CEST",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 12:00:00 CEST"
+    }
+  }
+}

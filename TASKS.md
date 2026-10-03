@@ -5,7 +5,9 @@
 - [x] Mixed-source apply/rollback/failure recovery and drift rejection: 157 installer tests passed, one inapplicable inherited case skipped; network disabled.
 - [x] Prepare a distinct R2 pinned entry point; preserve earlier packages and wrappers unchanged.
 - [x] Commit e355b51; R2 package prepared with 15 checksum entries and read-only preflight PASS for both installed sources.
-- [ ] Operator R2 apply, then next natural discovery/observer readback. No automatic deployment, manual cycles, provider calls or test sends.
+- [x] Operator deployed R2 e355b51 at 12:39 Riga; independent release/flags/four routes/timers/disabled ADMIN readback PASS.
+- [x] Natural 12:38 readiness observer succeeded on the previously installed calibration release; immutable report verified.
+- [ ] First post-R2 natural discovery at 13:00 Riga and observer at 13:08; no manual cycles/provider calls/test sends.
 - Report: docs/operations/PREMATCH_COMBO_LEG_FLOOR_R2_20261003.md.
 
 ## 2026-10-03 — COMBO per-leg minimum 1.30
@@ -18,7 +20,8 @@
 - [x] Source parity: 13 overlays reproduce the installed base plus the candidate; previously approved readiness files remain byte-identical.
 - [x] Combine pending approved readiness integration and leg floor into one reviewed operator package implementation.
 - [x] Source commit ff55669; pinned package prepared, 15 checksums and read-only preflight PASS; installed mode remains BASE.
-- [ ] Operator apply and next natural discovery/observer verification; no automatic deployment, manual cycle, provider call or test send.
+- [x] Operator applied R2 e355b51 after calibration deployment; see latest readback above.
+- [ ] Post-R2 natural discovery evidence; no manual cycle, provider call or test send.
 - Report: docs/operations/PREMATCH_COMBO_LEG_FLOOR_20261003.md.
 - Official unchanged; LIVE/ADMIN Codex disabled; champion unchanged.
 
@@ -32,7 +35,7 @@
 - [x] Prepare reviewed observer-only operator implementation with full application and plan hashes, atomic recovery and compatible flag rollback.
 - [x] Commit c4daf63; package checksums and read-only installer preflight PASS, current mode BASE.
 - [x] Operator installed calibration observer c4daf63; source/flag/route readback PASS on 2026-10-03.
-- [ ] Post-install natural readiness observer document; no manual cycle.
+- [x] Natural readiness observer at 12:38 Riga: success, report retained; FIT still data/window BLOCKED, no training or promotion.
 - [ ] Natural calendar evidence, then separately reviewed offline calibration/evaluation if all gates pass.
 - Report: docs/operations/CALIBRATION_OBSERVER_20261003.md.
 - SINGLE >=1.30; COMBO no floor; today-only/early COMBO settlement retained. Official unchanged; LIVE/ADMIN Codex disabled.
