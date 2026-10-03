@@ -482,3 +482,12 @@ preparation does not activate the timer or run production cycles. Existing cache
 results/current quotes only, dedicated append-only state, frozen plan/holdouts,
 no provider/Telegram calls and no selection/champion or publication changes.
 Preserve the first prospective research records across installation and rollback.
+
+## Constrained Dixon–Coles calculation improvement authorized 2026-10-03
+
+The user approved continuing calculation improvements at normal priority.
+Develop and test an explicitly separate constrained-solver research candidate
+with existing cached chronological results; preserve the deployed model/plan,
+selection and champion. Development replays are not prospective forecasts.
+No deployment, provider requests, Telegram sends, historical bookmaker odds
+or automatic promotion. A later forward comparison needs its own declaration.

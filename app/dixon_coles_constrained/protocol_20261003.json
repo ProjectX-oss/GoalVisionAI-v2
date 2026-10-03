@@ -1,0 +1,58 @@
+{
+  "acceptance": {
+    "analytic_gradient_hessian_finite_difference": true,
+    "boundary_failure_replay_must_certify_or_remain_unavailable": true,
+    "global_optimum_claim": false,
+    "independent_known_solution_check": true,
+    "interior_objective_absolute_tolerance": 1e-05,
+    "interior_probability_absolute_tolerance": 0.0001,
+    "local_kkt_residual_required": true,
+    "no_backfill_no_forward_claim": true,
+    "same_objective_and_model_policy": true,
+    "strict_feasibility": true
+  },
+  "baseline_model_sha256": "06cc4239564f0abb162e9e01b9c7250f8e93b4ae2f7576a2d3f8d644a3240b02",
+  "baseline_plan_fingerprint": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+  "constraints": {
+    "maximum_goal_rate": 8.0,
+    "minimum_log_goal_rate": -12.0,
+    "minimum_low_cell_factor": 1e-10
+  },
+  "declared_at": "2026-10-03T16:53:13.895524+00:00",
+  "fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+  "forward_enabled": false,
+  "historical_bookmaker_odds_used": false,
+  "known_development_fixtures": [
+    1602097,
+    1641278,
+    1498855
+  ],
+  "method": "FEASIBLE_LOG_BARRIER_DAMPED_NEWTON_ANALYTIC_HESSIAN",
+  "no_installed_imports_or_routes": true,
+  "priority": "NORMAL",
+  "prospective_declaration_required": true,
+  "purpose": "DEVELOPMENT_ONLY",
+  "selection_effect": "NONE",
+  "solver": {
+    "armijo": 0.0001,
+    "barrier_weights": [
+      0.01,
+      0.001,
+      0.0001,
+      1e-05,
+      1e-06,
+      1e-07,
+      1e-08
+    ],
+    "complementarity_inf_tolerance": 1e-06,
+    "cpu_seconds_per_fit": 20.0,
+    "damping_growth": 10.0,
+    "damping_start": 1e-08,
+    "max_damping_attempts": 14,
+    "max_evaluations": 10000,
+    "max_iterations_per_stage": 100,
+    "max_line_search_steps": 60,
+    "stationarity_tolerance": 1e-06
+  },
+  "version": "DC_CONSTRAINED_DEVELOPMENT_V1"
+}
