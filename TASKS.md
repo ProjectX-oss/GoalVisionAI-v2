@@ -5,7 +5,8 @@
 - [x] Implement bounded independent worker, immutable paired model/COMBO comparisons and operator-only package; 338 offline tests and synthetic replay pass.
 - [x] Record offline evidence, systemd unit verification and unchanged installed production/original research.
 - [x] Source commit 1183e35; operator package built, 844 checksums and read-only wrapper preflight PASS. New state/unit absent; no deployment.
-- [ ] Operator activation, independent installed readback and first natural forward/shadow cycle.
+- [x] Operator activated 1183e35; independent 842-file/unit/resource/route/empty-state readback PASS at 20:55 Riga. All 26 original V1 records and protected state retained. New timer active/enabled, first scheduled tick 21:12:30 Riga.
+- [ ] Review the first natural forward/COMBO shadow cycle and later genuine paired outcomes; no automatic promotion.
 
 ## 2026-10-03 — Separate constrained Dixon–Coles development candidate
 

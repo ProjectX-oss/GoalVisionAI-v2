@@ -1,0 +1,115 @@
+{
+  "admin_codex": {
+    "service": {
+      "ActiveState": "inactive",
+      "MainPID": "0"
+    },
+    "timer": {
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    }
+  },
+  "all_application_hashes_match": true,
+  "application_files": 842,
+  "automatic_promotion": false,
+  "combo_per_leg_minimum": "1.30",
+  "extra_combined_floor": null,
+  "manual_service_cycles": 0,
+  "next_review": "FIRST_NATURAL_FORWARD_COMBO_SHADOW_CYCLE",
+  "observed_at": "2026-10-03T17:56:48.737435+00:00",
+  "operator_report": "DIXON_COLES_FORWARD_COMBO_SHADOW_DEPLOYED",
+  "original_research": {
+    "all_reviewed_records_preserved": true,
+    "manifest_and_units_match": true,
+    "records": 26,
+    "release": "/opt/goalvision-dixon-coles-e5b02e4-20261003",
+    "timer_active": true
+  },
+  "priority": "NORMAL",
+  "production_application_files": 818,
+  "production_application_hashes_unchanged": true,
+  "production_routes_equal_prepared_package": true,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "published_selection_effect": "NONE",
+  "release": "/opt/goalvision-dixon-coles-forward-1183e35-20261003",
+  "root_config_guard": "OPERATOR_APPLY_CHECKED; READBACK_NONROOT",
+  "service": {
+    "ActiveState": "inactive",
+    "CPUQuotaPerSecUSec": "250ms",
+    "CPUWeight": "10",
+    "DropInPaths": "",
+    "ExecMainStartTimestamp": "",
+    "ExecMainStatus": "0",
+    "ExecStart": "{ path=/home/arvis/GoalVisionAI/.venv/bin/python ; argv[]=/home/arvis/GoalVisionAI/.venv/bin/python -B -m app.dixon_coles_forward.worker --shadow-database /home/arvis/GoalVisionAI/var/lab_v2/shadow.db --audit-database /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db --ledger-database /home/arvis/GoalVisionAI/var/lab_combo/ledger.db --research-database /var/lib/goalvision-dixon-coles-forward/research.db --limit 12 ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }",
+    "FragmentPath": "/etc/systemd/system/goalvision-dixon-coles-forward.service",
+    "Group": "arvis",
+    "IOSchedulingClass": "3",
+    "IOWeight": "10",
+    "LoadState": "loaded",
+    "MainPID": "0",
+    "MemoryMax": "268435456",
+    "Nice": "10",
+    "NoNewPrivileges": "yes",
+    "PrivateNetwork": "yes",
+    "ProtectHome": "read-only",
+    "ProtectSystem": "strict",
+    "ReadWritePaths": "/var/lib/goalvision-dixon-coles-forward",
+    "RestrictAddressFamilies": "AF_UNIX",
+    "Result": "success",
+    "SubState": "dead",
+    "TasksMax": "16",
+    "TimeoutStartUSec": "50s",
+    "TimeoutStopUSec": "5s",
+    "User": "arvis",
+    "WorkingDirectory": "/opt/goalvision-dixon-coles-forward-1183e35-20261003/application"
+  },
+  "single_minimum": "1.50",
+  "source_commit": "1183e356e479a3a4bcc52c7e63d3bc1b61d00a89",
+  "state": {
+    "directory_mode": "0700",
+    "latest_exists": false,
+    "mode": "0600",
+    "owner": "arvis",
+    "path": "/var/lib/goalvision-dixon-coles-forward/research.db",
+    "records": 0
+  },
+  "status": "DEPLOYED_READBACK_PASS",
+  "telegram_sends": 0,
+  "timer": {
+    "AccuracyUSec": "1s",
+    "ActiveState": "active",
+    "DropInPaths": "",
+    "FragmentPath": "/etc/systemd/system/goalvision-dixon-coles-forward.timer",
+    "LastTriggerUSec": "",
+    "LoadState": "loaded",
+    "NextElapseUSecRealtime": "Sat 2026-10-03 21:12:30 EEST",
+    "Persistent": "no",
+    "RandomizedDelayUSec": "0",
+    "SubState": "waiting",
+    "TimersCalendar": "{ OnCalendar=*-*-* *:12,42:30 Europe/Riga ; next_elapse=Sat 2026-10-03 21:12:30 EEST }",
+    "UnitFileState": "enabled"
+  },
+  "units": {
+    "goalvision-dixon-coles-forward.service": {
+      "bytes_match": true,
+      "sha256": "28dfb89103fad36beec38c431974fca07ad2545491f49e486e16f09ccb340b5d"
+    },
+    "goalvision-dixon-coles-forward.timer": {
+      "bytes_match": true,
+      "sha256": "4149f0e96c8b783887d7d84990e81def33a605dc74ec435c27f77d30c8046a5e"
+    }
+  }
+}
