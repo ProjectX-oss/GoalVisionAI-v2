@@ -137,3 +137,25 @@ Default systemd Result=success/ExecMainStatus=0 is not evidence of a completed c
 First natural-run proof and resolved/cross-day quality evidence remain pending.
 Readback: `docs/evidence/dixon_coles_automation_20261003/deployed_readback.json`.
 No manual cycle, provider call, Telegram request, redeployment or promotion.
+
+## First natural cycle — 2026-10-03 19:10 Riga
+
+The timer triggered at 19:10:30 and the service exited successfully at 19:10:36
+(exit 0, approximately 1.63 CPU seconds). The worker reported COMPLETED.
+Its evaluation fingerprint resolves to the immutable research metrics record;
+all 13 research document fingerprints verify and all original 10 records survive.
+
+No new forecast was added. Fixture 1602097 in 1X2 and TOTAL_2_5 explicitly
+returned FIT_DID_NOT_CONVERGE. These are two families for one fixture, not two
+independent games. The model policy/iteration limits and frozen plan are unchanged.
+The source scan examined the bounded latest 500 records: 477 pre-declaration,
+10 no longer upcoming, 9 stale and 2 missing model references; older records
+were not scanned. This is a bounded sample, not all available football fixtures.
+
+Fixture 1641278 (21:00 Riga kickoff) remains the only pending prospective fixture:
+four families/nine paired market comparisons, zero resolved or void fixtures.
+The first scheduled lifecycle is verified; predictive quality is still unassessed.
+Next timer slot observed: 19:40:30 Riga. Subsequent coverage/non-convergence and
+resolved/cross-day evidence need review. No manual cycle or fit, source API call,
+Telegram request, deployment, promotion or policy change was performed.
+Evidence: `docs/evidence/dixon_coles_automation_20261003/first_natural_cycle.json`.

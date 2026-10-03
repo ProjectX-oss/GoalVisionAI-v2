@@ -7,7 +7,8 @@
 - [x] 104 offline tests passed (45 automation/installer checks); systemd unit verification PASS; frozen plans and all non-research application files unchanged.
 - [x] Source commit e5b02e4; pinned operator package built; 831 checksums and read-only preflight PASS. Research service/timer remain not installed.
 - [x] Operator activated e5b02e4; independent release/unit/resource/seed/route/champion readback PASS. All 10 original research records retained; timer active/enabled.
-- [ ] First natural run (initial next slot 2026-10-03 19:10:30 Riga), then genuine cross-day quality review.
+- [x] First natural timer run 19:10:30–19:10:36 Riga completed, exit 0; 13 research records verified and original 10 preserved. No new forecast: one fixture/two families explicitly unavailable (FIT_DID_NOT_CONVERGE). One original fixture remains pending.
+- [ ] Review subsequent natural coverage/non-convergence and genuine resolved/cross-day quality evidence; no frozen-plan tuning or promotion.
 - Runbook: docs/operations/DIXON_COLES_AUTOMATION_20261003.md.
 - Evidence: docs/evidence/dixon_coles_automation_20261003/verification.json.
 - No deployment, manual production cycle, provider/Telegram request or automatic promotion during preparation.

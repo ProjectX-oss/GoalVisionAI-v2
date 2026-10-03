@@ -1,0 +1,373 @@
+{
+  "all_13_research_document_fingerprints_verified": true,
+  "capture_outcome": {
+    "new_forecasts": 0,
+    "reason": "FIT_DID_NOT_CONVERGE",
+    "unavailable_fixture_families": 2,
+    "unavailable_markets": [
+      "1X2",
+      "TOTAL_2_5"
+    ],
+    "unique_unavailable_fixtures": 1
+  },
+  "cycle_report": {
+    "automatic_promotion": false,
+    "capture": {
+      "counts": {
+        "unavailable": 2
+      },
+      "details": [
+        {
+          "fixture_id": 1602097,
+          "reason": "FIT_DID_NOT_CONVERGE"
+        },
+        {
+          "fixture_id": 1602097,
+          "reason": "FIT_DID_NOT_CONVERGE"
+        }
+      ],
+      "fingerprint": "e1244b1cde088391e1c058de5452539b04f664e97ab8be6d0895c831a750cc6f",
+      "source_diagnostics": {
+        "before_declaration": 477,
+        "capture_rows_examined": 500,
+        "missing_model_reference": 2,
+        "not_upcoming_evaluation": 10,
+        "older_captures_not_scanned": 1,
+        "stale_capture": 9
+      }
+    },
+    "evaluation": {
+      "counts": {
+        "forecast_families": 4
+      },
+      "fingerprint": "871369a8d545149b6fe1a4ac9462f985af4d9b8541047da7fd04e331a1a9f88e",
+      "fixtures": 0,
+      "kickoff_dates": 0,
+      "lifecycle": {
+        "PENDING": 1,
+        "RESOLVED": 0,
+        "VOID": 0
+      },
+      "market_rows": 0,
+      "quality_verdict": "NEEDS_MORE_EVIDENCE"
+    },
+    "fingerprint": "194a47748d7a02a34033d57c979f5820a1fdc96e92aea389e0aa713526ea0340",
+    "finished_at": "2026-10-03T16:10:35.955601+00:00",
+    "priority": "NORMAL",
+    "provider_calls": 0,
+    "selection_effect": "NONE",
+    "started_at": "2026-10-03T16:10:34.261822+00:00",
+    "status": "COMPLETED",
+    "telegram_sends": 0,
+    "version": "DC_AUTOMATION_V1"
+  },
+  "diagnostics": [
+    {
+      "capture_id": "devig-v2:1602097:TOTAL_2_5:3efa30593aaec008dbdd4e3a0eb184888f0065910a0749395bfc853efcb4fc25",
+      "fingerprint": "091869f64b9fb05d1f711481363b6c0a7be54d43e1b90e0332eee7596b94d971",
+      "fixture_id": 1602097,
+      "observed_at": "2026-10-03T16:10:35.674626+00:00",
+      "plan_fingerprint": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+      "reason": "FIT_DID_NOT_CONVERGE",
+      "version": "DIXON_COLES_RESEARCH_V1"
+    },
+    {
+      "capture_id": "devig-v2:1602097:1X2:b9bbd5c764aa432560bd4f0634c3ba56e0d6ffe372906a052304407107b136e9",
+      "fingerprint": "ff7246c303b079df506a0a47ed9605841366b6df8e0ff4a315a5c846f4acd11d",
+      "fixture_id": 1602097,
+      "observed_at": "2026-10-03T16:10:35.459050+00:00",
+      "plan_fingerprint": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+      "reason": "FIT_DID_NOT_CONVERGE",
+      "version": "DIXON_COLES_RESEARCH_V1"
+    }
+  ],
+  "metrics": {
+    "as_of": "2026-10-03T16:10:35.761051+00:00",
+    "automatic_promotion": false,
+    "betting_metrics": "NOT_APPLICABLE_NO_RESEARCH_BET_SELECTION",
+    "counts": {
+      "forecast_families": 4
+    },
+    "fingerprint": "871369a8d545149b6fe1a4ac9462f985af4d9b8541047da7fd04e331a1a9f88e",
+    "lifecycle": {
+      "PENDING": 1,
+      "RESOLVED": 0,
+      "VOID": 0
+    },
+    "overall": {
+      "common": {
+        "DIXON_COLES": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "EXISTING_ENSEMBLE": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "MULTIPLICATIVE": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "OO_EPC": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "POISSON_SAME_RATES": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "POWER": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        },
+        "SHIN": {
+          "brier": null,
+          "ece": null,
+          "log_loss": null,
+          "mce": null,
+          "probability_observations": 0,
+          "reliability_bins": []
+        }
+      },
+      "common_market_rows": 0,
+      "fixtures": 0,
+      "kickoff_dates": 0,
+      "market_rows": 0,
+      "paired": {
+        "DIXON_COLES": {
+          "fixtures": 0,
+          "method": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          },
+          "missing_market_rows": 0,
+          "paired_dixon_coles": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          }
+        },
+        "EXISTING_ENSEMBLE": {
+          "fixtures": 0,
+          "method": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          },
+          "missing_market_rows": 0,
+          "paired_dixon_coles": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          }
+        },
+        "MULTIPLICATIVE": {
+          "fixtures": 0,
+          "method": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          },
+          "missing_market_rows": 0,
+          "paired_dixon_coles": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          }
+        },
+        "OO_EPC": {
+          "fixtures": 0,
+          "method": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          },
+          "missing_market_rows": 0,
+          "paired_dixon_coles": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          }
+        },
+        "POISSON_SAME_RATES": {
+          "fixtures": 0,
+          "method": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          },
+          "missing_market_rows": 0,
+          "paired_dixon_coles": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          }
+        },
+        "POWER": {
+          "fixtures": 0,
+          "method": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          },
+          "missing_market_rows": 0,
+          "paired_dixon_coles": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          }
+        },
+        "SHIN": {
+          "fixtures": 0,
+          "method": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          },
+          "missing_market_rows": 0,
+          "paired_dixon_coles": {
+            "brier": null,
+            "ece": null,
+            "log_loss": null,
+            "mce": null,
+            "probability_observations": 0,
+            "reliability_bins": []
+          }
+        }
+      }
+    },
+    "plan_fingerprint": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+    "quality_verdict": "NEEDS_MORE_EVIDENCE",
+    "segments": {
+      "family": {},
+      "lead": {},
+      "league": {},
+      "market": {},
+      "odds": {}
+    },
+    "selection_effect": "NONE",
+    "unit_of_independence": "FIXTURE_AND_KICKOFF_DATE; COMPLEMENTS_ARE_CORRELATED",
+    "version": "DIXON_COLES_RESEARCH_V1"
+  },
+  "no_deployment_promotion_or_frozen_plan_change": true,
+  "no_manual_cycle": true,
+  "no_provider_calls": true,
+  "no_telegram_requests": true,
+  "observed_at": "2026-10-03T16:31:37.453623+00:00",
+  "original_10_seed_records_preserved": true,
+  "pending": {
+    "fixture_ids": [
+      1641278
+    ],
+    "forecast_families": 4,
+    "kickoff_riga": "2026-10-03T21:00:00+03:00",
+    "paired_market_comparisons": 9,
+    "unique_fixtures": 1
+  },
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "quality_conclusion": "NEEDS_MORE_EVIDENCE; first scheduled lifecycle success is not forecast-quality evidence",
+  "release_and_production_route_validation": "PASS",
+  "research_record_counts": {
+    "diagnostic": 2,
+    "forecast": 4,
+    "metrics": 2,
+    "model": 4,
+    "plan": 1
+  },
+  "source_commit": "e5b02e4b35bb29720b3500d20d874ab8ad368474",
+  "trigger": "NATURAL_SYSTEMD_TIMER",
+  "units": {
+    "goalvision-dixon-coles-research.service": {
+      "ActiveState": "inactive",
+      "CPUUsageNSec": "1633456000",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 19:10:36 EEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 19:10:30 EEST",
+      "ExecMainStatus": "0",
+      "InvocationID": "313e4c8a4dfe4c5d855de19fdd6fedb9",
+      "LoadState": "loaded",
+      "Result": "success"
+    },
+    "goalvision-dixon-coles-research.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sat 2026-10-03 19:10:30 EEST",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 19:40:30 EEST",
+      "UnitFileState": "enabled"
+    }
+  }
+}
