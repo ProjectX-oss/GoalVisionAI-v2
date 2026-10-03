@@ -1,5 +1,10 @@
 # PREMATCH COMBO per-leg minimum 1.30 — 2026-10-03
 
+Operator update: calibration observer has since been installed. Use the R2
+runbook `docs/operations/PREMATCH_COMBO_LEG_FLOOR_R2_20261003.md` and the
+new `combo-leg-floor-r2.py` command. The original ff55669 preparation below
+is retained as historical evidence.
+
 User clarification at 10:22 Europe/Riga: each selected COMBO leg must have
 decimal odds at least 1.30. This is not a 1.30 combined-odds threshold.
 SINGLE remains >=1.30. There is no additional combined-odds minimum.
@@ -73,7 +78,7 @@ This is an operator-requested odds restriction, not evidence of an improved win
 rate or profitability. No historical bookmaker-odds acquisition or backtest is
 performed.
 
-## One package for the two approved pending changes
+## Original preparation before calibration was installed
 
 At preflight all four PREMATCH services still use
 `/opt/goalvision-prematch-devig-83958d1-20261002/release.env`.
@@ -104,14 +109,14 @@ routes and timer states. Root apply also requires the installed ADMIN
 After package preparation:
 
 ```bash
-python3 ~/goalvision-operations/combo-leg-floor.py
-sudo python3 ~/goalvision-operations/combo-leg-floor.py --apply
+python3 ~/goalvision-operations/combo-leg-floor-r2.py
+sudo python3 ~/goalvision-operations/combo-leg-floor-r2.py --apply
 ```
 
 Compatible rollback:
 
 ```bash
-sudo python3 ~/goalvision-operations/combo-leg-floor.py --apply --rollback
+sudo python3 ~/goalvision-operations/combo-leg-floor-r2.py --apply --rollback
 ```
 
 Rollback disables only the COMBO leg-floor flag; SINGLE 1.30, readiness reporting,

@@ -1,3 +1,12 @@
+## 2026-10-03 — COMBO installer after calibration deployment
+
+- [x] Verify calibration observer c4daf63 is installed; the rejected ff55669 COMBO attempt created no release or overrides.
+- [x] Retain exact-route guards and pin both installed source/environment contracts; runtime application files remain identical.
+- [x] Mixed-source apply/rollback/failure recovery and drift rejection: 157 installer tests passed, one inapplicable inherited case skipped; network disabled.
+- [x] Prepare a distinct R2 pinned entry point; preserve earlier packages and wrappers unchanged.
+- [ ] Operator R2 apply, then next natural discovery/observer readback. No automatic deployment, manual cycles, provider calls or test sends.
+- Report: docs/operations/PREMATCH_COMBO_LEG_FLOOR_R2_20261003.md.
+
 ## 2026-10-03 — COMBO per-leg minimum 1.30
 
 - [x] Apply the user's clarified rule: each COMBO selection >=1.30, not an aggregate 1.30 threshold.
@@ -21,7 +30,8 @@
 - [x] Query-only evidence: TRAIN 1,804 / 560 fixtures; FIT 312 opportunities / 101 upcoming fixtures, zero eligible resolved. No training/holdout/champion change.
 - [x] Prepare reviewed observer-only operator implementation with full application and plan hashes, atomic recovery and compatible flag rollback.
 - [x] Commit c4daf63; package checksums and read-only installer preflight PASS, current mode BASE.
-- [ ] Operator apply and next natural observer readback; no automatic deployment or manual cycle.
+- [x] Operator installed calibration observer c4daf63; source/flag/route readback PASS on 2026-10-03.
+- [ ] Post-install natural readiness observer document; no manual cycle.
 - [ ] Natural calendar evidence, then separately reviewed offline calibration/evaluation if all gates pass.
 - Report: docs/operations/CALIBRATION_OBSERVER_20261003.md.
 - SINGLE >=1.30; COMBO no floor; today-only/early COMBO settlement retained. Official unchanged; LIVE/ADMIN Codex disabled.

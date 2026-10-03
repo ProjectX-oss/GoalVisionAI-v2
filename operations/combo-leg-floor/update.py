@@ -1,4 +1,4 @@
-"""Reviewed PREMATCH COMBO leg floor and previously approved readiness observer from the installed de-vig release. Default is read-only; --apply is operator-only."""
+"""Reviewed PREMATCH COMBO leg floor from de-vig plus the already installed calibration observer. Default is read-only; --apply is operator-only."""
 import argparse
 import fcntl
 import hashlib
@@ -12,16 +12,19 @@ import tempfile
 import time
 
 BASE = Path('/opt/goalvision-prematch-devig-83958d1-20261002')
+CALIBRATION_BASE = Path('/opt/goalvision-calibration-observer-c4daf63-20261003')
 SERVICES = ('goalvision-lab-v2-discover.service', 'goalvision-adaptive-learning-observer.service',
             'goalvision-lab-combo-settle.service', 'goalvision-adaptive-learning.service')
-ROUTE_BASES = {unit: BASE / 'release.env' for unit in SERVICES}
+ROUTE_BASES = {unit: (CALIBRATION_BASE if unit == 'goalvision-adaptive-learning-observer.service'
+                      else BASE) / 'release.env' for unit in SERVICES}
 TIMERS = tuple(u.replace('.service', '.timer') for u in SERVICES)
 OVERRIDES = {u: Path('/etc/systemd/system') / (u + '.d') / 'zzzzzzzzzz-combo-leg-floor-20261003.conf' for u in SERVICES}
 PROTECTED = ('goalvision-lab-weekly-stats.service', 'goalvision-admin-alerts.service',
              'goalvision-admin-autorepair.service', 'goalvision-lab-combo-discover.service')
 PLAN_ASSET = 'app/adaptive_lab/calendar_plan_20261002.json'
-FILES = ('app/adaptive_lab/calendar_research.py', 'app/adaptive_lab/calendar_audit.py',
-         'app/adaptive_lab/calendar_monitor.py', PLAN_ASSET, 'app/adaptive_lab/observer.py',
+CALIBRATION_FILES = ('app/adaptive_lab/calendar_research.py', 'app/adaptive_lab/calendar_audit.py',
+                     'app/adaptive_lab/calendar_monitor.py', PLAN_ASSET, 'app/adaptive_lab/observer.py')
+FILES = (*CALIBRATION_FILES,
          'app/lab_combo/odds_policy.py', 'app/lab_combo/engine.py', 'app/lab_combo/experimental.py',
          'app/lab_combo/service.py', 'app/lab_v2_shadow/accuracy_combo.py',
          'app/lab_v2_shadow/publication.py', 'app/lab_v2_shadow/cli.py',
@@ -72,6 +75,21 @@ def base_environment(target):
             'GOALVISION_LAB_ACCURACY_COMBOS=1\nGOALVISION_LAB_TODAY_ONLY=1\n'
             'GOALVISION_LAB_EARLY_COMBO_LOSS=1\nGOALVISION_LAB_SINGLE_MIN_ODDS_130=1\n'
             'GOALVISION_LAB_DEVIG_RESEARCH=1\n').encode()
+
+def expected_route_sources(base_manifest: dict[str, str], files: dict[str, str]) -> dict:
+    """Derive both reviewed source contracts; never bless arbitrary observed drift."""
+    sources = {}
+    for env in sorted(set(ROUTE_BASES.values())):
+        if env == BASE / 'release.env':
+            manifest = dict(base_manifest)
+            content = base_environment(BASE)
+        elif env == CALIBRATION_BASE / 'release.env':
+            manifest = dict(base_manifest, **{name: files[name] for name in CALIBRATION_FILES})
+            content = base_environment(CALIBRATION_BASE) + b'GOALVISION_LAB_CALIBRATION_READINESS=1\n'
+        else:
+            raise ValueError('UNREVIEWED_ROUTE_SOURCE')
+        sources[str(env)] = {'environment_sha256': hashlib.sha256(content).hexdigest(), 'manifest': manifest}
+    return sources
 
 def environment(target, rollback=False):
     return base_environment(target) + b'GOALVISION_LAB_CALIBRATION_READINESS=1\n' + (
@@ -126,10 +144,12 @@ def validate(package):
     reject_symlinks(BASE)
     if tree(BASE / 'application') != meta['base_manifest'] or (BASE / 'release.env').read_bytes() != base_environment(BASE):
         raise ValueError('BASE_SOURCE_OR_ENV_DRIFT')
-    # Also pin the observer/settlement and research rollback sources.
+    # Pin the exact de-vig and already installed calibration source contracts.
     expected_sources = {str(p) for p in ROUTE_BASES.values()}
     if set(meta['route_sources']) != expected_sources:
         raise ValueError('ROUTE_SOURCE_SET_MISMATCH')
+    if meta['route_sources'] != expected_route_sources(meta['base_manifest'], meta['files']):
+        raise ValueError('ROUTE_SOURCE_CONTRACT_MISMATCH')
     for env_path, expected in meta['route_sources'].items():
         env = Path(env_path)
         app = env.parent / ('research' if env.name == 'research.env' else 'application')

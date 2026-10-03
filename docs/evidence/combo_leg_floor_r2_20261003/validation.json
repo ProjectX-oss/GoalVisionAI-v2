@@ -1,0 +1,24 @@
+{
+  "as_of": "2026-10-03T09:36:35.589169+00:00",
+  "both_installed_source_contracts": "PASS",
+  "command": [
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "docs/operations/offline_test_runner.py",
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_prematch_settlement_upgrade.py"
+  ],
+  "existing_runtime_test_evidence": "docs/evidence/combo_leg_floor_20261003/validation.json",
+  "log_sha256": "6a460dcf78c351427a99b0fd195ee2cee79d4e83944b03b07b2e40860e9c825a",
+  "manual_cycles": 0,
+  "network_denied": true,
+  "passed": 157,
+  "provider_calls": 0,
+  "runtime_source_unchanged": true,
+  "seconds": 2.72,
+  "skip_reason": "Inherited partial multi-route case is inapplicable for the single-route calendar installer.",
+  "skipped": 1,
+  "test_sends": 0
+}

@@ -29,14 +29,25 @@ def rig(tmp_path, monkeypatch, request):
         p = package / "overlay" / name
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text("REVIEWED = True\n")
+    if hasattr(mod, "CALIBRATION_BASE"):
+        calibration_base = tmp_path / "calibration-base"
+        mod.shutil.copytree(base / "application", calibration_base / "application")
+        for name in mod.CALIBRATION_FILES:
+            p = calibration_base / "application" / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes((package / "overlay" / name).read_bytes())
+        monkeypatch.setattr(mod, "CALIBRATION_BASE", calibration_base)
+        (calibration_base / "release.env").write_bytes(
+            mod.base_environment(calibration_base) + b"GOALVISION_LAB_CALIBRATION_READINESS=1\n")
+        route_bases["goalvision-adaptive-learning-observer.service"] = calibration_base / "release.env"
     meta = {
         "source_commit": "a" * 40, "updater_sha256": mod.sha(package / "update.py"),
         "files": {name: mod.sha(package / "overlay" / name) for name in mod.FILES},
         "base_manifest": mod.tree(base / "application"),
-        "route_sources": {str(base / "release.env"): {
-            "environment_sha256": mod.sha(base / "release.env"),
-            "manifest": mod.tree(base / "application"),
-        }},
+        "route_sources": {str(env): {
+            "environment_sha256": mod.sha(env),
+            "manifest": mod.tree(env.parent / "application"),
+        } for env in set(route_bases.values())},
     }
     (package / "metadata.json").write_text(json.dumps(meta))
     state = {t: "active" for t in mod.TIMERS}
@@ -340,3 +351,63 @@ def test_combo_leg_floor_rollback_retains_approved_readiness_and_other_flags(rig
     for flag in ("CALIBRATION_READINESS","DEVIG_RESEARCH","SINGLE_MIN_ODDS_130",
                  "TODAY_ONLY","EARLY_COMBO_LOSS","ACCURACY_COMBOS"):
         assert ("GOALVISION_LAB_"+flag+"=1\n").encode() in m.environment(target,True)
+
+
+@pytest.mark.parametrize("rig", ["combo-leg-floor"], indirect=True)
+def test_installed_calibration_source_is_exactly_pinned(rig):
+    m=rig.mod
+    observer="goalvision-adaptive-learning-observer.service"
+    assert len(set(m.ROUTE_BASES.values()))==2
+    assert m.ROUTE_BASES[observer]==m.CALIBRATION_BASE/"release.env"
+    assert rig.meta["route_sources"]==m.expected_route_sources(rig.meta["base_manifest"],rig.meta["files"])
+    m.verify_routes()
+    m.apply(rig.package)
+    target=m.validate(rig.package)[1]
+    assert b"GOALVISION_LAB_CALIBRATION_READINESS=1\n" in (target/"release.env").read_bytes()
+    m.apply(rig.package,rollback=True)
+    assert b"GOALVISION_LAB_CALIBRATION_READINESS=1\n" in (target/"rollback.env").read_bytes()
+    assert b"GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130=0\n" in (target/"rollback.env").read_bytes()
+
+
+@pytest.mark.parametrize("rig", ["combo-leg-floor"], indirect=True)
+@pytest.mark.parametrize("tamper", ["plan","observer","environment","unexpected_python"])
+def test_installed_calibration_source_drift_refused_before_controls(rig,tamper):
+    m=rig.mod
+    if tamper=="environment":
+        p=m.CALIBRATION_BASE/"release.env"
+    elif tamper=="plan":
+        p=m.CALIBRATION_BASE/"application"/m.PLAN_ASSET
+    elif tamper=="observer":
+        p=m.CALIBRATION_BASE/"application/app/adaptive_lab/observer.py"
+    else:
+        p=m.CALIBRATION_BASE/"application/app/unreviewed.py"
+    p.write_text("unreviewed")
+    with pytest.raises(ValueError,match="ROLLBACK_SOURCE_DRIFT"):
+        m.apply(rig.package)
+    assert not rig.calls and not any(p.exists() for p in rig.overrides.values())
+
+
+@pytest.mark.parametrize("rig", ["combo-leg-floor"], indirect=True)
+@pytest.mark.parametrize("tamper", ["manifest","environment"])
+def test_observed_calibration_drift_cannot_be_reblessed_in_metadata(rig,tamper):
+    m=rig.mod
+    env=m.CALIBRATION_BASE/"release.env"
+    meta=json.loads((rig.package/"metadata.json").read_text())
+    if tamper=="environment":
+        env.write_bytes(env.read_bytes().replace(b"CALIBRATION_READINESS=1",b"CALIBRATION_READINESS=0"))
+        meta["route_sources"][str(env)]["environment_sha256"]=m.sha(env)
+    else:
+        (m.CALIBRATION_BASE/"application"/m.PLAN_ASSET).write_text("{}")
+        meta["route_sources"][str(env)]["manifest"]=m.tree(m.CALIBRATION_BASE/"application")
+    (rig.package/"metadata.json").write_text(json.dumps(meta))
+    with pytest.raises(ValueError,match="ROUTE_SOURCE_CONTRACT_MISMATCH"):
+        m.apply(rig.package)
+    assert not rig.calls
+
+
+@pytest.mark.parametrize("rig", ["combo-leg-floor"], indirect=True)
+def test_r2_does_not_accept_prior_all_devig_route_state(rig):
+    rig.loaded["goalvision-adaptive-learning-observer.service"]=str(rig.base/"release.env")+" (ignore_errors=no)"
+    with pytest.raises(ValueError,match="PREMATCH_ROUTE_MISMATCH"):
+        rig.mod.apply(rig.package)
+    assert not rig.calls and not any(p.exists() for p in rig.overrides.values())
