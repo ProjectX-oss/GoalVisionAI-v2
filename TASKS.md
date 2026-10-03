@@ -5,7 +5,7 @@
 - [x] Dedicated bot/configuration/recipient contract; private START challenge verification and hidden credential enrollment.
 - [x] Original-route settlement, independent prospective COMBO statistics, unchanged economic claims and compatible pause rollback.
 - [x] Offline matrix: 622 passed, one inherited inapplicable case skipped; 817-file exact-base parity PASS.
-- [ ] Build pinned operator package from committed sources and verify read-only preflight.
+- [x] Source commit 9a3b198; pinned operator package built, checksums and read-only exact-base preflight PASS; enrollment/apply pending.
 - [ ] Operator enrollment, apply, readback and first qualifying natural COMBO-bot prediction/result.
 - Report: docs/operations/PREMATCH_COMBO_BOT_20261003.md.
 - SINGLE remains >=1.30; COMBO legs >=1.30. SINGLE 1.50 and channel/weekly COMBO delivery remain later work.

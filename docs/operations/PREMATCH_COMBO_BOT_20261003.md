@@ -109,3 +109,15 @@ Telegram primary references reviewed for the operator protocol:
 https://core.telegram.org/bots/api#getme
 https://core.telegram.org/bots/api#getupdates
 https://core.telegram.org/bots/features#deep-linking
+
+## Prepared package
+
+Source commit: 9a3b19890e951224cef335c78054c0af203e7428
+
+Package: /home/arvis/goalvision-operations/combo-bot-9a3b198-20261003
+
+Pinned entry point: /home/arvis/goalvision-operations/combo-bot.py
+
+8 package checksum entries verified. Read-only preflight PASS, current mode BASE.
+Enrollment contract loaded under network denial; token/recipient remain unconfigured.
+No deployment or Telegram calls performed.

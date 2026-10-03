@@ -1,0 +1,23 @@
+{
+  "automatic_deployment": false,
+  "credential_contract_offline_check": "ENROLLMENT_CONTRACT_LOADED; COMBO_CREDENTIAL_OR_RECIPIENT_NOT_CONFIGURED",
+  "hashes": {
+    "configure.py": "b0c61e7d3d4a05791d7ece6f127e46d83979d7c740469994216c42e10c60b513",
+    "metadata.json": "d619d09f3bb123a3e2e75ebf493329418f263deab78ba10d3fcb3b6f3d798f9a",
+    "overlay/app/lab_combo/bot_delivery.py": "d6168a8cb2b483f4d59dbcf3c832dda1bac9fa8f5205156dd505abf7a73f003e",
+    "overlay/app/lab_combo/bot_routing.py": "f77bfe0b9e6838794935a36ea3b32d8171e912aba6b10ac485a75fcbbfa81e1d",
+    "overlay/app/lab_combo/cli.py": "8f38922b263a29eee6988567ebdf7c2c1e3feb798092df357630102b0c891b34",
+    "overlay/app/lab_combo/service.py": "c25e3b9008015bea8130871520101d8831c51445a18a904d6de3931972a07ed6",
+    "overlay/app/lab_v2_shadow/cli.py": "ae069e99eb754c42b75728ad5ddfd5242207c26fed58be992e5498e80c3325df",
+    "update.py": "e2010cfcf78cdd3a88d2bd3dd00da3e5fdbf887309454f2be69c15d72b429825"
+  },
+  "operator_apply": "PENDING",
+  "operator_enrollment": "PENDING",
+  "package": "/home/arvis/goalvision-operations/combo-bot-9a3b198-20261003",
+  "read_only_preflight": "COMBO_BOT_PLAN_VALIDATED=/opt/goalvision-prematch-combo-bot-9a3b198-20261003\ncurrent_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS\nROOT_GUARD=CHECKED_AT_APPLY",
+  "source_commit": "9a3b19890e951224cef335c78054c0af203e7428",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "wrapper": "/home/arvis/goalvision-operations/combo-bot.py",
+  "wrapper_sha256": "ace4788251d3c7f4bb1b95e9e2a4cfee6f0b3f0fece5853d355276265a3eeb1f"
+}
