@@ -1,3 +1,18 @@
+## 2026-10-03 — SINGLE 1.50 with normal Lab publication
+
+- [x] User explicitly approved SINGLE >=1.50 and continued actual publication to the existing Lab conversation; COMBO legs remain >=1.30.
+- [x] Verify deployed 2436d39 reply release, repo instructions and protected routes/champion/disabled ADMIN.
+- [x] Versioned V4 policy, exact pre-ranking/preclaim floor, unchanged quality/today-only/COMBO selection, Lab message minimum and separate immutable 1.50 cohort statistics.
+- [x] Preserve old open bets, frozen previews, Reply text/photos and economic claim terminality; compatible rollback retains 1.50 result readers.
+- [x] Update de-vig provenance to the actual SINGLE policy; no research selection or champion change.
+- [x] Offline matrix: 883 passed, one inherited inapplicable installer case skipped; full 818-file exact-base parity PASS.
+- [x] GitHub/forum source review compared against existing capabilities; document Dixon–Coles/uncertainty/confirmed-XI options and source/license limits. No external installation or model change.
+- [ ] Commit source and evidence, build/pin exact-base operator package, verify read-only preflight.
+- [ ] Operator apply and first qualifying natural 1.50 SINGLE readback. Unattended sudo unavailable; no manual cycles/provider calls/test sends.
+- Runbook: docs/operations/PREMATCH_SINGLE_150_20261003.md.
+- Research: docs/research/CURRENT_DATA_QUALITY_OPTIONS_20261003.md.
+- Official/weekly unchanged; LIVE and ADMIN Codex disabled; no automatic deployment/promotion or historical bookmaker odds.
+
 ## 2026-10-03 — SINGLE/COMBO result replies to the original prediction
 
 - [x] User requested WIN/LOST as Reply to the original bet; inspect existing confirmed message IDs and deployed COMBO routing.

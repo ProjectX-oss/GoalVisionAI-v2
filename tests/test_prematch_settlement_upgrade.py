@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer", "combo-leg-floor", "combo-bot", "settlement-replies"])
+@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer", "combo-leg-floor", "combo-bot", "settlement-replies", "single-floor-150"])
 def rig(tmp_path, monkeypatch, request):
     source = Path(__file__).parents[1] / "operations" / request.param / "update.py"
     spec = importlib.util.spec_from_file_location("quality_update", source)
@@ -264,7 +264,8 @@ def test_single_floor_environment_is_explicit_and_rollback_compatible(rig):
         return
     target = m.validate(rig.package)[1]
     assert b'GOALVISION_LAB_SINGLE_MIN_ODDS_130=1\n' in m.environment(target)
-    assert b'GOALVISION_LAB_SINGLE_MIN_ODDS_130=0\n' in m.environment(target, True)
+    expected = b'1' if b'GOALVISION_LAB_SINGLE_MIN_ODDS_150=' in m.environment(target) else b'0'
+    assert b'GOALVISION_LAB_SINGLE_MIN_ODDS_130=' + expected + b'\n' in m.environment(target, True)
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=1\n' in m.environment(target)
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=1\n' in m.environment(target, True)
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=1\n' in m.base_environment(m.BASE)
@@ -470,4 +471,22 @@ def test_reply_rollback_only_disables_attachment_and_keeps_current_policy(rig):
                  "GOALVISION_LAB_EARLY_COMBO_LOSS", "GOALVISION_LAB_SINGLE_MIN_ODDS_130",
                  "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130", "GOALVISION_LAB_DEVIG_RESEARCH",
                  "GOALVISION_LAB_CALIBRATION_READINESS"):
+        assert flag+"=1\n" in disabled
+
+
+@pytest.mark.parametrize("rig", ["single-floor-150"], indirect=True)
+def test_single_150_rollback_restores_130_and_keeps_replies_combo_and_readers(rig):
+    m = rig.mod
+    m.apply(rig.package)
+    target = m.validate(rig.package)[1]
+    before = m.tree(target/"application")
+    enabled = (target/"release.env").read_text()
+    m.apply(rig.package,rollback=True)
+    disabled = (target/"rollback.env").read_text()
+    assert disabled == enabled.replace("GOALVISION_LAB_SINGLE_MIN_ODDS_150=1","GOALVISION_LAB_SINGLE_MIN_ODDS_150=0")
+    assert m.tree(target/"application") == before
+    for flag in ("GOALVISION_LAB_SINGLE_MIN_ODDS_130", "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130",
+                 "GOALVISION_COMBO_BOT_ROUTING", "GOALVISION_LAB_SETTLEMENT_REPLIES",
+                 "GOALVISION_LAB_EARLY_COMBO_LOSS", "GOALVISION_LAB_TODAY_ONLY",
+                 "GOALVISION_LAB_DEVIG_RESEARCH", "GOALVISION_LAB_CALIBRATION_READINESS"):
         assert flag+"=1\n" in disabled

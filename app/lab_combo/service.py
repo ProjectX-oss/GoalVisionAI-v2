@@ -216,7 +216,7 @@ class LabComboService:
             from app.lab_v2_shadow.origin import is_labelled
             from app.lab_v2_shadow.publication import SINGLE_SELECTION_POLICY
             from app.lab_v2_shadow.single_odds_policy import (
-                FLOOR_SELECTION_POLICY, minimum_single_odds, single_odds_blocker,
+                FLOOR_POLICIES, minimum_single_odds, single_odds_blocker,
             )
             if kind == 'single_prediction':
                 if self.ledger.get('claim', kind + ':' + prediction_id) is not None:
@@ -225,7 +225,7 @@ class LabComboService:
                 if blocker:
                     return {'status': blocker, 'sent': False}
             accuracy_single = (kind == 'single_prediction'
-                               and value.get('single_selection_policy') in {SINGLE_SELECTION_POLICY, FLOOR_SELECTION_POLICY})
+                               and value.get('single_selection_policy') in {SINGLE_SELECTION_POLICY, *FLOOR_POLICIES})
             if kind == 'combo_prediction':
                 if self.ledger.get('claim', kind + ':' + prediction_id) is not None:
                     return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
@@ -580,7 +580,11 @@ class LabComboService:
         from app.lab_v2_shadow.origin import is_labelled
         from app.lab_v2_shadow.statistics import public_single_snapshot
         if is_labelled(result):
-            return public_single_snapshot(self.ledger, as_of=self.clock())
+            from app.lab_v2_shadow.single_odds_policy import TEST_SELECTION_POLICY
+            prediction = self.ledger.get('single_prediction', result['prediction_id']) or {}
+            policy = prediction.get('single_selection_policy')
+            return public_single_snapshot(self.ledger, as_of=self.clock(),
+                selection_policy=policy if policy == TEST_SELECTION_POLICY else None)
         return single_statistics(self.ledger)
 
     def _single_result_message(self, result: dict, stats: dict) -> str:
@@ -618,7 +622,7 @@ def _accuracy_delivery_review(value: dict, now: datetime) -> dict:
         ACCURACY_PUBLICATION_POLICY_VERSION, review_accuracy_publication,
     )
 
-    from app.lab_v2_shadow.single_odds_policy import FLOOR_SELECTION_POLICY, SINGLE_ODDS_FLOOR
+    from app.lab_v2_shadow.single_odds_policy import FLOOR_POLICIES
 
     review = review_accuracy_publication(value, now=now)
     reasons = set(review['rejection_reasons'])
@@ -643,8 +647,9 @@ def _accuracy_delivery_review(value: dict, now: datetime) -> dict:
         if selection_policy == LEGACY_SINGLE_SELECTION_POLICY:
             if value.get('minimum_published_decimal_odds') != '1.30' or odds < Decimal('1.30'):
                 reasons.add('FROZEN_LEGACY_ODDS_CONTRACT_INVALID')
-        elif selection_policy == FLOOR_SELECTION_POLICY:
-            if value.get('minimum_published_decimal_odds') != str(SINGLE_ODDS_FLOOR) or odds < SINGLE_ODDS_FLOOR:
+        elif selection_policy in FLOOR_POLICIES:
+            frozen_floor = FLOOR_POLICIES[selection_policy]
+            if value.get('minimum_published_decimal_odds') != str(frozen_floor) or odds < frozen_floor:
                 reasons.add('FROZEN_SINGLE_ODDS_CONTRACT_INVALID')
         elif selection_policy != SINGLE_SELECTION_POLICY or value.get('minimum_published_decimal_odds') is not None:
             reasons.add('ACCURACY_SELECTION_POLICY_INVALID')

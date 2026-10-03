@@ -15,7 +15,8 @@ from app.real_match_lab_analysis.fingerprint import fingerprint
 
 from app.lab_combo.odds_policy import (LEG_POLICY, FLOOR_POLICY as COMBO_FLOOR_POLICY,
     minimum_combo_leg_odds, combo_leg_odds_blocker, floor_metadata)
-from .single_odds_policy import FLOOR_SELECTION_POLICY, minimum_single_odds, single_odds_blocker
+from .single_odds_policy import (TEST_SELECTION_POLICY, floor_selection_policy,
+    minimum_single_odds, single_odds_blocker)
 from .forward_evidence import current_quote
 from .publication_policy import (review_publication, review_accuracy_publication,
     PUBLICATION_POLICY_VERSION, ACCURACY_PUBLICATION_POLICY_VERSION)
@@ -61,7 +62,7 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     single_pool = []
     combo_minimum = minimum_combo_leg_odds()
     single_minimum = minimum_single_odds()
-    single_policy = FLOOR_SELECTION_POLICY if single_minimum is not None else SINGLE_SELECTION_POLICY
+    single_policy = floor_selection_policy(single_minimum) or SINGLE_SELECTION_POLICY
     single_minimum_text = str(single_minimum) if single_minimum is not None else None
     publication_blockers = {}
     combo_odds_rejections = {}
@@ -187,7 +188,8 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             from .public_presentation import VERSION
             from .statistics import public_single_snapshot
             value['public_presentation'] = {
-                'version': VERSION, 'statistics': public_single_snapshot(ledger, as_of=clock)}
+                'version': VERSION, 'statistics': public_single_snapshot(ledger, as_of=clock,
+                    selection_policy=single_policy if single_policy == TEST_SELECTION_POLICY else None)}
         if ledger.append("single_prediction", value["prediction_id"], value):
             ledger.append("single_preview", value["prediction_id"], {"message": v2_single_message(value)})
             ledger.append("v2_segmentation", value["prediction_id"], _segmentation(value, "SINGLE"))

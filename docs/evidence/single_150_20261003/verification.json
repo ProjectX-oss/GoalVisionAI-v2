@@ -1,0 +1,77 @@
+{
+  "base_files": 818,
+  "candidate_files": 818,
+  "combo_per_leg_minimum": "1.30",
+  "deployment": "OPERATOR_APPLY_PENDING",
+  "external_packages_installed": 0,
+  "git_push": false,
+  "installed_base": "/opt/goalvision-prematch-settlement-replies-2436d39-20261003",
+  "manual_operational_cycles": 0,
+  "manual_provider_calls": 0,
+  "new_single_minimum": "1.50",
+  "overlay_sha256": {
+    "app/adaptive_lab/devig_integration.py": "f2d5205d845cca5695c64f30ca8da070bce5c0cdce6a46f8c68cd02ddfa85a79",
+    "app/lab_combo/service.py": "e269b5b37dfe0327044cd01a8967e6b92bb3088a11bf7df2c96a5cd7f4756e63",
+    "app/lab_v2_shadow/public_presentation.py": "56a25e4eedcccb80830e9ea33f6988c45d5662a3897eac05de0479a0eec5ab1c",
+    "app/lab_v2_shadow/publication.py": "8d395bbbf76955e966411b3ee3dfbd81e5cdf62a6c6274ef7380639ef994eb88",
+    "app/lab_v2_shadow/single_odds_policy.py": "230c52eaed7647b4e590f487b3f3dfa88f2281e99bde0c35aff245a6b9b16c37",
+    "app/lab_v2_shadow/statistics.py": "06be1d473e324878b3b2c18e764dd2bd9973fc988b526be46cbf84ee9e4e825b"
+  },
+  "production_db_writes": 0,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "runtime_overlay": [
+    "app/lab_v2_shadow/single_odds_policy.py",
+    "app/lab_v2_shadow/publication.py",
+    "app/lab_v2_shadow/public_presentation.py",
+    "app/lab_v2_shadow/statistics.py",
+    "app/lab_combo/service.py",
+    "app/adaptive_lab/devig_integration.py"
+  ],
+  "single_destination": "EXISTING_LAB",
+  "source_base": "3327d4d8f63f100a233e2d7b3621bff56b7f822b",
+  "statistics": "IMMUTABLE_SINGLE_POLICY_COHORT_WITH_ALL_TIME_HISTORY_RETAINED",
+  "status": "PASS",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "tests": {
+    "files": [
+      "tests/test_combo_bot_routing.py",
+      "tests/test_prematch_settlement_upgrade.py",
+      "tests/test_lab_delivery_accounting.py",
+      "tests/test_lab_accuracy_combo.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/test_lab_combo.py",
+      "tests/test_prematch_v2_enablement.py",
+      "tests/test_lab_v2_shadow.py",
+      "tests/test_lab_combo_integrity.py",
+      "tests/test_lab_accuracy_delivery.py",
+      "tests/test_prematch_single_odds_floor.py",
+      "tests/test_lab_probability_delivery_hardening.py",
+      "tests/test_settlement_replies.py",
+      "tests/test_lab_telegram.py",
+      "tests/test_lab_experimental_selection.py",
+      "tests/test_prematch_single_150.py",
+      "tests/test_lab_v2_public_presentation.py",
+      "tests/adaptive_lab/test_devig_integration.py",
+      "tests/adaptive_lab/test_devig_research.py"
+    ],
+    "final_log_sha256": "d4d2c99dd67eacb095195fa71346f4209b1a449480fd67497571b144bec4d131",
+    "network": "DENIED_BY_OFFLINE_RUNNER",
+    "passed": 883,
+    "skipped": 1,
+    "targeted_single_150_tests": 30
+  }
+}

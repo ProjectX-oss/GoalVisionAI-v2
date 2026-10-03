@@ -37,12 +37,14 @@ def analysis_signals(families: list[str]) -> str:
 
 
 def statistics_block(snapshot: dict) -> str:
-    """Display the existing labelled single cohort totals without new accounting."""
+    """Display frozen all-time or labelled policy totals without new accounting."""
     totals = snapshot['totals']
     roi = totals['flat_unit_roi']
     roi_text = f"{Decimal(roi) * 100:+.1f}%" if roi is not None else '—'
     return '\n'.join((
-        '📊 V2 statistika',
+        (f"📊 SINGLE {snapshot['minimum_published_decimal_odds']} testa statistika"
+         if snapshot.get('version') == 'LAB_V2_PUBLIC_SINGLE_POLICY_STATISTICS_V1'
+         else '📊 V2 statistika'),
         f"Likmes: {totals['settled']} | ✅ WON: {totals['WON']} | ❌ LOST: {totals['LOST']} | ➖ VOID: {totals['VOID']}",
         f"🎯 Precizitāte: {public_percent(totals['hit_rate'])}",
         f"📈 P/L: {Decimal(totals['flat_unit_pnl']):+.2f}u | ROI: {roi_text}",
@@ -77,6 +79,8 @@ def prediction_message(value: dict) -> str:
         f"📊 Novērtētā varbūtība: {Decimal(value['ensemble_probability']) * 100:.1f}%",
         ("🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, bez koeficienta minimuma)"
          if value.get("single_selection_policy") == "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR"
+         else "🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, koef. ≥1.50)"
+         if value.get("single_selection_policy") == "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150"
          else "🎯 Atlases režīms: ACCURACY-FIRST (min. 55%, koef. ≥1.30)"),
         f"💹 EV: {ev:+.1f}% (diagnostikai)",
         f"🧠 Analīzes pamats: {basis}",

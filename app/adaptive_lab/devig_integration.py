@@ -14,7 +14,7 @@ from typing import Callable
 
 from app.real_match_lab_analysis.fingerprint import fingerprint
 from app.lab_v2_shadow.market_consensus import _market, _FAMILIES
-from app.lab_v2_shadow.single_odds_policy import FLOOR_SELECTION_POLICY, minimum_single_odds
+from app.lab_v2_shadow.single_odds_policy import floor_selection_policy, minimum_single_odds
 from .contracts import canonical, digest, utc
 from .devig_research import VERSION, capture, capture_prefix, capture_identity, forward_metrics
 
@@ -111,7 +111,7 @@ def capture_cycle(repository: object, odds_evidence: dict, fixtures: dict,
                         **{k: candidate.get(k) for k in ("model_generation", "model_artifact_identity",
                            "calibration_status", "profile_policy_version", "readiness_policy_version")}}
     minimum = minimum_single_odds()
-    context = {"single_policy": FLOOR_SELECTION_POLICY if minimum is not None else
+    context = {"single_policy": floor_selection_policy(minimum) or
                "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V2_NO_ODDS_FLOOR",
                "single_minimum": str(minimum) if minimum is not None else None,
                "today_only": today_only, "combo_minimum": None,

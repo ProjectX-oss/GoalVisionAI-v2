@@ -195,6 +195,17 @@ an explicit operator action.
 
 
 
+## PREMATCH SINGLE 1.50 experiment authorized 2026-10-03
+
+The user approved activating new PREMATCH Lab SINGLE selection with current odds
+>=1.50, inclusive without display rounding, and normal publication into the
+existing Lab conversation. This supersedes the earlier future-only 1.50 note
+after operator activation. COMBO legs remain >=1.30; no combined-odds floor.
+Maintain independent immutable policy statistics for comparison, preserve all
+prior history/open-bet settlement, and retain today-only and Reply results.
+Compatible rollback returns new SINGLE selection to 1.30 while retaining 1.50
+cohort/result readers. Official, LIVE and ADMIN Codex behavior is unchanged.
+
 ## Future PREMATCH test direction recorded 2026-10-03
 
 The user requested a later PREMATCH SINGLE minimum-odds test at 1.50 and proposed

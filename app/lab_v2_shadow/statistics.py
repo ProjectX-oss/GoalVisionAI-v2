@@ -61,7 +61,8 @@ def single_cohorts(ledger: object, *, start: datetime, end: datetime, as_of: dat
         row = {'prediction_id': pid, 'economic_key': f"{prediction['fixture_id']}:{prediction['market']}",
                'published_at': receipt['sent_at_utc'], 'settled_at': result['settled_at_utc'] if result else None,
                'captured_odds': str(odds), 'status': status,
-               'net_units': str(net) if result else None, 'origin': prediction.get('selection_origin')}
+               'net_units': str(net) if result else None, 'origin': prediction.get('selection_origin'),
+               'selection_policy': prediction.get('single_selection_policy') or 'UNKNOWN'}
         if labelled:
             rows.append(row)
         elif historical_selector:
@@ -80,12 +81,15 @@ def single_cohorts(ledger: object, *, start: datetime, end: datetime, as_of: dat
             'context_linked_observation_only': _totals([r for r in rows if r['origin'].get('context')]),
             'independent_football_context_model': _totals([]),
             'historical_selector_segment': _totals(historical),
+            'selection_policy_exclusive': {policy: _totals([r for r in rows if r['selection_policy'] == policy])
+                for policy in sorted({r['selection_policy'] for r in rows})},
             'records': rows, 'diagnostics': diagnostics}
 
 
-def public_single_snapshot(ledger: object, *, as_of: datetime) -> dict:
-    """Freeze all-time confirmed labelled SINGLE evidence using existing formulas.
+def public_single_snapshot(ledger: object, *, as_of: datetime, selection_policy: str | None = None) -> dict:
+    """Freeze all-time or explicitly policy-scoped confirmed SINGLE evidence.
 
+    Scope follows immutable prediction policy, never the current runtime flag.
     Records and cutoffs stay internal for reproduction. Duplicate economic
     selections fail closed through the existing cohort contract.
     """
@@ -93,5 +97,14 @@ def public_single_snapshot(ledger: object, *, as_of: datetime) -> dict:
                            end=datetime.max.replace(tzinfo=timezone.utc), as_of=as_of)
     if cohort['forward_union'] is None:
         raise ValueError('DUPLICATE_CONFIRMED_ECONOMIC_SELECTION')
+    if selection_policy is not None:
+        from .single_odds_policy import FLOOR_POLICIES
+        if selection_policy not in FLOOR_POLICIES:
+            raise ValueError('UNSUPPORTED_SINGLE_STATISTICS_POLICY')
+        records = [r for r in cohort['records'] if r['selection_policy'] == selection_policy]
+        return {'version': 'LAB_V2_PUBLIC_SINGLE_POLICY_STATISTICS_V1', 'as_of': cohort['as_of'],
+                'selection_policy': selection_policy,
+                'minimum_published_decimal_odds': str(FLOOR_POLICIES[selection_policy]),
+                'totals': _totals(records), 'records': records}
     return {'version': 'LAB_V2_PUBLIC_SINGLE_STATISTICS_V1', 'as_of': cohort['as_of'],
             'totals': cohort['forward_union'], 'records': cohort['records']}
