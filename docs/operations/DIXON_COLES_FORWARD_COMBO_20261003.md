@@ -34,3 +34,5 @@ Pause preserves all new state, original research and production. Reapplying the 
 Preserved: PREMATCH SINGLE >=1.50 in Lab, COMBO legs >=1.30 in its bot/private period, no combined floor, today-only, quality checks, Reply results, early COMBO loss and remaining legs, all historical statistics/open settlements, calibration/de-vig, champion and Official; LIVE/ADMIN Codex remain disabled. No promotion, production repointing, git push or hidden reset.
 
 Evidence: docs/evidence/dixon_coles_forward_combo_20261003/verification.json and controlled_replay.json. The latter is synthetic and must never be counted as prospective evidence.
+
+Prepared source commit: 1183e356e479a3a4bcc52c7e63d3bc1b61d00a89. Package: `/home/arvis/goalvision-operations/dixon-coles-forward-1183e35-20261003`; 842 application files and 844 checksums passed. Read-only wrapper preflight passed; root ADMIN guard is evaluated by the operator apply. Preparation left the new units/state absent. Package evidence: `docs/evidence/dixon_coles_forward_combo_20261003/package_readback.json`.

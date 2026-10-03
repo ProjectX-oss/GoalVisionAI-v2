@@ -4,7 +4,8 @@
 - [x] Declare separate prospective cohort and conservative COMBO shadow rank before implementation/capture.
 - [x] Implement bounded independent worker, immutable paired model/COMBO comparisons and operator-only package; 338 offline tests and synthetic replay pass.
 - [x] Record offline evidence, systemd unit verification and unchanged installed production/original research.
-- [ ] Build pinned package after source commit, verify read-only preflight and deliver operator command.
+- [x] Source commit 1183e35; operator package built, 844 checksums and read-only wrapper preflight PASS. New state/unit absent; no deployment.
+- [ ] Operator activation, independent installed readback and first natural forward/shadow cycle.
 
 ## 2026-10-03 — Separate constrained Dixon–Coles development candidate
 
