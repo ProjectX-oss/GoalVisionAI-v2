@@ -103,3 +103,27 @@ Five package checksum entries verified. Read-only preflight PASS, current mode
 BASE. Existing COMBO configuration and ReplyParameters dependency locally valid.
 Operator apply and the first natural threaded result remain pending. No deployment
 or test send performed. Evidence: operator_package.json in the evidence folder.
+
+## Operator deployment and first natural reply
+
+The operator deployed the pinned 2436d39 package on 2026-10-03; route files were
+updated at 11:57:06 UTC / 14:57:06 Europe/Riga. Independent readback at 12:08:59 UTC
+verified the entire installed 818-file manifest, release/rollback environments,
+ENABLED mode and all four service routes. Existing COMBO configuration validates
+locally. All four timers are active/enabled. ADMIN Codex is inactive with MainPID 0
+and its timer disabled. Protected commands/routes and champion/model counts match
+the reviewed package and previous readback.
+
+The natural settlement cycle at 15:05 Riga succeeded and produced the first
+confirmed SINGLE result reply: LOST, Telegram result message 616, original
+prediction message 582, sent 15:05:54 Riga. The receipt records
+reply_status=CONFIRMED. Independently verified original receipt, result receipt,
+claim and economic outcome fingerprints; the frozen parent message and original
+chat match exactly. This is natural production evidence, with no test send.
+
+No COMBO result with reply metadata appeared in the latest 200 receipts at this
+readback. COMBO replies are enabled and offline tested; the first natural COMBO
+reply remains pending. No manual cycle, provider/Telegram request, production DB
+write, deployment or service restart was performed by this readback.
+
+Evidence: docs/evidence/settlement_replies_20261003/deployed_readback.json.

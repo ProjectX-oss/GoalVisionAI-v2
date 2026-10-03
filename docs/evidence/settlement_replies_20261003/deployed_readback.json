@@ -1,0 +1,128 @@
+{
+  "admin": {
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "MainPID": "0",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "MainPID": "",
+      "UnitFileState": "disabled"
+    }
+  },
+  "checked_at_utc": "2026-10-03T12:08:59.336995+00:00",
+  "configuration_local_validation": "PASS",
+  "current_mode": "ENABLED",
+  "first_natural_combo_reply": "PENDING",
+  "first_natural_single_reply": "CONFIRMED",
+  "flags": [
+    "PYTHONPATH=/opt/goalvision-prematch-settlement-replies-2436d39-20261003/application",
+    "GOALVISION_LAB_ACCURACY_COMBOS=1",
+    "GOALVISION_LAB_TODAY_ONLY=1",
+    "GOALVISION_LAB_EARLY_COMBO_LOSS=1",
+    "GOALVISION_LAB_SINGLE_MIN_ODDS_130=1",
+    "GOALVISION_LAB_DEVIG_RESEARCH=1",
+    "GOALVISION_LAB_CALIBRATION_READINESS=1",
+    "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130=1",
+    "GOALVISION_COMBO_BOT_ROUTING=1",
+    "GOALVISION_LAB_SETTLEMENT_REPLIES=1"
+  ],
+  "manual_operational_cycles": 0,
+  "manual_provider_calls": 0,
+  "natural_reply_receipts": [
+    {
+      "message_id": 616,
+      "original_message_id": 582,
+      "original_publication_identity": "single_prediction:lab-v2-single-e2552ddfb2c518cf710f199ab788c27a41ae577870311e0831d832f57201826a",
+      "product": "SINGLE",
+      "publication_identity": "single_settlement:lab-v2-single-e2552ddfb2c518cf710f199ab788c27a41ae577870311e0831d832f57201826a",
+      "receipt_claim_original_fingerprints": "VERIFIED",
+      "reply_status": "CONFIRMED",
+      "same_original_chat": "VERIFIED",
+      "sent_at_riga": "2026-10-03T15:05:54.421990+03:00",
+      "sent_at_utc": "2026-10-03T12:05:54.421990+00:00",
+      "status": "LOST"
+    }
+  ],
+  "preflight": "SETTLEMENT_REPLIES_PLAN_VALIDATED=/opt/goalvision-prematch-settlement-replies-2436d39-20261003\ncurrent_mode=ENABLED; ADMIN_CODEX_SYSTEMD_DISABLED=PASS\nROOT_GUARD=CHECKED_AT_APPLY",
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "recent_receipts_checked": 200,
+  "release": "/opt/goalvision-prematch-settlement-replies-2436d39-20261003",
+  "release_manifest_verified": true,
+  "route_files_modified_at_utc": "2026-10-03T11:57:06.732898+00:00",
+  "services": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-settlement-replies-2436d39-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 14:08:44 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 14:08:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-settlement-replies-2436d39-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 04:12:04 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 04:12:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-settlement-replies-2436d39-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 14:05:55 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 14:05:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-settlement-replies-2436d39-20261003/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sat 2026-10-03 14:04:47 CEST",
+      "ExecMainStartTimestamp": "Sat 2026-10-03 14:00:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    }
+  },
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "timers": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 14:38:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 04:12:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 14:15:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 14:30:00 CEST",
+      "UnitFileState": "enabled"
+    }
+  }
+}

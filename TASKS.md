@@ -6,7 +6,8 @@
 - [x] Offline matrix: 744 passed, one inherited inapplicable installer case skipped; 818-file exact-base parity PASS.
 - [x] Review exact 9a3b198-base operator updater; rollback disables reply attachment only, preserving COMBO routing and all current policies.
 - [x] Source commit 2436d39; pinned package built, five checksum entries and read-only exact-base preflight PASS.
-- [ ] Operator apply and independent release/natural-result readback. No automatic deployment or test send.
+- [x] Operator deployed 2436d39 at 14:57 Riga; full release/routes/timers/disabled ADMIN readback PASS. Natural 15:05 SINGLE LOST reply confirmed (result 616 -> original 582), immutable evidence verified.
+- [ ] First natural COMBO result reply. No manual cycle or test send.
 - Report: docs/operations/PREMATCH_SETTLEMENT_REPLIES_20261003.md.
 - Official/champion unchanged; LIVE and ADMIN Codex remain disabled. SINGLE 1.50 stays pending.
 
