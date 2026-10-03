@@ -140,3 +140,19 @@ Collect natural results inside the fixed windows. Only after all calendar,
 cohort, independent-sample and class gates pass, prepare a separate offline
 calibration/evaluation review. Research service integration, holdout evaluation,
 shadow qualification and champion promotion remain separately reviewed work.
+
+## Prepared package
+
+Implementation commit: `c4daf639f1d5cca5beeb0c89d514d0792f629302`.
+
+Prepared package:
+`/home/arvis/goalvision-operations/calibration-observer-c4daf63-20261003`.
+
+Pinned operator entry:
+`/home/arvis/goalvision-operations/calibration-readiness.py`.
+
+All seven package checksum entries pass. Default read-only preflight reports
+`current_mode=BASE` and `ADMIN_CODEX_SYSTEMD_DISABLED=PASS`; root guard files
+will be checked at operator apply. Protected service routes match the package.
+No deployment, service cycle, provider request or test send was performed.
+The intended release is `/opt/goalvision-calibration-observer-c4daf63-20261003`.

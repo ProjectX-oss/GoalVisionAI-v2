@@ -6,6 +6,7 @@
 - [x] Offline regressions: 876 passed, one inapplicable multi-route case skipped; installed ADMIN output contract PASS.
 - [x] Query-only evidence: TRAIN 1,804 / 560 fixtures; FIT 312 opportunities / 101 upcoming fixtures, zero eligible resolved. No training/holdout/champion change.
 - [x] Prepare reviewed observer-only operator implementation with full application and plan hashes, atomic recovery and compatible flag rollback.
+- [x] Commit c4daf63; package checksums and read-only installer preflight PASS, current mode BASE.
 - [ ] Operator apply and next natural observer readback; no automatic deployment or manual cycle.
 - [ ] Natural calendar evidence, then separately reviewed offline calibration/evaluation if all gates pass.
 - Report: docs/operations/CALIBRATION_OBSERVER_20261003.md.

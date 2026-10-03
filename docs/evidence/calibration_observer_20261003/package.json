@@ -1,0 +1,33 @@
+{
+  "as_of": "2026-10-03T07:17:34.429194+00:00",
+  "checksum_entries": 7,
+  "checksum_validation": "PASS",
+  "deployment_performed": false,
+  "intended_release": "/opt/goalvision-calibration-observer-c4daf63-20261003",
+  "manual_cycles": 0,
+  "operator_apply": "sudo python3 ~/goalvision-operations/calibration-readiness.py --apply",
+  "package": "/home/arvis/goalvision-operations/calibration-observer-c4daf63-20261003",
+  "package_files": {
+    "SHA256SUMS": "d91a633e03deca1688304e4c24d37b4dea42c48f4e58ee4a633032878365659b",
+    "metadata.json": "48d7f7672b400f39fc927586c0a5b591631cd9b8d625b9e614a7f0147b62df36",
+    "overlay/app/adaptive_lab/calendar_audit.py": "6b37c6733fd820ee58884c7d37d2eb6eab8a9750d4a2e66016aefd0f70a367d9",
+    "overlay/app/adaptive_lab/calendar_monitor.py": "fe1c68d4f61b018739c151586291e9838c2441011c57803f5f5678b29cdff361",
+    "overlay/app/adaptive_lab/calendar_plan_20261002.json": "20538b9a2ee8d2308b0192bfdc706fc042be3c722ae46a52f64622d0ca573795",
+    "overlay/app/adaptive_lab/calendar_research.py": "608179f6d1ebf48b506a1e24535f7ec9d5bdeba9c46a08fc8cd10df818ef77ab",
+    "overlay/app/adaptive_lab/observer.py": "d9c6fcfa84303b3232bb23bceb63748a94393061c81cc8e2097c3a43a617f8a7",
+    "update.py": "39ee5d191a6af56216b8330882e87d4a02c32cf323d6de9c85e059794e71bbaa"
+  },
+  "protected_routes_unchanged": true,
+  "provider_calls": 0,
+  "readonly_preflight": [
+    "CALIBRATION_READINESS_PLAN_VALIDATED=/opt/goalvision-calibration-observer-c4daf63-20261003",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "rollback": "sudo python3 ~/goalvision-operations/calibration-readiness.py --apply --rollback",
+  "root_guard_checked": false,
+  "source_commit": "c4daf639f1d5cca5beeb0c89d514d0792f629302",
+  "test_sends": 0,
+  "wrapper": "/home/arvis/goalvision-operations/calibration-readiness.py",
+  "wrapper_sha256": "8d5af350fdd3fd3ba345a69f5b6cdec0978ef920d74d976c12a8208d397e6054"
+}
