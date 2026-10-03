@@ -23,6 +23,7 @@ from .bot_routing import (
     RoutingBlocked, delivery_route, validate_delivery, route_message,
     cohort_statistics, frozen_route, BOT_USERNAME as COMBO_BOT_USERNAME,
 )
+from .settlement_reply import settlement_reply, reply_confirmation
 from .publication_window import publication_blocker
 from .odds_policy import combo_odds_blocker, minimum_combo_leg_odds
 from .settlement import (
@@ -310,10 +311,17 @@ class LabComboService:
             if any(not _fresh_captured_odds(item, self.clock()) for item in candidates):
                 return {'status': 'STALE_CURRENT_ODDS', 'sent': False}
         identity = kind + ':' + prediction_id
+        try:
+            reply = settlement_reply(self.ledger, kind, prediction_id, destination)
+        except ValueError as exc:
+            return {'status': str(exc), 'sent': False}
+        reply_arguments = {'reply_to_message_id': reply['message_id']} if reply else {}
         message = route_message(preview['message'], route)
         if len(message) > 4096:
             return {'status': 'TELEGRAM_MESSAGE_TOO_LONG', 'sent': False}
         claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': destination}
+        if reply is not None:
+            claim['reply_to'] = reply
         if route is not None:
             claim['delivery_route'] = route
         claimed = (self.ledger.claim_publication(kind, value, claim)
@@ -334,13 +342,14 @@ class LabComboService:
         try:
             if use_photo:
                 operation = transport.send_photo_receipt(
-                    chat_id=destination, image_path=image, caption=message, timeout_seconds=10)
+                    chat_id=destination, image_path=image, caption=message, timeout_seconds=10, **reply_arguments)
             else:
                 operation = transport.send_message_receipt(
-                    chat_id=destination, text=message, parse_mode=None, timeout_seconds=10)
+                    chat_id=destination, text=message, parse_mode=None, timeout_seconds=10, **reply_arguments)
             receipt = await asyncio.wait_for(operation, timeout=11)
             if receipt.chat_id != destination or type(receipt.message_id) is not int or receipt.message_id <= 0:
                 raise ValueError('Invalid receipt')
+            reply_evidence = reply_confirmation(receipt, reply)
         except Exception as exc:
             from telegram.error import TimedOut
             facts.transport_failure_kind = 'TIMEOUT' if isinstance(exc, (TimedOut, TimeoutError)) else 'ERROR'
@@ -360,6 +369,7 @@ class LabComboService:
         facts.stage = 'RECEIPT_PERSISTENCE'
         result = {'status': 'SENT', 'sent': True, 'chat_id': receipt.chat_id,
                   'message_id': receipt.message_id, 'sent_at_utc': self.clock().isoformat()}
+        result.update(reply_evidence)
         if route is not None:
             result['delivery_route'] = route
         try:
@@ -412,11 +422,18 @@ class LabComboService:
             preview = self.ledger.get('preview', prediction_id)
             if preview is None or preview['message'] != prediction_message(combo):
                 return {'status': 'PREDICTION_MESSAGE_CONFLICT', 'sent': False}
+        try:
+            reply = settlement_reply(self.ledger, 'settlement' if settlement else 'prediction', prediction_id, destination)
+        except ValueError as exc:
+            return {'status': str(exc), 'sent': False}
+        reply_arguments = {'reply_to_message_id': reply['message_id']} if reply else {}
         message = route_message(preview['message'], route)
         if len(message) > 4096:
             return {'status': 'TELEGRAM_MESSAGE_TOO_LONG', 'sent': False}
         identity = ('settlement:' if settlement else 'prediction:') + prediction_id
         claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': destination}
+        if reply is not None:
+            claim['reply_to'] = reply
         if route is not None:
             claim['delivery_route'] = route
         claimed = (self.ledger.append('claim', identity, claim) if settlement
@@ -430,14 +447,16 @@ class LabComboService:
                     self.ledger.append('publication_blocked',identity,{'status':blocker,'sent':False})
                     return {'status':blocker,'sent':False}
             receipt = await asyncio.wait_for(transport.send_message_receipt(
-                chat_id=destination, text=message, parse_mode=None, timeout_seconds=10), timeout=11)
+                chat_id=destination, text=message, parse_mode=None, timeout_seconds=10, **reply_arguments), timeout=11)
             if receipt.chat_id != destination or type(receipt.message_id) is not int or receipt.message_id <= 0:
                 raise ValueError('Invalid receipt')
+            reply_evidence = reply_confirmation(receipt, reply)
         except Exception:
             self.ledger.append('delivery_unknown', identity, {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED'})
             return {'status': 'DELIVERY_UNKNOWN_RECONCILIATION_REQUIRED', 'sent': False}
         value = {'status': 'SENT', 'sent': True, 'chat_id': receipt.chat_id, 'message_id': receipt.message_id,
                  'sent_at_utc':self.clock().isoformat()}
+        value.update(reply_evidence)
         if route is not None:
             value['delivery_route'] = route
         self.ledger.append('receipt', identity, value)

@@ -1,3 +1,15 @@
+## 2026-10-03 — SINGLE/COMBO result replies to the original prediction
+
+- [x] User requested WIN/LOST as Reply to the original bet; inspect existing confirmed message IDs and deployed COMBO routing.
+- [x] Lab-only text/photo replies for SINGLE, old Lab COMBO and new private COMBO; frozen same-chat receipt binding, strict parent validation and no extra fallback send.
+- [x] Retain terminal claims, early COMBO loss/remaining-leg details, immutable results/statistics and both 1.30 floors.
+- [x] Offline matrix: 744 passed, one inherited inapplicable installer case skipped; 818-file exact-base parity PASS.
+- [x] Review exact 9a3b198-base operator updater; rollback disables reply attachment only, preserving COMBO routing and all current policies.
+- [ ] Commit source, build/pin package and verify read-only preflight.
+- [ ] Operator apply and independent release/natural-result readback. No automatic deployment or test send.
+- Report: docs/operations/PREMATCH_SETTLEMENT_REPLIES_20261003.md.
+- Official/champion unchanged; LIVE and ADMIN Codex remain disabled. SINGLE 1.50 stays pending.
+
 ## 2026-10-03 — Separate COMBO Telegram bot and prospective statistics
 
 - [x] User identified @GoalVision_AI_Combo_Bot, deferred the channel and requested system connection.

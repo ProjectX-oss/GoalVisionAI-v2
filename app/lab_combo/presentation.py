@@ -50,33 +50,56 @@ class ResultImagePaths:
 
 
 class LabTelegramTransport(TelegramService):
-    """Lab transport extension supporting an optional result-photo caption."""
+    """Lab-only text/photo replies; the shared Official transport is unchanged."""
+
+    @staticmethod
+    def _reply_arguments(message_id: int | None) -> dict:
+        if message_id is None:
+            return {}
+        if type(message_id) is not int or message_id <= 0:
+            raise ValueError("INVALID_REPLY_MESSAGE_ID")
+        from telegram import ReplyParameters
+        # Telegram handles a deleted parent within this same request. Never resend.
+        return {"reply_parameters": ReplyParameters(
+            message_id=message_id, allow_sending_without_reply=True)}
+
+    async def send_message_receipt(
+        self, chat_id: str, text: str, parse_mode: str | None = None, *,
+        timeout_seconds: float, reply_to_message_id: int | None = None,
+    ) -> TelegramMessageReceipt:
+        if reply_to_message_id is None:
+            return await super().send_message_receipt(
+                chat_id, text, parse_mode, timeout_seconds=timeout_seconds)
+        if timeout_seconds <= 0:
+            raise ValueError("Telegram timeout must be positive.")
+        arguments = {"chat_id": chat_id, "text": text,
+                     "read_timeout": timeout_seconds, "write_timeout": timeout_seconds,
+                     "connect_timeout": timeout_seconds, "pool_timeout": timeout_seconds,
+                     **self._reply_arguments(reply_to_message_id)}
+        if parse_mode is not None:
+            arguments["parse_mode"] = parse_mode
+        message = await self.bot.send_message(**arguments)
+        from .settlement_reply import telegram_receipt
+        return telegram_receipt(message, destination=chat_id,
+                                reply_to_message_id=reply_to_message_id)
 
     async def send_photo_receipt(
-        self,
-        *,
-        chat_id: str,
-        image_path: Path,
-        caption: str,
-        timeout_seconds: float,
+        self, *, chat_id: str, image_path: Path, caption: str,
+        timeout_seconds: float, reply_to_message_id: int | None = None,
     ) -> TelegramMessageReceipt:
+        if timeout_seconds <= 0:
+            raise ValueError("Telegram timeout must be positive.")
+        arguments = self._reply_arguments(reply_to_message_id)
         with image_path.open("rb") as photo:
             message = await self.bot.send_photo(
-                chat_id=chat_id,
-                photo=photo,
-                caption=caption,
-                read_timeout=timeout_seconds,
-                write_timeout=timeout_seconds,
-                connect_timeout=timeout_seconds,
-                pool_timeout=timeout_seconds,
+                chat_id=chat_id, photo=photo, caption=caption,
+                read_timeout=timeout_seconds, write_timeout=timeout_seconds,
+                connect_timeout=timeout_seconds, pool_timeout=timeout_seconds,
+                **arguments,
             )
-        message_id = getattr(message, "message_id", None)
-        accepted_chat_id = getattr(message, "chat_id", None)
-        if accepted_chat_id is None:
-            accepted_chat_id = getattr(getattr(message, "chat", None), "id", None)
-        if not isinstance(message_id, int) or accepted_chat_id is None:
-            raise ValueError("Telegram response did not contain a photo receipt.")
-        return TelegramMessageReceipt(message_id=message_id, chat_id=str(accepted_chat_id))
+        from .settlement_reply import telegram_receipt
+        return telegram_receipt(message, destination=chat_id,
+                                reply_to_message_id=reply_to_message_id)
 
 
 def single_message(value: dict) -> str:

@@ -159,6 +159,17 @@ Model comparison.
 
 Never affects Official statistics.
 
+## PREMATCH result replies authorized 2026-10-03
+
+After explicit operator activation, unsent SINGLE and COMBO result notifications
+reply to their original confirmed prediction message in its existing destination.
+This includes text/photo results, voids and early COMBO loss. Retain the original
+bot/recipient/period, immutable settlements and statistics, and terminal delivery
+claims. If Telegram no longer has the original message, allow standalone delivery
+within the same request; never issue a second fallback send. Do not replay prior
+results. This presentation change does not change selection, odds floors or
+Official/LIVE behavior.
+
 ## PREMATCH Lab policy update authorized 2026-10-02
 
 For the separately approved operator release, new PREMATCH Lab SINGLE bets require

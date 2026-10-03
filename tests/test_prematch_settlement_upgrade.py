@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer", "combo-leg-floor", "combo-bot"])
+@pytest.fixture(params=["prematch-settlement", "prematch-single-floor", "prematch-devig", "calibration-observer", "combo-leg-floor", "combo-bot", "settlement-replies"])
 def rig(tmp_path, monkeypatch, request):
     source = Path(__file__).parents[1] / "operations" / request.param / "update.py"
     spec = importlib.util.spec_from_file_location("quality_update", source)
@@ -53,9 +53,10 @@ def rig(tmp_path, monkeypatch, request):
             "manifest": mod.tree(env.parent / "application"),
         } for env in set(route_bases.values())},
     }
-    if hasattr(mod, "check_configuration"):
+    if request.param == "combo-bot":
         (package / "configure.py").write_text("REVIEWED = True\n")
         meta["configure_sha256"] = mod.sha(package / "configure.py")
+    if hasattr(mod, "check_configuration"):
         monkeypatch.setattr(mod, "check_configuration", lambda package: None)
     (package / "metadata.json").write_text(json.dumps(meta))
     state = {t: "active" for t in mod.TIMERS}
@@ -251,7 +252,7 @@ def test_rollback_keeps_compatible_reader_sources(rig):
     before = m.tree(target / 'application')
     m.apply(rig.package, rollback=True)
     assert m.tree(target / 'application') == before
-    expected_early = b'1' if ('app/lab_v2_shadow/single_odds_policy.py' in m.FILES or 'app/adaptive_lab/devig_research.py' in m.FILES or 'app/adaptive_lab/calendar_monitor.py' in m.FILES or 'app/lab_combo/bot_routing.py' in m.FILES) else b'0'
+    expected_early = b'1' if ('app/lab_v2_shadow/single_odds_policy.py' in m.FILES or 'app/adaptive_lab/devig_research.py' in m.FILES or 'app/adaptive_lab/calendar_monitor.py' in m.FILES or 'app/lab_combo/bot_routing.py' in m.FILES or 'app/lab_combo/settlement_reply.py' in m.FILES) else b'0'
     assert b'GOALVISION_LAB_EARLY_COMBO_LOSS=' + expected_early + b'\n' in (target / 'rollback.env').read_bytes()
     assert all('rollback.env' in p.read_text() for p in rig.overrides.values())
 
@@ -436,7 +437,7 @@ def test_combo_bot_missing_configuration_prevents_every_mutation(rig,monkeypatch
 
 def test_combo_bot_setup_hash_cannot_be_replaced(rig):
     m=rig.mod
-    if not hasattr(m,"check_configuration"):
+    if "configure_sha256" not in rig.meta:
         return
     (rig.package/"configure.py").write_text("UNREVIEWED = True\n")
     with pytest.raises(ValueError,match="CONFIGURE_HASH_MISMATCH"):
@@ -446,7 +447,7 @@ def test_combo_bot_setup_hash_cannot_be_replaced(rig):
 
 def test_combo_bot_rollback_pauses_new_sends_and_keeps_both_floors(rig):
     m=rig.mod
-    if not hasattr(m,"check_configuration"):
+    if "app/lab_combo/bot_routing.py" not in m.FILES:
         return
     m.apply(rig.package)
     m.apply(rig.package,rollback=True)
@@ -454,3 +455,19 @@ def test_combo_bot_rollback_pauses_new_sends_and_keeps_both_floors(rig):
     for flag in ("GOALVISION_LAB_SINGLE_MIN_ODDS_130=1","GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130=1",
                  "GOALVISION_LAB_EARLY_COMBO_LOSS=1","GOALVISION_COMBO_BOT_ROUTING=0"):
         assert flag in content
+
+
+@pytest.mark.parametrize("rig", ["settlement-replies"], indirect=True)
+def test_reply_rollback_only_disables_attachment_and_keeps_current_policy(rig):
+    m = rig.mod
+    m.apply(rig.package)
+    target = m.validate(rig.package)[1]
+    enabled = (target/"release.env").read_text()
+    m.apply(rig.package, rollback=True)
+    disabled = (target/"rollback.env").read_text()
+    assert disabled == enabled.replace("GOALVISION_LAB_SETTLEMENT_REPLIES=1", "GOALVISION_LAB_SETTLEMENT_REPLIES=0")
+    for flag in ("GOALVISION_COMBO_BOT_ROUTING", "GOALVISION_LAB_TODAY_ONLY",
+                 "GOALVISION_LAB_EARLY_COMBO_LOSS", "GOALVISION_LAB_SINGLE_MIN_ODDS_130",
+                 "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130", "GOALVISION_LAB_DEVIG_RESEARCH",
+                 "GOALVISION_LAB_CALIBRATION_READINESS"):
+        assert flag+"=1\n" in disabled

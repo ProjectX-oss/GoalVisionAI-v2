@@ -1,0 +1,61 @@
+{
+  "base_files": 817,
+  "candidate_files": 818,
+  "deployment": "NOT_PERFORMED",
+  "existing_combo_configuration_and_reply_api": "LOCAL_VALIDATION_PASS",
+  "git_push": false,
+  "installed_base": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003",
+  "manual_operational_cycles": 0,
+  "manual_provider_calls": 0,
+  "overlay": [
+    "app/lab_combo/settlement_reply.py",
+    "app/lab_combo/presentation.py",
+    "app/lab_combo/service.py"
+  ],
+  "overlay_sha256": {
+    "app/lab_combo/presentation.py": "a0f27a6a19d531fff46fa08e987fea68c3e7a8da94467c08def1c707786469ef",
+    "app/lab_combo/service.py": "a2dc996d8e52eafd5e5e2127fd658a980380ff6c3022198ab98287340459f40f",
+    "app/lab_combo/settlement_reply.py": "4b70b92f6a915ba26987ceaa33cb4410add36a45072c22612528382293e1550b"
+  },
+  "production_db_writes": 0,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "source_base": "98d93002ea4ce633a4cdb1a00209fa2c050f5ed5",
+  "status": "PASS",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "tests": {
+    "files": [
+      "tests/test_combo_bot_routing.py",
+      "tests/test_prematch_settlement_upgrade.py",
+      "tests/test_lab_delivery_accounting.py",
+      "tests/test_lab_accuracy_combo.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/test_lab_combo.py",
+      "tests/test_prematch_v2_enablement.py",
+      "tests/test_lab_v2_shadow.py",
+      "tests/test_lab_combo_integrity.py",
+      "tests/test_lab_accuracy_delivery.py",
+      "tests/test_prematch_single_odds_floor.py",
+      "tests/test_lab_probability_delivery_hardening.py",
+      "tests/test_settlement_replies.py",
+      "tests/test_lab_telegram.py",
+      "tests/test_lab_experimental_selection.py"
+    ],
+    "network": "DENIED_BY_OFFLINE_RUNNER",
+    "passed": 744,
+    "skipped": 1
+  }
+}

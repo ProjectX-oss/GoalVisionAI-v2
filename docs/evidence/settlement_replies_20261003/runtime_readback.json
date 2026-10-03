@@ -1,0 +1,105 @@
+{
+  "admin_systemd_guard": "PASS",
+  "base_parity": true,
+  "checked_at_utc": "2026-10-03T11:15:22.457715+00:00",
+  "flags": [
+    "PYTHONPATH=/opt/goalvision-prematch-combo-bot-9a3b198-20261003/application",
+    "GOALVISION_LAB_ACCURACY_COMBOS=1",
+    "GOALVISION_LAB_TODAY_ONLY=1",
+    "GOALVISION_LAB_EARLY_COMBO_LOSS=1",
+    "GOALVISION_LAB_SINGLE_MIN_ODDS_130=1",
+    "GOALVISION_LAB_DEVIG_RESEARCH=1",
+    "GOALVISION_LAB_CALIBRATION_READINESS=1",
+    "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130=1",
+    "GOALVISION_COMBO_BOT_ROUTING=1"
+  ],
+  "protected_routes": {
+    "goalvision-admin-alerts.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-admin-alerts.service.d/40-autorepair.conf /etc/systemd/system/goalvision-admin-alerts.service.d/zz-admin-io-startup-20261001.conf /etc/systemd/system/goalvision-admin-alerts.service.d/zzzzz-admin-monitor-compat-20261002.conf /etc/systemd/system/goalvision-admin-alerts.service.d/zzzzzz-admin-rotation-alerts-20261002.conf",
+      "EnvironmentFiles": "",
+      "WorkingDirectory": "/opt/goalvision-admin-alerts-releases/admin-rotation-alerts-6a37787-20261002"
+    },
+    "goalvision-admin-autorepair.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-admin-autorepair.service.d/zz-admin-io-startup-20261001.conf /etc/systemd/system/goalvision-admin-autorepair.service.d/zzz-admin-worker-clone-20261001.conf",
+      "EnvironmentFiles": "",
+      "WorkingDirectory": "/opt/goalvision-admin-autorepair-releases/admin-worker-clone-eebed21-20261001"
+    },
+    "goalvision-lab-combo-discover.service": {
+      "DropInPaths": "",
+      "EnvironmentFiles": "",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-lab-weekly-stats.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-lab-weekly-stats.service.d/90-reviewed-prematch-v2.conf /etc/systemd/system/goalvision-lab-weekly-stats.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-lab-weekly-stats.service.d/93-probability-first-singles.conf /etc/systemd/system/goalvision-lab-weekly-stats.service.d/95-accuracy-first-singles-20260930.conf /etc/systemd/system/goalvision-lab-weekly-stats.service.d/98-accuracy-delivery-r4-20261001.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-accuracy-delivery-fc4a740-r4-20261001/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    }
+  },
+  "protected_routes_match_installed_package": true,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "release": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003",
+  "services": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003/release.env (ignore_errors=no)",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003/release.env (ignore_errors=no)",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "activating",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003/release.env (ignore_errors=no)",
+      "ExecMainStatus": "0",
+      "MainPID": "1672778",
+      "Result": "success"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-bot-9a3b198-20261003/release.env (ignore_errors=no)",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success"
+    }
+  },
+  "timers": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 13:38:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 04:12:00 CEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Sat 2026-10-03 13:30:00 CEST",
+      "UnitFileState": "enabled"
+    }
+  }
+}
