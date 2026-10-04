@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-04T11:00:45.242101+00:00",
+  "remote": "https://github.com/ProjectX-oss/GoalVisionAI-v2",
+  "initial_branch_count": 42,
+  "verified_branch_count": 56,
+  "initial_42_heads_unchanged": true,
+  "verified_reviewed_heads": {
+    "refs/heads/research/forward-ai-ml-20261001": "938402ae7e2279f2e36a5abd8cb8124e793d7495",
+    "refs/heads/research/calibration-calendar-20261002": "8c1dd20539179d91f47eb1643be817b940f932d4",
+    "refs/heads/research/prematch-devig-shadow-20261002": "666307b4b276a2c498fa9546f8e6114b6a5e42c7",
+    "refs/heads/research/calibration-observer-20261003": "45d51a4a38364f8ae9f3e2cdb78d8d37911c64c3",
+    "refs/heads/feat/dixon-coles-research-20261003": "a8df4252eafe79ab8345e8e1e86cc532e873c4db",
+    "refs/heads/feat/dixon-coles-automation-20261003": "1ace0df2f2d0d93875b2344f698df2ddb2e81c76",
+    "refs/heads/feat/dixon-coles-constrained-20261003": "801ff47d2837da469b3894a570b8cad8ea9eadea",
+    "refs/heads/feat/dixon-coles-forward-combo-20261003": "711f6da67cf5cdfaa72be6d1fed4ce4b51c7fabb",
+    "refs/heads/fix/forward-package-repair-20261004": "7e77b6411de16534023a5b803e87ad33ac158f78",
+    "refs/heads/fix/admin-health-projection-20261004": "5ae11b7be6b582760cbbec7596dec2b718ee9b7c",
+    "refs/heads/feat/combo-conservative-publication-20261004": "0fdd6eb2e40b79a1c9c6ffa46894363bebb556ad",
+    "refs/heads/feat/combo-market-parallel-20261004": "d1b6147f4dbc475796fe45f4a05d25f2a4ba7abb",
+    "refs/heads/audit/watch-reconciliation-20261004": "a68223b67d15188a7cc225c7e99ed316e93e75aa",
+    "refs/heads/fix/settlement-status-reserve-20261004": "9d7389458866100468f36fc542af02255cfaf203"
+  },
+  "audit_worktree_clean": true,
+  "quota_worktree_clean": true,
+  "main_checkout_changed_paths": 220,
+  "new_commit_scan": {
+    "objects": 80,
+    "blobs": 37,
+    "findings": []
+  },
+  "protected_counts_unchanged": true,
+  "deployment": false,
+  "provider_calls": 0,
+  "telegram_sends": 0,
+  "note": "Readback covers the reviewed source and initial handoff commit. The following evidence-only closeout commit records this proof; its exact branch HEAD is reported in the final operator response."
+}

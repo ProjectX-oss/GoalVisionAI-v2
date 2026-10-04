@@ -62,7 +62,7 @@ Sekmīgi atomic pushoti šādi reviewed branchi (pilni SHA ir `github_preflight.
 | feat/combo-conservative-publication-20261004 | `0fdd6eb2e40b79a1c9c6ffa46894363bebb556ad` |
 | feat/combo-market-parallel-20261004 | `d1b6147f4dbc475796fe45f4a05d25f2a4ba7abb` |
 
-Papildus šī audita code/evidence tiek publicēti `audit/watch-reconciliation-20261004`; atsevišķā kvotas release ķēde — `fix/settlement-status-reserve-20261004`. `clean`, `goalvision/current-production` un production deployment branchi netiek pārrakstīti/mergeoti; force push nav izmantots. Gala remote readback ir `github_sync_final.json`.
+Papildus šī audita code/evidence tiek publicēti `audit/watch-reconciliation-20261004`; atsevišķā kvotas release ķēde — `fix/settlement-status-reserve-20261004`. `clean`, `goalvision/current-production` un production deployment branchi netiek pārrakstīti/mergeoti; force push nav izmantots. Pārskatītā source un sākotnējā handoff remote readback ir `github_sync_final.json`.
 
 ## 4. PREMATCH_CHAMPION_STATE
 
@@ -322,7 +322,7 @@ Veiktā darba commiti:
 | Incremental comparator | 58fdedd557bf0765679bb5adfd1def79ff938ec0 |
 | Incremental protocol/CLI hardening | 1e580922acdde160347179f4cba820391bc89b7c |
 
-Gala evidence/standalone snapshot tests commit ir šī handoff branch HEAD (precīzs SHA gala operatora atbildē). Pārskatīto branchu/commit pilns saraksts ir `github_preflight.json`; gala push readback — `github_sync_final.json`.
+Gala evidence/standalone snapshot tests commit ir šī handoff branch HEAD (precīzs SHA gala operatora atbildē). Pārskatīto branchu/commit pilns saraksts ir `github_preflight.json`; source/handoff push readback — `github_sync_final.json`.
 
 Testu rezultāti (suite skaiti daļēji pārklājas; tos nesummēt):
 
@@ -337,4 +337,4 @@ Papildus: installed forward checksum/import/resource smoke PASS; assembled quota
 
 Noslēguma invarianti: agent deployment=0; manual service cycles=0; agent football-provider calls=0; agent Telegram sends=0; champion training/activation/promotion/rollback=0. LIVE paliek DISABLED, ADMIN Codex inactive/disabled, Official pilnīgi neskarts. Esošie dabiskie servisi turpināja savus jau autorizētos provider calls/publications; to skaiti ir atsevišķi no aģenta darbībām. Historical bookmaker odds nav iegūti. Publication/selection thresholds nav mainīti.
 
-Audita un kvotas worktree pēc gala commit jābūt tīriem; vecais `/home/arvis/GoalVisionAI` checkout paliek iepriekšējā netīrajā stāvoklī (220 takas), neaiztikts. Nav izmantots `git add .`, force push vai production branch vēstures pārrakstīšana. Evidence publicēta tikai pēc satura/secret un forbidden-file pārbaudes.
+Audita un kvotas worktree pēc pārskatītā source/handoff commit ir pārbaudīti tīri; vecais `/home/arvis/GoalVisionAI` checkout paliek iepriekšējā netīrajā stāvoklī (220 takas), neaiztikts. Nav izmantots `git add .`, force push vai production branch vēstures pārrakstīšana. Evidence publicēta tikai pēc satura/secret un forbidden-file pārbaudes.
