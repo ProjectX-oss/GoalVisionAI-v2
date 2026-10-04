@@ -116,3 +116,15 @@ Compatible rollback:
 
 No automatic deployment, Git push, champion promotion, provider request,
 Telegram test send, or production learning cycle was performed.
+
+## Prepared release evidence
+
+Implementation commit: 222f20c. Package source: 6784969b14d5d5c17f4cdd09b5009114d83b9b9b.
+
+Pinned package: /home/arvis/goalvision-operations/combo-conservative-6784969-20261004.
+All 35 checksum entries passed; isolated package smoke imported 542 app modules
+and verified the plan, solver protocol and competition registry. Offline regression:
+528 passed. Both monitor and COMBO operator preflights exited 0 in read-only mode.
+The COMBO preflight reports BASE and requires the prepared monitor repair first.
+Root-owned disabled-Codex files are rechecked by operator sudo apply. Neither
+release target is installed at this checkpoint. No services were switched.

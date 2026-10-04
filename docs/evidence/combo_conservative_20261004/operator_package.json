@@ -1,0 +1,50 @@
+{
+  "checksum_entries": 35,
+  "checksum_pass": true,
+  "checksums_sha256": "eba622d5d204a7e6f9d9d3b36eb108a24c64d03c68abfa9af6cebf9a07613c39",
+  "deployment": "NOT_PERFORMED",
+  "git_push": false,
+  "implementation_commit": "222f20c",
+  "manual_production_cycles": 0,
+  "metadata_sha256": "b67f11d0659d822c53645c3f12babb35d134f29c36f99eca032f645341da3424",
+  "monitor_prerequisite_preflight": [
+    "ADMIN_HEALTH_PREFLIGHT={\"no_deployment\": true, \"root_guard_checked\": false, \"status\": \"READ_ONLY_PASS\", \"target\": \"/opt/goalvision-admin-alerts-releases/admin-health-projection-99e40ac-20261004\"}"
+  ],
+  "monitor_target_not_installed": true,
+  "observed_at": "2026-10-04T07:31:10.316684+00:00",
+  "operator_entry": "/home/arvis/goalvision-operations/combo-conservative.py",
+  "package": "/home/arvis/goalvision-operations/combo-conservative-6784969-20261004",
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "read_only_preflight": [
+    "COMBO_CONSERVATIVE_PLAN_VALIDATED=/opt/goalvision-prematch-combo-conservative-6784969-20261004",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "MONITOR_REPAIR_PREREQUISITE=INSTALL_ADMIN_HEALTH_PROJECTION_FIRST",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "runtime_import_smoke": {
+    "modules": 542,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "provider_calls": 0,
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_COMBO_IMPORT_PASS",
+    "telegram_sends": 0
+  },
+  "source_commit": "6784969b14d5d5c17f4cdd09b5009114d83b9b9b",
+  "target_not_installed": true,
+  "telegram_sends": 0,
+  "wrapper_sha256": "ee37a849dd980937fb6f386a5ca6d1d0b9e082a4b7024fcf62e07673ab8f6933"
+}
