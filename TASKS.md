@@ -5,7 +5,10 @@
 - [x] Packaging-only resource inclusion, isolated built-artifact import gate, exact old-to-new forward-unit upgrade and retained state; 109 offline tests pass.
 - [x] Prepare bounded query-only sanitized recent ADMIN export; private incident DB requires operator sudo.
 - [x] Repair source ebd0924 and diagnostics builder 18cf39c committed; 845 package checksums, isolated runtime import and read-only preflight pass. Pinned operator repair/ADMIN export wrappers prepared; neither executed with sudo.
-- [ ] Obtain ADMIN export and diagnose actual message repetition; independently review installed repair and first natural cycle.
+- [x] Read operator export: 50 deliveries = 36 health coverage + 12 settlement quota failures + 2 delivery uncertainty/recovery; old rotation sends zero. Reproduce 18 oversized discovery records and STATUS reserve mismatch at 86 remaining calls.
+- [x] Independently verify installed ebd0924 and first natural 09:12 cycle: exit 0, 5 forecast families, 21 immutable records, no forced COMBO/provider/Telegram activity; original V1/champion preserved.
+- [ ] Implement bounded ADMIN health/publication evidence projection with semantic-equivalence tests; preserve incident/history/sends.
+- [ ] Implement settlement-aware status quota authority and honest quota deferral; retain existing provider limits and settlement/publication policies.
 
 ## 2026-10-03 — Forward solver and COMBO shadow integration
 

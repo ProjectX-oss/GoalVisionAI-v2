@@ -1,0 +1,631 @@
+{
+  "admin_codex_timer": {
+    "ActiveState": "inactive",
+    "UnitFileState": "disabled"
+  },
+  "agent_deployment": false,
+  "application_code_changed_this_followup": false,
+  "delivery_attempts": [
+    {
+      "count": 50,
+      "result": "RECEIPT_PERSISTED"
+    }
+  ],
+  "export_as_of_epoch": 1791093809.7993453,
+  "export_hours": 24,
+  "export_incidents_including_old_open": 177,
+  "export_truncated": false,
+  "forward_repair": {
+    "application_files": 843,
+    "application_hashes_match": true,
+    "first_natural_report": {
+      "automatic_promotion": false,
+      "capture": {
+        "combo_shadow": {
+          "eligible_fixtures": 1,
+          "fingerprint": "4b949771502a3375c81cd77addb0c9e6a115a30125eb3ac98021dc79f1cf260a",
+          "rejection_counts": {
+            "ensemble_probability_below_existing_minimum": 9
+          },
+          "selections": {
+            "CONSERVATIVE_AGREEMENT": 0,
+            "ENSEMBLE_BASELINE": 0
+          }
+        },
+        "counts": {
+          "forecast": 5,
+          "unavailable": 7
+        },
+        "details": [
+          {
+            "fixture_id": 1643003,
+            "reason": "TEAM_CAPACITY"
+          },
+          {
+            "fixture_id": 1643003,
+            "reason": "TEAM_CAPACITY"
+          },
+          {
+            "fixture_id": 1643004,
+            "reason": "TEAM_CAPACITY"
+          },
+          {
+            "fixture_id": 1643004,
+            "reason": "TEAM_CAPACITY"
+          },
+          {
+            "fixture_id": 1643004,
+            "reason": "TEAM_CAPACITY"
+          },
+          {
+            "fixture_id": 1643004,
+            "reason": "TEAM_CAPACITY"
+          },
+          {
+            "fixture_id": 1643004,
+            "reason": "TEAM_CAPACITY"
+          }
+        ],
+        "fingerprint": "223bc6472740e21b7134a0c66584a738ccd4be4e09f927325bd5270ed417812e",
+        "source_diagnostics": {
+          "capture_rows_examined": 500,
+          "intake_limit_reached": 1,
+          "older_captures_not_scanned": 1,
+          "unavailable_current_odds": 60
+        }
+      },
+      "evaluation": {
+        "combo_shadow": {
+          "fingerprint": "0b015428a18aa7d704fefebbfbcfaa2a3edc9bb5e2579152a5098c395c979aff",
+          "policies": {
+            "CONSERVATIVE_AGREEMENT": {
+              "bets": 0,
+              "lifecycle": {},
+              "profit_units": "0",
+              "roi_per_settled_staked_unit": null,
+              "settled": 0
+            },
+            "ENSEMBLE_BASELINE": {
+              "bets": 0,
+              "lifecycle": {},
+              "profit_units": "0",
+              "roi_per_settled_staked_unit": null,
+              "settled": 0
+            }
+          }
+        },
+        "counts": {
+          "forecast_families": 5
+        },
+        "fingerprint": "8f8b6c8e39b0a2065f4d105e642318c08ada6143894479982ac0045aab0a9a71",
+        "fixtures": 0,
+        "kickoff_dates": 0,
+        "lifecycle": {
+          "PENDING": 1,
+          "RESOLVED": 0,
+          "VOID": 0
+        },
+        "market_rows": 0,
+        "quality_verdict": "NEEDS_MORE_EVIDENCE"
+      },
+      "fingerprint": "dc39261dd9522dbd5be1837f73a9188a27d55c382ce54f665bdfb58a8957855b",
+      "finished_at": "2026-10-04T06:12:41.760067+00:00",
+      "priority": "NORMAL",
+      "provider_calls": 0,
+      "selection_effect": "NONE",
+      "started_at": "2026-10-04T06:12:34.473303+00:00",
+      "status": "COMPLETED",
+      "telegram_sends": 0,
+      "version": "DC_CONSTRAINED_FORWARD_V1"
+    },
+    "installed_target": "/opt/goalvision-dixon-coles-forward-ebd0924-20261004",
+    "original_v1_records_now": 80,
+    "original_v1_records_preserved": 62,
+    "record_count": 21,
+    "service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 09:12:42 EEST",
+      "ExecMainStatus": "0",
+      "InvocationID": "aab3d483627946e4810dc123d2d8bc5e",
+      "Result": "success",
+      "WorkingDirectory": "/opt/goalvision-dixon-coles-forward-ebd0924-20261004/application"
+    },
+    "source_commit": "ebd09247ad34a578b330b79a02a17e87fb2b8628",
+    "systemd_units_match": true
+  },
+  "manual_service_cycles": 0,
+  "monitor_adapter_replay": {
+    "coverage_reasons": {
+      "OVERSIZED_RECORD": 18
+    },
+    "event_count": 84,
+    "health_cursors": {
+      "cycle_health": [
+        "2026-10-04T06:04:41.259884+00:00",
+        "01c38716ee1848c9387fee9249aff8b78cfdd9f448a3215d716bce651e240a2a"
+      ],
+      "observer_runs": [
+        "2026-10-04T06:08:02.045558+00:00",
+        "862732686f6b114cc91f37fe583f6bbc7f32f76878ba3a4f8df2b8cd415d7904"
+      ]
+    },
+    "mode": "READ_ONLY_ADAPTER_REPLAY",
+    "monitor_scan": false,
+    "provider_calls": 0,
+    "store_ingest": false,
+    "telegram_sends": 0
+  },
+  "monitor_history_limit": "Export contains latest incident evidence, not per-occurrence documents; 18 directly reproduced oversized records align with all 36 health incident notifications. No other coverage failure returned by replay.",
+  "observed_at": "2026-10-04T06:13:50.159488+00:00",
+  "old_rotation_alerts_in_window": 0,
+  "operator_export_sha256": "b1e2ef1d1658da2a6a1de72df339ad1974091190174040146da81a0a25fdf7bc",
+  "oversized_discovery_records": [
+    {
+      "after_performance_projection_bytes": 185625,
+      "created_at": "2026-10-03T06:05:36.478044+00:00",
+      "id": "349b75768e17c0a616924f8f3fb76b91550b106cfb60ce00ee818ea55f70c7b3",
+      "source_bytes": 418217
+    },
+    {
+      "after_performance_projection_bytes": 172479,
+      "created_at": "2026-10-03T06:34:57.067921+00:00",
+      "id": "406d5893c656f6d1e65a3d14cff89e4b1fcccafec44e2c3d81227f6d49b3b862",
+      "source_bytes": 407800
+    },
+    {
+      "after_performance_projection_bytes": 209014,
+      "created_at": "2026-10-03T07:04:28.689008+00:00",
+      "id": "b6c8a67baf5360a27070f6dc745239b6419e9f5c86a0dc3397ecfd42380798e4",
+      "source_bytes": 446920
+    },
+    {
+      "after_performance_projection_bytes": 549749,
+      "created_at": "2026-10-03T07:36:42.011717+00:00",
+      "id": "9063aff844c807ec23c698bcf31857fa1d4bff88c2a8f9862717a49dd25f6402",
+      "source_bytes": 790156
+    },
+    {
+      "after_performance_projection_bytes": 565619,
+      "created_at": "2026-10-03T08:05:16.838409+00:00",
+      "id": "2ec0465528bf99b9bc6d9a98cf258abbff990bc21efae3df98af3f7f76e676c1",
+      "source_bytes": 808795
+    },
+    {
+      "after_performance_projection_bytes": 590277,
+      "created_at": "2026-10-03T08:36:43.230884+00:00",
+      "id": "fcf01e04d97178c513f51923d06f43d5bc9ba3ee0623770d2810a32794fc2610",
+      "source_bytes": 835975
+    },
+    {
+      "after_performance_projection_bytes": 599574,
+      "created_at": "2026-10-03T09:05:27.642773+00:00",
+      "id": "23d036d1b76f11f9062d98c6b17772cb9b821d7a688c6844a7e2ea9cc3722ab7",
+      "source_bytes": 849109
+    },
+    {
+      "after_performance_projection_bytes": 169858,
+      "created_at": "2026-10-03T09:36:26.915939+00:00",
+      "id": "24d74d3832385b549d8dd6a2474d88eee2335c7fabaf947600fe53cc1294c833",
+      "source_bytes": 422000
+    },
+    {
+      "after_performance_projection_bytes": 155242,
+      "created_at": "2026-10-03T10:04:18.963823+00:00",
+      "id": "78521719e985420f699ed49afbb7299e2b2c7744d5596ddef2fa8844a5ee71c6",
+      "source_bytes": 410419
+    },
+    {
+      "after_performance_projection_bytes": 335551,
+      "created_at": "2026-10-03T10:36:22.106577+00:00",
+      "id": "4c54dce3bcaa4bc20ca219cf9a31c034005cdfe632e547da426e1c0bb5a0b339",
+      "source_bytes": 594845
+    },
+    {
+      "after_performance_projection_bytes": 350605,
+      "created_at": "2026-10-03T11:04:43.281999+00:00",
+      "id": "797df0aa8b86619544e7aeb32772c754f1d74ebbedd3f285159b51c51758230d",
+      "source_bytes": 614071
+    },
+    {
+      "after_performance_projection_bytes": 366144,
+      "created_at": "2026-10-03T11:36:00.295265+00:00",
+      "id": "50592493f5f52f13d04734712b1d29849bfa04e521d7cbeb59067eb302acc590",
+      "source_bytes": 633450
+    },
+    {
+      "after_performance_projection_bytes": 247878,
+      "created_at": "2026-10-03T12:04:46.339759+00:00",
+      "id": "65abdea45196d9c0cc06a5fe72746a75cf4d55085b0e5db3d78b8c604e618ec3",
+      "source_bytes": 517263
+    },
+    {
+      "after_performance_projection_bytes": 174550,
+      "created_at": "2026-10-03T12:35:31.535709+00:00",
+      "id": "e9d0f5c9fc0a31491b79ce42851b70018db4e5fdf64e8300522bc17ed1e82704",
+      "source_bytes": 447246
+    },
+    {
+      "after_performance_projection_bytes": 408467,
+      "created_at": "2026-10-03T13:35:37.735317+00:00",
+      "id": "4f04d92b5965a96781de1d82a57b191a99c76e63316136a92e417c3333e33c8d",
+      "source_bytes": 686436
+    },
+    {
+      "after_performance_projection_bytes": 222611,
+      "created_at": "2026-10-03T14:05:02.297329+00:00",
+      "id": "3b86407529c37e31f672d0ded4cc00c064d1d8f53763fbf5bee5a034b9c51b70",
+      "source_bytes": 504527
+    },
+    {
+      "after_performance_projection_bytes": 225774,
+      "created_at": "2026-10-03T14:35:37.066766+00:00",
+      "id": "0b46eafe23f648acb0a8a9cfc1aadd45a5e41213e7abf98293ea03e78db89cd6",
+      "source_bytes": 511066
+    },
+    {
+      "after_performance_projection_bytes": 222907,
+      "created_at": "2026-10-03T15:04:44.321819+00:00",
+      "id": "20a3f2cc97322ee662c612eafa3b6251e7f6dd69af8903c5f604797190836396",
+      "source_bytes": 512334
+    }
+  ],
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "quota_failure": {
+    "boundary_replay": {
+      "claims_before_settlement": 0,
+      "effective_headroom": 86,
+      "mode": "DISPOSABLE_HEADROOM_BOUNDARY_REPLAY",
+      "production_writes": 0,
+      "provider_calls": 0,
+      "settlement_allowed": true,
+      "settlement_reserve": 0,
+      "status_rejection": "PROTECTED_QUOTA_RESERVE",
+      "telegram_sends": 0,
+      "zero_provider_remaining_blocked": true
+    },
+    "failed_runs": [
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T22:05:05.216538+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T22:15:05.612812+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T22:25:07.150358+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T22:35:04.687770+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T22:45:05.175010+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T22:55:05.413825+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T23:05:05.562846+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T23:15:05.308313+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T23:25:07.698016+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T23:35:05.489429+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T23:45:04.873493+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      },
+      {
+        "api_calls_consumed": 0,
+        "created_at": "2026-10-03T23:55:04.970854+00:00",
+        "lab_telegram_sent": false,
+        "terminal_error": "FootballQuotaError",
+        "terminal_stage": "SETTLEMENT"
+      }
+    ],
+    "first_success_after_utc_reset": "2026-10-04T00:05:56.713303+00:00",
+    "local_claims_20261003": 7414,
+    "local_daily_limit": 7500,
+    "local_remaining": 86,
+    "settlement_reserve": 0,
+    "status_reserve": 100,
+    "subsequent_successful_runs_through_read": 37
+  },
+  "recent_incidents": [
+    {
+      "count": 1,
+      "id": "063c58240359ed3e86eb3623",
+      "last_seen": 1791071705.177751,
+      "last_sent": 1791071728.0376089,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "22fb7fdf85ac629242c5e318",
+      "last_seen": 1791071105.1135,
+      "last_sent": 1791071155.1638408,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "ff7e2a5d8c28479e7a7c36a2",
+      "last_seen": 1791070505.760323,
+      "last_sent": 1791070568.3144073,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "dd18af8ad4c26ba6a5ccf95f",
+      "last_seen": 1791069907.959694,
+      "last_sent": 1791069926.4446137,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "3c61277b23bbe204f7e68e07",
+      "last_seen": 1791069305.549474,
+      "last_sent": 1791069344.3601522,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "3f193f1651b07bf7305a28ac",
+      "last_seen": 1791068705.806468,
+      "last_sent": 1791068769.2259393,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "a688c8644da4cea08b381274",
+      "last_seen": 1791068105.649963,
+      "last_sent": 1791068125.222997,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "9401a95fbda86ed6d4bb1302",
+      "last_seen": 1791067505.452267,
+      "last_sent": 1791067539.1384068,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "98b2791478dcfd585e6641d4",
+      "last_seen": 1791066904.870771,
+      "last_sent": 1791066959.0983095,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "d881d8f723201c7272b93c0e",
+      "last_seen": 1791066307.379145,
+      "last_sent": 1791066314.0927835,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "1a55957c1a87deed197d1cf0",
+      "last_seen": 1791065705.842068,
+      "last_sent": 1791065735.1764426,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "0d212e81bd7fee3d18749084",
+      "last_seen": 1791065105.450111,
+      "last_sent": 1791065145.7331705,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "count": 1,
+      "id": "4813fdd5c3b1bc986ad402ab",
+      "last_seen": 1791051389.158697,
+      "last_sent": 1791051389.158697,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 2,
+          "rows": 2,
+          "state": "SENT"
+        }
+      ],
+      "rule": "DELIVERY_UNCERTAIN",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "RECOVERED"
+    },
+    {
+      "count": 45,
+      "id": "5551793c5b77956d7db042f5",
+      "last_seen": 1791040229.127904,
+      "last_sent": 1791040229.127904,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 36,
+          "rows": 36,
+          "state": "SENT"
+        }
+      ],
+      "rule": "MONITORING_COVERAGE_DEGRADED",
+      "service": "monitor",
+      "state": "RECOVERED"
+    }
+  ],
+  "recent_notification_counts": {
+    "DELIVERY_UNCERTAIN": 2,
+    "MONITORING_COVERAGE_DEGRADED": 36,
+    "SERVICE_FAILURE": 12
+  },
+  "remaining_repairs": [
+    "Bounded monitor health publication projection preserving every consumed failure and delivery field",
+    "Settlement status preflight uses settlement quota authority without expanding provider/day/minute limits"
+  ],
+  "scope": "READ_ONLY_POST_DEPLOY_VERIFICATION_AND_ADMIN_DIAGNOSIS",
+  "telegram_sends": 0,
+  "unresolved_claims_without_receipt": 0
+}
