@@ -15,6 +15,7 @@ import tempfile
 BASE = Path("/opt/goalvision-prematch-single-floor-150-e1263e7-20261003")
 BASE_ENV_SHA256 = "365272111a6ad43dd11cb9f554f179b3dddc809ba9ce6253448ec61028fc73d2"
 STATE = Path("/var/lib/goalvision-dixon-coles-forward")
+PREVIOUS = Path("/opt/goalvision-dixon-coles-forward-1183e35-20261003")
 ORIGINAL = Path("/opt/goalvision-dixon-coles-e5b02e4-20261003")
 ORIGINAL_STATE = Path("/var/lib/goalvision-dixon-coles/research.db")
 ORIGINAL_SERVICE = "goalvision-dixon-coles-research.service"
@@ -44,7 +45,7 @@ def tree(root: Path) -> dict:
         if path.is_symlink():
             raise ValueError("SYMLINK_REVIEW_REQUIRED")
         if path.is_file() and (path.suffix == ".py" or path.name in
-                              ("calendar_plan_20261002.json", "plan_20261003.json", "protocol_20261003.json")):
+                              ("calendar_plan_20261002.json", "plan_20261003.json", "protocol_20261003.json", "reviewed_competitions.json")):
             output[path.relative_to(root).as_posix()] = sha(path)
     return output
 
@@ -230,14 +231,19 @@ def validate(package: Path, *, rollback: bool = False) -> tuple[dict, Path]:
                 raise ValueError("PREMATCH_RELEASE_MISMATCH")
         disabled_admin()
         original_guard(meta)
-    target = Path("/opt")/("goalvision-dixon-coles-forward-"+commit[:7]+"-20261003")
+        if tree(PREVIOUS/"application") != meta["previous_manifest"]:
+            raise ValueError("PREVIOUS_FORWARD_RELEASE_DRIFT")
+        if meta.get("runtime_import_smoke", {}).get("status") != "ISOLATED_PACKAGE_IMPORT_PASS":
+            raise ValueError("PACKAGE_IMPORT_PROOF_REQUIRED")
+    target = Path("/opt")/("goalvision-dixon-coles-forward-"+commit[:7]+"-20261004")
     safe(target); safe(STATE)
     if not rollback and target.exists() and tree(target/"application") != meta["application"]:
         raise ValueError("RESEARCH_RELEASE_DRIFT")
     for unit, contents in units(target).items():
         path = SYSTEM/unit
         safe(path)
-        if path.exists() and path.read_bytes() != contents:
+        accepted = (contents, units(PREVIOUS)[unit])
+        if path.exists() and path.read_bytes() not in accepted:
             raise ValueError("EXISTING_RESEARCH_UNIT_CONFLICT")
         if prop(unit, "DropInPaths"):
             raise ValueError("UNREVIEWED_RESEARCH_OVERRIDE")
@@ -253,7 +259,7 @@ def activate(target: Path) -> None:
     try:
         for unit, contents in units(target).items():
             path = SYSTEM/unit
-            if not path.exists():
+            if not path.exists() or path.read_bytes() != contents:
                 atomic(path, contents)
         control("daemon-reload")
         control("enable", "--now", TIMER)
@@ -302,6 +308,9 @@ def apply(package: Path, *, rollback: bool = False) -> None:
         os.chmod(STATE, 0o700)
         # Recheck production after preparation and before activation.
         validate(package)
+        # Drain only the broken forward timer/service; production and V1 are untouched.
+        control("disable", "--now", TIMER)
+        control("stop", SERVICE)
         activate(target)
         try:
             if routes() != meta["routes"]:
@@ -312,7 +321,7 @@ def apply(package: Path, *, rollback: bool = False) -> None:
             control("disable", "--now", TIMER)
             control("stop", SERVICE)
             raise
-        print("DIXON_COLES_FORWARD_COMBO_SHADOW_DEPLOYED")
+        print("DIXON_COLES_FORWARD_PACKAGE_REPAIRED")
         print("research_release="+str(target))
         print("Constrained model and COMBO ranking=SHADOW ONLY; published selection/champion unchanged.\nSINGLE=1.50; COMBO legs=1.30; no additional combined floor.")
         print("Schedule=:12:30/:42:30 Riga; CPU=25%; nice=10; budget=45s.")

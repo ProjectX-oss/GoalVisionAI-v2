@@ -15,14 +15,15 @@ install=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(install)
 PLAN=load_plan()
 
 def package(tmp_path,monkeypatch):
-    base=tmp_path/"base";original=tmp_path/"original";state=tmp_path/"state";system=tmp_path/"system";pkg=tmp_path/"package"
-    for folder in (base/"application/app",original/"application/app",system,pkg/"application/app"):
+    base=tmp_path/"base";original=tmp_path/"original";previous=tmp_path/"previous";state=tmp_path/"state";system=tmp_path/"system";pkg=tmp_path/"package"
+    for folder in (base/"application/app",original/"application/app",previous/"application/app",system,pkg/"application/app"):
         folder.mkdir(parents=True)
-    for key,value in (("BASE",base),("ORIGINAL",original),("STATE",state),("SYSTEM",system),
+    for key,value in (("BASE",base),("ORIGINAL",original),("PREVIOUS",previous),("STATE",state),("SYSTEM",system),
                       ("ORIGINAL_STATE",tmp_path/"original.db"),("INSTALL_LOCK",tmp_path/"lock")):
         monkeypatch.setattr(install,key,value)
     (base/"application/app/base.py").write_text("# base\n")
     (original/"application/app/base.py").write_text("# original\n")
+    (previous/"application/app/base.py").write_text("# prior forward\n")
     (base/"release.env").write_text("SINGLE=1.50\n")
     monkeypatch.setattr(install,"BASE_ENV_SHA256",install.sha(base/"release.env"))
     (pkg/"application/app/base.py").write_text("# candidate\n")
@@ -38,7 +39,8 @@ def package(tmp_path,monkeypatch):
             return {"FragmentPath":str(system/unit),"DropInPaths":"","UnitFileState":"enabled","ActiveState":"active"}.get(key,"")
         return ""
     monkeypatch.setattr(install,"prop",prop)
-    meta={"source_commit":"b"*40,"updater_sha256":install.sha(pkg/"update.py"),
+    meta={"source_commit":"b"*40,"previous_manifest":install.tree(previous/"application"),
+          "runtime_import_smoke":{"status":"ISOLATED_PACKAGE_IMPORT_PASS"},"updater_sha256":install.sha(pkg/"update.py"),
           "application":install.tree(pkg/"application"),"base_manifest":install.tree(base/"application"),
           "environment_sha256":install.sha(base/"release.env"),"routes":routes,
           "original_manifest":install.tree(original/"application"),

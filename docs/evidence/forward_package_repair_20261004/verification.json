@@ -1,0 +1,81 @@
+{
+  "admin_notification_attribution": {
+    "admin_database_readable": false,
+    "forward_service_in_admin_allowlist": false,
+    "observer_latest_parser_replay": {
+      "actual_final_document_valid": true,
+      "created_at": "2026-10-04T05:38:01.201727+00:00",
+      "existing_exact_output_proofs": 1,
+      "invocation": "87804a36056246e693debcb59a003f65",
+      "limit": 131072,
+      "no_database_access": true,
+      "no_monitor_scan": true,
+      "original_bytes": 10990,
+      "performance_omitted_bytes": 7850,
+      "projected_exact_output_proofs": 1,
+      "unit": "goalvision-adaptive-learning-observer.service"
+    },
+    "status": "UNVERIFIED_REQUIRES_OPERATOR_READONLY_EXPORT",
+    "unattended_sudo_available": false,
+    "unresolved_ledger_claims_without_receipt": 0
+  },
+  "application_source_unchanged_from": "1183e356e479a3a4bcc52c7e63d3bc1b61d00a89",
+  "confirmed_failure": {
+    "cause": "MISSING_APP_LAB_V2_SHADOW_REVIEWED_COMPETITIONS_JSON",
+    "deployed_isolated_import": {
+      "exit_code": 1,
+      "missing_resource_confirmed": true,
+      "status": "REPRODUCED",
+      "worker_main_called": false
+    },
+    "first": {
+      "invocation": "5acfd25199174f7fa60dd3c0c99846ba",
+      "reason": "MISSING_REVIEWED_COMPETITIONS_JSON",
+      "time": "2026-10-03T18:12:34.362893+00:00"
+    },
+    "forward_research_records": 0,
+    "last": {
+      "invocation": "2a9c497bbb344335ad9fc7e4f823d6ab",
+      "reason": "MISSING_REVIEWED_COMPETITIONS_JSON",
+      "time": "2026-10-04T05:12:34.278760+00:00"
+    },
+    "latest_json_present": false,
+    "release": "/opt/goalvision-dixon-coles-forward-1183e35-20261003",
+    "service": "goalvision-dixon-coles-forward.service",
+    "starts_failed_in_initial_window": 23
+  },
+  "deployment": false,
+  "manual_service_cycles": 0,
+  "new_release_operator_only": true,
+  "no_backfill": true,
+  "observed_at": "2026-10-04T05:49:59.919640+00:00",
+  "original_research_records_before": 62,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "resource_repair": "Package exact committed competition registry; isolated import gate and no source fallback",
+  "scope": "READ_ONLY_ADMIN_INVESTIGATION_AND_FORWARD_PACKAGE_REPAIR_PREPARATION",
+  "selection_effect": "NONE",
+  "telegram_sends": 0,
+  "tests": {
+    "failed": 0,
+    "files": [
+      "tests/test_forward_package_repair.py",
+      "tests/test_dixon_coles_forward_install.py",
+      "tests/test_dixon_coles_forward.py",
+      "tests/test_dixon_coles_automation.py"
+    ],
+    "passed": 109
+  }
+}

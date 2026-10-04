@@ -1,3 +1,12 @@
+## 2026-10-04 — Overnight ADMIN investigation and forward package repair
+
+- [x] Reproduce 1183e35 scheduled startup failures: missing reviewed_competitions.json; no forward forecasts generated.
+- [x] Preserve production/old V1/champion/disabled ADMIN; distinguish this fault from unverified ADMIN notifications (forward service absent from monitor allowlist).
+- [x] Packaging-only resource inclusion, isolated built-artifact import gate, exact old-to-new forward-unit upgrade and retained state; 109 offline tests pass.
+- [x] Prepare bounded query-only sanitized recent ADMIN export; private incident DB requires operator sudo.
+- [ ] Commit/build/pin repair package and diagnostic wrapper; operator apply remains separate.
+- [ ] Obtain ADMIN export and diagnose actual message repetition; independently review installed repair and first natural cycle.
+
 ## 2026-10-03 — Forward solver and COMBO shadow integration
 
 - [x] Inspect installed research/PREMATCH and current COMBO ranking/quality review.
