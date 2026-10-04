@@ -57,7 +57,8 @@ async def cycle(args: argparse.Namespace) -> dict:
         from app.adaptive_lab.repository import AuditRepository
         from app.adaptive_lab.quota import SharedQuota,CATEGORY
         adaptive=AuditRepository(args.adaptive_database)
-        SharedQuota(adaptive).bind(client,lambda:datetime.now(timezone.utc),allow_status_preflight=True)
+        SharedQuota(adaptive).bind(client,lambda:datetime.now(timezone.utc),allow_status_preflight=True,
+            status_preflight_category='SETTLEMENT' if args.command == 'settle' else 'STATUS')
     stage = 'INITIALIZE'
     try:
         intelligence_repository = SQLiteCurrentMatchIntelligenceRepository(database)
@@ -75,7 +76,9 @@ async def cycle(args: argparse.Namespace) -> dict:
                 for p in adaptive.all('canonical_opportunities', 'PREMATCH')))
             if _settlement_work_relevant(ledger, datetime.now(timezone.utc)) or shadow_pending:
                 if adaptive:
-                    token=CATEGORY.set('STATUS')
+                    # The status request is part of settlement's bounded budget.
+                    # Discovery's protected reserve must not block its consumer.
+                    token=CATEGORY.set('SETTLEMENT')
                     try: await client.account_status()
                     finally: CATEGORY.reset(token)
                 else:

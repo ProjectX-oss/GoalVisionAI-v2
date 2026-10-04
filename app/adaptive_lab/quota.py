@@ -155,11 +155,14 @@ class SharedQuota:
         finally:
             CATEGORY.reset(token)
 
-    def bind(self, client: object, clock: object, *, allow_status_preflight: bool = False) -> None:
+    def bind(self, client: object, clock: object, *, allow_status_preflight: bool = False,
+             status_preflight_category: str = 'STATUS') -> None:
         """Bind before work to an already quota-verified client; never fetches on binding."""
+        if status_preflight_category not in {'STATUS', 'SETTLEMENT'}:
+            raise ValueError('INVALID_STATUS_PREFLIGHT_CATEGORY')
         def provider_snapshot() -> dict:
             provider=client.quota_snapshot()
-            if allow_status_preflight and CATEGORY.get()=='STATUS' and provider.get('interpretation_status')=='NOT_OBSERVED':
+            if allow_status_preflight and CATEGORY.get()==status_preflight_category and provider.get('interpretation_status')=='NOT_OBSERVED':
                 # Reserve a local slot before the initial status attempt. Actual
                 # provider headers govern every following request, including retries.
                 provider={'interpretation_status':'NORMALIZED','daily_remaining':self.daily_limit,
