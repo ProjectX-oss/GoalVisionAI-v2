@@ -338,3 +338,15 @@ Papildus: installed forward checksum/import/resource smoke PASS; assembled quota
 Noslēguma invarianti: agent deployment=0; manual service cycles=0; agent football-provider calls=0; agent Telegram sends=0; champion training/activation/promotion/rollback=0. LIVE paliek DISABLED, ADMIN Codex inactive/disabled, Official pilnīgi neskarts. Esošie dabiskie servisi turpināja savus jau autorizētos provider calls/publications; to skaiti ir atsevišķi no aģenta darbībām. Historical bookmaker odds nav iegūti. Publication/selection thresholds nav mainīti.
 
 Audita un kvotas worktree pēc pārskatītā source/handoff commit ir pārbaudīti tīri; vecais `/home/arvis/GoalVisionAI` checkout paliek iepriekšējā netīrajā stāvoklī (220 takas), neaiztikts. Nav izmantots `git add .`, force push vai production branch vēstures pārrakstīšana. Evidence publicēta tikai pēc satura/secret un forbidden-file pārbaudes.
+
+## Operator deployment follow-up — 2026-10-04
+
+Classification: **NO_CHANGE**. This addendum supersedes only the pending settlement-quota deployment action above; the original 13:46 performance/research snapshot remains unchanged.
+
+The operator installed the reviewed 9d7389458866100468f36fc542af02255cfaf203 package at 15:54:27 Riga. Independent read-only postflight returned current_mode=ENABLED, verified package checksums, the exact installed application/environment manifest and all four PREMATCH routes. Protected research, ADMIN and weekly routes are unchanged; ADMIN Codex remains inactive/disabled. The agent did not deploy.
+
+The first subsequent natural settlement timer start, 15:55:01–15:55:53 Riga, completed with service exit 0 and no terminal error. It processed one SINGLE result and recorded one acknowledged, persisted Lab result delivery. Natural-cycle counters were api_calls=9 and api_calls_consumed=15; these are existing scheduled activity, not agent requests or a test send. Early COMBO behavior, both COMBO lanes and SINGLE 1.50 / per-leg COMBO 1.30 flags are retained. Champion generation and protected model/governance counters match the original audit.
+
+**Remaining evidence limit:** normal-cycle operation now passes on the installed release. A new natural near-reserve/exhaustion event has not occurred in this check; that edge case remains supported by the reviewed offline regressions. No threshold tuning, model activation, manual service cycle, provider request or Telegram send was performed by the agent. Official is untouched; no LIVE service was enabled and the LIVE publication count remains zero.
+
+Evidence: docs/evidence/watch_reconciliation_20261004/settlement_quota_deployed_readback.json. No further installation is required for this repair.

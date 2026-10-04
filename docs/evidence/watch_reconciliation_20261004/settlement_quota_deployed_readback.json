@@ -1,0 +1,76 @@
+{
+  "admin_codex_systemd": "INACTIVE_DISABLED",
+  "agent_deployment": false,
+  "agent_manual_service_cycles": 0,
+  "agent_provider_calls": 0,
+  "agent_telegram_sends": 0,
+  "application_and_environment_exact_match": true,
+  "application_manifest_file_count": 847,
+  "champion_changes": 0,
+  "checked_at_utc": "2026-10-04T12:58:41.696323+00:00",
+  "classification": "NO_CHANGE",
+  "first_post_deployment_natural_run": {
+    "api_calls": 9,
+    "api_calls_consumed": 15,
+    "combo_remaining_details_completed": 0,
+    "combo_results_completed": 0,
+    "completed_at_utc": "2026-10-04T12:55:53.809271+00:00",
+    "deliveries": [
+      {
+        "acknowledgement_received": true,
+        "claim_persisted": true,
+        "kind": "single_settlement",
+        "persistence_failure": null,
+        "receipt_persisted": true,
+        "reconciliation_required": false,
+        "reply_status": "CONFIRMED",
+        "sent": true,
+        "status": "SENT",
+        "transport_attempted": true,
+        "transport_failure_kind": null
+      }
+    ],
+    "lab_telegram_sent": true,
+    "single_results_completed": 1,
+    "terminal_error": null
+  },
+  "limits": [
+    "The first ordinary natural cycle passed. Exhausted/near-reserve behavior is covered by offline tests; a new natural low-quota event has not yet been observed.",
+    "No new full performance snapshot was taken; the 13:46 Riga performance snapshot remains as-of evidence."
+  ],
+  "live_unit_files": [],
+  "official_changes": 0,
+  "operator_deployment": true,
+  "package_checksums": "PASS",
+  "prematch_routes_verified": 4,
+  "protected_research_admin_weekly_routes_unchanged": true,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "read_only_postflight": "ENABLED; PASS",
+  "release": "/opt/goalvision-prematch-settlement-quota-reserve-9d73894-20261004",
+  "root_guard": "Operator apply passed; not independently reread as root",
+  "route_installed_at_utc": "2026-10-04T12:54:27.163678+00:00",
+  "selection_threshold_changes": 0,
+  "settlement_service": {
+    "ActiveState": "inactive",
+    "ExecMainExitTimestamp": "Sun 2026-10-04 14:55:53 CEST",
+    "ExecMainStartTimestamp": "Sun 2026-10-04 14:55:01 CEST",
+    "ExecMainStatus": "0",
+    "MainPID": "0",
+    "Result": "success",
+    "SubState": "dead"
+  },
+  "source_commit": "9d7389458866100468f36fc542af02255cfaf203",
+  "verification": "PASS"
+}
