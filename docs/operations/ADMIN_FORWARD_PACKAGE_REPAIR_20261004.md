@@ -31,3 +31,11 @@ bash ~/goalvision-operations/admin-check-20261004.sh
 ```
 
 It prompts for sudo if needed and saves a user-readable sanitized report. Send the printed ADMIN_DIAGNOSTIC_SAVED line for follow-up. Current warning diagnosis remains pending that report; do not silence or invalidate alerts without evidence.
+
+## Prepared artifact readback
+
+Repair source: ebd09247ad34a578b330b79a02a17e87fb2b8628. Package: /home/arvis/goalvision-operations/dixon-coles-forward-ebd0924-20261004. All 845 checksums match (843 application/resource files); isolated package smoke imports 513 app modules, preserves the declared forward plan and never invokes the worker. Read-only preflight passes; the privileged ADMIN configuration guard remains deferred to operator apply.
+
+Diagnostic builder source: 18cf39cccc5d3e31bfdd400f03fd2e12dfcf7599. Package: /home/arvis/goalvision-operations/admin-diagnostic-18cf39c-20261004. The shell entry point checks the exact diagnostic source hash inside isolated Python before execution. Shell syntax, Git/source equality, isolated help and deliberate pin rejection pass without reading the private DB.
+
+At 08:57 Riga the old forward service is still failed (last exit 08:42:35); its timer remains scheduled. The repaired release is not installed. Original research retains all 62 captured records, forward state remains empty, and protected champion/training/LIVE counts match before inspection. ADMIN Codex timer is inactive/disabled; the monitor last exit is successful. Raw private ADMIN incidents and first repaired natural cycle remain pending. Evidence: docs/evidence/forward_package_repair_20261004/package_readback.json. No push or deployment.

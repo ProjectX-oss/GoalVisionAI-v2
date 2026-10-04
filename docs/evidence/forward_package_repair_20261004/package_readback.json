@@ -1,0 +1,87 @@
+{
+  "admin_codex_timer": {
+    "ActiveState": "inactive",
+    "UnitFileState": "disabled"
+  },
+  "admin_monitor": {
+    "ActiveState": "inactive",
+    "ExecMainStatus": "0",
+    "Result": "success"
+  },
+  "application_diff_empty": true,
+  "application_files": 843,
+  "checksums_verified": 845,
+  "deployment": false,
+  "diagnostic_launcher_validation": {
+    "isolated_help": "PASS",
+    "private_database_read": false,
+    "script_matches_git": "PASS",
+    "shell_syntax": "PASS",
+    "tampered_pin_rejected_before_execution": "PASS"
+  },
+  "diagnostic_metadata": {
+    "inspect_sha256": "2e65e4f4af6bbca42b164797a8d3b3e7ecc468280869b17a2b9ba2a0124c4861",
+    "mode": "OPERATOR_ONLY_READ_ONLY",
+    "monitor_scans": 0,
+    "private_admin_database_read": false,
+    "provider_calls": 0,
+    "source_commit": "18cf39cccc5d3e31bfdd400f03fd2e12dfcf7599",
+    "telegram_sends": 0,
+    "wrapper": "/home/arvis/goalvision-operations/admin-check-20261004.sh",
+    "wrapper_sha256": "2c5453df40862065d24cef701beebc8d89be9cb3c4fbe81feea405c8e2199c98"
+  },
+  "diagnostic_package": "/home/arvis/goalvision-operations/admin-diagnostic-18cf39c-20261004",
+  "forward_records": 0,
+  "forward_service": {
+    "ActiveState": "failed",
+    "ExecMainExitTimestamp": "Sun 2026-10-04 08:42:35 EEST",
+    "ExecMainStatus": "1",
+    "Result": "exit-code"
+  },
+  "forward_timer": {
+    "ActiveState": "active",
+    "NextElapseUSecRealtime": "Sun 2026-10-04 09:12:30 EEST",
+    "UnitFileState": "enabled"
+  },
+  "isolated_import_smoke": {
+    "app_modules": 513,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "provider_calls": 0,
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_PACKAGE_IMPORT_PASS",
+    "telegram_sends": 0,
+    "worker_main_called": false
+  },
+  "manual_cycles": 0,
+  "observed_at": "2026-10-04T05:57:13.641061+00:00",
+  "old_research_records_after": 62,
+  "old_research_records_preserved": 62,
+  "package": "/home/arvis/goalvision-operations/dixon-coles-forward-ebd0924-20261004",
+  "preflight": {
+    "no_deployment": true,
+    "original_records_preserved": 62,
+    "root_guard_checked": false,
+    "source_commit": "ebd09247ad34a578b330b79a02a17e87fb2b8628",
+    "status": "READ_ONLY_PREFLIGHT_PASS",
+    "target": "/opt/goalvision-dixon-coles-forward-ebd0924-20261004"
+  },
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "source_commit": "ebd09247ad34a578b330b79a02a17e87fb2b8628",
+  "status": "PREPARED_NOT_DEPLOYED",
+  "telegram_sends": 0,
+  "wrapper": "/home/arvis/goalvision-operations/dixon-coles-forward-r2.py",
+  "wrapper_sha256": "5319d8694bc26567d13c68905d0a3f38e81c540823981039fe0f35783f1c5b95"
+}

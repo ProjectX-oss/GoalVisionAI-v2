@@ -4,7 +4,7 @@
 - [x] Preserve production/old V1/champion/disabled ADMIN; distinguish this fault from unverified ADMIN notifications (forward service absent from monitor allowlist).
 - [x] Packaging-only resource inclusion, isolated built-artifact import gate, exact old-to-new forward-unit upgrade and retained state; 109 offline tests pass.
 - [x] Prepare bounded query-only sanitized recent ADMIN export; private incident DB requires operator sudo.
-- [ ] Commit/build/pin repair package and diagnostic wrapper; operator apply remains separate.
+- [x] Repair source ebd0924 and diagnostics builder 18cf39c committed; 845 package checksums, isolated runtime import and read-only preflight pass. Pinned operator repair/ADMIN export wrappers prepared; neither executed with sudo.
 - [ ] Obtain ADMIN export and diagnose actual message repetition; independently review installed repair and first natural cycle.
 
 ## 2026-10-03 — Forward solver and COMBO shadow integration
@@ -14,7 +14,7 @@
 - [x] Implement bounded independent worker, immutable paired model/COMBO comparisons and operator-only package; 338 offline tests and synthetic replay pass.
 - [x] Record offline evidence, systemd unit verification and unchanged installed production/original research.
 - [x] Source commit 1183e35; operator package built, 844 checksums and read-only wrapper preflight PASS. New state/unit absent; no deployment.
-- [x] Operator activated 1183e35; independent 842-file/unit/resource/route/empty-state readback PASS at 20:55 Riga. All 26 original V1 records and protected state retained. New timer active/enabled, first scheduled tick 21:12:30 Riga.
+- [x] Operator activated 1183e35; independent 842-file/unit/resource/route/empty-state readback PASS at 20:55 Riga. All 26 original V1 records and protected state retained. New timer active/enabled, first scheduled tick 21:12:30 Riga. This established installation state only; the 2026-10-04 investigation found all starts failed because the package lacked the competition registry.
 - [ ] Review the first natural forward/COMBO shadow cycle and later genuine paired outcomes; no automatic promotion.
 
 ## 2026-10-03 — Separate constrained Dixon–Coles development candidate
