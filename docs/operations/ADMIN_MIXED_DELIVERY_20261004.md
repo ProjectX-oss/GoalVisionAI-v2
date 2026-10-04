@@ -62,3 +62,16 @@ and forward COMBO delivery remain pending operator apply and qualifying evidence
 Source commit: ab327dddd08ef731571a981b4cb77a4db1cc05fe
 
 19 base source files verified; only app/admin_alerts/rules.py changes. Isolated six-module import smoke passed without network or scans. Package checksums and read-only preflight passed. Prepared target: /opt/goalvision-admin-alerts-releases/admin-mixed-delivery-ab327dd-20261004. No deployment performed.
+
+## Operator deployment verified — 2026-10-04 21:09 Riga
+
+The operator installed this pinned monitor release after COMBO aggregate cb6b7c6.
+Independent read-only checks pass for the 19-file monitor manifest and the
+approved 852-file PREMATCH release/routes. The monitor's natural 21:08:20 Riga
+start completed with exit status zero. ADMIN Codex remains inactive/disabled.
+
+Incident recovery is still unconfirmed: arvis cannot read the root-owned incident
+store, and the first post-deployment discovery is scheduled for 21:30 Riga.
+No manual scan or send was run. Consolidated deployment evidence is on reviewed
+branch fix/combo-aggregate-20261004 at
+docs/evidence/combo_aggregate_20261004/deployed_readback.json.
