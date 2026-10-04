@@ -1,0 +1,81 @@
+{
+  "admin_codex_systemd_guard": "PASS",
+  "application_manifest": "PASS",
+  "application_manifest_files": 847,
+  "combo_leg_minimum": "1.30",
+  "dc_lane": "ENABLED",
+  "deployment_performed_by": "USER_OPERATOR",
+  "first_new_policy_natural_cycle": "PENDING_2026-10-04T13:00:00+03:00",
+  "installed_at_riga": "2026-10-04T12:53:00.654695+03:00",
+  "installed_metadata": "MATCHES_PINNED_PACKAGE",
+  "manual_cycles": 0,
+  "market_lane": "ENABLED",
+  "mode": "ENABLED",
+  "observed_at": "2026-10-04T12:54:48.156486+03:00",
+  "protected_routes": "VALIDATED_BY_PINNED_PREFLIGHT",
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_state_matches_before": true,
+  "provider_calls": 0,
+  "read_only_preflight_exit": 0,
+  "release": "/opt/goalvision-prematch-combo-market-parallel-abddde7-20261004",
+  "root_disable_files": "CHECKED_BY_OPERATOR_APPLY_NOT_READ_BY_THIS_UNPRIVILEGED_READBACK",
+  "routes": {
+    "goalvision-adaptive-learning-observer.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning-observer.service.d/90-reviewed-prematch-v2.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/93-probability-first-singles.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/95-accuracy-first-singles-20260930.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/98-accuracy-delivery-r4-20261001.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzz-quality-20261001.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzz-settlement-20261002.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzz-single-floor-20261002.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzz-devig-20261002.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzz-calendar-readiness-20261003.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzzz-combo-leg-floor-20261003.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzzzz-combo-bot-20261003.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzzzzz-settlement-replies-20261003.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzzzzz-single-floor-150-20261003.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzzzzzz-combo-conservative-20261004.conf /etc/systemd/system/goalvision-adaptive-learning-observer.service.d/zzzzzzzzzzzzzz-combo-market-parallel-20261004.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-market-parallel-abddde7-20261004/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-adaptive-learning.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-adaptive-learning.service.d/90-quota-lock-hardening.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzz-quality-20261001.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzz-settlement-20261002.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzz-single-floor-20261002.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzz-devig-20261002.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzzzz-combo-leg-floor-20261003.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzzzzz-combo-bot-20261003.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzzzzzz-settlement-replies-20261003.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzzzzzz-single-floor-150-20261003.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzzzzzzz-combo-conservative-20261004.conf /etc/systemd/system/goalvision-adaptive-learning.service.d/zzzzzzzzzzzzzz-combo-market-parallel-20261004.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-market-parallel-abddde7-20261004/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-lab-combo-settle.service.d/90-reviewed-prematch-v2.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/93-probability-first-singles.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/95-accuracy-first-singles-20260930.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/98-accuracy-delivery-r4-20261001.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/99-goalvision-settlement-guard.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzz-quality-20261001.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzz-settlement-20261002.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzz-single-floor-20261002.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzz-devig-20261002.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzzzz-combo-leg-floor-20261003.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzzzzz-combo-bot-20261003.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzzzzzz-settlement-replies-20261003.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzzzzzz-single-floor-150-20261003.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzzzzzzz-combo-conservative-20261004.conf /etc/systemd/system/goalvision-lab-combo-settle.service.d/zzzzzzzzzzzzzz-combo-market-parallel-20261004.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-market-parallel-abddde7-20261004/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "DropInPaths": "/etc/systemd/system/goalvision-lab-v2-discover.service.d/90-reviewed-prematch-v2.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/92-priority-fixes-20260930.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/93-probability-first-singles.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/95-accuracy-first-singles-20260930.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/98-accuracy-delivery-r4-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/99-odds-budget-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zz-accuracy-combo-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzz-context-scope-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzz-today-scope-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzz-quality-20261001.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzz-settlement-20261002.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzz-single-floor-20261002.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzz-devig-20261002.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzzzz-combo-leg-floor-20261003.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzzzzz-combo-bot-20261003.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzzzzzz-settlement-replies-20261003.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzzzzzz-single-floor-150-20261003.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzzzzzzz-combo-conservative-20261004.conf /etc/systemd/system/goalvision-lab-v2-discover.service.d/zzzzzzzzzzzzzz-combo-market-parallel-20261004.conf",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-market-parallel-abddde7-20261004/release.env (ignore_errors=no)",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    }
+  },
+  "single_minimum": "1.50",
+  "source_commit": "abddde71292511a11a8ffc0a97f18f8caea3fc0d",
+  "telegram_test_sends": 0,
+  "timers": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "UnitFileState": "enabled",
+      "next_riga": "Sun 2026-10-04 13:08:00 EEST"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "UnitFileState": "enabled",
+      "next_riga": "Mon 2026-10-05 05:12:00 EEST"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "UnitFileState": "enabled",
+      "next_riga": "Sun 2026-10-04 12:55:00 EEST"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "UnitFileState": "enabled",
+      "next_riga": "Sun 2026-10-04 13:00:00 EEST"
+    }
+  }
+}

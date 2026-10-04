@@ -89,3 +89,20 @@ recipient configuration validation passes without network access. The new /opt
 release target is absent and all current routes remain on the installed DC
 release. Protected champion counters/generation remain unchanged. No automatic
 deployment, Git push, manual cycle, provider request or Telegram test send.
+
+## Operator deployment and independent readback
+
+Operator installed the pinned release at 12:53 Riga on 2026-10-04. Independent
+read-only preflight exits 0 in ENABLED mode; all 847 application/JSON files,
+release/rollback environments, installed metadata and four PREMATCH routes
+match the reviewed package. All four timers remain enabled and active.
+Both DC and market lanes are enabled, SINGLE remains >=1.50 and COMBO legs
+remain >=1.30. ADMIN Codex is runtime-disabled; protected routes and champion
+generation/counters remain unchanged.
+
+Next natural discovery is 13:00 Riga, settlement 12:55 and observer 13:08.
+At this readback no discovery invocation using the new release has completed,
+so no new market-lane Telegram publication is yet independently verified.
+No manual cycle, provider request or Telegram test send was made.
+
+Evidence: docs/evidence/combo_market_parallel_20261004/deployed_readback.json.

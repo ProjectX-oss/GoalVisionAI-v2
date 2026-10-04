@@ -7,7 +7,8 @@
 - [x] Read-only development replay of latest and preceding natural pools; retain same SINGLE/DC choices, preserve floor and disjointness. No performance improvement established.
 - [x] Exact 845-file installed base plus eleven reviewed overlays matches the 847-file candidate source; protected champion counters unchanged.
 - [x] Source abddde7 committed; pinned operator package built, 13 checksums and isolated 544-module import/read-only preflight pass. Target not installed.
-- [ ] Operator installation, then natural forward publications/results. No automatic deploy or promotion.
+- [x] Operator installed at 12:53 Riga; independent 847-file/metadata/four-route readback PASS, both lanes enabled, ADMIN disabled and champion unchanged.
+- [ ] Review first natural market-lane publications/results; next discovery 13:00 Riga. No automatic promotion.
 
 ## 2026-10-04 — Overnight ADMIN investigation and forward package repair
 
