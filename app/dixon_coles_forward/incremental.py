@@ -5,7 +5,7 @@ from pathlib import Path
 import json
 from app.adaptive_lab.performance import probability_metrics
 from app.dixon_coles_research.contracts import seal,verify,utc,digest
-from .contracts import load_plan as forward_plan,reserved
+from .contracts import load_plan as forward_plan,reserved,verify_plan as verify_forward
 from . import service
 
 ORDER=('HOME_WIN','DRAW','AWAY_WIN')
@@ -14,13 +14,22 @@ WEIGHTS=tuple(i/10 for i in range(11))
 
 def load_plan():
     plan=json.loads(Path(__file__).with_name('incremental_plan_20261004.json').read_text())
-    verify(plan)
     old=forward_plan()
-    if (plan['forward_plan_fingerprint']!=old['fingerprint'] or plan['selection_effect']!='NONE'
-            or plan['automatic_promotion'] is not False or plan['weights']!=list(WEIGHTS)
-            or plan['calendar_fingerprint']!=old['protected_calendar']['plan_fingerprint']):
-        raise ValueError('INCREMENTAL_PLAN_MISMATCH')
+    verify_protocol(plan,old)
     return plan
+
+
+def verify_protocol(plan,forward):
+    verify(plan);verify_forward(forward)
+    if (plan['version']!='DC_INCREMENTAL_PROTOCOL_V1'
+            or plan['forward_plan_fingerprint']!=forward['fingerprint'] or plan['selection_effect']!='NONE'
+            or plan['automatic_promotion'] is not False or plan['weights']!=list(WEIGHTS)
+            or plan['calendar_fingerprint']!=forward['protected_calendar']['plan_fingerprint']
+            or plan['minimum_fit_fixtures']!=300 or plan['minimum_validation_fixtures']!=100
+            or plan['minimum_validation_dates']!=7 or plan['bootstrap_samples']!=200
+            or plan['bootstrap_seed']!=1729 or plan['near_zero_weight_maximum']!=.1
+            or not utc(forward['declared_at'])<=utc(plan['declared_at'])<utc(forward['evaluation_end'])):
+        raise ValueError('INCREMENTAL_PLAN_MISMATCH')
 
 
 def vector(values):
@@ -61,7 +70,7 @@ def scores(pairs):
 
 def eligible_forecasts(forecasts,*,plan,forward,now,additional_reserved=frozenset()):
     """Filter BEFORE requesting labels; holdout and predeclaration labels are not read."""
-    verify(plan);excluded=reserved(forward,additional_reserved);counts=Counter();selected=[]
+    verify_protocol(plan,forward);excluded=reserved(forward,additional_reserved);counts=Counter();selected=[]
     end=utc(forward['protected_calendar']['windows']['SEALED_HOLDOUT'][0])
     for f in forecasts:
         verify(f)
@@ -111,11 +120,11 @@ def prepare(forecasts,models,results,*,plan,forward,now,additional_reserved=froz
 
 def fit_pool(rows,*,base,plan,forward,now):
     """Explicit research fit only; never called by report or a runtime timer."""
-    verify(plan)
+    verify_protocol(plan,forward)
     if base not in ('MARKET','CHAMPION'):raise ValueError('INVALID_POOL_BASE')
     start,end=map(utc,forward['protected_calendar']['windows']['CALIBRATION_FIT'])
     if utc(now)<end:raise ValueError('CALIBRATION_WINDOW_OPEN')
-    if any(r['partition']!='CALIBRATION_FIT' or not start<=utc(r['forecast_at'])<=utc(r['kickoff_utc'])<utc(r['settled_at'])<end
+    if any(r['fixture_id'] in reserved(forward) or r['partition']!='CALIBRATION_FIT' or not start<=utc(r['forecast_at'])<=utc(r['kickoff_utc'])<utc(r['settled_at'])<end
            or utc(r['forecast_at'])<utc(plan['declared_at']) for r in rows):raise ValueError('FIT_PARTITION_LEAKAGE')
     if len({r['fixture_id'] for r in rows})!=len(rows):raise ValueError('FIXTURE_DEPENDENCE')
     subset=[r for r in rows if base in r['p']]
@@ -132,7 +141,7 @@ def fit_pool(rows,*,base,plan,forward,now):
 
 def report(rows,*,plan,forward,now,diagnostics=None):
     """Descriptive paired metrics. No fit, holdout read, recommendation or activation."""
-    verify(plan);seen=set()
+    verify_protocol(plan,forward);seen=set()
     for r in rows:
         if r['fixture_id'] in seen:raise ValueError('FIXTURE_DEPENDENCE')
         seen.add(r['fixture_id'])
@@ -177,7 +186,7 @@ def validate_pool(fit_rows,validation_rows,artifact,*,plan,forward,now):
     start,end=map(utc,forward['protected_calendar']['windows']['VALIDATION_EVALUATION'])
     if utc(now)<end:raise ValueError('VALIDATION_WINDOW_OPEN')
     if utc(artifact['created_at'])>=start:raise ValueError('WEIGHT_NOT_FROZEN_BEFORE_VALIDATION')
-    if any(r['partition']!='VALIDATION_EVALUATION' or not start<=utc(r['forecast_at'])<=utc(r['kickoff_utc'])<utc(r['settled_at'])<end for r in validation_rows):raise ValueError('VALIDATION_PARTITION_LEAKAGE')
+    if any(r['fixture_id'] in reserved(forward) or r['partition']!='VALIDATION_EVALUATION' or not start<=utc(r['forecast_at'])<=utc(r['kickoff_utc'])<utc(r['settled_at'])<end for r in validation_rows):raise ValueError('VALIDATION_PARTITION_LEAKAGE')
     ids=[r['fixture_id'] for r in validation_rows]
     if len(set(ids))!=len(ids) or set(ids)&{r['fixture_id'] for r in fit_rows}:raise ValueError('FIXTURE_DEPENDENCE')
     base=artifact['base'];subset=[r for r in validation_rows if base in r['p']]

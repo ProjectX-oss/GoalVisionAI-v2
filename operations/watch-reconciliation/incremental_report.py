@@ -3,6 +3,8 @@ import argparse
 from datetime import datetime,timezone
 import json
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from app.dixon_coles_research.repository import ResearchStore
 from app.dixon_coles_research import sources
 from app.dixon_coles_forward import incremental

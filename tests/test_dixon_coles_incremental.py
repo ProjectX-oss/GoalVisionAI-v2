@@ -122,3 +122,12 @@ def test_adapter_reproduces_real_forecast_and_never_fabricates_champion(monkeypa
     with pytest.raises(ValueError,match='REPRODUCTION'):
         inc.prepare([seal(forged)],{artifact['fingerprint']:artifact},[fixture.result()],
             plan=PLAN,forward=FORWARD,now=clock+timedelta(days=1))
+
+
+def test_reserved_fixture_cannot_be_relabelled_as_fit_and_thresholds_cannot_be_weakened():
+    data=rows();data[0]['fixture_id']=int(FORWARD['protected_calendar']['reserved_holdout_fixtures'][0])
+    with pytest.raises(ValueError,match='LEAKAGE'):
+        inc.fit_pool(data,base='MARKET',plan=PLAN,forward=FORWARD,now=utc('2026-10-10T01:00:00+00:00'))
+    forged={k:v for k,v in PLAN.items() if k!='fingerprint'};forged['minimum_fit_fixtures']=1
+    with pytest.raises(ValueError,match='PLAN_MISMATCH'):
+        inc.fit_pool(rows(1),base='MARKET',plan=seal(forged),forward=FORWARD,now=utc('2026-10-10T01:00:00+00:00'))
