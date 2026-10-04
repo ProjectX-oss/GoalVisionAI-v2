@@ -1,0 +1,3272 @@
+{
+  "candidates": 13444,
+  "counts": {
+    "calibration": {
+      "UNCALIBRATED_LAB_ENSEMBLE": 31
+    },
+    "decision": {
+      "APPROVED": 4018,
+      "REJECTED": 9382,
+      "TRACKING": 44
+    },
+    "hard_failures": {
+      "INVALID_MODEL_PROBABILITY": 31,
+      "MARKET_REVIEW_TERMINAL": 10,
+      "NON_POSITIVE_VALUE": 9372
+    },
+    "missing_features": {
+      "advanced_stats": 13444,
+      "competition_state": 616,
+      "injuries": 13444,
+      "lineup": 13422,
+      "recent_form": 7047,
+      "standings": 13444
+    },
+    "producer": {
+      "API_FOOTBALL_PREDICTION": 31,
+      "CURRENT_MARKET_CONSENSUS": 31
+    },
+    "raw_zero": {},
+    "readiness": {
+      "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 145,
+      "CURRENT_ODDS_REFRESH_REQUIRED": 145,
+      "ENSEMBLE_NOT_APPROVED": 9382,
+      "FINAL_REVIEW_COMPLETE": 30,
+      "FINAL_REVIEW_WINDOW_NOT_OPEN": 2262,
+      "FIXTURE_REFRESH_REQUIRED": 145,
+      "QUALITY_RISK_TRACKING": 1625
+    },
+    "rejections": {
+      "INVALID_MODEL_PROBABILITY": 31,
+      "MARKET_REVIEW_TERMINAL": 10,
+      "NON_POSITIVE_VALUE": 9372
+    },
+    "soft_findings": {
+      "ENSEMBLE_EDGE_BELOW_0_04": 12221,
+      "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 281,
+      "INSUFFICIENT_INDEPENDENT_SIGNALS": 12211,
+      "MATERIAL_SIGNAL_DISAGREEMENT": 3962,
+      "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 5067,
+      "SEVERE_MODEL_MARKET_CONTRADICTION": 479,
+      "VALUE_BELOW_PROFILE_THRESHOLD": 10963,
+      "WEIGHTED_AGREEMENT_BELOW_0_65": 1000
+    }
+  },
+  "cycle_ids": [
+    "lab-v2-cycle-cf073be62d417a89ab7131c1e49037b527bc68e219fd7cf9400f15c219d7e737",
+    "lab-v2-cycle-58934e324bff310287d0a280cc69b7b75425cedb42d43f8185f379c52da45766",
+    "lab-v2-cycle-fb5a4631f08fd328a61190553d22434b2257598a33c8bde7545cf6312350944a",
+    "lab-v2-cycle-2f3be985cbc7ffc51d8277fa6501befeb552aeea45929df4d9346668b00535c4",
+    "lab-v2-cycle-99c8d0f8c03f9e89ebfe8ff6b4de56c2ce46e139317de7d4eac6b662a5cf8021",
+    "lab-v2-cycle-29f41b078f40f2ff466c16d2acb170750e75f72db3a228798f53c51573142b94",
+    "lab-v2-cycle-0722bffd10435d8594fdef8c24ac40cd42ad8d3f9380a4c0d6ef2da505a20da1",
+    "lab-v2-cycle-9c455bbc4ea38f8f7b39eb31bfd35baff66eec75a7de257e8a8d340ed8d074d6",
+    "lab-v2-cycle-3f45193b70de2ed8a9a2611e3d5a418dd86d1367366de26e5484e8975daf36a4",
+    "lab-v2-cycle-cc7eaa170c7ed2c51f13b40ec4e1c3121a3dbbcec344821cfdf3943e9d842610",
+    "lab-v2-cycle-92d5dbce4f4dae86ce12d20f6e4241d741d2d155df0074a75146a8c2a2a25a31",
+    "lab-v2-cycle-5a17a5dc67cb4622c608203f44c656d8b4774b3b59b7c2b397e3a962d1b1de2b"
+  ],
+  "cycles": 12,
+  "earliest": "2026-10-03T19:00:02.666684+00:00",
+  "independent_fixtures": 315,
+  "invalid_count": 31,
+  "invalid_fixtures": 7,
+  "invalid_incidents": [
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 14,
+        "comparison": {
+          "att": {
+            "away": "0.29",
+            "home": "0.71"
+          },
+          "def": {
+            "away": "0.4",
+            "home": "0.6"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.34",
+            "home": "0.66"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528940,
+        "home_team_id": 1118,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 1118,
+        "predicted_winner_name": "Netherlands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-c2223548c588353aee8d005a2cd9e2ebc50f4bf885de16d6d48f0a9cf2ea739e",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528940,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528940,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0540574893028732203597951736",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0540574893028732203597951736",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 1116,
+        "comparison": {
+          "att": {
+            "away": "0.17",
+            "home": "0.83"
+          },
+          "def": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "1"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0.23",
+            "home": "0.77"
+          },
+          "total": {
+            "away": "0.233",
+            "home": "0.768"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528943,
+        "home_team_id": 776,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 776,
+        "predicted_winner_name": "Rep. Of Ireland",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-b3fa050aaecde5f5aa8d77fbd00845321e9f01f82b2270c9fd0ac7efa510f8cd",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528943,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528943,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2869826372158746639556584030",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2869826372158746639556584030",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 8168,
+        "comparison": {
+          "att": {
+            "away": "0",
+            "home": "1"
+          },
+          "def": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.41",
+            "home": "0.59"
+          },
+          "h2h": {
+            "away": "0.38",
+            "home": "0.62"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.33",
+            "home": "0.67"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639985,
+        "home_team_id": 5169,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5169,
+        "predicted_winner_name": "Turks and Caicos Islands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-ad166657f15134cc7f46679734bf4091385ca1f8319474299e212ccc2200df08",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639985,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639985,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2399134250095658453159834390",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2399134250095658453159834390",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 14,
+        "comparison": {
+          "att": {
+            "away": "0.29",
+            "home": "0.71"
+          },
+          "def": {
+            "away": "0.4",
+            "home": "0.6"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.34",
+            "home": "0.66"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528940,
+        "home_team_id": 1118,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 1118,
+        "predicted_winner_name": "Netherlands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-411f2c7ebffba01ddf0d9b2048ad89bb1d0feb68800c72ab6fd9fc0bb042b4c2",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528940,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528940,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0574667301030651125322236219",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0574667301030651125322236219",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 1116,
+        "comparison": {
+          "att": {
+            "away": "0.17",
+            "home": "0.83"
+          },
+          "def": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "1"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0.23",
+            "home": "0.77"
+          },
+          "total": {
+            "away": "0.233",
+            "home": "0.768"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528943,
+        "home_team_id": 776,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 776,
+        "predicted_winner_name": "Rep. Of Ireland",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-4e3bd14c16cdb40d5a6e483b58b4bd123b8b79a7d51ee502cd2087e420ecb6b2",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528943,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528943,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2813448064222739763485503397",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2813448064222739763485503397",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 25036,
+        "comparison": {
+          "att": {
+            "away": "0.25",
+            "home": "0.75"
+          },
+          "def": {
+            "away": "0.36",
+            "home": "0.64"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "0"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "0"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.27",
+            "home": "0.73"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1616105,
+        "home_team_id": 9799,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 9799,
+        "predicted_winner_name": "Marino",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-348743d52ce85b6ffa7097d496c820c8e49655e39fac2b4791319fd778c51e51",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1616105,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1616105,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2409539425100189448016207195",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2409539425100189448016207195",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 5531,
+        "comparison": {
+          "att": {
+            "away": "0.11",
+            "home": "0.89"
+          },
+          "def": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "form": {
+            "away": "0.1",
+            "home": "0.9"
+          },
+          "goals": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "h2h": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.12",
+            "home": "0.886"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639984,
+        "home_team_id": 5162,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5162,
+        "predicted_winner_name": "Guyana",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-e858e4c168b11d2c0c17617600ede237d3087583a2b717fd541b99382f761fdc",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639984,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639984,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0567293684747084245845471681",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0567293684747084245845471681",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 8168,
+        "comparison": {
+          "att": {
+            "away": "0",
+            "home": "1"
+          },
+          "def": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.41",
+            "home": "0.59"
+          },
+          "h2h": {
+            "away": "0.38",
+            "home": "0.62"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.33",
+            "home": "0.67"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639985,
+        "home_team_id": 5169,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5169,
+        "predicted_winner_name": "Turks and Caicos Islands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-fc6c24d11fdafcf1b3dc14de639e8fc84a3c041567e43e70aa3fef69277e937c",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639985,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639985,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2399134250095658453159834390",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2399134250095658453159834390",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 14,
+        "comparison": {
+          "att": {
+            "away": "0.29",
+            "home": "0.71"
+          },
+          "def": {
+            "away": "0.4",
+            "home": "0.6"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.34",
+            "home": "0.66"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528940,
+        "home_team_id": 1118,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 1118,
+        "predicted_winner_name": "Netherlands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-cac15dd4b17d4a59d83b541b4855415bbf96f844887c55df18db939ace6d7214",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528940,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528940,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0574667301030651125322236219",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0574667301030651125322236219",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 1116,
+        "comparison": {
+          "att": {
+            "away": "0.17",
+            "home": "0.83"
+          },
+          "def": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "1"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0.23",
+            "home": "0.77"
+          },
+          "total": {
+            "away": "0.233",
+            "home": "0.768"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528943,
+        "home_team_id": 776,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 776,
+        "predicted_winner_name": "Rep. Of Ireland",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-1035efbbe880f2d5336016366b7bd1b1c6ad23e6215d7d446a6354870b9ca2fe",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528943,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528943,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2813448064222739763485503397",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2813448064222739763485503397",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 25036,
+        "comparison": {
+          "att": {
+            "away": "0.25",
+            "home": "0.75"
+          },
+          "def": {
+            "away": "0.36",
+            "home": "0.64"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "0"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "0"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.27",
+            "home": "0.73"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1616105,
+        "home_team_id": 9799,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 9799,
+        "predicted_winner_name": "Marino",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-e019ba48884a100d4ee707093ba13b689c1334d53ad99d5589e3c3fb24574ba6",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1616105,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1616105,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2409539425100189448016207195",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2409539425100189448016207195",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 5531,
+        "comparison": {
+          "att": {
+            "away": "0.11",
+            "home": "0.89"
+          },
+          "def": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "form": {
+            "away": "0.1",
+            "home": "0.9"
+          },
+          "goals": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "h2h": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.12",
+            "home": "0.886"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639984,
+        "home_team_id": 5162,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5162,
+        "predicted_winner_name": "Guyana",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-292b9cd4fa594503a21a1b2f442eb821449d9897ecc7903482f542c39be6c5b6",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639984,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639984,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0567293684747084245845471681",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0567293684747084245845471681",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 8168,
+        "comparison": {
+          "att": {
+            "away": "0",
+            "home": "1"
+          },
+          "def": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.41",
+            "home": "0.59"
+          },
+          "h2h": {
+            "away": "0.38",
+            "home": "0.62"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.33",
+            "home": "0.67"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639985,
+        "home_team_id": 5169,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5169,
+        "predicted_winner_name": "Turks and Caicos Islands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-7bf9e6a3582b046aefe2be6d803e2338d31a6fe6e215976744f14bc64f463283",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639985,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639985,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2399134250095658453159834390",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2399134250095658453159834390",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 14,
+        "comparison": {
+          "att": {
+            "away": "0.29",
+            "home": "0.71"
+          },
+          "def": {
+            "away": "0.4",
+            "home": "0.6"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.34",
+            "home": "0.66"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528940,
+        "home_team_id": 1118,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 1118,
+        "predicted_winner_name": "Netherlands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-04927bd260149703cb9460295280326c11145b1524e5fb82b993737396434701",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528940,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528940,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0574667301030651125322236219",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0574667301030651125322236219",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 1116,
+        "comparison": {
+          "att": {
+            "away": "0.17",
+            "home": "0.83"
+          },
+          "def": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "1"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0.23",
+            "home": "0.77"
+          },
+          "total": {
+            "away": "0.233",
+            "home": "0.768"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528943,
+        "home_team_id": 776,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 776,
+        "predicted_winner_name": "Rep. Of Ireland",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-51feaeb603131696409dd873a09a9ea2b34e4cdf0719257a29286316f70b31ad",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528943,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528943,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2813448064222739763485503397",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2813448064222739763485503397",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 25036,
+        "comparison": {
+          "att": {
+            "away": "0.25",
+            "home": "0.75"
+          },
+          "def": {
+            "away": "0.36",
+            "home": "0.64"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "0"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "0"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.27",
+            "home": "0.73"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1616105,
+        "home_team_id": 9799,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 9799,
+        "predicted_winner_name": "Marino",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-b29764283ed29ffc498a06c6f1e70b361d23872defab15f09cd7d3fb4c506699",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1616105,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1616105,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2409539425100189448016207195",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2409539425100189448016207195",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 5531,
+        "comparison": {
+          "att": {
+            "away": "0.11",
+            "home": "0.89"
+          },
+          "def": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "form": {
+            "away": "0.1",
+            "home": "0.9"
+          },
+          "goals": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "h2h": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.12",
+            "home": "0.886"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639984,
+        "home_team_id": 5162,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5162,
+        "predicted_winner_name": "Guyana",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-b5ad94aa9de874351f14073f0118f995038dfdc8852c1ed1d3534788177a3e0d",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639984,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639984,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0567293684747084245845471681",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0567293684747084245845471681",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 8168,
+        "comparison": {
+          "att": {
+            "away": "0",
+            "home": "1"
+          },
+          "def": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.41",
+            "home": "0.59"
+          },
+          "h2h": {
+            "away": "0.38",
+            "home": "0.62"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.33",
+            "home": "0.67"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639985,
+        "home_team_id": 5169,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5169,
+        "predicted_winner_name": "Turks and Caicos Islands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-5475f8d3103ce63e5ca9a6c0cdc671ac44d93033f4f99123f6469a1636085924",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639985,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639985,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2399134250095658453159834390",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2399134250095658453159834390",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 14,
+        "comparison": {
+          "att": {
+            "away": "0.29",
+            "home": "0.71"
+          },
+          "def": {
+            "away": "0.4",
+            "home": "0.6"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.34",
+            "home": "0.66"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528940,
+        "home_team_id": 1118,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 1118,
+        "predicted_winner_name": "Netherlands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-971345e009c8d9ce0f65a9a3ec31f07667ba43c088a0be921e903d08f5db375f",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528940,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528940,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0574667301030651125322236219",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0574667301030651125322236219",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 1116,
+        "comparison": {
+          "att": {
+            "away": "0.17",
+            "home": "0.83"
+          },
+          "def": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "1"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0.23",
+            "home": "0.77"
+          },
+          "total": {
+            "away": "0.233",
+            "home": "0.768"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528943,
+        "home_team_id": 776,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 776,
+        "predicted_winner_name": "Rep. Of Ireland",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-4ec97960c3f8b9e2b8a55a3c77638a70204d6af568c9eb107062982ef6a19c71",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528943,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528943,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2813448064222739763485503397",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:85cfc44f3766f90830f4e54b0803eecb85efc0b172ad104ceb7222d6ce949a40"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2813448064222739763485503397",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 25036,
+        "comparison": {
+          "att": {
+            "away": "0.25",
+            "home": "0.75"
+          },
+          "def": {
+            "away": "0.36",
+            "home": "0.64"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "0"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "0"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.27",
+            "home": "0.73"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1616105,
+        "home_team_id": 9799,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 9799,
+        "predicted_winner_name": "Marino",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-2a6ff3a37a7af739d9dba184fc8b682a90cb8614f6a71d8efbb6d68b4e4c602d",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1616105,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1616105,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2409539425100189448016207195",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:eeb006b4ffc38c538a83c3e2b236862dc04fba00bbd2604b661d79c4f2e4f724"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2409539425100189448016207195",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 4457,
+        "comparison": {
+          "att": {
+            "away": "0",
+            "home": "0"
+          },
+          "def": {
+            "away": "0",
+            "home": "0"
+          },
+          "form": {
+            "away": "0",
+            "home": "0"
+          },
+          "goals": {
+            "away": "0.81",
+            "home": "0.19"
+          },
+          "h2h": {
+            "away": "1",
+            "home": "0"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.81",
+            "home": "0.19"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1637964,
+        "home_team_id": 26471,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 4457,
+        "predicted_winner_name": "Wofoo Tai Po",
+        "probabilities": {
+          "AWAY_WIN": "0.5",
+          "DRAW": "0.5",
+          "HOME_WIN": "0E+1"
+        },
+        "source_fingerprint": "c0bd3c36f48eed066e618035c32cd1e2bce806214353d1698e1a2cb512fb2fbc",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-69b36d2f12d606a3f71ce9eff808e7a9202c1f55ee711c4dc3a84f56d801f7a8",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1637964,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1637964,
+        "market": "HOME_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.216977531278592706386139060",
+            "signal_market": "HOME_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:c0bd3c36f48eed066e618035c32cd1e2bce806214353d1698e1a2cb512fb2fbc",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "HOME_WIN"
+          }
+        ]
+      },
+      "market": "HOME_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:c0bd3c36f48eed066e618035c32cd1e2bce806214353d1698e1a2cb512fb2fbc"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.216977531278592706386139060",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 4467,
+        "comparison": {
+          "att": {
+            "away": "0",
+            "home": "0"
+          },
+          "def": {
+            "away": "0",
+            "home": "0"
+          },
+          "form": {
+            "away": "0",
+            "home": "0"
+          },
+          "goals": {
+            "away": "0.3",
+            "home": "0.7"
+          },
+          "h2h": {
+            "away": "0.07",
+            "home": "0.93"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.185",
+            "home": "0.815"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1637965,
+        "home_team_id": 20392,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 20392,
+        "predicted_winner_name": "Kowloon City",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "130e0db2f34cbf34216820950b31712ebf47e6550ee563f418447fcc0fecc7f0",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-3cd83f43d051b66d396835bbfeaf912ffc33a106b0b2cf6aec8232a517c373e1",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1637965,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1637965,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.4219393638765056161921279428",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:130e0db2f34cbf34216820950b31712ebf47e6550ee563f418447fcc0fecc7f0",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:130e0db2f34cbf34216820950b31712ebf47e6550ee563f418447fcc0fecc7f0"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.4219393638765056161921279428",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 5531,
+        "comparison": {
+          "att": {
+            "away": "0.11",
+            "home": "0.89"
+          },
+          "def": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "form": {
+            "away": "0.1",
+            "home": "0.9"
+          },
+          "goals": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "h2h": {
+            "away": "0.13",
+            "home": "0.88"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.12",
+            "home": "0.886"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639984,
+        "home_team_id": 5162,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5162,
+        "predicted_winner_name": "Guyana",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-32e30244f87edd0a9319f3176cfa0a261b3d5ddad02962258f656a2a32a8867e",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639984,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639984,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0567293684747084245845471681",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:b2be946e5d6afe78e2cd6e9d6b15c6907215932736c4760498a356ce11446cf1"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0567293684747084245845471681",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 8168,
+        "comparison": {
+          "att": {
+            "away": "0",
+            "home": "1"
+          },
+          "def": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.41",
+            "home": "0.59"
+          },
+          "h2h": {
+            "away": "0.38",
+            "home": "0.62"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "0"
+          },
+          "total": {
+            "away": "0.33",
+            "home": "0.67"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1639985,
+        "home_team_id": 5169,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 5169,
+        "predicted_winner_name": "Turks and Caicos Islands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-741adc67b17c66f4cd6bd8758b046b98478ed350466a25b411f0a1e0ed77052b",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1639985,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1639985,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.2399134250095658453159834390",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:300812126fe582d3ca7a0587ed6d17c23a907f6983154cd87880804d63f2a5ec"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.2399134250095658453159834390",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 14,
+        "comparison": {
+          "att": {
+            "away": "0.29",
+            "home": "0.71"
+          },
+          "def": {
+            "away": "0.4",
+            "home": "0.6"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.34",
+            "home": "0.66"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528940,
+        "home_team_id": 1118,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 1118,
+        "predicted_winner_name": "Netherlands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-a8dff90d92e2261beaccd74790fd82ef5fc0d2a4328a78c7529a8ef9d49cda69",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528940,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528940,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0579095560935250397640825052",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0579095560935250397640825052",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 1116,
+        "comparison": {
+          "att": {
+            "away": "0.17",
+            "home": "0.83"
+          },
+          "def": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "1"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0.22",
+            "home": "0.78"
+          },
+          "total": {
+            "away": "0.23",
+            "home": "0.77"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528943,
+        "home_team_id": 776,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 776,
+        "predicted_winner_name": "Rep. Of Ireland",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-af8ec70b539424e864410a696327f0baba6be9b17f33988c4726ccf6ec95bc73",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528943,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528943,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.260979038741909273689719770",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.260979038741909273689719770",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 14,
+        "comparison": {
+          "att": {
+            "away": "0.29",
+            "home": "0.71"
+          },
+          "def": {
+            "away": "0.4",
+            "home": "0.6"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.34",
+            "home": "0.66"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528940,
+        "home_team_id": 1118,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 1118,
+        "predicted_winner_name": "Netherlands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-a6db48c884c0e0ee489dd4c98028220e6229c06d4b346d7b3d5f952bb300187e",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528940,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528940,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0579095560935250397640825052",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0579095560935250397640825052",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 1116,
+        "comparison": {
+          "att": {
+            "away": "0.17",
+            "home": "0.83"
+          },
+          "def": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "1"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0.22",
+            "home": "0.78"
+          },
+          "total": {
+            "away": "0.23",
+            "home": "0.77"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528943,
+        "home_team_id": 776,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 776,
+        "predicted_winner_name": "Rep. Of Ireland",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-53ba3a2a940826d947b3baabbdfef689d6ee64e6348107b0a693ef37fd8ee979",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528943,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528943,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.260979038741909273689719770",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.260979038741909273689719770",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 14,
+        "comparison": {
+          "att": {
+            "away": "0.29",
+            "home": "0.71"
+          },
+          "def": {
+            "away": "0.4",
+            "home": "0.6"
+          },
+          "form": {
+            "away": "0",
+            "home": "1"
+          },
+          "goals": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0",
+            "home": "1"
+          },
+          "total": {
+            "away": "0.34",
+            "home": "0.66"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528940,
+        "home_team_id": 1118,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 1118,
+        "predicted_winner_name": "Netherlands",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+        "unavailable_reason": null,
+        "under_over": null,
+        "winner_comment": "Win or draw"
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-e8f93aba97ba89d1880e411bdd2bec09b35b2395fb584488602bdb1125aad6ee",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528940,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528940,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.0579095560935250397640825052",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:af8252cfff11e1380f33116c34e2b2ddb89bb4419a8893ce1cabc69508cbf464"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.0579095560935250397640825052",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    },
+    {
+      "api_prediction_normalization": {
+        "available": true,
+        "away_team_id": 1116,
+        "comparison": {
+          "att": {
+            "away": "0.17",
+            "home": "0.83"
+          },
+          "def": {
+            "away": "0.33",
+            "home": "0.67"
+          },
+          "form": {
+            "away": "0.2",
+            "home": "0.8"
+          },
+          "goals": {
+            "away": "0",
+            "home": "1"
+          },
+          "h2h": {
+            "away": "0",
+            "home": "1"
+          },
+          "poisson_distribution": {
+            "away": "0.22",
+            "home": "0.78"
+          },
+          "total": {
+            "away": "0.23",
+            "home": "0.77"
+          }
+        },
+        "expected_goals_away": null,
+        "expected_goals_home": null,
+        "fixture_id": 1528943,
+        "home_team_id": 776,
+        "normalization_version": "API_FOOTBALL_PERCENT_UNITS_V2",
+        "predicted_winner_id": 776,
+        "predicted_winner_name": "Rep. Of Ireland",
+        "probabilities": {
+          "AWAY_WIN": "0E+1",
+          "DRAW": "0.5",
+          "HOME_WIN": "0.5"
+        },
+        "source_fingerprint": "78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094",
+        "unavailable_reason": null,
+        "under_over": "OVER_1_5",
+        "winner_comment": null
+      },
+      "baseline_probability": null,
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_id": "lab-v2-candidate-8bd9f4361250db708a796865924634f51c14e1fb4b7551c9a3177fd8e0e41331",
+      "ensemble_probability": "0E+1",
+      "fixture_id": 1528943,
+      "invalid_model_probability_evidence": {
+        "ensemble_probability_before_validation": "0E+1",
+        "fixture_id": 1528943,
+        "market": "AWAY_WIN",
+        "signals": [
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "CURRENT_MARKET_CONSENSUS",
+            "producer": "CURRENT_MARKET_CONSENSUS",
+            "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY",
+            "raw_probability_before_ensemble_normalization": "0.260979038741909273689719770",
+            "signal_market": "AWAY_WIN"
+          },
+          {
+            "availability": "AVAILABLE",
+            "independence_group": "API_FOOTBALL_PREDICTION",
+            "producer": "API_FOOTBALL_PREDICTION",
+            "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094",
+            "raw_probability_before_ensemble_normalization": "0E+1",
+            "raw_provider_probability_before_normalization": "0%",
+            "signal_market": "AWAY_WIN"
+          }
+        ]
+      },
+      "market": "AWAY_WIN",
+      "model_artifact_identity": null,
+      "model_generation": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2",
+      "predictive_families": [
+        "API_FOOTBALL_PREDICTION"
+      ],
+      "signals": [
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "API_FOOTBALL_PREDICTION",
+          "name": "API_FOOTBALL_PREDICTION",
+          "probability": "0E+1",
+          "provenance": "CURRENT_/PREDICTIONS:API_FOOTBALL_PERCENT_UNITS_V2:78aed14c12f886ea65f041aaf6536cc24d3d96af9d380553ab15b55ee74c2094"
+        },
+        {
+          "availability": "AVAILABLE",
+          "independence_group": "CURRENT_MARKET_CONSENSUS",
+          "name": "CURRENT_MARKET_CONSENSUS",
+          "probability": "0.260979038741909273689719770",
+          "provenance": "CURRENT_API_FOOTBALL_QUOTES_ONLY"
+        }
+      ]
+    }
+  ],
+  "latest": "2026-10-04T10:30:03.435286+00:00",
+  "ready_candidates": 30,
+  "scope": "LATEST_12_COMPLETED_REHEARSALS_AS_OF_CUTOFF"
+}

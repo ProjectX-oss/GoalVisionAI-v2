@@ -1,0 +1,9 @@
+{
+  "effective_command": "{ path=/usr/bin/python3 ; argv[]=/usr/bin/python3 -I -S /opt/goalvision-settlement-guard-v1/runtime_guard.py",
+  "source_sha256": "4ab82ae534403e2a3d8f7e1b589220b555b8f3cfac63bb7c878337eea53ea5ff",
+  "guard_seconds": 180,
+  "discovery_active_deferrals_in_24h": 13,
+  "observed_database_lock_matches": 0,
+  "observed_quota_contention_matches": 0,
+  "no_absolute_concurrency_claim": true
+}

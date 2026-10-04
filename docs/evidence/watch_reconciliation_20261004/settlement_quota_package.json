@@ -1,0 +1,55 @@
+{
+  "source_commit": "9d7389458866100468f36fc542af02255cfaf203",
+  "package": "/home/arvis/goalvision-operations/settlement-quota-reserve-9d73894-20261004",
+  "wrapper": "/home/arvis/goalvision-operations/settlement-quota-reserve.py",
+  "checksum_exit": 0,
+  "preflight_exit": 0,
+  "preflight": [
+    "SETTLEMENT_QUOTA_RESERVE_PLAN_VALIDATED=/opt/goalvision-prematch-settlement-quota-reserve-9d73894-20261004",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "files": {
+    "app/adaptive_lab/quota.py": "3da1c279295e5447c0c4a1abdef2a0247475ae0386c63829dffffdc85c3acbcb",
+    "app/lab_combo/cli.py": "a01b1bce2d02cf0e622c05267999e2dbb7bb920f5b611f77aa895f80f0df72aa"
+  },
+  "runtime_import_smoke": {
+    "modules": 544,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "provider_calls": 0,
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_COMBO_IMPORT_PASS",
+    "telegram_sends": 0
+  },
+  "base_file_count": 847,
+  "deployed": false,
+  "provider_calls": 0,
+  "telegram_sends": 0,
+  "protected_before": {
+    "counts": {
+      "learning_cycles": 3,
+      "training_runs": 133,
+      "model_artifacts": 59,
+      "holdout_results": 0,
+      "shadow_runs": 0,
+      "activation_events": 1,
+      "champion_generations": 1,
+      "live_publications": 0
+    },
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a"
+  },
+  "protected_after": {
+    "counts": {
+      "learning_cycles": 3,
+      "training_runs": 133,
+      "model_artifacts": 59,
+      "holdout_results": 0,
+      "shadow_runs": 0,
+      "activation_events": 1,
+      "champion_generations": 1,
+      "live_publications": 0
+    },
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a"
+  }
+}

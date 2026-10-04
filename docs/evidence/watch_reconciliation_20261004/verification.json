@@ -1,0 +1,91 @@
+{
+  "as_of": "2026-10-04T10:46:24.308796+00:00",
+  "tests": [
+    {
+      "suite": "forward repair + original forward + calendar/probability/performance regression",
+      "passed": 154,
+      "seconds": 8.4,
+      "files": [
+        "tests/test_forward_package_repair.py",
+        "tests/test_dixon_coles_forward_install.py",
+        "tests/test_dixon_coles_forward.py",
+        "tests/test_dixon_coles_automation.py",
+        "tests/adaptive_lab/test_provider_zero_trace.py",
+        "tests/adaptive_lab/test_prematch_probability_guard.py",
+        "tests/adaptive_lab/test_calendar_monitor.py",
+        "tests/adaptive_lab/test_performance_snapshot.py"
+      ]
+    },
+    {
+      "suite": "quota/preflight/forward incremental/autonomy/early combo regression",
+      "passed": 303,
+      "seconds": 45.57,
+      "files": [
+        "tests/test_dixon_coles_incremental.py",
+        "tests/adaptive_lab/test_settlement_preflight_reserve.py",
+        "tests/adaptive_lab/test_quota_cli.py",
+        "tests/adaptive_lab/test_quota_contention.py",
+        "tests/adaptive_lab/test_prematch_autonomy.py",
+        "tests/test_lab_combo_early_loss.py"
+      ]
+    },
+    {
+      "suite": "operator installer + incremental + settlement preflight",
+      "passed": 39,
+      "seconds": 2.45,
+      "files": [
+        "tests/test_settlement_quota_install.py",
+        "tests/test_dixon_coles_incremental.py",
+        "tests/adaptive_lab/test_settlement_preflight_reserve.py"
+      ]
+    },
+    {
+      "suite": "final incremental adapter/protocol guards + snapshot/standalone CLI regression",
+      "passed": 22,
+      "seconds": 2.91,
+      "files": [
+        "tests/test_dixon_coles_incremental.py",
+        "tests/test_watch_snapshot.py"
+      ]
+    }
+  ],
+  "suite_counts_overlap": true,
+  "network_denied_in_tests": true,
+  "agent_provider_calls": 0,
+  "agent_telegram_sends": 0,
+  "manual_service_cycles": 0,
+  "agent_deployments": 0,
+  "champion_promotions": 0,
+  "rollbacks": 0,
+  "automatic_training_enabled": false,
+  "official_changes": false,
+  "protected_before": {
+    "counts": {
+      "learning_cycles": 3,
+      "training_runs": 133,
+      "model_artifacts": 59,
+      "holdout_results": 0,
+      "shadow_runs": 0,
+      "activation_events": 1,
+      "champion_generations": 1,
+      "live_publications": 0
+    },
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a"
+  },
+  "protected_after": {
+    "counts": {
+      "learning_cycles": 3,
+      "training_runs": 133,
+      "model_artifacts": 59,
+      "holdout_results": 0,
+      "shadow_runs": 0,
+      "activation_events": 1,
+      "champion_generations": 1,
+      "live_publications": 0
+    },
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a"
+  },
+  "LIVE": "DISABLED",
+  "ADMIN_CODEX": "DISABLED",
+  "operator_package_only": true
+}

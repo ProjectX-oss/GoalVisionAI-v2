@@ -1,0 +1,95 @@
+{
+  "as_of": "2026-10-04T10:46:24.308796+00:00",
+  "automatic_promotion": false,
+  "brier_definition": "SUM_OF_THREE_SQUARED_ERRORS_PER_FIXTURE",
+  "champion_market_mean_total_variation_disagreement": null,
+  "comparisons": {
+    "CHAMPION": {
+      "baseline": {
+        "brier": null,
+        "ece": null,
+        "fixtures": 0,
+        "log_loss": null,
+        "rps": null
+      },
+      "dixon_coles_paired": {
+        "brier": null,
+        "ece": null,
+        "fixtures": 0,
+        "log_loss": null,
+        "rps": null
+      },
+      "fixed_half_pool": {
+        "brier": null,
+        "ece": null,
+        "fixtures": 0,
+        "log_loss": null,
+        "rps": null
+      },
+      "mean_total_variation_disagreement": null
+    },
+    "MARKET": {
+      "baseline": {
+        "brier": null,
+        "ece": null,
+        "fixtures": 0,
+        "log_loss": null,
+        "rps": null
+      },
+      "dixon_coles_paired": {
+        "brier": null,
+        "ece": null,
+        "fixtures": 0,
+        "log_loss": null,
+        "rps": null
+      },
+      "fixed_half_pool": {
+        "brier": null,
+        "ece": null,
+        "fixtures": 0,
+        "log_loss": null,
+        "rps": null
+      },
+      "mean_total_variation_disagreement": null
+    }
+  },
+  "diagnostics": {
+    "eligible_forecasts": 2,
+    "filter_counts": {
+      "not_complete_1x2": 6,
+      "predeclaration": 39
+    },
+    "resolved_paired_fixtures": 0,
+    "verified_forward_fingerprint": "29cd02ca14ac61fdab021a8375692b6e177a15a213ec95b7d0c58c8d4e1fcad1"
+  },
+  "ece_definition": "TEN_EQUAL_WIDTH_BINS_ON_3_CLASS_INDICATORS; NOT_3_INDEPENDENT_FIXTURES",
+  "fingerprint": "cbd2880b716ae587fef08f3eb86dc9a55e68e30a5d2eaa18076923db288a95f1",
+  "fit_invoked": false,
+  "fixed_pool_is_diagnostic_only": true,
+  "fixed_pool_weight": 0.5,
+  "holdout_capture_blocker": "CURRENT_FORWARD_PLAN_ENDS_AT_HOLDOUT_START",
+  "holdout_read": false,
+  "market_definition": "FIRST_COMPLETE_BOOK_MULTIPLICATIVE_DEVIG_FROZEN_BY_FORWARD_PLAN",
+  "optimal_forward_dc_weight": null,
+  "paired_fit_fixtures": {
+    "CHAMPION": 0,
+    "MARKET": 0
+  },
+  "partition_fixtures": {},
+  "plan_fingerprint": "35082c3a4d7e3e8d44a0fb954026a86ec2b6b0d8eaf9265711ba87d3c1f98e34",
+  "promotion_eligibility": "BLOCKED_NEEDS_MORE_EVIDENCE",
+  "provider_calls": 0,
+  "rps_outcome_order": [
+    "HOME_WIN",
+    "DRAW",
+    "AWAY_WIN"
+  ],
+  "selection_effect": "NONE",
+  "telegram_sends": 0,
+  "version": "DC_INCREMENTAL_INFORMATION_V1",
+  "weight_status": [
+    "CALIBRATION_WINDOW_OPEN",
+    "INSUFFICIENT_PAIRED_FIT_FIXTURES",
+    "NO_FROZEN_WEIGHT_VALIDATED_ON_UNSEEN_VALIDATION"
+  ]
+}

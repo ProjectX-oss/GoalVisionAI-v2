@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-10-04T10:46:24.308796+00:00",
+  "latest_cycle": {
+    "singles_sent": 3,
+    "combos_sent": 1,
+    "status": "COMPLETED"
+  },
+  "publication_blockers": {
+    "LAB_COMBO_LEG_ODDS_BELOW_1_30": 71,
+    "FIXTURE_AFTER_LAB_CUTOFF": 138
+  },
+  "single_publication_blockers": {
+    "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 763,
+    "LAB_SINGLE_ODDS_BELOW_1_50": 117,
+    "FIXTURE_AFTER_LAB_CUTOFF": 138,
+    "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 8
+  },
+  "source": "READ_ONLY_LATEST_PERSISTED_CYCLE_HEALTH",
+  "recipient_and_deliveries_omitted": true
+}

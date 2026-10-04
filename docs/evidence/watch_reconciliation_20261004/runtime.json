@@ -1,0 +1,2210 @@
+{
+  "aggregate": {
+    "cycles": 28,
+    "fixtures": 31297,
+    "fixtures_considered": 13728,
+    "fixtures_evaluated": 3343,
+    "markets": 31941,
+    "provider_calls": 5899,
+    "published": 119,
+    "ready": 124,
+    "result_counts": {
+      "DEGRADED": 28
+    }
+  },
+  "cycle_health": [
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T11:04:43.281999+00:00",
+      "evidence_at": "2026-10-03T11:00:03.289403+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 243,
+          "percent_of_discovered": 18.635
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 6,
+          "percent_of_discovered": 0.46
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.383
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.307
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 557,
+          "percent_of_discovered": 42.715
+        },
+        "ODDS_STALE": {
+          "fixtures": 198,
+          "percent_of_discovered": 15.184
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 291,
+          "percent_of_discovered": 22.316
+        }
+      },
+      "fixtures": 1304,
+      "fixtures_considered": 1013,
+      "fixtures_evaluated": 251,
+      "lanes": {
+        "EXPERIMENTAL": 528,
+        "REJECTED": 1592,
+        "TRACKING": 357
+      },
+      "markets": 2477,
+      "odds_fixtures": 251,
+      "provider_calls": 233,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 261,
+        "already_consumed": 1,
+        "base_cycle_budget": 261,
+        "daily_remaining_observed": 4810,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 262,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 18,
+        "requested_maximum": 400,
+        "reserve_headroom": 4710,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 4650,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 5,
+        "NON_POSITIVE_VALUE": 1592
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T11:00:03.289403+00:00",
+      "tracking": 1046
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T11:36:00.295265+00:00",
+      "evidence_at": "2026-10-03T11:30:03.254286+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 251,
+          "percent_of_discovered": 19.248
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 9,
+          "percent_of_discovered": 0.69
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.307
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.23
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 547,
+          "percent_of_discovered": 41.948
+        },
+        "ODDS_STALE": {
+          "fixtures": 182,
+          "percent_of_discovered": 13.957
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 307,
+          "percent_of_discovered": 23.543
+        }
+      },
+      "fixtures": 1304,
+      "fixtures_considered": 997,
+      "fixtures_evaluated": 262,
+      "lanes": {
+        "EXPERIMENTAL": 532,
+        "REJECTED": 1665,
+        "TRACKING": 399
+      },
+      "markets": 2596,
+      "odds_fixtures": 262,
+      "provider_calls": 232,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 262,
+        "already_consumed": 1,
+        "base_cycle_budget": 262,
+        "daily_remaining_observed": 4556,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 263,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 17,
+        "requested_maximum": 400,
+        "reserve_headroom": 4456,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 4413,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 4,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 4,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 4,
+        "NON_POSITIVE_VALUE": 1665
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T11:30:03.254286+00:00",
+      "tracking": 1025
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T12:04:46.339759+00:00",
+      "evidence_at": "2026-10-03T12:00:02.949010+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.153
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 183,
+          "percent_of_discovered": 14.034
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.307
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.153
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.153
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 451,
+          "percent_of_discovered": 34.586
+        },
+        "ODDS_STALE": {
+          "fixtures": 206,
+          "percent_of_discovered": 15.798
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 454,
+          "percent_of_discovered": 34.816
+        }
+      },
+      "fixtures": 1304,
+      "fixtures_considered": 850,
+      "fixtures_evaluated": 190,
+      "lanes": {
+        "EXPERIMENTAL": 408,
+        "REJECTED": 1197,
+        "TRACKING": 277
+      },
+      "markets": 1882,
+      "odds_fixtures": 190,
+      "provider_calls": 241,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 263,
+        "already_consumed": 1,
+        "base_cycle_budget": 263,
+        "daily_remaining_observed": 4311,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 264,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 16,
+        "requested_maximum": 400,
+        "reserve_headroom": 4211,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 4129,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 3,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 3,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 4,
+        "NON_POSITIVE_VALUE": 1197
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T12:00:02.949010+00:00",
+      "tracking": 879
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T12:35:31.535709+00:00",
+      "evidence_at": "2026-10-03T12:30:02.928568+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 8,
+          "percent_of_discovered": 0.613
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 110,
+          "percent_of_discovered": 8.436
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 7,
+          "percent_of_discovered": 0.537
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 433,
+          "percent_of_discovered": 33.206
+        },
+        "ODDS_STALE": {
+          "fixtures": 256,
+          "percent_of_discovered": 19.632
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 490,
+          "percent_of_discovered": 37.577
+        }
+      },
+      "fixtures": 1304,
+      "fixtures_considered": 814,
+      "fixtures_evaluated": 126,
+      "lanes": {
+        "EXPERIMENTAL": 250,
+        "REJECTED": 779,
+        "TRACKING": 193
+      },
+      "markets": 1222,
+      "odds_fixtures": 126,
+      "provider_calls": 238,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 263,
+        "already_consumed": 1,
+        "base_cycle_budget": 263,
+        "daily_remaining_observed": 4049,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 264,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 15,
+        "requested_maximum": 400,
+        "reserve_headroom": 3949,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 3879,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 29,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 29,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 779
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T12:30:02.928568+00:00",
+      "tracking": 834
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T13:04:41.660818+00:00",
+      "evidence_at": "2026-10-03T13:00:03.593703+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 86,
+          "percent_of_discovered": 6.631
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.308
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 329,
+          "percent_of_discovered": 25.366
+        },
+        "ODDS_STALE": {
+          "fixtures": 239,
+          "percent_of_discovered": 18.427
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 637,
+          "percent_of_discovered": 49.113
+        }
+      },
+      "fixtures": 1297,
+      "fixtures_considered": 660,
+      "fixtures_evaluated": 90,
+      "lanes": {
+        "EXPERIMENTAL": 124,
+        "REJECTED": 466,
+        "TRACKING": 240
+      },
+      "markets": 830,
+      "odds_fixtures": 90,
+      "provider_calls": 236,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 263,
+        "already_consumed": 1,
+        "base_cycle_budget": 263,
+        "daily_remaining_observed": 3793,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 264,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 14,
+        "requested_maximum": 400,
+        "reserve_headroom": 3693,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 3653,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 466
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T13:00:03.593703+00:00",
+      "tracking": 680
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T13:35:37.735317+00:00",
+      "evidence_at": "2026-10-03T13:30:02.651986+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.154
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 248,
+          "percent_of_discovered": 19.121
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 17,
+          "percent_of_discovered": 1.311
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.308
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 298,
+          "percent_of_discovered": 22.976
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.154
+        },
+        "ODDS_STALE": {
+          "fixtures": 26,
+          "percent_of_discovered": 2.005
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 699,
+          "percent_of_discovered": 53.894
+        }
+      },
+      "fixtures": 1297,
+      "fixtures_considered": 598,
+      "fixtures_evaluated": 265,
+      "lanes": {
+        "EXPERIMENTAL": 452,
+        "REJECTED": 1860,
+        "TRACKING": 357
+      },
+      "markets": 2669,
+      "odds_fixtures": 265,
+      "provider_calls": 236,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 264,
+        "already_consumed": 1,
+        "base_cycle_budget": 264,
+        "daily_remaining_observed": 3536,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 265,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 13,
+        "requested_maximum": 400,
+        "reserve_headroom": 3436,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 3375,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 4,
+        "NON_POSITIVE_VALUE": 1860
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T13:30:02.651986+00:00",
+      "tracking": 605
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T14:05:02.297329+00:00",
+      "evidence_at": "2026-10-03T14:00:03.331390+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.154
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 137,
+          "percent_of_discovered": 10.579
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 6,
+          "percent_of_discovered": 0.463
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.232
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 196,
+          "percent_of_discovered": 15.135
+        },
+        "ODDS_FIXTURE_LEAGUE_OR_DATE_MISMATCH": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "ODDS_STALE": {
+          "fixtures": 17,
+          "percent_of_discovered": 1.313
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 932,
+          "percent_of_discovered": 71.969
+        }
+      },
+      "fixtures": 1295,
+      "fixtures_considered": 363,
+      "fixtures_evaluated": 145,
+      "lanes": {
+        "EXPERIMENTAL": 266,
+        "REJECTED": 958,
+        "TRACKING": 183
+      },
+      "markets": 1407,
+      "odds_fixtures": 145,
+      "provider_calls": 236,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 263,
+        "already_consumed": 1,
+        "base_cycle_budget": 263,
+        "daily_remaining_observed": 3265,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 264,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 12,
+        "requested_maximum": 400,
+        "reserve_headroom": 3165,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 3108,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 5,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 5,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 4,
+        "NON_POSITIVE_VALUE": 958
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T14:00:03.331390+00:00",
+      "tracking": 357
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T14:35:37.066766+00:00",
+      "evidence_at": "2026-10-03T14:30:02.721768+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 140,
+          "percent_of_discovered": 10.811
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 6,
+          "percent_of_discovered": 0.463
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.309
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 185,
+          "percent_of_discovered": 14.286
+        },
+        "ODDS_FIXTURE_LEAGUE_OR_DATE_MISMATCH": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.077
+        },
+        "ODDS_STALE": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.309
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 953,
+          "percent_of_discovered": 73.591
+        }
+      },
+      "fixtures": 1295,
+      "fixtures_considered": 342,
+      "fixtures_evaluated": 147,
+      "lanes": {
+        "EXPERIMENTAL": 283,
+        "REJECTED": 968,
+        "TRACKING": 194
+      },
+      "markets": 1445,
+      "odds_fixtures": 147,
+      "provider_calls": 236,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 264,
+        "already_consumed": 1,
+        "base_cycle_budget": 264,
+        "daily_remaining_observed": 3009,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 265,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 11,
+        "requested_maximum": 400,
+        "reserve_headroom": 2909,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 2911,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 4,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 4,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 4,
+        "MARKET_REVIEW_TERMINAL": 3,
+        "NON_POSITIVE_VALUE": 965
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T14:30:02.721768+00:00",
+      "tracking": 337
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T15:04:44.321819+00:00",
+      "evidence_at": "2026-10-03T15:00:03.038750+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.391
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 125,
+          "percent_of_discovered": 9.773
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 8,
+          "percent_of_discovered": 0.625
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 129,
+          "percent_of_discovered": 10.086
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1012,
+          "percent_of_discovered": 79.124
+        }
+      },
+      "fixtures": 1279,
+      "fixtures_considered": 267,
+      "fixtures_evaluated": 138,
+      "lanes": {
+        "EXPERIMENTAL": 267,
+        "REJECTED": 944,
+        "TRACKING": 183
+      },
+      "markets": 1394,
+      "odds_fixtures": 138,
+      "provider_calls": 226,
+      "provider_rows": 1270,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 264,
+        "already_consumed": 1,
+        "base_cycle_budget": 264,
+        "daily_remaining_observed": 2743,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 265,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 10,
+        "requested_maximum": 400,
+        "reserve_headroom": 2643,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 2573,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 10,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 10,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 4,
+        "NON_POSITIVE_VALUE": 944
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T15:00:03.038750+00:00",
+      "tracking": 255
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T15:35:08.291040+00:00",
+      "evidence_at": "2026-10-03T15:30:03.463472+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.392
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 60,
+          "percent_of_discovered": 4.706
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.314
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 115,
+          "percent_of_discovered": 9.02
+        },
+        "ODDS_STALE": {
+          "fixtures": 59,
+          "percent_of_discovered": 4.627
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1032,
+          "percent_of_discovered": 80.941
+        }
+      },
+      "fixtures": 1275,
+      "fixtures_considered": 243,
+      "fixtures_evaluated": 69,
+      "lanes": {
+        "EXPERIMENTAL": 119,
+        "REJECTED": 486,
+        "TRACKING": 126
+      },
+      "markets": 731,
+      "odds_fixtures": 69,
+      "provider_calls": 222,
+      "provider_rows": 1270,
+      "published": 5,
+      "quota": {
+        "additional_calls_available": 262,
+        "already_consumed": 1,
+        "base_cycle_budget": 262,
+        "daily_remaining_observed": 2458,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 263,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 9,
+        "requested_maximum": 400,
+        "reserve_headroom": 2358,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 2296,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 10,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 10,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 2,
+        "MARKET_REVIEW_TERMINAL": 40,
+        "NON_POSITIVE_VALUE": 446
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T15:30:03.463472+00:00",
+      "tracking": 236
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T16:04:04.001880+00:00",
+      "evidence_at": "2026-10-03T16:00:02.847106+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 24,
+          "percent_of_discovered": 1.882
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.314
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 61,
+          "percent_of_discovered": 4.784
+        },
+        "ODDS_STALE": {
+          "fixtures": 75,
+          "percent_of_discovered": 5.882
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1111,
+          "percent_of_discovered": 87.137
+        }
+      },
+      "fixtures": 1275,
+      "fixtures_considered": 164,
+      "fixtures_evaluated": 24,
+      "lanes": {
+        "EXPERIMENTAL": 35,
+        "REJECTED": 139,
+        "TRACKING": 68
+      },
+      "markets": 242,
+      "odds_fixtures": 24,
+      "provider_calls": 236,
+      "provider_rows": 1270,
+      "published": 3,
+      "quota": {
+        "additional_calls_available": 262,
+        "already_consumed": 1,
+        "base_cycle_budget": 262,
+        "daily_remaining_observed": 2197,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 263,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 8,
+        "requested_maximum": 400,
+        "reserve_headroom": 2097,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 2051,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 139
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T16:00:02.847106+00:00",
+      "tracking": 166
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T16:35:32.049567+00:00",
+      "evidence_at": "2026-10-03T16:30:03.428830+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.078
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.078
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 50,
+          "percent_of_discovered": 3.922
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.235
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 57,
+          "percent_of_discovered": 4.471
+        },
+        "ODDS_STALE": {
+          "fixtures": 41,
+          "percent_of_discovered": 3.216
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1122,
+          "percent_of_discovered": 88.0
+        }
+      },
+      "fixtures": 1275,
+      "fixtures_considered": 153,
+      "fixtures_evaluated": 51,
+      "lanes": {
+        "EXPERIMENTAL": 90,
+        "REJECTED": 363,
+        "TRACKING": 78
+      },
+      "markets": 531,
+      "odds_fixtures": 51,
+      "provider_calls": 190,
+      "provider_rows": 1270,
+      "published": 5,
+      "quota": {
+        "additional_calls_available": 257,
+        "already_consumed": 1,
+        "base_cycle_budget": 257,
+        "daily_remaining_observed": 1902,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 258,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 7,
+        "requested_maximum": 400,
+        "reserve_headroom": 1802,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 1713,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 4,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 4,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 1,
+        "NON_POSITIVE_VALUE": 363
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T16:30:03.428830+00:00",
+      "tracking": 153
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T17:03:40.499668+00:00",
+      "evidence_at": "2026-10-03T17:00:03.406092+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.079
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.157
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 38,
+          "percent_of_discovered": 2.985
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.157
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 47,
+          "percent_of_discovered": 3.692
+        },
+        "ODDS_STALE": {
+          "fixtures": 41,
+          "percent_of_discovered": 3.221
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1142,
+          "percent_of_discovered": 89.709
+        }
+      },
+      "fixtures": 1273,
+      "fixtures_considered": 131,
+      "fixtures_evaluated": 40,
+      "lanes": {
+        "EXPERIMENTAL": 83,
+        "REJECTED": 266,
+        "TRACKING": 65
+      },
+      "markets": 414,
+      "odds_fixtures": 40,
+      "provider_calls": 197,
+      "provider_rows": 1270,
+      "published": 4,
+      "quota": {
+        "additional_calls_available": 262,
+        "already_consumed": 1,
+        "base_cycle_budget": 262,
+        "daily_remaining_observed": 1673,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 263,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 6,
+        "requested_maximum": 400,
+        "reserve_headroom": 1573,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 1562,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 7,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 7,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 1,
+        "MARKET_REVIEW_TERMINAL": 6,
+        "NON_POSITIVE_VALUE": 260
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T17:00:03.406092+00:00",
+      "tracking": 130
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T17:34:57.569846+00:00",
+      "evidence_at": "2026-10-03T17:30:03.418653+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.079
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.157
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 38,
+          "percent_of_discovered": 2.987
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 43,
+          "percent_of_discovered": 3.381
+        },
+        "ODDS_STALE": {
+          "fixtures": 37,
+          "percent_of_discovered": 2.909
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1151,
+          "percent_of_discovered": 90.487
+        }
+      },
+      "fixtures": 1272,
+      "fixtures_considered": 121,
+      "fixtures_evaluated": 40,
+      "lanes": {
+        "EXPERIMENTAL": 82,
+        "REJECTED": 274,
+        "STANDARD": 1,
+        "TRACKING": 69
+      },
+      "markets": 426,
+      "odds_fixtures": 40,
+      "provider_calls": 212,
+      "provider_rows": 1270,
+      "published": 3,
+      "quota": {
+        "additional_calls_available": 265,
+        "already_consumed": 1,
+        "base_cycle_budget": 265,
+        "daily_remaining_observed": 1426,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 266,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 5,
+        "requested_maximum": 400,
+        "reserve_headroom": 1326,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 1282,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 8,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 8,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 1,
+        "MARKET_REVIEW_TERMINAL": 11,
+        "NON_POSITIVE_VALUE": 263
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T17:30:03.418653+00:00",
+      "tracking": 120
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T18:03:23.848458+00:00",
+      "evidence_at": "2026-10-03T18:00:03.207452+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.079
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.079
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 10,
+          "percent_of_discovered": 0.787
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.079
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 13,
+          "percent_of_discovered": 1.023
+        },
+        "ODDS_STALE": {
+          "fixtures": 26,
+          "percent_of_discovered": 2.046
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1219,
+          "percent_of_discovered": 95.909
+        }
+      },
+      "fixtures": 1271,
+      "fixtures_considered": 52,
+      "fixtures_evaluated": 11,
+      "lanes": {
+        "EXPERIMENTAL": 32,
+        "REJECTED": 71,
+        "STANDARD": 1,
+        "TRACKING": 17
+      },
+      "markets": 121,
+      "odds_fixtures": 11,
+      "provider_calls": 155,
+      "provider_rows": 1270,
+      "published": 1,
+      "quota": {
+        "additional_calls_available": 263,
+        "already_consumed": 1,
+        "base_cycle_budget": 263,
+        "daily_remaining_observed": 1155,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 264,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 4,
+        "requested_maximum": 400,
+        "reserve_headroom": 1055,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 1043,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 5,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 5,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 1,
+        "NON_POSITIVE_VALUE": 71
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T18:00:03.207452+00:00",
+      "tracking": 52
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T18:33:41.889260+00:00",
+      "evidence_at": "2026-10-03T18:30:03.034361+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.079
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.079
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 9,
+          "percent_of_discovered": 0.708
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 12,
+          "percent_of_discovered": 0.944
+        },
+        "ODDS_STALE": {
+          "fixtures": 20,
+          "percent_of_discovered": 1.574
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1228,
+          "percent_of_discovered": 96.617
+        }
+      },
+      "fixtures": 1271,
+      "fixtures_considered": 43,
+      "fixtures_evaluated": 10,
+      "lanes": {
+        "EXPERIMENTAL": 28,
+        "REJECTED": 65,
+        "STANDARD": 1,
+        "TRACKING": 16
+      },
+      "markets": 110,
+      "odds_fixtures": 10,
+      "provider_calls": 123,
+      "provider_rows": 1270,
+      "published": 0,
+      "quota": {
+        "additional_calls_available": 281,
+        "already_consumed": 1,
+        "base_cycle_budget": 281,
+        "daily_remaining_observed": 945,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 282,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 3,
+        "requested_maximum": 400,
+        "reserve_headroom": 845,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 905,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 5,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 5,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 1,
+        "MARKET_REVIEW_TERMINAL": 5,
+        "NON_POSITIVE_VALUE": 60
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T18:30:03.034361+00:00",
+      "tracking": 43
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T19:01:59.471816+00:00",
+      "evidence_at": "2026-10-03T19:00:02.666684+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.236
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.394
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.394
+        },
+        "ODDS_STALE": {
+          "fixtures": 7,
+          "percent_of_discovered": 0.551
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1250,
+          "percent_of_discovered": 98.425
+        }
+      },
+      "fixtures": 1270,
+      "fixtures_considered": 20,
+      "fixtures_evaluated": 8,
+      "lanes": {
+        "EXPERIMENTAL": 22,
+        "REJECTED": 49,
+        "STANDARD": 1,
+        "TRACKING": 14
+      },
+      "markets": 86,
+      "odds_fixtures": 8,
+      "provider_calls": 105,
+      "provider_rows": 1270,
+      "published": 0,
+      "quota": {
+        "additional_calls_available": 299,
+        "already_consumed": 1,
+        "base_cycle_budget": 335,
+        "daily_remaining_observed": 770,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 300,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 2,
+        "requested_maximum": 400,
+        "reserve_headroom": 670,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 703,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 11,
+        "STANDARD_READY": 1,
+        "STRONG_READY": 0
+      },
+      "ready": 12,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 49
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T19:00:02.666684+00:00",
+      "tracking": 17
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-03T19:33:31.262107+00:00",
+      "evidence_at": "2026-10-03T19:30:03.130315+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.236
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 12,
+          "percent_of_discovered": 0.945
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.236
+        },
+        "ODDS_STALE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.079
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 1251,
+          "percent_of_discovered": 98.504
+        }
+      },
+      "fixtures": 1270,
+      "fixtures_considered": 19,
+      "fixtures_evaluated": 15,
+      "lanes": {
+        "EXPERIMENTAL": 39,
+        "REJECTED": 91,
+        "TRACKING": 25
+      },
+      "markets": 155,
+      "odds_fixtures": 15,
+      "provider_calls": 111,
+      "provider_rows": 1270,
+      "published": 0,
+      "quota": {
+        "additional_calls_available": 299,
+        "already_consumed": 1,
+        "base_cycle_budget": 516,
+        "daily_remaining_observed": 616,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 300,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 1,
+        "requested_maximum": 400,
+        "reserve_headroom": 516,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 602,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 9,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 9,
+      "rejections": {
+        "MARKET_REVIEW_TERMINAL": 10,
+        "NON_POSITIVE_VALUE": 81
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-03T19:30:03.130315+00:00",
+      "tracking": 16
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T06:04:41.259884+00:00",
+      "evidence_at": "2026-10-04T06:00:03.269592+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 47,
+          "percent_of_discovered": 5.76
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 15,
+          "percent_of_discovered": 1.838
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.123
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 400,
+          "percent_of_discovered": 49.02
+        },
+        "ODDS_STALE": {
+          "fixtures": 261,
+          "percent_of_discovered": 31.985
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 92,
+          "percent_of_discovered": 11.275
+        }
+      },
+      "fixtures": 816,
+      "fixtures_considered": 724,
+      "fixtures_evaluated": 62,
+      "lanes": {
+        "EXPERIMENTAL": 60,
+        "REJECTED": 486,
+        "TRACKING": 62
+      },
+      "markets": 608,
+      "odds_fixtures": 62,
+      "provider_calls": 238,
+      "provider_rows": 816,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 247,
+        "already_consumed": 1,
+        "base_cycle_budget": 247,
+        "daily_remaining_observed": 7029,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 248,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 28,
+        "requested_maximum": 400,
+        "reserve_headroom": 6929,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 6877,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 2,
+        "NON_POSITIVE_VALUE": 486
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T06:00:03.269592+00:00",
+      "tracking": 717
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T06:35:55.317283+00:00",
+      "evidence_at": "2026-10-04T06:30:03.462599+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.123
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 79,
+          "percent_of_discovered": 9.681
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 7,
+          "percent_of_discovered": 0.858
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.123
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.245
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 397,
+          "percent_of_discovered": 48.652
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 6,
+          "percent_of_discovered": 0.735
+        },
+        "ODDS_STALE": {
+          "fixtures": 231,
+          "percent_of_discovered": 28.309
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 92,
+          "percent_of_discovered": 11.275
+        }
+      },
+      "fixtures": 816,
+      "fixtures_considered": 724,
+      "fixtures_evaluated": 87,
+      "lanes": {
+        "EXPERIMENTAL": 137,
+        "REJECTED": 560,
+        "TRACKING": 98
+      },
+      "markets": 795,
+      "odds_fixtures": 87,
+      "provider_calls": 237,
+      "provider_rows": 816,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 246,
+        "already_consumed": 1,
+        "base_cycle_budget": 246,
+        "daily_remaining_observed": 6753,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 247,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 27,
+        "requested_maximum": 400,
+        "reserve_headroom": 6653,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 6628,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 2,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 2,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 2,
+        "NON_POSITIVE_VALUE": 560
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T06:30:03.462599+00:00",
+      "tracking": 724
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T07:03:47.380107+00:00",
+      "evidence_at": "2026-10-04T07:00:03.357322+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.49
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 81,
+          "percent_of_discovered": 9.926
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.613
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.368
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.49
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 393,
+          "percent_of_discovered": 48.162
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 11,
+          "percent_of_discovered": 1.348
+        },
+        "ODDS_STALE": {
+          "fixtures": 221,
+          "percent_of_discovered": 27.083
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 94,
+          "percent_of_discovered": 11.52
+        }
+      },
+      "fixtures": 816,
+      "fixtures_considered": 722,
+      "fixtures_evaluated": 86,
+      "lanes": {
+        "EXPERIMENTAL": 128,
+        "REJECTED": 562,
+        "TRACKING": 96
+      },
+      "markets": 786,
+      "odds_fixtures": 86,
+      "provider_calls": 219,
+      "provider_rows": 816,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 245,
+        "already_consumed": 1,
+        "base_cycle_budget": 245,
+        "daily_remaining_observed": 6491,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 246,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 26,
+        "requested_maximum": 400,
+        "reserve_headroom": 6391,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 6383,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 2,
+        "NON_POSITIVE_VALUE": 562
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T07:00:03.357322+00:00",
+      "tracking": 725
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T07:35:45.797079+00:00",
+      "evidence_at": "2026-10-04T07:30:03.017528+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.49
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 257,
+          "percent_of_discovered": 31.495
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 8,
+          "percent_of_discovered": 0.98
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 3,
+          "percent_of_discovered": 0.368
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 11,
+          "percent_of_discovered": 1.348
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 392,
+          "percent_of_discovered": 48.039
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 13,
+          "percent_of_discovered": 1.593
+        },
+        "ODDS_STALE": {
+          "fixtures": 34,
+          "percent_of_discovered": 4.167
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 94,
+          "percent_of_discovered": 11.52
+        }
+      },
+      "fixtures": 816,
+      "fixtures_considered": 722,
+      "fixtures_evaluated": 265,
+      "lanes": {
+        "EXPERIMENTAL": 454,
+        "REJECTED": 1668,
+        "STANDARD": 1,
+        "TRACKING": 274
+      },
+      "markets": 2397,
+      "odds_fixtures": 265,
+      "provider_calls": 224,
+      "provider_rows": 816,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 245,
+        "already_consumed": 1,
+        "base_cycle_budget": 245,
+        "daily_remaining_observed": 6234,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 246,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 25,
+        "requested_maximum": 400,
+        "reserve_headroom": 6134,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 6117,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 7,
+        "NON_POSITIVE_VALUE": 1668
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T07:30:03.017528+00:00",
+      "tracking": 722
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T08:05:02.198721+00:00",
+      "evidence_at": "2026-10-04T08:00:02.788321+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.245
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.245
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 258,
+          "percent_of_discovered": 31.579
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 10,
+          "percent_of_discovered": 1.224
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.245
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 10,
+          "percent_of_discovered": 1.224
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 389,
+          "percent_of_discovered": 47.613
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 14,
+          "percent_of_discovered": 1.714
+        },
+        "ODDS_STALE": {
+          "fixtures": 28,
+          "percent_of_discovered": 3.427
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 102,
+          "percent_of_discovered": 12.485
+        }
+      },
+      "fixtures": 817,
+      "fixtures_considered": 715,
+      "fixtures_evaluated": 270,
+      "lanes": {
+        "EXPERIMENTAL": 452,
+        "REJECTED": 1685,
+        "STANDARD": 1,
+        "TRACKING": 288
+      },
+      "markets": 2426,
+      "odds_fixtures": 270,
+      "provider_calls": 218,
+      "provider_rows": 817,
+      "published": 6,
+      "quota": {
+        "additional_calls_available": 245,
+        "already_consumed": 1,
+        "base_cycle_budget": 245,
+        "daily_remaining_observed": 5985,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 246,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 24,
+        "requested_maximum": 400,
+        "reserve_headroom": 5885,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 5874,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 6,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 6,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 5,
+        "NON_POSITIVE_VALUE": 1685
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T08:00:02.788321+00:00",
+      "tracking": 711
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T08:36:14.865109+00:00",
+      "evidence_at": "2026-10-04T08:30:02.769533+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 268,
+          "percent_of_discovered": 32.803
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 10,
+          "percent_of_discovered": 1.224
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 6,
+          "percent_of_discovered": 0.734
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 10,
+          "percent_of_discovered": 1.224
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 387,
+          "percent_of_discovered": 47.368
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 19,
+          "percent_of_discovered": 2.326
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 117,
+          "percent_of_discovered": 14.321
+        }
+      },
+      "fixtures": 817,
+      "fixtures_considered": 700,
+      "fixtures_evaluated": 279,
+      "lanes": {
+        "EXPERIMENTAL": 450,
+        "REJECTED": 1727,
+        "STANDARD": 1,
+        "TRACKING": 285
+      },
+      "markets": 2463,
+      "odds_fixtures": 279,
+      "provider_calls": 218,
+      "provider_rows": 817,
+      "published": 3,
+      "quota": {
+        "additional_calls_available": 245,
+        "already_consumed": 1,
+        "base_cycle_budget": 245,
+        "daily_remaining_observed": 5742,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 246,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 23,
+        "requested_maximum": 400,
+        "reserve_headroom": 5642,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 5625,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 5,
+        "NON_POSITIVE_VALUE": 1727
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T08:30:02.769533+00:00",
+      "tracking": 698
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T09:04:14.242308+00:00",
+      "evidence_at": "2026-10-04T09:00:02.647684+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.122
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 261,
+          "percent_of_discovered": 31.946
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 12,
+          "percent_of_discovered": 1.469
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.612
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 10,
+          "percent_of_discovered": 1.224
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 380,
+          "percent_of_discovered": 46.512
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 18,
+          "percent_of_discovered": 2.203
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 130,
+          "percent_of_discovered": 15.912
+        }
+      },
+      "fixtures": 817,
+      "fixtures_considered": 687,
+      "fixtures_evaluated": 275,
+      "lanes": {
+        "EXPERIMENTAL": 442,
+        "REJECTED": 1699,
+        "STANDARD": 1,
+        "TRACKING": 281
+      },
+      "markets": 2423,
+      "odds_fixtures": 275,
+      "provider_calls": 225,
+      "provider_rows": 817,
+      "published": 4,
+      "quota": {
+        "additional_calls_available": 245,
+        "already_consumed": 1,
+        "base_cycle_budget": 245,
+        "daily_remaining_observed": 5499,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 246,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 22,
+        "requested_maximum": 400,
+        "reserve_headroom": 5399,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 5369,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 1,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 1,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 5,
+        "NON_POSITIVE_VALUE": 1699
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T09:00:02.647684+00:00",
+      "tracking": 682
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T09:35:05.807151+00:00",
+      "evidence_at": "2026-10-04T09:30:03.430281+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 6,
+          "percent_of_discovered": 0.734
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.245
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.612
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.122
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 372,
+          "percent_of_discovered": 45.532
+        },
+        "ODDS_STALE": {
+          "fixtures": 290,
+          "percent_of_discovered": 35.496
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 141,
+          "percent_of_discovered": 17.258
+        }
+      },
+      "fixtures": 817,
+      "fixtures_considered": 676,
+      "fixtures_evaluated": 8,
+      "lanes": {
+        "EXPERIMENTAL": 3,
+        "REJECTED": 23,
+        "TRACKING": 46
+      },
+      "markets": 72,
+      "odds_fixtures": 8,
+      "provider_calls": 217,
+      "provider_rows": 817,
+      "published": 2,
+      "quota": {
+        "additional_calls_available": 244,
+        "already_consumed": 1,
+        "base_cycle_budget": 244,
+        "daily_remaining_observed": 5236,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 245,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 21,
+        "requested_maximum": 400,
+        "reserve_headroom": 5136,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 5020,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 23
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T09:30:03.430281+00:00",
+      "tracking": 682
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T10:03:53.089148+00:00",
+      "evidence_at": "2026-10-04T10:00:03.382596+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.245
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.122
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 4,
+          "percent_of_discovered": 0.49
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.245
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 334,
+          "percent_of_discovered": 40.881
+        },
+        "ODDS_STALE": {
+          "fixtures": 267,
+          "percent_of_discovered": 32.681
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 207,
+          "percent_of_discovered": 25.337
+        }
+      },
+      "fixtures": 817,
+      "fixtures_considered": 610,
+      "fixtures_evaluated": 3,
+      "lanes": {
+        "EXPERIMENTAL": 4,
+        "REJECTED": 19,
+        "TRACKING": 2
+      },
+      "markets": 25,
+      "odds_fixtures": 3,
+      "provider_calls": 215,
+      "provider_rows": 817,
+      "published": 1,
+      "quota": {
+        "additional_calls_available": 244,
+        "already_consumed": 1,
+        "base_cycle_budget": 244,
+        "daily_remaining_observed": 4988,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 245,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 20,
+        "requested_maximum": 400,
+        "reserve_headroom": 4888,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 4856,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 19
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T10:00:03.382596+00:00",
+      "tracking": 617
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-04T10:35:29.666167+00:00",
+      "evidence_at": "2026-10-04T10:30:03.435286+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 6,
+          "percent_of_discovered": 0.734
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 121,
+          "percent_of_discovered": 14.81
+        },
+        "NON_POSITIVE_VALUE": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.612
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.612
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 5,
+          "percent_of_discovered": 0.612
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.122
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 324,
+          "percent_of_discovered": 39.657
+        },
+        "ODDS_STALE": {
+          "fixtures": 131,
+          "percent_of_discovered": 16.034
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 219,
+          "percent_of_discovered": 26.805
+        }
+      },
+      "fixtures": 817,
+      "fixtures_considered": 598,
+      "fixtures_evaluated": 126,
+      "lanes": {
+        "EXPERIMENTAL": 241,
+        "REJECTED": 813,
+        "TRACKING": 154
+      },
+      "markets": 1208,
+      "odds_fixtures": 126,
+      "provider_calls": 223,
+      "provider_rows": 817,
+      "published": 4,
+      "quota": {
+        "additional_calls_available": 243,
+        "already_consumed": 1,
+        "base_cycle_budget": 243,
+        "daily_remaining_observed": 4729,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 244,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 19,
+        "requested_maximum": 400,
+        "reserve_headroom": 4629,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 4580,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "INVALID_MODEL_PROBABILITY": 3,
+        "NON_POSITIVE_VALUE": 813
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-04T10:30:03.435286+00:00",
+      "tracking": 601
+    }
+  ],
+  "since": "2026-10-03T10:46:24.308796+00:00",
+  "utc_day_quota_claims": 3077
+}

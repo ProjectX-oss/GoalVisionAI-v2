@@ -1,0 +1,148 @@
+{
+  "repair_commit": "ebd09247ad34a578b330b79a02a17e87fb2b8628",
+  "package": "/home/arvis/goalvision-operations/dixon-coles-forward-ebd0924-20261004",
+  "installed": "/opt/goalvision-dixon-coles-forward-ebd0924-20261004",
+  "package_checksums_exit": 0,
+  "installed_files": 843,
+  "installed_mismatches": [],
+  "smoke": {
+    "status": "ISOLATED_PACKAGE_IMPORT_PASS",
+    "app_modules": 513,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "worker_main_called": false,
+    "provider_calls": 0,
+    "telegram_sends": 0
+  },
+  "tests": {
+    "passed": 154,
+    "seconds": 8.4
+  },
+  "resources": [
+    "app/adaptive_lab/calendar_plan_20261002.json",
+    "app/dixon_coles_constrained/protocol_20261003.json",
+    "app/dixon_coles_forward/plan_20261003.json",
+    "app/dixon_coles_research/plan_20261003.json",
+    "app/lab_v2_shadow/reviewed_competitions.json"
+  ],
+  "resource_smoke": {
+    "forward": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "research": "ec2b5310518ad7ff5cc5182daa4cc0f86461cc1828a8bb6c0271e4e6e10e6918",
+    "protocol": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "calendar": "CalendarPlan",
+    "registry": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "provider_calls": 0,
+    "telegram_sends": 0
+  },
+  "package_sha256sums": "29d64d8c883af66021eccb25582370f0b02dcc80e8926a43ea19ddca8b632090",
+  "checksum_entries": 845,
+  "repair_changed_files": [
+    "TASKS.md",
+    "docs/evidence/forward_package_repair_20261004/verification.json",
+    "docs/operations/ADMIN_FORWARD_PACKAGE_REPAIR_20261004.md",
+    "operations/admin-diagnostics/inspect_recent.py",
+    "operations/dixon-coles-forward/build.py",
+    "operations/dixon-coles-forward/update.py",
+    "tests/test_dixon_coles_forward_install.py",
+    "tests/test_forward_package_repair.py"
+  ],
+  "prediction_logic_diff": "",
+  "natural_latest": {
+    "automatic_promotion": false,
+    "capture": {
+      "combo_shadow": {
+        "eligible_fixtures": 1,
+        "fingerprint": "815fa070a83d12c11a2844b5ba5844d7f334dc27278e4cd4eb20bab9e0bcd781",
+        "rejection_counts": {
+          "candidate_not_accuracy_lane": 5,
+          "ensemble_probability_below_existing_minimum": 12
+        },
+        "selections": {
+          "CONSERVATIVE_AGREEMENT": 0,
+          "ENSEMBLE_BASELINE": 0
+        }
+      },
+      "counts": {
+        "forecast": 8,
+        "unavailable": 4
+      },
+      "details": [
+        {
+          "fixture_id": 1641170,
+          "reason": "INSUFFICIENT_TARGET_TEAM_RESULTS"
+        },
+        {
+          "fixture_id": 1641170,
+          "reason": "INSUFFICIENT_TARGET_TEAM_RESULTS"
+        },
+        {
+          "fixture_id": 1641170,
+          "reason": "INSUFFICIENT_TARGET_TEAM_RESULTS"
+        },
+        {
+          "fixture_id": 1641170,
+          "reason": "INSUFFICIENT_TARGET_TEAM_RESULTS"
+        }
+      ],
+      "fingerprint": "74285dd7c7b4539b56aee92a67b32204fb29bfb15d0af66330283176105d42b4",
+      "source_diagnostics": {
+        "capture_rows_examined": 500,
+        "intake_limit_reached": 1,
+        "missing_model_reference": 1,
+        "older_captures_not_scanned": 1
+      }
+    },
+    "evaluation": {
+      "combo_shadow": {
+        "fingerprint": "a2807d8953086f72d2ac9e39d8089bc14d897cfff333ebaaf9dd64220764260e",
+        "policies": {
+          "CONSERVATIVE_AGREEMENT": {
+            "bets": 0,
+            "lifecycle": {},
+            "profit_units": "0",
+            "roi_per_settled_staked_unit": null,
+            "settled": 0
+          },
+          "ENSEMBLE_BASELINE": {
+            "bets": 0,
+            "lifecycle": {},
+            "profit_units": "0",
+            "roi_per_settled_staked_unit": null,
+            "settled": 0
+          }
+        }
+      },
+      "counts": {
+        "forecast_families": 47
+      },
+      "fingerprint": "1537dc0ebd958146f038e5e805a46d763d14d7680b977d927efeeab54f9c5740",
+      "fixtures": 0,
+      "kickoff_dates": 0,
+      "lifecycle": {
+        "PENDING": 15,
+        "RESOLVED": 0,
+        "VOID": 0
+      },
+      "market_rows": 0,
+      "quality_verdict": "NEEDS_MORE_EVIDENCE"
+    },
+    "fingerprint": "3164a9d14311222c9b4921845a6791e01dbfba651e158273202d7bd8914a6602",
+    "finished_at": "2026-10-04T10:42:55.209524+00:00",
+    "priority": "NORMAL",
+    "provider_calls": 0,
+    "selection_effect": "NONE",
+    "started_at": "2026-10-04T10:42:34.510141+00:00",
+    "status": "COMPLETED",
+    "telegram_sends": 0,
+    "version": "DC_CONSTRAINED_FORWARD_V1"
+  },
+  "record_counts": {
+    "combo_batch": 10,
+    "combo_metrics": 10,
+    "diagnostic": 37,
+    "forecast": 47,
+    "metrics": 10,
+    "model": 57,
+    "plan": 1
+  }
+}
