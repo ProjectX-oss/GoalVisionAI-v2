@@ -4,6 +4,7 @@
 - [x] Implement full-pool private selection, isolated ledger/statistics, preclaim replay/freshness checks, fixture deduplication and original-message results.
 - [x] Retain existing public SINGLE/COMBO behavior, shared bounded result cache, quota reserve, 180-second guard, champion/Official and disabled LIVE/ADMIN.
 - [x] Verify 562 offline regression tests plus final overlapping 67 private/operator checks; read-only cached pool replay.
+- [x] Source cdcb526 committed; exact 852-file package, 12 checksums, isolated 549-module import and read-only BASE preflight PASS.
 - [ ] Operator verifies a fresh START on the Lab bot, applies the pinned package, then reviews first natural private publication/result. No agent apply or test send.
 - Runbook: docs/operations/PRIVATE_SINGLE_170_20261004.md.
 

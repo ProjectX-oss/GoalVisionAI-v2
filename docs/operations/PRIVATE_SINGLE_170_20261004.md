@@ -41,3 +41,13 @@ Explicit operator pause, if later authorized: sudo python3 ~/goalvision-operatio
 - Evidence: docs/evidence/private_single_170_20261004/verification.json and cached_pool_replay.json. Package verification is added after the exact source commit build.
 
 No agent production deployment, manual service cycle, provider request, Telegram send, calibration fit, model training, promotion, rollback, LIVE enablement or Official change. Private delivery remains inactive until operator START enrollment and apply. A daily pick and model accuracy improvement are not guaranteed.
+
+## Exact prepared package
+
+Source commit: cdcb526d8e578726911b51a39f650b6a8c799dc3
+Package: /home/arvis/goalvision-operations/private-single-170-cdcb526-20261004
+Expected target (not installed): /opt/goalvision-prematch-private-single-170-cdcb526-20261004
+
+All 847 installed base files are retained except the four explicitly reviewed integration files; five new private-module files produce an exact 852-file application manifest. Nine overlay source files, configuration script, metadata and updater pass all 12 package checksums. Isolated import/resource smoke passes for 549 application modules, with source-checkout fallback and socket connections denied. Read-only route/preflight returns BASE and PENDING_START_ENROLLMENT. The live private ledger/config/release have not been created.
+
+Operator entry points are prepared on the VPS. The only remaining setup is the owner's START enrollment followed by explicit operator apply. Package hash/import/preflight evidence: docs/evidence/private_single_170_20261004/package.json.
