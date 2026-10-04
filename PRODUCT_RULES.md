@@ -510,3 +510,18 @@ Unavailable inputs skip COMBO rather than forcing picks or silently falling back
 Keep separate immutable test statistics, old results and all settlement/reply
 behavior. Deployment remains an explicit operator action; ADMIN Codex and LIVE
 remain disabled. See docs/operations/PREMATCH_COMBO_CONSERVATIVE_20261004.md.
+
+## Parallel visible market COMBO experiment authorized 2026-10-04
+
+The user requested a second visible COMBO selection for personal evaluation,
+with every leg >=1.30. Retain the active DC lane with first choice, and add at
+most one disjoint three-leg market-consensus coupon per natural cycle. Use
+already captured complete current quotes from at least two distinct bookmakers;
+rank by the lower of median multiplicative and median power de-vig estimates.
+This is an uncalibrated experimental score, not proven predictive improvement.
+Preserve existing quality/correlation/today-only guards, exact leg floor,
+SINGLE >=1.50, separate frozen statistics and early-loss/reply settlement.
+No extra combined floor, new provider calls, champion/Official/LIVE change,
+automatic deployment or promotion. ADMIN Codex remains disabled. The new
+flag-off rollback pauses only new market-lane publications and retains readers.
+See docs/operations/PREMATCH_COMBO_MARKET_PARALLEL_20261004.md.

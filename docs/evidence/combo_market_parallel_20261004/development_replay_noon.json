@@ -1,0 +1,171 @@
+{
+  "as_of": "2026-10-04T09:03:21.736798+00:00",
+  "candidate_count": 2423,
+  "champion_changed": false,
+  "kind": "DEVELOPMENT_REPLAY_ONLY",
+  "observed_at": "2026-10-04T09:47:07.756653+00:00",
+  "outcomes": {
+    "DC_AND_MARKET": {
+      "claims": 0,
+      "combos": [
+        {
+          "fixtures": [
+            1636933,
+            1636939,
+            1641286
+          ],
+          "kickoffs": [
+            "2026-10-04T12:00:00+00:00",
+            "2026-10-04T11:45:00+00:00",
+            "2026-10-04T19:00:00+00:00"
+          ],
+          "markets": [
+            "UNDER_2_5",
+            "BTTS_NO",
+            "OVER_1_5"
+          ],
+          "odds": [
+            "1.53",
+            "1.50",
+            "1.44"
+          ],
+          "policy": "LAB_COMBO_CONSERVATIVE_AGREEMENT_V1",
+          "teams": [
+            25017,
+            2094,
+            26587,
+            622,
+            1935,
+            21043
+          ]
+        },
+        {
+          "fixtures": [
+            1528943,
+            1569957,
+            1635483
+          ],
+          "kickoffs": [
+            "2026-10-04T18:45:00+00:00",
+            "2026-10-04T12:00:00+00:00",
+            "2026-10-04T13:00:00+00:00"
+          ],
+          "markets": [
+            "UNDER_3_5",
+            "OVER_1_5",
+            "OVER_2_5"
+          ],
+          "odds": [
+            "1.34",
+            "1.30",
+            "1.30"
+          ],
+          "policy": "LAB_COMBO_MULTI_BOOK_MARKET_V1",
+          "teams": [
+            776,
+            1116,
+            9585,
+            715,
+            9214,
+            9201
+          ]
+        }
+      ],
+      "diagnostics": {
+        "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+        "eligible_fixture_count": 5,
+        "minimum_combo_leg_decimal_odds": "1.30",
+        "parallel_market": {
+          "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+          "eligible_fixture_count": 150,
+          "minimum_combo_leg_decimal_odds": "1.30",
+          "policy": "LAB_COMBO_MULTI_BOOK_MARKET_V1",
+          "prepared_count": 1,
+          "rank_tail_omitted": 90,
+          "reason": "COMBO_READY",
+          "rejection_counts": {
+            "COMBO_FIXTURE_ALREADY_CLAIMED": 6,
+            "LAB_COMBO_LEG_ODDS_BELOW_1_30": 72
+          }
+        },
+        "policy": "LAB_COMBO_CONSERVATIVE_AGREEMENT_V1",
+        "prepared_count": 1,
+        "reason": "COMBO_READY",
+        "rejection_counts": {
+          "COMBO_AGREEMENT_INPUT_UNAVAILABLE": 241,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 72
+        },
+        "total_prepared_count": 2
+      },
+      "receipts": 0,
+      "single_count": 3,
+      "single_selection_keys": [
+        "1500146:UNDER_2_5",
+        "1510688:OVER_2_5",
+        "1600715:UNDER_2_5"
+      ]
+    },
+    "DC_ONLY": {
+      "claims": 0,
+      "combos": [
+        {
+          "fixtures": [
+            1636933,
+            1636939,
+            1641286
+          ],
+          "kickoffs": [
+            "2026-10-04T12:00:00+00:00",
+            "2026-10-04T11:45:00+00:00",
+            "2026-10-04T19:00:00+00:00"
+          ],
+          "markets": [
+            "UNDER_2_5",
+            "BTTS_NO",
+            "OVER_1_5"
+          ],
+          "odds": [
+            "1.53",
+            "1.50",
+            "1.44"
+          ],
+          "policy": "LAB_COMBO_CONSERVATIVE_AGREEMENT_V1",
+          "teams": [
+            25017,
+            2094,
+            26587,
+            622,
+            1935,
+            21043
+          ]
+        }
+      ],
+      "diagnostics": {
+        "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+        "eligible_fixture_count": 5,
+        "minimum_combo_leg_decimal_odds": "1.30",
+        "policy": "LAB_COMBO_CONSERVATIVE_AGREEMENT_V1",
+        "prepared_count": 1,
+        "reason": "COMBO_READY",
+        "rejection_counts": {
+          "COMBO_AGREEMENT_INPUT_UNAVAILABLE": 241,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 72
+        }
+      },
+      "receipts": 0,
+      "single_count": 3,
+      "single_selection_keys": [
+        "1500146:UNDER_2_5",
+        "1510688:OVER_2_5",
+        "1600715:UNDER_2_5"
+      ]
+    }
+  },
+  "production_claims_considered": false,
+  "production_sources_read_only": true,
+  "provider_calls": 0,
+  "quality_verdict": "NO_PREDICTIVE_IMPROVEMENT_ESTABLISHED",
+  "source_fingerprint": "ad36fff4b658d452fb99ebc8926dc0050638f2ac4fd839ce8107c22ec4aee70b",
+  "source_identity": "lab-v2-cycle-2f3be985cbc7ffc51d8277fa6501befeb552aeea45929df4d9346668b00535c4",
+  "telegram_sends": 0
+}

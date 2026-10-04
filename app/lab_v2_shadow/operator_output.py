@@ -165,4 +165,15 @@ def operator_cycle_summary(report: dict[str, object]) -> dict[str, object]:
                     'COMBO_AGREEMENT_BUDGET_EXHAUSTED')
                     if _integer(counts.get(key)) is not None and counts[key] > 0},
             })
+        market = combo.get("parallel_market")
+        if isinstance(market, dict):
+            result["controlled_publication"]["combo_diagnostics"]["parallel_market"] = {
+                "policy": _code(market.get("policy")), "reason": _code(market.get("reason")),
+                "eligible_fixture_count": _integer(market.get("eligible_fixture_count")) or 0,
+                "prepared_count": _integer(market.get("prepared_count")) or 0,
+                "rank_tail_omitted": _integer(market.get("rank_tail_omitted")) or 0,
+                "minimum_combo_leg_decimal_odds": "1.30",
+            }
+            result["controlled_publication"]["combo_diagnostics"]["total_prepared_count"] = (
+                _integer(combo.get("total_prepared_count")) or 0)
     return result

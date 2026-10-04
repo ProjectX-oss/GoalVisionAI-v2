@@ -151,7 +151,8 @@ def route_message(message: str, route: dict | None) -> str:
     return "\n".join(lines)
 
 
-def cohort_statistics(ledger: object, route: dict | None, *, agreement: bool | None = None) -> dict:
+def cohort_statistics(ledger: object, route: dict | None, *, agreement: bool | None = None,
+                      selection_policy: str | None = None) -> dict:
     """Filter by frozen publication membership, never by settlement date."""
     from .settlement import statistics
 
@@ -167,8 +168,15 @@ def cohort_statistics(ledger: object, route: dict | None, *, agreement: bool | N
                 pid = value["prediction_id"]
                 legacy = ledger.get("receipt", "combo_prediction:" + pid) is None
                 from app.lab_v2_shadow.combo_agreement import POLICY
-                member = value.get("combo_selection_policy") == POLICY
-                if (agreement is None or member == agreement) and frozen_route(ledger, pid, legacy=legacy) == route:
+                from app.lab_v2_shadow.combo_market import POLICY as MARKET_POLICY
+                policy = value.get("combo_selection_policy")
+                member = policy == POLICY
+                if selection_policy is not None:
+                    matches = (policy == selection_policy if selection_policy in {POLICY, MARKET_POLICY}
+                               else policy not in {POLICY, MARKET_POLICY})
+                else:
+                    matches = agreement is None or (member == agreement and policy != MARKET_POLICY)
+                if matches and frozen_route(ledger, pid, legacy=legacy) == route:
                     selected.append(value)
             return selected
 
@@ -176,7 +184,10 @@ def cohort_statistics(ledger: object, route: dict | None, *, agreement: bool | N
     if route is not None:
         result = {**result, "statistics_period": route["statistics_period"],
                   "period_started_at": route["period_started_at"]}
-    if agreement is True:
-        from app.lab_v2_shadow.combo_agreement import COHORT
+    from app.lab_v2_shadow.combo_agreement import POLICY as AGREEMENT_POLICY, COHORT
+    from app.lab_v2_shadow.combo_market import POLICY as MARKET_POLICY, COHORT as MARKET_COHORT
+    if agreement is True or selection_policy == AGREEMENT_POLICY:
         result["selection_cohort"] = COHORT
+    if selection_policy == MARKET_POLICY:
+        result["selection_cohort"] = MARKET_COHORT
     return result

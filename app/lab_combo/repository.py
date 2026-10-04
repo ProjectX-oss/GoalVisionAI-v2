@@ -73,7 +73,12 @@ class ComboRepository:
             if self.get('economic_claim', key) or self.get('claim', identity):
                 return False
             for old in self.all('single_prediction' if single else 'prediction'):
-                if economic(old) != key:
+                overlap = False
+                if not single:
+                    from app.lab_v2_shadow.combo_market import POLICY as MARKET_POLICY
+                    if MARKET_POLICY in {prediction.get('combo_selection_policy'), old.get('combo_selection_policy')}:
+                        overlap = bool(_combo_exposures(prediction) & _combo_exposures(old))
+                if economic(old) != key and not overlap:
                     continue
                 prefixes = ('single_prediction:',) if single else ('combo_prediction:', 'prediction:')
                 if any(self.get(record, prefix + old['prediction_id'])
@@ -86,3 +91,15 @@ class ComboRepository:
                 self.connection.execute('INSERT INTO evidence VALUES (?,?,?,?)',
                     (record, record_id, fingerprint(document), canonical_json(document)))
         return True
+
+
+def _combo_exposures(value: dict) -> set[tuple]:
+    """Atomic cross-lane fixture and same-Riga-day team deduplication."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    keys = set()
+    for leg in value["legs"]:
+        day = datetime.fromisoformat(leg["kickoff_utc"]).astimezone(ZoneInfo("Europe/Riga")).date().isoformat()
+        keys.add(("fixture", str(leg["fixture_id"])))
+        keys.update(("team", day, str(leg[k])) for k in ("home_team_id", "away_team_id"))
+    return keys

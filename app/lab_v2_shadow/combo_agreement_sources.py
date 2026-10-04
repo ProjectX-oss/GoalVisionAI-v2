@@ -59,24 +59,30 @@ class Inputs:
             raise ValueError("COMBO_AGREEMENT_BUDGET_EXHAUSTED")
         if artifact is None:
             raise ValueError("COMBO_DC_MODEL_UNAVAILABLE")
-        fid = int(candidate["fixture_id"])
-        prefix = str(fid) + ":"
-        row = self.repository.connection.execute("""
-            SELECT content_fingerprint,CASE WHEN length(document_json)<=2097152 THEN document_json END,length(document_json)
-            FROM lab_v2_shadow_evidence
-            WHERE kind='market_consensus' AND identity>=? AND identity<?
-            AND json_extract(document_json,'$.retrieved_at_utc')=?
-            AND EXISTS (SELECT 1 FROM json_each(document_json,'$.quotes') q
-                WHERE json_extract(q.value,'$.provenance_fingerprint')=?)
-            AND created_at_utc<=? ORDER BY created_at_utc DESC,identity DESC LIMIT 1
-        """, (prefix, prefix + "\uffff", candidate["goalvision_retrieved_at_utc"],
-              candidate["quote_provenance_fingerprint"], now.isoformat())).fetchone()
-        if row is None or row[2] > MAX_DOCUMENT_BYTES:
-            raise ValueError("COMBO_CURRENT_CONSENSUS_UNAVAILABLE")
-        consensus = json.loads(row[1])
-        if fingerprint(consensus) != row[0]:
-            raise ValueError("COMBO_CURRENT_CONSENSUS_HASH_MISMATCH")
+        consensus = current_consensus(self.repository, candidate, now=now)
         result = evidence(candidate, artifact, consensus, now=now, verified=True)
         if monotonic() > self.deadline:
             raise ValueError("COMBO_AGREEMENT_BUDGET_EXHAUSTED")
         return result
+
+
+def current_consensus(repository: object, candidate: dict, *, now: datetime) -> dict:
+    """Read and verify the exact bounded persisted quote snapshot for a candidate."""
+    fid = int(candidate["fixture_id"])
+    prefix = str(fid) + ":"
+    row = repository.connection.execute("""
+        SELECT content_fingerprint,CASE WHEN length(document_json)<=2097152 THEN document_json END,length(document_json)
+        FROM lab_v2_shadow_evidence
+        WHERE kind='market_consensus' AND identity>=? AND identity<?
+        AND json_extract(document_json,'$.retrieved_at_utc')=?
+        AND EXISTS (SELECT 1 FROM json_each(document_json,'$.quotes') q
+            WHERE json_extract(q.value,'$.provenance_fingerprint')=?)
+        AND created_at_utc<=? ORDER BY created_at_utc DESC,identity DESC LIMIT 1
+    """, (prefix, prefix + "\uffff", candidate["goalvision_retrieved_at_utc"],
+          candidate["quote_provenance_fingerprint"], now.isoformat())).fetchone()
+    if row is None or row[2] > MAX_DOCUMENT_BYTES:
+        raise ValueError("COMBO_CURRENT_CONSENSUS_UNAVAILABLE")
+    consensus = json.loads(row[1])
+    if fingerprint(consensus) != row[0]:
+        raise ValueError("COMBO_CURRENT_CONSENSUS_HASH_MISMATCH")
+    return consensus

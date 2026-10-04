@@ -54,7 +54,8 @@ def _probability_first_single_candidates(ready: list[dict[str, object]]) -> list
 
 def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, *, now: datetime,
                             label_origin: bool = False, football_context: object | None = None,
-                            accuracy_combos: bool = False, combo_inputs: object | None = None) -> dict[str, object]:
+                            accuracy_combos: bool = False, combo_inputs: object | None = None,
+                            market_combo_inputs: object | None = None) -> dict[str, object]:
     """Persist accuracy singles and legacy or explicitly opted-in accuracy triples."""
     clock = now.astimezone(timezone.utc)
     combo_ready = []
@@ -274,6 +275,15 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
         combos, combo_diagnostics = prepare_accuracy_combos(
             accuracy_pool, ledger, now=clock, label_origin=label_origin, football_context=football_context,
             combo_inputs=combo_inputs)
+        from .combo_market import requested as market_requested
+        if market_requested():
+            market_combos, market_diagnostics = prepare_accuracy_combos(
+                accuracy_pool, ledger, now=clock, label_origin=label_origin,
+                football_context=football_context, combo_inputs=market_combo_inputs,
+                market_variant=True, excluded_combos=tuple(combos))
+            combo_diagnostics = {**combo_diagnostics, "parallel_market": market_diagnostics,
+                                 "total_prepared_count": len(combos) + len(market_combos)}
+            combos = [*combos, *market_combos]
     return {"combo_diagnostics": combo_diagnostics,
             "publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION,
             "single_publication_reviews": single_publication_reviews,
@@ -333,7 +343,11 @@ def v2_combo_message(value: dict, number: int) -> str:
         from .combo_agreement import POLICY as AGREEMENT_POLICY
         if value.get("combo_selection_policy") == AGREEMENT_POLICY:
             lines.append("🧪 COMBO DC tests · atsevišķa testa statistika.")
-        if value.get("combo_selection_policy") in {COMBO_FLOOR_POLICY, AGREEMENT_POLICY}:
+        from .combo_market import POLICY as MARKET_POLICY
+        if value.get("combo_selection_policy") == MARKET_POLICY:
+            lines.append("🧪 COMBO Tirgus tests · atsevišķa testa statistika.")
+            lines.append("Atlase pēc vairāku bukmeikeru koeficientiem bez maržas.")
+        if value.get("combo_selection_policy") in {COMBO_FLOOR_POLICY, AGREEMENT_POLICY, MARKET_POLICY}:
             lines.append("Katras likmes koef. ≥1.30.")
     for symbol, leg in zip(("1️⃣", "2️⃣", "3️⃣"), value["legs"], strict=True):
         lines.extend((

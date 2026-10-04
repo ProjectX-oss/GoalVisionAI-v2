@@ -129,13 +129,16 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
             from .combo_agreement import requested as agreement_requested
             from .combo_agreement_sources import Inputs as AgreementInputs
             combo_inputs = AgreementInputs(repository) if agreement_requested() else None
+            from .combo_market import requested as market_requested
+            from .combo_market_sources import Inputs as MarketInputs
+            market_inputs = MarketInputs(repository) if market_requested() else None
             with _cycle_phase(repository, "PUBLICATION_PREPARATION", clock):
                 prepared = prepare_v2_publications(
                     report, ledger, now=datetime.now(timezone.utc),
                     label_origin=bool(getattr(args, 'label_v2_selections', False)),
                     football_context=football_context,
                     accuracy_combos=bool(getattr(args, 'accuracy_combos', False)),
-                    combo_inputs=combo_inputs,
+                    combo_inputs=combo_inputs, market_combo_inputs=market_inputs,
                 )
             report['controlled_publication'].update({key: prepared[key] for key in (
                 'publication_blockers', 'publication_reviews', 'publication_policy_version',
