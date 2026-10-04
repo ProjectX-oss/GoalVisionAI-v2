@@ -1,0 +1,64 @@
+{
+  "agent_deployment": false,
+  "base_monitor_release": "/opt/goalvision-admin-alerts-releases/admin-health-projection-99e40ac-20261004",
+  "classification_tests": "323 passed, 79 subtests passed in 18.97s",
+  "identity_mapping": "DELIVERY_AFTER_PRETRANSPORT_INVALIDATION_V1",
+  "incident": "4f3832ebaf241e92b8d3ad51",
+  "legacy_tombstone": "bd52a22acbc330714271ae9a",
+  "live_enablement": false,
+  "live_incident_mutation": false,
+  "manual_monitor_scan": false,
+  "official_changes": false,
+  "operator_tests": "56 passed in 1.47s",
+  "provider_calls": 0,
+  "raw_incident_database_access": "NOT_AVAILABLE_TO_ARVIS",
+  "read_only_persisted_cycle_replay": {
+    "cycles": [
+      {
+        "aggregate_recovery_proof": true,
+        "at": "2026-10-04T17:33:47.085476+00:00",
+        "confirmed_sends": 0,
+        "delivery_status": "DEGRADED",
+        "new_delivery_failures": 0,
+        "old_delivery_failures": 0,
+        "transport_attempts": 0,
+        "uncertain_incidents_retained": 0
+      },
+      {
+        "aggregate_recovery_proof": true,
+        "at": "2026-10-04T17:02:53.170893+00:00",
+        "confirmed_sends": 3,
+        "delivery_status": "DEGRADED",
+        "new_delivery_failures": 0,
+        "old_delivery_failures": 1,
+        "transport_attempts": 3,
+        "uncertain_incidents_retained": 0
+      },
+      {
+        "aggregate_recovery_proof": true,
+        "at": "2026-10-04T16:34:14.769963+00:00",
+        "confirmed_sends": 3,
+        "delivery_status": "DEGRADED",
+        "new_delivery_failures": 0,
+        "old_delivery_failures": 1,
+        "transport_attempts": 3,
+        "uncertain_incidents_retained": 0
+      },
+      {
+        "aggregate_recovery_proof": false,
+        "at": "2026-10-04T16:02:25.768099+00:00",
+        "confirmed_sends": 0,
+        "delivery_status": "NOT_ATTEMPTED",
+        "new_delivery_failures": 0,
+        "old_delivery_failures": 0,
+        "transport_attempts": 0,
+        "uncertain_incidents_retained": 0
+      }
+    ],
+    "database_writes": 0,
+    "provider_calls": 0,
+    "telegram_sends": 0
+  },
+  "schema": "GOALVISION_ADMIN_MIXED_DELIVERY_REPAIR_V1",
+  "telegram_sends": 0
+}

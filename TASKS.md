@@ -1602,3 +1602,11 @@ Review after completing the current priority.
 - [x] Prepare standalone ADMIN service/timer, disabled configuration, checksummed package, drift check, installer and ADMIN-only kill switch.
 - [x] Document handoff in `docs/operations/PREMATCH_ADMIN_ALERTS_V1.md`.
 - [ ] Separate operator action: provide verified dedicated ADMIN configuration and `/start`, grant narrow read access, review/install, then review sender enablement. No deployment or real message was authorized/executed here.
+
+
+## 2026-10-04 mixed publication ADMIN alert
+
+- [x] Reproduce false DELIVERY_FAILURE from three receipts plus one pre-transport rejection.
+- [x] Prove full terminal accounting and preserve genuine uncertainty/integrity alerts.
+- [x] Test mapped incident recovery without history deletion.
+- [ ] Operator apply followed by natural monitoring validation.

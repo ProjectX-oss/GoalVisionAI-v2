@@ -71,10 +71,15 @@ def compact(record: dict, reference: str, now: float, *, invocation: str = 'UNKN
                           and not publication.get('publication_attempt_count')
                           and not publication.get('singles_sent')
                           and not publication.get('combos_sent'))
-    if (publication.get('failure') or (not only_pre_transport
+    accounted_terminal = _accounted_terminal_deliveries(record, publication, deliveries)
+    if (publication.get('failure') or (not (only_pre_transport or accounted_terminal)
             and record.get('delivery_status') in ('FAILED', 'DEGRADED', 'UNKNOWN'))) and not any(
             e.rule in ('DELIVERY_FAILURE', 'DELIVERY_UNCERTAIN') and not e.healthy for e in events):
         add('DELIVERY_FAILURE', identity((publication.get('failure') or {}).get('prediction_id')))
+    elif accounted_terminal:
+        # Recover only the aggregate transport incident. Per-prediction uncertain
+        # delivery and integrity incidents retain their independent identities.
+        add('DELIVERY_FAILURE', 'UNKNOWN', facts={'terminal_delivery_accounting_verified': True}, healthy=True)
     # Only classify fixed codes. Arbitrary exception text is discarded before retention.
     for failure in (publication.get('failure'), persistence, record.get('terminal_error')):
         if isinstance(failure, dict):
@@ -143,3 +148,42 @@ def _pre_transport_rejection(item: object) -> bool:
             and not any(item.get(key) for key in (
                 'acknowledgement_received', 'receipt_persisted', 'reconciliation_required',
                 'persistence_failure', 'transport_failure_kind', 'unknown_marker_persisted', 'sent')))
+
+
+def _confirmed_delivery(item: object) -> bool:
+    return (isinstance(item, dict) and item.get('status') == 'SENT'
+            and item.get('stage') == 'RECEIPT_PERSISTED'
+            and all(item.get(key) is True for key in (
+                'claim_persisted', 'transport_attempted', 'acknowledgement_received',
+                'receipt_persisted', 'sent'))
+            and not any(item.get(key) for key in (
+                'reconciliation_required', 'persistence_failure',
+                'transport_failure_kind', 'unknown_marker_persisted')))
+
+
+def _accounted_terminal_deliveries(record: dict, publication: dict, deliveries: list) -> bool:
+    """Prove every attempted send is receipted; rejection never counts as a send."""
+    if (record.get('delivery_status') not in ('COMPLETED', 'DEGRADED')
+            or publication.get('failure') or record.get('terminal_error')
+            or record.get('analysis_status') == 'FAILED'
+            or not 0 < len(deliveries) <= 200
+            or not all(_confirmed_delivery(item) or _pre_transport_rejection(item)
+                       for item in deliveries)):
+        return False
+    identities = [identity(item.get('prediction_id')) for item in deliveries]
+    if 'UNKNOWN' in identities or len(set(identities)) != len(identities):
+        return False
+    confirmed = sum(_confirmed_delivery(item) for item in deliveries)
+    counts = [publication.get('publication_attempt_count'),
+              publication.get('singles_sent'), publication.get('combos_sent'),
+              publication.get('private_singles_sent', 0)]
+    if any(type(count) is not int or count < 0 for count in counts):
+        return False
+    if counts[0] != confirmed or sum(counts[1:]) != confirmed:
+        return False
+    if publication.get('send_attempted') is not bool(confirmed):
+        return False
+    for key in ('publication_attempt_count', 'telegram_sends'):
+        if key in record and (type(record[key]) is not int or record[key] != confirmed):
+            return False
+    return True
