@@ -18,7 +18,7 @@ Natural settlement shares the existing fixture-response cache. Public SINGLE/COM
 
 ## Recipient and operator steps
 
-The existing private COMBO owner is already operator-verified. Lab-bot private enrollment is absent and must be proven through a new unique START challenge on @GoalVision_AI_Lab_Bot. Enrollment reuses the configured Lab token, validates getMe, and accepts only a fresh non-forwarded private START from the exact confirmed COMBO owner. It uses getMe/getUpdates only, with no send. No token input is required, and the existing .env is not modified. Recipient configuration is stored separately with mode 0600; no recipient identifiers or credentials are committed.
+The existing private COMBO owner is already operator-verified. At package preparation, Lab-bot private enrollment was absent and required a new unique START challenge on @GoalVision_AI_Lab_Bot. The operator has now completed enrollment and apply; see the post-deployment readback below. Enrollment reuses the configured Lab token, validates getMe, and accepts only a fresh non-forwarded private START from the exact confirmed COMBO owner. It uses getMe/getUpdates only, with no send. No token input is required, and the existing .env is not modified. Recipient configuration is stored separately with mode 0600; no recipient identifiers or credentials are committed.
 
 After the pinned package has been built:
 
@@ -40,14 +40,27 @@ Explicit operator pause, if later authorized: sudo python3 ~/goalvision-operatio
 - Cached read-only development replay: 16:00 / 16:30 / 17:00 Riga natural pools contained 254 / 1,167 / 1,139 candidates. Numeric parameter matches: 0 / 9 / 7. Full private quality-eligible candidates: 0 / 0 / 0. This is retrospective development evidence, not prospective performance. Existing severe model/market contradictions and source-stage/cutoff rules are retained.
 - Evidence: docs/evidence/private_single_170_20261004/verification.json and cached_pool_replay.json. Package verification is added after the exact source commit build.
 
-No agent production deployment, manual service cycle, provider request, Telegram send, calibration fit, model training, promotion, rollback, LIVE enablement or Official change. Private delivery remains inactive until operator START enrollment and apply. A daily pick and model accuracy improvement are not guaranteed.
+No agent production deployment, manual service cycle, provider request, Telegram send, calibration fit, model training, promotion, rollback, LIVE enablement or Official change. Private delivery was inactive during implementation; it was subsequently enabled by operator START enrollment and apply. A daily pick and model accuracy improvement are not guaranteed.
 
 ## Exact prepared package
 
 Source commit: cdcb526d8e578726911b51a39f650b6a8c799dc3
 Package: /home/arvis/goalvision-operations/private-single-170-cdcb526-20261004
-Expected target (not installed): /opt/goalvision-prematch-private-single-170-cdcb526-20261004
+Prepared target (subsequently installed by the operator): /opt/goalvision-prematch-private-single-170-cdcb526-20261004
 
-All 847 installed base files are retained except the four explicitly reviewed integration files; five new private-module files produce an exact 852-file application manifest. Nine overlay source files, configuration script, metadata and updater pass all 12 package checksums. Isolated import/resource smoke passes for 549 application modules, with source-checkout fallback and socket connections denied. Read-only route/preflight returns BASE and PENDING_START_ENROLLMENT. The live private ledger/config/release have not been created.
+All 847 installed base files are retained except the four explicitly reviewed integration files; five new private-module files produce an exact 852-file application manifest. Nine overlay source files, configuration script, metadata and updater pass all 12 package checksums. Isolated import/resource smoke passes for 549 application modules, with source-checkout fallback and socket connections denied. At preparation, read-only route/preflight returned BASE and PENDING_START_ENROLLMENT, and the live private ledger/config/release had not been created.
 
-Operator entry points are prepared on the VPS. The only remaining setup is the owner's START enrollment followed by explicit operator apply. Package hash/import/preflight evidence: docs/evidence/private_single_170_20261004/package.json.
+Operator entry points are prepared on the VPS. The operator subsequently completed START enrollment and explicit apply. Package hash/import/preflight evidence: docs/evidence/private_single_170_20261004/package.json.
+
+
+## Operator deployment readback — 2026-10-04 17:24 Riga
+
+The operator reported PREMATCH_PRIVATE_SINGLE_170_DEPLOYED. Independent read-only preflight returned ENABLED and PRIVATE_LAB_RECIPIENT=VERIFIED for the pinned cdcb526 release. Installed application/route checks and all 12 operator-package checksums pass. All four PREMATCH service environment routes point to the new immutable release; the 180-second settlement guard remains the effective settlement command.
+
+The Lab recipient is a verified private chat matching the existing verified COMBO owner; enrollment was completed at 17:19:40 Riga. Configuration mode is 0600 and contains no token. No private recipient identifiers or credentials are included in this evidence.
+
+At the 17:24 snapshot, the private ledger did not yet exist and the first natural discovery under the new release was still pending. Discovery timer is enabled, with its next scheduled start at 17:30 Riga; settlement remains on its existing timer. This verifies installation, not an actual qualifying pick or successful private publication. No manual cycle or test send was initiated.
+
+Champion generation and protected model/governance counts remain unchanged. ADMIN Codex timer is inactive/disabled; there are no LIVE unit files and live publication count is zero. Official was not modified. Agent deployment/provider calls/Telegram reads or sends/training/promotion/rollback: zero.
+
+Evidence: docs/evidence/private_single_170_20261004/deployed_readback.json. The completed tests above were not rerun for this documentation-only deployment readback.
