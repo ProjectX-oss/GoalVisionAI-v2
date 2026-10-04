@@ -58,3 +58,11 @@ claim to have modified or closed the live incident.
 
 Agent production deployment, provider calls, Telegram sends, training, promotion,
 rollback, LIVE activation and Official changes: zero.
+
+## Exact prepared package
+
+Source commit: cb6b7c605c70360031b84cc754b4bc9913536f54
+
+852 application files verified; only accuracy_combo.py differs from the installed private release. Isolated 549-module import/resource smoke passed with source-checkout fallback and sockets denied. All package hashes and read-only BASE route checks passed.
+
+Separate monitor repair prepared at source ab327dddd08ef731571a981b4cb77a4db1cc05fe. Apply COMBO first, then admin-mixed-delivery.py; the monitor installer verifies the pinned new PREMATCH manifest. No deployment performed.
