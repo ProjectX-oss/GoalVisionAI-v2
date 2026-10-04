@@ -128,3 +128,20 @@ and verified the plan, solver protocol and competition registry. Offline regress
 The COMBO preflight reports BASE and requires the prepared monitor repair first.
 Root-owned disabled-Codex files are rechecked by operator sudo apply. Neither
 release target is installed at this checkpoint. No services were switched.
+
+## Operator deployment and independent readback
+
+The operator installed the monitor repair at 11:17:27 Riga and the COMBO release
+at 11:17:57 Riga on 2026-10-04. Independent read-only COMBO preflight reports
+ENABLED and the monitor prerequisite passes. All 845 application/JSON files and
+all four service routes match the pinned COMBO release; all 19 monitor Python
+files match the reviewed monitor overlay and installed manifest. Timers are
+enabled and active; ADMIN Codex remains runtime-disabled and protected champion
+counts/generation are unchanged. The 11:18:18 monitor invocation completed with
+exit status 0 after installation. Full incident-history readback is unavailable
+to the unprivileged session, so this does not claim all historical incidents are
+resolved. The first discovery invocation using the new policy remains scheduled
+for 11:30 Riga; a new-policy publication has not yet been verified. No manual
+cycle or provider/Telegram request was used.
+
+Evidence: docs/evidence/combo_conservative_20261004/deployed_readback.json.

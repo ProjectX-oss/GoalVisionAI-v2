@@ -1,0 +1,134 @@
+{
+  "admin_worker_runtime_disabled": true,
+  "assistant_applied": false,
+  "champion_promotion": false,
+  "combo_installed_at": "2026-10-04T08:17:57.226913+00:00",
+  "combo_manifest_count": 845,
+  "combo_read_only_preflight": [
+    "COMBO_CONSERVATIVE_PLAN_VALIDATED=/opt/goalvision-prematch-combo-conservative-6784969-20261004",
+    "current_mode=ENABLED; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "MONITOR_REPAIR_PREREQUISITE=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "combo_read_only_preflight_exit": 0,
+  "combo_release": "/opt/goalvision-prematch-combo-conservative-6784969-20261004",
+  "first_new_discovery_cycle": "PENDING_2026-10-04T11:30:00+03:00",
+  "incident_database_readback": "UNAVAILABLE_TO_UNPRIVILEGED_SESSION",
+  "manual_production_cycles": 0,
+  "monitor_installed_at": "2026-10-04T08:17:27.784783+00:00",
+  "monitor_manifest_count": 19,
+  "monitor_manifest_matches_reviewed_source": true,
+  "monitor_release": "/opt/goalvision-admin-alerts-releases/admin-health-projection-99e40ac-20261004",
+  "observed_at": "2026-10-04T08:20:11.220090+00:00",
+  "operator_applied": true,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_state_unchanged": true,
+  "provider_calls": 0,
+  "root_guard_source": "operator apply output; unprivileged readback does not read root-owned configuration",
+  "services": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-conservative-6784969-20261004/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 11:08:59 EEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 11:08:01 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-conservative-6784969-20261004/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 05:12:10 EEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 05:12:01 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-admin-alerts.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 11:18:19 EEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 11:18:18 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "WorkingDirectory": "/opt/goalvision-admin-alerts-releases/admin-health-projection-99e40ac-20261004"
+    },
+    "goalvision-dixon-coles-forward.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 11:12:46 EEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 11:12:30 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "WorkingDirectory": "/opt/goalvision-dixon-coles-forward-ebd0924-20261004/application"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-conservative-6784969-20261004/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 11:15:55 EEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 11:15:01 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-conservative-6784969-20261004/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 11:05:03 EEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 11:00:01 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "WorkingDirectory": "/home/arvis/GoalVisionAI"
+    }
+  },
+  "status": "DEPLOYMENT_READBACK_PASS",
+  "telegram_test_sends": 0,
+  "timers": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 11:08:01 EEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 11:38:00 EEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 05:12:01 EEST",
+      "NextElapseUSecRealtime": "Mon 2026-10-05 05:12:00 EEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-admin-alerts.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 11:18:18 EEST",
+      "NextElapseUSecRealtime": "",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-dixon-coles-forward.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 11:12:30 EEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 11:42:30 EEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 11:15:01 EEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 11:25:00 EEST",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 11:00:01 EEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 11:30:00 EEST",
+      "UnitFileState": "enabled"
+    }
+  }
+}
