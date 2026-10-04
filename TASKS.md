@@ -1813,3 +1813,8 @@ Review after completing the current priority.
 - SINGLE >=1.50, COMBO legs >=1.30, champion/Official unchanged; LIVE and ADMIN Codex disabled.
 - Tests, development replay and exact-manifest operator package documented in docs/operations/PREMATCH_COMBO_CONSERVATIVE_20261004.md.
 - Operator installation pending: monitor repair first, COMBO experiment second. No automatic deployment or push.
+
+
+## Watch reconciliation 2026-10-04 — authorized, normal priority
+
+Read-only reconciliation of installed forward repair, GitHub, champion, learning, performance, probability provenance and runtime. Preserve Official, disabled LIVE/ADMIN Codex, champion and publication thresholds; no deployment, provider calls or Telegram sends. Prepare a separately reviewed settlement status quota fix if confirmed. Declare a shadow-only incremental-information protocol before new qualifying captures; no calibration fit before readiness, no holdout consumption, no promotion.

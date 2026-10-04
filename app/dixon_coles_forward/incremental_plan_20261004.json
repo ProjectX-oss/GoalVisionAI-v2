@@ -1,0 +1,30 @@
+{
+  "version": "DC_INCREMENTAL_PROTOCOL_V1",
+  "declared_at": "2026-10-04T10:30:54.327577+00:00",
+  "forward_plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+  "calendar_fingerprint": "9b154abc5b1ca4f18187150c2ca0a8d4d37b93b9c3893e97b2e61457329ca439",
+  "weights": [
+    0.0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "minimum_fit_fixtures": 300,
+  "minimum_validation_fixtures": 100,
+  "minimum_validation_dates": 7,
+  "bootstrap_samples": 200,
+  "bootstrap_seed": 1729,
+  "near_zero_weight_maximum": 0.1,
+  "selection_effect": "NONE",
+  "automatic_promotion": false,
+  "fit_source": "CALIBRATION_FIT_ONLY_AFTER_WINDOW_CLOSE",
+  "holdout": "NEVER_READ_BY_THIS_COMPARATOR; CURRENT_FORWARD_PLAN_ENDS_BEFORE_HOLDOUT",
+  "fingerprint": "35082c3a4d7e3e8d44a0fb954026a86ec2b6b0d8eaf9265711ba87d3c1f98e34"
+}
