@@ -77,3 +77,15 @@ voids and unsettled coupons. A single winning or losing coupon is not a quality
 verdict; the experiment currently has no prospective outcome evidence.
 
 Offline regression: 637 passed in 31.87s with socket connections denied and nice 10. Full fake-provider/Telegram cycle confirms the second-lane reader, COMBO bot routing and durable publication receipts. Champion generation/counters remain unchanged.
+
+## Prepared package checkpoint
+
+Source: abddde71292511a11a8ffc0a97f18f8caea3fc0d.
+Package: /home/arvis/goalvision-operations/combo-market-parallel-abddde7-20261004.
+All 13 package checksums pass; the exact assembled release imports 544 app
+modules in isolation and loads the frozen plan/protocol/registry without source
+checkout fallback. Read-only wrapper preflight exits 0 in BASE mode; local
+recipient configuration validation passes without network access. The new /opt
+release target is absent and all current routes remain on the installed DC
+release. Protected champion counters/generation remain unchanged. No automatic
+deployment, Git push, manual cycle, provider request or Telegram test send.

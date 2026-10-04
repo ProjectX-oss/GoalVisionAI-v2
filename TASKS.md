@@ -6,7 +6,7 @@
 - [x] Verify 637 offline tests, full fake-provider/Telegram cycle, real numerical comparisons, early loss/remaining legs, text/photo replies and installer recovery.
 - [x] Read-only development replay of latest and preceding natural pools; retain same SINGLE/DC choices, preserve floor and disjointness. No performance improvement established.
 - [x] Exact 845-file installed base plus eleven reviewed overlays matches the 847-file candidate source; protected champion counters unchanged.
-- [ ] Build and verify pinned operator package from committed source.
+- [x] Source abddde7 committed; pinned operator package built, 13 checksums and isolated 544-module import/read-only preflight pass. Target not installed.
 - [ ] Operator installation, then natural forward publications/results. No automatic deploy or promotion.
 
 ## 2026-10-04 — Overnight ADMIN investigation and forward package repair

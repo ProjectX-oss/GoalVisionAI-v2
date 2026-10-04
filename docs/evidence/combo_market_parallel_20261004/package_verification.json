@@ -1,0 +1,98 @@
+{
+  "checksums": [
+    {
+      "file": "metadata.json",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_combo/bot_routing.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_combo/presentation.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_combo/repository.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_combo/service.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_v2_shadow/accuracy_combo.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_v2_shadow/cli.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_v2_shadow/combo_agreement_sources.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_v2_shadow/combo_market.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_v2_shadow/combo_market_sources.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_v2_shadow/operator_output.py",
+      "pass": true
+    },
+    {
+      "file": "overlay/app/lab_v2_shadow/publication.py",
+      "pass": true
+    },
+    {
+      "file": "update.py",
+      "pass": true
+    }
+  ],
+  "git_push": false,
+  "installed_route_mode": "BASE",
+  "installed_target_exists": false,
+  "manual_cycles": 0,
+  "observed_at": "2026-10-04T09:51:04.977158+00:00",
+  "package": "/home/arvis/goalvision-operations/combo-market-parallel-abddde7-20261004",
+  "production_deployment": false,
+  "protected_after": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "read_only_preflight": [
+    "COMBO_MARKET_PARALLEL_PLAN_VALIDATED=/opt/goalvision-prematch-combo-market-parallel-abddde7-20261004",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "read_only_preflight_exit": 0,
+  "recipient_configuration": "LOCAL_READ_ONLY_PASS",
+  "rollback": "DISABLE_MARKET_LANE_ONLY_RETAIN_DC_STATISTICS_AND_SETTLEMENT",
+  "runtime_import_smoke": {
+    "modules": 544,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "provider_calls": 0,
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_COMBO_IMPORT_PASS",
+    "telegram_sends": 0
+  },
+  "source_commit": "abddde71292511a11a8ffc0a97f18f8caea3fc0d",
+  "telegram_test_sends": 0,
+  "wrapper": "/home/arvis/goalvision-operations/combo-market-parallel.py",
+  "wrapper_sha256": "def015afdb5c0c96c253c70bfce883348929b4b93a9e17bb64a8223e9cfb1155"
+}
