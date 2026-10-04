@@ -75,6 +75,8 @@ def main():
     for name in mod.FILES:
         destination = assembled/name
         destination.parent.mkdir(parents=True, exist_ok=True)
+        if destination.exists():
+            destination.chmod(0o644)  # Only our disposable smoke copy; installed source stays read-only.
         shutil.copyfile(package/'overlay'/name, destination)
     if mod.tree(assembled) != expected:
         raise ValueError('ASSEMBLED_MANIFEST_MISMATCH')
