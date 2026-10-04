@@ -33,3 +33,7 @@ Deployment remains operator-only. After apply, review the installed hashes/route
 ## COMBO question
 
 The new constrained Dixon–Coles and conservative COMBO ranking exist only in the separately deployed forward shadow comparison. Its first successful natural invocation completed at 09:12 Riga on October 4. Published COMBO selection has not been switched to this model, and improved real predictive performance has not been demonstrated yet. Retain SINGLE >=1.50, COMBO legs >=1.30, no extra total-odds floor, today-only, independent bot/statistics, replies, early loss/remaining-leg tracking, disabled LIVE/ADMIN Codex and unchanged champion.
+
+## Prepared package readback
+
+Source commit 99e40ac01110b6dbc54036f46696df4e5228c738. Package /home/arvis/goalvision-operations/admin-health-projection-99e40ac-20261004. All 29 checksums pass. The complete assembled runtime imports in isolated Python with six app modules and no source fallback; the real-report replay under /usr/bin/python3 exactly matches the tested source replay. Read-only wrapper preflight passes. The intended target is absent and the installed monitor still uses admin-rotation-alerts-6a37787-20261002. Protected routes/timers/champion match preparation; ADMIN Codex remains disabled. Root-only configuration/marker guards and first natural post-install health scan remain pending operator apply. No push or deployment. See package_readback.json next to verification.json.

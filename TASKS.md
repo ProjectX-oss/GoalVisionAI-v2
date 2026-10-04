@@ -4,7 +4,8 @@
 - [x] Remove only four unused publication diagnostic fields plus existing PERFORMANCE on oversized valid health documents; keep every consumed failure/delivery field and existing limits.
 - [x] 351 offline tests + 79 subtests PASS; 38 genuine reports preserve 228 exact events and remove all 18 oversized-record errors.
 - [x] Prepare monitor-only pinned installer, explicit disabled-Codex guards and protected PREMATCH/worker/research/weekly routes/timers.
-- [ ] Commit/build/read-only preflight, then separate operator installation and natural monitoring verification.
+- [x] Source 99e40ac committed; 29 package hashes, isolated assembled runtime import, real-report replay under production Python and read-only preflight PASS.
+- [ ] Operator installation and independent next natural monitoring verification; package prepared only.
 - [ ] Separate pending work: settlement STATUS quota authority/verified quota deferral. Not included in this monitor change.
 - COMBO improvement remains SHADOW ONLY; no change to published selection/champion. Audit source: 7e77b64 in forward repair worktree.
 - Runbook: docs/operations/ADMIN_HEALTH_PROJECTION_20261004.md.
