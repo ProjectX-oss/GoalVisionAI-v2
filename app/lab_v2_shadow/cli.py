@@ -156,6 +156,9 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                            | set(prepared['single_publication_blockers'].values()))
                 report["controlled_publication"]["reason"] = (next(iter(reasons)) if len(reasons)==1 else
                     'LAB_PUBLICATION_RULE_BLOCKED' if reasons else 'EXACTLY_ONCE_NO_NEW_PUBLICATIONS')
+                from app.lab_private_single.runtime import publish_natural, record_publication
+                record_publication(report, await publish_natural(report,
+                    transport_factory=LabTelegramTransport, football_context=football_context))
                 return _persist_cycle_evidence(repository, report, clock)
             config = load_lab_telegram_config()
             blocker = validate_lab_telegram_config(config)
@@ -197,6 +200,9 @@ async def _cycle(args: argparse.Namespace, *, football_context: object | None = 
                 "deliveries": deliveries,
                 "reason": failure["code"] if failure else None,
             }
+            from app.lab_private_single.runtime import publish_natural, record_publication
+            record_publication(report, await publish_natural(report,
+                transport_factory=LabTelegramTransport, football_context=football_context))
             return _persist_cycle_evidence(repository, report, clock)
         finally:
             ledger.close()

@@ -298,6 +298,9 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
 
 
 def v2_single_message(value: dict) -> str:
+    from app.lab_private_single.policy import POLICY as PRIVATE_POLICY, message as private_message
+    if value.get('single_selection_policy') == PRIVATE_POLICY:
+        return private_message(value)
     from .origin import LABEL, is_labelled
     if is_labelled(value) and 'public_presentation' in value:
         from .public_presentation import prediction_message

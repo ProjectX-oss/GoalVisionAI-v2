@@ -69,12 +69,15 @@ async def cycle(args: argparse.Namespace) -> dict:
         )
         if args.command == 'settle':
             stage = 'SETTLEMENT'
+            from app.lab_private_single.runtime import settlement_needed, settle_natural
+            private_due = settlement_needed(now=datetime.now(timezone.utc))
+            result_cache = {}
             shadow_pending=bool(adaptive and any(not adaptive.get('shadow_settlements',p['prediction_id'])
                               for p in adaptive.all('shadow_predictions','PREMATCH')) or adaptive and any(
                 not adaptive.get('canonical_results', str(p['fixture_id']) + ':' + p['market'])
                 and (datetime.now(timezone.utc) - datetime.fromisoformat(p['kickoff_utc'])).total_seconds() >= 7200
                 for p in adaptive.all('canonical_opportunities', 'PREMATCH')))
-            if _settlement_work_relevant(ledger, datetime.now(timezone.utc)) or shadow_pending:
+            if _settlement_work_relevant(ledger, datetime.now(timezone.utc)) or shadow_pending or private_due:
                 if adaptive:
                     # The status request is part of settlement's bounded budget.
                     # Discovery's protected reserve must not block its consumer.
@@ -88,13 +91,22 @@ async def cycle(args: argparse.Namespace) -> dict:
                 try:
                     from app.adaptive_lab.coordinator import LearningCoordinator
                     from app.adaptive_lab.observer import settle_pending_shadow
-                    output.update(await service.check_results(client,adaptive_learning=LearningCoordinator(adaptive)))
+                    output.update(await service.check_results(client,adaptive_learning=LearningCoordinator(adaptive),
+                                                              result_cache=result_cache))
                     remaining=max(0,21-client.request_count)
                     if remaining and shadow_pending:
                         output['shadow']=await settle_pending_shadow(adaptive,client,now=datetime.now(timezone.utc),maximum_calls=min(5,remaining),ledger=ledger)
+                    output['private_single'] = await settle_natural(client, result_cache=result_cache,
+                        maximum_calls=min(2, max(0, 21-client.request_count)),
+                        transport_factory=LabTelegramTransport, send=args.send, result_images=service.result_images)
                 finally: CATEGORY.reset(token)
             else:
-                output.update(await service.check_results(client))
+                output.update(await service.check_results(client, result_cache=result_cache))
+                output['private_single'] = await settle_natural(client, result_cache=result_cache,
+                    maximum_calls=min(2, max(0, 21-client.request_count)),
+                    transport_factory=LabTelegramTransport, send=args.send, result_images=service.result_images)
+            output['lab_telegram_sent'] = any(v.get('sent') for v in
+                output.get('private_single', {}).get('deliveries', []))
             pending = [
                 *[('single_settlement', value['prediction_id']) for value in ledger.all('single_settlement')
                   if ledger.get('receipt', 'single_prediction:' + value['prediction_id'])
@@ -200,7 +212,7 @@ async def cycle(args: argparse.Namespace) -> dict:
                 from .bot_delivery import deliver_batch
                 output['deliveries'], failure = await deliver_batch(
                     service, pending, config, LabTelegramTransport)
-                output['lab_telegram_sent'] = any(item.get('sent') for item in output['deliveries'])
+                output['lab_telegram_sent'] = output['lab_telegram_sent'] or any(item.get('sent') for item in output['deliveries'])
                 if failure:
                     output['send_blocker'] = failure['code']
                     output['delivery_failure'] = failure

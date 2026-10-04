@@ -1,0 +1,51 @@
+{
+  "admin_codex_enabled": false,
+  "agent_deployment": false,
+  "agent_provider_calls": 0,
+  "agent_telegram_sends": 0,
+  "base_source_commit": "9d7389458866100468f36fc542af02255cfaf203",
+  "champion_changes": 0,
+  "declaration_commit": "7e69ddb3dbc3f1c10e87bcbb8dc64e262e1eeab5",
+  "existing_combo_leg_floor": "1.30",
+  "existing_combo_owner_verified": true,
+  "existing_public_single_floor": "1.50",
+  "live_enabled": false,
+  "manual_service_cycles": 0,
+  "natural_settlement_cycle_request_ceiling": 21,
+  "network_connections_denied": true,
+  "official_changes": 0,
+  "priority_nice": 10,
+  "private_lab_recipient_configured": false,
+  "private_ledger_learning_sync": false,
+  "private_production_ledger_exists": false,
+  "private_scope": "ODDS_GTE_1_70_PROBABILITY_0_70_THROUGH_0_80_INCLUSIVE",
+  "private_selection_maximum_per_natural_cycle": 1,
+  "private_settlement_maximum_remaining_requests": 2,
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "status": "PASS_OPERATOR_ENROLLMENT_AND_DEPLOYMENT_PENDING",
+  "test_counts_overlap": true,
+  "tests": [
+    {
+      "passed": 562,
+      "scope": "FOCUSED_REGRESSION_MATRIX",
+      "seconds": 24.74
+    },
+    {
+      "passed": 67,
+      "scope": "FINAL_PRIVATE_FOCUSED",
+      "seconds": 2.57
+    }
+  ]
+}

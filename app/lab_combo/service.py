@@ -171,18 +171,28 @@ class LabComboService:
 
     async def _publish_experimental(self, kind: str, prediction_id: str, config: object,
                                     transport: object, facts: DeliveryFacts) -> dict:
+        from app.lab_private_single.repository import PrivateSingleRepository
+        from app.lab_private_single.routing import PrivateLabConfig
+        private = isinstance(self.ledger, PrivateSingleRepository)
+        if not private and isinstance(config, PrivateLabConfig):
+            return {'status': 'PRIVATE_SINGLE_LEDGER_REQUIRED', 'sent': False}
+        resolve_route, check_route, render_route = delivery_route, validate_delivery, route_message
+        if private:
+            from app.lab_private_single import routing as private_routing
+            resolve_route, check_route, render_route = (
+                private_routing.delivery_route, private_routing.validate_delivery, private_routing.route_message)
         if self.ledger.get('claim', kind + ':' + prediction_id) is not None:
             return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
         try:
-            route = delivery_route(self.ledger, kind, prediction_id)
+            route = resolve_route(self.ledger, kind, prediction_id)
         except RoutingBlocked as exc:
             return {'status': str(exc), 'sent': False}
-        blocker = validate_delivery(config, transport, route, now=self.clock())
+        blocker = check_route(config, transport, route, now=self.clock())
         if blocker:
             return {'status': blocker, 'sent': False}
         destination = route['chat_id'] if route else LAB_CHAT_ID
         from app.real_match_lab_analysis.models import LAB_BOT_USERNAME
-        expected_bot = COMBO_BOT_USERNAME if route else LAB_BOT_USERNAME
+        expected_bot = route['bot_username'] if route else LAB_BOT_USERNAME
         mapping = {
             'single_prediction': ('single_prediction', 'single_preview'),
             'combo_prediction': ('prediction', 'preview'),
@@ -195,6 +205,14 @@ class LabComboService:
         value, preview = self.ledger.get(evidence_kind, prediction_id), self.ledger.get(preview_kind, prediction_id)
         if value is None or preview is None:
             return {'status': 'LAB_EVIDENCE_NOT_READY', 'sent': False}
+        from app.lab_private_single.policy import POLICY as PRIVATE_POLICY, frozen_blocker
+        if not private and (value.get('single_selection_policy') == PRIVATE_POLICY
+                            or 'private_delivery_route' in value):
+            return {'status': 'PRIVATE_SINGLE_LEDGER_REQUIRED', 'sent': False}
+        if private and kind == 'single_prediction':
+            blocker = frozen_blocker(value, now=self.clock())
+            if blocker:
+                return {'status': blocker, 'sent': False}
         if kind in {'single_settlement', 'combo_settlement'}:
             prefix = 'single_prediction:' if kind == 'single_settlement' else 'combo_prediction:'
             receipt = self.ledger.get('receipt', prefix + prediction_id)
@@ -225,7 +243,9 @@ class LabComboService:
                 if blocker:
                     return {'status': blocker, 'sent': False}
             accuracy_single = (kind == 'single_prediction'
-                               and value.get('single_selection_policy') in {SINGLE_SELECTION_POLICY, *FLOOR_POLICIES})
+                               and value.get('single_selection_policy') in {
+                                   SINGLE_SELECTION_POLICY, *FLOOR_POLICIES,
+                                   *({PRIVATE_POLICY} if private else set())})
             if kind == 'combo_prediction':
                 from app.lab_v2_shadow.combo_market import published_selection_blocker as mode_blocker
                 policy_blocker = mode_blocker(value.get('combo_selection_policy'))
@@ -320,7 +340,7 @@ class LabComboService:
         except ValueError as exc:
             return {'status': str(exc), 'sent': False}
         reply_arguments = {'reply_to_message_id': reply['message_id']} if reply else {}
-        message = route_message(preview['message'], route)
+        message = render_route(preview['message'], route)
         if len(message) > 4096:
             return {'status': 'TELEGRAM_MESSAGE_TOO_LONG', 'sent': False}
         claim = {'prediction_id': prediction_id, 'message': message, 'chat_id': destination}
@@ -466,17 +486,19 @@ class LabComboService:
         self.ledger.append('receipt', identity, value)
         return value
 
-    async def check_results(self, client: object, *, maximum_calls: int = 20, adaptive_learning: object | None = None) -> dict:
+    async def check_results(self, client: object, *, maximum_calls: int = 20,
+                            adaptive_learning: object | None = None, result_cache: dict | None = None) -> dict:
         """One bounded result sweep, caching fixture responses across combos."""
         from app.current_odds_forward_test.provider import _require
-        if not 1 <= maximum_calls <= 20:
-            raise ValueError('Result sweep requires a 1–20 call ceiling')
-        if hasattr(client, 'restrict_requests'):
+        if not 0 <= maximum_calls <= 20 or (maximum_calls == 0 and result_cache is None):
+            raise ValueError('Result sweep requires a 0–20 call ceiling')
+        if maximum_calls and hasattr(client, 'restrict_requests'):
             client.restrict_requests(client.request_count + maximum_calls)
         now = self.clock()
         from .result_diagnostics import MAX_RECORDS, VERSION, unresolved_result
         from app.real_match_lab_analysis.fingerprint import fingerprint
-        cache, completed, single_completed, detail_completed = {}, [], [], []
+        cache = {} if result_cache is None else result_cache
+        completed, single_completed, detail_completed = [], [], []
         failed_requests, diagnostics, diagnostic_count = set(), [], 0
         start = client.request_count
 
@@ -583,6 +605,9 @@ class LabComboService:
 
     def _single_preview_statistics(self, result: dict) -> dict:
         """Snapshot after settlement acceptance, only for a new preview."""
+        from app.lab_private_single.repository import PrivateSingleRepository
+        if isinstance(self.ledger, PrivateSingleRepository):
+            return single_statistics(self.ledger)
         from app.lab_v2_shadow.origin import is_labelled
         from app.lab_v2_shadow.statistics import public_single_snapshot
         if is_labelled(result):
@@ -595,6 +620,9 @@ class LabComboService:
 
     def _single_result_message(self, result: dict, stats: dict) -> str:
         """New attributed outcomes retain the label; historical previews stay frozen."""
+        from app.lab_private_single.repository import PrivateSingleRepository
+        if isinstance(self.ledger, PrivateSingleRepository):
+            return single_result_message(result, stats)
         from app.lab_v2_shadow.origin import is_labelled
         from app.lab_v2_shadow.public_presentation import result_message
         if is_labelled(result):
@@ -657,6 +685,11 @@ def _accuracy_delivery_review(value: dict, now: datetime) -> dict:
             frozen_floor = FLOOR_POLICIES[selection_policy]
             if value.get('minimum_published_decimal_odds') != str(frozen_floor) or odds < frozen_floor:
                 reasons.add('FROZEN_SINGLE_ODDS_CONTRACT_INVALID')
+        elif selection_policy == 'PRIVATE_SINGLE_170_P70_80_20261004_V1':
+            from app.lab_private_single.policy import frozen_blocker
+            blocker = frozen_blocker(value, now=now)
+            if blocker:
+                reasons.add(blocker)
         elif selection_policy != SINGLE_SELECTION_POLICY or value.get('minimum_published_decimal_odds') is not None:
             reasons.add('ACCURACY_SELECTION_POLICY_INVALID')
         reviewed = datetime.fromisoformat(value['accuracy_review_completed_at_utc'])

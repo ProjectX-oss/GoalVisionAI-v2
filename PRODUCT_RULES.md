@@ -525,3 +525,16 @@ No extra combined floor, new provider calls, champion/Official/LIVE change,
 automatic deployment or promotion. ADMIN Codex remains disabled. The new
 flag-off rollback pauses only new market-lane publications and retains readers.
 See docs/operations/PREMATCH_COMBO_MARKET_PARALLEL_20261004.md.
+
+## Private Lab SINGLE filter authorized 2026-10-04
+
+The user requested a private Lab-bot selection with current decimal odds >=1.70
+and the previously specified model probability 70–80%, inclusive and unrounded.
+Prepare a separate prospective private ledger/statistics cohort. Search the full
+natural evaluated candidate pool, keep existing quality/freshness/replay,
+independent-model, severe-disagreement and Riga today-only gates, and publish at
+most one new private fixture per natural cycle. No forced picks or probability
+inflation. Verify the already confirmed private COMBO owner through a fresh Lab
+bot START before operator activation. Private results use original-message Replies.
+Existing Lab SINGLE 1.50 / COMBO legs 1.30, both COMBO lanes, learning/champion,
+Official, LIVE and ADMIN restrictions remain unchanged. No automatic deployment.

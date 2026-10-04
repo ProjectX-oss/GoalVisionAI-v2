@@ -1,0 +1,48 @@
+{
+  "cycles": [
+    {
+      "candidates": 1139,
+      "cycle": "2026-10-04T14:00:03.433908+00:00",
+      "eligible": [],
+      "fixtures": 117,
+      "numeric_match_blockers": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 5,
+        "FIXTURE_AFTER_LAB_CUTOFF": 1,
+        "PRIVATE_APPROVED_CANDIDATE_REQUIRED": 7,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 5
+      },
+      "numeric_matches": 7,
+      "quality_eligible": 0,
+      "reviewed_as_of": "2026-10-04T14:04:14.856810+00:00"
+    },
+    {
+      "candidates": 1167,
+      "cycle": "2026-10-04T13:30:02.816466+00:00",
+      "eligible": [],
+      "fixtures": 121,
+      "numeric_match_blockers": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 7,
+        "FIXTURE_AFTER_LAB_CUTOFF": 1,
+        "PRIVATE_APPROVED_CANDIDATE_REQUIRED": 9,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 7
+      },
+      "numeric_matches": 9,
+      "quality_eligible": 0,
+      "reviewed_as_of": "2026-10-04T13:35:34.331135+00:00"
+    },
+    {
+      "candidates": 254,
+      "cycle": "2026-10-04T13:00:01.678991+00:00",
+      "eligible": [],
+      "fixtures": 28,
+      "numeric_match_blockers": {},
+      "numeric_matches": 0,
+      "quality_eligible": 0,
+      "reviewed_as_of": "2026-10-04T13:03:46.114671+00:00"
+    }
+  ],
+  "database_writes": 0,
+  "provider_calls": 0,
+  "scope": "DEVELOPMENT_ONLY_CACHED_REPLAY_NOT_PROSPECTIVE",
+  "telegram_sends": 0
+}

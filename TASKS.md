@@ -1,3 +1,12 @@
+## 2026-10-04 — Private Lab SINGLE odds >=1.70 / probability 70–80%
+
+- [x] Verify installed settlement-quota 9d73894 release and verified COMBO-owner anchor; declare the private prospective contract before implementation.
+- [x] Implement full-pool private selection, isolated ledger/statistics, preclaim replay/freshness checks, fixture deduplication and original-message results.
+- [x] Retain existing public SINGLE/COMBO behavior, shared bounded result cache, quota reserve, 180-second guard, champion/Official and disabled LIVE/ADMIN.
+- [x] Verify 562 offline regression tests plus final overlapping 67 private/operator checks; read-only cached pool replay.
+- [ ] Operator verifies a fresh START on the Lab bot, applies the pinned package, then reviews first natural private publication/result. No agent apply or test send.
+- Runbook: docs/operations/PRIVATE_SINGLE_170_20261004.md.
+
 ## 2026-10-04 — Parallel visible current-market COMBO experiment
 
 - [x] User authorized a second visible COMBO lane; declare separate policy/cohort before implementation. Keep each leg >=1.30, SINGLE >=1.50 and DC first.
