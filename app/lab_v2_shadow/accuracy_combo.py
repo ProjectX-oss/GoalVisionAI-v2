@@ -154,10 +154,14 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
             break
         _, group, fixtures, teams = best
         legs = sorted((dict(item) for item in group), key=lambda item: item["publication_key"])
-        combined, joint = Decimal(1), Decimal(1)
+        combined, joint, ranking_joint = Decimal(1), Decimal(1), Decimal(1)
         for leg in legs:
             combined *= Decimal(leg["odds"])
             joint *= Decimal(leg["probability"])
+            if scored:
+                # Decimal multiplication is order-sensitive after rounding. Persist
+                # the score in the same frozen leg order used by delivery review.
+                ranking_joint *= Decimal(leg[score_key]["ranking_score"])
         value = dict(prediction_id=combo_identity(legs, policy=policy), policy=policy,
                      combo_selection_policy=policy, created_at_utc=now.isoformat(),
                      legs=legs, combined_odds=str(combined),
@@ -169,7 +173,7 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
                      combo_number=len(combos) + 1, **floor_metadata(minimum))
         if scored:
             value.update(statistics_cohort=combo_market.COHORT if market_variant else COHORT, score_is_calibrated_probability=False,
-                         ranking_score_if_independent=str(-best[0][0]))
+                         ranking_score_if_independent=str(ranking_joint))
         existing = ledger.get("prediction", value["prediction_id"])
         if existing is not None:
             # Never renew a frozen review timestamp or rewrite a preview on replay.

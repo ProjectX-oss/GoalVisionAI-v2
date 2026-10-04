@@ -1823,3 +1823,11 @@ Review after completing the current priority.
 - SINGLE >=1.50, COMBO legs >=1.30, champion/Official unchanged; LIVE and ADMIN Codex disabled.
 - Tests, development replay and exact-manifest operator package documented in docs/operations/PREMATCH_COMBO_CONSERVATIVE_20261004.md.
 - Operator installation pending: monitor repair first, COMBO experiment second. No automatic deployment or push.
+
+
+## 2026-10-04 COMBO aggregate delivery incident
+
+- [x] Reproduce Decimal order mismatch from immutable prepared evidence.
+- [x] Preserve selected legs/ranking and exact checks; freeze aggregate in stored leg order.
+- [x] Offline focused and operator regression checks.
+- [ ] Explicit operator apply and natural-cycle validation.
