@@ -1,0 +1,80 @@
+{
+  "admin_codex": "DISABLED",
+  "application_modules_changed": [
+    "app/admin_alerts/sources.py"
+  ],
+  "combo_ranking": "SHADOW_ONLY_PUBLISHED_SELECTION_UNCHANGED",
+  "deployment": false,
+  "diagnostic_paths_removed_only_for_oversized_valid_documents": [
+    "$.PERFORMANCE",
+    "$.publication.publication_blockers",
+    "$.publication.publication_reviews",
+    "$.publication.single_publication_blockers",
+    "$.publication.single_publication_reviews"
+  ],
+  "history_rewritten": false,
+  "installed_base_release": "/opt/goalvision-admin-alerts-releases/admin-rotation-alerts-6a37787-20261002",
+  "manual_monitor_scans": 0,
+  "manual_service_cycles": 0,
+  "observed_at": "2026-10-04T06:29:53.194967+00:00",
+  "protected_state": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "provider_calls": 0,
+  "real_report_replay": {
+    "disposable_database_bytes_unchanged": true,
+    "event_count": 228,
+    "event_counts": {
+      "DELIVERY_FAILURE:True": 114,
+      "DELIVERY_UNCERTAIN:True": 114
+    },
+    "max_discovery_projected_bytes": 10013,
+    "max_discovery_source_bytes": 849109,
+    "monitor_scan": false,
+    "new_coverage_errors": 0,
+    "old_oversized_discovery_records": 18,
+    "provider_calls": 0,
+    "records": {
+      "cycle_health": 19,
+      "observer_runs": 19
+    },
+    "source_content_sha256": "8f7e2a9ac87025170a58ef886146de9c9f51d61b16acae92b394e08924a5d641",
+    "source_logical_content_unchanged": true,
+    "status": "REAL_REPORT_EVENT_EQUIVALENCE_PASS",
+    "store_ingest": false,
+    "telegram_sends": 0,
+    "window_end": "2026-10-03T15:20:00+00:00",
+    "window_start": "2026-10-03T06:03:29+00:00"
+  },
+  "scope": "ADMIN_MONITOR_ONLY",
+  "settlement_quota_fix": "SEPARATE_PENDING_WORK",
+  "source_base_commit": "ef23d76eb4cb195073ea34471751e69da29a288c",
+  "telegram_sends": 0,
+  "tests": {
+    "commands": [
+      "tests/admin_alerts",
+      "tests/admin_autorepair/test_compat_upgrade.py",
+      "tests/admin_autorepair/test_disable_autorepair.py",
+      "tests/admin_autorepair/test_health_projection_package.py"
+    ],
+    "failed": 0,
+    "passed": 351,
+    "subtests_passed": 79
+  },
+  "unchanged_limits": {
+    "projected_document_bytes": 131072,
+    "raw_document_bytes": 4194304,
+    "rows_per_table": 128,
+    "sql_deadline_seconds": 0.3
+  }
+}

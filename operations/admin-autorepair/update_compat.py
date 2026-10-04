@@ -31,6 +31,7 @@ SPECS = {
     },
 }
 RELEASE_PREFIX = 'admin-compat'
+RELEASE_DATE = '20261002'
 STATUS_PREFIX = 'ADMIN_COMPAT'
 UNCHANGED_MESSAGE = 'PREMATCH routes unchanged. No job retry, manual cycle or test message.'
 
@@ -111,7 +112,7 @@ def validate(package):
             overlay = package/'overlay'/name/module
             if overlay.is_symlink() or sha(overlay) != meta['files'][name][module]:
                 raise ValueError('OVERLAY_HASH_MISMATCH')
-        targets[name] = base.parent/(RELEASE_PREFIX+'-'+commit[:7]+'-20261002')
+        targets[name] = base.parent/(RELEASE_PREFIX+'-'+commit[:7]+'-'+RELEASE_DATE)
     return meta, targets
 
 def verify_route(spec, target):

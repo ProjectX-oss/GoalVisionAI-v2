@@ -487,16 +487,28 @@ def readonly(path: Path) -> sqlite3.Connection:
     return connection
 
 
+# Reviewed selection diagnostics only. None is read by completed_health/compact.
+# Keep unknown fields, all delivery rows and every failure/status fact intact.
+HEALTH_DIAGNOSTIC_PATHS = (
+    '$.PERFORMANCE',
+    '$.publication.publication_blockers',
+    '$.publication.publication_reviews',
+    '$.publication.single_publication_blockers',
+    '$.publication.single_publication_reviews',
+)
+
+
 def health_rows(path: Path, previous: dict, now: float) -> tuple[list[Event], dict]:
     """Read bounded health projections; persisted performance evidence is untouched.
 
-    PERFORMANCE is not consumed by completed_health. Only that root key may be
-    omitted from an oversized, valid document. All failure/publication facts
-    retain the existing 128 KiB limit; raw source JSON is capped at 4 MiB.
+    Only the five reviewed diagnostic paths may be omitted from an oversized,
+    valid document. Failure/status facts, all deliveries and unknown fields stay
+    intact. The projected 128 KiB, raw 4 MiB and page/deadline limits are unchanged.
     """
     state = dict(previous)
     events = []
     connection = None
+    projection_paths = ','.join("'" + path + "'" for path in HEALTH_DIAGNOSTIC_PATHS)
     try:
         connection = readonly(path)
         for table, service in (('cycle_health', DISCOVERY), ('observer_runs', UNITS[2])):
@@ -509,7 +521,7 @@ def health_rows(path: Path, previous: dict, now: float) -> tuple[list[Event], di
             ), projected AS MATERIALIZED (
                 SELECT id,created_at,
                     CASE WHEN length(CAST(document AS BLOB))>? AND json_valid(document)
-                         THEN json_remove(document,'$.PERFORMANCE') ELSE document END AS document
+                         THEN json_remove(document,{projection_paths}) ELSE document END AS document
                 FROM batch
             )
             SELECT id,created_at,

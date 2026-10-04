@@ -257,7 +257,7 @@ def test_daemon_reload_runtime_reset_vs_real_command_drift(installation,monkeypa
     assert all(states[s['timer']]=='active' for s in m.SPECS.values())
 
 
-@pytest.fixture(params=["update_monitor_compat.py","update_rotation_alerts.py"])
+@pytest.fixture(params=["update_monitor_compat.py","update_rotation_alerts.py","update_health_projection.py"])
 def monitor_installation(installation,tmp_path,monkeypatch,request):
     m,package,states,flags,calls,probes=installation
     source=Path(__file__).parents[2]/'operations/admin-autorepair'/request.param
