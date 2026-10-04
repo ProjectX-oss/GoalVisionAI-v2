@@ -56,3 +56,9 @@ Evidence: docs/evidence/admin_mixed_delivery_20261004/verification.json.
 No agent deployment, provider call, Telegram send, manual cycle/monitor scan,
 model change, LIVE activation or Official modification. Natural live recovery
 and forward COMBO delivery remain pending operator apply and qualifying evidence.
+
+## Exact prepared package
+
+Source commit: ab327dddd08ef731571a981b4cb77a4db1cc05fe
+
+19 base source files verified; only app/admin_alerts/rules.py changes. Isolated six-module import smoke passed without network or scans. Package checksums and read-only preflight passed. Prepared target: /opt/goalvision-admin-alerts-releases/admin-mixed-delivery-ab327dd-20261004. No deployment performed.
