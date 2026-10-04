@@ -54,7 +54,7 @@ def _probability_first_single_candidates(ready: list[dict[str, object]]) -> list
 
 def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, *, now: datetime,
                             label_origin: bool = False, football_context: object | None = None,
-                            accuracy_combos: bool = False) -> dict[str, object]:
+                            accuracy_combos: bool = False, combo_inputs: object | None = None) -> dict[str, object]:
     """Persist accuracy singles and legacy or explicitly opted-in accuracy triples."""
     clock = now.astimezone(timezone.utc)
     combo_ready = []
@@ -272,7 +272,8 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
     if accuracy_combos:
         from .accuracy_combo import prepare_accuracy_combos
         combos, combo_diagnostics = prepare_accuracy_combos(
-            accuracy_pool, ledger, now=clock, label_origin=label_origin, football_context=football_context)
+            accuracy_pool, ledger, now=clock, label_origin=label_origin, football_context=football_context,
+            combo_inputs=combo_inputs)
     return {"combo_diagnostics": combo_diagnostics,
             "publication_reviews": publication_reviews, "publication_policy_version": PUBLICATION_POLICY_VERSION,
             "single_publication_reviews": single_publication_reviews,
@@ -329,7 +330,10 @@ def v2_combo_message(value: dict, number: int) -> str:
     lines = [f"🧪 GoalVision AI Lab Combo #{value['combo_number'] if accuracy else number}"]
     if accuracy:
         lines.append("Eksperimentāls 3 spēļu combo no PREMATCH atlases.")
-        if value.get("combo_selection_policy") == COMBO_FLOOR_POLICY:
+        from .combo_agreement import POLICY as AGREEMENT_POLICY
+        if value.get("combo_selection_policy") == AGREEMENT_POLICY:
+            lines.append("🧪 COMBO DC tests · atsevišķa testa statistika.")
+        if value.get("combo_selection_policy") in {COMBO_FLOOR_POLICY, AGREEMENT_POLICY}:
             lines.append("Katras likmes koef. ≥1.30.")
     for symbol, leg in zip(("1️⃣", "2️⃣", "3️⃣"), value["legs"], strict=True):
         lines.extend((

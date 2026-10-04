@@ -159,7 +159,10 @@ def operator_cycle_summary(report: dict[str, object]) -> dict[str, object]:
                 'minimum_combo_leg_decimal_odds': '1.30',
                 'combo_leg_odds_policy': _code(combo.get('combo_leg_odds_policy')),
                 'rejection_counts': {key: counts[key] for key in (
-                    'LAB_COMBO_LEG_ODDS_BELOW_1_30', 'INVALID_CURRENT_DECIMAL_ODDS')
+                    'LAB_COMBO_LEG_ODDS_BELOW_1_30', 'INVALID_CURRENT_DECIMAL_ODDS',
+                    'COMBO_AGREEMENT_INPUT_UNAVAILABLE', 'COMBO_AGREEMENT_INPUTS_UNAVAILABLE',
+                    'COMBO_AGREEMENT_CAPACITY', 'COMBO_AGREEMENT_CONFIGURATION_INVALID',
+                    'COMBO_AGREEMENT_BUDGET_EXHAUSTED')
                     if _integer(counts.get(key)) is not None and counts[key] > 0},
             })
     return result

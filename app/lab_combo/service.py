@@ -227,6 +227,10 @@ class LabComboService:
             accuracy_single = (kind == 'single_prediction'
                                and value.get('single_selection_policy') in {SINGLE_SELECTION_POLICY, *FLOOR_POLICIES})
             if kind == 'combo_prediction':
+                from app.lab_v2_shadow.combo_agreement import mode_blocker
+                policy_blocker = mode_blocker(value.get('combo_selection_policy'))
+                if policy_blocker and self.ledger.get('claim', kind + ':' + prediction_id) is None:
+                    return {'status': policy_blocker, 'sent': False}
                 if self.ledger.get('claim', kind + ':' + prediction_id) is not None:
                     return {'status': 'DELIVERY_ALREADY_CLAIMED', 'sent': False}
                 blocker = combo_odds_blocker(value, minimum=minimum_combo_leg_odds())
@@ -558,7 +562,10 @@ class LabComboService:
             identity = value['prediction_id']
             if not self.ledger.get('settlement_preview', identity):
                 route = frozen_route(self.ledger, identity)
-                stats = cohort_statistics(self.ledger, route)
+                from app.lab_v2_shadow.combo_agreement import POLICY as AGREEMENT_POLICY
+                prediction = self.ledger.get("prediction", identity) or {}
+                stats = cohort_statistics(self.ledger, route,
+                    agreement=prediction.get("combo_selection_policy") == AGREEMENT_POLICY)
                 self.ledger.append('settlement_preview', identity, {'message': combo_result_message(value, stats), 'statistics': stats})
         if adaptive_learning is not None:
             adaptive_learning.sync_prematch(self.ledger, now=self.clock(), train=False)

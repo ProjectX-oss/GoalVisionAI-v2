@@ -162,6 +162,8 @@ def combo_result_message(value: dict, stats: dict) -> str:
         lines.append(f"💰 Sākotnējais koef.: {public_decimal(value['quoted_combined_odds'])}")
     else:
         lines.append(f"🔥 Gala koef.: {public_decimal(value['effective_combined_odds'])}")
+    if stats.get("selection_cohort") == "COMBO_AGREEMENT_20261004_V1":
+        lines.append("🧪 COMBO DC testa statistika")
     lines.append(statistics_line("Combo", stats))
     return "\n".join(lines)
 

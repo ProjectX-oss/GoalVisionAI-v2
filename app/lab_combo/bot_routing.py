@@ -151,7 +151,7 @@ def route_message(message: str, route: dict | None) -> str:
     return "\n".join(lines)
 
 
-def cohort_statistics(ledger: object, route: dict | None) -> dict:
+def cohort_statistics(ledger: object, route: dict | None, *, agreement: bool | None = None) -> dict:
     """Filter by frozen publication membership, never by settlement date."""
     from .settlement import statistics
 
@@ -166,7 +166,9 @@ def cohort_statistics(ledger: object, route: dict | None) -> dict:
             for value in ledger.all("prediction"):
                 pid = value["prediction_id"]
                 legacy = ledger.get("receipt", "combo_prediction:" + pid) is None
-                if frozen_route(ledger, pid, legacy=legacy) == route:
+                from app.lab_v2_shadow.combo_agreement import POLICY
+                member = value.get("combo_selection_policy") == POLICY
+                if (agreement is None or member == agreement) and frozen_route(ledger, pid, legacy=legacy) == route:
                     selected.append(value)
             return selected
 
@@ -174,4 +176,7 @@ def cohort_statistics(ledger: object, route: dict | None) -> dict:
     if route is not None:
         result = {**result, "statistics_period": route["statistics_period"],
                   "period_started_at": route["period_started_at"]}
+    if agreement is True:
+        from app.lab_v2_shadow.combo_agreement import COHORT
+        result["selection_cohort"] = COHORT
     return result

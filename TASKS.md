@@ -1791,3 +1791,13 @@ Review after completing the current priority.
 - Old `prematch-v2-release-e120f1b` package MUST NOT be applied.
 - Report: `docs/operations/PREMATCH_INSTALLER_HARDENING_2026-09-25.md`.
 - Installation BLOCKED pending review/operator execution; no deployment/push/merge.
+
+
+## 2026-10-04 — Active COMBO conservative agreement experiment
+
+- Explicit user authorization recorded; actual Lab COMBO selection prepared at normal priority.
+- Verified cached constrained model plus current de-vig and unchanged ensemble ranking; no inline fitting.
+- Separate immutable COMBO DC cohort, prior history and all settlement/Reply behavior retained.
+- SINGLE >=1.50, COMBO legs >=1.30, champion/Official unchanged; LIVE and ADMIN Codex disabled.
+- Tests, development replay and exact-manifest operator package documented in docs/operations/PREMATCH_COMBO_CONSERVATIVE_20261004.md.
+- Operator installation pending: monitor repair first, COMBO experiment second. No automatic deployment or push.

@@ -9,35 +9,45 @@ from collections import Counter
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from itertools import combinations
+import sqlite3
 
 from app.real_match_lab_analysis.fingerprint import fingerprint
 from app.lab_combo.odds_policy import (FLOOR_POLICY, COMBO_LEG_ODDS_FLOOR,
     minimum_combo_leg_odds, combo_leg_odds_blocker, combo_odds_blocker, floor_metadata)
 
 POLICY = "LAB_COMBO_ACCURACY_FROM_SINGLES_V1"
-SUPPORTED_POLICIES = frozenset({POLICY, FLOOR_POLICY})
+from .combo_agreement import POLICY as AGREEMENT_POLICY, COHORT, requested, mode_blocker
+SUPPORTED_POLICIES = frozenset({POLICY, FLOOR_POLICY, AGREEMENT_POLICY})
 
 
 def active_policy() -> str:
-    return FLOOR_POLICY if minimum_combo_leg_odds() is not None else POLICY
+    return AGREEMENT_POLICY if requested() else FLOOR_POLICY if minimum_combo_leg_odds() is not None else POLICY
 
 
 def combo_identity(legs: list[dict], *, policy: str = POLICY) -> str:
     binding = tuple(sorted((leg["publication_key"], leg["candidate_id"],
                             leg["quote_provenance_fingerprint"]) for leg in legs))
+    if policy == AGREEMENT_POLICY:
+        binding = (binding, tuple(sorted((leg["publication_key"], (leg["combo_agreement"]["artifact"]["fingerprint"], fingerprint(leg["combo_agreement"]["consensus"]))) for leg in legs)))
     return "lab-v2-combo-accuracy-" + fingerprint((policy, binding))
 
 
 def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: datetime,
-                            label_origin: bool, football_context: object | None = None) -> tuple[list[dict], dict]:
+                            label_origin: bool, football_context: object | None = None,
+                            combo_inputs: object | None = None) -> tuple[list[dict], dict]:
     from .publication import (_leg, _probability_first_single_candidates, MAX_COMBOS_PER_CYCLE,
                               SINGLE_SELECTION_POLICY, MIN_PUBLISHED_DECIMAL_ODDS,
                               MIN_PUBLISHED_MARKET_PROBABILITY, v2_combo_message)
     from .origin import freeze_origin
     from app.lab_combo.service import _accuracy_delivery_review
 
-    minimum = minimum_combo_leg_odds()
-    policy = FLOOR_POLICY if minimum is not None else POLICY
+    agreement = requested()
+    minimum = COMBO_LEG_ODDS_FLOOR if agreement else minimum_combo_leg_odds()
+    policy = AGREEMENT_POLICY if agreement else FLOOR_POLICY if minimum is not None else POLICY
+    if agreement and (mode_blocker(policy) or combo_inputs is None):
+        reason = mode_blocker(policy) or "COMBO_AGREEMENT_INPUTS_UNAVAILABLE"
+        return [], {"policy": policy, **floor_metadata(minimum), "eligible_fixture_count": 0,
+                    "prepared_count": 0, "reason": reason, "rejection_counts": {reason: 1}}
     blockers: Counter[str] = Counter()
     qualified = []
     for candidate in candidates:
@@ -52,7 +62,12 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
         if any(ledger.get(kind, prefix + previous["prediction_id"])
                for kind in ("claim", "receipt") for prefix in ("combo_prediction:", "prediction:")):
             used_fixtures.update(int(leg["fixture_id"]) for leg in previous["legs"])
-    for candidate in _probability_first_single_candidates(qualified):
+    source_candidates = qualified if agreement else _probability_first_single_candidates(qualified)
+    if agreement and len(source_candidates) > 600:
+        return [], {"policy": policy, **floor_metadata(minimum), "eligible_fixture_count": 0,
+                    "prepared_count": 0, "reason": "COMBO_AGREEMENT_CAPACITY",
+                    "rejection_counts": {"COMBO_AGREEMENT_CAPACITY": 1}}
+    for candidate in source_candidates:
         if not label_origin:
             blockers["COMBO_SELECTION_ORIGIN_REQUIRED"] += 1
             continue
@@ -68,8 +83,31 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
         if not review["eligible"]:
             blockers.update(review["rejection_reasons"])
             continue
+        if agreement:
+            try:
+                leg["combo_agreement"] = combo_inputs.score(candidate, now=now)
+            except (OSError, sqlite3.Error, ValueError, KeyError, TypeError, ArithmeticError) as exc:
+                if str(exc) == "COMBO_AGREEMENT_BUDGET_EXHAUSTED":
+                    return [], {"policy": policy, **floor_metadata(minimum), "eligible_fixture_count": 0,
+                                "prepared_count": 0, "reason": "COMBO_AGREEMENT_BUDGET_EXHAUSTED",
+                                "rejection_counts": {"COMBO_AGREEMENT_BUDGET_EXHAUSTED": 1}}
+                blockers["COMBO_AGREEMENT_INPUT_UNAVAILABLE"] += 1
+                continue
         ready.append(leg)
+    if agreement:
+        from .publication import _single_rank
+        best_by_fixture = {}
+        for leg in ready:
+            rank = (-Decimal(leg["combo_agreement"]["ranking_score"]), *_single_rank(leg)[1:])
+            previous = best_by_fixture.get(int(leg["fixture_id"]))
+            if previous is None or rank < previous[0]:
+                best_by_fixture[int(leg["fixture_id"])] = (rank, leg)
+        ready = [v[1] for v in sorted(best_by_fixture.values(), key=lambda v: v[0])]
     initial_count = len(ready)
+    if agreement and initial_count > 60:
+        return [], {"policy": policy, **floor_metadata(minimum), "eligible_fixture_count": initial_count,
+                    "prepared_count": 0, "reason": "COMBO_AGREEMENT_CAPACITY",
+                    "rejection_counts": {"COMBO_AGREEMENT_CAPACITY": 1}}
     combos = []
     while len(combos) < MAX_COMBOS_PER_CYCLE:
         best = None
@@ -80,7 +118,7 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
                 continue
             probability = Decimal(1)
             for item in group:
-                probability *= Decimal(item["probability"])
+                probability *= Decimal(item["combo_agreement"]["ranking_score"] if agreement else item["probability"])
             rank = (-probability, tuple(sorted(item["publication_key"] for item in group)))
             if best is None or rank < best[0]:
                 best = rank, group, fixtures, teams
@@ -101,6 +139,9 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
                      accounting="LAB_ONLY_HYPOTHETICAL_ONE_UNIT",
                      correlation_review="PASSED_DISTINCT_FIXTURES_TEAMS_AND_DISJOINT_BATCH",
                      combo_number=len(combos) + 1, **floor_metadata(minimum))
+        if agreement:
+            value.update(statistics_cohort=COHORT, score_is_calibrated_probability=False,
+                         ranking_score_if_independent=str(-best[0][0]))
         existing = ledger.get("prediction", value["prediction_id"])
         if existing is not None:
             # Never renew a frozen review timestamp or rewrite a preview on replay.
@@ -138,7 +179,7 @@ def review_accuracy_combo(value: dict, *, now: datetime) -> dict:
                 or value.get("accounting") != "LAB_ONLY_HYPOTHETICAL_ONE_UNIT"
                 or type(value.get("combo_number")) is not int or not 1 <= value["combo_number"] <= 3):
             reasons.add("COMBO_POLICY_OR_IDENTITY_INVALID")
-        if policy == FLOOR_POLICY:
+        if policy in {FLOOR_POLICY, AGREEMENT_POLICY}:
             if any(value.get(k) != v for k, v in floor_metadata(COMBO_LEG_ODDS_FLOOR).items()):
                 reasons.add("COMBO_FLOOR_POLICY_INVALID")
             blocker = combo_odds_blocker(value, minimum=COMBO_LEG_ODDS_FLOOR)
@@ -171,6 +212,9 @@ def review_accuracy_combo(value: dict, *, now: datetime) -> dict:
                 or Decimal(value["estimated_ev_if_independent"]) != joint * combined - 1
                 or value.get("probability_assumption") != "INDEPENDENCE_ASSUMED_NOT_VERIFIED"):
             reasons.add("COMBO_AGGREGATE_MISMATCH")
-    except (KeyError, TypeError, ValueError, InvalidOperation, AttributeError):
+        if policy == AGREEMENT_POLICY:
+            from .combo_agreement import review
+            review(value, now=now)
+    except (KeyError, TypeError, ValueError, ArithmeticError, AttributeError):
         reasons.add("COMBO_EVIDENCE_INVALID_OR_MISSING")
     return {"version": value.get("combo_selection_policy", POLICY), "eligible": not reasons, "rejection_reasons": sorted(reasons)}

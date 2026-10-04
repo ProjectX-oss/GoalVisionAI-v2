@@ -1,0 +1,101 @@
+{
+  "as_of": "2026-10-04T07:01:08.791843+00:00",
+  "candidate_count": 786,
+  "champion_changed": false,
+  "kind": "DEVELOPMENT_REPLAY_ONLY",
+  "observed_at": "2026-10-04T07:23:35.512073+00:00",
+  "outcomes": {
+    "AGREEMENT": {
+      "claims": 0,
+      "combos": [],
+      "diagnostics": {
+        "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+        "eligible_fixture_count": 1,
+        "minimum_combo_leg_decimal_odds": "1.30",
+        "policy": "LAB_COMBO_CONSERVATIVE_AGREEMENT_V1",
+        "prepared_count": 0,
+        "reason": "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES",
+        "rejection_counts": {
+          "COMBO_AGREEMENT_INPUT_UNAVAILABLE": 89,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 32
+        }
+      },
+      "receipts": 0,
+      "single_count": 3,
+      "single_selection_keys": [
+        "1495959:BTTS_YES",
+        "1500146:UNDER_2_5",
+        "1510688:OVER_2_5"
+      ]
+    },
+    "PREVIOUS": {
+      "claims": 0,
+      "combos": [
+        {
+          "fixtures": [
+            1508569,
+            1643003,
+            1643422
+          ],
+          "markets": [
+            "UNDER_3_5",
+            "UNDER_3_5",
+            "OVER_1_5"
+          ],
+          "policy": "LAB_COMBO_ACCURACY_FROM_SINGLES_V2_LEG_MIN_ODDS_130"
+        },
+        {
+          "fixtures": [
+            1498862,
+            1528943,
+            1635483
+          ],
+          "markets": [
+            "UNDER_2_5",
+            "OVER_1_5",
+            "OVER_2_5"
+          ],
+          "policy": "LAB_COMBO_ACCURACY_FROM_SINGLES_V2_LEG_MIN_ODDS_130"
+        },
+        {
+          "fixtures": [
+            1528938,
+            1528940,
+            1624676
+          ],
+          "markets": [
+            "UNDER_3_5",
+            "OVER_2_5",
+            "OVER_1_5"
+          ],
+          "policy": "LAB_COMBO_ACCURACY_FROM_SINGLES_V2_LEG_MIN_ODDS_130"
+        }
+      ],
+      "diagnostics": {
+        "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+        "eligible_fixture_count": 47,
+        "minimum_combo_leg_decimal_odds": "1.30",
+        "policy": "LAB_COMBO_ACCURACY_FROM_SINGLES_V2_LEG_MIN_ODDS_130",
+        "prepared_count": 3,
+        "reason": "COMBO_READY",
+        "rejection_counts": {
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 32
+        }
+      },
+      "receipts": 0,
+      "single_count": 3,
+      "single_selection_keys": [
+        "1495959:BTTS_YES",
+        "1500146:UNDER_2_5",
+        "1510688:OVER_2_5"
+      ]
+    }
+  },
+  "production_claims_considered": false,
+  "production_sources_read_only": true,
+  "provider_calls": 0,
+  "quality_verdict": "NO_PREDICTIVE_IMPROVEMENT_ESTABLISHED",
+  "source_fingerprint": "a094f62ba4cae80b5779fc09fab54acf4b46d57970ce30f8307da4874a387e13",
+  "source_identity": "lab-v2-cycle-9c455bbc4ea38f8f7b39eb31bfd35baff66eec75a7de257e8a8d340ed8d074d6",
+  "telegram_sends": 0
+}

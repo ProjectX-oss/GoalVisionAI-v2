@@ -495,3 +495,18 @@ or automatic promotion. A later forward comparison needs its own declaration.
 ## Forward solver and COMBO selection preparation authorized 2026-10-03
 
 The user requested installation preparation for the improved calculation and COMBO selection improvements. Prepare a separate prospective constrained-model and paired COMBO shadow comparison at normal priority; preserve actual selection/champion and existing research. New declaration precedes prospective capture and excludes development fixtures. Operator activation is separate; no automatic deployment or promotion.
+
+## Active conservative COMBO experiment authorized 2026-10-04
+
+The user explicitly requested real Lab COMBO publications from the improved
+selection immediately for personal evaluation. This supersedes the preceding
+shadow-only COMBO selection restriction after operator activation; it does not
+promote a champion or change SINGLE/Official/LIVE. Use the conservative minimum
+of verified constrained Dixon–Coles, existing ensemble and current multiplicative
+de-vig scores for COMBO ranking. Treat the score as uncalibrated and the experiment
+as unproven. Preserve current quality, identity, chronology, today-only, 1.30 leg
+floor and correlation checks; SINGLE stays >=1.50 and no combined floor is added.
+Unavailable inputs skip COMBO rather than forcing picks or silently falling back.
+Keep separate immutable test statistics, old results and all settlement/reply
+behavior. Deployment remains an explicit operator action; ADMIN Codex and LIVE
+remain disabled. See docs/operations/PREMATCH_COMBO_CONSERVATIVE_20261004.md.
