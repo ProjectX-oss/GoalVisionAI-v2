@@ -1,0 +1,127 @@
+{
+  "admin": {
+    "exact_manifest": "PASS",
+    "first_natural_monitor_exit_status": 0,
+    "first_natural_monitor_start_riga": "2026-10-04T21:08:20+03:00",
+    "incident_recovery": "NOT_YET_CONFIRMED",
+    "incident_state": "NOT_READ_ROOT_OWNED",
+    "installed_at_riga": "2026-10-04T21:07:41.045970+03:00",
+    "manifest_files": 19,
+    "read_only_preflight": "ADMIN_MIXED_DELIVERY_PREFLIGHT={\"no_deployment\": true, \"root_guard_checked\": false, \"status\": \"READ_ONLY_PASS\", \"target\": \"/opt/goalvision-admin-alerts-releases/admin-mixed-delivery-ab327dd-20261004\"}",
+    "read_only_preflight_exit": 0,
+    "release": "/opt/goalvision-admin-alerts-releases/admin-mixed-delivery-ab327dd-20261004",
+    "source_commit": "ab327dddd08ef731571a981b4cb77a4db1cc05fe"
+  },
+  "agent_actions": {
+    "deployment": false,
+    "live_enablement": false,
+    "manual_cycle": false,
+    "manual_monitor_scan": false,
+    "official_changes": false,
+    "promotion": false,
+    "provider_calls": 0,
+    "rollback": false,
+    "telegram_sends": 0
+  },
+  "captured_at_riga": "2026-10-04T21:09:00.008494+03:00",
+  "captured_at_utc": "2026-10-04T18:09:00.008494+00:00",
+  "operator_deployment_reported": true,
+  "prematch": {
+    "exact_manifest_and_environment": "PASS",
+    "first_post_deployment_discovery": "PENDING",
+    "four_service_routes": "PASS",
+    "installed_at_riga": "2026-10-04T21:07:03.448836+03:00",
+    "manifest_files": 852,
+    "next_discovery_riga": "2026-10-04T21:30:00+03:00",
+    "release": "/opt/goalvision-prematch-combo-aggregate-cb6b7c6-20261004",
+    "source_commit": "cb6b7c605c70360031b84cc754b4bc9913536f54"
+  },
+  "protected": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "schema": "GOALVISION_COMBO_ADMIN_DEPLOYED_READBACK_V1",
+  "units": {
+    "goalvision-admin-alerts.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 20:08:21 CEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 20:08:20 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-alerts.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 20:08:20 CEST",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "",
+      "ExecMainStartTimestamp": "",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "LastTriggerUSec": "",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 20:06:07 CEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 20:05:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 20:05:01 CEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 20:15:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Sun 2026-10-04 20:02:39 CEST",
+      "ExecMainStartTimestamp": "Sun 2026-10-04 20:00:01 CEST",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sun 2026-10-04 20:00:01 CEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-04 20:30:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    }
+  }
+}

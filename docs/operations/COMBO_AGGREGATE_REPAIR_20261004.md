@@ -66,3 +66,26 @@ Source commit: cb6b7c605c70360031b84cc754b4bc9913536f54
 852 application files verified; only accuracy_combo.py differs from the installed private release. Isolated 549-module import/resource smoke passed with source-checkout fallback and sockets denied. All package hashes and read-only BASE route checks passed.
 
 Separate monitor repair prepared at source ab327dddd08ef731571a981b4cb77a4db1cc05fe. Apply COMBO first, then admin-mixed-delivery.py; the monitor installer verifies the pinned new PREMATCH manifest. No deployment performed.
+
+## Operator deployment verified — 2026-10-04 21:09 Riga
+
+The operator installed COMBO source cb6b7c605c70360031b84cc754b4bc9913536f54
+at approximately 21:07:03 Riga, then ADMIN source
+ab327dddd08ef731571a981b4cb77a4db1cc05fe at approximately 21:07:41.
+Read-only inspection verifies all 852 PREMATCH files and environment bytes,
+all four PREMATCH routes, all 19 monitor source files and manifest, and the
+monitor preflight's exact approved PREMATCH release/hash checks.
+
+The new monitor completed its natural 21:08:20 start with exit status zero.
+PREMATCH discovery's latest completed run predates deployment; its next timer
+start is 21:30 Riga. The first corrected natural COMBO selection/publication
+remains unobserved. The root-owned incident state was not directly accessible;
+successful monitor startup does not prove that incident 4f3832ebaf241e92b8d3ad51
+has recovered.
+
+Champion/protected model counts remain unchanged; ADMIN Codex is inactive/disabled
+and live publication count remains zero. No agent deployment, manual cycle,
+provider request, Telegram send, training, promotion, rollback or Official change.
+No tests rerun for this documentation-only deployment readback.
+
+Evidence: docs/evidence/combo_aggregate_20261004/deployed_readback.json.
