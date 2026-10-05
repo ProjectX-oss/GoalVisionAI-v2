@@ -1,0 +1,58 @@
+{
+  "admin_codex_enabled_by_task": false,
+  "application_changed_files": [
+    "app/lab_v2_shadow/runner.py"
+  ],
+  "base_commit": "cf6aaf441914000382bb11dfed50d20d583c4037",
+  "champion_changes": 0,
+  "date": "2026-10-05",
+  "deployments": 0,
+  "final_focused": {
+    "network_denied": true,
+    "passed": 338,
+    "paths": [
+      "tests/test_final_review_queue.py",
+      "tests/test_lab_v2_shadow.py",
+      "tests/test_lab_v2_global.py",
+      "tests/test_lab_v2_prematch.py",
+      "tests/test_prematch_odds_page_budget.py",
+      "tests/test_prematch_production_integration.py",
+      "tests/test_private_single_170.py",
+      "tests/test_final_review_queue_install.py",
+      "tests/test_combo_aggregate_order.py",
+      "tests/test_combo_market_parallel.py",
+      "tests/test_settlement_replies.py"
+    ],
+    "seconds": 47.97
+  },
+  "incident_replay_scope": "IN_MEMORY_QUEUE_ONLY_WITH_RETAINED_CYCLE_AND_TRACKING_SNAPSHOTS_NOT_FULL_PROVIDER_REPLAY",
+  "initial_matrix": {
+    "passed": 208,
+    "seconds": 39.81
+  },
+  "live_enabled_by_task": false,
+  "manual_production_cycles": 0,
+  "official_changes": 0,
+  "original_regression": {
+    "expected": true,
+    "failed": 5
+  },
+  "protected_policy": {
+    "batches": 2,
+    "combo_leg_min_odds": "1.30",
+    "lab_single_min_odds": "1.50",
+    "maximum_per_batch": 5,
+    "minimum_lead_exclusive": true,
+    "private_probability_max": "0.80",
+    "private_probability_min": "0.70",
+    "private_single_min_odds": "1.70",
+    "review_window_minutes": [
+      10,
+      75
+    ],
+    "same_day_riga": true
+  },
+  "provider_calls": 0,
+  "status": "OFFLINE_VERIFIED_OPERATOR_APPLY_PENDING",
+  "telegram_sends": 0
+}

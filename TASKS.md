@@ -1831,3 +1831,12 @@ Review after completing the current priority.
 - [x] Preserve selected legs/ranking and exact checks; freeze aggregate in stored leg order.
 - [x] Offline focused and operator regression checks.
 - [ ] Explicit operator apply and natural-cycle validation.
+
+## 2026-10-05 — Mandatory PREMATCH final-review queue
+
+- [x] Diagnose three missed pending fixtures from immutable natural-cycle evidence.
+- [x] Exclude disallowed kickoffs and same-cycle attempts before shortlist truncation.
+- [x] Pending/deadline/least-recent-review ordering; unchanged prediction/publication gates.
+- [x] 338 focused offline tests; original five-defect reproduction and incident queue replay.
+- [ ] Explicit operator apply and next natural-cycle queue validation.
+- Report: docs/operations/PREMATCH_FINAL_REVIEW_QUEUE_20261005.md.

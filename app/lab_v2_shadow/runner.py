@@ -252,15 +252,16 @@ class LabV2ShadowRunner:
             except Exception:
                 self.football_context_observer_failures += 1
         early_reviews, exact_evidence, priority_exact_evidence = {}, {}, {}
-        due = [f for f in fair_order(upcoming, self.repository, phase='review')
-               if MINIMUM_KICKOFF_LEAD < f['kickoff_utc'] - clock <= FINAL_REVIEW_WINDOW
-               and resource_priority(f) == first_resource_class]
-        for fixture in due[:FINAL_REVIEW_SHORTLIST_SIZE]:
+        due = _final_review_queue(upcoming, self.repository, now=clock, tracked_ids=tracked_ids)
+        early_shortlist = due[:FINAL_REVIEW_SHORTLIST_SIZE]
+        attempted_review_ids: list[int] = []
+        for fixture in early_shortlist:
             if self._remaining() < 2:
                 break
             context = dict(near_kickoff=True, fixture_refreshed=False, odds_refreshed=False,
                            lineup_status='NOT_REQUESTED', injuries_status='NOT_REQUESTED',
                            reviewed_at_utc=None, status='FINAL_REVIEW_REQUIRED')
+            attempted_review_ids.append(fixture['fixture_id'])
             early_reviews[fixture['fixture_id']] = await self._exact_review(
                 fixture, clock, exact_evidence, context, optional_reserve=2 * len(due))
         for fixture in upcoming:
@@ -348,28 +349,36 @@ class LabV2ShadowRunner:
             odds_fixtures, odds_evidence, histories, adapters, api_predictions,
             persisted_models, {}, {}, clock,
         )
-        shortlist_ids = _shortlist(preliminary, maximum=max(1, len(odds_fixtures)))
-        tracked_due = [item["fixture_id"] for item in ordered
-                       if item["fixture_id"] in tracked_ids
-                       and MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW]
-        all_due = [item['fixture_id'] for item in ordered
-                   if MINIMUM_KICKOFF_LEAD < item['kickoff_utc'] - clock <= FINAL_REVIEW_WINDOW]
-        review_pool = list(dict.fromkeys([*tracked_due, *all_due, *shortlist_ids]))
-        near_pool = [i for i in review_pool if MINIMUM_KICKOFF_LEAD < fixtures[i]["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW]
-        review_pool = near_pool or review_pool
-        shortlist_ids = [item["fixture_id"] for item in fair_order(
-            [fixtures[i] for i in review_pool], self.repository, phase="review")][:FINAL_REVIEW_SHORTLIST_SIZE]
+        # New preliminary candidates can join the second batch; completed/failed
+        # first-batch attempts cannot occupy a slot again in this cycle.
+        pending_ids = tracked_ids | {item["fixture_id"] for item in preliminary
+                                    if item["stage"] in {"EARLY_CANDIDATE", "FINAL_REVIEW_REQUIRED"}}
+        remaining_queue = _final_review_queue(
+            upcoming, self.repository, now=clock, tracked_ids=pending_ids,
+            attempted_ids=frozenset(attempted_review_ids))
+        shortlist_ids = [item["fixture_id"] for item in remaining_queue[:FINAL_REVIEW_SHORTLIST_SIZE]]
+        selected_review_ids = list(dict.fromkeys(
+            [item["fixture_id"] for item in early_shortlist] + shortlist_ids))
+        tracked_due = {item["fixture_id"] for item in due if item["fixture_id"] in tracked_ids}
+        # Preserve optional early-match context collection when no final review
+        # is due. It is not a mandatory-review slot or a publication approval.
+        context_ids = []
+        if not due:
+            early_pool = _shortlist(preliminary, maximum=max(1, len(odds_fixtures)))
+            context_ids = [item["fixture_id"] for item in fair_order(
+                [fixtures[i] for i in early_pool
+                 if fixtures[i]["kickoff_utc"] - clock > FINAL_REVIEW_WINDOW
+                 and publication_blocker(clock, [fixtures[i]["kickoff_utc"]]) is None],
+                self.repository, phase="review")][:FINAL_REVIEW_SHORTLIST_SIZE]
         availability: dict[int, dict[str, AvailabilityImpact]] = {}
         final_reviews: dict[int, dict[str, object]] = dict(early_reviews)
         cmi_enriched: set[int] = set()
-        for fixture_id in shortlist_ids:
+        for fixture_id in shortlist_ids + context_ids:
             fixture = fixtures[fixture_id]
-            if publication_blocker(clock,[fixture['kickoff_utc']]) is not None:
-                continue
             capability: LeagueCapability = fixture["capability"]
             near = timedelta(0) < fixture["kickoff_utc"] - clock <= FINAL_REVIEW_WINDOW
-            if fixture_id in early_reviews:
-                continue
+            if near and self._remaining() < 2:
+                break
             context: dict[str, object] = {
                 "near_kickoff": near,
                 "fixture_refreshed": False,
@@ -398,11 +407,20 @@ class LabV2ShadowRunner:
                 context["injuries_status"] = "NOT_SUPPORTED"
 
             if near and self._remaining() >= 2:
+                attempted_review_ids.append(fixture_id)
                 context = await self._exact_review(fixture, clock, odds_evidence, context,
                                                    exact_cache=priority_exact_evidence)
                 cmi_enriched.add(fixture_id)
             final_reviews[fixture_id] = context
 
+        pending_review_ids = [item["fixture_id"] for item in due
+                              if item["fixture_id"] not in attempted_review_ids]
+        for fixture_id in pending_review_ids:
+            final_reviews.setdefault(fixture_id, {
+                "status": "FINAL_REVIEW_REQUIRED", "fixture_refreshed": False,
+                "odds_refreshed": False, "reviewed_at_utc": None,
+                "reason": ("FINAL_REVIEW_BUDGET_UNAVAILABLE" if fixture_id in selected_review_ids
+                           else "FINAL_REVIEW_QUEUE_CAPACITY_PENDING")})
         evaluation_clock = max(clock, _metadata_time(getattr(self.client, 'response_metadata', lambda: {})(), clock))
         # Observation-only input boundary: after collection, before FINAL evaluation.
         context_receipt = None
@@ -528,13 +546,24 @@ class LabV2ShadowRunner:
             "candidate_markets": candidates,
             "tracked_final_reviews": lifecycle,
             "tracked_final_review_state_counts": _counts(item["state"] for item in lifecycle),
-            "tracked_final_review_shortlist": [value for value in shortlist_ids if value in tracked_due],
+            "tracked_final_review_shortlist": [value for value in selected_review_ids if value in tracked_due],
+            "final_review_queue": {
+                "version": "LAB_FINAL_REVIEW_QUEUE_V1",
+                "due_fixture_ids": [item["fixture_id"] for item in due],
+                "selected_fixture_ids": selected_review_ids,
+                "attempted_fixture_ids": attempted_review_ids,
+                "pending_fixture_ids": pending_review_ids,
+                "maximum_per_batch": FINAL_REVIEW_SHORTLIST_SIZE,
+                "maximum_batches": 2,
+            },
             "rejection_reasons": rejection_reasons,
             "fixture_coverage": fixture_coverage,
             "fixture_coverage_status_counts": _counts(item["status"] for item in fixture_coverage),
             "one_x_two_diagnostics": _one_x_two_diagnostics(candidates),
             "readiness_policy": READINESS_POLICY_VERSION,
-            "near_kickoff_cycle_result": "NO_FIXTURES_CURRENTLY_DUE" if not due else "EXACT_REVIEW_ATTEMPTED",
+            "near_kickoff_cycle_result": (
+                "NO_FIXTURES_CURRENTLY_DUE" if not due else
+                "EXACT_REVIEW_ATTEMPTED" if attempted_review_ids else "EXACT_REVIEW_BUDGET_PENDING"),
             "currently_due_fixtures": len(due),
             "lineup_sensitive_markets": sorted(LINEUP_SENSITIVE_MARKETS),
             "final_review_call_reserve": final_review_reserve,
@@ -1697,6 +1726,34 @@ def _current_review_timestamp(value: object, now: datetime, kickoff: datetime) -
     except ValueError:
         return False
     return now - FINAL_REVIEW_MAX_AGE <= reviewed <= now + FINAL_REVIEW_MAX_AGE and reviewed < kickoff
+
+
+def _final_review_queue(
+    fixtures: list[dict], repository: ShadowEvidenceRepository, *, now: datetime,
+    tracked_ids: set[int] | frozenset[int] = frozenset(),
+    attempted_ids: set[int] | frozenset[int] = frozenset(),
+) -> list[dict]:
+    """Schedule mandatory checks before deadlines without changing eligibility.
+
+    Pending candidates precede new discovery. Earlier kickoffs and least-recently
+    serviced ties precede competition priority. A failed attempt also consumes
+    its current-cycle slot; retries remain bounded inside the provider wrapper.
+    """
+    last: dict[int, datetime] = {}
+    for row in repository.all("enrichment_service"):
+        if row["phase"] == "review":
+            stamp = _utc(datetime.fromisoformat(row["at"]))
+            last[row["fixture_id"]] = max(last.get(row["fixture_id"], stamp), stamp)
+    eligible = {item["fixture_id"]: item for item in fixtures
+                if item["fixture_id"] not in attempted_ids
+                and item.get("prematch_eligible", True)
+                and MINIMUM_KICKOFF_LEAD < item["kickoff_utc"] - now <= FINAL_REVIEW_WINDOW
+                and publication_blocker(now, [item["kickoff_utc"]]) is None}
+    never = datetime.min.replace(tzinfo=timezone.utc)
+    return sorted(eligible.values(), key=lambda item: (
+        item["fixture_id"] not in tracked_ids, item["kickoff_utc"],
+        last.get(item["fixture_id"], never), resource_priority(item), item["fixture_id"],
+    ))
 
 
 def _final_review_call_reserve(fixtures: list[dict[str, object]], now: datetime) -> int:

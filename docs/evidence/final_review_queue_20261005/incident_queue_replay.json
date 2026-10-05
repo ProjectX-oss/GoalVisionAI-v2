@@ -1,0 +1,219 @@
+{
+  "provider_calls": 0,
+  "rows": [
+    {
+      "cycle": "2026-10-04T15:00:02.796147+00:00",
+      "eligible_due": 70,
+      "first_batch": [
+        1511609,
+        1571153,
+        1607697,
+        1608304,
+        1608689
+      ],
+      "original_recorded_shortlist": [
+        1528938,
+        1545610,
+        1641620,
+        1511609
+      ],
+      "second_batch_if_budget_remains": [
+        1615806,
+        1528938,
+        1545610,
+        1641620,
+        1554177
+      ],
+      "target_ranks": {},
+      "telegram_sends": 0,
+      "total_provider_calls": 0
+    },
+    {
+      "cycle": "2026-10-04T15:30:03.558998+00:00",
+      "eligible_due": 52,
+      "first_batch": [
+        1554177,
+        1554180,
+        1558957,
+        1572378,
+        1572379
+      ],
+      "original_recorded_shortlist": [
+        1528938,
+        1545610,
+        1641620,
+        1601256
+      ],
+      "second_batch_if_budget_remains": [
+        1572685,
+        1591626,
+        1601256,
+        1612742,
+        1614270
+      ],
+      "target_ranks": {
+        "1569956": 22
+      },
+      "telegram_sends": 0,
+      "total_provider_calls": 0
+    },
+    {
+      "cycle": "2026-10-04T16:00:03.212368+00:00",
+      "eligible_due": 26,
+      "first_batch": [
+        1613971,
+        1569951,
+        1569956,
+        1593142,
+        1613660
+      ],
+      "original_recorded_shortlist": [
+        1613971,
+        1593142,
+        1508569
+      ],
+      "second_batch_if_budget_remains": [
+        1570766,
+        1571147,
+        1508569,
+        1572986,
+        1573600
+      ],
+      "target_ranks": {
+        "1569956": 3
+      },
+      "telegram_sends": 0,
+      "total_provider_calls": 0
+    },
+    {
+      "cycle": "2026-10-04T16:30:02.818232+00:00",
+      "eligible_due": 21,
+      "first_batch": [
+        1570766,
+        1571147,
+        1572986,
+        1573600,
+        1601450
+      ],
+      "original_recorded_shortlist": [
+        1493160,
+        1573600
+      ],
+      "second_batch_if_budget_remains": [
+        1601451,
+        1601456,
+        1508569,
+        1561671,
+        1573607
+      ],
+      "target_ranks": {},
+      "telegram_sends": 0,
+      "total_provider_calls": 0
+    },
+    {
+      "cycle": "2026-10-04T18:00:02.762469+00:00",
+      "eligible_due": 25,
+      "first_batch": [
+        1498851,
+        1498862,
+        1608301,
+        1608686,
+        1609061
+      ],
+      "original_recorded_shortlist": [
+        1528943,
+        1528939,
+        1528940,
+        1528941,
+        1528942
+      ],
+      "second_batch_if_budget_remains": [
+        1609068,
+        1609069,
+        1643185,
+        1528939,
+        1528940
+      ],
+      "target_ranks": {
+        "1600716": 19
+      },
+      "telegram_sends": 0,
+      "total_provider_calls": 0
+    },
+    {
+      "cycle": "2026-10-04T18:30:02.788103+00:00",
+      "eligible_due": 22,
+      "first_batch": [
+        1528939,
+        1528940,
+        1528941,
+        1528942,
+        1528943
+      ],
+      "original_recorded_shortlist": [
+        1639984,
+        1528939,
+        1528940,
+        1528941,
+        1528942
+      ],
+      "second_batch_if_budget_remains": [
+        1549808,
+        1641621,
+        1569955,
+        1571155,
+        1600716
+      ],
+      "target_ranks": {
+        "1600716": 10,
+        "1635939": 17
+      },
+      "telegram_sends": 0,
+      "total_provider_calls": 0
+    },
+    {
+      "cycle": "2026-10-04T19:00:03.761750+00:00",
+      "eligible_due": 6,
+      "first_batch": [
+        1635939,
+        1635940,
+        1641864,
+        1498850,
+        1641863
+      ],
+      "original_recorded_shortlist": [
+        1639985,
+        1639986,
+        1493165,
+        1517360,
+        1610588
+      ],
+      "second_batch_if_budget_remains": [
+        1641865
+      ],
+      "target_ranks": {
+        "1635939": 1
+      },
+      "telegram_sends": 0,
+      "total_provider_calls": 0
+    },
+    {
+      "cycle": "2026-10-04T19:30:03.399250+00:00",
+      "eligible_due": 0,
+      "first_batch": [],
+      "original_recorded_shortlist": [
+        1639985,
+        1639986,
+        1493165,
+        1517360,
+        1610588
+      ],
+      "second_batch_if_budget_remains": [],
+      "target_ranks": {},
+      "telegram_sends": 0,
+      "total_provider_calls": 0
+    }
+  ],
+  "scope": "IN_MEMORY_QUEUE_ONLY_WITH_RETAINED_CYCLE_AND_TRACKING_SNAPSHOTS_NOT_FULL_PROVIDER_REPLAY",
+  "telegram_sends": 0
+}
