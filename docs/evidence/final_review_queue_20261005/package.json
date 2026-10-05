@@ -1,0 +1,39 @@
+{
+  "admin_codex_systemd_disabled": true,
+  "application_file_count": 852,
+  "application_manifest_fingerprint": "2d89832672e451823faf78196e355f21f04e2e6bc708f7eede974844e03dff4a",
+  "base_commit": "cf6aaf441914000382bb11dfed50d20d583c4037",
+  "base_release": "/opt/goalvision-prematch-combo-aggregate-cb6b7c6-20261004",
+  "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+  "deployed": false,
+  "live_publications": 0,
+  "metadata_sha256": "59188cff0d1c55a742eadba11a7153d33ca61ee695a24422af035a6cf191fd31",
+  "operator_apply_required": true,
+  "operator_wrapper": "/home/arvis/goalvision-operations/final-review-queue.py",
+  "overlay_sha256": {
+    "app/lab_v2_shadow/runner.py": "974bfb2795ce44e732dd46562b4f964ef36f13c81206352b4efd368900f6448b"
+  },
+  "package": "/home/arvis/goalvision-operations/final-review-queue-76d96c1-20261005",
+  "package_checksum_entries": 3,
+  "package_checksum_status": "PASS",
+  "provider_calls": 0,
+  "read_only_preflight": [
+    "FINAL_REVIEW_QUEUE_PLAN_VALIDATED=/opt/goalvision-prematch-final-review-queue-76d96c1-20261005",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "repeated_isolated_assembly_equal": true,
+  "runtime_import_smoke": {
+    "modules": 549,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "provider_calls": 0,
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_FINAL_REVIEW_IMPORT_PASS",
+    "telegram_sends": 0
+  },
+  "sha256sums_sha256": "aac5236fa5bd4ef26e7eefaf1b0bb4cfb2a9688fecc7ae65fe3278d8118785ae",
+  "source_commit": "76d96c1a374a35a2d8d7cd059d0363ac095be3eb",
+  "target": "/opt/goalvision-prematch-final-review-queue-76d96c1-20261005",
+  "telegram_sends": 0
+}

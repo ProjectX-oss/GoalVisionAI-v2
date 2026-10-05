@@ -108,3 +108,19 @@ Work branch: fix/final-review-queue-20261005
 
 Package and exact source commit: docs/evidence/final_review_queue_20261005/package.json
 Focused verification: docs/evidence/final_review_queue_20261005/verification.json
+
+## Prepared package readback
+
+Source commit: 76d96c1a374a35a2d8d7cd059d0363ac095be3eb
+Package: /home/arvis/goalvision-operations/final-review-queue-76d96c1-20261005
+Target: /opt/goalvision-prematch-final-review-queue-76d96c1-20261005
+
+Read-only operator preflight: PASS, current_mode=BASE.
+Checksums: 3/3 PASS. Complete application manifest: 852 .py/.json files.
+Isolated release import/queue smoke: 549 modules PASS; independently assembled
+second copy produced the identical manifest and smoke evidence.
+Required reviewed_competitions.json and frozen calendar plan are included.
+
+Working release remains the COMBO aggregate baseline; deployment is pending.
+ADMIN Codex systemd timer is inactive/disabled; worker inactive with MainPID=0.
+Bootstrap champion generation remains unchanged; live publication count is zero.
