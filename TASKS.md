@@ -1868,6 +1868,7 @@ Review after completing the current priority.
 - [x] Implement diagnostic-only quality disagreement, exact model replay/freshness/final review, disjoint exposure/claims, bounded full-pool ranking and separate results/statistics.
 - [x] Preserve existing SINGLE/DC policies and legacy triples; add two-leg complete/early-loss settlement and text/photo Reply compatibility.
 - [x] 510 offline tests passed; source syntax and stored current-input replay passed. No predictive-quality or future-pick-volume claim.
-- [ ] Exact-base pinned operator package smoke/preflight and manual operator deployment; no automatic deployment.
+- [x] Exact-base pinned operator package: 856 files, 555-module isolated smoke and read-only preflight PASS.
+- [ ] Manual operator deployment; no automatic deployment.
 - [ ] Natural-cycle Double publication/result verification after operator activation.
 - Runbook: docs/operations/COMBO_DOUBLE_170_20261006.md.
