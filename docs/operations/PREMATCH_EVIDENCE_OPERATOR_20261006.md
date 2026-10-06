@@ -7,7 +7,12 @@ Gatavās paketes source commit: `574f55fb50ae5bae1b9236978cf7e98b26d982d3`.
 Pakete: `/home/arvis/goalvision-operations/prematch-evidence-574f55f-20261006`.
 Mērķis pēc operatora apply: `/opt/goalvision-prematch-evidence-574f55f-20261006`.
 Gatavās paketes 7/7 checksums PASS; read-only preflight PASS, `current_mode=BASE`.
-Mērķis nav instalēts; esošās production routes un 852 application hashi pārbaudīti.
+Operators instalēja 2026-10-06 plkst. 13:48 Riga. Neatkarīgais readback 13:49:
+`current_mode=ENABLED`, 854/854 application hashi, metadata, četru servisu routes
+un active/enabled timeri PASS. Champion un aizsargātie governance skaiti nemainīti.
+Evidence: `docs/evidence/prematch_evidence_package_20261006/operator_deployment_readback.json`.
+Pirmais jaunā release dabiskais settlement paredzēts 13:55, discovery 14:00,
+observer 14:08 Riga; šo nākotnes ciklu darbība vēl nav apstiprināta.
 
 ## Operatora komandas
 

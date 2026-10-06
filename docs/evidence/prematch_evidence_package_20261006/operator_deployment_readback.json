@@ -1,0 +1,99 @@
+{
+  "admin_codex_disabled": true,
+  "agent_deployments": 0,
+  "agent_manual_cycles": 0,
+  "agent_provider_calls": 0,
+  "agent_telegram_sends": 0,
+  "all_four_timers_active_enabled": true,
+  "application_files": 854,
+  "application_hashes_match": true,
+  "as_of": "2026-10-06T10:51:13.704511+00:00",
+  "current_mode": "ENABLED",
+  "important_limitation": "Reported successful service exits precede this deployment; they are not proof of a new-release natural cycle.",
+  "installed_metadata_matches_prepared_package": true,
+  "last_runs_europe_riga": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ExecMainExitTimestamp": "Tue 2026-10-06 13:38:58 EEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 13:38:01 EEST"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ExecMainExitTimestamp": "Tue 2026-10-06 05:12:13 EEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 05:12:01 EEST"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ExecMainExitTimestamp": "Tue 2026-10-06 13:46:05 EEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 13:45:01 EEST"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ExecMainExitTimestamp": "Tue 2026-10-06 13:34:45 EEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 13:30:01 EEST"
+    }
+  },
+  "live_status": "DISABLED",
+  "natural_new_release_execution_status": "PENDING_FIRST_SCHEDULED_RUN",
+  "next_runs_europe_riga": {
+    "goalvision-adaptive-learning-observer.timer": "Tue 2026-10-06 14:08:00 EEST",
+    "goalvision-adaptive-learning.timer": "Wed 2026-10-07 05:12:00 EEST",
+    "goalvision-lab-combo-settle.timer": "Tue 2026-10-06 13:55:00 EEST",
+    "goalvision-lab-v2-discover.timer": "Tue 2026-10-06 14:00:00 EEST"
+  },
+  "official_changes": 0,
+  "operator_deployment_confirmed": true,
+  "production_release": "/opt/goalvision-prematch-evidence-574f55f-20261006",
+  "protected_counts": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_counts_match_prepared": true,
+  "protected_routes_and_commands_unchanged": true,
+  "read_only_preflight": [
+    "PREMATCH_EVIDENCE_PLAN_VALIDATED=/opt/goalvision-prematch-evidence-574f55f-20261006",
+    "current_mode=ENABLED; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "services": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-evidence-574f55f-20261006/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Tue 2026-10-06 12:38:58 CEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 12:38:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-evidence-574f55f-20261006/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Tue 2026-10-06 04:12:13 CEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 04:12:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-evidence-574f55f-20261006/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Tue 2026-10-06 12:46:05 CEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 12:45:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-evidence-574f55f-20261006/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Tue 2026-10-06 12:34:45 CEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 12:30:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success"
+    }
+  },
+  "source_commit": "574f55fb50ae5bae1b9236978cf7e98b26d982d3",
+  "status": "OPERATOR_DEPLOYMENT_VERIFIED"
+}

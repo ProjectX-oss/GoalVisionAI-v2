@@ -8,7 +8,8 @@
 - [x] Extend reviewed six-method paired forward research and sparse-sample CI reporting; no DC algorithm or publication change.
 - [x] Audit quota, database, settlements, delivery uncertainty and promotion eligibility; retain unresolved claim for operator reconciliation.
 - [x] Prepare the exact-base operator package for the five reviewed runtime/resource files; 46 installer tests and isolated 553-module smoke pass.
-- [ ] Operator applies the pinned prematch-evidence wrapper, then verifies ENABLED and natural output. No agent deployment.
+- [x] Operator deployed at 13:48 Riga; independent 854-file/hash/metadata/four-route/timer readback PASS, champion and protected counts unchanged.
+- [ ] First natural new-release runs: settlement 13:55, discovery 14:00, observer 14:08 Riga. Installation readback does not claim these future runs passed.
 - Operator runbook: docs/operations/PREMATCH_EVIDENCE_OPERATOR_20261006.md.
 - Methods: docs/operations/PREMATCH_EVIDENCE_METHODS_20261006.md.
 - Consolidated report: docs/operations/PREMATCH_EVIDENCE_HANDOFF_20261006.md.
