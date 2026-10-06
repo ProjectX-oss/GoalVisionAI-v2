@@ -1869,6 +1869,6 @@ Review after completing the current priority.
 - [x] Preserve existing SINGLE/DC policies and legacy triples; add two-leg complete/early-loss settlement and text/photo Reply compatibility.
 - [x] 510 offline tests passed; source syntax and stored current-input replay passed. No predictive-quality or future-pick-volume claim.
 - [x] Exact-base pinned operator package: 856 files, 555-module isolated smoke and read-only preflight PASS.
-- [ ] Manual operator deployment; no automatic deployment.
+- [x] Manual operator deployment confirmed by exact hashes/routes/flags readback; next natural discovery 2026-10-07 09:00 Riga. No agent deployment.
 - [ ] Natural-cycle Double publication/result verification after operator activation.
 - Runbook: docs/operations/COMBO_DOUBLE_170_20261006.md.

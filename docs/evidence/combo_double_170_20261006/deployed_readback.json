@@ -1,0 +1,174 @@
+{
+  "admin_codex_units": {
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "MainPID": "0",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    }
+  },
+  "agent_activity": {
+    "football_provider_calls": 0,
+    "manual_cycles": 0,
+    "runtime_database_writes": 0,
+    "telegram_api_calls": 0,
+    "telegram_sends": 0
+  },
+  "agent_production_deployments": 0,
+  "branch": "work/combo-double-170-20261006",
+  "checks": {
+    "admin_codex_systemd_disabled": "PASS",
+    "all_13_package_checksums_and_wrapper_pin_match": true,
+    "application_files": 856,
+    "base_application_files": 854,
+    "configured_commands_unchanged": "PASS",
+    "exact_application_hashes": "PASS",
+    "exact_release_environment": "PASS",
+    "four_prematch_routes": "PASS",
+    "installed_metadata_matches_package": true,
+    "only_declared_application_changes": [
+      "app/lab_combo/bot_routing.py",
+      "app/lab_combo/cardinality.py",
+      "app/lab_combo/odds_policy.py",
+      "app/lab_combo/presentation.py",
+      "app/lab_combo/repository.py",
+      "app/lab_combo/service.py",
+      "app/lab_combo/settlement.py",
+      "app/lab_v2_shadow/accuracy_combo.py",
+      "app/lab_v2_shadow/combo_double.py",
+      "app/lab_v2_shadow/combo_market.py",
+      "app/lab_v2_shadow/publication.py"
+    ],
+    "protected_admin_weekly_research_routes_unchanged": "PASS",
+    "root_private_guard": "Operator apply reported PASS; not re-read as normal user"
+  },
+  "current_mode": "ENABLED",
+  "flags": {
+    "GOALVISION_COMBO_BOT_ROUTING": "1",
+    "GOALVISION_COMBO_CONSERVATIVE_AGREEMENT": "1",
+    "GOALVISION_COMBO_DOUBLE_170": "1",
+    "GOALVISION_COMBO_MARKET_PARALLEL": "0",
+    "GOALVISION_LAB_ACCURACY_COMBOS": "1",
+    "GOALVISION_LAB_CALIBRATION_READINESS": "1",
+    "GOALVISION_LAB_COMBO_LEG_MIN_ODDS_130": "1",
+    "GOALVISION_LAB_DEVIG_RESEARCH": "1",
+    "GOALVISION_LAB_EARLY_COMBO_LOSS": "1",
+    "GOALVISION_LAB_SETTLEMENT_REPLIES": "1",
+    "GOALVISION_LAB_SINGLE_MIN_ODDS_130": "1",
+    "GOALVISION_LAB_SINGLE_MIN_ODDS_150": "1",
+    "GOALVISION_LAB_TODAY_ONLY": "1",
+    "GOALVISION_PRIVATE_SINGLE_170": "1"
+  },
+  "implementation_commit": "6489f92cf1b8da4ca894834fd2247c3dce94afef",
+  "natural_double_publication_verification": "PENDING; no post-activation discovery has run at observation time",
+  "natural_settlement_service": "Last start 2026-10-06 22:45:01 Riga, exit success after release metadata creation; no manual start",
+  "next_natural_discovery_riga": "2026-10-07T09:00:00+03:00",
+  "observed_at_utc": "2026-10-06T19:48:55.418835+00:00",
+  "operator_reported_deployed": true,
+  "original_repository_changed_by_agent": false,
+  "original_repository_preexisting_dirty_paths": 220,
+  "pre_readback_head": "92c6b6738925e275a018e08d5507637cd6ba9261",
+  "predeployment_verification": {
+    "isolated_import_modules": 555,
+    "offline_tests_passed": 510,
+    "reason": "Readback only; no implementation changes",
+    "rerun_after_deployment": false,
+    "tests_seconds": 21.6
+  },
+  "preserved": {
+    "champion": "No mutation; no new champion-state audit in this readback",
+    "historical_coupons": "Retained; no ledger writes by this readback",
+    "live": "DISABLED baseline retained; no LIVE configuration/source changes",
+    "official": "Untouched; no Official commands or source/configuration changes"
+  },
+  "read_only_wrapper_exit": 0,
+  "release": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006",
+  "release_metadata_file_mtime_utc": "2026-10-06T19:42:46.151119+00:00",
+  "schema": "COMBO_DOUBLE_DEPLOYED_READBACK_V1",
+  "selection_contract": {
+    "dc_triples_retained": true,
+    "double_legs": 2,
+    "double_statistics": "COMBO_DOUBLE_20261006_V1",
+    "max_double_per_natural_cycle": 1,
+    "new_market_publications": false,
+    "per_leg_min_odds": "1.70",
+    "per_leg_model_probability": [
+      "0.70",
+      "0.80"
+    ]
+  },
+  "services": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Tue 2026-10-06 22:39:05 EEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 22:38:01 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Tue 2026-10-06 05:12:13 EEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 05:12:01 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Tue 2026-10-06 22:45:30 EEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 22:45:01 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/release.env (ignore_errors=no)",
+      "ExecMainExitTimestamp": "Tue 2026-10-06 22:33:08 EEST",
+      "ExecMainStartTimestamp": "Tue 2026-10-06 22:30:01 EEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead"
+    }
+  },
+  "status": "PASS",
+  "timers": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Tue 2026-10-06 22:38:01 EEST",
+      "NextElapseUSecRealtime": "Tue 2026-10-06 23:08:00 EEST",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Tue 2026-10-06 05:12:01 EEST",
+      "NextElapseUSecRealtime": "Wed 2026-10-07 05:12:00 EEST",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Tue 2026-10-06 22:45:01 EEST",
+      "NextElapseUSecRealtime": "Tue 2026-10-06 22:55:00 EEST",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Tue 2026-10-06 22:30:01 EEST",
+      "NextElapseUSecRealtime": "Wed 2026-10-07 09:00:00 EEST",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    }
+  }
+}
