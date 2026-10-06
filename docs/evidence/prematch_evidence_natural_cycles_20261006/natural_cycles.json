@@ -1,0 +1,1283 @@
+{
+  "ADMIN_CODEX": "DISABLED",
+  "LIVE": "DISABLED",
+  "Official": "UNCHANGED",
+  "agent_provider_calls": 0,
+  "agent_telegram_sends": 0,
+  "as_of": "2026-10-06T12:39:23.911596+00:00",
+  "audit_query_note": "One unbounded read-only kind aggregation was stopped by terminating only the agent-owned analysis REPL. All subsequent DB reads use query_only plus time budgets and indexed/bounded lookups; no production service was stopped.",
+  "calendar_counts": {
+    "CALIBRATION_FIT": 164,
+    "EXCLUDED": 22,
+    "PURGED": 759,
+    "SEALED_HOLDOUT": 0,
+    "TRAIN": 1804,
+    "VALIDATION_EVALUATION": 0
+  },
+  "calendar_independent_counts": {
+    "CALIBRATION_FIT": 164,
+    "EXCLUDED": 20,
+    "PURGED": 297,
+    "SEALED_HOLDOUT": 0,
+    "TRAIN": 560,
+    "VALIDATION_EVALUATION": 0
+  },
+  "champion": {
+    "artifact_id": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+    "created_at": "2026-09-18T19:53:42.075830+00:00",
+    "evidence": {
+      "artifact_fingerprint": "694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d"
+    },
+    "generation_id": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "previous_generation": null,
+    "reason": "BOOTSTRAP",
+    "scope": "LAB_ONLY",
+    "stream": "PREMATCH"
+  },
+  "code_changes": false,
+  "data_quality_last_cycle": {
+    "at": "2026-10-06T12:30:03.041343+00:00",
+    "complete_date_sweeps": false,
+    "date_odds_calls": 16,
+    "discovered": 208,
+    "exact_odds_calls": 23,
+    "missing": 0,
+    "missing_rate": 0.0,
+    "odds_scope_fixtures": 129,
+    "provider_calls": 95,
+    "provider_quote_age_buckets": {
+      "[12600,14400)": 3,
+      "[14400,inf)": 50,
+      "[1800,3600)": 43,
+      "[900,1800)": 11
+    },
+    "reasons": {
+      "CURRENT_ODDS_AVAILABLE": 47,
+      "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": 6,
+      "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": 1,
+      "ODDS_PAGINATION_CHANGED_DURING_SWEEP": 22,
+      "ODDS_STALE": 53
+    },
+    "stale": 53,
+    "stale_rate": 0.4108527131782946
+  },
+  "discovery_cycles": [
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-06T11:03:09.416659+00:00",
+      "evidence_at": "2026-10-06T11:00:03.481849+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 2,
+          "percent_of_discovered": 0.962
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 60,
+          "percent_of_discovered": 28.846
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 4,
+          "percent_of_discovered": 1.923
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 33,
+          "percent_of_discovered": 15.865
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 12,
+          "percent_of_discovered": 5.769
+        },
+        "ODDS_STALE": {
+          "fixtures": 39,
+          "percent_of_discovered": 18.75
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 58,
+          "percent_of_discovered": 27.885
+        }
+      },
+      "fixtures": 208,
+      "fixtures_considered": 150,
+      "fixtures_evaluated": 60,
+      "lanes": {
+        "EXPERIMENTAL": 73,
+        "REJECTED": 479,
+        "TRACKING": 82
+      },
+      "markets": 634,
+      "odds_fixtures": 60,
+      "provider_calls": 89,
+      "provider_rows": 208,
+      "published": 4,
+      "quota": {
+        "additional_calls_available": 299,
+        "already_consumed": 1,
+        "base_cycle_budget": 309,
+        "daily_remaining_observed": 5675,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 300,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 18,
+        "requested_maximum": 400,
+        "reserve_headroom": 5575,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 5587,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 0,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 0,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 479,
+        "PROVIDER_ZERO_PROBABILITY": 7
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-06T11:00:03.481849+00:00",
+      "tracking": 157
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-06T11:33:53.210746+00:00",
+      "evidence_at": "2026-10-06T11:30:03.069626+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 3,
+          "percent_of_discovered": 1.442
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 38,
+          "percent_of_discovered": 18.269
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 5,
+          "percent_of_discovered": 2.404
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 24,
+          "percent_of_discovered": 11.538
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 12,
+          "percent_of_discovered": 5.769
+        },
+        "ODDS_STALE": {
+          "fixtures": 57,
+          "percent_of_discovered": 27.404
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 69,
+          "percent_of_discovered": 33.173
+        }
+      },
+      "fixtures": 208,
+      "fixtures_considered": 139,
+      "fixtures_evaluated": 41,
+      "lanes": {
+        "EXPERIMENTAL": 52,
+        "REJECTED": 302,
+        "TRACKING": 69
+      },
+      "markets": 423,
+      "odds_fixtures": 41,
+      "provider_calls": 68,
+      "provider_rows": 208,
+      "published": 4,
+      "quota": {
+        "additional_calls_available": 299,
+        "already_consumed": 1,
+        "base_cycle_budget": 320,
+        "daily_remaining_observed": 5556,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 300,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 17,
+        "requested_maximum": 400,
+        "reserve_headroom": 5456,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 5531,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 3,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 3,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 302,
+        "PROVIDER_ZERO_PROBABILITY": 2
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-06T11:30:03.069626+00:00",
+      "tracking": 143
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-06T12:03:53.556206+00:00",
+      "evidence_at": "2026-10-06T12:00:02.692937+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.481
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 12,
+          "percent_of_discovered": 5.769
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 5,
+          "percent_of_discovered": 2.404
+        },
+        "ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD": {
+          "fixtures": 19,
+          "percent_of_discovered": 9.135
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.481
+        },
+        "ODDS_STALE": {
+          "fixtures": 91,
+          "percent_of_discovered": 43.75
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 79,
+          "percent_of_discovered": 37.981
+        }
+      },
+      "fixtures": 208,
+      "fixtures_considered": 129,
+      "fixtures_evaluated": 13,
+      "lanes": {
+        "EXPERIMENTAL": 9,
+        "REJECTED": 66,
+        "TRACKING": 54
+      },
+      "markets": 129,
+      "odds_fixtures": 13,
+      "provider_calls": 172,
+      "provider_rows": 208,
+      "published": 1,
+      "quota": {
+        "additional_calls_available": 299,
+        "already_consumed": 1,
+        "base_cycle_budget": 334,
+        "daily_remaining_observed": 5456,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 300,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 16,
+        "requested_maximum": 400,
+        "reserve_headroom": 5356,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 5360,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 2,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 2,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 66,
+        "PROVIDER_ZERO_PROBABILITY": 1
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-06T12:00:02.692937+00:00",
+      "tracking": 135
+    },
+    {
+      "LIVE": "DISABLED",
+      "completed_at": "2026-10-06T12:33:49.916093+00:00",
+      "evidence_at": "2026-10-06T12:30:03.041343+00:00",
+      "failure": null,
+      "fixture_blockers": {
+        "CURRENT_ODDS_AVAILABLE": {
+          "fixtures": 12,
+          "percent_of_discovered": 5.769
+        },
+        "FINAL_REVIEW_COMPLETE": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.481
+        },
+        "NEEDS_NEAR_KICKOFF_REFRESH": {
+          "fixtures": 31,
+          "percent_of_discovered": 14.904
+        },
+        "NO_CURRENT_ODDS": {
+          "fixtures": 5,
+          "percent_of_discovered": 2.404
+        },
+        "ODDS_BOOKMAKER_FILTER_REMOVED_ALL": {
+          "fixtures": 4,
+          "percent_of_discovered": 1.923
+        },
+        "ODDS_INSUFFICIENT_COMPARABLE_BOOKMAKERS": {
+          "fixtures": 1,
+          "percent_of_discovered": 0.481
+        },
+        "ODDS_PAGINATION_CHANGED_DURING_SWEEP": {
+          "fixtures": 20,
+          "percent_of_discovered": 9.615
+        },
+        "ODDS_STALE": {
+          "fixtures": 55,
+          "percent_of_discovered": 26.442
+        },
+        "PREMATCH_PUBLICATION_CLOSED": {
+          "fixtures": 79,
+          "percent_of_discovered": 37.981
+        }
+      },
+      "fixtures": 208,
+      "fixtures_considered": 129,
+      "fixtures_evaluated": 32,
+      "lanes": {
+        "EXPERIMENTAL": 61,
+        "REJECTED": 223,
+        "TRACKING": 38
+      },
+      "markets": 322,
+      "odds_fixtures": 32,
+      "provider_calls": 95,
+      "provider_rows": 208,
+      "published": 4,
+      "quota": {
+        "additional_calls_available": 299,
+        "already_consumed": 1,
+        "base_cycle_budget": 343,
+        "daily_remaining_observed": 5254,
+        "daily_safety_reserve": 100,
+        "effective_cycle_maximum": 300,
+        "minute_remaining_observed": 299,
+        "remaining_discovery_cycles": 15,
+        "requested_maximum": 400,
+        "reserve_headroom": 5154,
+        "status": "REDUCED_TO_PRESERVE_QUOTA"
+      },
+      "quota_remaining": 5207,
+      "readiness_blockers": {},
+      "readiness_lanes": {
+        "EXPERIMENTAL_READY": 1,
+        "STANDARD_READY": 0,
+        "STRONG_READY": 0
+      },
+      "ready": 1,
+      "rejections": {
+        "NON_POSITIVE_VALUE": 223
+      },
+      "result": "DEGRADED",
+      "started_at": "2026-10-06T12:30:03.041343+00:00",
+      "tracking": 135
+    }
+  ],
+  "governance": {
+    "activation_events": 1,
+    "candidate_comparisons": 0,
+    "holdout_results": 0,
+    "learning_cycles": 3,
+    "model_artifacts": 59,
+    "promotion_gates": 0,
+    "rollback_events": 0,
+    "shadow_predictions": 0,
+    "shadow_runs": 0,
+    "shadow_settlements": 0,
+    "training_runs": 133,
+    "validation_results": 0
+  },
+  "incomplete_sweep_limitation": "Zero observed missing rows is not proof of complete provider coverage; pagination-changed fixtures remain unknown/rejected.",
+  "installed_release": "/opt/goalvision-prematch-evidence-574f55f-20261006",
+  "journal_audit": {
+    "goalvision-adaptive-learning-observer.service": {
+      "cap_reached": false,
+      "entries": 4,
+      "matches": {
+        "DISCOVERY_ACTIVE": 0,
+        "Failed with result": 0,
+        "FileNotFoundError": 0,
+        "PROTECTED_QUOTA_RESERVE": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "database is locked": 0,
+        "database table is locked": 0
+      },
+      "query_exit": 0,
+      "success_finishes": 0
+    },
+    "goalvision-dixon-coles-forward.service": {
+      "cap_reached": false,
+      "entries": 3,
+      "matches": {
+        "DISCOVERY_ACTIVE": 0,
+        "Failed with result": 0,
+        "FileNotFoundError": 0,
+        "PROTECTED_QUOTA_RESERVE": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "database is locked": 0,
+        "database table is locked": 0
+      },
+      "query_exit": 0,
+      "success_finishes": 0
+    },
+    "goalvision-lab-combo-settle.service": {
+      "cap_reached": false,
+      "entries": 143,
+      "matches": {
+        "DISCOVERY_ACTIVE": 0,
+        "Failed with result": 0,
+        "FileNotFoundError": 0,
+        "PROTECTED_QUOTA_RESERVE": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "database is locked": 0,
+        "database table is locked": 0
+      },
+      "query_exit": 0,
+      "success_finishes": 0
+    },
+    "goalvision-lab-v2-discover.service": {
+      "cap_reached": false,
+      "entries": 448,
+      "matches": {
+        "DISCOVERY_ACTIVE": 0,
+        "Failed with result": 0,
+        "FileNotFoundError": 0,
+        "PROTECTED_QUOTA_RESERVE": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "database is locked": 0,
+        "database table is locked": 0
+      },
+      "query_exit": 0,
+      "success_finishes": 0
+    }
+  },
+  "learning": {
+    "eligibility": {
+      "automatic_eligible": false,
+      "cycle_due": true,
+      "days_covered": 18,
+      "new_resolved": 1223,
+      "next_threshold": {
+        "calendar_days": 90,
+        "resolved": 500
+      },
+      "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+      "policy_version": "LAB_ADAPTIVE_V2",
+      "reason": "RESEARCH_ELIGIBLE",
+      "research_due": true,
+      "resolved": 2737,
+      "stage": "CHALLENGER_RESEARCH",
+      "status": "RESEARCH_ELIGIBLE",
+      "stream": "PREMATCH"
+    },
+    "independent_resolved_fixtures": 1031,
+    "resolved_eligible_observations": 2737,
+    "source_product_counts": {
+      "COMBO_LEG": 12,
+      "SHADOW": 2373,
+      "SINGLE": 364
+    },
+    "total_observations": 2749
+  },
+  "manual_cycles": 0,
+  "new_agent_deployment": false,
+  "performance_as_of": "2026-10-06T12:38:01.687434+00:00",
+  "performance_totals": {
+    "COMBO": {
+      "LOST": 97,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 61,
+      "average_combined_odds": "9.986811647727272727272727273",
+      "average_odds": "9.986811647727272727272727273",
+      "brier": null,
+      "calibration_bias_predicted_minus_observed": null,
+      "ece": null,
+      "flat_roi": -0.04909467088607595,
+      "flat_unit_pnl": "-7.756958",
+      "hit_rate": 0.3860759493670886,
+      "log_loss": null,
+      "mce": null,
+      "median_odds": "2.571080",
+      "missing_pnl_count": 0,
+      "missing_probability_count": 19,
+      "odds_sample": 176,
+      "partial_void_count": 0,
+      "pending": 18,
+      "pending_settlements": 18,
+      "predictive_calibration_observations": 0,
+      "probability_observations": 0,
+      "reliability_bins": [],
+      "roi": "-0.04909467088607594936708860759",
+      "total_published": 176,
+      "total_settled": 158
+    },
+    "SINGLE": {
+      "LOST": 170,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 197,
+      "average_odds": "2.313827160493827160493827160",
+      "brier": 0.2238071026148348,
+      "calibration_bias_predicted_minus_observed": 0.06943161587755045,
+      "ece": 0.07751213492130198,
+      "flat_roi": -0.1008991825613079,
+      "flat_unit_pnl": "-37.03",
+      "hit_rate": 0.5367847411444142,
+      "log_loss": 0.638414926523116,
+      "mce": 0.26104242930882154,
+      "median_odds": "1.54",
+      "missing_pnl_count": 0,
+      "missing_probability_count": 3,
+      "odds_sample": 405,
+      "partial_void_count": 0,
+      "pending": 38,
+      "pending_settlements": 38,
+      "probability_observations": 364,
+      "reliability_bins": [
+        {
+          "error": 0.13192579593144407,
+          "lower": 0.1,
+          "n": 3,
+          "observed": 0,
+          "predicted": 0.13192579593144407,
+          "upper": 0.2
+        },
+        {
+          "error": 0.26104242930882154,
+          "lower": 0.2,
+          "n": 5,
+          "observed": 0,
+          "predicted": 0.26104242930882154,
+          "upper": 0.3
+        },
+        {
+          "error": 0.007908074051532321,
+          "lower": 0.3,
+          "n": 30,
+          "observed": 0.3333333333333333,
+          "predicted": 0.34124140738486564,
+          "upper": 0.4
+        },
+        {
+          "error": 0.238474806310947,
+          "lower": 0.4,
+          "n": 28,
+          "observed": 0.21428571428571427,
+          "predicted": 0.4527605205966613,
+          "upper": 0.5
+        },
+        {
+          "error": 0.10553194400186944,
+          "lower": 0.5,
+          "n": 66,
+          "observed": 0.45454545454545453,
+          "predicted": 0.560077398547324,
+          "upper": 0.6
+        },
+        {
+          "error": 0.057189757275000974,
+          "lower": 0.6,
+          "n": 144,
+          "observed": 0.5902777777777778,
+          "predicted": 0.6474675350527788,
+          "upper": 0.7
+        },
+        {
+          "error": -0.02087684901733855,
+          "lower": 0.7,
+          "n": 60,
+          "observed": 0.75,
+          "predicted": 0.7291231509826614,
+          "upper": 0.8
+        },
+        {
+          "error": 0.11711211844306779,
+          "lower": 0.8,
+          "n": 25,
+          "observed": 0.72,
+          "predicted": 0.8371121184430678,
+          "upper": 0.9
+        },
+        {
+          "error": -0.07268117497415383,
+          "lower": 0.9,
+          "n": 3,
+          "observed": 1,
+          "predicted": 0.9273188250258462,
+          "upper": 1.0
+        }
+      ],
+      "roi": "-0.1008991825613079019073569482",
+      "total_published": 405,
+      "total_settled": 367
+    }
+  },
+  "publication_cycles": [
+    {
+      "at": "2026-10-06T12:33:49.907212+00:00",
+      "combo_blockers": {
+        "LAB_COMBO_LEG_ODDS_BELOW_1_30": 19,
+        "LAB_PUBLICATION_POLICY_REJECTED": 1
+      },
+      "combos_sent": 1,
+      "delivery_counts": {
+        "receipt_persisted": 4,
+        "reconciliation_required": 0,
+        "stage:RECEIPT_PERSISTED": 4,
+        "status:SENT": 4,
+        "transport_attempted": 4
+      },
+      "delivery_status": "COMPLETED",
+      "failure": null,
+      "private_singles_sent": 0,
+      "single_blockers": {
+        "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 6,
+        "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 226,
+        "LAB_SINGLE_ODDS_BELOW_1_50": 29
+      },
+      "singles_sent": 3
+    },
+    {
+      "at": "2026-10-06T12:03:53.548647+00:00",
+      "combo_blockers": {
+        "FIXTURE_AFTER_LAB_CUTOFF": 22,
+        "LAB_COMBO_LEG_ODDS_BELOW_1_30": 5,
+        "LAB_PUBLICATION_POLICY_REJECTED": 1
+      },
+      "combos_sent": 0,
+      "delivery_counts": {
+        "receipt_persisted": 1,
+        "reconciliation_required": 0,
+        "stage:RECEIPT_PERSISTED": 1,
+        "status:SENT": 1,
+        "transport_attempted": 1
+      },
+      "delivery_status": "COMPLETED",
+      "failure": null,
+      "private_singles_sent": 0,
+      "single_blockers": {
+        "FIXTURE_AFTER_LAB_CUTOFF": 22,
+        "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 2,
+        "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 52,
+        "LAB_SINGLE_ODDS_BELOW_1_50": 8
+      },
+      "singles_sent": 1
+    },
+    {
+      "at": "2026-10-06T11:33:53.201369+00:00",
+      "combo_blockers": {
+        "FIXTURE_AFTER_LAB_CUTOFF": 33,
+        "LAB_COMBO_LEG_ODDS_BELOW_1_30": 34
+      },
+      "combos_sent": 1,
+      "delivery_counts": {
+        "receipt_persisted": 4,
+        "reconciliation_required": 0,
+        "stage:RECEIPT_PERSISTED": 4,
+        "status:SENT": 4,
+        "transport_attempted": 4
+      },
+      "delivery_status": "COMPLETED",
+      "failure": null,
+      "private_singles_sent": 0,
+      "single_blockers": {
+        "FIXTURE_AFTER_LAB_CUTOFF": 33,
+        "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 10,
+        "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 266,
+        "LAB_SINGLE_ODDS_BELOW_1_50": 49
+      },
+      "singles_sent": 3
+    },
+    {
+      "at": "2026-10-06T11:03:09.407190+00:00",
+      "combo_blockers": {
+        "FIXTURE_AFTER_LAB_CUTOFF": 11,
+        "LAB_COMBO_LEG_ODDS_BELOW_1_30": 66
+      },
+      "combos_sent": 1,
+      "delivery_counts": {
+        "receipt_persisted": 4,
+        "reconciliation_required": 0,
+        "stage:RECEIPT_PERSISTED": 4,
+        "status:SENT": 4,
+        "transport_attempted": 4
+      },
+      "delivery_status": "COMPLETED",
+      "failure": null,
+      "private_singles_sent": 0,
+      "single_blockers": {
+        "FIXTURE_AFTER_LAB_CUTOFF": 11,
+        "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 13,
+        "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 427,
+        "LAB_SINGLE_ODDS_BELOW_1_50": 85
+      },
+      "singles_sent": 3
+    }
+  ],
+  "queue_cycles": [
+    {
+      "at": "2026-10-06T12:30:03.041343+00:00",
+      "attempted_fixture_ids": [
+        1619162,
+        1642267,
+        1641761,
+        1350205,
+        1559383,
+        1559384,
+        1641762,
+        1642265,
+        1642266
+      ],
+      "cycle_ceiling": 300,
+      "due_fixture_ids": [
+        1619162,
+        1642267,
+        1641761,
+        1350205,
+        1559383,
+        1559384,
+        1641762,
+        1642265,
+        1642266
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 95,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1619162,
+        1642267,
+        1641761,
+        1350205,
+        1559383,
+        1559384,
+        1641762,
+        1642265,
+        1642266
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 1,
+        "ODDS_STALE": 3
+      },
+      "tracked_shortlist": [
+        1619162,
+        1642267,
+        1641761,
+        1350205
+      ],
+      "unique_attempts": 9,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T12:00:02.692937+00:00",
+      "attempted_fixture_ids": [
+        1619162,
+        1642267,
+        1559383,
+        1559384,
+        1641762,
+        1642265,
+        1642266
+      ],
+      "cycle_ceiling": 300,
+      "due_fixture_ids": [
+        1619162,
+        1642267,
+        1559383,
+        1559384,
+        1641762,
+        1642265,
+        1642266
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 172,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1619162,
+        1642267,
+        1559383,
+        1559384,
+        1641762,
+        1642265,
+        1642266
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 2
+      },
+      "tracked_shortlist": [
+        1619162,
+        1642267
+      ],
+      "unique_attempts": 7,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T11:30:03.069626+00:00",
+      "attempted_fixture_ids": [
+        1619160,
+        1619254,
+        1642331,
+        1619158,
+        1586580,
+        1611878,
+        1631988,
+        1632358,
+        1644410
+      ],
+      "cycle_ceiling": 300,
+      "due_fixture_ids": [
+        1619160,
+        1619254,
+        1642331,
+        1619158,
+        1586580,
+        1611878,
+        1631988,
+        1632358,
+        1644410
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 68,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1619160,
+        1619254,
+        1642331,
+        1619158,
+        1586580,
+        1611878,
+        1631988,
+        1632358,
+        1644410
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 3,
+        "ODDS_STALE": 1
+      },
+      "tracked_shortlist": [
+        1619160,
+        1619254,
+        1642331,
+        1619158
+      ],
+      "unique_attempts": 9,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T11:00:03.481849+00:00",
+      "attempted_fixture_ids": [
+        1638470,
+        1638513,
+        1528723,
+        1528724,
+        1528787,
+        1638468,
+        1638469,
+        1638603,
+        1642331,
+        1619158
+      ],
+      "cycle_ceiling": 300,
+      "due_fixture_ids": [
+        1638470,
+        1638513,
+        1528723,
+        1528724,
+        1528787,
+        1638468,
+        1638469,
+        1638603,
+        1642331,
+        1619158,
+        1619160,
+        1619254,
+        1632357,
+        1641873,
+        1641877,
+        1641885,
+        1586580,
+        1611878,
+        1631988,
+        1632358,
+        1644410
+      ],
+      "final_review_candidate_count": 2,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [
+        1619160,
+        1619254,
+        1632357,
+        1641873,
+        1641877,
+        1641885,
+        1586580,
+        1611878,
+        1631988,
+        1632358,
+        1644410
+      ],
+      "provider_calls": 89,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1638470,
+        1638513,
+        1528723,
+        1528724,
+        1528787,
+        1638468,
+        1638469,
+        1638603,
+        1642331,
+        1619158
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 1,
+        "CURRENT_ODDS_UNAVAILABLE": 4,
+        "ODDS_STALE": 5
+      },
+      "tracked_shortlist": [
+        1638470,
+        1638513,
+        1528723,
+        1528724,
+        1528787,
+        1638468,
+        1638469,
+        1638603,
+        1642331,
+        1619158
+      ],
+      "unique_attempts": 10,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    }
+  ],
+  "scheduled_performance": [
+    {
+      "LIVE": "DISABLED",
+      "api_calls": null,
+      "at": "2026-10-06T12:33:49.916093+00:00",
+      "bias": 0.06943161587755045,
+      "has_cohorts": true,
+      "has_ev_sign": true,
+      "keys": [
+        "LIVE",
+        "PERFORMANCE",
+        "completed_at",
+        "evidence_at",
+        "failure",
+        "fixture_blockers",
+        "fixtures",
+        "fixtures_considered",
+        "fixtures_evaluated",
+        "lanes",
+        "markets",
+        "odds_fixtures",
+        "provider_calls",
+        "provider_rows",
+        "publication",
+        "published",
+        "quota",
+        "quota_remaining",
+        "readiness_blockers",
+        "readiness_lanes",
+        "ready",
+        "rejections",
+        "result",
+        "started_at",
+        "timing_diagnostics",
+        "tracking"
+      ],
+      "performance_status": "COMPLETE",
+      "performance_version": "LAB_PERFORMANCE_SNAPSHOT_V2",
+      "table": "cycle_health",
+      "telegram_sends": null
+    },
+    {
+      "LIVE": "DISABLED",
+      "api_calls": null,
+      "at": "2026-10-06T12:03:53.556206+00:00",
+      "bias": 0.06943161587755045,
+      "has_cohorts": true,
+      "has_ev_sign": true,
+      "keys": [
+        "LIVE",
+        "PERFORMANCE",
+        "completed_at",
+        "evidence_at",
+        "failure",
+        "fixture_blockers",
+        "fixtures",
+        "fixtures_considered",
+        "fixtures_evaluated",
+        "lanes",
+        "markets",
+        "odds_fixtures",
+        "provider_calls",
+        "provider_rows",
+        "publication",
+        "published",
+        "quota",
+        "quota_remaining",
+        "readiness_blockers",
+        "readiness_lanes",
+        "ready",
+        "rejections",
+        "result",
+        "started_at",
+        "timing_diagnostics",
+        "tracking"
+      ],
+      "performance_status": "COMPLETE",
+      "performance_version": "LAB_PERFORMANCE_SNAPSHOT_V2",
+      "table": "cycle_health",
+      "telegram_sends": null
+    },
+    {
+      "LIVE": "DISABLED",
+      "api_calls": null,
+      "at": "2026-10-06T11:33:53.210746+00:00",
+      "bias": 0.06943161587755045,
+      "has_cohorts": true,
+      "has_ev_sign": true,
+      "keys": [
+        "LIVE",
+        "PERFORMANCE",
+        "completed_at",
+        "evidence_at",
+        "failure",
+        "fixture_blockers",
+        "fixtures",
+        "fixtures_considered",
+        "fixtures_evaluated",
+        "lanes",
+        "markets",
+        "odds_fixtures",
+        "provider_calls",
+        "provider_rows",
+        "publication",
+        "published",
+        "quota",
+        "quota_remaining",
+        "readiness_blockers",
+        "readiness_lanes",
+        "ready",
+        "rejections",
+        "result",
+        "started_at",
+        "timing_diagnostics",
+        "tracking"
+      ],
+      "performance_status": "COMPLETE",
+      "performance_version": "LAB_PERFORMANCE_SNAPSHOT_V2",
+      "table": "cycle_health",
+      "telegram_sends": null
+    },
+    {
+      "LIVE": "DISABLED",
+      "api_calls": null,
+      "at": "2026-10-06T11:03:09.416659+00:00",
+      "bias": 0.07015809954557549,
+      "has_cohorts": true,
+      "has_ev_sign": true,
+      "keys": [
+        "LIVE",
+        "PERFORMANCE",
+        "completed_at",
+        "evidence_at",
+        "failure",
+        "fixture_blockers",
+        "fixtures",
+        "fixtures_considered",
+        "fixtures_evaluated",
+        "lanes",
+        "markets",
+        "odds_fixtures",
+        "provider_calls",
+        "provider_rows",
+        "publication",
+        "published",
+        "quota",
+        "quota_remaining",
+        "readiness_blockers",
+        "readiness_lanes",
+        "ready",
+        "rejections",
+        "result",
+        "started_at",
+        "timing_diagnostics",
+        "tracking"
+      ],
+      "performance_status": "COMPLETE",
+      "performance_version": "LAB_PERFORMANCE_SNAPSHOT_V2",
+      "table": "cycle_health",
+      "telegram_sends": null
+    },
+    {
+      "LIVE": "DISABLED",
+      "api_calls": 0,
+      "at": "2026-10-06T12:38:01.687434+00:00",
+      "bias": 0.06943161587755045,
+      "has_cohorts": true,
+      "has_ev_sign": true,
+      "keys": [
+        "CALIBRATION_READINESS",
+        "DEVIG_RESEARCH",
+        "LIVE",
+        "PERFORMANCE",
+        "api_calls",
+        "created_at",
+        "heavy_training",
+        "linkage",
+        "metrics",
+        "state",
+        "stream",
+        "telegram_sends"
+      ],
+      "performance_status": "COMPLETE",
+      "performance_version": "LAB_PERFORMANCE_SNAPSHOT_V2",
+      "table": "observer_runs",
+      "telegram_sends": 0
+    },
+    {
+      "LIVE": "DISABLED",
+      "api_calls": 0,
+      "at": "2026-10-06T12:08:01.448724+00:00",
+      "bias": 0.06943161587755045,
+      "has_cohorts": true,
+      "has_ev_sign": true,
+      "keys": [
+        "CALIBRATION_READINESS",
+        "DEVIG_RESEARCH",
+        "LIVE",
+        "PERFORMANCE",
+        "api_calls",
+        "created_at",
+        "heavy_training",
+        "linkage",
+        "metrics",
+        "state",
+        "stream",
+        "telegram_sends"
+      ],
+      "performance_status": "COMPLETE",
+      "performance_version": "LAB_PERFORMANCE_SNAPSHOT_V2",
+      "table": "observer_runs",
+      "telegram_sends": 0
+    },
+    {
+      "LIVE": "DISABLED",
+      "api_calls": 0,
+      "at": "2026-10-06T11:38:01.573727+00:00",
+      "bias": 0.06943161587755045,
+      "has_cohorts": true,
+      "has_ev_sign": true,
+      "keys": [
+        "CALIBRATION_READINESS",
+        "DEVIG_RESEARCH",
+        "LIVE",
+        "PERFORMANCE",
+        "api_calls",
+        "created_at",
+        "heavy_training",
+        "linkage",
+        "metrics",
+        "state",
+        "stream",
+        "telegram_sends"
+      ],
+      "performance_status": "COMPLETE",
+      "performance_version": "LAB_PERFORMANCE_SNAPSHOT_V2",
+      "table": "observer_runs",
+      "telegram_sends": 0
+    },
+    {
+      "LIVE": "DISABLED",
+      "api_calls": 0,
+      "at": "2026-10-06T11:08:01.213322+00:00",
+      "bias": 0.06943161587755045,
+      "has_cohorts": true,
+      "has_ev_sign": true,
+      "keys": [
+        "CALIBRATION_READINESS",
+        "DEVIG_RESEARCH",
+        "LIVE",
+        "PERFORMANCE",
+        "api_calls",
+        "created_at",
+        "heavy_training",
+        "linkage",
+        "metrics",
+        "state",
+        "stream",
+        "telegram_sends"
+      ],
+      "performance_status": "COMPLETE",
+      "performance_version": "LAB_PERFORMANCE_SNAPSHOT_V2",
+      "table": "observer_runs",
+      "telegram_sends": 0
+    }
+  ],
+  "scheduled_segment_dimensions": {
+    "COMBO": [
+      "competition",
+      "data_quality_state",
+      "ev_sign",
+      "lead_time_bucket",
+      "league",
+      "market",
+      "model_confidence_bucket",
+      "model_market_disagreement_bucket",
+      "odds_age_bucket",
+      "odds_band",
+      "probability_band",
+      "probability_kind",
+      "selection_policy",
+      "signal_basis",
+      "statistics_cohort",
+      "value_cohort"
+    ],
+    "SINGLE": [
+      "competition",
+      "data_quality_state",
+      "ev_sign",
+      "lead_time_bucket",
+      "league",
+      "market",
+      "model_confidence_bucket",
+      "model_market_disagreement_bucket",
+      "odds_age_bucket",
+      "odds_band",
+      "probability_band",
+      "probability_kind",
+      "selection_policy",
+      "signal_basis",
+      "statistics_cohort",
+      "value_cohort"
+    ]
+  },
+  "source_commit": "574f55fb50ae5bae1b9236978cf7e98b26d982d3",
+  "status": "NATURAL_CYCLE_VERIFICATION_PASS"
+}

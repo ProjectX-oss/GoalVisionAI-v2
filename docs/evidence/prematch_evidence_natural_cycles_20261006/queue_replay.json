@@ -1,0 +1,188 @@
+{
+  "cycle_at": "2026-10-06T11:00:03.481849+00:00",
+  "deferred_fixture_ids": [
+    1619160,
+    1619254,
+    1632357,
+    1641873,
+    1641877,
+    1641885,
+    1586580,
+    1611878,
+    1631988,
+    1632358,
+    1644410
+  ],
+  "due_count": 21,
+  "network_denied": true,
+  "never_reviewed_before_reviewed_on_equal_kickoff": true,
+  "next_cycle_reviewed_deferred_candidates": true,
+  "ordering_evidence": [
+    {
+      "fixture_id": 1638470,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": null,
+      "profile": "RESERVE_OR_B_TEAM",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1638513,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": null,
+      "profile": "RESERVE_OR_B_TEAM",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1528723,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": "2026-10-06T10:30:02.677096+00:00",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1528724,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": "2026-10-06T10:30:02.677096+00:00",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1528787,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": "2026-10-06T10:30:02.677096+00:00",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1638468,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": "2026-10-06T10:30:02.677096+00:00",
+      "profile": "RESERVE_OR_B_TEAM",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1638469,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": "2026-10-06T10:30:02.677096+00:00",
+      "profile": "LOWER_DIVISION_OR_SEMIPRO",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1638603,
+      "kickoff": "2026-10-06T11:35:00+00:00",
+      "previous_review": null,
+      "profile": "FRIENDLY",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1642331,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "SENIOR_MEN_PRO",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1619158,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "YOUTH_U21_U23",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1619160,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "YOUTH_U21_U23",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1619254,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "YOUTH_U21_U23",
+      "tracked": true
+    },
+    {
+      "fixture_id": 1632357,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": null,
+      "profile": "FRIENDLY",
+      "tracked": false
+    },
+    {
+      "fixture_id": 1641873,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": null,
+      "profile": "DOMESTIC_CUP",
+      "tracked": false
+    },
+    {
+      "fixture_id": 1641877,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": null,
+      "profile": "DOMESTIC_CUP",
+      "tracked": false
+    },
+    {
+      "fixture_id": 1641885,
+      "kickoff": "2026-10-06T11:30:00+00:00",
+      "previous_review": null,
+      "profile": "DOMESTIC_CUP",
+      "tracked": false
+    },
+    {
+      "fixture_id": 1586580,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "RESERVE_OR_B_TEAM",
+      "tracked": false
+    },
+    {
+      "fixture_id": 1611878,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "YOUTH_U19_U20",
+      "tracked": false
+    },
+    {
+      "fixture_id": 1631988,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "UNKNOWN",
+      "tracked": false
+    },
+    {
+      "fixture_id": 1632358,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "FRIENDLY",
+      "tracked": false
+    },
+    {
+      "fixture_id": 1644410,
+      "kickoff": "2026-10-06T12:00:00+00:00",
+      "previous_review": null,
+      "profile": "FRIENDLY",
+      "tracked": false
+    }
+  ],
+  "replay_order_matches": true,
+  "replay_scope": "FROZEN_RECORDED_DUE_FIXTURES; TRACKED_MEMBERSHIP_FROM_FROZEN_REVIEW_ROWS; INDEXED_PRE_CYCLE_LAST_REVIEW",
+  "tracked_due": 12,
+  "two_batches": [
+    [
+      1638470,
+      1638513,
+      1528723,
+      1528724,
+      1528787
+    ],
+    [
+      1638468,
+      1638469,
+      1638603,
+      1642331,
+      1619158
+    ]
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "cycle": "2026-10-06T11:00:03.481849+00:00",
+  "samples": [
+    {
+      "candidate_id": "lab-v2-candidate-b48a1635edbe192fd0e457b20b44ae164db9d3562e1a9910832497d449067cdf",
+      "rejection_reasons": [
+        "NON_POSITIVE_VALUE",
+        "PROVIDER_ZERO_PROBABILITY"
+      ],
+      "trace": {
+        "decision": "REJECTED",
+        "downstream_rejection": "PROVIDER_ZERO_PROBABILITY",
+        "ensemble_probability": "0E+1",
+        "fixture_id": 1350209,
+        "independence_group": "API_FOOTBALL_PREDICTION",
+        "market": "AWAY_WIN",
+        "normalized_probability": "0E+1",
+        "observed_at_utc": "2026-10-06T11:02:53.799557+00:00",
+        "probability_modified": false,
+        "provider_source": "API_FOOTBALL_PREDICTION",
+        "raw_provider_probability": "0%",
+        "source_fingerprint": "a11721d99302a763a79edc1ea24918eda4fc7bf4d9b5478224a90fd9029c14f5",
+        "timestamp_kind": "DOWNSTREAM_EVALUATION_TIME"
+      }
+    },
+    {
+      "candidate_id": "lab-v2-candidate-52e79103ded8a27cc64a764cda4849997b9bb0f506455d07a6d4263a94ad9332",
+      "rejection_reasons": [
+        "NON_POSITIVE_VALUE",
+        "PROVIDER_ZERO_PROBABILITY"
+      ],
+      "trace": {
+        "decision": "REJECTED",
+        "downstream_rejection": "PROVIDER_ZERO_PROBABILITY",
+        "ensemble_probability": "0E+1",
+        "fixture_id": 1350211,
+        "independence_group": "API_FOOTBALL_PREDICTION",
+        "market": "HOME_WIN",
+        "normalized_probability": "0E+1",
+        "observed_at_utc": "2026-10-06T11:02:53.799557+00:00",
+        "probability_modified": false,
+        "provider_source": "API_FOOTBALL_PREDICTION",
+        "raw_provider_probability": "0%",
+        "source_fingerprint": "9a10ea6c97b27e856272162d7f6dfce7cb55900c65511e2ee30c012093d13647",
+        "timestamp_kind": "DOWNSTREAM_EVALUATION_TIME"
+      }
+    },
+    {
+      "candidate_id": "lab-v2-candidate-199317460e7154b4bdb3aa4cdb0340ddf1e99a4d74f5401244670c721f8dd6f5",
+      "rejection_reasons": [
+        "NON_POSITIVE_VALUE",
+        "PROVIDER_ZERO_PROBABILITY"
+      ],
+      "trace": {
+        "decision": "REJECTED",
+        "downstream_rejection": "PROVIDER_ZERO_PROBABILITY",
+        "ensemble_probability": "0E+1",
+        "fixture_id": 1350215,
+        "independence_group": "API_FOOTBALL_PREDICTION",
+        "market": "HOME_WIN",
+        "normalized_probability": "0E+1",
+        "observed_at_utc": "2026-10-06T11:02:53.799557+00:00",
+        "probability_modified": false,
+        "provider_source": "API_FOOTBALL_PREDICTION",
+        "raw_provider_probability": "0%",
+        "source_fingerprint": "eb43f9398445723af3478156319dfc9d013b951f0cde9110b55ff7b6e053a4c1",
+        "timestamp_kind": "DOWNSTREAM_EVALUATION_TIME"
+      }
+    },
+    {
+      "candidate_id": "lab-v2-candidate-7caf521b9e089112eb70018e77c2af98ae43fc4610a45f1d9ce60150d9596142",
+      "rejection_reasons": [
+        "NON_POSITIVE_VALUE",
+        "PROVIDER_ZERO_PROBABILITY"
+      ],
+      "trace": {
+        "decision": "REJECTED",
+        "downstream_rejection": "PROVIDER_ZERO_PROBABILITY",
+        "ensemble_probability": "0E+1",
+        "fixture_id": 1350216,
+        "independence_group": "API_FOOTBALL_PREDICTION",
+        "market": "AWAY_WIN",
+        "normalized_probability": "0E+1",
+        "observed_at_utc": "2026-10-06T11:02:53.799557+00:00",
+        "probability_modified": false,
+        "provider_source": "API_FOOTBALL_PREDICTION",
+        "raw_provider_probability": "0%",
+        "source_fingerprint": "0540bc61234d0b1a422f4c6e83320ed5f91a12ab59793d23aa9b11b8009aa489",
+        "timestamp_kind": "DOWNSTREAM_EVALUATION_TIME"
+      }
+    },
+    {
+      "candidate_id": "lab-v2-candidate-d4b1b500bee1298dfc03627f0316c554349d19c65e3bec7bb77e9e4582cba2e2",
+      "rejection_reasons": [
+        "NON_POSITIVE_VALUE",
+        "PROVIDER_ZERO_PROBABILITY"
+      ],
+      "trace": {
+        "decision": "REJECTED",
+        "downstream_rejection": "PROVIDER_ZERO_PROBABILITY",
+        "ensemble_probability": "0E+1",
+        "fixture_id": 1350217,
+        "independence_group": "API_FOOTBALL_PREDICTION",
+        "market": "AWAY_WIN",
+        "normalized_probability": "0E+1",
+        "observed_at_utc": "2026-10-06T11:02:53.799557+00:00",
+        "probability_modified": false,
+        "provider_source": "API_FOOTBALL_PREDICTION",
+        "raw_provider_probability": "0%",
+        "source_fingerprint": "e6bd495d93ff86ad0b203a3b90a3843a9f7c0e268c1a4e49f55f6a4a277b354d",
+        "timestamp_kind": "DOWNSTREAM_EVALUATION_TIME"
+      }
+    },
+    {
+      "candidate_id": "lab-v2-candidate-40e0c8cc8928a5e78512cf268005e622a0321e23570c5031a142622449930203",
+      "rejection_reasons": [
+        "NON_POSITIVE_VALUE",
+        "PROVIDER_ZERO_PROBABILITY"
+      ],
+      "trace": {
+        "decision": "REJECTED",
+        "downstream_rejection": "PROVIDER_ZERO_PROBABILITY",
+        "ensemble_probability": "0E+1",
+        "fixture_id": 1588884,
+        "independence_group": "API_FOOTBALL_PREDICTION",
+        "market": "AWAY_WIN",
+        "normalized_probability": "0E+1",
+        "observed_at_utc": "2026-10-06T11:02:53.799557+00:00",
+        "probability_modified": false,
+        "provider_source": "API_FOOTBALL_PREDICTION",
+        "raw_provider_probability": "0%",
+        "source_fingerprint": "e13dbd9ad3153d1f1e3609cce219ce94d2480c65545c0a4f1fe240e6a666f044",
+        "timestamp_kind": "DOWNSTREAM_EVALUATION_TIME"
+      }
+    },
+    {
+      "candidate_id": "lab-v2-candidate-ddb5e6482ede307d9f70300ddf7360eaa2a778078e4633fdc0389ef41e532185",
+      "rejection_reasons": [
+        "NON_POSITIVE_VALUE",
+        "PROVIDER_ZERO_PROBABILITY"
+      ],
+      "trace": {
+        "decision": "REJECTED",
+        "downstream_rejection": "PROVIDER_ZERO_PROBABILITY",
+        "ensemble_probability": "0E+1",
+        "fixture_id": 1642267,
+        "independence_group": "API_FOOTBALL_PREDICTION",
+        "market": "HOME_WIN",
+        "normalized_probability": "0E+1",
+        "observed_at_utc": "2026-10-06T11:02:53.799557+00:00",
+        "probability_modified": false,
+        "provider_source": "API_FOOTBALL_PREDICTION",
+        "raw_provider_probability": "0%",
+        "source_fingerprint": "1c56fb7bf704ee21e32e2b9df6faa071d57d600c185e57d767a1bc6786e656e6",
+        "timestamp_kind": "DOWNSTREAM_EVALUATION_TIME"
+      }
+    }
+  ]
+}

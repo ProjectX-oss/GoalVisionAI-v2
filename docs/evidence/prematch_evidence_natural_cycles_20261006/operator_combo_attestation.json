@@ -1,0 +1,16 @@
+{
+  "claim_body_normalized_sha256": "3fe9f6530daee2dce50bbaf83a37f4e4cbc41c8519436121b7b7a014f8e137a3",
+  "claim_body_sha256": "3fe9f6530daee2dce50bbaf83a37f4e4cbc41c8519436121b7b7a014f8e137a3",
+  "exact_normalized_body_match": true,
+  "next_required_evidence": "ORIGINAL_TELEGRAM_MESSAGE_ID_BOUND_TO_EXISTING_DESTINATION; NO_SYNTHETIC_ID_OR_RECEIPT",
+  "operator_confirmation_at": "2026-10-06T15:38:37+03:00",
+  "prediction_id": "lab-v2-combo-accuracy-e1f7df2f5ab623619b141a4045aaf627cb287cd813124a887ba04ce6ce61f808",
+  "receipt_present": false,
+  "resend_attempted": false,
+  "runtime_ledger_modified": false,
+  "settlement_present": false,
+  "status": "OPERATOR_CONFIRMED_BODY_MATCH_MESSAGE_ID_REQUIRED",
+  "supplied_body_normalized_sha256": "3fe9f6530daee2dce50bbaf83a37f4e4cbc41c8519436121b7b7a014f8e137a3",
+  "telegram_original_message_id_supplied": false,
+  "unknown_marker_retained": true
+}

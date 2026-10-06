@@ -12,7 +12,8 @@ Operators instalēja 2026-10-06 plkst. 13:48 Riga. Neatkarīgais readback 13:49:
 un active/enabled timeri PASS. Champion un aizsargātie governance skaiti nemainīti.
 Evidence: `docs/evidence/prematch_evidence_package_20261006/operator_deployment_readback.json`.
 Pirmais jaunā release dabiskais settlement paredzēts 13:55, discovery 14:00,
-observer 14:08 Riga; šo nākotnes ciklu darbība vēl nav apstiprināta.
+observer 14:08 Riga. Vēlākā pārbaude apstiprina četrus dabiskos discovery/observer
+ciklus līdz 15:38; skatīt PREMATCH_NATURAL_CYCLES_20261006.md.
 
 ## Operatora komandas
 
