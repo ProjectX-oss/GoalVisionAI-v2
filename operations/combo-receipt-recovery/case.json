@@ -1,0 +1,18 @@
+{
+  "challenge": "GV-COMBO-E1F7-AE65808636FB",
+  "expires_at": 1791378733,
+  "fingerprints": {
+    "claim": "e58f447dc000c2afa766c1611f8c86dc44b439ad3bdfc5770abc96ab3023a380",
+    "delivery_unknown": "66f4ce91619a7901d4d10a123091c631379e3e4515596a225897cbf6bf5dcedf",
+    "prediction": "23c0f2b4bff521c1661c657dd61e080cf39b0e780a573e874ca8cec47fc423f6"
+  },
+  "guard_sha256": "362111ad9c9a90ddfd59873d2005a2726f11471a4da1b47a246ce991f30ac565",
+  "issued_at": 1791292333,
+  "message_sha256": "3fe9f6530daee2dce50bbaf83a37f4e4cbc41c8519436121b7b7a014f8e137a3",
+  "original_max_date": 1791190979,
+  "original_min_date": 1791190901,
+  "prediction_id": "lab-v2-combo-accuracy-e1f7df2f5ab623619b141a4045aaf627cb287cd813124a887ba04ce6ce61f808",
+  "purpose": "Bind original sent message from authenticated owner reply; no resend or manual settlement.",
+  "route_sha256": "fe5e4eed7f74a7b8db6ef3132e9a3a7b09a8afe21f035e1056e1ece3253628a5",
+  "version": "COMBO_REPLY_RECEIPT_RECOVERY_V1"
+}
