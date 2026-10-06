@@ -1,0 +1,23 @@
+{
+  "as_of": "2026-10-06T09:42:27.795571+00:00",
+  "files": {
+    "docs/evidence/prematch_evidence_20261006/dixon_coles_paired.json": "bd06d6e82bad7d1aa1814ac6b824239240d033846bdb008f4bb0d018036a31c5",
+    "docs/evidence/prematch_evidence_20261006/journals.json": "40bac0862d340c897d14927eeef43433eada64641e043ca21b1b6d3eb5f68bbf",
+    "docs/evidence/prematch_evidence_20261006/learning_champion.json": "ba2171a778bdb7e116c364e36c1d51d0761c59c1b988c563f6a5d3b494ce17f5",
+    "docs/evidence/prematch_evidence_20261006/performance.json": "4303a766a9504805ffab5cdf57b91e7e2da6d1b7bacff7bf4e6fb81c8e62e784",
+    "docs/evidence/prematch_evidence_20261006/private_performance.json": "092b402a0651a2bb0a4f663a9e6043226e34e825d0bb6b047154a12d0ea4c6c9",
+    "docs/evidence/prematch_evidence_20261006/publication_gate_counts.json": "c2c7d6a837378d79eac4cdd7979f7f29af2172012f26096242d88b790d8c6953",
+    "docs/evidence/prematch_evidence_20261006/publication_health.json": "8d80a8b8f275ce98486df93f9680bfcfa2720068aabf8da0a70299af053d5873",
+    "docs/evidence/prematch_evidence_20261006/queue_data_disagreement.json": "00fbb4813f052d68b355b48c581db7ae473a7b20c508f4e2bf14945a416cffd1",
+    "docs/evidence/prematch_evidence_20261006/runtime.json": "0558b9a16eed48e917f0252b6bd181e026f8c58d584f90dcd091f163baeee306",
+    "docs/evidence/prematch_evidence_20261006/unresolved_delivery.json": "771891611282aa0c9de1f4f1acbb212285099565e1c80a4a33908b241e04a48c",
+    "docs/evidence/prematch_evidence_20261006/verification.json": "a9fe152dd7b67a5c6e55c96bc9a4e93bd4da1d200f7699c394b32a4412060c26"
+  },
+  "handoff": {
+    "path": "docs/operations/PREMATCH_EVIDENCE_HANDOFF_20261006.md",
+    "sha256": "1a07904f017a00628bf287e435072d06da088f7cd711a571117e8f50f4804bd0"
+  },
+  "implementation_commit": "c5fec8c52625e3fc2742265ad75fad82e59a3911",
+  "schema": "PREMATCH_EVIDENCE_FILES_V1",
+  "self_excluded": true
+}

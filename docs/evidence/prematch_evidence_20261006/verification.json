@@ -1,0 +1,130 @@
+{
+  "agent_deployments": 0,
+  "agent_manual_cycles": 0,
+  "agent_provider_calls": 0,
+  "agent_telegram_sends": 0,
+  "as_of": "2026-10-06T09:42:27.795571+00:00",
+  "base_commit": "6357a6996568731ff3c54a839aa50ac942fb25fe",
+  "branch": "audit/prematch-evidence-20261006",
+  "calibration_fit_invoked": false,
+  "champion_and_governance": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "changed_source_files": [
+    "TASKS.md",
+    "app/adaptive_lab/performance.py",
+    "app/dixon_coles_forward/incremental.py",
+    "app/dixon_coles_forward/incremental_plan_20261004.json",
+    "app/lab_v2_shadow/global_evaluation.py",
+    "app/lab_v2_shadow/runner.py",
+    "docs/operations/PREMATCH_EVIDENCE_METHODS_20261006.md",
+    "operations/prematch-evidence/diagnostics.py",
+    "operations/prematch-evidence/publication_audit.py",
+    "operations/watch-reconciliation/incremental_report.py",
+    "operations/watch-reconciliation/runtime_audit.py",
+    "operations/watch-reconciliation/snapshot.py",
+    "tests/adaptive_lab/test_calendar_monitor.py",
+    "tests/adaptive_lab/test_performance_snapshot.py",
+    "tests/adaptive_lab/test_provider_zero_reason.py",
+    "tests/test_dixon_coles_incremental.py",
+    "tests/test_prematch_evidence_audit.py",
+    "tests/test_provider_zero_runner.py",
+    "tests/test_watch_snapshot.py"
+  ],
+  "guard_read_only_preflight": "PASS; current_mode=ENABLED; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+  "holdout_evaluated": false,
+  "implementation_commit": "c5fec8c52625e3fc2742265ad75fad82e59a3911",
+  "isolated_smoke": {
+    "exit": 0,
+    "result": "ISOLATED_RESEARCH_RESOURCES_AND_REPORT_PASS",
+    "source_fallback": false
+  },
+  "live_status": "DISABLED",
+  "official_changes": 0,
+  "original_working_tree_dirty_paths": 220,
+  "production_application_files": 852,
+  "production_hashes_matched": 852,
+  "production_release": "/opt/goalvision-prematch-final-review-queue-76d96c1-20261005",
+  "production_source": "76d96c1a374a35a2d8d7cd059d0363ac095be3eb",
+  "promotion_status": "NOT_ELIGIBLE",
+  "protected_configuration_verified": true,
+  "protected_counts_after": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "reviewed_incremental_source": "20be74f9e3197032567a092c0e88574c62293b7a",
+  "test_followup_initial": {
+    "cause": "Test harness: synthetic capability response/league mismatch and mixed root/nested fixture registration.",
+    "errors": 13,
+    "failed": 1,
+    "passed": 461
+  },
+  "test_harness_corrections": [
+    "Synthetic league capability response wrapper and league identity corrected.",
+    "Mixed root/nested collection had fixture registration failures; final suites run separately.",
+    "Observer test now retrieves its exact content-addressed record; equal timestamps do not establish insertion order."
+  ],
+  "tests_files": [
+    "tests/adaptive_lab/test_provider_zero_reason.py",
+    "tests/adaptive_lab/test_provider_zero_trace.py",
+    "tests/adaptive_lab/test_prematch_probability_guard.py",
+    "tests/adaptive_lab/test_performance_snapshot.py",
+    "tests/adaptive_lab/test_prematch_performance_output.py",
+    "tests/test_dixon_coles_incremental.py",
+    "tests/test_watch_snapshot.py",
+    "tests/test_final_review_queue.py",
+    "tests/test_lab_v2_global.py",
+    "tests/test_lab_v2_shadow.py",
+    "tests/test_provider_zero_runner.py",
+    "tests/test_prematch_evidence_audit.py",
+    "tests/test_private_single_170.py",
+    "tests/test_prematch_production_integration.py",
+    "tests/test_combo_aggregate_order.py",
+    "tests/test_settlement_replies.py",
+    "tests/test_combo_market_parallel.py",
+    "tests/adaptive_lab/test_calendar_monitor.py",
+    "tests/adaptive_lab/test_calendar_audit.py",
+    "tests/adaptive_lab/test_calendar_research.py",
+    "tests/adaptive_lab/test_devig_integration.py",
+    "tests/test_dixon_coles_forward.py",
+    "tests/adaptive_lab/test_settlement_preflight_reserve.py"
+  ],
+  "tests_final": {
+    "adaptive": {
+      "passed": 133,
+      "seconds": 13.93
+    },
+    "network": "SOCKET_CONNECT_DENIED",
+    "normal_priority_nice": 10,
+    "root": {
+      "passed": 342,
+      "seconds": 37.33
+    },
+    "suites_run_separately": true,
+    "total_unique": 475
+  },
+  "tests_initial": {
+    "network": "SOCKET_CONNECT_DENIED",
+    "passed": 178,
+    "seconds": 26.61
+  }
+}

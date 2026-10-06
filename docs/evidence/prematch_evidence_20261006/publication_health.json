@@ -1,0 +1,1128 @@
+{
+  "private_ledger": {
+    "as_of": "2026-10-06T09:42:27.795571+00:00",
+    "claim_inventory_is_current_not_historical_asof": true,
+    "confirmed_publications_asof": {
+      "COMBO": 0,
+      "SINGLE": 1
+    },
+    "current_claims_without_receipt": 0,
+    "current_delivery_unknown_markers": 0,
+    "current_missing_receipt_details": [],
+    "delay_limitation": "Kickoff age is a review flag, not measured delay from provider result availability.",
+    "duplicate_confirmed_fixture_within_single_policy_or_exact_combo": {
+      "COMBO": 0,
+      "SINGLE": 0
+    },
+    "historical_single_fixture_repeat_details": [],
+    "last_settlement_diagnostic": {
+      "observed_at_utc": "2026-10-06T09:16:06.801807+00:00",
+      "records": [
+        {
+          "fixture_id": 1638509,
+          "frozen_kickoff_utc": "2026-10-06T07:30:00+00:00",
+          "observed_at_utc": "2026-10-06T09:16:06.801807+00:00",
+          "provider_kickoff_utc": "2026-10-06T07:30:00+00:00",
+          "provider_status": "2H",
+          "reason": "NONTERMINAL_OR_UNSUPPORTED_STATUS",
+          "schedule_changed": false
+        }
+      ],
+      "total_unresolved": 1,
+      "truncated": false,
+      "version": "LAB_UNRESOLVED_RESULT_V1"
+    },
+    "pending": [],
+    "pending_older_than_6h": 0,
+    "receipts_last_24h": {
+      "SENT": 2
+    },
+    "settlement_diagnostic_samples": 2
+  },
+  "public_ledger": {
+    "as_of": "2026-10-06T09:42:27.795571+00:00",
+    "claim_inventory_is_current_not_historical_asof": true,
+    "confirmed_publications_asof": {
+      "COMBO": 171,
+      "SINGLE": 389
+    },
+    "current_claims_without_receipt": 1,
+    "current_delivery_unknown_markers": 1,
+    "current_missing_receipt_details": [
+      {
+        "kind": "combo_prediction",
+        "prediction_id": "lab-v2-combo-accuracy-e1f7df2f5ab623619b141a4045aaf627cb287cd813124a887ba04ce6ce61f808",
+        "prepared_at": "2026-10-05T09:01:42.732669+00:00",
+        "unknown_marker_present": true
+      }
+    ],
+    "delay_limitation": "Kickoff age is a review flag, not measured delay from provider result availability.",
+    "duplicate_confirmed_fixture_within_single_policy_or_exact_combo": {
+      "COMBO": 0,
+      "SINGLE": 10
+    },
+    "historical_single_fixture_repeat_details": [
+      {
+        "count": 2,
+        "fixture_id": "1551463",
+        "markets": [
+          "BTTS_NO",
+          "DRAW"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-21T13:05:06.006986+00:00",
+          "2026-09-21T13:35:25.712075+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1639139",
+        "markets": [
+          "OVER_2_5",
+          "OVER_1_5"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-28T14:03:04.185286+00:00",
+          "2026-09-28T14:34:54.302742+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1639142",
+        "markets": [
+          "OVER_1_5",
+          "BTTS_YES"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-29T14:35:53.196939+00:00",
+          "2026-09-29T14:03:21.961500+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1639141",
+        "markets": [
+          "UNDER_1_5",
+          "UNDER_3_5"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-28T16:04:15.241138+00:00",
+          "2026-09-28T17:02:35.803058+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1640262",
+        "markets": [
+          "HOME_WIN",
+          "DRAW"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-30T08:03:19.949424+00:00",
+          "2026-09-30T08:34:49.549405+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1528906",
+        "markets": [
+          "HOME_WIN",
+          "DRAW"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-28T18:00:31.968919+00:00",
+          "2026-09-28T18:31:27.723537+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1528914",
+        "markets": [
+          "DRAW",
+          "AWAY_WIN"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-29T15:00:35.074548+00:00",
+          "2026-09-29T15:31:49.826839+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1628521",
+        "markets": [
+          "AWAY_WIN",
+          "DRAW"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-26T14:04:10.468091+00:00",
+          "2026-09-26T14:34:39.325309+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1528908",
+        "markets": [
+          "AWAY_WIN",
+          "DRAW"
+        ],
+        "policy": "LEGACY",
+        "prepared_at": [
+          "2026-09-28T18:31:30.364778+00:00",
+          "2026-09-28T18:03:27.000622+00:00"
+        ]
+      },
+      {
+        "count": 2,
+        "fixture_id": "1528922",
+        "markets": [
+          "OVER_1_5",
+          "UNDER_3_5"
+        ],
+        "policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V1",
+        "prepared_at": [
+          "2026-10-01T11:00:32.401327+00:00",
+          "2026-10-01T18:31:52.170898+00:00"
+        ]
+      }
+    ],
+    "last_settlement_diagnostic": {
+      "observed_at_utc": "2026-10-06T09:35:07.129882+00:00",
+      "records": [
+        {
+          "fixture_id": 1641994,
+          "frozen_kickoff_utc": "2026-10-02T14:00:00+00:00",
+          "observed_at_utc": "2026-10-06T09:35:07.129882+00:00",
+          "provider_kickoff_utc": "2026-10-02T14:00:00+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED",
+          "schedule_changed": false
+        },
+        {
+          "fixture_id": 1595250,
+          "frozen_kickoff_utc": "2026-10-03T13:30:00+00:00",
+          "observed_at_utc": "2026-10-06T09:35:07.129882+00:00",
+          "provider_kickoff_utc": "2026-10-03T13:30:00+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED",
+          "schedule_changed": false
+        },
+        {
+          "fixture_id": 1585277,
+          "frozen_kickoff_utc": "2026-10-03T14:00:00+00:00",
+          "observed_at_utc": "2026-10-06T09:35:07.129882+00:00",
+          "provider_kickoff_utc": "2026-10-03T14:00:00+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED",
+          "schedule_changed": false
+        },
+        {
+          "fixture_id": 1641994,
+          "frozen_kickoff_utc": "2026-10-02T14:00:00+00:00",
+          "observed_at_utc": "2026-10-06T09:35:07.129882+00:00",
+          "provider_kickoff_utc": "2026-10-02T14:00:00+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED",
+          "schedule_changed": false
+        },
+        {
+          "fixture_id": 1572374,
+          "frozen_kickoff_utc": "2026-10-03T16:00:00+00:00",
+          "observed_at_utc": "2026-10-06T09:35:07.129882+00:00",
+          "provider_kickoff_utc": "2026-10-03T16:00:00+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED",
+          "schedule_changed": false
+        },
+        {
+          "fixture_id": 1613966,
+          "frozen_kickoff_utc": "2026-10-03T16:15:00+00:00",
+          "observed_at_utc": "2026-10-06T09:35:07.129882+00:00",
+          "provider_kickoff_utc": "2026-10-03T16:15:00+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED",
+          "schedule_changed": false
+        }
+      ],
+      "total_unresolved": 6,
+      "truncated": false,
+      "version": "LAB_UNRESOLVED_RESULT_V1"
+    },
+    "pending": [
+      {
+        "hours_after_last_kickoff": -8.292279008055555,
+        "last_kickoff_utc": "2026-10-06T18:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-14fcbfbb2c9843e8d7e92764c2b314ecdfe636247304d823381c56fafb342940",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-25fec7fd7916b26ad9aab21348442993c8713ba82eeee04958d0437251ff416a",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -8.292279008055555,
+        "last_kickoff_utc": "2026-10-06T18:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-262cf0d092a0866ee82daf6b7042693c5d70a1419e7cb071ab6cc5089e646610",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -7.292279008055556,
+        "last_kickoff_utc": "2026-10-06T17:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-284de73f344dea27ecb480ac1622c09b33ba61d588cee1cb998d23ba0926eb51",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-2e6bbe3407e4508cb7f4abf0f989278c010c9b84f4bfb248c4a13cff213a8c68",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-46ed5449ac3aed759f0c6f81fee048062ce79cfb837a80dda887040407be8270",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": 91.70772099194446,
+        "last_kickoff_utc": "2026-10-02T14:00:00+00:00",
+        "older_than_6h": true,
+        "prediction_id": "lab-v2-single-572685da5635694e816f5b8e0fa73ca2e886802c8a5d2e55513a96d7657f72e9",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -7.292279008055556,
+        "last_kickoff_utc": "2026-10-06T17:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-5db0ce064031be8c2c7b9a32fd2cdb0f9f30ae69d1b71f8b7f976941e4d2d96d",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-5ea016ab770296dde95ede167ee0a9fc280049ca65646cd80e52cdd6052bfa0e",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-67b60efd6b771a881a7ea6f76f47e819857466bf159f62099ebeafcbf8785a36",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -8.292279008055555,
+        "last_kickoff_utc": "2026-10-06T18:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-6ea4ec5aec4a4a359ac18403860188cac794d7fd7a62b421ca652417ef6c5d00",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -4.292279008055555,
+        "last_kickoff_utc": "2026-10-06T14:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-718d9b1a1c54c7316ec7d6b22560d9d659b0da88236e95eecee48bb83bfffd29",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-8190fb7896de35d9ae5f6e06d4cdea14e6133f09d19bbe562eb72f3855de4911",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": 0.7077209919444445,
+        "last_kickoff_utc": "2026-10-06T09:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-83e6df198591f7bef4e09f51def0819573e842ebfbfe9c199f3f739b9457a3e0",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -2.2922790080555555,
+        "last_kickoff_utc": "2026-10-06T12:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-952dfbc87a76763b9822cd5ff2a34bec4167fe2b7b60e5292c81095a2924c6d4",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -1.7922790080555557,
+        "last_kickoff_utc": "2026-10-06T11:30:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-9d51af4aaf93e146ee1978d66f5a85a43db195ef765cf12b8b2c5d0b5aa35db5",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -7.292279008055556,
+        "last_kickoff_utc": "2026-10-06T17:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-a9974f38b56c1019892fee57ca4cd08754cca6dd80786afb50e20d2b8e20e2dc",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -1.2922790080555557,
+        "last_kickoff_utc": "2026-10-06T11:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-ab80da86aa944cc7550a7c061b222aa89e55e9a73bf5d41e37e2ce30c018dc52",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -8.292279008055555,
+        "last_kickoff_utc": "2026-10-06T18:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-accc385c789f455ea0466d1ef854340440c87161a4319d545cfbd926a7fd630f",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -8.292279008055555,
+        "last_kickoff_utc": "2026-10-06T18:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-bd34c063d008ab77cf4fed0c75c4a1d630ff0309a0b35871b943c660b410d54f",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -6.292279008055556,
+        "last_kickoff_utc": "2026-10-06T16:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-da8b767fae1adb33ba112dd5a995a68ab97ac1415cb79e50a9efdb8c6cdab683",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-e5886cb018ce73ebe162e88abfbd374d113aec2c6c978e0089aa66f952f4b1d1",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -8.292279008055555,
+        "last_kickoff_utc": "2026-10-06T18:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-single-e830b6cbd43f59b6beb80271d23256cfb74d41f030a13935a4acd7581e210852",
+        "product": "SINGLE"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-167c55dbd956cd8bdd5d6b52d70730c28a35e932f4e85760f6be98bfd4f20676",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": -7.292279008055556,
+        "last_kickoff_utc": "2026-10-06T17:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-2bc644c1882446bf025c4b27f78ae9c2a979073551376b249d244c44ffe97b38",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": -8.292279008055555,
+        "last_kickoff_utc": "2026-10-06T18:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-3c495684364d6f8fe17273bcf16cfe034a13ca30c163d15cade0e7ce19c6d9fc",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": -7.042279008055556,
+        "last_kickoff_utc": "2026-10-06T16:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-3cb34530e36fd2cef49d0d9d22c6d8896d4752665addff132b0811f95de0a9cf",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": 67.70772099194444,
+        "last_kickoff_utc": "2026-10-03T14:00:00+00:00",
+        "older_than_6h": true,
+        "prediction_id": "lab-v2-combo-accuracy-5257c09c082a75381d9a184ae3d26e57349a776d2b76409a5ac83e51d9827216",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": -5.292279008055556,
+        "last_kickoff_utc": "2026-10-06T15:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-555045adf0533240e4fb9ca42eb180ae547911e0c52c0788fc410933b746e21e",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": -2.2922790080555555,
+        "last_kickoff_utc": "2026-10-06T12:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-6550d9e1b310284bc74e8bfb9473931fbc008dc19834c17ea346520e9ee9f195",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": 67.70772099194444,
+        "last_kickoff_utc": "2026-10-03T14:00:00+00:00",
+        "older_than_6h": true,
+        "prediction_id": "lab-v2-combo-accuracy-743d95c77af464c3feb9f64502dc44baafd31b59013e61304b2a8e94ca65b1cb",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": 86.70772099194446,
+        "last_kickoff_utc": "2026-10-02T19:00:00+00:00",
+        "older_than_6h": true,
+        "prediction_id": "lab-v2-combo-accuracy-875216484225014e2f6c0baeb35dc66a3e1c22964edecfd5726079843c16140c",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-b5283632fabdb729960316e8640303790f2c86ba299171b4609f1ecaf4d452cb",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": -9.042279008055555,
+        "last_kickoff_utc": "2026-10-06T18:45:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-ce48e4a9ca0321111a1e5c77ee39e657e13334c22682b988f43e35c298bdfd10",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": -9.292279008055555,
+        "last_kickoff_utc": "2026-10-06T19:00:00+00:00",
+        "older_than_6h": false,
+        "prediction_id": "lab-v2-combo-accuracy-d7a53fcb6bf69df2c39f6349f440fab7ac478a1769d1861d2611667e0962513e",
+        "product": "COMBO"
+      },
+      {
+        "hours_after_last_kickoff": 62.95772099194444,
+        "last_kickoff_utc": "2026-10-03T18:45:00+00:00",
+        "older_than_6h": true,
+        "prediction_id": "lab-v2-combo-accuracy-e4221c3d681e8ad0f28d9f313bf01a5a9e888b209153cb480a17174bff50f8dc",
+        "product": "COMBO"
+      }
+    ],
+    "pending_older_than_6h": 5,
+    "receipts_last_24h": {
+      "SENT": 81
+    },
+    "settlement_diagnostic_samples": 143
+  },
+  "publication_cycles": {
+    "as_of": "2026-10-06T09:42:27.795571+00:00",
+    "cycles": [
+      {
+        "at": "2026-10-06T09:33:37.569707+00:00",
+        "combo_blockers": {
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 27
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 4,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 4,
+          "status:SENT": 4,
+          "transport_attempted": 4
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 6,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 199,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 43
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-06T09:04:09.330551+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 44,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 107
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 4,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 4,
+          "status:SENT": 4,
+          "transport_attempted": 4
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 44,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 20,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 826,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 150
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-06T08:35:22.008945+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 44,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 107,
+          "LAB_PUBLICATION_POLICY_REJECTED": 2
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 4,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 4,
+          "status:SENT": 4,
+          "transport_attempted": 4
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 44,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 22,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 832,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 150
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-06T08:03:26.137887+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 44,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 92,
+          "LAB_PUBLICATION_POLICY_REJECTED": 2
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 4,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 4,
+          "status:SENT": 4,
+          "transport_attempted": 4
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 44,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 22,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 761,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 132
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-06T07:34:23.644222+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 78
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 4,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 4,
+          "status:SENT": 4,
+          "transport_attempted": 4
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 19,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 670,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 113
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-06T07:02:54.664683+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 79,
+          "LAB_PUBLICATION_POLICY_REJECTED": 3
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 4,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 4,
+          "status:SENT": 4,
+          "transport_attempted": 4
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 22,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 689,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 116
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-06T06:33:46.333931+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 44,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 54,
+          "LAB_PUBLICATION_POLICY_REJECTED": 3
+        },
+        "combos_sent": 2,
+        "delivery_counts": {
+          "receipt_persisted": 5,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 5,
+          "status:SENT": 5,
+          "transport_attempted": 5
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 1,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 44,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 17,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 526,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 85
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-06T06:04:52.239773+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 23
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 4,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 4,
+          "status:SENT": 4,
+          "transport_attempted": 4
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 3,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 208,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 39
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-05T19:32:32.414143+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 1
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 4,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 7
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T19:01:45.908260+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 1
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 7,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 2
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T18:33:01.642263+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 9,
+          "LAB_PUBLICATION_POLICY_REJECTED": 4
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 1,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 80,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 13
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T18:02:42.260013+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 9,
+          "LAB_PUBLICATION_POLICY_REJECTED": 4
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 1,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 72,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 13
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T17:32:55.738791+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 10,
+          "LAB_PUBLICATION_POLICY_REJECTED": 3
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 1,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 105,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 18
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T17:01:30.608669+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 7
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 83,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 14
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T16:32:57.988568+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 1
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 33,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 5
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T16:01:25.858507+00:00",
+        "combo_blockers": {
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 1
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 1,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 7
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T15:33:05.264792+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 17,
+          "LAB_PUBLICATION_POLICY_REJECTED": 1
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 5,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 157,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 29
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T15:01:52.033299+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 23,
+          "LAB_PUBLICATION_POLICY_REJECTED": 3
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 8,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 203,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 36
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T14:33:25.092406+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 24
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 1,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 1,
+          "status:SENT": 1,
+          "transport_attempted": 1
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 33,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 8,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 217,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 40
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T14:01:51.984605+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 23,
+          "LAB_PUBLICATION_POLICY_REJECTED": 1
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 7,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 196,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 38
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T13:33:38.617885+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 18,
+          "LAB_PUBLICATION_POLICY_REJECTED": 1
+        },
+        "combos_sent": 0,
+        "delivery_counts": {
+          "receipt_persisted": 1,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 1,
+          "status:SENT": 1,
+          "transport_attempted": 1
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 5,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 158,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 30
+        },
+        "singles_sent": 1
+      },
+      {
+        "at": "2026-10-05T13:01:28.283158+00:00",
+        "combo_blockers": {
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 2
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 42,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 7
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T12:33:09.204565+00:00",
+        "combo_blockers": {
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 2
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 49,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 7
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T12:01:54.032345+00:00",
+        "combo_blockers": {
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 2
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 22,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 5
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T11:32:46.468903+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 20
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 6,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 220,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 40
+        },
+        "singles_sent": 0
+      },
+      {
+        "at": "2026-10-05T11:01:31.450116+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 20
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 2,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 2,
+          "status:SENT": 2,
+          "transport_attempted": 2
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 3,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 194,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 39
+        },
+        "singles_sent": 1
+      },
+      {
+        "at": "2026-10-05T10:33:25.802137+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 16
+        },
+        "combos_sent": 1,
+        "delivery_counts": {
+          "receipt_persisted": 4,
+          "reconciliation_required": 0,
+          "stage:RECEIPT_PERSISTED": 4,
+          "status:SENT": 4,
+          "transport_attempted": 4
+        },
+        "delivery_status": "COMPLETED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 22,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 3,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 164,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 32
+        },
+        "singles_sent": 3
+      },
+      {
+        "at": "2026-10-05T10:01:39.858484+00:00",
+        "combo_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_COMBO_LEG_ODDS_BELOW_1_30": 5
+        },
+        "combos_sent": 0,
+        "delivery_counts": {},
+        "delivery_status": "NOT_ATTEMPTED",
+        "failure": null,
+        "private_singles_sent": 0,
+        "single_blockers": {
+          "FIXTURE_AFTER_LAB_CUTOFF": 11,
+          "LAB_ACCURACY_PUBLICATION_POLICY_REJECTED": 3,
+          "LAB_PUBLICATION_PROBABILITY_BELOW_0_55": 70,
+          "LAB_SINGLE_ODDS_BELOW_1_50": 13
+        },
+        "singles_sent": 0
+      }
+    ],
+    "delivery_counts": {
+      "receipt_persisted": 41,
+      "reconciliation_required": 0,
+      "stage:RECEIPT_PERSISTED": 41,
+      "status:SENT": 41,
+      "transport_attempted": 41
+    },
+    "since": "2026-10-05T09:42:27.795571+00:00"
+  }
+}
