@@ -7,7 +7,9 @@
 - [x] Extend the existing authoritative performance path with bias, data quality and policy cohorts.
 - [x] Extend reviewed six-method paired forward research and sparse-sample CI reporting; no DC algorithm or publication change.
 - [x] Audit quota, database, settlements, delivery uncertainty and promotion eligibility; retain unresolved claim for operator reconciliation.
-- [ ] Separate operator review/release of observability code if desired. No deployment or scheduled job change in this task.
+- [x] Prepare the exact-base operator package for the five reviewed runtime/resource files; 46 installer tests and isolated 553-module smoke pass.
+- [ ] Operator applies the pinned prematch-evidence wrapper, then verifies ENABLED and natural output. No agent deployment.
+- Operator runbook: docs/operations/PREMATCH_EVIDENCE_OPERATOR_20261006.md.
 - Methods: docs/operations/PREMATCH_EVIDENCE_METHODS_20261006.md.
 - Consolidated report: docs/operations/PREMATCH_EVIDENCE_HANDOFF_20261006.md.
 
