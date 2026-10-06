@@ -357,3 +357,14 @@ The adaptive forward-learning and regulation-time LIVE single foundation is
 implemented for isolated Test/Lab evaluation. Production deployment, provider
 LIVE provenance verification and initial reviewed champion bootstrap remain
 separate operator tasks. See `docs/runbooks/adaptive_lab_live.md`.
+
+
+## 2026-10-06 — User-authorized COMBO Double replacement
+
+- [x] Declare replacement of new Tirgus publications by exactly two legs: each odds >=1.70, model probability 70–80% inclusive, separate prospective cohort.
+- [x] Implement diagnostic-only quality disagreement, exact model replay/freshness/final review, disjoint exposure/claims, bounded full-pool ranking and separate results/statistics.
+- [x] Preserve existing SINGLE/DC policies and legacy triples; add two-leg complete/early-loss settlement and text/photo Reply compatibility.
+- [x] 510 offline tests passed; source syntax and stored current-input replay passed. No predictive-quality or future-pick-volume claim.
+- [ ] Exact-base pinned operator package smoke/preflight and manual operator deployment; no automatic deployment.
+- [ ] Natural-cycle Double publication/result verification after operator activation.
+- Runbook: docs/operations/COMBO_DOUBLE_170_20261006.md.

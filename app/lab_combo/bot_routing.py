@@ -169,13 +169,14 @@ def cohort_statistics(ledger: object, route: dict | None, *, agreement: bool | N
                 legacy = ledger.get("receipt", "combo_prediction:" + pid) is None
                 from app.lab_v2_shadow.combo_agreement import POLICY
                 from app.lab_v2_shadow.combo_market import POLICY as MARKET_POLICY
+                from app.lab_v2_shadow.combo_double import POLICY as DOUBLE_POLICY
                 policy = value.get("combo_selection_policy")
                 member = policy == POLICY
                 if selection_policy is not None:
-                    matches = (policy == selection_policy if selection_policy in {POLICY, MARKET_POLICY}
-                               else policy not in {POLICY, MARKET_POLICY})
+                    matches = (policy == selection_policy if selection_policy in {POLICY, MARKET_POLICY, DOUBLE_POLICY}
+                               else policy not in {POLICY, MARKET_POLICY, DOUBLE_POLICY})
                 else:
-                    matches = agreement is None or (member == agreement and policy != MARKET_POLICY)
+                    matches = agreement is None or (member == agreement and policy not in {MARKET_POLICY, DOUBLE_POLICY})
                 if matches and frozen_route(ledger, pid, legacy=legacy) == route:
                     selected.append(value)
             return selected
@@ -190,4 +191,7 @@ def cohort_statistics(ledger: object, route: dict | None, *, agreement: bool | N
         result["selection_cohort"] = COHORT
     if selection_policy == MARKET_POLICY:
         result["selection_cohort"] = MARKET_COHORT
+    from app.lab_v2_shadow.combo_double import POLICY as DOUBLE_POLICY, COHORT as DOUBLE_COHORT
+    if selection_policy == DOUBLE_POLICY:
+        result["selection_cohort"] = DOUBLE_COHORT
     return result

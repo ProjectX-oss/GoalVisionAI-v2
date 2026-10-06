@@ -19,7 +19,8 @@ METHODS = ("MULTIPLICATIVE", "POWER")
 
 
 def requested() -> bool:
-    return os.environ.get(FLAG, "0") != "0"
+    from .combo_double import requested as double_requested
+    return os.environ.get(FLAG, "0") != "0" and not double_requested()
 
 
 def mode_blocker(policy: str) -> str | None:
@@ -108,6 +109,10 @@ def review(value: dict, *, now: datetime) -> None:
 
 def published_selection_blocker(policy: str) -> str | None:
     """Both authorized lanes coexist; rollback blocks new B claims, not results."""
+    from .combo_double import mode_blocker as double_blocker, POLICY as DOUBLE_POLICY
+    blocker = double_blocker(policy)
+    if blocker or policy == DOUBLE_POLICY:
+        return blocker
     from .combo_agreement import mode_blocker as agreement_blocker
     if policy == POLICY:
         return mode_blocker(policy)

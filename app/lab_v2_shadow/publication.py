@@ -276,7 +276,15 @@ def prepare_v2_publications(report: dict[str, object], ledger: ComboRepository, 
             accuracy_pool, ledger, now=clock, label_origin=label_origin, football_context=football_context,
             combo_inputs=combo_inputs)
         from .combo_market import requested as market_requested
-        if market_requested():
+        from .combo_double import requested as double_requested, prepare as prepare_double
+        if double_requested():
+            doubles, double_diagnostics = prepare_double(
+                report.get("candidate_markets", []), ledger, now=clock, label_origin=label_origin,
+                football_context=football_context, excluded_combos=tuple(combos))
+            combo_diagnostics = {**combo_diagnostics, "parallel_double": double_diagnostics,
+                                 "total_prepared_count": len(combos) + len(doubles)}
+            combos = [*combos, *doubles]
+        elif market_requested():
             market_combos, market_diagnostics = prepare_accuracy_combos(
                 accuracy_pool, ledger, now=clock, label_origin=label_origin,
                 football_context=football_context, combo_inputs=market_combo_inputs,
@@ -339,6 +347,21 @@ def v2_single_message(value: dict) -> str:
 
 def v2_combo_message(value: dict, number: int) -> str:
     from .accuracy_combo import SUPPORTED_POLICIES as ACCURACY_COMBO_POLICIES
+    from .combo_double import POLICY as DOUBLE_POLICY
+    if value.get("combo_selection_policy") == DOUBLE_POLICY:
+        lines = [f"🧪 GoalVision AI Lab Combo #{value['combo_number']}",
+                 "🧪 COMBO Double tests · 2 spēles · atsevišķa testa statistika.",
+                 "Katrai kājai koef. ≥1.70 un modeļa novērtējums 70–80%."]
+        for symbol, leg in zip(("1️⃣", "2️⃣"), value["legs"], strict=True):
+            lines.extend((f"{symbol} {leg['home_team']} – {leg['away_team']}",
+                          f"🎯 Likme: {market_label(leg['market'])}",
+                          f"💰 Koef.: {public_decimal(leg['captured_odds'])}",
+                          f"Modeļa novērtējums: {Decimal(leg['ensemble_probability'])*100:.1f}%"))
+        first = min(datetime.fromisoformat(leg["kickoff_utc"]) for leg in value["legs"])
+        lines.extend((f"🔥 Kopējais koef.: {public_decimal(value['combined_odds'])}",
+                      f"⏰ Pirmais starts: {latvia_time(first.isoformat())}",
+                      "Abām likmēm jāuzvar. Eksperimentāls, nekalibrēts modeļa novērtējums; peļņa nav garantēta."))
+        return "\n".join(lines)
     accuracy = value.get("combo_selection_policy") in ACCURACY_COMBO_POLICIES
     lines = [f"🧪 GoalVision AI Lab Combo #{value['combo_number'] if accuracy else number}"]
     if accuracy:

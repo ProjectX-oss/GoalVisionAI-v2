@@ -37,7 +37,8 @@ def combo_odds_blocker(value: dict, *, minimum: Decimal | None) -> str | None:
         return None
     try:
         legs = value["legs"]
-        if not isinstance(legs, list) or len(legs) != 3:
+        from .cardinality import leg_count
+        if not isinstance(legs, list) or len(legs) != leg_count(value):
             return "INVALID_CURRENT_DECIMAL_ODDS"
         for leg in legs:
             captured = leg.get("captured_odds", leg.get("odds"))

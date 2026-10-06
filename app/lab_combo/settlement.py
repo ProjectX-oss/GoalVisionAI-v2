@@ -12,6 +12,7 @@ from app.real_match_lab_analysis.fingerprint import fingerprint
 from .repository import ComboRepository
 from .experimental import SETTLEMENT_RELEVANCE_AFTER_KICKOFF
 from .presentation import combo_result_message, single_result_message
+from .cardinality import leg_count
 
 
 def resolve_leg(leg: dict, payload: dict, now: datetime) -> dict | None:
@@ -62,8 +63,11 @@ def resolve_leg(leg: dict, payload: dict, now: datetime) -> dict | None:
 
 def aggregate(combo: dict, results: list[dict], now: datetime) -> dict:
     """Settle only a complete set; void legs contribute decimal odds of one."""
-    if len(results) != 3 or {r['observation_id'] for r in results} != {l['observation_id'] for l in combo['legs']}:
-        raise ValueError('All three immutable leg results are required')
+    count = leg_count(combo)
+    if (len(combo['legs']) != count or len(results) != count
+            or len({l['observation_id'] for l in combo['legs']}) != count
+            or {r['observation_id'] for r in results} != {l['observation_id'] for l in combo['legs']}):
+        raise ValueError('All immutable leg results for the declared coupon size are required')
     by_id = {r['observation_id']: r for r in results}
     results = [by_id[leg['observation_id']] for leg in combo['legs']]
     if any(r['outcome'] not in {'WON', 'LOST', 'VOID'} for r in results):
@@ -75,7 +79,7 @@ def aggregate(combo: dict, results: list[dict], now: datetime) -> dict:
               else 'PARTIAL_VOID' if 'VOID' in outcomes else 'WON')
     net = Decimal(-1) if status == 'LOST' else Decimal(0) if status == 'VOID' else effective - 1
     return {'prediction_id': combo['prediction_id'], 'legs': results, 'status': status,
-            'partial_void': 0 < outcomes.count('VOID') < 3, 'effective_combined_odds': str(effective),
+            'partial_void': 0 < outcomes.count('VOID') < count, 'effective_combined_odds': str(effective),
             'unit_result': str(net), 'settled_at_utc': now.isoformat()}
 
 
@@ -88,10 +92,11 @@ def economic_settlement(combo: dict, results: list[dict], now: datetime) -> dict
     Complete-set records retain their original format for immutable replay. An
     early loss is final accounting; later leg completion is a separate record.
     """
-    if len(results) == 3:
+    count = leg_count(combo)
+    if len(results) == count:
         return aggregate(combo, results, now)
     legs = {leg['observation_id']: leg for leg in combo['legs']}
-    if len(legs) != 3 or len({r['observation_id'] for r in results}) != len(results):
+    if len(legs) != count or len(combo['legs']) != count or len({r['observation_id'] for r in results}) != len(results):
         raise ValueError('Invalid combo result identities')
     by_id = {}
     for result in results:

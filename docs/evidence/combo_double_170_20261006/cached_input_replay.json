@@ -1,0 +1,82 @@
+{
+  "as_of": "2026-10-06T19:00:57.620705+00:00",
+  "candidate_count": 33,
+  "champion_changed": false,
+  "kind": "DEVELOPMENT_REPLAY_ONLY",
+  "observed_at": "2026-10-06T19:29:27.214455+00:00",
+  "outcomes": {
+    "BASELINE_DC_MARKET": {
+      "claims": 0,
+      "combos": [],
+      "diagnostics": {
+        "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+        "eligible_fixture_count": 0,
+        "minimum_combo_leg_decimal_odds": "1.30",
+        "parallel_market": {
+          "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+          "eligible_fixture_count": 0,
+          "minimum_combo_leg_decimal_odds": "1.30",
+          "policy": "LAB_COMBO_MULTI_BOOK_MARKET_V1",
+          "prepared_count": 0,
+          "rank_tail_omitted": 0,
+          "reason": "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES",
+          "rejection_counts": {}
+        },
+        "policy": "LAB_COMBO_CONSERVATIVE_AGREEMENT_V1",
+        "prepared_count": 0,
+        "reason": "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES",
+        "rejection_counts": {},
+        "total_prepared_count": 0
+      },
+      "receipts": 0,
+      "single_count": 0,
+      "single_selection_keys": []
+    },
+    "DC_DOUBLE": {
+      "claims": 0,
+      "combos": [],
+      "diagnostics": {
+        "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+        "eligible_fixture_count": 0,
+        "minimum_combo_leg_decimal_odds": "1.30",
+        "parallel_double": {
+          "eligible_fixture_count": 0,
+          "leg_count": 2,
+          "maximum_leg_model_probability": "0.80",
+          "minimum_combo_leg_decimal_odds": "1.70",
+          "minimum_leg_model_probability": "0.70",
+          "policy": "LAB_COMBO_DOUBLE_170_P70_80_20261006_V1",
+          "prepared_count": 0,
+          "rank_tail_omitted": 0,
+          "reason": "INSUFFICIENT_INDEPENDENT_DOUBLE_LEGS",
+          "rejection_counts": {
+            "COMBO_DOUBLE_COMPLETED_FINAL_REVIEW_REQUIRED": 33,
+            "COMBO_DOUBLE_LEG_EVIDENCE_INVALID": 33,
+            "COMBO_DOUBLE_LEG_ODDS_BELOW_1_70": 12,
+            "COMBO_DOUBLE_PROBABILITY_OUTSIDE_70_80": 31,
+            "FIXTURE_AFTER_LAB_CUTOFF": 33,
+            "PUBLICATION_DECISION_EVIDENCE_INVALID_OR_MISSING": 8,
+            "PUBLICATION_PROBABILITY_REPLAY_MISMATCH": 1
+          },
+          "score_is_calibrated_probability": false,
+          "statistics_cohort": "COMBO_DOUBLE_20261006_V1"
+        },
+        "policy": "LAB_COMBO_CONSERVATIVE_AGREEMENT_V1",
+        "prepared_count": 0,
+        "reason": "INSUFFICIENT_ELIGIBLE_COMBO_FIXTURES",
+        "rejection_counts": {},
+        "total_prepared_count": 0
+      },
+      "receipts": 0,
+      "single_count": 0,
+      "single_selection_keys": []
+    }
+  },
+  "production_claims_considered": false,
+  "production_sources_read_only": true,
+  "provider_calls": 0,
+  "quality_verdict": "NO_PREDICTIVE_IMPROVEMENT_ESTABLISHED",
+  "source_fingerprint": "94f102c48c83fe9143bfd15dcf3fee882f8aa0fa5df78a5679b87bd9ac852b41",
+  "source_identity": "lab-v2-cycle-5e5d0c2f40dede476016d5359ecaf18e0132d8e00fcdd82fbb6bca5f7ed12040",
+  "telegram_sends": 0
+}

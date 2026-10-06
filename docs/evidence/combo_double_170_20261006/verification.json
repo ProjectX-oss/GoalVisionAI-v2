@@ -1,0 +1,89 @@
+{
+  "admin_codex": "DISABLED unchanged",
+  "app_files_sha256": {
+    "app/lab_combo/bot_routing.py": "22e8fd29b76eec3989afa6565fcbd793844c1f5ca0838b7415c24f77d5f5d02b",
+    "app/lab_combo/cardinality.py": "9486430dfb5adb1ba03ac958f73923e8ab1b7b09593a5b91573bc8828521dcbb",
+    "app/lab_combo/odds_policy.py": "ce3f102ae32504a9ab0b0c29ed0aab4288eadb01ab5d501a345bb4da0eed0109",
+    "app/lab_combo/presentation.py": "ca13d121830aaa7744e39885891e28c548aff4d4362ae861c6a4207639bb761c",
+    "app/lab_combo/repository.py": "5f73c6e39362151c674ba6a5f7a5dfc13ccb2ca3188cf487eac03f576752af59",
+    "app/lab_combo/service.py": "0a823c1f6497eecc0395ae613f2990f139f82b39e3f0ac2f03881832601ff929",
+    "app/lab_combo/settlement.py": "7a1b6a98fea8a79b1dc29c0b44746e6d94cc9bdc40a307e9f01449f05920aa4c",
+    "app/lab_v2_shadow/accuracy_combo.py": "924bea7a3c07bd67242ca15590c440f6fb0129ca811f6ba59387864bc9aec564",
+    "app/lab_v2_shadow/combo_double.py": "f7b396552da76429afcfba80c846352413ee2bec52ac1175b94ac85270a64316",
+    "app/lab_v2_shadow/combo_market.py": "61a0464a489c68ede6c8457e894949a13f8ccb1f05c3875dfc6a0f7ed0543879",
+    "app/lab_v2_shadow/publication.py": "ab0ae353b1f3985639d6868a9ed0f0e943e3adaa86ac5f1e953574944eb741d5"
+  },
+  "base_read_only_preflight": "PASS",
+  "base_release": "/opt/goalvision-prematch-evidence-574f55f-20261006",
+  "baseline_commit": "9683d2222a80d6c728018ad2e0c9c0963fef7b53",
+  "cached_replay": "PASS; no qualifying latest-cycle pair; not performance evidence",
+  "champion": "unchanged",
+  "dc_publication_policy": "unchanged",
+  "declared_commit": "8de62b8e2e8e3aad523ec9b5efedcec22ab73768",
+  "football_provider_calls": 0,
+  "full_pool_cap": 6000,
+  "leg_odds_minimum": "1.70",
+  "legs": 2,
+  "live": "DISABLED unchanged",
+  "manual_cycles": 0,
+  "max_double_per_natural_cycle": 1,
+  "model_probability_range": [
+    "0.70",
+    "0.80"
+  ],
+  "observed_at_utc": "2026-10-06T19:33:37.750228+00:00",
+  "official": "untouched",
+  "policy": "LAB_COMBO_DOUBLE_170_P70_80_20261006_V1",
+  "previous_market_results": "retained",
+  "previous_recovered_combo": {
+    "result_reply": "CONFIRMED",
+    "source": "read-only natural settlement ledger",
+    "status": "LOST"
+  },
+  "production_deployments": 0,
+  "production_ledger_writes": 0,
+  "quality_disagreement": "diagnostic only for Double",
+  "ranked_fixture_cap": 60,
+  "replaces": "new COMBO market publications",
+  "retained_gates": [
+    "source identity",
+    "probability replay",
+    "non-market model evidence",
+    "fresh current odds",
+    "completed fresh final review",
+    "Riga today-only and cutoff",
+    "fixture/team correlation",
+    "cross-lane atomic economic claims",
+    "private bot routing",
+    "result reply"
+  ],
+  "schema": "COMBO_DOUBLE_170_IMPLEMENTATION_V1",
+  "single_publication_policies": "unchanged",
+  "syntax_parse": {
+    "passed_sources": 16
+  },
+  "telegram_sends": 0,
+  "tests": {
+    "failed": 0,
+    "network": "denied",
+    "passed": 510,
+    "scope": [
+      "tests/test_combo_double_170.py",
+      "tests/test_combo_double_install.py",
+      "tests/test_combo_market_parallel.py",
+      "tests/test_lab_accuracy_combo.py",
+      "tests/test_lab_accuracy_delivery.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_combo_bot_routing.py",
+      "tests/test_combo_aggregate_order.py",
+      "tests/test_lab_combo_integrity.py",
+      "tests/test_private_single_170.py",
+      "tests/test_settlement_replies.py",
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/adaptive_lab/test_performance_snapshot.py",
+      "tests/adaptive_lab/test_no_combo_learning.py",
+      "tests/test_combo_receipt_recovery.py"
+    ],
+    "seconds": 21.6
+  }
+}

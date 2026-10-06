@@ -76,7 +76,8 @@ class ComboRepository:
                 overlap = False
                 if not single:
                     from app.lab_v2_shadow.combo_market import POLICY as MARKET_POLICY
-                    if MARKET_POLICY in {prediction.get('combo_selection_policy'), old.get('combo_selection_policy')}:
+                    from .cardinality import DOUBLE_POLICY
+                    if {MARKET_POLICY, DOUBLE_POLICY} & {prediction.get('combo_selection_policy'), old.get('combo_selection_policy')}:
                         overlap = bool(_combo_exposures(prediction) & _combo_exposures(old))
                 if economic(old) != key and not overlap:
                     continue

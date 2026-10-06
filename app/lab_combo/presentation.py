@@ -166,6 +166,8 @@ def combo_result_message(value: dict, stats: dict) -> str:
         lines.append("🧪 COMBO DC testa statistika")
     if stats.get("selection_cohort") == "COMBO_MARKET_20261004_V1":
         lines.append("🧪 COMBO Tirgus testa statistika")
+    if stats.get("selection_cohort") == "COMBO_DOUBLE_20261006_V1":
+        lines.append("🧪 COMBO Double testa statistika")
     lines.append(statistics_line("Combo", stats))
     return "\n".join(lines)
 

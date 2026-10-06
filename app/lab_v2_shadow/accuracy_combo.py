@@ -18,7 +18,8 @@ from app.lab_combo.odds_policy import (FLOOR_POLICY, COMBO_LEG_ODDS_FLOOR,
 POLICY = "LAB_COMBO_ACCURACY_FROM_SINGLES_V1"
 from .combo_agreement import POLICY as AGREEMENT_POLICY, COHORT, requested, mode_blocker
 from . import combo_market
-SUPPORTED_POLICIES = frozenset({POLICY, FLOOR_POLICY, AGREEMENT_POLICY, combo_market.POLICY})
+from app.lab_combo.cardinality import DOUBLE_POLICY
+SUPPORTED_POLICIES = frozenset({POLICY, FLOOR_POLICY, AGREEMENT_POLICY, combo_market.POLICY, DOUBLE_POLICY})
 
 
 def active_policy() -> str:
@@ -81,7 +82,7 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
         if any(ledger.get(kind, prefix + previous["prediction_id"])
                for kind in ("claim", "receipt") for prefix in ("combo_prediction:", "prediction:")):
             used_fixtures.update(int(leg["fixture_id"]) for leg in previous["legs"])
-            if market_variant or previous.get("combo_selection_policy") == combo_market.POLICY:
+            if market_variant or previous.get("combo_selection_policy") in {combo_market.POLICY, DOUBLE_POLICY}:
                 reserve_teams(previous)
     source_candidates = qualified if scored else _probability_first_single_candidates(qualified)
     if scored and len(source_candidates) > 600:
@@ -199,6 +200,9 @@ def prepare_accuracy_combos(candidates: list[dict], ledger: object, *, now: date
 
 def review_accuracy_combo(value: dict, *, now: datetime) -> dict:
     """Revalidate every leg, aggregate and identity before a durable send claim."""
+    if value.get("combo_selection_policy") == DOUBLE_POLICY:
+        from .combo_double import review
+        return review(value, now=now)
     from app.lab_combo.service import _accuracy_delivery_review
     from .origin import is_labelled
     from .publication import SINGLE_SELECTION_POLICY, LEGACY_SINGLE_SELECTION_POLICY

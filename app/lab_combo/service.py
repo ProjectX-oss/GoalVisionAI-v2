@@ -324,7 +324,9 @@ class LabComboService:
             candidates = [value] if kind == 'single_prediction' else value['legs']
             if not (accuracy_single or accuracy_combo) and any(item.get('stage') != 'READY_TO_PUBLISH' for item in candidates):
                 return {'status': 'FINAL_REVIEW_REQUIRED', 'sent': False}
-            review_field = ('accuracy_review_completed_at_utc' if accuracy_single or accuracy_combo
+            from .cardinality import DOUBLE_POLICY
+            review_field = ('double_review_completed_at_utc' if accuracy_combo and value.get('combo_selection_policy') == DOUBLE_POLICY
+                            else 'accuracy_review_completed_at_utc' if accuracy_single or accuracy_combo
                             else 'final_review_completed_at_utc')
             review_times = [item.get(review_field) for item in candidates]
             if any(not review for review in review_times):
@@ -562,12 +564,14 @@ class LabComboService:
                 if result:
                     results.append(result)
             existing = self.ledger.get('settlement', identity)
+            from .cardinality import leg_count
+            expected_results = leg_count(combo)
             if existing is None:
                 value = (economic_settlement(combo, results, now) if self.early_combo_loss
-                         else aggregate(combo, results, now) if len(results) == 3 else None)
+                         else aggregate(combo, results, now) if len(results) == expected_results else None)
                 if value and self.ledger.append('settlement', identity, value):
                     completed.append(identity)
-            elif existing.get('settlement_version') == EARLY_LOSS_VERSION and len(results) == 3:
+            elif existing.get('settlement_version') == EARLY_LOSS_VERSION and len(results) == expected_results:
                 detail = aggregate(combo, results, now)
                 if detail['status'] != existing['status'] or detail['unit_result'] != existing['unit_result']:
                     raise ValueError('COMBO_FINAL_DETAIL_ACCOUNTING_CONFLICT')
