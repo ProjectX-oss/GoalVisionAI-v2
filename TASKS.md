@@ -1,3 +1,16 @@
+## 2026-10-06 — PREMATCH evidence and observability audit
+
+- [x] Read-only current champion/learning/calendar snapshot; 163/300 independent CALIBRATION_FIT, no fit or holdout use.
+- [x] Verify eight natural queue cycles; preserve queue, thresholds and provider caps. Saturated pending/tie real-world proof remains unavailable.
+- [x] Separate upstream stale/missing current quote evidence from quota exhaustion; no speculative refresh targeting change.
+- [x] Attribute proven raw provider zero to PROVIDER_ZERO_PROBABILITY, preserving rejection and unmodified probabilities.
+- [x] Extend the existing authoritative performance path with bias, data quality and policy cohorts.
+- [x] Extend reviewed six-method paired forward research and sparse-sample CI reporting; no DC algorithm or publication change.
+- [x] Audit quota, database, settlements, delivery uncertainty and promotion eligibility; retain unresolved claim for operator reconciliation.
+- [ ] Separate operator review/release of observability code if desired. No deployment or scheduled job change in this task.
+- Methods: docs/operations/PREMATCH_EVIDENCE_METHODS_20261006.md.
+- Consolidated report: docs/operations/PREMATCH_EVIDENCE_HANDOFF_20261006.md.
+
 ## 2026-10-04 — Private Lab SINGLE odds >=1.70 / probability 70–80%
 
 - [x] Verify installed settlement-quota 9d73894 release and verified COMBO-owner anchor; declare the private prospective contract before implementation.

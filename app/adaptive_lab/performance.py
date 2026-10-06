@@ -7,7 +7,7 @@ from math import log
 from statistics import mean, median
 from .contracts import utc
 
-VERSION = "LAB_PERFORMANCE_SNAPSHOT_V1"
+VERSION = "LAB_PERFORMANCE_SNAPSHOT_V2"
 LEAD_BOUNDS = (10, 25, 45, 90)
 AGE_BOUNDS = (60, 300, 900, 1800, 3600, 14400)
 
@@ -63,6 +63,7 @@ def probability_metrics(pairs: list[tuple[float, int]]) -> dict:
             "log_loss": mean(-y*log(p)-(1-y)*log(1-p) for p, y in pairs) if n else None,
             "ece": sum(b["n"]*abs(b["error"]) for b in bins)/n if n else None,
             "mce": max(abs(b["error"]) for b in bins) if bins else None,
+            "calibration_bias_predicted_minus_observed": mean(p-y for p,y in pairs) if n else None,
             "reliability_bins": bins}
 
 
@@ -106,7 +107,13 @@ def dimensions(prediction: dict) -> dict:
     families = prediction.get("predictive_families")
     signal_basis = ("MISSING" if not isinstance(families, list) else
                     "MARKET_ONLY" if not families else "NON_MARKET_EVIDENCE_PRESENT")
-    return {"signal_basis": signal_basis,
+    review = prediction.get('accuracy_publication_review')
+    quality = ('FROZEN_ACCURACY_REVIEW_UNAVAILABLE' if not isinstance(review, dict) else
+               'FROZEN_ACCURACY_REVIEW_ELIGIBLE' if review.get('eligible') is True else
+               'FROZEN_ACCURACY_REVIEW_OTHER_OR_UNAVAILABLE')
+    return {"signal_basis": signal_basis, "data_quality_state": quality,
+            "ev_sign": ('MISSING' if p is None or odds is None else
+                        'POSITIVE_EV' if p*odds > 1 else 'NON_POSITIVE_EV'),
             "probability_kind": str(prediction.get("probability_kind") or "MISSING"),
             "selection_policy": str(prediction.get("single_selection_policy") or prediction.get("policy") or "MISSING"),"odds_band": band(odds, (1.5, 2, 3, 5, 10)),
             "probability_band": band(p, (.4, .5, .6, .7, .8, .9)),
@@ -156,6 +163,7 @@ def performance_snapshot(ledger, *, now: datetime) -> dict:
                 status, result = "PENDING", None
             if product == "SINGLE":
                 d = dimensions(prediction)
+                d['statistics_cohort'] = prediction.get('single_selection_policy') or prediction.get('policy') or 'LEGACY_SINGLE'
                 p = finite(prediction.get("ensemble_probability"))
                 odds = finite(prediction.get("captured_odds"))
             else:
@@ -169,6 +177,9 @@ def performance_snapshot(ledger, *, now: datetime) -> dict:
                 d["probability_band"] = band(p, (.2, .3, .4, .5, .6, .7))
                 d["value_cohort"] = ("MISSING" if p is None or odds is None else
                                     "NEGATIVE_EV" if p*odds < 1 else "ZERO_EV" if p*odds == 1 else "POSITIVE_EV")
+                d['ev_sign'] = ('MISSING' if p is None or odds is None else
+                                'POSITIVE_EV' if p*odds > 1 else 'NON_POSITIVE_EV')
+                d['statistics_cohort'] = prediction.get('statistics_cohort') or prediction.get('combo_selection_policy') or 'LEGACY_COMBO'
             rows.append({"status": status, "probability": p, "odds": odds,
                          "pnl": finite(result.get("unit_result")) if result else None,
                          "partial_void": bool((result or {}).get("partial_void")), "dimensions": d})
@@ -191,6 +202,8 @@ def performance_snapshot(ledger, *, now: datetime) -> dict:
                                          product=p) for p, rows in products.items()},
             "non_positive_ev": {p: summarize([r for r in rows if r["dimensions"].get("value_cohort") in {"NEGATIVE_EV", "ZERO_EV"}],
                                              product=p) for p, rows in products.items()},
+            "cohorts": {p: {v['value']: {k:x for k,x in v.items() if k not in {'dimension','value'}}
+                            for v in segments[p] if v['dimension']=='statistics_cohort'} for p in products},
             "segments": segments}
 
 
@@ -205,7 +218,7 @@ def candidate_timing_diagnostics(candidates: list[dict], *, selected_at: datetim
     for (dimension, value), rows in sorted(groups.items()):
         reasons = Counter(reason for r in rows for reason in
                           set(r.get("rejection_reasons") or []) | set(r.get("readiness_reasons") or []))
-        invalid = sum(any("INVALID" in reason or "STALE" in reason for reason in
+        invalid = sum(any("INVALID" in reason or "STALE" in reason or reason == 'PROVIDER_ZERO_PROBABILITY' for reason in
                           set(r.get("rejection_reasons") or []) | set(r.get("hard_failures") or [])) for r in rows)
         disagreement = []
         for r in rows:
@@ -250,6 +263,7 @@ def operator_summary(snapshot: dict) -> dict:
         "average_odds", "median_odds", "average_combined_odds", "odds_sample",
         "missing_pnl_count", "missing_probability_count", "probability_observations",
         "brier", "log_loss", "ece", "mce", "predictive_calibration_observations",
+        "calibration_bias_predicted_minus_observed",
     )
     def totals(value):
         return {key: value[key] for key in scalar_keys if key in value}

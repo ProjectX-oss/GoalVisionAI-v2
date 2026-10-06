@@ -2,7 +2,7 @@
 from __future__ import annotations
 from dataclasses import replace
 from datetime import datetime, timedelta
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 from .ensemble import EnsembleDecision, EnsembleSignal, evaluate_ensemble, _independence_group, _market_weight
 from .ensemble import MAX_MARKET_EDGE, MAX_MODEL_MARKET_DIFFERENCE
@@ -111,3 +111,42 @@ def next_refresh(kickoff: datetime, now: datetime, policy: ProfilePolicy) -> dat
     """Deterministic data-usefulness windows, invoked manually without timers."""
     return next((kickoff - timedelta(minutes=m) for m in policy.refresh_minutes
                  if kickoff - timedelta(minutes=m) > now), None)
+
+
+def provider_probability_diagnostic(decision: EnsembleDecision, evidence: dict, api,
+                                    *, fixture_id: int, market: str, now: datetime):
+    """Attribute an already rejected endpoint only with matching raw provider proof.
+
+    Probabilities, decision, lane and all other gates are unchanged. Unproven
+    zeros, nonfinite values, complements and other producers retain the generic code.
+    """
+    trace = evidence.get('invalid_model_probability_evidence')
+    if not trace or api is None or not api.raw_provider_probabilities:
+        return decision, evidence
+    raw = api.raw_provider_probabilities.get(market)
+    for source in trace.get('signals', []):
+        if source.get('producer') == 'API_FOOTBALL_PREDICTION':
+            source['raw_provider_probability_before_normalization'] = raw
+    try:
+        raw_zero = isinstance(raw, str) and raw.endswith('%') and Decimal(raw[:-1].strip()) == 0
+    except InvalidOperation:
+        raw_zero = False
+    if not (raw_zero and api.available and api.fixture_id == fixture_id and api.source_fingerprint
+            and api.probabilities.get(market) == 0 and decision.ensemble_probability == 0
+            and evidence.get('predictive_families') == ['API_FOOTBALL_PREDICTION']
+            and 'INVALID_MODEL_PROBABILITY' in decision.rejection_reasons):
+        return decision, evidence
+    code = 'PROVIDER_ZERO_PROBABILITY'
+    rename = lambda values: sorted({code if r == 'INVALID_MODEL_PROBABILITY' else r for r in values})
+    decision = replace(decision, rejection_reasons=tuple(rename(decision.rejection_reasons)))
+    evidence['hard_failures'] = rename(evidence['hard_failures'])
+    evidence['provider_zero_probability_evidence'] = {
+        'fixture_id': fixture_id, 'market': market, 'raw_provider_probability': raw,
+        'provider_source': 'API_FOOTBALL_PREDICTION', 'source_fingerprint': api.source_fingerprint,
+        'observed_at_utc': now.isoformat(), 'timestamp_kind': 'DOWNSTREAM_EVALUATION_TIME',
+        'normalized_probability': str(api.probabilities[market]),
+        'ensemble_probability': str(decision.ensemble_probability),
+        'downstream_rejection': code, 'decision': decision.decision,
+        'independence_group': 'API_FOOTBALL_PREDICTION', 'probability_modified': False,
+    }
+    return decision, evidence

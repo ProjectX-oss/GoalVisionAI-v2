@@ -41,7 +41,7 @@ from .quota import (
 from .repository import ShadowEvidenceRepository
 from .tracking import load_reviews, new_review, restore_fixture
 from .profiles import classify, fallback_capability, policy_for, is_priority, resource_priority
-from .global_evaluation import evaluate_profile
+from .global_evaluation import evaluate_profile, provider_probability_diagnostic
 from .signal_evidence import signal_requirements
 from .scheduling import fair_order, record_service
 from .diagnostics import global_diagnostic
@@ -1353,13 +1353,8 @@ class LabV2ShadowRunner:
                             market, None, signals, profile_policy, missing,
                             contradiction=veto, fixture_id=fixture_id)
                         profile_evidence.update(waiting_for_refresh=True)
-                    invalid_probability = profile_evidence.get("invalid_model_probability_evidence")
-                    if invalid_probability and api and api.raw_provider_probabilities:
-                        for source in invalid_probability.get("signals", []):
-                            if source.get("producer") == "API_FOOTBALL_PREDICTION":
-                                source["raw_provider_probability_before_normalization"] = (
-                                    api.raw_provider_probabilities.get(market)
-                                )
+                    decision, profile_evidence = provider_probability_diagnostic(
+                        decision, profile_evidence, api, fixture_id=fixture_id, market=market, now=now)
                     stage, readiness_reasons = _readiness(decision, fixture, now, review)
                     if profile_evidence["candidate_lane"] == "TRACKING" and stage not in {"REJECTED", "RESULT_TRACKING"}:
                         stage, readiness_reasons = "TRACKING", ("QUALITY_RISK_TRACKING",)

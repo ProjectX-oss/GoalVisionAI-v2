@@ -214,7 +214,10 @@ def test_observer_flag_adds_only_compact_health_and_preserves_core(repo,monkeypa
     report=after.pop("CALIBRATION_READINESS")
     assert after==before
     assert report["status"]=="BLOCKED"
-    assert repo.all("observer_runs","PREMATCH")[-1]["CALIBRATION_READINESS"]==report
+    from app.adaptive_lab.contracts import digest
+    # Both runs share NOW; repository ordering by digest is not insertion order.
+    identity=digest({**after,"CALIBRATION_READINESS":report})
+    assert repo.get("observer_runs",identity)["CALIBRATION_READINESS"]==report
     assert protected=={t:repo.revision(t) for t in PROTECTED_TABLES}
     assert after["api_calls"]==after["telegram_sends"]==0 and after["LIVE"]=="DISABLED"
 

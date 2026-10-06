@@ -97,6 +97,8 @@ def test_no_pick_diagnostics_use_candidate_denominator():
         assert g["candidate_count"] == 2 and g["invalid_or_stale_rate"] == .5
         assert g["no_pick_reasons"] == {"INVALID_MODEL_PROBABILITY": 1}
     assert result["publication_policy_changed"] is False
+    rows[0]['rejection_reasons']=['PROVIDER_ZERO_PROBABILITY']
+    assert all(g['invalid_or_stale_count']==1 for g in candidate_timing_diagnostics(rows,selected_at=START)['groups'])
 
 
 def test_persisted_health_has_explicit_snapshot_availability(repo, tmp_path):
@@ -150,3 +152,21 @@ def test_unavailable_snapshot_stays_explicit_in_operator_summary():
     from app.adaptive_lab.performance import operator_summary
     snapshot = {"status":"UNAVAILABLE", "reason":"LAB_LEDGER_SNAPSHOT_UNAVAILABLE"}
     assert operator_summary(snapshot) == snapshot
+
+
+def test_bias_quality_cohorts_and_ev_sign_share_confirmed_denominator():
+    from app.adaptive_lab.performance import operator_summary
+    ledger=Ledger()
+    a=single(ledger,'a','WON',odds='2',probability='.6')
+    a.update(single_selection_policy='NEW',accuracy_publication_review={'eligible':True})
+    b=single(ledger,'b','LOST',odds='2',probability='.5')
+    b.update(single_selection_policy='NEW')
+    single(ledger,'pending',None)
+    snapshot=performance_snapshot(ledger,now=START+timedelta(days=1))
+    assert snapshot['SINGLE']['calibration_bias_predicted_minus_observed']==pytest.approx(.05)
+    assert snapshot['cohorts']['SINGLE']['NEW']['total_settled']==2
+    groups={(r['dimension'],r['value']):r for r in snapshot['segments']['SINGLE']}
+    assert groups['data_quality_state','FROZEN_ACCURACY_REVIEW_ELIGIBLE']['WON']==1
+    assert groups['ev_sign','NON_POSITIVE_EV']['LOST']==1
+    assert groups['ev_sign','NON_POSITIVE_EV']['pending']==1
+    assert operator_summary(snapshot)['SINGLE']['calibration_bias_predicted_minus_observed']==pytest.approx(.05)
