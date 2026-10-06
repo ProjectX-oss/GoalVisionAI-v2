@@ -3,6 +3,12 @@
 Statuss: **SMALL_GITHUB_FIX / OPERATOR_ACTION_REQUIRED**. Sagatavota operatora
 pakete jau pārskatītajām observability izmaiņām. Aģents production neizvieto.
 
+Gatavās paketes source commit: `574f55fb50ae5bae1b9236978cf7e98b26d982d3`.
+Pakete: `/home/arvis/goalvision-operations/prematch-evidence-574f55f-20261006`.
+Mērķis pēc operatora apply: `/opt/goalvision-prematch-evidence-574f55f-20261006`.
+Gatavās paketes 7/7 checksums PASS; read-only preflight PASS, `current_mode=BASE`.
+Mērķis nav instalēts; esošās production routes un 852 application hashi pārbaudīti.
+
 ## Operatora komandas
 
 Pārbaude neko neinstalē un nestartē nevienu ciklu:
@@ -77,8 +83,9 @@ ADMIN darbība netiek mainīta. ADMIN Codex disabled guard joprojām obligāts.
 - Pazudis incremental JSON resurss izolētajā kopijā tiek korekti noraidīts.
 - Installer testi pārbauda replay, hash/route/command drift, missing resource,
   symlink, disabled ADMIN, root guards, busy worker un failure recovery.
-- Gala gatavās paketes hash/preflight un Git readback evidence tiek saglabāti
-  `docs/evidence/prematch_evidence_package_20261006/` pēc build.
+- Gatavās paketes hash/preflight un aizsargātā stāvokļa evidence saglabāta
+  `docs/evidence/prematch_evidence_package_20261006/`. Protected governance
+  skaiti pirms/pēc sagatavošanas sakrīt; source application nav papildus mainīta.
 
 ## Atlikusī delivery uncertainty
 

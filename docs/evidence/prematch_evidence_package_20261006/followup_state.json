@@ -1,0 +1,430 @@
+{
+  "as_of": "2026-10-06T10:33:11.747315+00:00",
+  "calendar_counts": {
+    "CALIBRATION_FIT": 163,
+    "EXCLUDED": 22,
+    "PURGED": 759,
+    "SEALED_HOLDOUT": 0,
+    "TRAIN": 1804,
+    "VALIDATION_EVALUATION": 0
+  },
+  "calendar_independent_fixtures": {
+    "CALIBRATION_FIT": 163,
+    "EXCLUDED": 20,
+    "PURGED": 297,
+    "SEALED_HOLDOUT": 0,
+    "TRAIN": 560,
+    "VALIDATION_EVALUATION": 0
+  },
+  "calibration_blockers": [
+    "CALIBRATION_FIT_INDEPENDENT_FIXTURES_INSUFFICIENT",
+    "CALIBRATION_FIT_SAMPLE_INSUFFICIENT",
+    "CALIBRATION_FIT_WINDOW_NOT_CLOSED",
+    "SEALED_HOLDOUT_INDEPENDENT_FIXTURES_INSUFFICIENT",
+    "SEALED_HOLDOUT_SAMPLE_INSUFFICIENT",
+    "SEALED_HOLDOUT_WINDOW_NOT_CLOSED",
+    "VALIDATION_EVALUATION_INDEPENDENT_FIXTURES_INSUFFICIENT",
+    "VALIDATION_EVALUATION_SAMPLE_INSUFFICIENT",
+    "VALIDATION_EVALUATION_WINDOW_NOT_CLOSED"
+  ],
+  "champion": {
+    "artifact_id": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+    "created_at": "2026-09-18T19:53:42.075830+00:00",
+    "evidence": {
+      "artifact_fingerprint": "694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d"
+    },
+    "generation_id": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "previous_generation": null,
+    "reason": "BOOTSTRAP",
+    "scope": "LAB_ONLY",
+    "stream": "PREMATCH"
+  },
+  "dataset_fingerprint": "530a5e624ad488b44a316a38143eb196a83c2c9a6cce82ad884061ed279fbf58",
+  "fit_invoked": false,
+  "holdout_evaluated": false,
+  "learning": {
+    "eligibility": {
+      "automatic_eligible": false,
+      "cycle_due": true,
+      "days_covered": 18,
+      "new_resolved": 1222,
+      "next_threshold": {
+        "calendar_days": 90,
+        "resolved": 500
+      },
+      "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+      "policy_version": "LAB_ADAPTIVE_V2",
+      "reason": "RESEARCH_ELIGIBLE",
+      "research_due": true,
+      "resolved": 2736,
+      "stage": "CHALLENGER_RESEARCH",
+      "status": "RESEARCH_ELIGIBLE",
+      "stream": "PREMATCH"
+    },
+    "independent_resolved_fixtures": 1030,
+    "resolved_eligible_observations": 2736,
+    "source_product_counts": {
+      "COMBO_LEG": 12,
+      "SHADOW": 2373,
+      "SINGLE": 363
+    },
+    "total_observations": 2748
+  },
+  "promotion_eligibility": "NOT_ELIGIBLE",
+  "queue_cycles": [
+    {
+      "at": "2026-10-06T10:00:03.264260+00:00",
+      "attempted_fixture_ids": [
+        1528721,
+        1528722,
+        1629005,
+        1632354,
+        1636360,
+        1636361,
+        1640677,
+        1640692,
+        1643202,
+        1643233
+      ],
+      "cycle_ceiling": 297,
+      "due_fixture_ids": [
+        1528721,
+        1528722,
+        1629005,
+        1632354,
+        1636360,
+        1636361,
+        1640677,
+        1640692,
+        1643202,
+        1643233
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 73,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1528721,
+        1528722,
+        1629005,
+        1632354,
+        1636360,
+        1636361,
+        1640677,
+        1640692,
+        1643202,
+        1643233
+      ],
+      "tracked_review_statuses": {
+        "ODDS_STALE": 5
+      },
+      "tracked_shortlist": [
+        1528721,
+        1528722,
+        1629005,
+        1632354,
+        1636360
+      ],
+      "unique_attempts": 10,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T09:30:03.316566+00:00",
+      "attempted_fixture_ids": [
+        1598647
+      ],
+      "cycle_ceiling": 286,
+      "due_fixture_ids": [
+        1598647
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 37,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1598647
+      ],
+      "tracked_review_statuses": {
+        "ODDS_STALE": 1
+      },
+      "tracked_shortlist": [
+        1598647
+      ],
+      "unique_attempts": 1,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T09:00:01.758321+00:00",
+      "attempted_fixture_ids": [
+        1598647
+      ],
+      "cycle_ceiling": 283,
+      "due_fixture_ids": [
+        1598647
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 185,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1598647
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 1
+      },
+      "tracked_shortlist": [
+        1598647
+      ],
+      "unique_attempts": 1,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T08:30:03.549724+00:00",
+      "attempted_fixture_ids": [
+        1638512,
+        1640079,
+        1640225,
+        1640226,
+        1643013,
+        1643014,
+        1644409,
+        1644441
+      ],
+      "cycle_ceiling": 274,
+      "due_fixture_ids": [
+        1638512,
+        1640079,
+        1640225,
+        1640226,
+        1643013,
+        1643014,
+        1644409,
+        1644441
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 65,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1638512,
+        1640079,
+        1640225,
+        1640226,
+        1643013,
+        1643014,
+        1644409,
+        1644441
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 1
+      },
+      "tracked_shortlist": [
+        1638512
+      ],
+      "unique_attempts": 8,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T08:00:03.297166+00:00",
+      "attempted_fixture_ids": [
+        1636359,
+        1638512,
+        1640079,
+        1643013,
+        1643014,
+        1644409,
+        1644441,
+        1640225,
+        1640226
+      ],
+      "cycle_ceiling": 267,
+      "due_fixture_ids": [
+        1636359,
+        1638512,
+        1640079,
+        1643013,
+        1643014,
+        1644409,
+        1644441,
+        1640225,
+        1640226
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 71,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1636359,
+        1638512,
+        1640079,
+        1643013,
+        1643014,
+        1644409,
+        1644441,
+        1640225,
+        1640226
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 2
+      },
+      "tracked_shortlist": [
+        1636359,
+        1638512
+      ],
+      "unique_attempts": 9,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T07:30:03.411198+00:00",
+      "attempted_fixture_ids": [
+        1636359,
+        1635881
+      ],
+      "cycle_ceiling": 265,
+      "due_fixture_ids": [
+        1636359,
+        1635881
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 195,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1636359,
+        1635881
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 1
+      },
+      "tracked_shortlist": [
+        1636359
+      ],
+      "unique_attempts": 2,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T07:00:02.621149+00:00",
+      "attempted_fixture_ids": [
+        1638509,
+        1638510,
+        1638511,
+        1635881
+      ],
+      "cycle_ceiling": 258,
+      "due_fixture_ids": [
+        1638509,
+        1638510,
+        1638511,
+        1635881
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 49,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1638509,
+        1638510,
+        1638511,
+        1635881
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 3
+      },
+      "tracked_shortlist": [
+        1638509,
+        1638510,
+        1638511
+      ],
+      "unique_attempts": 4,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T06:30:02.892154+00:00",
+      "attempted_fixture_ids": [
+        1638508,
+        1638509,
+        1638510,
+        1638511
+      ],
+      "cycle_ceiling": 251,
+      "due_fixture_ids": [
+        1638508,
+        1638509,
+        1638510,
+        1638511
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 47,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1638508,
+        1638509,
+        1638510,
+        1638511
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 4
+      },
+      "tracked_shortlist": [
+        1638508,
+        1638509,
+        1638510,
+        1638511
+      ],
+      "unique_attempts": 4,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    },
+    {
+      "at": "2026-10-06T06:00:02.871568+00:00",
+      "attempted_fixture_ids": [
+        1638508
+      ],
+      "cycle_ceiling": 252,
+      "due_fixture_ids": [
+        1638508
+      ],
+      "final_review_candidate_count": 0,
+      "invalid_window_attempts": [],
+      "maximum_batches": 2,
+      "maximum_per_batch": 5,
+      "pending_fixture_ids": [],
+      "provider_calls": 239,
+      "same_cycle_duplicates": 0,
+      "selected_fixture_ids": [
+        1638508
+      ],
+      "tracked_review_statuses": {
+        "AVAILABLE": 1
+      },
+      "tracked_shortlist": [],
+      "unique_attempts": 1,
+      "version": "LAB_FINAL_REVIEW_QUEUE_V1"
+    }
+  ],
+  "queue_pending_priority_live_proof": "BLOCKED_NEEDS_MORE_EVIDENCE"
+}

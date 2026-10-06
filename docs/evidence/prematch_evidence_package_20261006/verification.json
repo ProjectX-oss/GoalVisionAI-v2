@@ -1,0 +1,84 @@
+{
+  "admin_codex": "DISABLED",
+  "application_changes_during_packaging": [],
+  "base_application_files": 852,
+  "base_audit_evidence_commit": "30886bc91b6020e68d0d258d3e00e6b6b2c4522b",
+  "candidate_application_files": 854,
+  "checksums_checked": 7,
+  "checksums_exit_code": 0,
+  "current_mode": "BASE",
+  "deployments": 0,
+  "installer_tests": {
+    "files": [
+      "tests/test_prematch_evidence_install.py",
+      "tests/test_final_review_queue_install.py"
+    ],
+    "network_connect_denied": true,
+    "passed": 46,
+    "seconds": 0.58
+  },
+  "live_status": "DISABLED",
+  "manual_cycles": 0,
+  "missing_plan_isolated_negative_smoke": "PASS",
+  "official_changes": 0,
+  "overlay_files": [
+    "app/lab_v2_shadow/runner.py",
+    "app/lab_v2_shadow/global_evaluation.py",
+    "app/adaptive_lab/performance.py",
+    "app/dixon_coles_forward/incremental.py",
+    "app/dixon_coles_forward/incremental_plan_20261004.json"
+  ],
+  "package_path": "/home/arvis/goalvision-operations/prematch-evidence-574f55f-20261006",
+  "package_source_commit": "574f55fb50ae5bae1b9236978cf7e98b26d982d3",
+  "previous_runtime_tests_passed": 475,
+  "production_852_file_hashes_match_pinned_manifest": true,
+  "production_release": "/opt/goalvision-prematch-final-review-queue-76d96c1-20261005",
+  "protected_counts_after": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_counts_before": {
+    "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "counts": {
+      "activation_events": 1,
+      "champion_generations": 1,
+      "holdout_results": 0,
+      "learning_cycles": 3,
+      "live_publications": 0,
+      "model_artifacts": 59,
+      "shadow_runs": 0,
+      "training_runs": 133
+    }
+  },
+  "protected_routes_and_commands_verified": true,
+  "provider_calls": 0,
+  "read_only_preflight": [
+    "PREMATCH_EVIDENCE_PLAN_VALIDATED=/opt/goalvision-prematch-evidence-574f55f-20261006",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "root_only_admin_guard": "DEFERRED_TO_OPERATOR_APPLY",
+  "runtime_import_smoke": {
+    "incremental_plan_sha256": "25ad0030ae657748bf8af4c595a8e68d64be835d787e26d91bfa17fd8841dd3c",
+    "modules": 553,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "provider_calls": 0,
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_PREMATCH_EVIDENCE_IMPORT_PASS",
+    "telegram_sends": 0
+  },
+  "runtime_source_commit": "c5fec8c52625e3fc2742265ad75fad82e59a3911",
+  "target_exists": false,
+  "target_release": "/opt/goalvision-prematch-evidence-574f55f-20261006",
+  "telegram_sends": 0
+}

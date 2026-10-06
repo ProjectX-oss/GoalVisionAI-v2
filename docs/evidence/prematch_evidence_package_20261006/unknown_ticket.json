@@ -1,0 +1,42 @@
+{
+  "action": "INSPECT_ORIGINAL_CONVERSATION_NO_RESEND_NO_SYNTHETIC_RECEIPT",
+  "as_of": "2026-10-06T10:33:11.747315+00:00",
+  "combined_odds": "3.534912",
+  "combo_number": 1,
+  "created_at_utc": "2026-10-05T09:01:42.732669+00:00",
+  "ledger_state": {
+    "claim": 1,
+    "delivery_unknown": 1,
+    "receipt": 0
+  },
+  "legs": [
+    {
+      "away_team": "Belgium",
+      "fixture_id": 1528944,
+      "home_team": "France",
+      "kickoff_utc": "2026-10-05T18:45:00+00:00",
+      "market": "OVER_2_5",
+      "odds": "1.52"
+    },
+    {
+      "away_team": "Georgia",
+      "fixture_id": 1528947,
+      "home_team": "Northern Ireland",
+      "kickoff_utc": "2026-10-05T18:45:00+00:00",
+      "market": "UNDER_2_5",
+      "odds": "1.53"
+    },
+    {
+      "away_team": "Šamorín",
+      "fixture_id": 1561149,
+      "home_team": "Liptovský Mikuláš",
+      "kickoff_utc": "2026-10-05T15:00:00+00:00",
+      "market": "BTTS_YES",
+      "odds": "1.52"
+    }
+  ],
+  "policy": "LAB_COMBO_MULTI_BOOK_MARKET_V1",
+  "prediction_id": "lab-v2-combo-accuracy-e1f7df2f5ab623619b141a4045aaf627cb287cd813124a887ba04ce6ce61f808",
+  "status": "OPERATOR_ACTION_REQUIRED",
+  "timeout_at_utc": "2026-10-05T09:01:59.689850+00:00"
+}

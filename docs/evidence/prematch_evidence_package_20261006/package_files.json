@@ -1,0 +1,14 @@
+{
+  "files": {
+    "SHA256SUMS": "1bf80ec95cc9e08e977f6f9a2d40705545a53e20d09c5f19e34315ae308edbb6",
+    "metadata.json": "37538c04ab00641e865e23df65b5ad3f4e349a6af12cc37b2e3d07a330908b88",
+    "overlay/app/adaptive_lab/performance.py": "fbdb7711aedaa2e7aca73e3875052f1d25be27b2de808ddb525f1e2a478eeb0d",
+    "overlay/app/dixon_coles_forward/incremental.py": "745ea7ea556c48109f9782aab532586fb75c1fec639a44c79f5d5f04d12c5b03",
+    "overlay/app/dixon_coles_forward/incremental_plan_20261004.json": "25ad0030ae657748bf8af4c595a8e68d64be835d787e26d91bfa17fd8841dd3c",
+    "overlay/app/lab_v2_shadow/global_evaluation.py": "ece34559c051b810ef27570b39c67b2a4333234da7e6e1fcf63a8641144ec779",
+    "overlay/app/lab_v2_shadow/runner.py": "2b1e5aa358efd2e2d81ad51a6a0057c6311600887e89e3cbb7f9693fc33ef61e",
+    "update.py": "5eabe201397290ca6847e524f3245f0c540b1ddd19b22d63ce6f846191ec3aad"
+  },
+  "source_commit": "574f55fb50ae5bae1b9236978cf7e98b26d982d3",
+  "wrapper_sha256": "362111ad9c9a90ddfd59873d2005a2726f11471a4da1b47a246ce991f30ac565"
+}
