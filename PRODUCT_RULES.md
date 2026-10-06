@@ -538,3 +538,31 @@ inflation. Verify the already confirmed private COMBO owner through a fresh Lab
 bot START before operator activation. Private results use original-message Replies.
 Existing Lab SINGLE 1.50 / COMBO legs 1.30, both COMBO lanes, learning/champion,
 Official, LIVE and ADMIN restrictions remain unchanged. No automatic deployment.
+
+
+## COMBO Double replacement authorized 2026-10-06
+
+The user explicitly requested replacing new COMBO Tirgus tests publications with
+exactly TWO legs, each with current decimal odds >=1.70 and the retained model
+probability in [0.70, 0.80], inclusive and without display rounding. Declare
+`LAB_COMBO_DOUBLE_170_P70_80_20261006_V1`, cohort `COMBO_DOUBLE_20261006_V1`.
+This authorization applies only to the replacement lane; DC COMBO and public/private
+SINGLE policies remain unchanged. At most one Double per natural discovery cycle.
+
+The Double uses the existing frozen model/ensemble estimate, without DC agreement,
+multiple-bookmaker consensus ranking or confidence/edge/agreement quality cutoffs.
+Severe model/market or intelligence disagreement is retained as diagnostic evidence
+rather than a Double publication veto. Do not bypass data integrity: require actual
+non-market model evidence, exact probability replay, valid current quote provenance,
+upcoming permitted fixture/time window, fresh completed final review, distinct
+fixtures/teams, cross-COMBO exposure/duplicate checks, and bound original-message
+result delivery. Do not clamp/inflate probabilities, fabricate review approval,
+force picks or increase API budgets. Other unrecognized/data-quality failures remain
+blocking. These are uncalibrated experimental probabilities, not proven win rates.
+
+Retire new market-lane claims at explicit operator activation. Preserve all historical
+market/DC triples, immutable results/statistics, early loss and remaining-leg tracking.
+New two-leg statistics are a separate prospective cohort. Existing COMBO bot/private
+recipient remains. No additional combined floor, bankroll/staking change, champion
+change, Official/LIVE/ADMIN change, automatic deployment/promotion, provider call,
+Telegram test send or historical bookmaker odds acquisition is authorized.
