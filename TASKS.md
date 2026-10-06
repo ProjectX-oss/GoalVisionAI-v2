@@ -1838,5 +1838,6 @@ Review after completing the current priority.
 - [x] Exclude disallowed kickoffs and same-cycle attempts before shortlist truncation.
 - [x] Pending/deadline/least-recent-review ordering; unchanged prediction/publication gates.
 - [x] 338 focused offline tests; original five-defect reproduction and incident queue replay.
-- [ ] Explicit operator apply and next natural-cycle queue validation.
+- [x] Explicit operator apply and exact release/routes readback (2026-10-06).
+- [ ] First natural discovery queue validation after the 09:00 Riga start.
 - Report: docs/operations/PREMATCH_FINAL_REVIEW_QUEUE_20261005.md.

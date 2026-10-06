@@ -1,6 +1,6 @@
 # PREMATCH final-review queue repair — 2026-10-05
 
-Status: OFFLINE_VERIFIED; operator deployment pending.
+Status: DEPLOYMENT_VERIFIED; first natural discovery with the new release pending.
 
 ## Why this change is needed
 
@@ -124,3 +124,26 @@ Required reviewed_competitions.json and frozen calendar plan are included.
 Working release remains the COMBO aggregate baseline; deployment is pending.
 ADMIN Codex systemd timer is inactive/disabled; worker inactive with MainPID=0.
 Bootstrap champion generation remains unchanged; live publication count is zero.
+
+
+## Operator deployment verified — 2026-10-06 07:10 Riga
+
+The operator applied the package. Independent read-only verification confirms
+current_mode=ENABLED, exact 852-file application/environment hashes, matching
+deployment metadata and all four PREMATCH routes. Protected ADMIN/weekly/research
+configuration still matches the captured package contract. No agent deployment,
+manual cycle, provider request or Telegram send was performed.
+
+Discovery timer remains active/enabled; next natural start is 2026-10-06 09:00
+Europe/Riga (systemd displays 08:00 CEST). Latest recorded discovery execution
+predates deployment, so new queue behavior in a natural cycle is not yet verified.
+Settlement timer remains active/enabled. Observer activity spanning release
+assembly is not treated as proof of a new-release discovery run.
+
+ADMIN Codex timer remains inactive/disabled, worker inactive/MainPID=0.
+Bootstrap champion remains generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a;
+one champion generation, one activation, zero live publications.
+Official is untouched. Earlier test results are retained; no code test rerun
+was necessary for this documentation-only postflight.
+
+Evidence: docs/evidence/final_review_queue_20261005/deployed_readback_20261006.json.
