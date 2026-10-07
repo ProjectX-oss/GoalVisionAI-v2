@@ -131,7 +131,8 @@ def test_scheduled_ticks_block_unready_calibration_and_preserve_champion(repo):
 def test_observer_cannot_train_or_fetch(repo,monkeypatch):
     monkeypatch.setattr(AutoLearner,'run',lambda *a,**k:pytest.fail('observer trained'))
     result=observe(repo,Ledger(),now=START)
-    assert result['LIVE']=='DISABLED' and result['api_calls']==0
+    assert result['LIVE']=='NOT_EVALUATED' and result['api_calls']==0
+    assert result['LIVE_SCOPE']=='PREMATCH_OBSERVER'
 
 
 def test_math_full_market_contract():
@@ -232,7 +233,7 @@ def test_cycle_health_does_not_call_quota_starvation_healthy():
        'rejection_reasons':{'NO_INDEPENDENT_NON_MARKET_EVIDENCE':1}}
     h=cycle_health(r,started=START,completed=START)
     assert h['result']=='DEGRADED' and h['tracking']==20 and h['published']==0
-    assert h['lanes']=={'EXPERIMENTAL':1} and h['LIVE']=='DISABLED'
+    assert h['lanes']=={'EXPERIMENTAL':1} and h['LIVE']=='NOT_EVALUATED'
     r['terminal_error']='ValueError'
     assert cycle_health(r,started=START,completed=START)['result']=='FAILED'
 

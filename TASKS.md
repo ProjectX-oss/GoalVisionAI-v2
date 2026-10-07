@@ -7,8 +7,8 @@
 - [x] Reproduce 12 queue cycles/103 attempts, including two 34-candidate queues; deadline/least-recent ordering PASS, no duplicate attempts or budget overrun.
 - [x] Six-method DC paired snapshot: 14 fixtures/four dates, insufficient CI/fit/governance sample. No model changes.
 - [x] Read-only public/private performance, disagreement, runtime/delivery and postponed-result audit; 130 focused tests and 17 final overlapping module tests pass with network denied.
-- [ ] Operator resolves latest LIVE DISABLED instruction versus prior authorized ENABLED deployment; no timer or production configuration changes made by this audit.
-- [ ] After that decision, review runtime health LIVE field/timer-name compatibility; current handoff records actual systemd status.
+- [x] User reconfirmed on 2026-10-07 at 21:46 Riga: retain LIVE Lab discovery 18:00–23:00; results continue. No timer or production configuration change required.
+- [x] Prepare source-only health LIVE status fix: actual evening timer, separate discovery window and explicit PREMATCH scope; 214 focused offline tests PASS. Production deployment remains separate. See docs/operations/LAB_LIVE_HEALTH_STATUS_20261007.md.
 - Report: docs/operations/PREMATCH_QUALITY_HANDOFF_20261007.md.
 - Source commit: 6e7ae9f64792c0152d7a90cc7b1da3f2467cf917.
 - No manual cycle, provider request, Telegram send, production DB write, deployment, promotion or rollback.

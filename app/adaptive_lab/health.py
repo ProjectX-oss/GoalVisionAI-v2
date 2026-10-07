@@ -32,7 +32,8 @@ def cycle_health(report: dict, *, started: datetime, completed: datetime) -> dic
             'rejections':report.get('rejection_reasons',{}),'fixture_blockers':report.get('fixture_reason_counts',{}),
             'readiness_blockers':report.get('readiness_reasons',{}),'quota':quota,
             'quota_remaining':report.get('current_remaining_daily_quota'),
-            'publication':report.get('controlled_publication',{}),'LIVE':'DISABLED',
+            'publication':report.get('controlled_publication',{}),
+            'LIVE':'NOT_EVALUATED','LIVE_SCOPE':'PREMATCH_CYCLE',
             'PERFORMANCE':report.get('PERFORMANCE', {'status':'UNAVAILABLE','reason':'LEGACY_CYCLE_WITHOUT_SNAPSHOT'}),
             'timing_diagnostics':report.get('timing_diagnostics',{})}
 
@@ -50,12 +51,41 @@ def persist_health(repository: object, report: dict, *, started: datetime, compl
 def timer_state(unit: str) -> dict:
     """Read systemd properties only; this function cannot start/stop a unit."""
     try:
-        r=subprocess.run(['systemctl','show',unit,'--property=ActiveState,UnitFileState,Result,ExecMainStatus,ExecMainStartTimestamp,ExecMainExitTimestamp,LastTriggerUSec,NextElapseUSecRealtime'],
+        r=subprocess.run(['systemctl','show',unit,'--property=LoadState,ActiveState,UnitFileState,Result,ExecMainStatus,ExecMainStartTimestamp,ExecMainExitTimestamp,LastTriggerUSec,NextElapseUSecRealtime'],
                          capture_output=True,text=True,timeout=5,check=False)
-        return dict(line.split('=',1) for line in r.stdout.splitlines() if '=' in line)
+        if r.returncode != 0:
+            return {'status':'SYSTEMD_UNAVAILABLE'}
+        values=dict(line.split('=',1) for line in r.stdout.splitlines() if '=' in line)
+        return values or {'status':'SYSTEMD_UNAVAILABLE'}
     except (OSError,subprocess.TimeoutExpired):
         return {'status':'SYSTEMD_UNAVAILABLE'}
 
+
+
+def live_runtime_status(*, now: datetime) -> dict:
+    """Observe the installed evening timer, not prediction eligibility or transport.
+
+    The timer also handles pending results outside the discovery window. Its
+    activity alone cannot prove valid quotes, completed cycles or future sends.
+    """
+    from .daypart import live_window
+    unit='goalvision-lab-live-evening.timer'
+    timer=timer_state(unit)
+    if timer.get('status') == 'SYSTEMD_UNAVAILABLE':
+        state='UNKNOWN'
+    elif timer.get('LoadState') == 'not-found':
+        state='NOT_INSTALLED'
+    elif timer.get('LoadState') != 'loaded':
+        state='UNKNOWN'
+    else:
+        state={'active':'ACTIVE','inactive':'INACTIVE','failed':'FAILED'}.get(
+            timer.get('ActiveState'), 'UNKNOWN')
+    return {'LIVE':state,'LIVE_SCOPE':'LAB_EVENING_TIMER',
+            'LIVE_OBSERVED_AT':utc(now).isoformat(),
+            'LIVE_TIMER':{'unit':unit,**timer},
+            'LIVE_DISCOVERY_WINDOW':{'timezone':'Europe/Riga','start':'18:00',
+                'end_exclusive':'23:00','contains_observed_time':live_window(now)},
+            'LIVE_RESULTS_WINDOW':'24H_WHILE_TIMER_ACTIVE'}
 
 def persisted_cycles(path: Path, *, since: str) -> dict:
     """Read only existing immutable summaries; never hydrate the entire discovery DB."""
@@ -123,4 +153,4 @@ def status(repository: object, ledger: object, shadow_database: Path, *, now: da
       'COMBO':combo,'COMBO_TIMER':timer_state('goalvision-lab-combo-settle.timer'),
       'OBSERVER_TIMER':timer_state('goalvision-adaptive-learning-observer.timer'),
       'LEARNING_TIMER':timer_state('goalvision-adaptive-learning.timer'),
-      'LIVE':'DISABLED','LIVE_TIMER':timer_state('goalvision-live-lab.timer')}
+      **live_runtime_status(now=now)}

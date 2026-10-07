@@ -219,7 +219,7 @@ def test_observer_flag_adds_only_compact_health_and_preserves_core(repo,monkeypa
     identity=digest({**after,"CALIBRATION_READINESS":report})
     assert repo.get("observer_runs",identity)["CALIBRATION_READINESS"]==report
     assert protected=={t:repo.revision(t) for t in PROTECTED_TABLES}
-    assert after["api_calls"]==after["telegram_sends"]==0 and after["LIVE"]=="DISABLED"
+    assert after["api_calls"]==after["telegram_sends"]==0 and after["LIVE"]=="NOT_EVALUATED"
 
 
 @pytest.mark.parametrize("failure",["snapshot","import"])

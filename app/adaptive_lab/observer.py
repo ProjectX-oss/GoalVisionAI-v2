@@ -36,7 +36,7 @@ def observe(repository: object, ledger: object, *, now: datetime,
     from .performance import performance_snapshot
     value={'PERFORMANCE':performance_snapshot(ledger,now=now),'created_at':utc(now).isoformat(),'stream':'PREMATCH','linkage':linkage,
            'state':state,'metrics':metrics(repository.all('learning_observations','PREMATCH'),'PREMATCH'),
-           'LIVE':'DISABLED','api_calls':0,'telegram_sends':0,'heavy_training':False}
+           'LIVE':'NOT_EVALUATED','LIVE_SCOPE':'PREMATCH_OBSERVER','api_calls':0,'telegram_sends':0,'heavy_training':False}
     if shadow_database is not None and os.environ.get("GOALVISION_LAB_DEVIG_RESEARCH", "0") == "1":
         try:
             from .devig_integration import observed_snapshot, persist_metrics

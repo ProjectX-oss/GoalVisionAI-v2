@@ -264,7 +264,7 @@ def test_observer_persists_metrics_without_learning_inflation_and_isolates_failu
         assert "methods" in metrics and "methods" not in full["DEVIG_RESEARCH"]
     finally:saved.close()
     assert not repo.all("learning_observations","PREMATCH")
-    assert full["LIVE"]=="DISABLED" and full["api_calls"]==full["telegram_sends"]==0
+    assert full["LIVE"]=="NOT_EVALUATED" and full["api_calls"]==full["telegram_sends"]==0
     def fail(*a,**k):raise RuntimeError("secret-token")
     monkeypatch.setattr(integration,"observed_snapshot",fail)
     full=observe(repo,ledger,now=START+timedelta(days=1,seconds=1),shadow_database=path)

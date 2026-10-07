@@ -294,6 +294,9 @@ def test_health_status_exposes_current_single_and_combo_performance(tmp_path, mo
     assert result['PERFORMANCE']['SINGLE']['average_odds']=='2'
     assert result['raw_product_statistics']['pending']==1
     assert result['COMBO']['pending']==1
+    assert result['LIVE']=='UNKNOWN'  # LoadState is absent in this synthetic probe.
+    assert result['LIVE_TIMER']['unit']=='goalvision-lab-live-evening.timer'
+    assert result['LIVE_DISCOVERY_WINDOW']['contains_observed_time'] is True
 
 
 def test_losing_combo_with_void_leg_is_not_a_partial_win():

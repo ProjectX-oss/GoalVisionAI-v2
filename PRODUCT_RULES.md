@@ -566,3 +566,14 @@ New two-leg statistics are a separate prospective cohort. Existing COMBO bot/pri
 recipient remains. No additional combined floor, bankroll/staking change, champion
 change, Official/LIVE/ADMIN change, automatic deployment/promotion, provider call,
 Telegram test send or historical bookmaker odds acquisition is authorized.
+
+
+## Lab evening LIVE confirmation authorized 2026-10-07
+
+The user reconfirmed that the already deployed LIVE Lab discovery stays enabled
+from 18:00 inclusive until 23:00 exclusive Europe/Riga. PREMATCH/SINGLE/COMBO
+discovery stays 10:00–18:00 Riga; pending-result checks continue outside discovery
+windows. This supersedes the generic LIVE DISABLED wording in the later audit
+request. Official and ADMIN Codex remain unchanged. Retain all installed model,
+publication, freshness and shared-quota gates. No new deployment, automatic
+training/promotion/rollback or Telegram test is authorized by this confirmation.
