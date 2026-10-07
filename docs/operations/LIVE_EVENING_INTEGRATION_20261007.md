@@ -153,3 +153,30 @@ to that prior audit; no additional production database write was made here.
 - LIVE is still OFF and PREMATCH still uses the original schedule until operator apply.
 
 The theoretical PREMATCH quota projection also uses the active 16-slot schedule. The earlier unapplied package 1b425b5 is superseded; the pinned live-evening.py wrapper points only to 4f547cf.
+
+## Operator deployment and natural-cycle verification
+
+The operator activated release 4f547cf on 2026-10-07. Postdeployment readback
+confirms current_mode=ENABLED, all 857 application hashes, the 11-file overlay,
+the four import routes, exact timer configuration and protected routes/commands.
+The earlier BASE/LIVE OFF statements above describe the predeployment evidence.
+
+Natural LIVE starts at 20:27 and 20:32 Europe/Riga both completed successfully.
+Each found 12 fixtures and 11 odds-feed rows, consumed three accounted API calls,
+and produced no candidates, claims or publications. No rows passed the combined
+20-second timestamp and active-status prefilter; available cycle logs do not
+separate stale, inactive and malformed rows. These are two scans, not 24 distinct
+fixtures. Actual qualified-pick delivery and subsequent results remain unproven.
+
+PREMATCH discovery next starts on 2026-10-08 at 10:00 Riga. The all-day result
+timer remains active; its 20:25 run succeeded through the existing 180-second
+guard. Local quota accounting at 20:32:08 showed 3,923 calls remaining after the
+last claim, including 840 dynamically reserved for PREMATCH results. This is
+durable local accounting, not an additional provider status request.
+
+PREMATCH champion remains generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a.
+ADMIN Codex remains disabled. No Official changes, manual cycles, deployments,
+production writes, provider requests or Telegram requests were initiated by
+this read-only verification. The two natural LIVE starts independently made six
+provider requests and sent no messages. No source change or test rerun was needed.
+Sanitized evidence: docs/evidence/live_evening_20261007/postdeploy.json.

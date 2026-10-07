@@ -1,0 +1,321 @@
+{
+  "acceptance": {
+    "installed_release_and_routes": "PASS",
+    "live_delivery_and_result": "PENDING_NATURAL_EVIDENCE",
+    "natural_live_start": "PASS",
+    "prematch_results_continue": "PASS",
+    "qualified_live_pick": "PENDING_NATURAL_EVIDENCE"
+  },
+  "branch": "work/live-evening-integration-20261007",
+  "champion_pointers": {
+    "PREMATCH": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a"
+  },
+  "current_mode": "ENABLED",
+  "effects_this_verification": {
+    "admin_codex": "DISABLED",
+    "champion_changes": 0,
+    "deployments": 0,
+    "manual_cycles": 0,
+    "observed_natural_live_provider_calls": 6,
+    "observed_natural_live_publications": 0,
+    "official_changes": 0,
+    "production_writes": 0,
+    "provider_requests_initiated_by_audit": 0,
+    "telegram_requests_initiated_by_audit": 0
+  },
+  "fresh_feed_note": "No rows passed the combined source timestamp age (0..20s) and active status prefilter. Logs do not separate stale, inactive or malformed reasons.",
+  "last_live_claim_daily_remaining_after_estimate": 3923,
+  "last_live_claim_protected_prematch_reserve": 840,
+  "live_journal_error_markers": [],
+  "live_table_counts": {
+    "live_candidates": 0,
+    "live_claims": 0,
+    "live_diagnostics": 0,
+    "live_publications": 0,
+    "live_result_claims": 0,
+    "live_result_receipts": 0,
+    "live_settlements": 0,
+    "live_snapshots": 0
+  },
+  "natural_live_cycles": [
+    {
+      "completed_at": "2026-10-07T17:27:07.843265+00:00",
+      "result": {
+        "api_calls": 3,
+        "automatic_promotion": false,
+        "automatic_rollback": false,
+        "automatic_training": false,
+        "candidates": 0,
+        "deliveries": [],
+        "discovery_evidence": {
+          "fixtures_discovered": 12,
+          "fixtures_reviewed": 0,
+          "fresh_feed_fixtures": 0,
+          "live_odds_rows": 11,
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        "settled": 0,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "riga": "2026-10-07T20:27:07.843265+03:00"
+    },
+    {
+      "completed_at": "2026-10-07T17:32:08.521346+00:00",
+      "result": {
+        "api_calls": 3,
+        "automatic_promotion": false,
+        "automatic_rollback": false,
+        "automatic_training": false,
+        "candidates": 0,
+        "deliveries": [],
+        "discovery_evidence": {
+          "fixtures_discovered": 12,
+          "fixtures_reviewed": 0,
+          "fresh_feed_fixtures": 0,
+          "live_odds_rows": 11,
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        "settled": 0,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "riga": "2026-10-07T20:32:08.521346+03:00"
+    }
+  ],
+  "observed_at": "2026-10-07T17:35:13.721201+00:00",
+  "operator_report": "LAB_LIVE_EVENING_DEPLOYED",
+  "overlay_files": 11,
+  "package_wrapper_preflight": "PASS",
+  "protected_configuration": "PASS",
+  "quota_claims_20261007_1725_to_173209_utc": [
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:07.932063+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3941,
+      "remaining_minute_before": 300,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:09.791319+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3940,
+      "remaining_minute_before": 299,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:11.719739+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3939,
+      "remaining_minute_before": 298,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:12.321619+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3938,
+      "remaining_minute_before": 297,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:12.944713+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3937,
+      "remaining_minute_before": 296,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:13.563866+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3936,
+      "remaining_minute_before": 295,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:14.198077+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3935,
+      "remaining_minute_before": 294,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:29.863685+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3934,
+      "remaining_minute_before": 293,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:30.481596+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3933,
+      "remaining_minute_before": 292,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:31.083571+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3932,
+      "remaining_minute_before": 291,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:31.685188+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3931,
+      "remaining_minute_before": 290,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "SETTLEMENT",
+      "created_at": "2026-10-07T17:25:32.297121+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 0,
+      "remaining_daily_before": 3930,
+      "remaining_minute_before": 289,
+      "stream": "PREMATCH"
+    },
+    {
+      "category": "LIVE_SETTLEMENT",
+      "created_at": "2026-10-07T17:27:05.388915+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 840,
+      "remaining_daily_before": 3929,
+      "remaining_minute_before": 300,
+      "stream": "LIVE"
+    },
+    {
+      "category": "LIVE_STATE",
+      "created_at": "2026-10-07T17:27:06.390764+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 840,
+      "remaining_daily_before": 3928,
+      "remaining_minute_before": 299,
+      "stream": "LIVE"
+    },
+    {
+      "category": "LIVE_ODDS",
+      "created_at": "2026-10-07T17:27:07.303280+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 840,
+      "remaining_daily_before": 3927,
+      "remaining_minute_before": 298,
+      "stream": "LIVE"
+    },
+    {
+      "category": "LIVE_SETTLEMENT",
+      "created_at": "2026-10-07T17:32:06.176864+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 840,
+      "remaining_daily_before": 3926,
+      "remaining_minute_before": 300,
+      "stream": "LIVE"
+    },
+    {
+      "category": "LIVE_STATE",
+      "created_at": "2026-10-07T17:32:07.170622+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 840,
+      "remaining_daily_before": 3925,
+      "remaining_minute_before": 299,
+      "stream": "LIVE"
+    },
+    {
+      "category": "LIVE_ODDS",
+      "created_at": "2026-10-07T17:32:08.077262+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 840,
+      "remaining_daily_before": 3924,
+      "remaining_minute_before": 298,
+      "stream": "LIVE"
+    }
+  ],
+  "quota_note": "Local durable quota accounting at 17:32:08 UTC, not a new provider status request; each natural cycle consumed three claims.",
+  "release": "/opt/goalvision-live-evening-4f547cf-20261007",
+  "release_hashes": "PASS",
+  "release_manifest_files": 857,
+  "repository_head_at_start": "a2eb2d75b9da8aa06823d0ef03af2397e4e31c29",
+  "schema_version": "goalvision-live-evening-postdeploy-v1",
+  "source_commit": "4f547cf0ac305393c656cfb270d98ea379310a18",
+  "systemd": {
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "",
+      "ExecMainStartTimestamp": "",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "LastTriggerUSec": "",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "activating",
+      "ExecMainExitTimestamp": "",
+      "ExecMainStartTimestamp": "Wed 2026-10-07 19:35:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "start",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Wed 2026-10-07 19:35:01 CEST",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-live-evening.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Wed 2026-10-07 19:32:09 CEST",
+      "ExecMainStartTimestamp": "Wed 2026-10-07 19:32:00 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-live-evening.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Wed 2026-10-07 19:32:00 CEST",
+      "NextElapseUSecRealtime": "Wed 2026-10-07 19:37:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "LastTriggerUSec": "Wed 2026-10-07 19:00:01 CEST",
+      "NextElapseUSecRealtime": "Thu 2026-10-08 09:00:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    }
+  }
+}
