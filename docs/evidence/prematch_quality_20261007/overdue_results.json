@@ -1,0 +1,72 @@
+{
+  "all_unresolved_legs_current_provider_postponed": true,
+  "as_of": "2026-10-07T17:47:33.519387+00:00",
+  "provider_calls": 0,
+  "tickets": [
+    {
+      "hours_after_last_kickoff": 123.79264427416666,
+      "prediction_id": "lab-v2-single-572685da5635694e816f5b8e0fa73ca2e886802c8a5d2e55513a96d7657f72e9",
+      "product": "SINGLE",
+      "unresolved_fixtures": [
+        {
+          "fixture_id": 1641994,
+          "observed_at_utc": "2026-10-07T17:45:06.968799+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED"
+        }
+      ]
+    },
+    {
+      "hours_after_last_kickoff": 99.79264427416666,
+      "prediction_id": "lab-v2-combo-accuracy-5257c09c082a75381d9a184ae3d26e57349a776d2b76409a5ac83e51d9827216",
+      "product": "COMBO",
+      "unresolved_fixtures": [
+        {
+          "fixture_id": 1595250,
+          "observed_at_utc": "2026-10-07T17:45:06.968799+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED"
+        }
+      ]
+    },
+    {
+      "hours_after_last_kickoff": 99.79264427416666,
+      "prediction_id": "lab-v2-combo-accuracy-743d95c77af464c3feb9f64502dc44baafd31b59013e61304b2a8e94ca65b1cb",
+      "product": "COMBO",
+      "unresolved_fixtures": [
+        {
+          "fixture_id": 1585277,
+          "observed_at_utc": "2026-10-07T17:45:06.968799+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED"
+        }
+      ]
+    },
+    {
+      "hours_after_last_kickoff": 118.79264427416666,
+      "prediction_id": "lab-v2-combo-accuracy-875216484225014e2f6c0baeb35dc66a3e1c22964edecfd5726079843c16140c",
+      "product": "COMBO",
+      "unresolved_fixtures": [
+        {
+          "fixture_id": 1641994,
+          "observed_at_utc": "2026-10-07T17:45:06.968799+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED"
+        }
+      ]
+    },
+    {
+      "hours_after_last_kickoff": 95.04264427416666,
+      "prediction_id": "lab-v2-combo-accuracy-e4221c3d681e8ad0f28d9f313bf01a5a9e888b209153cb480a17174bff50f8dc",
+      "product": "COMBO",
+      "unresolved_fixtures": [
+        {
+          "fixture_id": 1613966,
+          "observed_at_utc": "2026-10-07T17:45:06.968799+00:00",
+          "provider_status": "PST",
+          "reason": "POSTPONED"
+        }
+      ]
+    }
+  ]
+}

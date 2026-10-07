@@ -1,0 +1,75 @@
+{
+  "coverage": "OPERATOR_ACCESSIBLE_JOURNAL; ZERO_MATCHES_DOES_NOT_PROVE_NO_FAILURES; CROSS_CHECK_OPERATOR_ADMIN_EXPORT_AND_RUN_LEDGER",
+  "since": "2026-10-06T17:47:33.519387+00:00",
+  "units": {
+    "goalvision-adaptive-learning-observer.service": {
+      "counts": {
+        "DISCOVERY_ACTIVE": 0,
+        "Failed with result": 0,
+        "FileNotFoundError": 0,
+        "PARTIAL": 336,
+        "PROTECTED_QUOTA_RESERVE": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "database is locked": 0,
+        "database table is locked": 0,
+        "timed out": 0
+      },
+      "exit": 0,
+      "lines": 48,
+      "truncated": false
+    },
+    "goalvision-dixon-coles-forward.service": {
+      "counts": {
+        "DISCOVERY_ACTIVE": 0,
+        "Failed with result": 0,
+        "FileNotFoundError": 0,
+        "PARTIAL": 0,
+        "PROTECTED_QUOTA_RESERVE": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "database is locked": 0,
+        "database table is locked": 0,
+        "timed out": 0
+      },
+      "exit": 0,
+      "lines": 48,
+      "truncated": false
+    },
+    "goalvision-lab-combo-settle.service": {
+      "counts": {
+        "DISCOVERY_ACTIVE": 0,
+        "Failed with result": 0,
+        "FileNotFoundError": 0,
+        "PARTIAL": 0,
+        "PROTECTED_QUOTA_RESERVE": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "database is locked": 0,
+        "database table is locked": 0,
+        "timed out": 0
+      },
+      "exit": 0,
+      "lines": 2096,
+      "truncated": false
+    },
+    "goalvision-lab-v2-discover.service": {
+      "counts": {
+        "DISCOVERY_ACTIVE": 0,
+        "Failed with result": 0,
+        "FileNotFoundError": 0,
+        "PARTIAL": 0,
+        "PROTECTED_QUOTA_RESERVE": 0,
+        "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+        "QUOTA_DB_CONTENTION_RETRY": 0,
+        "database is locked": 0,
+        "database table is locked": 0,
+        "timed out": 0
+      },
+      "exit": 0,
+      "lines": 2708,
+      "truncated": false
+    }
+  },
+  "until": "2026-10-07T17:47:33.519387+00:00"
+}

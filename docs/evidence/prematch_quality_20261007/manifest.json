@@ -1,0 +1,22 @@
+{
+  "as_of": "2026-10-07T17:47:33.519387+00:00",
+  "files": {
+    "docs/evidence/prematch_quality_20261007/combo_calibration.json": "360b0fb26e53264b87d820841cb36993875ddf7605945ccc7a504f423d309ba6",
+    "docs/evidence/prematch_quality_20261007/disagreement.json": "0e9f6b03b099b85a426464d609984199a56f208c7386948bf3a1df9f1f4b8f1f",
+    "docs/evidence/prematch_quality_20261007/dixon_coles.json": "9cb32b9dcd948daf7ed6a67b260755e58bc1598b026f57961e44b75a99cda007",
+    "docs/evidence/prematch_quality_20261007/journals.json": "8adf822f2b9a8141b71edc8cb377484b379dbe3aa6b02bef99ce752b0439b326",
+    "docs/evidence/prematch_quality_20261007/learning_champion.json": "e7235243e7b6ed19ea90d21835745dc97d45c35ad2e1991e7db8dfae2a4aae03",
+    "docs/evidence/prematch_quality_20261007/odds_yield.json": "5b10dcfd6663693826e6cbc85a84b0394e7818e0ae552221e2cdf80c02d97586",
+    "docs/evidence/prematch_quality_20261007/overdue_results.json": "e9bcb545d981829fd60e4d64ccddc8aa907e2fc4169c95772be30f1491c3acf5",
+    "docs/evidence/prematch_quality_20261007/performance.json": "c1c63cd9fe82e811c48997c226aae6eb7c0c1392fe12bdc86a34870cda8266ac",
+    "docs/evidence/prematch_quality_20261007/private_performance.json": "f01c60df36a4e88fb5655b2257b6b1c195fda5d1d1490629174aa13dd79b6c5a",
+    "docs/evidence/prematch_quality_20261007/publication.json": "52e215e6113b72d776272cdcc24869ff07924cc75f9cb25eca755f04fbfae79a",
+    "docs/evidence/prematch_quality_20261007/queue_replay.json": "08d5c311e8478f343c8c8d8df6e9893d4d0b5dac7a13d3a996256ce6dce5af47",
+    "docs/evidence/prematch_quality_20261007/runtime.json": "3110203620f503e6f6bdb766b65635383b5a4fea3e0619fb98b1bab5dc2297eb",
+    "docs/evidence/prematch_quality_20261007/runtime_state.json": "a4087e6199514e23e7dd504e537e8f5abc62e6691af83d37c28c59907f4ce963",
+    "docs/evidence/prematch_quality_20261007/verification.json": "d01a40e9583135d8177ffbc9736953971e2e7f2b92bbbd38d963c706dc33d8ea"
+  },
+  "handoff_sha256": "2512c01e484c1cf38f76e96deb377261996da173be653fc2826cd607513da052",
+  "source_commit": "6e7ae9f64792c0152d7a90cc7b1da3f2467cf917",
+  "version": "PREMATCH_QUALITY_EVIDENCE_MANIFEST_V1"
+}

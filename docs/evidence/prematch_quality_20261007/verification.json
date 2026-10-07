@@ -1,0 +1,56 @@
+{
+  "api_calls_initiated": 0,
+  "as_of": "2026-10-07T17:47:33.519387+00:00",
+  "final_changed_module_tests": {
+    "note": "Final rate-missingness and unrepresentable float extremes checked; probabilities retained, never clamped.",
+    "overlaps_focused_matrix": true,
+    "passed": 17,
+    "seconds": 0.07
+  },
+  "focused_matrix": {
+    "credentials": "SYNTHETIC",
+    "files": [
+      "tests/test_prematch_quality_evidence.py",
+      "tests/adaptive_lab/test_no_combo_learning.py",
+      "tests/adaptive_lab/test_performance_snapshot.py",
+      "tests/adaptive_lab/test_calendar_research.py",
+      "tests/adaptive_lab/test_calibration_research.py",
+      "tests/test_final_review_queue.py",
+      "tests/test_dixon_coles_forward.py"
+    ],
+    "full_suite_run": false,
+    "outbound_sockets": "DENIED",
+    "passed": 130,
+    "seconds": 10.13
+  },
+  "holdout_read": false,
+  "no_yield_priority_decision": {
+    "ODDS_REFRESH_YIELD_PRIORITY_V1": "NOT_IMPLEMENTED",
+    "angola_fresh_successes": 0,
+    "discretionary_attempts": 20,
+    "discretionary_unique_fixtures": 2,
+    "existing_discretionary_cap": 20,
+    "maximum_discretionary_candidates_in_observed_cycle": 2,
+    "reason": "Observed discretionary queues do not compete for the 20 slots. Reordering the same one or two fixtures has no measured benefit; tracked/final-review work must remain protected. No coverage blacklist/cooldown inferred from one fixture.",
+    "repeated_angola_fixture_attempts": 17,
+    "status": "DATA_QUALITY_LIMITATION"
+  },
+  "production_deployment": false,
+  "production_source_changed": false,
+  "readonly_rehearsal": {
+    "coupon_export_source_product": "COMBO",
+    "coupon_publications": 190,
+    "coupon_settled": 181,
+    "coupon_vs_authoritative_counts": "PASS",
+    "coupon_vs_authoritative_pnl": "PASS",
+    "cycles_odds": 24,
+    "frozen_probability_or_odds_mismatches": {},
+    "model_learning_observations": 0,
+    "queue_attempts": 103,
+    "queue_cycles": 12,
+    "queue_reproduced": true
+  },
+  "source_commit": "6e7ae9f64792c0152d7a90cc7b1da3f2467cf917",
+  "telegram_sends_initiated": 0,
+  "training_invoked": false
+}

@@ -1,3 +1,18 @@
+## 2026-10-07 — Read-only PREMATCH quality and coupon evidence
+
+- [x] Reconcile installed evening release, GitHub parent, unchanged bootstrap champion and actual LIVE ENABLED state; do not mistake hardcoded PREMATCH observer LIVE field for global systemd state.
+- [x] Fixed-cutoff learning/calibration snapshot: 2819 eligible observations, 1113 fixtures, CALIBRATION_FIT 246/300, validation/holdout zero; no fit or promotion.
+- [x] Audit 24 natural current-odds cycles; separate date/exact/final denominators and unknown failure reasons. No demonstrated ordering gain in 1–2 discretionary fixtures versus 20 available slots; keep existing policy/budget.
+- [x] Read-only 190-coupon export with frozen per-leg provenance, naive joint calibration, cohort metrics and explicit COMBO non-learning source.
+- [x] Reproduce 12 queue cycles/103 attempts, including two 34-candidate queues; deadline/least-recent ordering PASS, no duplicate attempts or budget overrun.
+- [x] Six-method DC paired snapshot: 14 fixtures/four dates, insufficient CI/fit/governance sample. No model changes.
+- [x] Read-only public/private performance, disagreement, runtime/delivery and postponed-result audit; 130 focused tests and 17 final overlapping module tests pass with network denied.
+- [ ] Operator resolves latest LIVE DISABLED instruction versus prior authorized ENABLED deployment; no timer or production configuration changes made by this audit.
+- [ ] After that decision, review runtime health LIVE field/timer-name compatibility; current handoff records actual systemd status.
+- Report: docs/operations/PREMATCH_QUALITY_HANDOFF_20261007.md.
+- Source commit: 6e7ae9f64792c0152d7a90cc7b1da3f2467cf917.
+- No manual cycle, provider request, Telegram send, production DB write, deployment, promotion or rollback.
+
 ## 2026-10-06 — PREMATCH evidence and observability audit
 
 - [x] Read-only current champion/learning/calendar snapshot; 163/300 independent CALIBRATION_FIT, no fit or holdout use.

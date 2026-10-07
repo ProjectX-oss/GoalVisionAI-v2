@@ -1,0 +1,114 @@
+{
+  "ADMIN_CODEX": "DISABLED",
+  "LIVE_actual": "ENABLED",
+  "LIVE_reconciliation_status": "OPERATOR_ACTION_REQUIRED",
+  "LIVE_requested": "DISABLED",
+  "Official_modified": false,
+  "as_of": "2026-10-07T17:47:33.519387+00:00",
+  "audit_effects": {
+    "deployments": 0,
+    "manual_cycles": 0,
+    "production_db_writes": 0,
+    "promotions": 0,
+    "provider_requests": 0,
+    "rollbacks": 0,
+    "telegram_sends": 0,
+    "training_fits": 0
+  },
+  "branch": "work/prematch-quality-evidence-20261007",
+  "legacy_health_live_field": {
+    "actual_evening_timer_name": "goalvision-lab-live-evening.timer",
+    "global_state_authority": "SYSTEMD_AND_VERIFIED_INSTALLED_RELEASE",
+    "hardcoded_in": [
+      "app/adaptive_lab/health.py",
+      "app/adaptive_lab/observer.py"
+    ],
+    "note": "Audit records actual ENABLED state; PREMATCH observer field is not authoritative for global LIVE. Separate operator intent and monitoring compatibility review are required before runtime changes.",
+    "old_health_timer_name": "goalvision-live-lab.timer",
+    "reported": "DISABLED",
+    "runtime_fix_applied": false,
+    "status": "SMALL_GITHUB_FIX"
+  },
+  "original_checkout_dirty_paths": 220,
+  "original_checkout_modified_by_audit": false,
+  "production_release": "/opt/goalvision-live-evening-4f547cf-20261007",
+  "release_hash_preflight": "PASS",
+  "release_manifest_files": 857,
+  "repository_start_head": "0162759dd4bffe35b8ab9d7ed326818ddcd30fd6",
+  "runtime_readback_at": "2026-10-07T18:04:51.376674+00:00",
+  "units": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Wed 2026-10-07 19:39:08 CEST",
+      "ExecMainStartTimestamp": "Wed 2026-10-07 19:38:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "",
+      "ExecMainStartTimestamp": "",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "disabled"
+    },
+    "goalvision-dixon-coles-forward.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Wed 2026-10-07 19:42:50 CEST",
+      "ExecMainStartTimestamp": "Wed 2026-10-07 19:42:30 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Wed 2026-10-07 19:56:09 CEST",
+      "ExecMainStartTimestamp": "Wed 2026-10-07 19:55:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Wed 2026-10-07 20:05:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-live-evening.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Wed 2026-10-07 20:07:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "ExecMainExitTimestamp": "Wed 2026-10-07 19:03:52 CEST",
+      "ExecMainStartTimestamp": "Wed 2026-10-07 19:00:01 CEST",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "SubState": "dead",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "NextElapseUSecRealtime": "Thu 2026-10-08 09:00:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    }
+  }
+}
