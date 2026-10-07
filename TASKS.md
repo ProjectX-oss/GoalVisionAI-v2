@@ -1872,3 +1872,12 @@ Review after completing the current priority.
 - [x] Manual operator deployment confirmed by exact hashes/routes/flags readback; next natural discovery 2026-10-07 09:00 Riga. No agent deployment.
 - [ ] Natural-cycle Double publication/result verification after operator activation.
 - Runbook: docs/operations/COMBO_DOUBLE_170_20261006.md.
+
+## 2026-10-07 — Calibration request readiness
+
+- [x] Fresh bounded read-only audit: CALIBRATION_FIT 222 independent fixtures / 300; missing 78.
+- [x] Champion and governance unchanged; frozen partition intersections zero; 54 focused tests passed.
+- [x] Preserve readiness evidence; no application change, fitting, artifact, provider call or send.
+- [ ] Reassess after 300 eligible independent calibration examples; retain calendar, validation and holdout gates.
+- [ ] Isolated calibration comparison only when eligible; no automatic activation or deployment.
+- Report: docs/operations/CALIBRATION_READINESS_20261007.md.

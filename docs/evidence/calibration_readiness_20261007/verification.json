@@ -1,0 +1,88 @@
+{
+  "admin_codex": "No state changes",
+  "as_of": "2026-10-07T05:33:24.811233+00:00",
+  "calibration_artifacts_created": 0,
+  "champion_family": "EXISTING_PREMATCH_BASELINE_V1",
+  "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+  "champion_unchanged": true,
+  "clarification": "Legacy rolling projection is descriptive only. Frozen calendar_candidate is authoritative for this calibration request; no legacy rows are reassigned to satisfy the minimum.",
+  "code_changes": false,
+  "comparison_status": "NOT_RUN_MINIMUM_SAMPLE_NOT_MET",
+  "fit_readiness": {
+    "eligible_observations": 222,
+    "independent_fixtures": 222,
+    "missing": 78,
+    "required": 300,
+    "window_closes_utc": "2026-10-10T00:00:00+00:00"
+  },
+  "governance_after": {
+    "activation_events": 1,
+    "champion_generations": 1,
+    "holdout_results": 0,
+    "model_artifacts": 59,
+    "promotion_gates": 0,
+    "rollback_events": 0,
+    "shadow_runs": 0,
+    "training_runs": 133,
+    "validation_results": 0
+  },
+  "governance_before": {
+    "activation_events": 1,
+    "champion_generations": 1,
+    "holdout_results": 0,
+    "model_artifacts": 59,
+    "promotion_gates": 0,
+    "rollback_events": 0,
+    "shadow_runs": 0,
+    "training_runs": 133,
+    "validation_results": 0
+  },
+  "holdout_scored": false,
+  "holdout_used_for_fit": false,
+  "installed_readiness_sources_match_reviewed_git": true,
+  "installed_release": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006",
+  "learning_stage": "CHALLENGER_RESEARCH",
+  "learning_stage_evidence_at": "2026-10-07T05:08:01.284144+00:00",
+  "live": "DISABLED baseline retained; no LIVE changes; audit live_publications=0",
+  "manual_cycles": 0,
+  "method_plan": {
+    "identity": "Baseline",
+    "isotonic": "Existing minimum 1000; not ready",
+    "platt": "Only CALIBRATION_FIT when eligible",
+    "temperature": "Only CALIBRATION_FIT when eligible"
+  },
+  "model_training_invoked": false,
+  "next_legal_action": "Continue existing natural data collection; reassess at >=300 eligible independent CALIBRATION_FIT examples. Keep calendar, class support, validation and holdout restrictions. This does not schedule a fitting or activation job.",
+  "official": "UNTOUCHED",
+  "production_database_writes": 0,
+  "production_deployments": 0,
+  "promotion_status": "NOT_ELIGIBLE",
+  "promotions": 0,
+  "provider_calls": 0,
+  "publication_thresholds_changed": false,
+  "read_only_audit": {
+    "exit_code": 0,
+    "mode": "SQLite query_only bounded reads; installed calendar CLI; outbound sockets denied",
+    "sha256": "29023d08a3bf80f1c243f112f350baefae05e040482bd5cada224159377518c1"
+  },
+  "request": "User requested calibration; enforce previously approved 300 independent fixture minimum.",
+  "rollbacks": 0,
+  "schema": "CALIBRATION_READINESS_REQUEST_VERIFICATION_V1",
+  "source_commit": "796ac0f893e04c75e487511440f6dfd34af0c7cc",
+  "status": "BLOCKED_NEEDS_MORE_EVIDENCE",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "tests": {
+    "exit_code": 0,
+    "files": [
+      "tests/adaptive_lab/test_calendar_audit.py",
+      "tests/adaptive_lab/test_calendar_research.py",
+      "tests/adaptive_lab/test_calendar_monitor.py"
+    ],
+    "network": "DENIED",
+    "output_sha256": "ae09b31e252f35bda8a2ba06272c4ad452c0419430163dd85b84b7ed93f55fa5",
+    "passed": 54,
+    "seconds": 10.54
+  },
+  "validation_used_for_fit": false
+}
