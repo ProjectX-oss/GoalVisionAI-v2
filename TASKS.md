@@ -1899,7 +1899,7 @@ Review after completing the current priority.
 - [x] Correct actual LIVE IDs/names/main flags; reuse per-cycle catalog/history, refresh live state/events/quotes.
 - [x] Remove automatic learning/rollback from LIVE worker, account preflight before HTTP, isolate LIVE settlement.
 - [x] Coordinate 10–18 PREMATCH / 18–23 LIVE clocks and durable quota; protect all-day PREMATCH results.
-- [x] 309 focused tests + 8 subtests; fake full LIVE publication/result Reply and operator failure recovery.
+- [x] 310 focused tests + 8 subtests; fake full LIVE publication/result Reply and operator failure recovery.
 - [x] Review exact source overlay and prepare guarded operator package; no new provider call or test send.
 - [ ] Operator apply with explicit acceptance of labeled API-feed quotes (bookmaker unknown).
 - [ ] First natural LIVE cycle, genuine fresh quote eligibility, receipt and result verification.

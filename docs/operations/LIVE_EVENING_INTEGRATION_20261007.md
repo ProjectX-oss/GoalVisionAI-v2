@@ -1,6 +1,6 @@
 # LIVE evening integration — 2026-10-07
 
-Status: READY_FOR_EXPLICIT_OPERATOR_APPLY. Implementation 1b425b5e28c0ce8af398746dfa28ee7e84cb4798.
+Status: READY_FOR_EXPLICIT_OPERATOR_APPLY. Implementation 4f547cf0ac305393c656cfb270d98ea379310a18.
 Production remains on the COMBO Double release until the explicit root apply below.
 
 ## Scope and source contract
@@ -81,7 +81,7 @@ can accumulate prospectively without fitting or activating a model.
 
 ## Verification
 
-- Final focused regressions: 309 passed, 8 subtests passed in 15.12 seconds.
+- Final focused regressions: 310 passed, 8 subtests passed in 16.51 seconds.
 - Includes LIVE API-feed provenance, exact 20-second boundary, real ID/name/line
   mapping, unique/duplicate main flags, final-refresh rejection, fake end-to-end
   publish/settle/Reply, idempotency, no automatic learning/rollback, 18:00 cutoff,
@@ -143,11 +143,13 @@ to that prior audit; no additional production database write was made here.
 
 ## Prepared package readback
 
-- Package: /home/arvis/goalvision-operations/live-evening-1b425b5-20261007
-- Target: /opt/goalvision-live-evening-1b425b5-20261007
+- Package: /home/arvis/goalvision-operations/live-evening-4f547cf-20261007
+- Target: /opt/goalvision-live-evening-4f547cf-20261007
 - Read-only wrapper preflight: PASS, current_mode=BASE.
 - Immutable application: 857 verified Python/JSON files; 11-file overlay.
 - Exact package import/idle smoke: 576 modules PASS, no checkout fallback.
-- Source commit: 1b425b5e28c0ce8af398746dfa28ee7e84cb4798.
+- Source commit: 4f547cf0ac305393c656cfb270d98ea379310a18.
 - Wrapper and package SHA-256 pins: docs/evidence/live_evening_20261007/operator_package.json.
 - LIVE is still OFF and PREMATCH still uses the original schedule until operator apply.
+
+The theoretical PREMATCH quota projection also uses the active 16-slot schedule. The earlier unapplied package 1b425b5 is superseded; the pinned live-evening.py wrapper points only to 4f547cf.
