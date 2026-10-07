@@ -99,7 +99,7 @@ def resolved_market(market: str, state: dict) -> bool:
 
 
 def readiness(state: dict, quote: dict, probability: float, *, uncertainty: float, now: datetime,
-              previous: list[dict] = ()) -> list[str]:
+              previous: list[dict] = (), allow_provider_feed: bool = False) -> list[str]:
     """All hard gates operate outside model artifacts and cannot be optimized away."""
     reasons=[]
     if state.get('state_fingerprint') != digest({k:v for k,v in state.items() if k!='state_fingerprint'}):
@@ -136,7 +136,11 @@ def readiness(state: dict, quote: dict, probability: float, *, uncertainty: floa
         reasons.append('UNSUPPORTED_MARKET')
     elif resolved_market(market,state):
         reasons.append('MARKET_ALREADY_RESOLVED')
-    if not quote.get('bookmaker_id') or not quote.get('bookmaker') or not quote.get('market_identity'):
+    from .provider import feed_provenance
+    attributed = bool(quote.get('bookmaker_id') and quote.get('bookmaker'))
+    valid_source = (allow_provider_feed and feed_provenance(quote)
+                    if quote.get('quote_origin_kind') == 'API_FOOTBALL_FEED_UPDATE_V1' else attributed)
+    if not quote.get('market_identity') or not valid_source:
         reasons.append('LIVE_BOOKMAKER_OR_MARKET_PROVENANCE_MISSING')
     if quote.get('blocked') or quote.get('stopped') or quote.get('finished') or quote.get('suspended'):
         reasons.append('LIVE_MARKET_SUSPENDED')

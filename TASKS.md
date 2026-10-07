@@ -1892,3 +1892,15 @@ Review after completing the current priority.
 - [ ] Then implement reviewed no-training LIVE worker, actual market mapping and coordinated schedule/quota/settlement wiring.
 - [ ] Production launch blocked; no timer/release/application changes in this task.
 - Report: docs/operations/EVENING_QUOTA_READINESS_20261007.md.
+
+## 2026-10-07 — Existing-subscription LIVE evening integration
+
+- [x] Add explicit truthful API-feed source mode; preserve unknown bookmaker and exact 20-second quote limit.
+- [x] Correct actual LIVE IDs/names/main flags; reuse per-cycle catalog/history, refresh live state/events/quotes.
+- [x] Remove automatic learning/rollback from LIVE worker, account preflight before HTTP, isolate LIVE settlement.
+- [x] Coordinate 10–18 PREMATCH / 18–23 LIVE clocks and durable quota; protect all-day PREMATCH results.
+- [x] 309 focused tests + 8 subtests; fake full LIVE publication/result Reply and operator failure recovery.
+- [x] Review exact source overlay and prepare guarded operator package; no new provider call or test send.
+- [ ] Operator apply with explicit acceptance of labeled API-feed quotes (bookmaker unknown).
+- [ ] First natural LIVE cycle, genuine fresh quote eligibility, receipt and result verification.
+- Runbook: docs/operations/LIVE_EVENING_INTEGRATION_20261007.md.

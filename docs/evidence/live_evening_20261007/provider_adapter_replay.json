@@ -1,0 +1,57 @@
+{
+  "current_capture_replay_only": true,
+  "network_denied": true,
+  "policy_quote_age_seconds": 20,
+  "prediction_calls": 0,
+  "provider_calls": 0,
+  "rows": [
+    {
+      "bookmaker_identity_invented": false,
+      "fixture_id": 1638514,
+      "normalization_reasons": [
+        "UNSUPPORTED_LIVE_MARKET"
+      ],
+      "normalized_markets": [
+        "AWAY_WIN",
+        "BTTS_NO",
+        "BTTS_YES",
+        "DRAW",
+        "HOME_WIN",
+        "OVER_3_5",
+        "UNDER_3_5"
+      ],
+      "provider_feed_normalized_quotes": 7,
+      "quotes_passing_existing_20_second_guard": 0,
+      "source_row_update_age_seconds": 36.473576,
+      "strict_normalized_quotes": 0,
+      "strict_reasons": [
+        "LIVE_BOOKMAKER_OR_ORIGIN_UNAVAILABLE"
+      ]
+    },
+    {
+      "bookmaker_identity_invented": false,
+      "fixture_id": 1635591,
+      "normalization_reasons": [
+        "UNSUPPORTED_LIVE_MARKET"
+      ],
+      "normalized_markets": [
+        "AWAY_WIN",
+        "BTTS_NO",
+        "BTTS_YES",
+        "DRAW",
+        "HOME_WIN",
+        "OVER_2_5",
+        "UNDER_2_5"
+      ],
+      "provider_feed_normalized_quotes": 7,
+      "quotes_passing_existing_20_second_guard": 0,
+      "source_row_update_age_seconds": 35.473576,
+      "strict_normalized_quotes": 0,
+      "strict_reasons": [
+        "LIVE_BOOKMAKER_OR_ORIGIN_UNAVAILABLE"
+      ]
+    }
+  ],
+  "state_for_adapter_replay": "captured_odds_header_no_prediction_or_state_freshness_claim",
+  "telegram_sends": 0
+}

@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass
 from decimal import Decimal
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from app.adaptive_lab import daypart
 
 
 MAX_DISCOVERY_CALLS_PER_CYCLE = 400
@@ -42,9 +43,10 @@ def discovery_cycles_remaining(now: datetime) -> int:
     if now.tzinfo is None or now.utcoffset() is None:
         raise ValueError("DISCOVERY_TIME_REQUIRES_OFFSET")
     local = now.astimezone(RIGA)
-    if not 9 <= local.hour < 23:
+    start, end = daypart.discovery_hours()
+    if not start <= local.hour < end:
         return 0
-    return (23 - local.hour) * 2 - int(local.minute >= 30)
+    return (end - local.hour) * 2 - int(local.minute >= 30)
 
 
 def discovery_state(now: datetime) -> str:
@@ -79,6 +81,8 @@ def adaptive_quota_budget(
         raise ValueError("LAB_V2_MAXIMUM_CALLS_MUST_BE_BETWEEN_1_AND_400")
     if daily_safety_reserve != SETTLEMENT_RESULT_RESERVE:
         raise ValueError("LAB_V2_USE_SETTLEMENT_RESULT_RESERVE_100")
+    if daypart.enabled():
+        daily_safety_reserve = daypart.prematch_discovery_reserve(now)
     daily = _integer(quota.get("daily_remaining"))
     minute = _integer(quota.get("minute_remaining"))
     normalized = quota.get("interpretation_status") == "NORMALIZED"

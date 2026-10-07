@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Callable
 from app.adaptive_lab.contracts import digest, utc
 from app.adaptive_lab.quota import SharedQuota
+from app.adaptive_lab import daypart
 from .engine import state_snapshot, attach_events
 from .provider import normalize_quotes, history_rates
 from .policy import POLICY
@@ -14,6 +15,8 @@ class LiveRunner:
     def __init__(self, service: LiveService, client: object, quota: SharedQuota, *,
                  clock: Callable[[],datetime]) -> None:
         self.service,self.client,self.quota,self.clock=service,client,quota,clock
+        self._catalog = None
+        self._histories = {}
         quota.bind(client,clock)
 
     async def refresh(self, fixture_id: int) -> tuple[dict,list[dict],dict]:
@@ -25,32 +28,70 @@ class LiveRunner:
         events=await self.quota.call('LIVE_STATE',self.client.events,fixture_id)
         state=attach_events(state,events,retrieved_at=self.clock())
         # Existing client/cache governs requests; no historical bookmaker prices.
-        home=await self.quota.call('LIVE_STATE',self.client.last_matches,state['home_team_id'],last=10)
-        away=await self.quota.call('LIVE_STATE',self.client.last_matches,state['away_team_id'],last=10)
+        home=await self._history(state['home_team_id'])
+        away=await self._history(state['away_team_id'])
         # FootballClient.last_matches returns the response list, unlike fixture
         # and events. Preserve its observed rows in the history adapter envelope.
         home={'response':home} if isinstance(home,list) else home
         away={'response':away} if isinstance(away,list) else away
         rates=history_rates(state,home,away,retrieved_at=self.clock())
-        catalog=await self.quota.call('LIVE_ODDS',self.client.live_bets)
-        catalog={**catalog,'endpoint':'/odds/live/bets'}
+        catalog=await self._live_catalog()
         odds=await self.quota.call('LIVE_REFRESH',self.client.live_odds,fixture_id)
-        quotes,reasons=normalize_quotes(odds,state,catalog,retrieved_at=self.clock())
+        quotes,reasons=normalize_quotes(odds,state,catalog,retrieved_at=self.clock(),
+                                        allow_provider_feed=self.service.allow_provider_feed)
         if reasons:
             self._diagnostic(fixture_id,reasons)
         return state,quotes,rates
 
+    async def _live_catalog(self) -> dict:
+        if self._catalog is None:
+            payload = await self.quota.call('LIVE_ODDS', self.client.live_bets)
+            if payload.get('errors') or not isinstance(payload.get('response'), list):
+                raise ValueError('LIVE_MARKET_CATALOG_REQUIRED')
+            self._catalog = {**payload, 'endpoint': '/odds/live/bets'}
+        return self._catalog
+
+    async def _history(self, team_id: int) -> object:
+        # Per-cycle immutable finished-match context, never cached odds/state/events.
+        if team_id not in self._histories:
+            self._histories[team_id] = await self.quota.call('LIVE_STATE', self.client.last_matches, team_id, last=10)
+        return self._histories[team_id]
+
     async def scan(self) -> dict:
         prepared=[]
+        counters={'fixtures_discovered':0,'live_odds_rows':0,'fresh_feed_fixtures':0,'fixtures_reviewed':0}
+        if daypart.enabled() and not daypart.live_window(self.clock()):
+            return {'status':'LIVE_DISCOVERY_WINDOW_CLOSED','candidates':[]}
+
         try:
             payload=await self.quota.call('LIVE_STATE',self.client.live_fixtures)
             if payload.get('errors'):
                 raise ValueError('LIVE_DISCOVERY_UNAVAILABLE')
             rows=payload.get('response') or []
+            counters['fixtures_discovered']=len(rows)
+            if self.service.allow_provider_feed and rows:
+                # Cheap coverage/current-age filter before per-fixture histories.
+                # This does not replace the exact final refresh before publication.
+                feed=await self.quota.call('LIVE_ODDS',self.client.live_odds)
+                if feed.get('errors') or not isinstance(feed.get('response'),list):
+                    raise ValueError('LIVE_ODDS_PROVIDER_UNAVAILABLE')
+                counters['live_odds_rows']=len(feed['response'])
+                covered=set()
+                for offer in feed['response']:
+                    try:
+                        age=(utc(self.clock())-utc(offer['update'])).total_seconds()
+                        if 0 <= age <= POLICY.quote_age_seconds and all(
+                                offer.get('status',{}).get(flag) is False for flag in ('blocked','stopped','finished')):
+                            covered.add(offer['fixture']['id'])
+                    except (KeyError,TypeError,ValueError):
+                        continue
+                counters['fresh_feed_fixtures']=len(covered)
+                rows=[row for row in rows if row.get('fixture',{}).get('id') in covered]
         except Exception:
             return {'status':'LIVE_DISCOVERY_UNAVAILABLE','candidates':[]}
         for row in sorted(rows,key=lambda r:r.get('fixture',{}).get('id',0))[:POLICY.max_fixtures_per_scan]:
             identity=row.get('fixture',{}).get('id')
+            counters['fixtures_reviewed']+=1
             try:
                 state_snapshot(row,retrieved_at=self.clock())
                 state,quotes,rates=await self.refresh(identity)
@@ -64,7 +105,7 @@ class LiveRunner:
                     prepared.append(candidate)
             except Exception:
                 self._diagnostic(identity,['LIVE_FIXTURE_REVIEW_UNAVAILABLE'])
-        return {'status':'LIVE_SCAN_COMPLETE','candidates':prepared}
+        return {'status':'LIVE_SCAN_COMPLETE','candidates':prepared,**counters}
 
     async def settle(self) -> list[str]:
         completed=[]
@@ -79,14 +120,14 @@ class LiveRunner:
                 if fid not in cache:
                     if len(cache)>=POLICY.max_fixtures_per_scan:
                         break
-                    cache[fid]=await self.quota.call('SETTLEMENT',self.client.fixture,fid)
+                    cache[fid]=await self.quota.call('LIVE_SETTLEMENT',self.client.fixture,fid)
                 if self.service.settle(identity,cache[fid],now=self.clock()):
                     completed.append(identity)
             except Exception:
                 self._diagnostic(fid,['LIVE_SETTLEMENT_UNAVAILABLE'])
         # Shadow opportunities have no publication receipt and are never added to
         # product statistics. Their final fixture evidence uses the same result API.
-        for pred in self.service.repository.all('shadow_predictions'):
+        for pred in self.service.repository.all('shadow_predictions','LIVE'):
             if self.service.repository.get('shadow_settlements', pred['prediction_id']):
                 continue
             row=pred['frozen_opportunity']
@@ -97,7 +138,7 @@ class LiveRunner:
                 if fid not in cache:
                     if len(cache)>=POLICY.max_fixtures_per_scan:
                         break
-                    cache[fid]=await self.quota.call('SETTLEMENT',self.client.fixture,fid)
+                    cache[fid]=await self.quota.call('LIVE_SETTLEMENT',self.client.fixture,fid)
                 self.service.governance.settle_shadow_result(pred['prediction_id'],cache[fid],now=self.clock())
             except Exception:
                 self._diagnostic(fid,['SHADOW_SETTLEMENT_UNAVAILABLE'])

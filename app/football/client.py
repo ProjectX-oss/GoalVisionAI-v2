@@ -104,9 +104,9 @@ class FootballClient:
         response = await self._get("/fixtures", params={"live": "all"})
         return response.json()
 
-    async def live_odds(self, fixture_id: int) -> dict:
+    async def live_odds(self, fixture_id: int | None = None) -> dict:
         """Genuine current in-play odds, distinct from /odds."""
-        response = await self._get("/odds/live", params={"fixture": fixture_id})
+        response = await self._get("/odds/live", params={} if fixture_id is None else {"fixture": fixture_id})
         return response.json()
 
     async def live_bets(self) -> dict:

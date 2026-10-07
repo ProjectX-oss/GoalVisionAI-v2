@@ -1,0 +1,47 @@
+{
+  "existing_live_model_formula_ast_unchanged": true,
+  "expected_application_files": 857,
+  "isolated_source_smoke": {
+    "incremental_plan_sha256": "25ad0030ae657748bf8af4c595a8e68d64be835d787e26d91bfa17fd8841dd3c",
+    "modules": 576,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "provider_calls": 0,
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_LIVE_EVENING_IMPORT_PASS",
+    "telegram_sends": 0
+  },
+  "live_quality_policy_file_unchanged": true,
+  "outbound_network_denied_in_tests": true,
+  "production_deployments": 0,
+  "provider_calls_this_implementation": 0,
+  "source_overlay_files": [
+    "app/adaptive_lab/daypart.py",
+    "app/adaptive_lab/quota.py",
+    "app/adaptive_lab/worker.py",
+    "app/football/client.py",
+    "app/lab_combo/publication_window.py",
+    "app/lab_v2_shadow/quota.py",
+    "app/live_lab/provider.py",
+    "app/live_lab/engine.py",
+    "app/live_lab/service.py",
+    "app/live_lab/runner.py",
+    "app/live_lab/presentation.py"
+  ],
+  "status": "FOCUSED_AND_SOURCE_SMOKE_PASS",
+  "systemd_unit_verify_exit": 0,
+  "telegram_sends_this_implementation": 0,
+  "test_files": [
+    "tests/adaptive_lab/test_evening_live.py",
+    "tests/adaptive_lab/test_live.py",
+    "tests/adaptive_lab/test_quota_cli.py",
+    "tests/adaptive_lab/test_quota_contention.py",
+    "tests/test_live_evening_install.py",
+    "tests/test_api_football_adaptive_discovery.py",
+    "tests/test_lab_today_scope.py",
+    "tests/test_combo_double_170.py",
+    "tests/test_private_single_170.py",
+    "tests/test_settlement_replies.py"
+  ],
+  "tests": "309 passed, 8 subtests passed in 15.12s"
+}

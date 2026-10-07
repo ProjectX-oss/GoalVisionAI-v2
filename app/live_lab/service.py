@@ -18,9 +18,11 @@ from .presentation import prediction_message, settlement_message
 class LiveService:
     """No combos and no configurable destination; only the existing Lab transport contract."""
     def __init__(self, repository: AuditRepository, *, clock: Callable[[],datetime],
-                 after_settlement: Callable[[dict],object] | None = None) -> None:
+                 after_settlement: Callable[[dict],object] | None = None,
+                 allow_provider_feed: bool = False) -> None:
         self.repository,self.clock,self.after_settlement=repository,clock,after_settlement
         self.governance=Governance(repository)
+        self.allow_provider_feed = allow_provider_feed
 
     def candidate(self, state: dict, quote: dict, rates: dict, *, now: datetime) -> dict:
         probabilities=remaining_goal_probabilities(state,rates,as_of=now)
@@ -34,9 +36,9 @@ class LiveService:
                      'uncertainty':uncertainty,'evidence_family_count':1,'frozen_features':frozen_features,
                      'live_minute':state['minute'],'live_score_home':state['home_score'],'live_score_away':state['away_score'],
                      'competition_profile':state['competition_profile'],'market':quote['market']}
-        p,champion=self.governance.safe_resolve('LIVE',observation,now=now)
+        p,champion=self.governance.resolve('LIVE',observation)
         previous=[self.repository.get('live_candidates',c['selection_id']) for c in self.repository.all('live_claims','LIVE')]
-        reasons=readiness(state,quote,p,uncertainty=uncertainty,now=now,previous=previous)
+        reasons=readiness(state,quote,p,uncertainty=uncertainty,now=now,previous=previous,allow_provider_feed=self.allow_provider_feed)
         observation.update(fixture_id=state['fixture_id'],offered_decimal_odds=quote['decimal_odds'])
         if not set(reasons)-{'NON_POSITIVE_EV','SEVERE_MODEL_MARKET_CONTRADICTION'}:
             self.governance.monitor_opportunity('LIVE',observation,p,
@@ -53,9 +55,12 @@ class LiveService:
                'edge':p-1/number(quote['decimal_odds']),'uncertainty_penalty':uncertainty,
                'predictive_families':['LIVE_REMAINING_GOALS' if not champion else 'LIVE_ADAPTIVE_MODEL'],
                'bookmaker_id':quote.get('bookmaker_id'),'bookmaker':quote.get('bookmaker'),
+               'quote_origin_kind':quote.get('quote_origin_kind','ATTRIBUTED_QUOTE'),
+               'source_identity':quote.get('source_identity'),
                'quote_provenance_fingerprint':quote['quote_fingerprint'],'provider_type':'API_FOOTBALL_LIVE_ODDS',
                'provider_origin_timestamp_utc':quote['origin_timestamp'],'goalvision_retrieved_at_utc':quote['retrieved_at'],
-               'prepared_at_utc':stamp,'policy':POLICY.version,'classifier_version':'LIVE_PROVIDER_PROFILE_V1',
+               'prepared_at_utc':stamp,'policy':('LAB_LIVE_API_FEED_V1' if self.allow_provider_feed else POLICY.version),
+               'classifier_version':'LIVE_PROVIDER_PROFILE_V1',
                'model_generation':generation,'model_artifact_identity':champion['artifact_id'] if champion else digest(['LIVE_POISSON_BASELINE_V1',rates]),
                'live_minute':state['minute'],'live_score_home':state['home_score'],'live_score_away':state['away_score'],
                'live_match_state_fingerprint':state['state_fingerprint'],
@@ -78,6 +83,9 @@ class LiveService:
         """Refresh fixture/events/odds before claiming; unknown delivery is never retried."""
         if validate_lab_telegram_config(config) is not None:
             return {'status':'LAB_CONFIGURATION_REJECTED','sent':False}
+        from app.adaptive_lab import daypart
+        if daypart.enabled() and not daypart.live_window(self.clock()):
+            return {'status':'LIVE_DISCOVERY_WINDOW_CLOSED','sent':False}
         original=self.repository.get('live_candidates',identity)
         if original is None:
             return {'status':'LIVE_CANDIDATE_MISSING','sent':False}
@@ -98,19 +106,23 @@ class LiveService:
                 return {'status':'LIVE_CHAMPION_CHANGED_REVIEW_REQUIRED','sent':False}
             prior=[self.repository.get('live_candidates',c['selection_id']) for c in self.repository.all('live_claims','LIVE')]
             reasons=readiness(state,quote,number(candidate['ensemble_probability']),
-                              uncertainty=candidate['uncertainty_penalty'],now=self.clock(),previous=prior)
+                              uncertainty=candidate['uncertainty_penalty'],now=self.clock(),previous=prior,allow_provider_feed=self.allow_provider_feed)
             if reasons:
                 return {'status':'LIVE_READINESS_BLOCKED','blockers':reasons,'sent':False}
+            if daypart.enabled() and not daypart.live_window(self.clock()):
+                return {'status':'LIVE_DISCOVERY_WINDOW_CLOSED','sent':False}
             message=prediction_message(candidate)
             claim={'selection_id':identity,'created_at':stamp,'message_fingerprint':digest(message)}
             if not self.repository.append('live_claims',identity,'LIVE',claim,stamp,selection_id=identity):
                 return {'status':'DELIVERY_ALREADY_CLAIMED','sent':False}
         return await self._send(identity,message,transport,table='live_publications',claim_id=identity)
 
-    async def _send(self, identity: str, message: str, transport: object, *, table: str, claim_id: str) -> dict:
+    async def _send(self, identity: str, message: str, transport: object, *, table: str, claim_id: str,
+                    reply_to_message_id: int | None = None) -> dict:
         try:
+            reply = {'reply_to_message_id':reply_to_message_id} if reply_to_message_id is not None else {}
             receipt=await asyncio.wait_for(transport.send_message_receipt(chat_id=LAB_TELEGRAM_CHAT_ID,
-                text=message,parse_mode=None,timeout_seconds=10),timeout=11)
+                text=message,parse_mode=None,timeout_seconds=10,**reply),timeout=11)
             if receipt.chat_id!=LAB_TELEGRAM_CHAT_ID or type(receipt.message_id) is not int or receipt.message_id<=0:
                 raise ValueError('INVALID_LAB_RECEIPT')
         except Exception:
@@ -135,7 +147,9 @@ class LiveService:
             if any(existing[k] != result[k] for k in ('outcome','fixture_id','market','captured_odds','fulltime_home','fulltime_away')):
                 raise ValueError('CONFLICTING_SETTLEMENT')
             return existing
-        value={**result,'prediction_id':identity,'status':result['outcome'],'settled_at_utc':utc(now).isoformat()}
+        value={**result,'prediction_id':identity,'status':result['outcome'],'settled_at_utc':utc(now).isoformat(),
+               'quote_origin_kind':prediction.get('quote_origin_kind','ATTRIBUTED_QUOTE'),
+               'source_identity':prediction.get('source_identity')}
         with self.repository.transaction():
             self.repository.append('live_settlements',identity,'LIVE',value,value['settled_at_utc'],publication_id=identity)
             observation=ingest(self.repository,prediction,receipt,value,stream='LIVE',publication_id=identity)
@@ -157,4 +171,6 @@ class LiveService:
                 return {'status':'DELIVERY_ALREADY_CLAIMED','sent':False}
             self.repository.append('live_result_claims',identity,'LIVE',{'settlement_id':identity,'message':message},
                                    utc(self.clock()).isoformat(),settlement_id=identity)
-        return await self._send(identity,message,transport,table='live_result_receipts',claim_id=identity)
+        original=self.repository.get('live_publications',identity)
+        return await self._send(identity,message,transport,table='live_result_receipts',claim_id=identity,
+                                reply_to_message_id=original['message_id'])

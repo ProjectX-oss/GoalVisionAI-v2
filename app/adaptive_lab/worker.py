@@ -14,28 +14,57 @@ from .observations import ReadOnlyLedger
 from .repository import AuditRepository
 
 
-async def live_cycle(repo: AuditRepository, *, send: bool) -> dict:
+async def live_cycle(repo: AuditRepository, *, send: bool, clock=None) -> dict:
+    """Evening Lab only. Collection/settlement never invokes ML or model switching."""
+    from . import daypart
+    from .quota import SharedQuota
     from app.football.client import FootballClient
+    from app.football.quota import FootballQuotaError
     from app.live_lab.runner import LiveRunner
     from app.live_lab.service import LiveService
-    from .quota import SharedQuota
-    clock=lambda:datetime.now(timezone.utc)
-    coordinator=LearningCoordinator(repo)
-    client=FootballClient(request_limit=80)
-    client.restrict_requests(80,daily_reserve=750)
+    clock=clock or (lambda:datetime.now(timezone.utc))
+    if not daypart.enabled():
+        return {'status':'LIVE_EVENING_MODE_REQUIRED','api_calls':0,'deliveries':[]}
+    discover=daypart.live_window(clock())
+    pending=[r for r in repo.all('live_publications','LIVE')
+             if not repo.get('live_settlements',r['selection_id'])]
+    shadow=[r for r in repo.all('shadow_predictions','LIVE')
+            if not repo.get('shadow_settlements',r['prediction_id'])]
+    results=[r for r in repo.all('live_settlements','LIVE')
+             if not repo.get('live_result_claims',r['prediction_id'])]
+    if not discover and not (pending or shadow or results):
+        return {'status':'LIVE_IDLE_NO_PENDING_RESULTS','api_calls':0,'deliveries':[]}
+    service=LiveService(repo,clock=clock,allow_provider_feed=daypart.feed_quotes_enabled())
+    client=None
+    runner=None
+    scanned={'status':'LIVE_RESULTS_ONLY','candidates':[]}
+    api_calls=0
     try:
-        await client.account_status()  # Existing provider header preflight; no odds fallback.
-        quota=SharedQuota(repo)
-        quota.claim('STATUS',now=clock(),provider=client.quota_snapshot())
-        service=LiveService(repo,clock=clock,after_settlement=lambda _:coordinator.after_settlement('LIVE',now=clock()))
-        runner=LiveRunner(service,client,quota,clock=clock)
-        settled=await runner.settle()
-        coordinator.after_settlement('PREMATCH',now=clock())
-        coordinator.after_settlement('LIVE',now=clock())
+        if discover or pending or shadow:
+            client=FootballClient(request_limit=80)
+            # The durable shared authorizer enforces the changing results reserve
+            # on every attempt; a tiny local floor must not override that policy.
+            client.restrict_requests(80,daily_reserve=20)
+            quota=SharedQuota(repo)
+            quota.bind(client,clock,allow_status_preflight=True,status_preflight_category='LIVE_SETTLEMENT')
+            try:
+                await quota.call('LIVE_SETTLEMENT',client.account_status)
+                budget=daypart.live_budget(client.quota_snapshot(),clock(),consumed=client.request_count)
+                if budget <= client.request_count:
+                    raise FootballQuotaError('PROTECTED_QUOTA_RESERVE')
+                client.restrict_requests(budget,daily_reserve=20)
+                runner=LiveRunner(service,client,quota,clock=clock)
+                await runner.settle()
+                if discover and daypart.live_window(clock()):
+                    scanned=await runner.scan()
+            except FootballQuotaError:
+                scanned={'status':'LIVE_QUOTA_BOUNDED_STOP','candidates':[]}
+            except Exception:
+                scanned={'status':'LIVE_PROVIDER_REVIEW_UNAVAILABLE','candidates':[]}
+        candidates=sorted((c for c in scanned['candidates'] if not c['blockers']),
+                          key=lambda c:(-c['expected_value'],c['prediction_id']))[:1]
         settled=[r['prediction_id'] for r in repo.all('live_settlements','LIVE')
                  if not repo.get('live_result_claims',r['prediction_id'])]
-        scanned=await runner.scan()
-        candidates=[c for c in scanned['candidates'] if not c['blockers']]
         deliveries=[]
         if send and (candidates or settled):
             from app.lab_telegram.service import load_lab_telegram_config,validate_lab_telegram_config
@@ -44,20 +73,24 @@ async def live_cycle(repo: AuditRepository, *, send: bool) -> dict:
             from app.lab_combo.secure_logging import install_lab_secret_redaction
             config=load_lab_telegram_config()
             if validate_lab_telegram_config(config) is not None:
-                return {'status':'LAB_CONFIGURATION_REJECTED'}
+                return {'status':'LAB_CONFIGURATION_REJECTED','api_calls':client.request_count if client else 0}
             install_lab_secret_redaction(config.token)
             transport=LabTelegramTransport(config.token)
             async with transport.bot:
                 if '@'+(transport.bot.username or '')!=LAB_BOT_USERNAME:
-                    return {'status':'LAB_BOT_IDENTITY_MISMATCH'}
+                    return {'status':'LAB_BOT_IDENTITY_MISMATCH','api_calls':client.request_count if client else 0}
                 for identity in settled:
                     deliveries.append(await service.publish_result(identity,config,transport))
                 for candidate in candidates:
-                    deliveries.append(await service.publish(candidate['prediction_id'],config,transport,refresh=runner.refresh))
+                    if daypart.live_window(clock()) and runner is not None:
+                        deliveries.append(await service.publish(candidate['prediction_id'],config,transport,refresh=runner.refresh))
         return {'status':scanned['status'],'candidates':len(candidates),'settled':len(settled),
-                'deliveries':deliveries,'api_calls':client.request_count}
+                'deliveries':deliveries,'api_calls':client.request_count if client else 0,
+                'automatic_training':False,'automatic_promotion':False,'automatic_rollback':False,
+                'discovery_evidence':{k:v for k,v in scanned.items() if k!='candidates'}}
     finally:
-        await client.close()
+        if client is not None:
+            await client.close()
 
 
 def main(argv: list[str] | None = None) -> int:

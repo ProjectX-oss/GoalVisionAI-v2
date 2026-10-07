@@ -14,10 +14,12 @@ from .prepared import PreparedAudit, AuditSnapshotChanged
 from .contracts import digest, utc
 from .repository import AuditRepository
 from app.football.quota import FootballQuotaError
+from . import daypart
 
 CATEGORY = ContextVar('goalvision_quota_category', default='PREMATCH_DISCOVERY')
 RESERVES = {'SETTLEMENT':150,'PREMATCH_REVIEW':300,'LIVE_STATE':200,'LIVE_ODDS':300,'LIVE_REFRESH':200}
 LIVE_DAILY_CAP = 1800
+CATEGORIES = frozenset({*RESERVES, 'PREMATCH_DISCOVERY', 'STATUS', 'LIVE_SETTLEMENT'})
 QUOTA_VERSION = 'LAB_SHARED_QUOTA_V1'
 
 
@@ -76,7 +78,7 @@ class SharedQuota:
         # One JSON line; fixed vocabulary only, no SQLite text/SQL/provider values.
         print(json.dumps({'code': code, 'attempt': attempt,
                           'elapsed_ms': min(round(elapsed * 1000), 2147483647),
-                          'category': category if category in {*RESERVES, 'PREMATCH_DISCOVERY', 'STATUS'} else 'INVALID',
+                          'category': category if category in CATEGORIES else 'INVALID',
                           'stage': stage}, sort_keys=True), file=sys.stderr)
         if exhausted:
             raise QuotaDBContentionError() from None
@@ -114,7 +116,7 @@ class SharedQuota:
             return None, stage['value']
 
     def _claim_once(self, category: str, *, now: datetime, provider: dict, stage: dict[str, str]) -> dict:
-        if category not in {*RESERVES,'PREMATCH_DISCOVERY','STATUS'}:
+        if category not in CATEGORIES:
             raise ValueError('UNKNOWN_QUOTA_CATEGORY')
         if provider.get('interpretation_status')!='NORMALIZED':
             raise FootballQuotaError('QUOTA_UNAVAILABLE')
@@ -134,14 +136,25 @@ class SharedQuota:
             reserve = (100 if category in {'PREMATCH_DISCOVERY', 'PREMATCH_REVIEW', 'STATUS'}
                        else 0 if category == 'SETTLEMENT'
                        else sum(v for k, v in RESERVES.items() if k != category))
-            if category.startswith('LIVE_') and live>=LIVE_DAILY_CAP:
+            evening = daypart.enabled()
+            if evening:
+                if category in {'PREMATCH_DISCOVERY', 'PREMATCH_REVIEW', 'STATUS'}:
+                    local = clock.astimezone(daypart.RIGA)
+                    if not 10 <= local.hour < 18:
+                        raise FootballQuotaError('PREMATCH_DISCOVERY_WINDOW_CLOSED')
+                    reserve = daypart.prematch_discovery_reserve(clock)
+                elif category.startswith('LIVE_'):
+                    if category != 'LIVE_SETTLEMENT' and not daypart.live_window(clock):
+                        raise FootballQuotaError('LIVE_DISCOVERY_WINDOW_CLOSED')
+                    reserve = daypart.prematch_results_reserve(clock)
+            if not evening and category.startswith('LIVE_') and live>=LIVE_DAILY_CAP:
                 raise FootballQuotaError('LIVE_DAILY_CAP')
             available=min(self.daily_limit-len(today),provider['daily_remaining'])
             minute=min(self.minute_limit-len(recent),provider['minute_remaining'])
             if available-1<reserve or minute<1:
                 raise FootballQuotaError('PROTECTED_QUOTA_RESERVE')
             value={'category':category,'created_at':clock.isoformat(),'remaining_daily_before':available,
-                   'remaining_minute_before':minute,'protected_reserve':reserve,'policy_version':QUOTA_VERSION}
+                   'remaining_minute_before':minute,'protected_reserve':reserve,'policy_version':'LAB_SHARED_EVENING_QUOTA_V1' if evening else QUOTA_VERSION}
             batch.append('quota_claims',str(uuid4()),'LIVE' if category.startswith('LIVE_') else 'PREMATCH',value,clock.isoformat())
             stage['value'] = 'RESERVE_COMMIT'
             batch.commit()
@@ -158,7 +171,7 @@ class SharedQuota:
     def bind(self, client: object, clock: object, *, allow_status_preflight: bool = False,
              status_preflight_category: str = 'STATUS') -> None:
         """Bind before work to an already quota-verified client; never fetches on binding."""
-        if status_preflight_category not in {'STATUS', 'SETTLEMENT'}:
+        if status_preflight_category not in {'STATUS', 'SETTLEMENT', 'LIVE_SETTLEMENT'}:
             raise ValueError('INVALID_STATUS_PREFLIGHT_CATEGORY')
         def provider_snapshot() -> dict:
             provider=client.quota_snapshot()
