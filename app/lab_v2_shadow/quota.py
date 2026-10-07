@@ -106,8 +106,11 @@ def adaptive_quota_budget(
     )
 
 
-def projected_daily_usage(*, maximum_per_cycle: int, cycles_per_day: int = DISCOVERY_CYCLES_PER_DAY_30_MINUTES,
+def projected_daily_usage(*, maximum_per_cycle: int, cycles_per_day: int | None = None,
                           operational_reserve: int = DAILY_SAFETY_RESERVE) -> dict[str, int | bool]:
+    if cycles_per_day is None:
+        start, end = daypart.discovery_hours()
+        cycles_per_day = (end - start) * 2
     if maximum_per_cycle < 0 or cycles_per_day < 0 or operational_reserve < 0:
         raise ValueError("PROJECTED_USAGE_INPUT_INVALID")
     discovery = maximum_per_cycle * cycles_per_day

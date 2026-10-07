@@ -266,3 +266,11 @@ def test_feed_stale_final_refresh_creates_no_claim_or_send(repo):
     result=asyncio.run(service.publish(candidate['prediction_id'],config,None,refresh=refresh))
     assert not result['sent'] and 'STALE_LIVE_ODDS' in result['blockers']
     assert repo.all('live_claims')==repo.all('live_publications')==[]
+
+
+def test_report_projection_uses_the_active_sixteen_slot_schedule(monkeypatch):
+    from app.lab_v2_shadow.quota import projected_daily_usage
+    monkeypatch.setenv('GOALVISION_LAB_EVENING_MODE','1')
+    assert projected_daily_usage(maximum_per_cycle=400)['discovery_cycles']==16
+    monkeypatch.delenv('GOALVISION_LAB_EVENING_MODE')
+    assert projected_daily_usage(maximum_per_cycle=400)['discovery_cycles']==28
