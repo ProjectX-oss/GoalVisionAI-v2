@@ -1,0 +1,32 @@
+{
+  "note": "Static replay of existing durable request claims, not a forecast or promised saving. No provider calls.",
+  "scenarios": [
+    {
+      "baseline_total_claims": 7319,
+      "discovery_calls_removed": 1728,
+      "estimated_keep_total": 5591,
+      "live_headroom_with_850_reserve": 1059,
+      "remaining_from_7500": 1909,
+      "settlement_claims_retained": 2046,
+      "utc_quota_day": "2026-10-04"
+    },
+    {
+      "baseline_total_claims": 3414,
+      "discovery_calls_removed": 651,
+      "estimated_keep_total": 2763,
+      "live_headroom_with_850_reserve": 1800,
+      "remaining_from_7500": 4737,
+      "settlement_claims_retained": 1844,
+      "utc_quota_day": "2026-10-05"
+    },
+    {
+      "baseline_total_claims": 4765,
+      "discovery_calls_removed": 1293,
+      "estimated_keep_total": 3472,
+      "live_headroom_with_850_reserve": 1800,
+      "remaining_from_7500": 4028,
+      "settlement_claims_retained": 1799,
+      "utc_quota_day": "2026-10-06"
+    }
+  ]
+}

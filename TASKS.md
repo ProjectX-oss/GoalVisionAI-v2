@@ -1881,3 +1881,14 @@ Review after completing the current priority.
 - [ ] Reassess after 300 eligible independent calibration examples; retain calendar, validation and holdout gates.
 - [ ] Isolated calibration comparison only when eligible; no automatic activation or deployment.
 - Report: docs/operations/CALIBRATION_READINESS_20261007.md.
+
+## 2026-10-07 — Authorized evening LIVE request: readiness blocker
+
+- [x] Verify current release (856 hashes), champion and timers; LIVE still not installed.
+- [x] Four bounded, quota-accounted current provider calls; absent bookmaker identity and stale row timestamps reproduced.
+- [x] Prepare read-only 10–18 / evening quota plan with 24-hour result reserve; 43 offline tests PASS.
+- [x] Preserve sanitized capability, isolated installed-adapter replay and runtime readback.
+- [ ] Resolve real LIVE bookmaker/origin/freshness contract before launch.
+- [ ] Then implement reviewed no-training LIVE worker, actual market mapping and coordinated schedule/quota/settlement wiring.
+- [ ] Production launch blocked; no timer/release/application changes in this task.
+- Report: docs/operations/EVENING_QUOTA_READINESS_20261007.md.

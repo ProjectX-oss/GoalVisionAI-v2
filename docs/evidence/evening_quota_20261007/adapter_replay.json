@@ -1,0 +1,23 @@
+{
+  "network_denied": true,
+  "provider_calls": 0,
+  "replay_only": true,
+  "rows": [
+    {
+      "fixture_id": 1638514,
+      "normalized_quotes": 0,
+      "reasons": [
+        "LIVE_BOOKMAKER_OR_ORIGIN_UNAVAILABLE"
+      ]
+    },
+    {
+      "fixture_id": 1635591,
+      "normalized_quotes": 0,
+      "reasons": [
+        "LIVE_BOOKMAKER_OR_ORIGIN_UNAVAILABLE"
+      ]
+    }
+  ],
+  "source": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/application",
+  "telegram_sends": 0
+}

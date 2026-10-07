@@ -1,0 +1,81 @@
+{
+  "admin_codex_activation_by_agent": false,
+  "application_manifest_files_verified": 856,
+  "application_manifest_mismatches": [],
+  "champion_pointers": [
+    {
+      "generation_id": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "stream": "PREMATCH"
+    }
+  ],
+  "installed_implementation_commit": "6489f92cf1b8da4ca894834fd2247c3dce94afef",
+  "installed_prematch_release": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006",
+  "live_activation_by_agent": false,
+  "live_counts": {
+    "champion_generations": 0,
+    "live_candidates": 0,
+    "live_publications": 0,
+    "live_settlements": 0,
+    "live_snapshots": 0
+  },
+  "live_unit_files": "",
+  "live_worker_process_present": false,
+  "observed_at": "2026-10-07T09:20:25.182541+00:00",
+  "official_touched_by_agent": false,
+  "other_production_database_mutations_by_agent": 0,
+  "production_app_changes_by_agent": 0,
+  "production_deployments_by_agent": 0,
+  "provider_calls_by_agent": 4,
+  "provider_quota_claims_by_agent": 4,
+  "telegram_sends_by_agent": 0,
+  "training_or_promotion_by_agent": 0,
+  "unit_or_timer_changes_by_agent": 0,
+  "units": {
+    "goalvision-adaptive-learning-observer.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/release.env (ignore_errors=no)",
+      "LoadState": "loaded",
+      "UnitFileState": "static"
+    },
+    "goalvision-adaptive-learning.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/release.env (ignore_errors=no)",
+      "LoadState": "loaded",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.service": {
+      "ActiveState": "inactive",
+      "LoadState": "loaded",
+      "UnitFileState": "static"
+    },
+    "goalvision-admin-autorepair.timer": {
+      "ActiveState": "inactive",
+      "LoadState": "loaded",
+      "UnitFileState": "disabled"
+    },
+    "goalvision-lab-combo-settle.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/release.env (ignore_errors=no)",
+      "LoadState": "loaded",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "LoadState": "loaded",
+      "TimersCalendar": "{ OnCalendar=*-*-* *:05,15,25,35,45,55:00 ; next_elapse=Wed 2026-10-07 11:25:00 CEST }",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.service": {
+      "ActiveState": "inactive",
+      "EnvironmentFiles": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006/release.env (ignore_errors=no)",
+      "LoadState": "loaded",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "LoadState": "loaded",
+      "TimersCalendar": "{ OnCalendar=*-*-* 09..22:00,30:00 Europe/Riga ; next_elapse=Wed 2026-10-07 11:30:00 CEST }",
+      "UnitFileState": "enabled"
+    }
+  }
+}

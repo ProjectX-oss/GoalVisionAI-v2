@@ -1,0 +1,226 @@
+{
+  "attempt_cap": 4,
+  "catalog_count": 266,
+  "catalog_supported_names": [
+    {
+      "id": 36,
+      "name": "Over/Under Line"
+    },
+    {
+      "id": 59,
+      "name": "Fulltime Result"
+    },
+    {
+      "id": 69,
+      "name": "Both Teams to Score"
+    }
+  ],
+  "champion_changes": 0,
+  "daily_reserve": 2500,
+  "final_quota": {
+    "daily_limit": 7500,
+    "daily_remaining": 6103,
+    "exact_headers": [
+      [
+        "x-ratelimit-requests-limit",
+        "7500"
+      ],
+      [
+        "x-ratelimit-requests-remaining",
+        "6103"
+      ],
+      [
+        "x-ratelimit-limit",
+        "300"
+      ],
+      [
+        "x-ratelimit-remaining",
+        "296"
+      ]
+    ],
+    "interpretation_status": "NORMALIZED",
+    "minute_limit": 300,
+    "minute_remaining": 296
+  },
+  "finished_at": "2026-10-07T09:06:34.474502+00:00",
+  "fixture_count": 4,
+  "initial_quota": {
+    "daily_limit": 7500,
+    "daily_remaining": 6107,
+    "exact_headers": [
+      [
+        "x-ratelimit-requests-limit",
+        "7500"
+      ],
+      [
+        "x-ratelimit-requests-remaining",
+        "6107"
+      ],
+      [
+        "x-ratelimit-limit",
+        "300"
+      ],
+      [
+        "x-ratelimit-remaining",
+        "299"
+      ]
+    ],
+    "interpretation_status": "NORMALIZED",
+    "minute_limit": 300,
+    "minute_remaining": 299
+  },
+  "live_odds_paging": {
+    "current": 1,
+    "total": 1
+  },
+  "live_odds_rows": [
+    {
+      "bookmaker_id_present": false,
+      "bookmaker_name_present": false,
+      "fixture_id": 1638514,
+      "market_ids": [
+        15,
+        16,
+        20,
+        21,
+        23,
+        25,
+        29,
+        32,
+        33,
+        35,
+        36,
+        37,
+        39,
+        43,
+        44,
+        45,
+        58,
+        59,
+        61,
+        62,
+        67,
+        68,
+        69,
+        70,
+        87,
+        92
+      ],
+      "row_keys": [
+        "fixture",
+        "league",
+        "odds",
+        "status",
+        "teams",
+        "update"
+      ],
+      "status": {
+        "blocked": false,
+        "finished": false,
+        "stopped": false
+      },
+      "update": "2026-10-07T09:05:58+00:00",
+      "update_age_seconds": 36.473576
+    },
+    {
+      "bookmaker_id_present": false,
+      "bookmaker_name_present": false,
+      "fixture_id": 1635591,
+      "market_ids": [
+        8,
+        10,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        47,
+        48,
+        49,
+        50,
+        52,
+        54,
+        55,
+        56,
+        58,
+        59,
+        61,
+        62,
+        64,
+        65,
+        67,
+        68,
+        69,
+        70,
+        72,
+        73,
+        75,
+        77,
+        79,
+        82,
+        83,
+        204
+      ],
+      "row_keys": [
+        "fixture",
+        "league",
+        "odds",
+        "status",
+        "teams",
+        "update"
+      ],
+      "status": {
+        "blocked": false,
+        "finished": false,
+        "stopped": false
+      },
+      "update": "2026-10-07T09:05:59+00:00",
+      "update_age_seconds": 35.473576
+    }
+  ],
+  "model_training": false,
+  "provider_calls": 4,
+  "provider_errors": {
+    "catalog": false,
+    "fixtures": false,
+    "odds": false
+  },
+  "publication_calls": 0,
+  "response_fingerprints": {
+    "catalog": "db92283b35622c13898efc9a33d4ec8c6777d213a4f60e67a209a93e01691e0d",
+    "fixtures": "6231ed5691f73e50f9cdca0b90867008c43a0c1ba8b212314a8298c5a97ed0a7",
+    "odds": "bc9162e4b388d6fc7f3bb8c178e29050bd59bfc5879c5d14fecbb7eb81972242"
+  },
+  "retrieved_at": "2026-10-07T09:06:34.473576+00:00",
+  "runtime_deployments": 0,
+  "started_at": "2026-10-07T09:06:32.771479+00:00",
+  "status": "CAPABILITY_OBSERVED",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "version": "LIVE_CAPABILITY_PREFLIGHT_20261007_V1"
+}

@@ -1,0 +1,36 @@
+{
+  "focused_tests": {
+    "exit": 0,
+    "files": [
+      "tests/operations/test_evening_quota_plan.py",
+      "tests/adaptive_lab/test_live.py"
+    ],
+    "outbound_sockets_denied": true,
+    "result": "43 passed in 4.80s",
+    "synthetic_credentials_only": true
+  },
+  "planner_cli": {
+    "exit": 2,
+    "expected_blocked_exit": 2,
+    "provider_calls": 0,
+    "status": "BLOCKED_NOT_DEPLOYED",
+    "telegram_sends": 0
+  },
+  "provider_capture_replay": {
+    "exit": 0,
+    "normalized_quotes": 0,
+    "provider_calls": 0
+  },
+  "runtime_application_hash_mismatches": [],
+  "runtime_application_hashes_verified": 856,
+  "systemd_calendar_syntax_only": {
+    "*-*-* 10..17:00,30:00 Europe/Riga": {
+      "exit": 0,
+      "output": "Normalized form: *-*-* 10..17:00,30:00 Europe/Riga\n    Next elapse: Wed 2026-10-07 11:30:00 CEST\n       (in UTC): Wed 2026-10-07 09:30:00 UTC\n       From now: 9min left"
+    },
+    "*-*-* 18..22:00/5:00 Europe/Riga": {
+      "exit": 0,
+      "output": "Normalized form: *-*-* 18..22:00/5:00 Europe/Riga\n    Next elapse: Wed 2026-10-07 17:00:00 CEST\n       (in UTC): Wed 2026-10-07 15:00:00 UTC\n       From now: 5h 39min left"
+    }
+  }
+}
