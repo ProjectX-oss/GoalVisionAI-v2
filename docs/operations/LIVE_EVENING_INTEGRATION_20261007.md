@@ -1,6 +1,6 @@
 # LIVE evening integration — 2026-10-07
 
-Status: implementation reviewed and tested; operator package preparation.
+Status: READY_FOR_EXPLICIT_OPERATOR_APPLY. Implementation 1b425b5e28c0ce8af398746dfa28ee7e84cb4798.
 Production remains on the COMBO Double release until the explicit root apply below.
 
 ## Scope and source contract
@@ -140,3 +140,14 @@ Official, PREMATCH champion, model formula, thresholds, calibration/holdout,
 bankroll, ADMIN Codex and existing historical records remain unchanged.
 The four shared quota claims from the earlier authorized capability probe belong
 to that prior audit; no additional production database write was made here.
+
+## Prepared package readback
+
+- Package: /home/arvis/goalvision-operations/live-evening-1b425b5-20261007
+- Target: /opt/goalvision-live-evening-1b425b5-20261007
+- Read-only wrapper preflight: PASS, current_mode=BASE.
+- Immutable application: 857 verified Python/JSON files; 11-file overlay.
+- Exact package import/idle smoke: 576 modules PASS, no checkout fallback.
+- Source commit: 1b425b5e28c0ce8af398746dfa28ee7e84cb4798.
+- Wrapper and package SHA-256 pins: docs/evidence/live_evening_20261007/operator_package.json.
+- LIVE is still OFF and PREMATCH still uses the original schedule until operator apply.

@@ -1,0 +1,57 @@
+{
+  "admin_codex_enabled": false,
+  "current_champion_pointers": [
+    [
+      "PREMATCH",
+      "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a"
+    ]
+  ],
+  "current_installed_release": "/opt/goalvision-prematch-combo-double-170-6489f92-20261006",
+  "immutable_application_files": 857,
+  "live_currently_enabled": false,
+  "natural_cycle_verification": "PENDING_OPERATOR_APPLY",
+  "observed_at": "2026-10-07T10:57:57.286569+00:00",
+  "official_touched": false,
+  "operator_command": "sudo python3 ~/goalvision-operations/live-evening.py --apply --accept-api-feed-quotes",
+  "operator_preflight": [
+    "LIVE_EVENING_PLAN_VALIDATED=/opt/goalvision-live-evening-1b425b5-20261007",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "LIVE_QUOTE_CONTRACT=API_FOOTBALL_FEED_UNKNOWN_BOOKMAKER; FRESHNESS_MAX=20s",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "operator_preflight_exit": 0,
+  "package": "/home/arvis/goalvision-operations/live-evening-1b425b5-20261007",
+  "package_hashes": {
+    "metadata.json": "333d72e415601e85cb0c6ccc8e9f87a7e779897b5ae9fde36469525d7855c4aa",
+    "overlay/app/adaptive_lab/daypart.py": "2c1d42c93d1d247cbc4c6df4ba4bfad24d71e2f6a5287ebb61ed3e76b4e5a393",
+    "overlay/app/adaptive_lab/quota.py": "99a80a54d6ef9b19f007d520b593f826a9251a14120c450ea37ecf6593b185ee",
+    "overlay/app/adaptive_lab/worker.py": "3a37ed7e1926f69494fcb1edd865c97cf1aa5960d385b5f68aceb3553c2faf10",
+    "overlay/app/football/client.py": "7605335d5a0cf462ee80affd6ce35a8e8f766e3bdb21721da1d94b7d742eb2d7",
+    "overlay/app/lab_combo/publication_window.py": "2e631001f912d43e441448b399095263360db05aaf477059d50f14a06a09adeb",
+    "overlay/app/lab_v2_shadow/quota.py": "726e7ee3114d1656d137a174ed63b33730711c2ec8b1e8981844e98840f03c9d",
+    "overlay/app/live_lab/engine.py": "030e14ce9fd5e5544dd4103d81751f7967807cb04b6d8ceb9e63f76c5fbc9a1f",
+    "overlay/app/live_lab/presentation.py": "73ade250aa36609de85a6bf87c56a0f31700d005b405e155da8c7fb6b42718b2",
+    "overlay/app/live_lab/provider.py": "0f6a2f75b49528a2453438c58618b7e2fa890cc08e7cc50ccf285582eb1c3b1c",
+    "overlay/app/live_lab/runner.py": "982dfdb077ddb2c1305aaaced967fc1ddb7be4de393c5b8544162768c9c7cc33",
+    "overlay/app/live_lab/service.py": "cb4d5c3110ee29ae0d4eb45f989fd24c09ff7f8cf1f4c8aaaf9cd6f07eca0b3f",
+    "update.py": "f0c9d214da6c58755a8eeb059e416c2df0a390d2beb54f6a06e91dd6e52913bb"
+  },
+  "production_deployments": 0,
+  "provider_calls": 0,
+  "runtime_import_smoke": {
+    "incremental_plan_sha256": "25ad0030ae657748bf8af4c595a8e68d64be835d787e26d91bfa17fd8841dd3c",
+    "modules": 576,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "provider_calls": 0,
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_LIVE_EVENING_IMPORT_PASS",
+    "telegram_sends": 0
+  },
+  "source_commit": "1b425b5e28c0ce8af398746dfa28ee7e84cb4798",
+  "source_files": 11,
+  "status": "READY_FOR_EXPLICIT_OPERATOR_APPLY",
+  "target_release": "/opt/goalvision-live-evening-1b425b5-20261007",
+  "telegram_sends": 0,
+  "wrapper_sha256": "ab27033c3c6dc2cafaa9911212eae15f29f15670241fb96880b5c2c53e3b687e"
+}
