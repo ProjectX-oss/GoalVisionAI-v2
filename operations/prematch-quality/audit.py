@@ -12,6 +12,7 @@ from app.adaptive_lab.contracts import digest, utc
 from app.adaptive_lab.performance import band
 from app.adaptive_lab.observations import ReadOnlyLedger
 from app.adaptive_lab.combo_evidence import coupon_report
+from app.real_match_lab_analysis.fingerprint import fingerprint
 
 MISSING = {"ODDS_COMPLETE_SWEEP_NO_FIXTURE_RECORD", "NO_CURRENT_ODDS",
            "ODDS_EMPTY_RESPONSE", "ODDS_EMPTY_BOOKMAKERS",
@@ -25,6 +26,13 @@ def readonly(path: Path) -> sqlite3.Connection:
     connection.set_progress_handler(lambda: int(time.monotonic()>deadline), 1000)
     connection.execute("BEGIN")
     return connection
+
+
+def verified(document: str, expected: str) -> dict:
+    value=json.loads(document)
+    if fingerprint(value) != expected:
+        raise ValueError("QUALITY_AUDIT_SOURCE_INTEGRITY_FAILURE")
+    return value
 
 
 def metadata(state: dict, at: str) -> dict:
@@ -205,6 +213,10 @@ def disagreement_report(candidates: list[dict]) -> dict:
             "lead_time": temporal["prematch_lead_minutes_bucket"],
             "odds_age": temporal["odds_age_seconds_bucket"],
             "data_freshness_state": fresh_state, "provider_completeness": completeness,
+            "model_generation": row.get("model_generation") or "UNKNOWN",
+            "context_quality": (str(row["context_quality"]) if row.get("context_quality") else
+                                "CONTEXT_BLOCKER_RECORDED" if any("CONTEXT" in r for r in reasons) else
+                                "NOT_EXPLICITLY_RATED"),
         }
         groups[("ALL", "ALL")].append(sample)
         for dimension, value in dims.items():
@@ -221,7 +233,7 @@ def disagreement_report(candidates: list[dict]) -> dict:
             "divergence_observations": len(divergence),
             "mean_absolute_ensemble_market_divergence": sum(divergence)/len(divergence) if divergence else None,
         })
-    return {"version": "PREMATCH_DISAGREEMENT_ASSOCIATION_V1", "segments": segments,
+    return {"version": "PREMATCH_DISAGREEMENT_ASSOCIATION_V2", "segments": segments,
             "selection_effect": "NONE",
             "limitations": [
                 "Repeated candidate-market-cycle rows are not independent bets.",
@@ -229,6 +241,8 @@ def disagreement_report(candidates: list[dict]) -> dict:
                 "Completeness records quote/API-prediction availability, not every upstream field.",
                 "No stale marker is not independent proof of provider timestamp correctness.",
                 "Association cannot separate model misspecification from provider errors causally.",
+                "Context quality is an explicit source rating or a recorded context blocker; absence is not a positive quality grade.",
+                "Missing generation is UNKNOWN, never inferred from the current champion.",
             ]}
 
 
@@ -242,22 +256,22 @@ def run(shadow: Path, ledger_path: Path, *, as_of: str, output: Path, limit: int
             "SELECT identity,content_fingerprint,document_json FROM lab_v2_shadow_evidence "
             "WHERE kind='rehearsal' AND created_at_utc<=? ORDER BY rowid DESC LIMIT ?",
             (as_of, limit)).fetchall()
-        cycles = [json.loads(r[2]) for r in records]
+        cycles = [verified(r[2],r[1]) for r in records]
         tracked = {}
         for cycle in cycles:
             at = cycle["evaluated_at_utc"]; prefix = at+":"
-            tracked[at] = [json.loads(r[0]) for r in connection.execute(
-                "SELECT document_json FROM lab_v2_shadow_evidence "
+            tracked[at] = [verified(r[0],r[1]) for r in connection.execute(
+                "SELECT document_json,content_fingerprint FROM lab_v2_shadow_evidence "
                 "WHERE kind='tracked_odds_refresh' AND identity>=? AND identity<?", (prefix, prefix+"~"))]
         candidate_ids = list(dict.fromkeys(i for c in cycles[:12] for i in c["candidate_ids"]))
         if len(candidate_ids) > 50000:
             raise ValueError("CANDIDATE_AUDIT_CAP")
         candidates = []
         for identity in candidate_ids:
-            raw, created = connection.execute(
-                "SELECT document_json,created_at_utc FROM lab_v2_shadow_evidence WHERE kind='candidate' AND identity=?",
+            raw, created, expected = connection.execute(
+                "SELECT document_json,created_at_utc,content_fingerprint FROM lab_v2_shadow_evidence WHERE kind='candidate' AND identity=?",
                 (identity,)).fetchone()
-            row = json.loads(raw)
+            row = verified(raw,expected)
             row["evaluated_at_utc"] = max(created, row.get("goalvision_retrieved_at_utc") or created)
             candidates.append(row)
         disagreement = disagreement_report(candidates)

@@ -275,3 +275,72 @@ def test_future_append_does_not_change_fixed_cutoff_coupon_report():
 
 def test_mismatched_fixture_result_cannot_score():
     assert score_replay([coupon()],{"1":fact(99,"LOST")},cutoff=NOW+timedelta(hours=3))[0]["status"]=="PENDING"
+
+def movement_candidate(at, odds="2", suffix="a"):
+    row=live_candidate(5, ())
+    row.update(candidate_id=suffix, prepared_at_utc=at.isoformat(),
+               captured_odds=odds, quote_provenance_fingerprint="quote-"+suffix,
+               live_match_state_fingerprint="snapshot-"+suffix,
+               state={"fixture_id":1,"status":"2H","minute":60,"added_time":None,
+                      "home_score":1,"away_score":0,"red_cards_home":0,"red_cards_away":0,
+                      "events":[],"retrieved_at":at.isoformat(),"state_fingerprint":"snapshot-"+suffix})
+    row["quote"].update(origin_timestamp=(at-timedelta(seconds=5)).isoformat(),
+                        retrieved_at=at.isoformat(),source_identity="API_FOOTBALL:/odds/live",
+                        provider_type="API_FOOTBALL_LIVE_ODDS",bookmaker_id=None,bookmaker=None,
+                        live_market_id=1,market_identity="live:1:Home",
+                        blocked=False,stopped=False,finished=False,suspended=False)
+    return row
+
+
+def movement_report(a, b):
+    return live_report([a,b],[],[],[],[],[],as_of=NOW+timedelta(seconds=30),
+                       since=NOW-timedelta(minutes=1))
+
+
+def test_equal_state_price_movement_survives_distinct_capture_fingerprints():
+    a=movement_candidate(NOW)
+    b=movement_candidate(NOW+timedelta(seconds=10),"2.10","b")
+    output=movement_report(a,b)
+    assert output["same_state_odds_movement"]["n"]==1
+    assert output["same_state_odds_movement"]["mean"]==pytest.approx(.05)
+    assert output["same_state_quote_pairs"][0]["elapsed_seconds"]==10
+    assert a["live_match_state_fingerprint"]!=b["live_match_state_fingerprint"]
+
+
+@pytest.mark.parametrize("scope,key,value",[
+    ("state","minute",61),("state","home_score",2),("state","red_cards_away",1),
+    ("state","events",[{"type":"Card"}]),("quote","bookmaker_id",999),
+    ("quote","market_identity","live:1:Away"),("quote","source_identity","ANOTHER_FEED"),
+    ("quote","suspended",True),("quote","blocked",None),
+])
+def test_price_movement_never_pairs_different_state_source_or_activity(scope,key,value):
+    a=movement_candidate(NOW);b=movement_candidate(NOW+timedelta(seconds=10),"2.10","b")
+    b[scope][key]=value
+    assert movement_report(a,b)["same_state_odds_movement"]["n"]==0
+
+
+def test_missing_state_cannot_create_a_synthetic_price_pair():
+    a=movement_candidate(NOW);b=movement_candidate(NOW+timedelta(seconds=10),"2.10","b")
+    del b["state"]["events"]
+    output=movement_report(a,b)
+    assert output["same_state_odds_movement"]["n"]==0
+    assert output["quote_movement_exclusions"]=={"STATE_EVIDENCE_INCOMPLETE":1}
+
+
+def test_fixture_response_diagnostics_use_fixture_goals():
+    from app.live_lab.research import provider_evidence
+    state={"fixture_id":1,"minute":60,"home_score":1,"away_score":0}
+    payload={"response":[{"fixture":{"id":1,"status":{"elapsed":60}},
+                         "goals":{"home":1,"away":0},"teams":{"home":{"id":1},"away":{"id":2}}}]}
+    row=provider_evidence(payload,state=state)["rows"][0]
+    assert row["provider_score"]==[1,0]
+    assert row["score_matches"] and row["minute_matches"]
+    assert row["score_source"]=="FIXTURE_GOALS"
+
+
+def test_missing_provider_values_are_not_reported_as_observed_mismatches():
+    from app.live_lab.research import provider_evidence
+    state={"fixture_id":1,"minute":60,"home_score":1,"away_score":0}
+    row=provider_evidence({"response":[{"fixture":{"id":1},"teams":{}}]},state=state)["rows"][0]
+    assert row["score_matches"] is None and row["minute_matches"] is None
+    assert not row["score_available"] and not row["minute_available"]

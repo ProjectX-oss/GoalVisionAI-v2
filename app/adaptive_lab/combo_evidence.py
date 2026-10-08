@@ -12,7 +12,7 @@ from statistics import mean, median
 from .contracts import digest, utc
 from .performance import band, finite, probability_metrics, timing
 
-VERSION = "LAB_COMBO_COUPON_EVIDENCE_V2"
+VERSION = "LAB_COMBO_COUPON_EVIDENCE_V3"
 DOUBLE_COHORT = "COMBO_DOUBLE_20261006_V1"
 
 
@@ -89,7 +89,9 @@ def coupon_rows(ledger: object, *, now: datetime) -> tuple[list[dict], dict]:
                 "market_fair_probability": _text(finite(leg.get("market_fair_probability"))),
                 "expected_value": _text(finite(leg.get("expected_value"))),
                 "weighted_agreement": _text(finite(leg.get("weighted_agreement"))),
-                "context_quality": leg.get("readiness_lane"),
+                "context_quality": leg.get("context_quality") or "NOT_EXPLICITLY_RATED",
+                "publication_readiness_lane": leg.get("readiness_lane"),
+                "context_quality_findings": [r for r in findings if "CONTEXT" in r],
                 **timing(leg, selected_at=publication),
                 "fixture_id": leg.get("fixture_id"), "market": leg.get("market"),
                 "league_id": leg.get("league_id"), "competition": leg.get("competition_profile"),

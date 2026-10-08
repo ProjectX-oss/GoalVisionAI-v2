@@ -206,5 +206,31 @@ class DisagreementTests(unittest.TestCase):
         self.assertEqual(report["selection_effect"], "NONE")
 
 
+class AuditCompletenessTests(unittest.TestCase):
+    def test_generation_and_context_do_not_impute_current_champion_or_quality(self):
+        rows=[{"fixture_id":1,"model_generation":"generation-a","context_quality":"FRESH"},
+              {"fixture_id":2,"model_generation":"generation-b","soft_findings":["STALE_CONTEXT"]},
+              {"fixture_id":3}]
+        report=audit.disagreement_report(rows)
+        gens={r["value"]:r["candidate_rows"] for r in report["segments"] if r["dimension"]=="model_generation"}
+        contexts={r["value"]:r["candidate_rows"] for r in report["segments"] if r["dimension"]=="context_quality"}
+        self.assertEqual(gens,{"generation-a":1,"generation-b":1,"UNKNOWN":1})
+        self.assertEqual(contexts,{"FRESH":1,"CONTEXT_BLOCKER_RECORDED":1,"NOT_EXPLICITLY_RATED":1})
+
+    def test_quality_audit_rejects_corrupt_frozen_source(self):
+        import json
+        value={"fixture_id":1}
+        encoded=json.dumps(value)
+        self.assertEqual(audit.verified(encoded,audit.fingerprint(value)),value)
+        with self.assertRaisesRegex(ValueError,"SOURCE_INTEGRITY"):
+            audit.verified(encoded,"0"*64)
+
+    def test_publication_readiness_is_not_a_context_quality_rating(self):
+        p=prediction()
+        p["legs"][0]["readiness_lane"]="READY"
+        row=coupon_report(Ledger([p]),now=NOW)["rows"][0]["legs"][0]
+        self.assertEqual(row["publication_readiness_lane"],"READY")
+        self.assertEqual(row["context_quality"],"NOT_EXPLICITLY_RATED")
+
 if __name__ == "__main__":
     unittest.main()

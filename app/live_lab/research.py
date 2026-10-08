@@ -3,11 +3,12 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
 from statistics import mean, median
 from app.adaptive_lab.contracts import digest, utc
 from .engine import quote_timing
 
-VERSION = "LIVE_DIAGNOSTICS_V1"
+VERSION = "LIVE_DIAGNOSTICS_V2"
 LIMITS = (20, 30, 45)
 
 
@@ -30,6 +31,37 @@ def distribution(values: list[float]) -> dict:
             "median": median(values) if values else None,
             "mean": mean(values) if values else None,
             "maximum": max(values) if values else None}
+
+
+def quote_series(row: dict) -> dict:
+    """Compare equal observable state/source, never a timestamp-bearing snapshot hash."""
+    state, quote = row.get("state") or {}, row.get("quote") or {}
+    fields = ("fixture_id", "status", "minute", "added_time", "home_score",
+              "away_score", "red_cards_home", "red_cards_away")
+    if (not isinstance(state, dict) or not isinstance(quote, dict)
+            or any(k not in state for k in fields)
+            or not isinstance(state.get("events"), list)
+            or state.get("fixture_id") != row.get("fixture_id")):
+        return {"quote_series_fingerprint": None, "movement_exclusion": "STATE_EVIDENCE_INCOMPLETE"}
+    numeric = ("fixture_id", "minute", "home_score", "away_score", "red_cards_home", "red_cards_away")
+    if any(type(state[k]) is not int or state[k] < 0 for k in numeric):
+        return {"quote_series_fingerprint": None, "movement_exclusion": "STATE_EVIDENCE_INCOMPLETE"}
+    source = (quote.get("source_identity"), quote.get("provider_type"),
+              quote.get("bookmaker_id"), quote.get("bookmaker"),
+              quote.get("live_market_id"), quote.get("market_identity"))
+    if not source[0] or not source[1] or not source[4] or not source[5]:
+        return {"quote_series_fingerprint": None, "movement_exclusion": "QUOTE_SOURCE_INCOMPLETE"}
+    if any(quote.get(k) is not False for k in ("blocked", "stopped", "finished", "suspended")):
+        return {"quote_series_fingerprint": None, "movement_exclusion": "MARKET_NOT_VERIFIABLY_ACTIVE"}
+    try:
+        odds = Decimal(str(row.get("captured_odds")))
+        if not odds.is_finite() or odds <= 1:
+            raise ValueError
+    except (InvalidOperation, ValueError):
+        return {"quote_series_fingerprint": None, "movement_exclusion": "ODDS_INVALID"}
+    identity = {"state": {k:state[k] for k in fields}, "events":state["events"],
+                "source":source, "market":row.get("market")}
+    return {"quote_series_fingerprint": digest(identity), "movement_exclusion": None}
 
 
 def candidate_diagnostic(row: dict) -> dict:
@@ -60,7 +92,7 @@ def candidate_diagnostic(row: dict) -> dict:
         "blockers": sorted(reasons), "non_age_blockers": sorted(other),
         "age_only_rejected": reasons == {"STALE_LIVE_ODDS"} and timing["status"] == "VALID",
         "counterfactual_initial_ready": counterfactual,
-        "source_fingerprint": digest(row),
+        "source_fingerprint": digest(row), **quote_series(row),
     }
 
 
@@ -93,13 +125,23 @@ def report(candidates: list[dict], diagnostics: list[dict], cycles: list[dict],
     # Only same-state successive observations: match evolution is not quote-only movement.
     groups = defaultdict(list)
     for r in rows:
-        groups[(r["fixture_id"], r["market"], r["state_fingerprint"])].append(r)
-    movements = []
+        if r["quote_series_fingerprint"] and r["timing"]["status"] == "VALID":
+            groups[r["quote_series_fingerprint"]].append(r)
+    movements, pairs = [], []
     for group in groups.values():
-        ordered = sorted(group, key=lambda r: r["prepared_at"])
+        ordered = sorted(group, key=lambda r: (utc(r["prepared_at"]), r["candidate_id"]))
         for a, b in zip(ordered, ordered[1:]):
-            if a["quote_fingerprint"] != b["quote_fingerprint"]:
-                movements.append(float(b["odds"])/float(a["odds"])-1)
+            if (a["quote_fingerprint"] and b["quote_fingerprint"]
+                    and a["quote_fingerprint"] != b["quote_fingerprint"]
+                    and utc(a["prepared_at"]) < utc(b["prepared_at"])):
+                change = Decimal(b["odds"])/Decimal(a["odds"])-1
+                movements.append(float(change))
+                pairs.append({"from_candidate":a["candidate_id"], "to_candidate":b["candidate_id"],
+                              "relative_price_change":str(change),
+                              "elapsed_seconds":(utc(b["prepared_at"])-utc(a["prepared_at"])).total_seconds(),
+                              "from_quote_age":a["timing"]["origin_age_seconds"],
+                              "to_quote_age":b["timing"]["origin_age_seconds"],
+                              "quote_series_fingerprint":a["quote_series_fingerprint"]})
     calls = sum(r.get("api_calls", 0) for r in runs)
     funnel = {k: sum((r.get("discovery_evidence") or {}).get(k, 0) for r in runs)
               for k in ("fixtures_discovered", "live_odds_rows", "fresh_feed_fixtures",
@@ -119,6 +161,8 @@ def report(candidates: list[dict], diagnostics: list[dict], cycles: list[dict],
         "http_latency_seconds": None, "http_latency_status": "NOT_CAPTURED",
         "provider_feed_age_distribution": "UNAVAILABLE_FOR_DISCARDED_BROAD_FEED_ROWS",
         "same_state_odds_movement": distribution(movements),
+        "same_state_quote_pairs": pairs,
+        "quote_movement_exclusions": dict(Counter(r["movement_exclusion"] for r in rows if r["movement_exclusion"])),
         "claims": len(claimed), "confirmed_publications": len(sent),
         "claims_without_receipt": sum(c["selection_id"] not in {r["selection_id"] for r in sent} for c in claimed),
         "settled_publications": sum(r["selection_id"] in results for r in sent),
@@ -159,17 +203,29 @@ def provider_evidence(payload: object, *, state: dict | None = None) -> dict:
         if not isinstance(fixture,dict):continue
         teams=value.get("teams") or {}
         status=fixture.get("status") or {}
-        score=[(teams.get(k) or {}).get("goals") for k in ("home","away")]
+        goals=value.get("goals")
+        if isinstance(goals,dict):
+            score=[goals.get(k) for k in ("home","away")]
+            score_source="FIXTURE_GOALS"
+        else:
+            teams=teams if isinstance(teams,dict) else {}
+            score=[(teams.get(k) if isinstance(teams.get(k),dict) else {}).get("goals")
+                   for k in ("home","away")]
+            score_source="LIVE_ODDS_TEAMS_GOALS"
+        status=status if isinstance(status,dict) else {}
         try:
             update=utc(value.get("update")).isoformat()
         except (ValueError,TypeError,AttributeError):
             update=None
+        score_available=all(type(v) is int and v >= 0 for v in score)
+        minute_available=type(status.get("elapsed")) is int and status["elapsed"] >= 0
         item={"fixture_id":fixture.get("id"),"provider_update":update,
-              "provider_minute":status.get("elapsed"),"provider_score":score}
+              "provider_minute":status.get("elapsed"),"provider_score":score,"score_source":score_source,
+              "score_available":score_available,"minute_available":minute_available}
         if state is not None and fixture.get("id")==state["fixture_id"]:
             item.update(expected_minute=state["minute"],expected_score=[state["home_score"],state["away_score"]],
-                        minute_matches=status.get("elapsed")==state["minute"],
-                        score_matches=score==[state["home_score"],state["away_score"]])
+                        minute_matches=(status.get("elapsed")==state["minute"]) if minute_available else None,
+                        score_matches=(score==[state["home_score"],state["away_score"]]) if score_available else None)
         rows.append(item)
     return {"response_shape":"LIST","response_rows":len(response),"rows":rows,
             "truncated":len(response)>100, "provider_errors_present":bool(payload.get("errors")),
