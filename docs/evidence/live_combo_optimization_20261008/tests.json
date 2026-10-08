@@ -1,0 +1,50 @@
+{
+  "command": "python -I -B operations/live-combo-research/offline_tests.py",
+  "deployments": 0,
+  "elapsed_seconds": 38.16,
+  "outbound_socket_connections": "DENIED",
+  "passed": 619,
+  "production_provider_calls": 0,
+  "provider_credentials": "FAKE",
+  "reproduction": {
+    "files": {
+      "combo.json": "7f4de534fbac0ba2a6cfe4d7ec01c7daf7c7bc656777005aa6126385adc53bbc",
+      "live.json": "cbd3894b8238f377c7426ad7c5f9a4d862d66c364178887836218e4e96d6cb6f",
+      "replay.json": "268db547119a4db36a944eae1b859536aa5717315e7605a86a8eebde333711f6"
+    },
+    "fixed_as_of": "2026-10-08T19:06:10.302493+00:00",
+    "result": "PASS",
+    "same_bytes_twice": true
+  },
+  "result": "PASS",
+  "source_commit": "b716db64fd365892937a871b28cf945a50305336",
+  "telegram_credentials": "FAKE",
+  "telegram_sends": 0,
+  "tests": [
+    "tests/adaptive_lab/test_live.py",
+    "tests/adaptive_lab/test_evening_live.py",
+    "tests/adaptive_lab/test_live_quote_age_policy.py",
+    "tests/adaptive_lab/test_quota_contention.py",
+    "tests/adaptive_lab/test_settlement_preflight_reserve.py",
+    "tests/adaptive_lab/test_no_combo_learning.py",
+    "tests/adaptive_lab/test_calendar_research.py",
+    "tests/adaptive_lab/test_calendar_monitor.py",
+    "tests/adaptive_lab/test_calibration_research.py",
+    "tests/adaptive_lab/test_shadow_chronology.py",
+    "tests/adaptive_lab/test_devig_research.py",
+    "tests/adaptive_lab/test_devig_integration.py",
+    "tests/adaptive_lab/test_performance_snapshot.py",
+    "tests/test_live_combo_research.py",
+    "tests/test_prematch_quality_evidence.py",
+    "tests/test_combo_double_170.py",
+    "tests/test_combo_aggregate_order.py",
+    "tests/test_lab_combo_early_loss.py",
+    "tests/test_lab_combo_integrity.py",
+    "tests/test_settlement_replies.py",
+    "tests/test_lab_delivery_accounting.py",
+    "tests/test_final_review_queue.py",
+    "tests/test_dixon_coles_incremental.py",
+    "tests/test_prematch_combo_leg_odds_floor.py",
+    "tests/test_lab_accuracy_combo.py"
+  ]
+}

@@ -1,0 +1,753 @@
+{
+  "bookmakers": [
+    {
+      "bookmaker": "Betfair",
+      "bookmaker_id": 3,
+      "historical_bookmaker_odds_used": false,
+      "margin": "0.127948075316496369127948075",
+      "methods": {
+        "MULTIPLICATIVE": {
+          "parameters": {},
+          "probabilities": {
+            "AWAY_WIN": "0.6665907019143117593436645398",
+            "DRAW": "0.1970145852324521422060164084",
+            "HOME_WIN": "0.1363947128532360984503190518"
+          },
+          "status": "AVAILABLE"
+        },
+        "OO_EPC": {
+          "parameters": {
+            "z": 0.05563201508203994
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.7241684604693596",
+            "DRAW": "0.17315939660873148",
+            "HOME_WIN": "0.102672142921909"
+          },
+          "status": "AVAILABLE"
+        },
+        "POWER": {
+          "parameters": {
+            "exponent": 1.1704430015272465
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.7162072510585551",
+            "DRAW": "0.1719697202349465",
+            "HOME_WIN": "0.11182302870648192"
+          },
+          "status": "AVAILABLE"
+        },
+        "SHIN": {
+          "parameters": {
+            "insider_fraction": 0.06686108176375136
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6979254942825868",
+            "DRAW": "0.18372250712454513",
+            "HOME_WIN": "0.11835199859294496"
+          },
+          "status": "AVAILABLE"
+        }
+      },
+      "quote_fingerprints": [
+        "5b6b5fec7c96d2491b0d4b221dd16ddfc5dce54df835bd9ca0091fc9dc2172db",
+        "95ab1626140c5ddbf0234688b1e8f509b920e07a773614ff3b695c9fb15ec50a",
+        "e9aa1e5bb08d1b2d6e5372a2776bcbe55df80d20a9f51a1cc7860d2ae6b630b6"
+      ],
+      "research_only": true,
+      "status": "AVAILABLE",
+      "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+    },
+    {
+      "bookmaker": "Betano",
+      "bookmaker_id": 32,
+      "historical_bookmaker_odds_used": false,
+      "margin": "0.106186136426401546534106600",
+      "methods": {
+        "MULTIPLICATIVE": {
+          "parameters": {},
+          "probabilities": {
+            "AWAY_WIN": "0.6366246411184621145924354015",
+            "DRAW": "0.2127075271501685182873548871",
+            "HOME_WIN": "0.1506678317313693671202097114"
+          },
+          "status": "AVAILABLE"
+        },
+        "OO_EPC": {
+          "parameters": {
+            "z": 0.04555004382456265
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6794528843363375",
+            "DRAW": "0.19546175982709887",
+            "HOME_WIN": "0.12508535583656355"
+          },
+          "status": "AVAILABLE"
+        },
+        "POWER": {
+          "parameters": {
+            "exponent": 1.1297713627848225
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.672897615970389",
+            "DRAW": "0.19501327785133596",
+            "HOME_WIN": "0.13208910617825811"
+          },
+          "status": "AVAILABLE"
+        },
+        "SHIN": {
+          "parameters": {
+            "insider_fraction": 0.05461886088045498
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6603613115714944",
+            "DRAW": "0.20300681901388196",
+            "HOME_WIN": "0.1366318694145873"
+          },
+          "status": "AVAILABLE"
+        }
+      },
+      "quote_fingerprints": [
+        "29eb55bda0f0777b295e064eb3b60d4e4b47adf7df054169017e66ad4ca8b5be",
+        "6597b825aaf3f6d792ff80e1ce382aaff0264eff3bf01e34380162ced8c0b000",
+        "c740e0ab19ef718d16d08fd79e2b1006bfe34461bc433b3d932e52f29777889f"
+      ],
+      "research_only": true,
+      "status": "AVAILABLE",
+      "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+    },
+    {
+      "bookmaker": "BetVictor",
+      "bookmaker_id": 36,
+      "historical_bookmaker_odds_used": false,
+      "margin": "0.099078750348958201152196533",
+      "methods": {
+        "MULTIPLICATIVE": {
+          "parameters": {},
+          "probabilities": {
+            "AWAY_WIN": "0.6498949361535086706537049439",
+            "DRAW": "0.2101276929826586925901124530",
+            "HOME_WIN": "0.1399773708638326367561826031"
+          },
+          "status": "AVAILABLE"
+        },
+        "OO_EPC": {
+          "parameters": {
+            "z": 0.04249852853857765
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6915692952523725",
+            "DRAW": "0.19367751132166178",
+            "HOME_WIN": "0.11475319342596559"
+          },
+          "status": "AVAILABLE"
+        },
+        "POWER": {
+          "parameters": {
+            "exponent": 1.123522001834317
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6852072300505393",
+            "DRAW": "0.19270449476727872",
+            "HOME_WIN": "0.122088275182176"
+          },
+          "status": "AVAILABLE"
+        },
+        "SHIN": {
+          "parameters": {
+            "insider_fraction": 0.05104848250693418
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6730356663046501",
+            "DRAW": "0.20083578997390888",
+            "HOME_WIN": "0.1261285437214361"
+          },
+          "status": "AVAILABLE"
+        }
+      },
+      "quote_fingerprints": [
+        "1e1239ded0a4b2dd255ed60a5cb55f455999055775eaaac10fd531efa05954d5",
+        "99162a907c1e73c1bf047351d65cc78c845fdcf7abc3381fc094a42ad0c5029e",
+        "9d80896c918348320db213c0bb3abadef7b4cd36ced59c321ade7d2f021d8d4a"
+      ],
+      "research_only": true,
+      "status": "AVAILABLE",
+      "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+    },
+    {
+      "bookmaker": "Pinnacle",
+      "bookmaker_id": 4,
+      "historical_bookmaker_odds_used": false,
+      "margin": "0.117965700422752810569157836",
+      "methods": {
+        "MULTIPLICATIVE": {
+          "parameters": {},
+          "probabilities": {
+            "AWAY_WIN": "0.6389155892847257519865933261",
+            "DRAW": "0.2134801491643475066303653118",
+            "HOME_WIN": "0.1476042615509267413830413621"
+          },
+          "status": "AVAILABLE"
+        },
+        "OO_EPC": {
+          "parameters": {
+            "z": 0.050828819895099096
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6871165672255001",
+            "DRAW": "0.19431300119500447",
+            "HOME_WIN": "0.11857043157949552"
+          },
+          "status": "AVAILABLE"
+        },
+        "POWER": {
+          "parameters": {
+            "exponent": 1.1466942208994624
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6798855735066165",
+            "DRAW": "0.19342418503759362",
+            "HOME_WIN": "0.12669024145580127"
+          },
+          "status": "AVAILABLE"
+        },
+        "SHIN": {
+          "parameters": {
+            "insider_fraction": 0.06094602429464703
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6654319852853285",
+            "DRAW": "0.20272937540059657",
+            "HOME_WIN": "0.13183863931410497"
+          },
+          "status": "AVAILABLE"
+        }
+      },
+      "quote_fingerprints": [
+        "07c0487709b68842f58f31963bb4d3bed9681070bb4d3d895b7f4e776bde5450",
+        "2aa71ba7d9727b595921dfd5466674215a9ec915530f1d402e653f2dfc79550f",
+        "ffdbf1db81e3e0cddba2878dc0dc753e1a631fe12c4de840ab12d04c707a7676"
+      ],
+      "research_only": true,
+      "status": "AVAILABLE",
+      "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+    },
+    {
+      "bookmaker": "William Hill",
+      "bookmaker_id": 7,
+      "historical_bookmaker_odds_used": false,
+      "margin": "0.126262626262626262626262626",
+      "methods": {
+        "MULTIPLICATIVE": {
+          "parameters": {},
+          "probabilities": {
+            "AWAY_WIN": "0.6165919282511210762331838566",
+            "DRAW": "0.2219730941704035874439461884",
+            "HOME_WIN": "0.1614349775784753363228699550"
+          },
+          "status": "AVAILABLE"
+        },
+        "OO_EPC": {
+          "parameters": {
+            "z": 0.05434553569314513
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6644038192902728",
+            "DRAW": "0.20293538550746237",
+            "HOME_WIN": "0.13266079520226473"
+          },
+          "status": "AVAILABLE"
+        },
+        "POWER": {
+          "parameters": {
+            "exponent": 1.15175884950213
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6570593478561373",
+            "DRAW": "0.20256857689437088",
+            "HOME_WIN": "0.14037207524940995"
+          },
+          "status": "AVAILABLE"
+        },
+        "SHIN": {
+          "parameters": {
+            "insider_fraction": 0.06498097651245058
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.642860639826767",
+            "DRAW": "0.2113355396835363",
+            "HOME_WIN": "0.14580382048965582"
+          },
+          "status": "AVAILABLE"
+        }
+      },
+      "quote_fingerprints": [
+        "710f5c01c1732892c4d1c7206ede8ca36f407f820bb22117ec27e03690709565",
+        "b1592bab7af37ab5b100d4002a8e8c6402c91bf4a4e56c959802600c29610a10",
+        "d4451f653bad29653d572372c9badfe30bf67993b1c96c0a2d8f3b47188ba2b3"
+      ],
+      "research_only": true,
+      "status": "AVAILABLE",
+      "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+    },
+    {
+      "bookmaker": "Bet365",
+      "bookmaker_id": 8,
+      "historical_bookmaker_odds_used": false,
+      "margin": "0.100373482726423902894491130",
+      "methods": {
+        "MULTIPLICATIVE": {
+          "parameters": {},
+          "probabilities": {
+            "AWAY_WIN": "0.6682223165040305473058973270",
+            "DRAW": "0.2019516334323292320746711921",
+            "HOME_WIN": "0.1298260500636402206194314809"
+          },
+          "status": "AVAILABLE"
+        },
+        "OO_EPC": {
+          "parameters": {
+            "z": 0.04322283100076044
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.7130561545596062",
+            "DRAW": "0.18410326829282717",
+            "HOME_WIN": "0.1028405771475667"
+          },
+          "status": "AVAILABLE"
+        },
+        "POWER": {
+          "parameters": {
+            "exponent": 1.130232582840108
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.706431367196302",
+            "DRAW": "0.1826913282860493",
+            "HOME_WIN": "0.11087730451767461"
+          },
+          "status": "AVAILABLE"
+        },
+        "SHIN": {
+          "parameters": {
+            "insider_fraction": 0.052001691511980266
+          },
+          "probabilities": {
+            "AWAY_WIN": "0.6930201521333534",
+            "DRAW": "0.19187210352740197",
+            "HOME_WIN": "0.1151077443393271"
+          },
+          "status": "AVAILABLE"
+        }
+      },
+      "quote_fingerprints": [
+        "803e2822c07d5c94ee6a0c3aa6eccb542defdfea9d1af52401239af91abe46a3",
+        "bfe9bc68d4c22c19f77e8fec039a05ece317ca478dca5c4982228b189a7b1402",
+        "c388666b196f3fb131935d2ce63799e1d7af7ab987f59dc667c3379f232d29b0"
+      ],
+      "research_only": true,
+      "status": "AVAILABLE",
+      "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+    }
+  ],
+  "capture_id": "devig-v2:1644617:1X2:571fb251c68f143d7f013274bcceb44880949232afb8a3be7724e783f3aae8fc",
+  "captured_at": "2026-10-08T14:33:49.639220+00:00",
+  "fixture_id": 1644617,
+  "historical_bookmaker_odds_used": false,
+  "kickoff_utc": "2026-10-08T14:50:00+00:00",
+  "market_family": "1X2",
+  "method_version": "ODDS_ONLY_MATH_V1",
+  "model_probabilities": {
+    "AWAY_WIN": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "36000f25d530c5e7fd93d719737e2394b5668f5b17e4dcfff4d5931565b9efb3",
+      "candidate_id": "lab-v2-candidate-e867ca3744670ed03771ab4c9710a5af554e2301773d80827b08f1c189e4049c",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.8110615787382444506759259439",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    },
+    "BTTS_NO": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "c00657f066e88a3b5d4201d779989a5214bd99ebedbfc3453d38a48a8c7febfd",
+      "candidate_id": "lab-v2-candidate-d494bdc761aca9e1e500d7b550c8e37e0edb8feac416a280ea266e84d2b0a287",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.6783205940342433363052972455",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    },
+    "BTTS_YES": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "069e369f36415876cb7ca4b0fa45e7b9c681eaef7552bcd262abedd991a18cbf",
+      "candidate_id": "lab-v2-candidate-31e1d6c6c9ae8c8482a61e5bc2504eb9c741530026011e725aadf7e559e21903",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.3216794059657566636947027545",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    },
+    "DRAW": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "817795db197025a6623f6f0781a633f2960d95d5f6760d12d26a1dd5fc9a215e",
+      "candidate_id": "lab-v2-candidate-c14e891fe1244888ce052c9e5a0cebc453ab736adec7088ac8362b5e8fb5cc54",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.1444505002010079256803401545",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    },
+    "HOME_WIN": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "964e290d288f32720afc223330c68106e33689b853d711f8b4bae9dd47128b51",
+      "candidate_id": "lab-v2-candidate-e645175790879beb5aaa96a7431fa4f3d2d80c604aa2feae1918f97c846c6d34",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.04448792106074762364373390170",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    },
+    "OVER_2_5": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "2daaa128a997f56ac59a06f0ae3c2c3221fc06b448b8d57606b45697c7ac3c4e",
+      "candidate_id": "lab-v2-candidate-d71070b0ba2135b7f498e873ce9b09aa5b3e48d543a4345b2f99764bf47916dd",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.5540083086352615892027577462",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    },
+    "OVER_3_5": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "6529baf4ebf6064b65dd6495ad190e567eb386ad456cde89ef166970107bb606",
+      "candidate_id": "lab-v2-candidate-99fb7455f328716fcee9499d24dfa47d706da624910bda61cce30d2ba6ec77b4",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.3303485472759123922975874047",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    },
+    "UNDER_2_5": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "1f1da57f42eb2330253b1ceb38a57ec69886f6f52f4aff61b124e99373143de7",
+      "candidate_id": "lab-v2-candidate-c58829e3c0500250a64f384c3f925c4952c5ae9e42c9c684ec40e341702df1cf",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.4459916913647384107972422538",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    },
+    "UNDER_3_5": {
+      "calibration_status": "UNCALIBRATED_LAB_ENSEMBLE",
+      "candidate_fingerprint": "55c1a3f5174b69a3d33dc94c0698152b351cc47c03b055d774ee96a9dbd9ba63",
+      "candidate_id": "lab-v2-candidate-f8dd3e0ac04385ae61d9cfd97e7b5388cdf766ff82110f707e49fdd7d4ff1057",
+      "model_artifact_identity": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "model_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "probability": "0.6696514527240876077024125953",
+      "profile_policy_version": "LAB_COMPETITION_POLICY_V2",
+      "readiness_policy_version": null
+    }
+  },
+  "policy_context": {
+    "combo_minimum": null,
+    "scope": "ALL_CAPTURED_CURRENT_MARKETS_NOT_ONLY_PUBLISHED",
+    "single_minimum": "1.50",
+    "single_policy": "LAB_SINGLE_ACCURACY_FIRST_PER_FIXTURE_V4_MIN_ODDS_150",
+    "today_only": true
+  },
+  "research_only": true,
+  "selection_effect": "NONE",
+  "source_consensus": {
+    "bookmaker_count": 6,
+    "bookmaker_markets": [
+      {
+        "bookmaker_id": 8,
+        "bookmaker_name": "Bet365",
+        "fair_probabilities": {
+          "AWAY_WIN": "0.6682223165040305473058973272",
+          "DRAW": "0.2019516334323292320746711921",
+          "HOME_WIN": "0.1298260500636402206194314807"
+        },
+        "margin": "0.100373482726423902894491130",
+        "market_family": "1X2"
+      },
+      {
+        "bookmaker_id": 32,
+        "bookmaker_name": "Betano",
+        "fair_probabilities": {
+          "AWAY_WIN": "0.6366246411184621145924354012",
+          "DRAW": "0.2127075271501685182873548871",
+          "HOME_WIN": "0.1506678317313693671202097117"
+        },
+        "margin": "0.106186136426401546534106600",
+        "market_family": "1X2"
+      },
+      {
+        "bookmaker_id": 3,
+        "bookmaker_name": "Betfair",
+        "fair_probabilities": {
+          "AWAY_WIN": "0.6665907019143117593436645396",
+          "DRAW": "0.1970145852324521422060164084",
+          "HOME_WIN": "0.1363947128532360984503190520"
+        },
+        "margin": "0.127948075316496369127948075",
+        "market_family": "1X2"
+      },
+      {
+        "bookmaker_id": 36,
+        "bookmaker_name": "BetVictor",
+        "fair_probabilities": {
+          "AWAY_WIN": "0.6498949361535086706537049437",
+          "DRAW": "0.2101276929826586925901124530",
+          "HOME_WIN": "0.1399773708638326367561826033"
+        },
+        "margin": "0.099078750348958201152196533",
+        "market_family": "1X2"
+      },
+      {
+        "bookmaker_id": 4,
+        "bookmaker_name": "Pinnacle",
+        "fair_probabilities": {
+          "AWAY_WIN": "0.6389155892847257519865933258",
+          "DRAW": "0.2134801491643475066303653118",
+          "HOME_WIN": "0.1476042615509267413830413624"
+        },
+        "margin": "0.117965700422752810569157836",
+        "market_family": "1X2"
+      },
+      {
+        "bookmaker_id": 7,
+        "bookmaker_name": "William Hill",
+        "fair_probabilities": {
+          "AWAY_WIN": "0.6165919282511210762331838564",
+          "DRAW": "0.2219730941704035874439461884",
+          "HOME_WIN": "0.1614349775784753363228699552"
+        },
+        "margin": "0.126262626262626262626262626",
+        "market_family": "1X2"
+      }
+    ],
+    "dispersion": {
+      "AWAY_WIN": "0.0516303882529094710727134708",
+      "DRAW": "0.0249585089379514452379297800",
+      "HOME_WIN": "0.0316089275148351157034384745"
+    },
+    "fair_probabilities": {
+      "AWAY_WIN": "0.6461400188710266533525798991",
+      "DRAW": "0.2095424470220599465387444067",
+      "HOME_WIN": "0.1443175341069134001086756942"
+    },
+    "fixture_id": 1644617,
+    "historical_bookmaker_odds_used": false,
+    "market_family": "1X2",
+    "quote_count": 18,
+    "quotes": [
+      {
+        "bookmaker_id": 8,
+        "bookmaker_name": "Bet365",
+        "decimal_odds": "1.36",
+        "fixture_id": 1644617,
+        "market": "AWAY_WIN",
+        "provenance_fingerprint": "803e2822c07d5c94ee6a0c3aa6eccb542defdfea9d1af52401239af91abe46a3",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.7352941176470588235294117647",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 8,
+        "bookmaker_name": "Bet365",
+        "decimal_odds": "4.50",
+        "fixture_id": 1644617,
+        "market": "DRAW",
+        "provenance_fingerprint": "c388666b196f3fb131935d2ce63799e1d7af7ab987f59dc667c3379f232d29b0",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.2222222222222222222222222222",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 8,
+        "bookmaker_name": "Bet365",
+        "decimal_odds": "7.00",
+        "fixture_id": 1644617,
+        "market": "HOME_WIN",
+        "provenance_fingerprint": "bfe9bc68d4c22c19f77e8fec039a05ece317ca478dca5c4982228b189a7b1402",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.1428571428571428571428571429",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 32,
+        "bookmaker_name": "Betano",
+        "decimal_odds": "1.42",
+        "fixture_id": 1644617,
+        "market": "AWAY_WIN",
+        "provenance_fingerprint": "c740e0ab19ef718d16d08fd79e2b1006bfe34461bc433b3d932e52f29777889f",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.7042253521126760563380281690",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 32,
+        "bookmaker_name": "Betano",
+        "decimal_odds": "4.25",
+        "fixture_id": 1644617,
+        "market": "DRAW",
+        "provenance_fingerprint": "29eb55bda0f0777b295e064eb3b60d4e4b47adf7df054169017e66ad4ca8b5be",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.2352941176470588235294117647",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 32,
+        "bookmaker_name": "Betano",
+        "decimal_odds": "6.00",
+        "fixture_id": 1644617,
+        "market": "HOME_WIN",
+        "provenance_fingerprint": "6597b825aaf3f6d792ff80e1ce382aaff0264eff3bf01e34380162ced8c0b000",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.1666666666666666666666666667",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 3,
+        "bookmaker_name": "Betfair",
+        "decimal_odds": "1.33",
+        "fixture_id": 1644617,
+        "market": "AWAY_WIN",
+        "provenance_fingerprint": "5b6b5fec7c96d2491b0d4b221dd16ddfc5dce54df835bd9ca0091fc9dc2172db",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.7518796992481203007518796992",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 3,
+        "bookmaker_name": "Betfair",
+        "decimal_odds": "4.50",
+        "fixture_id": 1644617,
+        "market": "DRAW",
+        "provenance_fingerprint": "95ab1626140c5ddbf0234688b1e8f509b920e07a773614ff3b695c9fb15ec50a",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.2222222222222222222222222222",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 3,
+        "bookmaker_name": "Betfair",
+        "decimal_odds": "6.50",
+        "fixture_id": 1644617,
+        "market": "HOME_WIN",
+        "provenance_fingerprint": "e9aa1e5bb08d1b2d6e5372a2776bcbe55df80d20a9f51a1cc7860d2ae6b630b6",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.1538461538461538461538461538",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 36,
+        "bookmaker_name": "BetVictor",
+        "decimal_odds": "1.40",
+        "fixture_id": 1644617,
+        "market": "AWAY_WIN",
+        "provenance_fingerprint": "1e1239ded0a4b2dd255ed60a5cb55f455999055775eaaac10fd531efa05954d5",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.7142857142857142857142857143",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 36,
+        "bookmaker_name": "BetVictor",
+        "decimal_odds": "4.33",
+        "fixture_id": 1644617,
+        "market": "DRAW",
+        "provenance_fingerprint": "9d80896c918348320db213c0bb3abadef7b4cd36ced59c321ade7d2f021d8d4a",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.2309468822170900692840646651",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 36,
+        "bookmaker_name": "BetVictor",
+        "decimal_odds": "6.50",
+        "fixture_id": 1644617,
+        "market": "HOME_WIN",
+        "provenance_fingerprint": "99162a907c1e73c1bf047351d65cc78c845fdcf7abc3381fc094a42ad0c5029e",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.1538461538461538461538461538",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 4,
+        "bookmaker_name": "Pinnacle",
+        "decimal_odds": "1.40",
+        "fixture_id": 1644617,
+        "market": "AWAY_WIN",
+        "provenance_fingerprint": "07c0487709b68842f58f31963bb4d3bed9681070bb4d3d895b7f4e776bde5450",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.7142857142857142857142857143",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 4,
+        "bookmaker_name": "Pinnacle",
+        "decimal_odds": "4.19",
+        "fixture_id": 1644617,
+        "market": "DRAW",
+        "provenance_fingerprint": "2aa71ba7d9727b595921dfd5466674215a9ec915530f1d402e653f2dfc79550f",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.2386634844868735083532219570",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 4,
+        "bookmaker_name": "Pinnacle",
+        "decimal_odds": "6.06",
+        "fixture_id": 1644617,
+        "market": "HOME_WIN",
+        "provenance_fingerprint": "ffdbf1db81e3e0cddba2878dc0dc753e1a631fe12c4de840ab12d04c707a7676",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.1650165016501650165016501650",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 7,
+        "bookmaker_name": "William Hill",
+        "decimal_odds": "1.44",
+        "fixture_id": 1644617,
+        "market": "AWAY_WIN",
+        "provenance_fingerprint": "d4451f653bad29653d572372c9badfe30bf67993b1c96c0a2d8f3b47188ba2b3",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.6944444444444444444444444444",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 7,
+        "bookmaker_name": "William Hill",
+        "decimal_odds": "4.00",
+        "fixture_id": 1644617,
+        "market": "DRAW",
+        "provenance_fingerprint": "710f5c01c1732892c4d1c7206ede8ca36f407f820bb22117ec27e03690709565",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.25",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      },
+      {
+        "bookmaker_id": 7,
+        "bookmaker_name": "William Hill",
+        "decimal_odds": "5.50",
+        "fixture_id": 1644617,
+        "market": "HOME_WIN",
+        "provenance_fingerprint": "b1592bab7af37ab5b100d4002a8e8c6402c91bf4a4e56c959802600c29610a10",
+        "provider_origin_timestamp_utc": "2026-10-08T13:21:15+00:00",
+        "raw_implied_probability": "0.1818181818181818181818181818",
+        "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00"
+      }
+    ],
+    "reason": null,
+    "retrieved_at_utc": "2026-10-08T14:32:19.925092+00:00",
+    "source": "API_FOOTBALL_CURRENT_ODDS",
+    "status": "AVAILABLE"
+  },
+  "source_consensus_fingerprint": "3de34b6732ef34cc30c3d25840a07d282693ce609f682b3d14e0f19f67effd15",
+  "source_issues": [],
+  "status": "AVAILABLE",
+  "version": "CURRENT_ODDS_DEVIG_RESEARCH_V2"
+}

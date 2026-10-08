@@ -1,0 +1,820 @@
+{
+  "artifact_manifest": {
+    "combo.json": {
+      "bytes": 2325761,
+      "sha256": "7f4de534fbac0ba2a6cfe4d7ec01c7daf7c7bc656777005aa6126385adc53bbc"
+    },
+    "devig_example.json": {
+      "bytes": 29490,
+      "sha256": "21a1a6eaafb44073a5ae2b6781690dd1d27c841b8e50c3bc429ef25c0a878834"
+    },
+    "disagreement.json": {
+      "bytes": 82787,
+      "sha256": "4806e3e2362c745a9899a451db9314e3ce35ab6dec8a275a05db8732f5bef630"
+    },
+    "dixon_coles.json": {
+      "bytes": 1147400,
+      "sha256": "bb6b8cbb211b2e21983b9e82ad311fa9becd65f40a9e89efdab22c420991bc87"
+    },
+    "journals.json": {
+      "bytes": 2168,
+      "sha256": "e20c297e8cf344d074066d676a79ca33d7f48da5d20309d1a6b29ebc62f660f2"
+    },
+    "learning_champion.json": {
+      "bytes": 11768,
+      "sha256": "b76974d9e72d1f23b0233cbd8017c0cc7fb310422550143d1f6112e5946de5ac"
+    },
+    "live.json": {
+      "bytes": 362296,
+      "sha256": "cbd3894b8238f377c7426ad7c5f9a4d862d66c364178887836218e4e96d6cb6f"
+    },
+    "odds_yield.json": {
+      "bytes": 444134,
+      "sha256": "7555e1271d76abaa22a15d7f47a86b810fa68cfe3dacb2462eb63e222ef120dd"
+    },
+    "performance.json": {
+      "bytes": 876118,
+      "sha256": "aae3f22cedef52cb86cb53b279dba1629806db5e3c2a6b4675e34573a455d804"
+    },
+    "publication.json": {
+      "bytes": 28712,
+      "sha256": "1c4dd0528110cbece0033fa3096caa63805f3c1ecefa10ddcd3a0ea83b5c8ded"
+    },
+    "queue.json": {
+      "bytes": 20259,
+      "sha256": "542885aa2e7368976641f65a5cd6bb09d9f013ec70cb2fbec256dfcf152c263c"
+    },
+    "replay.json": {
+      "bytes": 3802755,
+      "sha256": "268db547119a4db36a944eae1b859536aa5717315e7605a86a8eebde333711f6"
+    },
+    "runtime.json": {
+      "bytes": 36110,
+      "sha256": "b51a6d6f047ad3f549ba00a657b69e05de24cb22ff3b7bf663d1f3448bda3b5a"
+    },
+    "runtime_integrity.json": {
+      "bytes": 62428,
+      "sha256": "4b73d5cdd91daaddd30096ad7d97580c7eb9d32c238ccf114060258162bc5fed"
+    },
+    "tests.json": {
+      "bytes": 2016,
+      "sha256": "71a6e911e38c84b1644e3637136355c84109a4c373bf60f74cdcc62284e03c90"
+    }
+  },
+  "as_of": "2026-10-08T19:06:10.302493+00:00",
+  "base_commit": "2b93f574b39906df92b6cae1c4274756c9728ee0",
+  "branch": "research/live-combo-optimization-20261008",
+  "findings": [
+    {
+      "classification": "NO_CHANGE",
+      "conclusion": "Operator V2 quote age is diagnostic-only; LIVE timer remains enabled.",
+      "evidence": [
+        "runtime_integrity.json",
+        "live.json"
+      ],
+      "id": "LIVE_ACTUAL_POLICY"
+    },
+    {
+      "classification": "PASS",
+      "conclusion": "Five receipt-confirmed predictions, one LOST and four pending at cutoff.",
+      "evidence": [
+        "live.json"
+      ],
+      "id": "LIVE_PUBLICATIONS"
+    },
+    {
+      "classification": "DATA_QUALITY_LIMITATION",
+      "conclusion": "145 mismatch diagnostics; old raw minute/score pairs and HTTP latency are unavailable.",
+      "evidence": [
+        "live.json"
+      ],
+      "id": "LIVE_MISMATCH_PROVENANCE"
+    },
+    {
+      "classification": "SMALL_GITHUB_FIX",
+      "conclusion": "Default-off sanitized observer and offline diagnostics; no runtime integration or request-order change.",
+      "id": "LIVE_OPTIONAL_OBSERVER",
+      "source_commit": "b716db64fd365892937a871b28cf945a50305336"
+    },
+    {
+      "classification": "SMALL_GITHUB_FIX",
+      "conclusion": "Original-candidate A/B replay, blocked C screen, extended coupon evidence and mathematical joint bounds.",
+      "evidence": [
+        "combo.json",
+        "replay.json"
+      ],
+      "id": "COMBO_RESEARCH"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "conclusion": "V2 positive descriptive ROI; no paired mature evidence or adequate connected clusters; no ranking.",
+      "evidence": [
+        "combo.json"
+      ],
+      "id": "COMBO_WINNER"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "conclusion": "C ranking is not implemented; calibrated-leg and validated joint evidence contract missing.",
+      "evidence": [
+        "replay.json"
+      ],
+      "id": "QUALITY_FIRST_RANKER"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "conclusion": "289/300 independent examples and fit window open; no fit.",
+      "evidence": [
+        "learning_champion.json"
+      ],
+      "id": "CALIBRATION"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "conclusion": "28 paired fixtures/five dates; DC descriptively worse; no weight fit or promotion.",
+      "evidence": [
+        "dixon_coles.json"
+      ],
+      "id": "DC_INCREMENTAL"
+    },
+    {
+      "classification": "PASS",
+      "conclusion": "12 natural cycles/103 review attempts; ordering, duplicate filters and batch limits pass.",
+      "evidence": [
+        "queue.json"
+      ],
+      "id": "QUEUE"
+    },
+    {
+      "classification": "DATA_QUALITY_LIMITATION",
+      "conclusion": "35.03% broad fresh exposure; partial outcomes do not establish ordering improvement.",
+      "evidence": [
+        "odds_yield.json"
+      ],
+      "id": "ODDS_COVERAGE"
+    },
+    {
+      "classification": "NO_CHANGE",
+      "conclusion": "Segmented diagnostics retained; zero provider probabilities rejected; thresholds unchanged.",
+      "evidence": [
+        "disagreement.json"
+      ],
+      "id": "DISAGREEMENT"
+    },
+    {
+      "classification": "NO_CHANGE",
+      "conclusion": "Protected routes unchanged; no current receipt gap; old pending/PST evidence retained.",
+      "evidence": [
+        "runtime_integrity.json",
+        "publication.json",
+        "journals.json"
+      ],
+      "id": "RUNTIME"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "conclusion": "NOT_ELIGIBLE: validation and holdout zero; bootstrap unchanged.",
+      "evidence": [
+        "learning_champion.json"
+      ],
+      "id": "PROMOTION"
+    },
+    {
+      "classification": "OPERATOR_APPROVAL_REQUIRED",
+      "conclusion": "Any future worker integration needs separately approved diagnostics release; none created or applied.",
+      "id": "DEPLOYED_CAPTURE"
+    }
+  ],
+  "fixed_cutoff_reproduction": {
+    "files": {
+      "combo.json": "7f4de534fbac0ba2a6cfe4d7ec01c7daf7c7bc656777005aa6126385adc53bbc",
+      "live.json": "cbd3894b8238f377c7426ad7c5f9a4d862d66c364178887836218e4e96d6cb6f",
+      "replay.json": "268db547119a4db36a944eae1b859536aa5717315e7605a86a8eebde333711f6"
+    },
+    "fixed_as_of": "2026-10-08T19:06:10.302493+00:00",
+    "result": "PASS",
+    "same_bytes_twice": true
+  },
+  "implementation_completeness": {
+    "empirical_joint_model": "NOT_FITTED_INSUFFICIENT_EVIDENCE",
+    "http_latency_measurement": "NOT_AVAILABLE",
+    "live_future_observer": "IMPLEMENTED_DEFAULT_OFF_NOT_DEPLOYED",
+    "live_offline_diagnostics": "IMPLEMENTED",
+    "performance_comparison": "IMPLEMENTED_DESCRIPTIVE_NO_RANKING",
+    "strategy_A": "EXISTING_SELECTOR_REPLAY",
+    "strategy_B": "EXISTING_SELECTOR_REPLAY",
+    "strategy_C": "FAIL_CLOSED_DIAGNOSTICS_ONLY_RANKER_NOT_IMPLEMENTED"
+  },
+  "limitations": [
+    "Sources have independent read-only SQLite snapshots; a fixed as-of cutoff aligns stored immutable records, not an atomic cross-database transaction.",
+    "Current claim inventory and systemd after-state have their own later capture time.",
+    "Journal availability limits exact future reproduction.",
+    "Retrospective replay uses recorded preparation-end, not unavailable exact selector-call time.",
+    "No prospective or causal quality improvement demonstrated; no production selection change follows."
+  ],
+  "live_timer_after": {
+    "ActiveState": "active",
+    "DropInPaths": "",
+    "FragmentPath": "/etc/systemd/system/goalvision-lab-live-evening.timer",
+    "Result": "success",
+    "SubState": "waiting",
+    "UnitFileState": "enabled"
+  },
+  "live_timer_before": {
+    "ActiveState": "active",
+    "DropInPaths": "",
+    "FragmentPath": "/etc/systemd/system/goalvision-lab-live-evening.timer",
+    "Result": "success",
+    "SubState": "waiting",
+    "UnitFileState": "enabled"
+  },
+  "read_only_producers": [
+    "operations/live-combo-research/audit.py",
+    "operations/watch-reconciliation/snapshot.py",
+    "operations/prematch-quality/audit.py",
+    "operations/prematch-quality/queue_audit.py",
+    "operations/watch-reconciliation/runtime_audit.py",
+    "operations/watch-reconciliation/incremental_report.py",
+    "operations/prematch-evidence/publication_audit.py"
+  ],
+  "report": "../../operations/GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_REPORT.md",
+  "riga_as_of": "2026-10-08T22:06:10.302493+03:00",
+  "safety": {
+    "agent_deployments": 0,
+    "agent_provider_calls": 0,
+    "agent_service_restarts": 0,
+    "agent_telegram_sends": 0,
+    "agent_timer_changes": 0,
+    "checked_at": "2026-10-08T19:34:49.495967+00:00",
+    "main_dirty_paths_after": 220,
+    "main_dirty_paths_before": 220,
+    "main_status_sha256": "7d4c11b48b60f1c12cca10af5356ce94b751c226f46b15e7a4ed691fc7d6e6c1",
+    "main_status_unchanged": true,
+    "official_mutations": 0,
+    "official_verification_scope": "No Official writes; protected systemd routes unchanged; no assertion of a separate Official runtime DB snapshot.",
+    "protected_file_count": 142,
+    "protected_files_unchanged": true
+  },
+  "source_commit": "b716db64fd365892937a871b28cf945a50305336",
+  "source_files": {
+    "app/adaptive_lab/combo_evidence.py": "60516533d5ceaf4f6bf4df440557f6e94031731bee9564892873545a4215b216",
+    "app/adaptive_lab/combo_research.py": "973ad5772ad7220b1f366ba17c124b3706c2fbdc063fde8a939e41a6439e4aed",
+    "app/live_lab/research.py": "13ea618067998b4113829f8135378e66db7699bacd80d8cd24ef1ab39af38ac3",
+    "app/live_lab/runner.py": "1656132f713e75ee3a069d25469628caa84025f81016157f8af589c464744cc8",
+    "operations/live-combo-research/audit.py": "1f6716afd79de4d9ff70be9cadad3b6c643df2b5969f6beb4d82d8694b832b63",
+    "operations/live-combo-research/offline_tests.py": "52f2e7063b3daab2e3d8498e9617c2104d71478129d8236fcbc4d8438bcbd4b6",
+    "tests/test_live_combo_research.py": "1abcdd1a4e6340904fca22c686b2d857a929a105af7d15d0d23b502569c621ab"
+  },
+  "summary": {
+    "calibration_count": 289,
+    "calibration_fit_invoked": false,
+    "combo_cohorts": {
+      "COMBO_AGREEMENT_20261004_V1": {
+        "LOST": 12,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 5,
+        "average_combined_odds": "3.1213241",
+        "binary_missing_probability": 0,
+        "brier": 0.21774414477728263,
+        "calibration_bias_predicted_minus_observed": -0.03393166787857305,
+        "coupon_probability_observations": 17,
+        "ece": 0.061194853358225686,
+        "evidence_status": "DESCRIPTIVE_ONLY",
+        "flat_roi": -0.058361176470588236,
+        "flat_unit_pnl": "-0.992140",
+        "log_loss": 0.6339624927374122,
+        "maximum_known_losing_streak_publication_order": 4,
+        "mce": 0.8085754305127892,
+        "mean_predicted_joint_published": 0.2624059772902096,
+        "mean_predicted_joint_scored": 0.2601859791802505,
+        "median_combined_odds": "2.973164",
+        "model_learning_observations": 0,
+        "observed_hit_rate": 0.29411764705882354,
+        "partial_void_count": 0,
+        "pending": 3,
+        "published": 20,
+        "reliability_bins": [
+          {
+            "error": -0.8085754305127892,
+            "lower": 0.1,
+            "n": 1,
+            "observed": 1,
+            "predicted": 0.1914245694872107,
+            "upper": 0.2
+          },
+          {
+            "error": 0.00029791306120202643,
+            "lower": 0.2,
+            "n": 12,
+            "observed": 0.25,
+            "predicted": 0.250297913061202,
+            "upper": 0.3
+          },
+          {
+            "error": 0.057040529960655784,
+            "lower": 0.3,
+            "n": 4,
+            "observed": 0.25,
+            "predicted": 0.3070405299606558,
+            "upper": 0.4
+          }
+        ],
+        "settled": 17,
+        "unscorable_float_extreme_probability": 0
+      },
+      "COMBO_DOUBLE_20261006_V1": {
+        "LOST": 0,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 0,
+        "average_combined_odds": null,
+        "binary_missing_probability": 0,
+        "brier": null,
+        "calibration_bias_predicted_minus_observed": null,
+        "coupon_probability_observations": 0,
+        "ece": null,
+        "evidence_status": "INSUFFICIENT_EVIDENCE",
+        "flat_roi": null,
+        "flat_unit_pnl": "0",
+        "log_loss": null,
+        "maximum_known_losing_streak_publication_order": 0,
+        "mce": null,
+        "mean_predicted_joint_published": null,
+        "mean_predicted_joint_scored": null,
+        "median_combined_odds": null,
+        "model_learning_observations": 0,
+        "observed_hit_rate": null,
+        "partial_void_count": 0,
+        "pending": 0,
+        "published": 0,
+        "reliability_bins": [],
+        "settled": 0,
+        "unscorable_float_extreme_probability": 0
+      },
+      "COMBO_MARKET_20261004_V1": {
+        "LOST": 29,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 10,
+        "average_combined_odds": "2.770761692307692307692307692",
+        "binary_missing_probability": 0,
+        "brier": 0.19710954301675834,
+        "calibration_bias_predicted_minus_observed": 0.033644479152486126,
+        "coupon_probability_observations": 39,
+        "ece": 0.11740882799679946,
+        "evidence_status": "DESCRIPTIVE_ONLY",
+        "flat_roi": -0.2698713846153846,
+        "flat_unit_pnl": "-10.524984",
+        "log_loss": 0.5834754758262163,
+        "maximum_known_losing_streak_publication_order": 7,
+        "mce": 0.19681230943921502,
+        "mean_predicted_joint_published": 0.2900547355627425,
+        "mean_predicted_joint_scored": 0.2900547355627425,
+        "median_combined_odds": "2.627660",
+        "model_learning_observations": 0,
+        "observed_hit_rate": 0.2564102564102564,
+        "partial_void_count": 0,
+        "pending": 0,
+        "published": 39,
+        "reliability_bins": [
+          {
+            "error": 0.1901671572620591,
+            "lower": 0.1,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.1901671572620591,
+            "upper": 0.2
+          },
+          {
+            "error": -0.0680585334360046,
+            "lower": 0.2,
+            "n": 24,
+            "observed": 0.3333333333333333,
+            "predicted": 0.2652747998973287,
+            "upper": 0.3
+          },
+          {
+            "error": 0.19681230943921502,
+            "lower": 0.3,
+            "n": 14,
+            "observed": 0.14285714285714285,
+            "predicted": 0.33966945229635787,
+            "upper": 0.4
+          }
+        ],
+        "settled": 39,
+        "unscorable_float_extreme_probability": 0
+      },
+      "LAB_COMBO_ACCURACY_FROM_SINGLES_V1": {
+        "LOST": 34,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 32,
+        "average_combined_odds": "2.060419176470588235294117647",
+        "binary_missing_probability": 0,
+        "brier": 0.23177378964222797,
+        "calibration_bias_predicted_minus_observed": -0.03501820224845823,
+        "coupon_probability_observations": 66,
+        "ece": 0.10819530120739995,
+        "evidence_status": "DESCRIPTIVE_ONLY",
+        "flat_roi": -0.09460434848484849,
+        "flat_unit_pnl": "-6.243887",
+        "log_loss": 0.6546728613720716,
+        "maximum_known_losing_streak_publication_order": 4,
+        "mce": 0.7285910608445785,
+        "mean_predicted_joint_published": 0.4502265224441754,
+        "mean_predicted_joint_scored": 0.4498302826000266,
+        "median_combined_odds": "1.716072",
+        "model_learning_observations": 0,
+        "observed_hit_rate": 0.48484848484848486,
+        "partial_void_count": 0,
+        "pending": 2,
+        "published": 68,
+        "reliability_bins": [
+          {
+            "error": 0.17534819701179055,
+            "lower": 0.1,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.17534819701179055,
+            "upper": 0.2
+          },
+          {
+            "error": 0.07111944972219358,
+            "lower": 0.2,
+            "n": 11,
+            "observed": 0.18181818181818182,
+            "predicted": 0.2529376315403754,
+            "upper": 0.3
+          },
+          {
+            "error": -0.13289085052405897,
+            "lower": 0.3,
+            "n": 17,
+            "observed": 0.47058823529411764,
+            "predicted": 0.3376973847700587,
+            "upper": 0.4
+          },
+          {
+            "error": -0.04299671936676169,
+            "lower": 0.4,
+            "n": 6,
+            "observed": 0.5,
+            "predicted": 0.4570032806332383,
+            "upper": 0.5
+          },
+          {
+            "error": -0.007697132127005957,
+            "lower": 0.5,
+            "n": 18,
+            "observed": 0.5555555555555556,
+            "predicted": 0.5478584234285496,
+            "upper": 0.6
+          },
+          {
+            "error": -0.18821567824069463,
+            "lower": 0.6,
+            "n": 11,
+            "observed": 0.8181818181818182,
+            "predicted": 0.6299661399411236,
+            "upper": 0.7
+          },
+          {
+            "error": 0.7285910608445785,
+            "lower": 0.7,
+            "n": 2,
+            "observed": 0,
+            "predicted": 0.7285910608445785,
+            "upper": 0.8
+          }
+        ],
+        "settled": 66,
+        "unscorable_float_extreme_probability": 0
+      },
+      "LAB_COMBO_ACCURACY_FROM_SINGLES_V2_LEG_MIN_ODDS_130": {
+        "LOST": 30,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 21,
+        "average_combined_odds": "2.780715320754716981132075472",
+        "binary_missing_probability": 0,
+        "brier": 0.2563371973033508,
+        "calibration_bias_predicted_minus_observed": -0.09378929931229521,
+        "coupon_probability_observations": 51,
+        "ece": 0.11565437425508052,
+        "evidence_status": "DESCRIPTIVE_ONLY",
+        "flat_roi": 0.09770858823529412,
+        "flat_unit_pnl": "4.983138",
+        "log_loss": 0.7094209504723054,
+        "maximum_known_losing_streak_publication_order": 6,
+        "mce": 0.8005473193842036,
+        "mean_predicted_joint_published": 0.3180082286823414,
+        "mean_predicted_joint_scored": 0.31797540657005774,
+        "median_combined_odds": "2.699136",
+        "model_learning_observations": 0,
+        "observed_hit_rate": 0.4117647058823529,
+        "partial_void_count": 0,
+        "pending": 2,
+        "published": 53,
+        "reliability_bins": [
+          {
+            "error": -0.8005473193842036,
+            "lower": 0.1,
+            "n": 1,
+            "observed": 1,
+            "predicted": 0.1994526806157963,
+            "upper": 0.2
+          },
+          {
+            "error": -0.045694810597580515,
+            "lower": 0.2,
+            "n": 19,
+            "observed": 0.3157894736842105,
+            "predicted": 0.27009466308663,
+            "upper": 0.3
+          },
+          {
+            "error": -0.1059758141152769,
+            "lower": 0.3,
+            "n": 29,
+            "observed": 0.4482758620689655,
+            "predicted": 0.3423000479536886,
+            "upper": 0.4
+          },
+          {
+            "error": -0.5987663458868173,
+            "lower": 0.4,
+            "n": 1,
+            "observed": 1,
+            "predicted": 0.40123365411318274,
+            "upper": 0.5
+          },
+          {
+            "error": 0.5575594110410252,
+            "lower": 0.5,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.5575594110410252,
+            "upper": 0.6
+          }
+        ],
+        "settled": 51,
+        "unscorable_float_extreme_probability": 0
+      },
+      "LEGACY_COMBO": {
+        "LOST": 18,
+        "PARTIAL_VOID": 0,
+        "VOID": 0,
+        "WON": 1,
+        "average_combined_odds": "72.22578794736842105263157895",
+        "binary_missing_probability": 0,
+        "brier": 0.05382547642754549,
+        "calibration_bias_predicted_minus_observed": 0.062009037951911115,
+        "coupon_probability_observations": 19,
+        "ece": 0.06200903795191113,
+        "evidence_status": "DESCRIPTIVE_ONLY",
+        "flat_roi": -0.2933117894736842,
+        "flat_unit_pnl": "-5.572924",
+        "log_loss": 0.2165212956375874,
+        "maximum_known_losing_streak_publication_order": 9,
+        "mce": 0.24447067949344875,
+        "mean_predicted_joint_published": 0.11464061689927954,
+        "mean_predicted_joint_scored": 0.11464061689927954,
+        "median_combined_odds": "39.212580",
+        "model_learning_observations": 0,
+        "observed_hit_rate": 0.05263157894736842,
+        "partial_void_count": 0,
+        "pending": 0,
+        "published": 19,
+        "reliability_bins": [
+          {
+            "error": 0.06719273054291953,
+            "lower": 0.0,
+            "n": 9,
+            "observed": 0,
+            "predicted": 0.06719273054291953,
+            "upper": 0.1
+          },
+          {
+            "error": 0.01056197340164225,
+            "lower": 0.1,
+            "n": 8,
+            "observed": 0.125,
+            "predicted": 0.13556197340164225,
+            "upper": 0.2
+          },
+          {
+            "error": 0.24447067949344875,
+            "lower": 0.2,
+            "n": 2,
+            "observed": 0,
+            "predicted": 0.24447067949344875,
+            "upper": 0.3
+          }
+        ],
+        "settled": 19,
+        "unscorable_float_extreme_probability": 0
+      }
+    },
+    "combo_overall": {
+      "LOST": 123,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 69,
+      "average_combined_odds": "9.197299371859296482412060302",
+      "binary_missing_probability": 0,
+      "brier": 0.21240559307212856,
+      "calibration_bias_predicted_minus_observed": -0.026984310204311305,
+      "coupon_probability_observations": 192,
+      "ece": 0.0528273073848358,
+      "evidence_status": "DESCRIPTIVE_ONLY",
+      "flat_roi": -0.09557706770833334,
+      "flat_unit_pnl": "-18.350797",
+      "log_loss": 0.6095608743516505,
+      "maximum_known_losing_streak_publication_order": 13,
+      "mce": 0.7285910608445785,
+      "mean_predicted_joint_published": 0.3327048522623391,
+      "mean_predicted_joint_scored": 0.3323906897956887,
+      "median_combined_odds": "2.627100",
+      "model_learning_observations": 0,
+      "observed_hit_rate": 0.359375,
+      "partial_void_count": 0,
+      "pending": 7,
+      "published": 199,
+      "reliability_bins": [
+        {
+          "error": 0.06719273054291953,
+          "lower": 0.0,
+          "n": 9,
+          "observed": 0,
+          "predicted": 0.06719273054291953,
+          "upper": 0.1
+        },
+        {
+          "error": -0.09659263403416712,
+          "lower": 0.1,
+          "n": 12,
+          "observed": 0.25,
+          "predicted": 0.15340736596583288,
+          "upper": 0.2
+        },
+        {
+          "error": -0.018040822664010137,
+          "lower": 0.2,
+          "n": 68,
+          "observed": 0.27941176470588236,
+          "predicted": 0.2613709420418722,
+          "upper": 0.3
+        },
+        {
+          "error": -0.03670169712906873,
+          "lower": 0.3,
+          "n": 64,
+          "observed": 0.375,
+          "predicted": 0.33829830287093127,
+          "upper": 0.4
+        },
+        {
+          "error": -0.12239238029819816,
+          "lower": 0.4,
+          "n": 7,
+          "observed": 0.5714285714285714,
+          "predicted": 0.44903619113037324,
+          "upper": 0.5
+        },
+        {
+          "error": 0.022053212250258913,
+          "lower": 0.5,
+          "n": 19,
+          "observed": 0.5263157894736842,
+          "predicted": 0.5483690017239431,
+          "upper": 0.6
+        },
+        {
+          "error": -0.18821567824069463,
+          "lower": 0.6,
+          "n": 11,
+          "observed": 0.8181818181818182,
+          "predicted": 0.6299661399411236,
+          "upper": 0.7
+        },
+        {
+          "error": 0.7285910608445785,
+          "lower": 0.7,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.7285910608445785,
+          "upper": 0.8
+        }
+      ],
+      "settled": 192,
+      "unscorable_float_extreme_probability": 0
+    },
+    "dc_kickoff_dates": 5,
+    "dc_paired_fixtures": 28,
+    "holdout": 0,
+    "learning": {
+      "eligibility": {
+        "automatic_eligible": false,
+        "cycle_due": true,
+        "days_covered": 20,
+        "new_resolved": 1348,
+        "next_threshold": {
+          "calendar_days": 90,
+          "resolved": 500
+        },
+        "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+        "policy_version": "LAB_ADAPTIVE_V2",
+        "reason": "RESEARCH_ELIGIBLE",
+        "research_due": true,
+        "resolved": 2862,
+        "stage": "CHALLENGER_RESEARCH",
+        "status": "RESEARCH_ELIGIBLE",
+        "stream": "PREMATCH"
+      },
+      "independent_resolved_fixtures": 1156,
+      "resolved_eligible_observations": 2862,
+      "source_product_counts": {
+        "COMBO_LEG": 12,
+        "SHADOW": 2373,
+        "SINGLE": 490
+      },
+      "total_observations": 2875
+    },
+    "live": {
+      "candidate_versions": 261,
+      "confirmed_publications": 5,
+      "cycles": 49,
+      "delivery_status_counts": {
+        "LIVE_READINESS_BLOCKED": 1,
+        "LIVE_REFRESH_QUOTE_MISSING": 9,
+        "SENT": 6
+      },
+      "fixture_diagnostic_counts": {
+        "LIVE_FIXTURE_REVIEW_UNAVAILABLE": 4,
+        "LIVE_STATE_QUOTE_MISMATCH": 145,
+        "UNSUPPORTED_LIVE_MARKET": 49
+      },
+      "natural_provider_calls": 1125,
+      "result_counts": {
+        "LOST": 1,
+        "PENDING": 4
+      }
+    },
+    "promotion_eligibility": "NOT_ELIGIBLE",
+    "validation": 0
+  },
+  "tests": {
+    "command": "python -I -B operations/live-combo-research/offline_tests.py",
+    "deployments": 0,
+    "elapsed_seconds": 38.16,
+    "outbound_socket_connections": "DENIED",
+    "passed": 619,
+    "production_provider_calls": 0,
+    "provider_credentials": "FAKE",
+    "reproduction": {
+      "files": {
+        "combo.json": "7f4de534fbac0ba2a6cfe4d7ec01c7daf7c7bc656777005aa6126385adc53bbc",
+        "live.json": "cbd3894b8238f377c7426ad7c5f9a4d862d66c364178887836218e4e96d6cb6f",
+        "replay.json": "268db547119a4db36a944eae1b859536aa5717315e7605a86a8eebde333711f6"
+      },
+      "fixed_as_of": "2026-10-08T19:06:10.302493+00:00",
+      "result": "PASS",
+      "same_bytes_twice": true
+    },
+    "result": "PASS",
+    "source_commit": "b716db64fd365892937a871b28cf945a50305336",
+    "telegram_credentials": "FAKE",
+    "telegram_sends": 0,
+    "tests": [
+      "tests/adaptive_lab/test_live.py",
+      "tests/adaptive_lab/test_evening_live.py",
+      "tests/adaptive_lab/test_live_quote_age_policy.py",
+      "tests/adaptive_lab/test_quota_contention.py",
+      "tests/adaptive_lab/test_settlement_preflight_reserve.py",
+      "tests/adaptive_lab/test_no_combo_learning.py",
+      "tests/adaptive_lab/test_calendar_research.py",
+      "tests/adaptive_lab/test_calendar_monitor.py",
+      "tests/adaptive_lab/test_calibration_research.py",
+      "tests/adaptive_lab/test_shadow_chronology.py",
+      "tests/adaptive_lab/test_devig_research.py",
+      "tests/adaptive_lab/test_devig_integration.py",
+      "tests/adaptive_lab/test_performance_snapshot.py",
+      "tests/test_live_combo_research.py",
+      "tests/test_prematch_quality_evidence.py",
+      "tests/test_combo_double_170.py",
+      "tests/test_combo_aggregate_order.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_lab_combo_integrity.py",
+      "tests/test_settlement_replies.py",
+      "tests/test_lab_delivery_accounting.py",
+      "tests/test_final_review_queue.py",
+      "tests/test_dixon_coles_incremental.py",
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/test_lab_accuracy_combo.py"
+    ]
+  },
+  "timezone": "UTC",
+  "version": "GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_EVIDENCE"
+}

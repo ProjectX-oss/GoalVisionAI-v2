@@ -1,3 +1,18 @@
+## 2026-10-08 — LIVE diagnostics and COMBO optimization research V1
+
+- [x] Read-only VPS/GitHub reconciliation; actual LIVE enabled, operator age-diagnostic V2 retained; protected 142 systemd files and original 220 dirty paths unchanged.
+- [x] Fixed-cutoff LIVE funnel, freshness counterfactual, request efficiency and receipt-backed five-publication snapshot.
+- [x] Extend existing coupon evidence: 199 coupons, cohort/leg diagnostics, mathematical joint bounds; no learned correlation claim or COMBO learning.
+- [x] Original-candidate A/B offline replay; C quality evidence screen explicitly refuses selection without verified calibration/joint evidence.
+- [x] Default-off LIVE diagnostic sink; no worker wiring, request-order change, API budget change or deployment.
+- [x] 619 network-denied tests PASS; byte-identical repeated LIVE/COMBO/replay export.
+- [x] Calibration 289/300 and window open; six-method DC 28 fixtures/five dates; no fit, activation or promotion.
+- [ ] After frozen fit close and readiness, run existing research-only calibration comparator; never consume validation/holdout for fit.
+- [ ] Separate operator decision for a diagnostics-only LIVE capture release; no deployment authorized by this report.
+- [ ] Gather mature prospective coupon evidence before a C ranker, joint fit or strategy ranking.
+- Report: docs/operations/GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_REPORT.md.
+- Evidence: docs/evidence/live_combo_optimization_20261008/GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_EVIDENCE.json.
+
 ## 2026-10-08 — LIVE quote age diagnostic policy
 
 - [x] User authorized quote-age-only gate removal in LIVE; preserve state/provenance/publication gates.
@@ -5,7 +20,7 @@
 - [x] Original-time replay: three of seven NEC–Express markets pass readiness, four retain negative EV; no historical sends.
 - [x] 114 focused network-denied tests PASS, including LIVE-only installer and quota/contention regressions.
 - [x] Prepare exact-base five-file operator build and pinned read-only/apply entry point; no automatic deployment.
-- [ ] Operator applies package, then review new-policy evidence from natural cycles.
+- [x] Operator applied quote-age package; 2026-10-08 read-only preflight verifies ENABLED and natural V2 evidence (see LIVE/COMBO report).
 - Runbook: docs/operations/LIVE_QUOTE_AGE_DIAGNOSTIC_20261008.md.
 
 ## 2026-10-07 — Read-only PREMATCH quality and coupon evidence
