@@ -1,0 +1,92 @@
+{
+  "classification": "OFFLINE_FROZEN_READINESS_REPLAY",
+  "manual_provider_calls": 0,
+  "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+  "production_effect": "NONE",
+  "rows": [
+    {
+      "evaluated_at": "2026-10-08T17:07:30.363917+00:00",
+      "fixture_id": 1635274,
+      "market": "AWAY_WIN",
+      "new_blockers": [],
+      "old_blockers": [
+        "STALE_LIVE_ODDS"
+      ],
+      "source_quote_time": "2026-10-08T17:07:00+00:00"
+    },
+    {
+      "evaluated_at": "2026-10-08T17:07:30.392338+00:00",
+      "fixture_id": 1635274,
+      "market": "BTTS_NO",
+      "new_blockers": [
+        "NON_POSITIVE_EV"
+      ],
+      "old_blockers": [
+        "NON_POSITIVE_EV",
+        "STALE_LIVE_ODDS"
+      ],
+      "source_quote_time": "2026-10-08T17:07:00+00:00"
+    },
+    {
+      "evaluated_at": "2026-10-08T17:07:30.411719+00:00",
+      "fixture_id": 1635274,
+      "market": "BTTS_YES",
+      "new_blockers": [
+        "NON_POSITIVE_EV"
+      ],
+      "old_blockers": [
+        "NON_POSITIVE_EV",
+        "STALE_LIVE_ODDS"
+      ],
+      "source_quote_time": "2026-10-08T17:07:00+00:00"
+    },
+    {
+      "evaluated_at": "2026-10-08T17:07:30.479466+00:00",
+      "fixture_id": 1635274,
+      "market": "DRAW",
+      "new_blockers": [],
+      "old_blockers": [
+        "STALE_LIVE_ODDS"
+      ],
+      "source_quote_time": "2026-10-08T17:07:00+00:00"
+    },
+    {
+      "evaluated_at": "2026-10-08T17:07:30.491241+00:00",
+      "fixture_id": 1635274,
+      "market": "HOME_WIN",
+      "new_blockers": [
+        "NON_POSITIVE_EV"
+      ],
+      "old_blockers": [
+        "NON_POSITIVE_EV",
+        "STALE_LIVE_ODDS"
+      ],
+      "source_quote_time": "2026-10-08T17:07:00+00:00"
+    },
+    {
+      "evaluated_at": "2026-10-08T17:07:30.501061+00:00",
+      "fixture_id": 1635274,
+      "market": "OVER_1_5",
+      "new_blockers": [
+        "NON_POSITIVE_EV"
+      ],
+      "old_blockers": [
+        "NON_POSITIVE_EV",
+        "STALE_LIVE_ODDS"
+      ],
+      "source_quote_time": "2026-10-08T17:07:00+00:00"
+    },
+    {
+      "evaluated_at": "2026-10-08T17:07:30.572277+00:00",
+      "fixture_id": 1635274,
+      "market": "UNDER_1_5",
+      "new_blockers": [],
+      "old_blockers": [
+        "STALE_LIVE_ODDS"
+      ],
+      "source_quote_time": "2026-10-08T17:07:00+00:00"
+    }
+  ],
+  "source_release": "/opt/goalvision-live-evening-4f547cf-20261007",
+  "telegram_sends": 0
+}

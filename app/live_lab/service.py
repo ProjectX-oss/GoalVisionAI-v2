@@ -10,7 +10,7 @@ from app.adaptive_lab.observations import ingest
 from app.adaptive_lab.metrics import metrics
 from app.lab_telegram.models import LAB_TELEGRAM_CHAT_ID
 from app.lab_telegram.service import validate_lab_telegram_config
-from .engine import readiness, remaining_goal_probabilities
+from .engine import readiness, remaining_goal_probabilities, quote_timing
 from .policy import POLICY
 from .presentation import prediction_message, settlement_message
 
@@ -19,10 +19,13 @@ class LiveService:
     """No combos and no configurable destination; only the existing Lab transport contract."""
     def __init__(self, repository: AuditRepository, *, clock: Callable[[],datetime],
                  after_settlement: Callable[[dict],object] | None = None,
-                 allow_provider_feed: bool = False) -> None:
+                 allow_provider_feed: bool = False, quote_age_diagnostic: bool = False) -> None:
         self.repository,self.clock,self.after_settlement=repository,clock,after_settlement
         self.governance=Governance(repository)
         self.allow_provider_feed = allow_provider_feed
+        if quote_age_diagnostic and not allow_provider_feed:
+            raise ValueError("LIVE_QUOTE_AGE_POLICY_REQUIRES_FEED_MODE")
+        self.quote_age_diagnostic = quote_age_diagnostic
 
     def candidate(self, state: dict, quote: dict, rates: dict, *, now: datetime) -> dict:
         probabilities=remaining_goal_probabilities(state,rates,as_of=now)
@@ -38,13 +41,20 @@ class LiveService:
                      'competition_profile':state['competition_profile'],'market':quote['market']}
         p,champion=self.governance.resolve('LIVE',observation)
         previous=[self.repository.get('live_candidates',c['selection_id']) for c in self.repository.all('live_claims','LIVE')]
-        reasons=readiness(state,quote,p,uncertainty=uncertainty,now=now,previous=previous,allow_provider_feed=self.allow_provider_feed)
+        reasons=readiness(state,quote,p,uncertainty=uncertainty,now=now,previous=previous,allow_provider_feed=self.allow_provider_feed,
+                              quote_age_diagnostic=self.quote_age_diagnostic)
         observation.update(fixture_id=state['fixture_id'],offered_decimal_odds=quote['decimal_odds'])
         if not set(reasons)-{'NON_POSITIVE_EV','SEVERE_MODEL_MARKET_CONTRADICTION'}:
             self.governance.monitor_opportunity('LIVE',observation,p,
                 opportunity_key=digest([state['state_fingerprint'],quote['quote_fingerprint']]),now=now)
         generation=champion['generation_id'] if champion else 'LIVE_POISSON_BASELINE_V1'
-        key=digest([state['fixture_id'],quote['market'],state['state_fingerprint'],quote['quote_fingerprint'],generation])
+        policy=('LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2' if self.quote_age_diagnostic else
+                'LAB_LIVE_API_FEED_V1' if self.allow_provider_feed else POLICY.version)
+        identity_parts=[state['fixture_id'],quote['market'],state['state_fingerprint'],quote['quote_fingerprint'],generation]
+        # Keep legacy identities; a new policy never reuses a blocked V1 record.
+        if self.quote_age_diagnostic:
+            identity_parts.append(policy)
+        key=digest(identity_parts)
         stamp=utc(now).isoformat()
         value={'prediction_id':'live-'+key,'candidate_id':'live-'+key,'opportunity_key':key,
                'fixture_id':state['fixture_id'],'league_id':state['league_id'],
@@ -59,7 +69,7 @@ class LiveService:
                'source_identity':quote.get('source_identity'),
                'quote_provenance_fingerprint':quote['quote_fingerprint'],'provider_type':'API_FOOTBALL_LIVE_ODDS',
                'provider_origin_timestamp_utc':quote['origin_timestamp'],'goalvision_retrieved_at_utc':quote['retrieved_at'],
-               'prepared_at_utc':stamp,'policy':('LAB_LIVE_API_FEED_V1' if self.allow_provider_feed else POLICY.version),
+               'prepared_at_utc':stamp,'policy':policy,
                'classifier_version':'LIVE_PROVIDER_PROFILE_V1',
                'model_generation':generation,'model_artifact_identity':champion['artifact_id'] if champion else digest(['LIVE_POISSON_BASELINE_V1',rates]),
                'live_minute':state['minute'],'live_score_home':state['home_score'],'live_score_away':state['away_score'],
@@ -68,6 +78,9 @@ class LiveService:
                'state':state,'quote':quote,'rates':rates,'blockers':reasons,'adaptive_features':observation['frozen_features'],
                'baseline_probability':probabilities.get(quote['market']),
                'reasoning':'Remaining-time goal model uses observed team scoring history, current score and minute; value is compared with captured LIVE odds.'}
+        if self.quote_age_diagnostic:
+            value['quote_age_diagnostics']={**quote_timing(quote,now=now),
+                'mode':'DIAGNOSTIC_ONLY','legacy_limit_seconds':POLICY.quote_age_seconds}
         existing = self.repository.get('live_candidates', value['prediction_id'])
         if existing is not None:
             return existing
@@ -106,7 +119,8 @@ class LiveService:
                 return {'status':'LIVE_CHAMPION_CHANGED_REVIEW_REQUIRED','sent':False}
             prior=[self.repository.get('live_candidates',c['selection_id']) for c in self.repository.all('live_claims','LIVE')]
             reasons=readiness(state,quote,number(candidate['ensemble_probability']),
-                              uncertainty=candidate['uncertainty_penalty'],now=self.clock(),previous=prior,allow_provider_feed=self.allow_provider_feed)
+                              uncertainty=candidate['uncertainty_penalty'],now=self.clock(),previous=prior,allow_provider_feed=self.allow_provider_feed,
+                              quote_age_diagnostic=self.quote_age_diagnostic)
             if reasons:
                 return {'status':'LIVE_READINESS_BLOCKED','blockers':reasons,'sent':False}
             if daypart.enabled() and not daypart.live_window(self.clock()):

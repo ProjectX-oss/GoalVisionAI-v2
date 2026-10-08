@@ -98,8 +98,26 @@ def resolved_market(market: str, state: dict) -> bool:
     return False
 
 
+
+def quote_timing(quote: dict, *, now: datetime) -> dict:
+    """Expose original quote clocks; age never repairs missing/future provenance."""
+    try:
+        origin=utc(quote['origin_timestamp'])
+        retrieved=utc(quote['retrieved_at'])
+        clock=utc(now)
+    except (KeyError, ValueError, TypeError, AttributeError):
+        return {'status':'INVALID_TIMESTAMP','origin_age_seconds':None,
+                'retrieval_age_seconds':None,'exceeds_legacy_age_limit':None}
+    age=(clock-origin).total_seconds()
+    retrieved_age=(clock-retrieved).total_seconds()
+    return {'status':'VALID' if origin<=retrieved<=clock else 'INVALID_TIME_ORDER',
+            'origin_age_seconds':age,'retrieval_age_seconds':retrieved_age,
+            'exceeds_legacy_age_limit':max(age,retrieved_age)>POLICY.quote_age_seconds}
+
+
 def readiness(state: dict, quote: dict, probability: float, *, uncertainty: float, now: datetime,
-              previous: list[dict] = (), allow_provider_feed: bool = False) -> list[str]:
+              previous: list[dict] = (), allow_provider_feed: bool = False,
+              quote_age_diagnostic: bool = False) -> list[str]:
     """All hard gates operate outside model artifacts and cannot be optimized away."""
     reasons=[]
     if state.get('state_fingerprint') != digest({k:v for k,v in state.items() if k!='state_fingerprint'}):
@@ -122,13 +140,19 @@ def readiness(state: dict, quote: dict, probability: float, *, uncertainty: floa
         reasons.append('STALE_EVENT_STATE')
     if quote.get('provider_type')!='API_FOOTBALL_LIVE_ODDS' or quote.get('endpoint')!='/odds/live':
         reasons.append('GENUINE_LIVE_ODDS_REQUIRED')
-    if not fresh(quote.get('origin_timestamp'),POLICY.quote_age_seconds) or not fresh(quote.get('retrieved_at'),POLICY.quote_age_seconds):
+    timing=quote_timing(quote,now=now)
+    if quote_age_diagnostic:
+        if not allow_provider_feed:
+            reasons.append('LIVE_QUOTE_AGE_POLICY_REQUIRES_FEED_MODE')
+        if timing['status']!='VALID':
+            reasons.append('LIVE_QUOTE_TIMESTAMP_INVALID')
+    elif not fresh(quote.get('origin_timestamp'),POLICY.quote_age_seconds) or not fresh(quote.get('retrieved_at'),POLICY.quote_age_seconds):
         reasons.append('STALE_LIVE_ODDS')
     try:
         if utc(quote['origin_timestamp'])>utc(quote['retrieved_at']):
             reasons.append('LIVE_QUOTE_TIME_ORDER_INVALID')
-    except (KeyError,ValueError,TypeError):
-        reasons.append('STALE_LIVE_ODDS')
+    except (KeyError,ValueError,TypeError,AttributeError):
+        reasons.append('LIVE_QUOTE_TIMESTAMP_INVALID' if quote_age_diagnostic else 'STALE_LIVE_ODDS')
     if quote.get('fixture_id')!=state['fixture_id'] or quote.get('state_fingerprint')!=state['state_fingerprint']:
         reasons.append('LIVE_STATE_QUOTE_MISMATCH')
     market=quote.get('market')

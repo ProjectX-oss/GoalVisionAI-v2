@@ -34,7 +34,8 @@ async def live_cycle(repo: AuditRepository, *, send: bool, clock=None) -> dict:
              if not repo.get('live_result_claims',r['prediction_id'])]
     if not discover and not (pending or shadow or results):
         return {'status':'LIVE_IDLE_NO_PENDING_RESULTS','api_calls':0,'deliveries':[]}
-    service=LiveService(repo,clock=clock,allow_provider_feed=daypart.feed_quotes_enabled())
+    service=LiveService(repo,clock=clock,allow_provider_feed=daypart.feed_quotes_enabled(),
+                        quote_age_diagnostic=daypart.quote_age_diagnostic_enabled())
     client=None
     runner=None
     scanned={'status':'LIVE_RESULTS_ONLY','candidates':[]}

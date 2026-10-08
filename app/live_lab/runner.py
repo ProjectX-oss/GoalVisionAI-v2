@@ -59,7 +59,8 @@ class LiveRunner:
 
     async def scan(self) -> dict:
         prepared=[]
-        counters={'fixtures_discovered':0,'live_odds_rows':0,'fresh_feed_fixtures':0,'fixtures_reviewed':0}
+        counters={'fixtures_discovered':0,'live_odds_rows':0,'fresh_feed_fixtures':0,'fixtures_reviewed':0,
+                  'eligible_feed_fixtures':0,'quote_age_diagnostic_fixtures':0}
         if daypart.enabled() and not daypart.live_window(self.clock()):
             return {'status':'LIVE_DISCOVERY_WINDOW_CLOSED','candidates':[]}
 
@@ -70,22 +71,30 @@ class LiveRunner:
             rows=payload.get('response') or []
             counters['fixtures_discovered']=len(rows)
             if self.service.allow_provider_feed and rows:
-                # Cheap coverage/current-age filter before per-fixture histories.
+                # Cheap coverage/status filter; quote-age policy is explicit and logged.
                 # This does not replace the exact final refresh before publication.
                 feed=await self.quota.call('LIVE_ODDS',self.client.live_odds)
                 if feed.get('errors') or not isinstance(feed.get('response'),list):
                     raise ValueError('LIVE_ODDS_PROVIDER_UNAVAILABLE')
                 counters['live_odds_rows']=len(feed['response'])
-                covered=set()
+                covered=set(); fresh=set(); aged=set()
                 for offer in feed['response']:
                     try:
                         age=(utc(self.clock())-utc(offer['update'])).total_seconds()
-                        if 0 <= age <= POLICY.quote_age_seconds and all(
+                        if age >= 0 and all(
                                 offer.get('status',{}).get(flag) is False for flag in ('blocked','stopped','finished')):
-                            covered.add(offer['fixture']['id'])
-                    except (KeyError,TypeError,ValueError):
+                            identity=offer['fixture']['id']
+                            if age <= POLICY.quote_age_seconds:
+                                fresh.add(identity)
+                                covered.add(identity)
+                            elif self.service.quote_age_diagnostic:
+                                aged.add(identity)
+                                covered.add(identity)
+                    except (KeyError,TypeError,ValueError,AttributeError):
                         continue
-                counters['fresh_feed_fixtures']=len(covered)
+                counters['fresh_feed_fixtures']=len(fresh)
+                counters['eligible_feed_fixtures']=len(covered)
+                counters['quote_age_diagnostic_fixtures']=len(aged-fresh)
                 rows=[row for row in rows if row.get('fixture',{}).get('id') in covered]
         except Exception:
             return {'status':'LIVE_DISCOVERY_UNAVAILABLE','candidates':[]}

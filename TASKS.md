@@ -1,3 +1,13 @@
+## 2026-10-08 — LIVE quote age diagnostic policy
+
+- [x] User authorized quote-age-only gate removal in LIVE; preserve state/provenance/publication gates.
+- [x] Explicit default-off option, broad-feed and final-readiness integration, immutable V2 identity and honest age diagnostics.
+- [x] Original-time replay: three of seven NEC–Express markets pass readiness, four retain negative EV; no historical sends.
+- [x] 114 focused network-denied tests PASS, including LIVE-only installer and quota/contention regressions.
+- [x] Prepare exact-base five-file operator build and pinned read-only/apply entry point; no automatic deployment.
+- [ ] Operator applies package, then review new-policy evidence from natural cycles.
+- Runbook: docs/operations/LIVE_QUOTE_AGE_DIAGNOSTIC_20261008.md.
+
 ## 2026-10-07 — Read-only PREMATCH quality and coupon evidence
 
 - [x] Reconcile installed evening release, GitHub parent, unchanged bootstrap champion and actual LIVE ENABLED state; do not mistake hardcoded PREMATCH observer LIVE field for global systemd state.

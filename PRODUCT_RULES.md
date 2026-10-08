@@ -577,3 +577,16 @@ windows. This supersedes the generic LIVE DISABLED wording in the later audit
 request. Official and ADMIN Codex remain unchanged. Retain all installed model,
 publication, freshness and shared-quota gates. No new deployment, automatic
 training/promotion/rollback or Telegram test is authorized by this confirmation.
+
+
+## LIVE quote age diagnostic policy authorized 2026-10-08
+
+The user explicitly requested removal of LIVE coefficient freshness as a selection
+blocker. For the operator-enabled API-Football Lab feed, quote origin/retrieval age
+becomes diagnostic-only with no maximum age veto. This supersedes the LIVE
+20-second quote-age gate; preserve original timestamps and prospective V2 policy
+identity. Retain final exact refresh, state/event freshness, score/minute match,
+valid temporal provenance, active-market, EV, uncertainty, divergence and duplicate
+checks. PREMATCH/COMBO, champion, Official, schedule and quota ceilings are unchanged.
+Deployment remains an explicit operator action. See
+docs/operations/LIVE_QUOTE_AGE_DIAGNOSTIC_20261008.md.
