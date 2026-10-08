@@ -1,0 +1,59 @@
+{
+  "bankroll_mutations": 0,
+  "champion_activations": 0,
+  "checked_at": "2026-10-08T20:23:01.861744+00:00",
+  "dixon_coles_release": "/opt/goalvision-dixon-coles-forward-ebd0924-20261004/application",
+  "live_timer_after": {
+    "ActiveState": "active",
+    "UnitFileState": "enabled"
+  },
+  "live_timer_before": {
+    "ActiveState": "active",
+    "DropInPaths": "",
+    "FragmentPath": "/etc/systemd/system/goalvision-lab-live-evening.timer",
+    "Result": "success",
+    "SubState": "waiting",
+    "UnitFileState": "enabled"
+  },
+  "main_checkout_status_unchanged": true,
+  "main_preexisting_dirty_paths": 220,
+  "official_mutations": 0,
+  "production_deployments": 0,
+  "promotions": 0,
+  "protected_systemd_before_sha256": "026b63eb409e2f1770e66f306d3e7a0fdefbdef84ef5c6437fc81664d6eae2c4",
+  "protected_systemd_files": 142,
+  "protected_systemd_unchanged": true,
+  "provider_calls_initiated": 0,
+  "restarts": 0,
+  "reviewed_competitions_sha256": "9e3cc8e923e392bb535354759a0b587e82d9ef2179dc4bde20cfa660c66b7cd6",
+  "reviewed_history_ancestor_checks": {
+    "1183e35": true,
+    "2436d39": true,
+    "42a441f": true,
+    "4f547cf": true,
+    "574f55f": true,
+    "6489f92": true,
+    "6784969": true,
+    "76d96c1": true,
+    "83958d1": true,
+    "9d73894": true,
+    "ab327dd": false,
+    "abddde7": true,
+    "c4daf63": true,
+    "cb6b7c6": true,
+    "cdcb526": true,
+    "e1263e7": true,
+    "e5b02e4": true,
+    "ebd0924": true
+  },
+  "rollbacks": 0,
+  "separate_admin_branch": {
+    "branch": "fix/admin-mixed-delivery-20261004",
+    "remote_head": "ea94dfec4d72334c93e3133a31fd6509a41c3ebc",
+    "source_commit": "ab327dddd08ef731571a981b4cb77a4db1cc05fe",
+    "source_is_ancestor_of_remote_head": true
+  },
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "timer_changes": 0
+}

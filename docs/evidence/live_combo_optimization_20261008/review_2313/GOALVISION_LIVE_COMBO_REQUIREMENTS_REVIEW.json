@@ -1,0 +1,931 @@
+{
+  "all_requested_implementations_complete": false,
+  "all_requirements_reviewed": true,
+  "artifact_manifest": {
+    "combo.json": {
+      "bytes": 2416094,
+      "sha256": "c087f33f6319aa73fd437b33e6e7ef576dc171d3d6902b4676890643c6c7a3c4"
+    },
+    "disagreement.json": {
+      "bytes": 86545,
+      "sha256": "dc172e7a83f55cf18f9a6611dd7cfaaa3ab6e4ac360aaac296aef2a921c036d8"
+    },
+    "dixon_coles.json": {
+      "bytes": 1158049,
+      "sha256": "9b8c2d6796028abf2f7d498f6d1ab9b180e436542a806aa215d65428b03eef88"
+    },
+    "learning_champion.json": {
+      "bytes": 11768,
+      "sha256": "b3117d04b8329bbc74e5401e6ece72bcca53d20601a3b94d689cf9a0797334a2"
+    },
+    "live.json": {
+      "bytes": 685682,
+      "sha256": "a80340a4ed4f94179969bd81c8610d48bf35689196c004722505d47b423f0566"
+    },
+    "odds_yield.json": {
+      "bytes": 444134,
+      "sha256": "d415d3862c0a10b0e3da9f2e14629a7fa9adfa8100afb8bac09bdd7629db357e"
+    },
+    "performance.json": {
+      "bytes": 879647,
+      "sha256": "4a6a4ff7db378e91173345c4f5faf755169529d705f2cf9dfc4089f66d331df9"
+    },
+    "replay.json": {
+      "bytes": 3802762,
+      "sha256": "6f3a25e537853664aca6489da88fcbf2a2d99aaf09285ca731c5489fd8d9cc64"
+    },
+    "runtime_integrity.json": {
+      "bytes": 1791,
+      "sha256": "d8362038d49df0d1dc876a04512fd7cc94b6c550fb4af659c31408ed157cc0f0"
+    },
+    "tests.json": {
+      "bytes": 2022,
+      "sha256": "043d30f5aaad4b9bde56e8352c08ca67d0317d908182831669278bd42ea0dacc"
+    }
+  },
+  "as_of": "2026-10-08T20:13:06.987380+00:00",
+  "branch": "research/live-combo-optimization-20261008",
+  "classifications": {
+    "BLOCKED_NEEDS_MORE_EVIDENCE": 12,
+    "DATA_QUALITY_LIMITATION": 4,
+    "NO_CHANGE": 6,
+    "PASS": 37,
+    "SMALL_GITHUB_FIX": 5
+  },
+  "implemented_corrections": [
+    "Observable-state/source pairing replaces capture-time state hashes for LIVE price movement.",
+    "Provider fixture-goals and LIVE-teams-goals formats are distinguished; missing values remain unknown.",
+    "Model-generation and explicit context-quality disagreement segments added.",
+    "Publication readiness is separated from context-quality rating.",
+    "Quality audit verifies frozen cycle/tracked-refresh/candidate source fingerprints before aggregation."
+  ],
+  "previous_report_commit": "2bb66b97729e818be6342f4d6573f64903d3c785",
+  "previous_source_commit": "b716db64fd365892937a871b28cf945a50305336",
+  "requirements": [
+    {
+      "classification": "PASS",
+      "evidence": "runtime_integrity.json",
+      "finding": "No writes or production policy changes; protected routes and original checkout retained.",
+      "id": "S01",
+      "requirement": "Official, champion, bankroll and staking preservation"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "runtime_integrity.json",
+      "finding": "All changes remain source/research; operator controls untouched.",
+      "id": "S02",
+      "requirement": "No deployment, restart, timer toggle, promotion or rollback"
+    },
+    {
+      "classification": "NO_CHANGE",
+      "evidence": "live.json",
+      "finding": "Later operator evidence supersedes obsolete LIVE=DISABLED and 20-second-cap text.",
+      "id": "S03",
+      "requirement": "Preserve actual LIVE-enabled state and operator quote-age V2"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "tests.json",
+      "finding": "Offline transports denied; existing stored current quotes only.",
+      "id": "S04",
+      "requirement": "No production provider requests, Telegram traffic, purchases or historical-odds acquisition"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "learning_champion.json",
+      "finding": "Research outputs are non-learning; old COMBO_LEG sources remain retained/excluded.",
+      "id": "S05",
+      "requirement": "COMBO exclusion from champion learning and immutable history"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "live.json",
+      "finding": "Cycle funnel and frozen candidate/state inspection; no fabricated missing matches.",
+      "id": "1.1a",
+      "requirement": "LIVE fixture discovery, status and minute"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "live.json",
+      "finding": "Saved quote identity/provenance retained; unknown bookmaker remains unknown.",
+      "id": "1.1b",
+      "requirement": "Odds discovery, market/provider ID and bookmaker attribution"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "live.json",
+      "finding": "Origin/retrieval/preparation clocks and policy-specific age buckets.",
+      "id": "1.1c",
+      "requirement": "Provider quote timestamps and age"
+    },
+    {
+      "classification": "DATA_QUALITY_LIMITATION",
+      "evidence": "live.json",
+      "finding": "Not present in old records. Client/quota elapsed observer is implemented, but isolated HTTP-boundary instrumentation is not implemented or deployed.",
+      "id": "1.1d",
+      "requirement": "Exact HTTP response latency"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "live.json",
+      "finding": "Code path and stored rejection evidence audited; baseline/gates unchanged.",
+      "id": "1.1e",
+      "requirement": "Raw normalization, model inference, EV, uncertainty and disagreement"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "live.json",
+      "finding": "Receipt-backed lifecycle and separate failure stages; no manual sends or cycles.",
+      "id": "1.1f",
+      "requirement": "Final refresh, duplicate/exposure, claims, receipts and settlement"
+    },
+    {
+      "classification": "DATA_QUALITY_LIMITATION",
+      "evidence": "live.json",
+      "finding": "Reason counts exist; rejected raw quote/state pairs were discarded. Optional future observer is uninstalled.",
+      "id": "1.1g",
+      "requirement": "Exact producer of state/quote mismatches"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "live.json",
+      "finding": "Candidate-version counts with explicit denominators and missing/future-time handling.",
+      "id": "1.2a",
+      "requirement": "All six quote-age buckets and freshness-only blockers"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "live.json",
+      "finding": "Retains all non-age blockers; not a promise of final publications or executable prices.",
+      "id": "1.2b",
+      "requirement": "20/30/45-second offline counterfactual"
+    },
+    {
+      "classification": "DATA_QUALITY_LIMITATION",
+      "evidence": "live.json",
+      "finding": "Discarded broad-feed rows cannot be reconstructed from eligible-candidate records.",
+      "id": "1.2c",
+      "requirement": "Full broad-feed update-age distribution"
+    },
+    {
+      "classification": "SMALL_GITHUB_FIX",
+      "evidence": "live.json",
+      "finding": "Compare same score/minute/cards/events/source, not a retrieval-time-dependent state hash; nine retained comparable pairs have no price movement.",
+      "id": "1.2d",
+      "requirement": "Odds movement under identical observable state"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "live.json",
+      "finding": "Indicative feed with unknown bookmaker; no execution claim, API/betting integration or price guarantee.",
+      "id": "1.2e",
+      "requirement": "Execution-price availability or slippage proof"
+    },
+    {
+      "classification": "NO_CHANGE",
+      "evidence": "live.json",
+      "finding": "Existing cache/broad-feed filter reviewed; no measured same-budget gain supports request reordering.",
+      "id": "1.3",
+      "requirement": "Ordering, history-cache/filter and quota throughput review"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "combo.json",
+      "finding": "Confirmed receipts, W/L/VOID/partial/pending, odds mean/median, flat P/L/ROI, probability scores and reliability.",
+      "id": "2.1a",
+      "requirement": "All six COMBO cohorts and requested coupon metrics"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "combo.json",
+      "finding": "Zero confirmed Double coupons; no substituted retrospective or legacy results.",
+      "id": "2.1b",
+      "requirement": "Double performance"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "combo.json",
+      "finding": "Per-coupon leg outcomes and original probability/quote provenance retained; no hidden losses.",
+      "id": "2.2a",
+      "requirement": "Every losing coupon and losing/unknown legs"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "combo.json",
+      "finding": "Coupon/leg segments and failure/risk flags; flags are not causal conclusions.",
+      "id": "2.2b",
+      "requirement": "Markets, leagues, leg count, odds, lead time, freshness and shared risks"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "combo.json",
+      "finding": "Co-occurrence, selected samples and shared forecasts do not establish a causal producer error.",
+      "id": "2.2c",
+      "requirement": "Dominant wrong signal or causal quality attribution"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "combo.json",
+      "finding": "All confirmed coupons currently have three legs; Double sample is empty.",
+      "id": "2.2d",
+      "requirement": "Two-leg versus three-leg realized comparison"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "replay.json",
+      "finding": "Existing selector, original candidates, exact 1.70/70\u201380% rules and in-memory ledger; no production change.",
+      "id": "3A",
+      "requirement": "Current Double baseline replay"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "replay.json",
+      "finding": "Existing V2 selector reused on identical candidate pools; real V2 publication is not reactivated.",
+      "id": "3B",
+      "requirement": "V2 Singles-Based replay"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "replay.json",
+      "finding": "Only fail-closed evidence/no-pick screen exists. Calibrated-leg/joint artifact contract and ranking algorithm are not completed.",
+      "id": "3C",
+      "requirement": "Quality/value-first Double ranker"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "combo.json",
+      "finding": "Product calculated from frozen Decimal inputs; explicit independent-assumption label.",
+      "id": "4a",
+      "requirement": "Naive product and joint probability provenance"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "combo.json",
+      "finding": "Shared-risk screening, dependency clusters and mathematical Fr\u00e9chet bounds; no invented coefficient.",
+      "id": "4b",
+      "requirement": "Fixture/team/league/market/shared-signal risk"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "combo.json",
+      "finding": "Not fitted or implemented as a validated model; inadequate independent prospective data.",
+      "id": "4c",
+      "requirement": "Empirical/scenario/Monte Carlo correlation-adjusted joint forecast"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "learning_champion.json",
+      "finding": "Latest read-only counts; both sample and closed-window gates required.",
+      "id": "5a",
+      "requirement": "Champion, learning, frozen calendar and 300-fixture readiness"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "learning_champion.json",
+      "finding": "Reuse existing comparator only after frozen readiness. No fit, artifact or activation now.",
+      "id": "5b",
+      "requirement": "Identity/Platt/temperature/isotonic fit and immutable calibration artifact"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "learning_champion.json",
+      "finding": "Published raw reliability is available; new fitted calibrator metrics would be premature.",
+      "id": "5c",
+      "requirement": "Fitted calibration slope/intercept, league/market curves and extremes"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "tests.json",
+      "finding": "No held-out fitting, calendar relaxation, current-data relabeling or automatic training.",
+      "id": "5d",
+      "requirement": "TRAIN/CALIBRATION/VALIDATION/HOLDOUT leakage isolation"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "../devig_example.json",
+      "finding": "Existing complete-current-quote captures and six-method comparator reused; no duplicate implementation.",
+      "id": "6a",
+      "requirement": "Multiplicative/Shin/Power/OO-EPC reuse and overround"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "combo.json",
+      "finding": "Frozen per-leg/C diagnostic features and market-method evidence exported.",
+      "id": "6b",
+      "requirement": "Probability difference, EV, odds age, lead time and market evidence"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "dixon_coles.json",
+      "finding": "DC sample remains 29 fixtures/five dates; no validated pooled weight or winning strategy established.",
+      "id": "6c",
+      "requirement": "Statistically stable incremental gain against market/champion"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "disagreement.json",
+      "finding": "Counts segmented by market, league/competition, p/odds, lead time, freshness and provider completeness.",
+      "id": "7a",
+      "requirement": "Six named signal/rejection families and existing segments"
+    },
+    {
+      "classification": "SMALL_GITHUB_FIX",
+      "evidence": "disagreement.json",
+      "finding": "Added missing dimensions; unknown generation and unrated context remain explicit.",
+      "id": "7b",
+      "requirement": "Model-generation and context-quality segments"
+    },
+    {
+      "classification": "SMALL_GITHUB_FIX",
+      "evidence": "combo.json",
+      "finding": "Exporter now preserves readiness separately; READY is never relabeled as a context-quality grade.",
+      "id": "7c",
+      "requirement": "Publication readiness versus context quality"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "combo.json",
+      "finding": "Policy audited unchanged; no published Double outcomes to demonstrate realized calibration.",
+      "id": "7d",
+      "requirement": "Double diagnostic-only disagreement performance"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "../../../operations/GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_REPORT.md",
+      "finding": "Official project docs/source availability/results/license reviewed; no unverified code copied.",
+      "id": "8a",
+      "requirement": "Four requested GitHub projects"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "../../../operations/GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_REPORT.md",
+      "finding": "References and methodological limitations recorded; forum anecdotes are not OOS proof.",
+      "id": "8b",
+      "requirement": "Issues/discussions, Reddit and statistics material"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "../../../operations/GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_REPORT.md",
+      "finding": "Research matrix answers all eight decision criteria; no paid provider or speculative model import.",
+      "id": "8c",
+      "requirement": "Technical basis/code/OOS/data/cost/fit/incremental-gain/complexity assessment"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "replay.json",
+      "finding": "A/B/C receive the same retained pool; integrity checks fail closed.",
+      "id": "9a",
+      "requirement": "Common immutable candidate pool, original odds and source fingerprints"
+    },
+    {
+      "classification": "DATA_QUALITY_LIMITATION",
+      "evidence": "replay.json",
+      "finding": "Unavailable; replay uses observed preparation-end with strict preceding-input checks. Exact production-decision reproduction is not claimed.",
+      "id": "9b",
+      "requirement": "Exact original selector-call timestamp reproduction"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "replay.json",
+      "finding": "Selection precedes label attachment; independent hypothetical carry-forward and original exposure guards.",
+      "id": "9c",
+      "requirement": "No future labels, retrospective replacement or duplicate exposure"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "tests.json",
+      "finding": "Only retained verified regulation facts; absent/conflicting results remain unknown.",
+      "id": "9d",
+      "requirement": "Reproducible early-loss/VOID/partial-VOID settlement"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "replay.json",
+      "finding": "Descriptive results with immature-cohort bias disclosed; no prospective-performance label.",
+      "id": "9e",
+      "requirement": "Selected/no-pick/settled/ROI/probability metrics and losing streak"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "replay.json",
+      "finding": "Different/empty selected coupons have different targets; no fabricated paired score delta.",
+      "id": "9f",
+      "requirement": "Paired probability-score deltas across three strategies"
+    },
+    {
+      "classification": "BLOCKED_NEEDS_MORE_EVIDENCE",
+      "evidence": "combo.json",
+      "finding": "Evidence gates not met; no relaxed sample minimum or holdout tuning.",
+      "id": "9g",
+      "requirement": "Confidence intervals and ranking"
+    },
+    {
+      "classification": "SMALL_GITHUB_FIX",
+      "evidence": "live.json",
+      "finding": "Offline report and optional observer implemented. Raw HTTP timing, rejected-row history and production persistence remain unavailable/unwired.",
+      "id": "10A",
+      "requirement": "LIVE diagnostics implementation block"
+    },
+    {
+      "classification": "SMALL_GITHUB_FIX",
+      "evidence": "replay.json",
+      "finding": "A/B replay and joint-risk diagnostics implemented; C ranker/joint model explicitly incomplete.",
+      "id": "10B",
+      "requirement": "COMBO quality research implementation block"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "combo.json",
+      "finding": "Existing combo_evidence extended; all cohorts shown, no unjustified ranking.",
+      "id": "10C",
+      "requirement": "Coupon performance comparison implementation block"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "tests.json",
+      "finding": "635 tests pass, including 16 additions since original 619; fake transports and network denial.",
+      "id": "11a",
+      "requirement": "Focused and adjacent full requested regression matrix"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "tests.json",
+      "finding": "Regression coverage and real read-only smoke; no learning/publication side effects.",
+      "id": "11b",
+      "requirement": "Read-only isolation, exact replay, probability boundaries and source corruption"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "runtime_integrity.json",
+      "finding": "Only reviewed source/docs/evidence; original dirty checkout preserved.",
+      "id": "11c",
+      "requirement": "Isolated worktree, reviewed commit/push, secrets and runtime exclusions"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "live.json",
+      "finding": "LIVE publishes; negative EV and alignment/coverage failures remain; HTTP causal attribution unresolved.",
+      "id": "12a",
+      "requirement": "LIVE final verdict"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "combo.json",
+      "finding": "No proven best calibrated/risk-adjusted strategy. V2 descriptive ROI is insufficient; Double and C lack evidence.",
+      "id": "12b",
+      "requirement": "COMBO final verdict"
+    },
+    {
+      "classification": "PASS",
+      "evidence": "learning_champion.json",
+      "finding": "Calibration not ready; champion preserved; promotion NOT_ELIGIBLE; no reason established for a new classifier.",
+      "id": "12c",
+      "requirement": "AI/ML final verdict"
+    },
+    {
+      "classification": "NO_CHANGE",
+      "evidence": "runtime_integrity.json",
+      "finding": "ebd0924 is in reviewed history; installed forward application contains reviewed_competitions.json with verified hash.",
+      "id": "H01",
+      "requirement": "Earlier Dixon\u2013Coles packaging repair"
+    },
+    {
+      "classification": "NO_CHANGE",
+      "evidence": "runtime_integrity.json",
+      "finding": "Reviewed commits checked as ancestors; installed flags preserved; no repetition of completed implementations.",
+      "id": "H02",
+      "requirement": "Earlier PREMATCH/de-vig/calibration/queue/settlement/Double/evening changes"
+    },
+    {
+      "classification": "NO_CHANGE",
+      "evidence": "runtime_integrity.json",
+      "finding": "ab327dd is an ancestor of verified remote ea94dfec on separate fix/admin-mixed-delivery-20261004; no missing PREMATCH history.",
+      "id": "H03",
+      "requirement": "Separate ADMIN mixed-delivery branch"
+    },
+    {
+      "classification": "NO_CHANGE",
+      "evidence": "../queue.json",
+      "finding": "Existing queue PASS and coverage analysis reused; no proven priority/budget improvement was invented.",
+      "id": "H04",
+      "requirement": "Final-review queue regression and odds-yield review"
+    }
+  ],
+  "requirements_count": 64,
+  "riga_as_of": "2026-10-08T23:13:06.987380+03:00",
+  "safety": {
+    "bankroll_mutations": 0,
+    "champion_activations": 0,
+    "checked_at": "2026-10-08T20:23:01.861744+00:00",
+    "dixon_coles_release": "/opt/goalvision-dixon-coles-forward-ebd0924-20261004/application",
+    "live_timer_after": {
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "live_timer_before": {
+      "ActiveState": "active",
+      "DropInPaths": "",
+      "FragmentPath": "/etc/systemd/system/goalvision-lab-live-evening.timer",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "main_checkout_status_unchanged": true,
+    "main_preexisting_dirty_paths": 220,
+    "official_mutations": 0,
+    "production_deployments": 0,
+    "promotions": 0,
+    "protected_systemd_before_sha256": "026b63eb409e2f1770e66f306d3e7a0fdefbdef84ef5c6437fc81664d6eae2c4",
+    "protected_systemd_files": 142,
+    "protected_systemd_unchanged": true,
+    "provider_calls_initiated": 0,
+    "restarts": 0,
+    "reviewed_competitions_sha256": "9e3cc8e923e392bb535354759a0b587e82d9ef2179dc4bde20cfa660c66b7cd6",
+    "reviewed_history_ancestor_checks": {
+      "1183e35": true,
+      "2436d39": true,
+      "42a441f": true,
+      "4f547cf": true,
+      "574f55f": true,
+      "6489f92": true,
+      "6784969": true,
+      "76d96c1": true,
+      "83958d1": true,
+      "9d73894": true,
+      "ab327dd": false,
+      "abddde7": true,
+      "c4daf63": true,
+      "cb6b7c6": true,
+      "cdcb526": true,
+      "e1263e7": true,
+      "e5b02e4": true,
+      "ebd0924": true
+    },
+    "rollbacks": 0,
+    "separate_admin_branch": {
+      "branch": "fix/admin-mixed-delivery-20261004",
+      "remote_head": "ea94dfec4d72334c93e3133a31fd6509a41c3ebc",
+      "source_commit": "ab327dddd08ef731571a981b4cb77a4db1cc05fe",
+      "source_is_ancestor_of_remote_head": true
+    },
+    "telegram_calls": 0,
+    "telegram_sends": 0,
+    "timer_changes": 0
+  },
+  "source_commit": "d642f72d579ab45d622459befea5b4c55e7813d8",
+  "source_files": {
+    "app/adaptive_lab/combo_evidence.py": "976c43b02ca5c52346d75995968b456226db141c57081cef5f7f46dd4098c07f",
+    "app/live_lab/research.py": "d530f095217f035f493695aefbede6f0e1775ea76c4fb6af9a226b524f56bfc6",
+    "operations/prematch-quality/audit.py": "d465445679f2dfcd5b2b3826c2b4d69b79cfde200b54343f12ac3d6904bd7de1",
+    "tests/test_live_combo_research.py": "b1129af3f8d9d994437d56651cd97ad47d04e81bd3d39a925d40c2374b7e5b7c",
+    "tests/test_prematch_quality_evidence.py": "42eb62ce8e019e579ac9273b42c1eb7b26f2b965e31e0deb77549df994be31df"
+  },
+  "summary": {
+    "COMBO": {
+      "LOST": 125,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 69,
+      "average_combined_odds": "9.197299371859296482412060302",
+      "binary_missing_probability": 0,
+      "brier": 0.21125165022445866,
+      "calibration_bias_predicted_minus_observed": -0.023440774768510173,
+      "coupon_probability_observations": 194,
+      "ece": 0.04901734929768905,
+      "evidence_status": "DESCRIPTIVE_ONLY",
+      "flat_roi": -0.10490101546391753,
+      "flat_unit_pnl": "-20.350797",
+      "log_loss": 0.6072049710129171,
+      "maximum_known_losing_streak_publication_order": 13,
+      "mce": 0.7285910608445785,
+      "mean_predicted_joint_published": 0.3327048522623391,
+      "mean_predicted_joint_scored": 0.3322293283242733,
+      "median_combined_odds": "2.627100",
+      "model_learning_observations": 0,
+      "observed_hit_rate": 0.3556701030927835,
+      "partial_void_count": 0,
+      "pending": 5,
+      "published": 199,
+      "reliability_bins": [
+        {
+          "error": 0.06719273054291953,
+          "lower": 0.0,
+          "n": 9,
+          "observed": 0,
+          "predicted": 0.06719273054291953,
+          "upper": 0.1
+        },
+        {
+          "error": -0.09659263403416712,
+          "lower": 0.1,
+          "n": 12,
+          "observed": 0.25,
+          "predicted": 0.15340736596583288,
+          "upper": 0.2
+        },
+        {
+          "error": -0.018040822664010137,
+          "lower": 0.2,
+          "n": 68,
+          "observed": 0.27941176470588236,
+          "predicted": 0.2613709420418722,
+          "upper": 0.3
+        },
+        {
+          "error": -0.025991384274600016,
+          "lower": 0.3,
+          "n": 66,
+          "observed": 0.36363636363636365,
+          "predicted": 0.33764497936176363,
+          "upper": 0.4
+        },
+        {
+          "error": -0.12239238029819816,
+          "lower": 0.4,
+          "n": 7,
+          "observed": 0.5714285714285714,
+          "predicted": 0.44903619113037324,
+          "upper": 0.5
+        },
+        {
+          "error": 0.022053212250258913,
+          "lower": 0.5,
+          "n": 19,
+          "observed": 0.5263157894736842,
+          "predicted": 0.5483690017239431,
+          "upper": 0.6
+        },
+        {
+          "error": -0.18821567824069463,
+          "lower": 0.6,
+          "n": 11,
+          "observed": 0.8181818181818182,
+          "predicted": 0.6299661399411236,
+          "upper": 0.7
+        },
+        {
+          "error": 0.7285910608445785,
+          "lower": 0.7,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.7285910608445785,
+          "upper": 0.8
+        }
+      ],
+      "settled": 194,
+      "unscorable_float_extreme_probability": 0
+    },
+    "DC_fixtures": 29,
+    "DC_kickoff_dates": 5,
+    "LIVE": {
+      "candidate_versions": 448,
+      "confirmed_publications": 9,
+      "cycle_status_counts": {
+        "LIVE_RESULTS_ONLY": 3,
+        "LIVE_SCAN_COMPLETE": 60
+      },
+      "cycles": 63,
+      "delivery_status_counts": {
+        "LIVE_FINAL_REFRESH_FAILED": 1,
+        "LIVE_READINESS_BLOCKED": 2,
+        "LIVE_REFRESH_QUOTE_MISSING": 13,
+        "SENT": 16
+      },
+      "fixture_diagnostic_counts": {
+        "LIVE_FIXTURE_REVIEW_UNAVAILABLE": 5,
+        "LIVE_STATE_QUOTE_MISMATCH": 220,
+        "UNSUPPORTED_LIVE_MARKET": 88
+      },
+      "natural_provider_calls": 1770,
+      "result_counts": {
+        "LOST": 6,
+        "PENDING": 2,
+        "WON": 1
+      },
+      "same_state_odds_movement": {
+        "maximum": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "minimum": 0.0,
+        "n": 9
+      }
+    },
+    "SINGLE": {
+      "LOST": 219,
+      "PARTIAL_VOID": 0,
+      "VOID": 1,
+      "WON": 281,
+      "average_odds": "2.173675889328063241106719368",
+      "brier": 0.22641190573751452,
+      "calibration_bias_predicted_minus_observed": 0.046083687889897,
+      "ece": 0.04696112662197934,
+      "flat_roi": -0.07429141716566866,
+      "flat_unit_pnl": "-37.22",
+      "hit_rate": 0.562,
+      "log_loss": 0.6441728837571455,
+      "mce": 0.26104242930882154,
+      "median_odds": "1.57",
+      "missing_pnl_count": 0,
+      "missing_probability_count": 3,
+      "odds_sample": 506,
+      "partial_void_count": 0,
+      "pending": 5,
+      "pending_settlements": 5,
+      "probability_observations": 497,
+      "reliability_bins": [
+        {
+          "error": 0.13192579593144407,
+          "lower": 0.1,
+          "n": 3,
+          "observed": 0,
+          "predicted": 0.13192579593144407,
+          "upper": 0.2
+        },
+        {
+          "error": 0.26104242930882154,
+          "lower": 0.2,
+          "n": 5,
+          "observed": 0,
+          "predicted": 0.26104242930882154,
+          "upper": 0.3
+        },
+        {
+          "error": 0.007908074051532321,
+          "lower": 0.3,
+          "n": 30,
+          "observed": 0.3333333333333333,
+          "predicted": 0.34124140738486564,
+          "upper": 0.4
+        },
+        {
+          "error": 0.238474806310947,
+          "lower": 0.4,
+          "n": 28,
+          "observed": 0.21428571428571427,
+          "predicted": 0.4527605205966613,
+          "upper": 0.5
+        },
+        {
+          "error": 0.05128557227830777,
+          "lower": 0.5,
+          "n": 122,
+          "observed": 0.5163934426229508,
+          "predicted": 0.5676790149012586,
+          "upper": 0.6
+        },
+        {
+          "error": 0.025641683094969725,
+          "lower": 0.6,
+          "n": 213,
+          "observed": 0.6150234741784038,
+          "predicted": 0.6406651572733735,
+          "upper": 0.7
+        },
+        {
+          "error": 0.0005940036402650728,
+          "lower": 0.7,
+          "n": 67,
+          "observed": 0.7313432835820896,
+          "predicted": 0.7319372872223546,
+          "upper": 0.8
+        },
+        {
+          "error": 0.10568436586655727,
+          "lower": 0.8,
+          "n": 26,
+          "observed": 0.7307692307692307,
+          "predicted": 0.836453596635788,
+          "upper": 0.9
+        },
+        {
+          "error": -0.07268117497415383,
+          "lower": 0.9,
+          "n": 3,
+          "observed": 1,
+          "predicted": 0.9273188250258462,
+          "upper": 1.0
+        }
+      ],
+      "roi": "-0.07429141716566866267465069860",
+      "total_published": 506,
+      "total_settled": 501
+    },
+    "calibration_fit_invoked": false,
+    "calibration_independent": 297,
+    "champion": {
+      "artifact_id": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+      "created_at": "2026-09-18T19:53:42.075830+00:00",
+      "evidence": {
+        "artifact_fingerprint": "694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d"
+      },
+      "generation_id": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+      "previous_generation": null,
+      "reason": "BOOTSTRAP",
+      "scope": "LAB_ONLY",
+      "stream": "PREMATCH"
+    },
+    "independent_partitions": {
+      "CALIBRATION_FIT": 297,
+      "EXCLUDED": 20,
+      "PURGED": 298,
+      "SEALED_HOLDOUT": 0,
+      "TRAIN": 560,
+      "VALIDATION_EVALUATION": 0
+    },
+    "learning": {
+      "eligibility": {
+        "automatic_eligible": false,
+        "cycle_due": true,
+        "days_covered": 20,
+        "new_resolved": 1356,
+        "next_threshold": {
+          "calendar_days": 90,
+          "resolved": 500
+        },
+        "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+        "policy_version": "LAB_ADAPTIVE_V2",
+        "reason": "RESEARCH_ELIGIBLE",
+        "research_due": true,
+        "resolved": 2870,
+        "stage": "CHALLENGER_RESEARCH",
+        "status": "RESEARCH_ELIGIBLE",
+        "stream": "PREMATCH"
+      },
+      "independent_resolved_fixtures": 1164,
+      "resolved_eligible_observations": 2870,
+      "source_product_counts": {
+        "COMBO_LEG": 12,
+        "SHADOW": 2373,
+        "SINGLE": 498
+      },
+      "total_observations": 2883
+    },
+    "partitions": {
+      "CALIBRATION_FIT": 297,
+      "EXCLUDED": 22,
+      "PURGED": 760,
+      "SEALED_HOLDOUT": 0,
+      "TRAIN": 1804,
+      "VALIDATION_EVALUATION": 0
+    },
+    "promotion_eligibility": "NOT_ELIGIBLE"
+  },
+  "tests": {
+    "command": "python -I -B operations/live-combo-research/offline_tests.py",
+    "core_reproduction": {
+      "as_of": "2026-10-08T20:13:06.987380+00:00",
+      "same_bytes_twice": true,
+      "sha256": {
+        "combo.json": "c087f33f6319aa73fd437b33e6e7ef576dc171d3d6902b4676890643c6c7a3c4",
+        "live.json": "a80340a4ed4f94179969bd81c8610d48bf35689196c004722505d47b423f0566",
+        "replay.json": "6f3a25e537853664aca6489da88fcbf2a2d99aaf09285ca731c5489fd8d9cc64"
+      }
+    },
+    "elapsed_seconds": 41.0,
+    "new_cases_since_original": 16,
+    "passed": 635,
+    "provider_transport": "FAKE_NETWORK_DENIED",
+    "real_provider_calls": 0,
+    "real_telegram_calls": 0,
+    "real_telegram_sends": 0,
+    "result": "PASS",
+    "source_commit": "d642f72d579ab45d622459befea5b4c55e7813d8",
+    "telegram_transport": "FAKE_NETWORK_DENIED",
+    "test_files": [
+      "tests/adaptive_lab/test_live.py",
+      "tests/adaptive_lab/test_evening_live.py",
+      "tests/adaptive_lab/test_live_quote_age_policy.py",
+      "tests/adaptive_lab/test_quota_contention.py",
+      "tests/adaptive_lab/test_settlement_preflight_reserve.py",
+      "tests/adaptive_lab/test_no_combo_learning.py",
+      "tests/adaptive_lab/test_calendar_research.py",
+      "tests/adaptive_lab/test_calendar_monitor.py",
+      "tests/adaptive_lab/test_calibration_research.py",
+      "tests/adaptive_lab/test_shadow_chronology.py",
+      "tests/adaptive_lab/test_devig_research.py",
+      "tests/adaptive_lab/test_devig_integration.py",
+      "tests/adaptive_lab/test_performance_snapshot.py",
+      "tests/test_live_combo_research.py",
+      "tests/test_prematch_quality_evidence.py",
+      "tests/test_combo_double_170.py",
+      "tests/test_combo_aggregate_order.py",
+      "tests/test_lab_combo_early_loss.py",
+      "tests/test_lab_combo_integrity.py",
+      "tests/test_settlement_replies.py",
+      "tests/test_lab_delivery_accounting.py",
+      "tests/test_final_review_queue.py",
+      "tests/test_dixon_coles_incremental.py",
+      "tests/test_prematch_combo_leg_odds_floor.py",
+      "tests/test_lab_accuracy_combo.py"
+    ]
+  },
+  "unimplemented_or_unavailable": [
+    "C calibrated quality/value ranking algorithm and verified artifact contract.",
+    "Empirical/scenario correlation-adjusted joint forecast.",
+    "Historical raw mismatch payload and broad discarded-feed quote-age distribution.",
+    "Isolated HTTP-boundary latency measurements and deployed persistence.",
+    "New calibration fit until frozen readiness/window gates.",
+    "Statistically supported strategy ranking and paired probability delta on shared targets."
+  ],
+  "version": "GOALVISION_LIVE_COMBO_REQUIREMENTS_REVIEW_V1"
+}

@@ -1,5 +1,34 @@
 # GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_REPORT
 
+**Completion re-review — 2026-10-08 23:13:06 Europe/Riga**
+
+The user requested a second pass through the entire task. All **64 traceable requirements** across the 12 priorities, safety rules and earlier operator evidence were checked. This is **not a claim that every requested research algorithm is complete**: 37 findings are PASS, six NO_CHANGE, five SMALL_GITHUB_FIX, four DATA_QUALITY_LIMITATION and 12 BLOCKED_NEEDS_MORE_EVIDENCE. The full matrix is appended in section 19.
+
+Latest source commit: `d642f72d579ab45d622459befea5b4c55e7813d8`. Machine-readable re-review:
+[GOALVISION_LIVE_COMBO_REQUIREMENTS_REVIEW.json](../evidence/live_combo_optimization_20261008/review_2313/GOALVISION_LIVE_COMBO_REQUIREMENTS_REVIEW.json).
+
+Latest fixed-cutoff facts, superseding the earlier snapshot's current-state counts:
+- LIVE: **9 confirmed publications; 1 WON, 6 LOST, 2 pending**. Sixty discovery cycles and three results-only cycles; discovery correctly closes at 23:00 Riga while the enabled timer continues results. 1,770 natural provider calls; zero initiated by this audit.
+- COMBO: 199 published, 194 settled, **69 W / 125 L / five pending**, P/L −20.350797u, ROI **−10.4901%**. Double remains zero. V2 descriptive ROI remains +9.77%; no statistical winner.
+- SINGLE: 506 published, 501 settled, 281 W / 219 L / one VOID / five pending; P/L −37.22u, ROI −7.4291%.
+- Learning: 2,883 retained observations, 2,870 resolved eligible / 1,164 independent fixtures; **CALIBRATION_FIT 297/300**. TRAIN remains 1,804/560; validation/holdout remain zero. Fit still requires the October 10 03:00 Riga window close.
+- DC: **29 paired fixtures / five dates**, still below the unchanged 30/seven CI gate. Brier: champion 0.553948, multiplicative market 0.589684, DC 0.607375. No incremental gain established.
+
+Corrections completed in this second pass:
+1. LIVE odds movement previously grouped by a state fingerprint containing retrieval time. It now compares identical observable score/minute/cards/events and quote source/market, preserving original snapshot fingerprints. Nine comparable pairs are present; all have zero observed movement. This does not establish executable prices or broader price stability.
+2. Future diagnostic capture now distinguishes fixture `goals` from LIVE quote `teams.*.goals`. Missing score/minute values remain unknown instead of appearing as observed mismatches.
+3. Disagreement now includes model generation and explicit context-quality segments. Of 3,886 rows, 3,862 name the bootstrap generation and 24 name the deterministic ensemble; all 24 provider-zero cases occur in the latter group. All context ratings are NOT_EXPLICITLY_RATED. No rating is invented.
+4. Coupon publication readiness is kept separately from context quality.
+5. The quality auditor now verifies frozen cycle, tracked-refresh and candidate hashes before aggregation.
+
+**635 tests PASS**; all three core exports reproduce byte-for-byte. Earlier immutable JSON is preserved. Reviewed historical PREMATCH commits are present; ADMIN `ab327dd` is on its separate verified remote branch, and installed DC repair `ebd0924` contains the previously missing JSON file.
+
+Still incomplete/unavailable: C's calibrated ranker/artifact contract, a validated correlation-adjusted joint model, isolated HTTP-boundary timing and historical rejected raw quote payloads, calibration fitting before legal readiness, and statistically supported strategy ranking. These are explicitly not marked done. No live pipeline reorder, model change, deployment or capture-sink activation was performed.
+
+The timestamped **original 22:06 snapshot** below is retained for provenance. For latest counts and completion status use this re-review and the section 19 matrix.
+
+---
+
 Evidence cutoff: **2026-10-08 19:06:10.302493 UTC / 22:06:10 Europe/Riga**.
 Runtime preservation recheck: 19:34:49 UTC.
 Research source commit: `b716db64fd365892937a871b28cf945a50305336`.
@@ -307,7 +336,11 @@ No provider/Telegram transport was exercised against production. All SQL input p
 Reproduce on the authorized VPS from this branch:
 
 ```bash
-cd /home/arvis/goalvision-worktrees/live-combo-research-20261008
+# Original 22:06 snapshot: use its source commit, not the later branch HEAD.
+git -C /home/arvis/goalvision-worktrees/live-combo-research-20261008 worktree add --detach \
+  /home/arvis/goalvision-worktrees/live-combo-original-replay-b716db6 \
+  b716db64fd365892937a871b28cf945a50305336
+cd /home/arvis/goalvision-worktrees/live-combo-original-replay-b716db6
 /home/arvis/GoalVisionAI/.venv/bin/python -I -B operations/live-combo-research/offline_tests.py
 
 nice -n 10 /home/arvis/GoalVisionAI/.venv/bin/python -I -B \
@@ -364,3 +397,99 @@ Nine published items were more than six hours beyond frozen last kickoff, which 
 | NO_CHANGE | Keep DC shadow, champion, odds floors, publication gates, API budget and staking unchanged |
 
 Delivery invariants: **zero production deployments, restarts, timer changes, provider calls initiated, Telegram calls/sends, Official mutations, bankroll mutations, champion activations, promotions or rollbacks**. Existing natural services generated their own calls/publications while this work read their evidence. Research worktree changes are isolated; original dirty checkout remains untouched.
+
+
+### Full requirement-by-requirement review
+
+Latest source: `d642f72d579ab45d622459befea5b4c55e7813d8`. Full machine-readable requirements and hashes are in `docs/evidence/live_combo_optimization_20261008/review_2313/GOALVISION_LIVE_COMBO_REQUIREMENTS_REVIEW.json`.
+
+“PASS” means the named audit/test requirement has evidence; it does not mean a profitable or production-ready strategy. “BLOCKED” is an unfulfilled condition or incomplete implementation, not a success label. The C ranker is explicitly incomplete.
+
+| ID | Requirement | Classification | Finding |
+|---|---|---|---|
+| S01 | Official, champion, bankroll and staking preservation | PASS | No writes or production policy changes; protected routes and original checkout retained. |
+| S02 | No deployment, restart, timer toggle, promotion or rollback | PASS | All changes remain source/research; operator controls untouched. |
+| S03 | Preserve actual LIVE-enabled state and operator quote-age V2 | NO_CHANGE | Later operator evidence supersedes obsolete LIVE=DISABLED and 20-second-cap text. |
+| S04 | No production provider requests, Telegram traffic, purchases or historical-odds acquisition | PASS | Offline transports denied; existing stored current quotes only. |
+| S05 | COMBO exclusion from champion learning and immutable history | PASS | Research outputs are non-learning; old COMBO_LEG sources remain retained/excluded. |
+| 1.1a | LIVE fixture discovery, status and minute | PASS | Cycle funnel and frozen candidate/state inspection; no fabricated missing matches. |
+| 1.1b | Odds discovery, market/provider ID and bookmaker attribution | PASS | Saved quote identity/provenance retained; unknown bookmaker remains unknown. |
+| 1.1c | Provider quote timestamps and age | PASS | Origin/retrieval/preparation clocks and policy-specific age buckets. |
+| 1.1d | Exact HTTP response latency | DATA_QUALITY_LIMITATION | Not present in old records. Client/quota elapsed observer is implemented, but isolated HTTP-boundary instrumentation is not implemented or deployed. |
+| 1.1e | Raw normalization, model inference, EV, uncertainty and disagreement | PASS | Code path and stored rejection evidence audited; baseline/gates unchanged. |
+| 1.1f | Final refresh, duplicate/exposure, claims, receipts and settlement | PASS | Receipt-backed lifecycle and separate failure stages; no manual sends or cycles. |
+| 1.1g | Exact producer of state/quote mismatches | DATA_QUALITY_LIMITATION | Reason counts exist; rejected raw quote/state pairs were discarded. Optional future observer is uninstalled. |
+| 1.2a | All six quote-age buckets and freshness-only blockers | PASS | Candidate-version counts with explicit denominators and missing/future-time handling. |
+| 1.2b | 20/30/45-second offline counterfactual | PASS | Retains all non-age blockers; not a promise of final publications or executable prices. |
+| 1.2c | Full broad-feed update-age distribution | DATA_QUALITY_LIMITATION | Discarded broad-feed rows cannot be reconstructed from eligible-candidate records. |
+| 1.2d | Odds movement under identical observable state | SMALL_GITHUB_FIX | Compare same score/minute/cards/events/source, not a retrieval-time-dependent state hash; nine retained comparable pairs have no price movement. |
+| 1.2e | Execution-price availability or slippage proof | BLOCKED_NEEDS_MORE_EVIDENCE | Indicative feed with unknown bookmaker; no execution claim, API/betting integration or price guarantee. |
+| 1.3 | Ordering, history-cache/filter and quota throughput review | NO_CHANGE | Existing cache/broad-feed filter reviewed; no measured same-budget gain supports request reordering. |
+| 2.1a | All six COMBO cohorts and requested coupon metrics | PASS | Confirmed receipts, W/L/VOID/partial/pending, odds mean/median, flat P/L/ROI, probability scores and reliability. |
+| 2.1b | Double performance | BLOCKED_NEEDS_MORE_EVIDENCE | Zero confirmed Double coupons; no substituted retrospective or legacy results. |
+| 2.2a | Every losing coupon and losing/unknown legs | PASS | Per-coupon leg outcomes and original probability/quote provenance retained; no hidden losses. |
+| 2.2b | Markets, leagues, leg count, odds, lead time, freshness and shared risks | PASS | Coupon/leg segments and failure/risk flags; flags are not causal conclusions. |
+| 2.2c | Dominant wrong signal or causal quality attribution | BLOCKED_NEEDS_MORE_EVIDENCE | Co-occurrence, selected samples and shared forecasts do not establish a causal producer error. |
+| 2.2d | Two-leg versus three-leg realized comparison | BLOCKED_NEEDS_MORE_EVIDENCE | All confirmed coupons currently have three legs; Double sample is empty. |
+| 3A | Current Double baseline replay | PASS | Existing selector, original candidates, exact 1.70/70–80% rules and in-memory ledger; no production change. |
+| 3B | V2 Singles-Based replay | PASS | Existing V2 selector reused on identical candidate pools; real V2 publication is not reactivated. |
+| 3C | Quality/value-first Double ranker | BLOCKED_NEEDS_MORE_EVIDENCE | Only fail-closed evidence/no-pick screen exists. Calibrated-leg/joint artifact contract and ranking algorithm are not completed. |
+| 4a | Naive product and joint probability provenance | PASS | Product calculated from frozen Decimal inputs; explicit independent-assumption label. |
+| 4b | Fixture/team/league/market/shared-signal risk | PASS | Shared-risk screening, dependency clusters and mathematical Fréchet bounds; no invented coefficient. |
+| 4c | Empirical/scenario/Monte Carlo correlation-adjusted joint forecast | BLOCKED_NEEDS_MORE_EVIDENCE | Not fitted or implemented as a validated model; inadequate independent prospective data. |
+| 5a | Champion, learning, frozen calendar and 300-fixture readiness | PASS | Latest read-only counts; both sample and closed-window gates required. |
+| 5b | Identity/Platt/temperature/isotonic fit and immutable calibration artifact | BLOCKED_NEEDS_MORE_EVIDENCE | Reuse existing comparator only after frozen readiness. No fit, artifact or activation now. |
+| 5c | Fitted calibration slope/intercept, league/market curves and extremes | BLOCKED_NEEDS_MORE_EVIDENCE | Published raw reliability is available; new fitted calibrator metrics would be premature. |
+| 5d | TRAIN/CALIBRATION/VALIDATION/HOLDOUT leakage isolation | PASS | No held-out fitting, calendar relaxation, current-data relabeling or automatic training. |
+| 6a | Multiplicative/Shin/Power/OO-EPC reuse and overround | PASS | Existing complete-current-quote captures and six-method comparator reused; no duplicate implementation. |
+| 6b | Probability difference, EV, odds age, lead time and market evidence | PASS | Frozen per-leg/C diagnostic features and market-method evidence exported. |
+| 6c | Statistically stable incremental gain against market/champion | BLOCKED_NEEDS_MORE_EVIDENCE | DC sample remains 29 fixtures/five dates; no validated pooled weight or winning strategy established. |
+| 7a | Six named signal/rejection families and existing segments | PASS | Counts segmented by market, league/competition, p/odds, lead time, freshness and provider completeness. |
+| 7b | Model-generation and context-quality segments | SMALL_GITHUB_FIX | Added missing dimensions; unknown generation and unrated context remain explicit. |
+| 7c | Publication readiness versus context quality | SMALL_GITHUB_FIX | Exporter now preserves readiness separately; READY is never relabeled as a context-quality grade. |
+| 7d | Double diagnostic-only disagreement performance | BLOCKED_NEEDS_MORE_EVIDENCE | Policy audited unchanged; no published Double outcomes to demonstrate realized calibration. |
+| 8a | Four requested GitHub projects | PASS | Official project docs/source availability/results/license reviewed; no unverified code copied. |
+| 8b | Issues/discussions, Reddit and statistics material | PASS | References and methodological limitations recorded; forum anecdotes are not OOS proof. |
+| 8c | Technical basis/code/OOS/data/cost/fit/incremental-gain/complexity assessment | PASS | Research matrix answers all eight decision criteria; no paid provider or speculative model import. |
+| 9a | Common immutable candidate pool, original odds and source fingerprints | PASS | A/B/C receive the same retained pool; integrity checks fail closed. |
+| 9b | Exact original selector-call timestamp reproduction | DATA_QUALITY_LIMITATION | Unavailable; replay uses observed preparation-end with strict preceding-input checks. Exact production-decision reproduction is not claimed. |
+| 9c | No future labels, retrospective replacement or duplicate exposure | PASS | Selection precedes label attachment; independent hypothetical carry-forward and original exposure guards. |
+| 9d | Reproducible early-loss/VOID/partial-VOID settlement | PASS | Only retained verified regulation facts; absent/conflicting results remain unknown. |
+| 9e | Selected/no-pick/settled/ROI/probability metrics and losing streak | PASS | Descriptive results with immature-cohort bias disclosed; no prospective-performance label. |
+| 9f | Paired probability-score deltas across three strategies | BLOCKED_NEEDS_MORE_EVIDENCE | Different/empty selected coupons have different targets; no fabricated paired score delta. |
+| 9g | Confidence intervals and ranking | BLOCKED_NEEDS_MORE_EVIDENCE | Evidence gates not met; no relaxed sample minimum or holdout tuning. |
+| 10A | LIVE diagnostics implementation block | SMALL_GITHUB_FIX | Offline report and optional observer implemented. Raw HTTP timing, rejected-row history and production persistence remain unavailable/unwired. |
+| 10B | COMBO quality research implementation block | SMALL_GITHUB_FIX | A/B replay and joint-risk diagnostics implemented; C ranker/joint model explicitly incomplete. |
+| 10C | Coupon performance comparison implementation block | PASS | Existing combo_evidence extended; all cohorts shown, no unjustified ranking. |
+| 11a | Focused and adjacent full requested regression matrix | PASS | 635 tests pass, including 16 additions since original 619; fake transports and network denial. |
+| 11b | Read-only isolation, exact replay, probability boundaries and source corruption | PASS | Regression coverage and real read-only smoke; no learning/publication side effects. |
+| 11c | Isolated worktree, reviewed commit/push, secrets and runtime exclusions | PASS | Only reviewed source/docs/evidence; original dirty checkout preserved. |
+| 12a | LIVE final verdict | PASS | LIVE publishes; negative EV and alignment/coverage failures remain; HTTP causal attribution unresolved. |
+| 12b | COMBO final verdict | PASS | No proven best calibrated/risk-adjusted strategy. V2 descriptive ROI is insufficient; Double and C lack evidence. |
+| 12c | AI/ML final verdict | PASS | Calibration not ready; champion preserved; promotion NOT_ELIGIBLE; no reason established for a new classifier. |
+| H01 | Earlier Dixon–Coles packaging repair | NO_CHANGE | ebd0924 is in reviewed history; installed forward application contains reviewed_competitions.json with verified hash. |
+| H02 | Earlier PREMATCH/de-vig/calibration/queue/settlement/Double/evening changes | NO_CHANGE | Reviewed commits checked as ancestors; installed flags preserved; no repetition of completed implementations. |
+| H03 | Separate ADMIN mixed-delivery branch | NO_CHANGE | ab327dd is an ancestor of verified remote ea94dfec on separate fix/admin-mixed-delivery-20261004; no missing PREMATCH history. |
+| H04 | Final-review queue regression and odds-yield review | NO_CHANGE | Existing queue PASS and coverage analysis reused; no proven priority/budget improvement was invented. |
+
+### Reproduce the 23:13 re-review
+
+Use the reviewed branch containing source `d642f72d579ab45d622459befea5b4c55e7813d8`. These are offline/read-only commands, not deployment commands.
+
+```bash
+cd /home/arvis/goalvision-worktrees/live-combo-research-20261008
+/home/arvis/GoalVisionAI/.venv/bin/python -I -B operations/live-combo-research/offline_tests.py
+nice -n 10 /home/arvis/GoalVisionAI/.venv/bin/python -I -B \
+  operations/live-combo-research/audit.py \
+  --audit /home/arvis/GoalVisionAI/var/adaptive_lab/audit.db \
+  --shadow /home/arvis/GoalVisionAI/var/lab_v2/shadow.db \
+  --ledger /home/arvis/GoalVisionAI/var/lab_combo/ledger.db \
+  --as-of 2026-10-08T20:13:06.987380+00:00 \
+  --live-since 2026-10-08T15:00:00+00:00 \
+  --cycles 12 \
+  --output /home/arvis/goalvision-operations/live-combo-audit-20261008/requirements-review/final
+```
+
+The original source in the section 16 worktree reproduces the old schemas/snapshot; the later source emits LIVE_DIAGNOSTICS_V2 and LAB_COMBO_COUPON_EVIDENCE_V3. Do not overwrite the old immutable output directory with a new schema.
+
+Latest safety readback: 142 protected systemd files unchanged; original 220 dirty paths unchanged; LIVE timer enabled/active before and after. Official/champion/staking untouched; zero agent production requests, Telegram calls/sends, deployments, timer changes, restarts, promotions or rollbacks.

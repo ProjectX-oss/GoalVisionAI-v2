@@ -1,3 +1,15 @@
+## 2026-10-08 — Full LIVE/COMBO requirements re-review
+
+- [x] Trace all 64 requirements; distinguish completed audits from incomplete research implementations.
+- [x] Fix same-observable-state LIVE quote pairing and fixture/live score provenance; unknown values stay unknown.
+- [x] Add model-generation/context-quality disagreement segments, separate readiness from quality and verify frozen source hashes.
+- [x] 635 offline tests PASS; latest core exports reproduce byte-for-byte.
+- [x] 23:13 Riga snapshot: LIVE 9 published (1W/6L/2 pending); COMBO 69W/125L/5 pending; calibration 297/300; DC 29 paired fixtures/five dates.
+- [x] Verify old DC packaging repair and separate remote ADMIN branch; preserve all running routes and pre-existing dirty changes.
+- [ ] C calibrated ranker/joint model and exact HTTP capture remain incomplete; no production deployment or policy change.
+- Evidence: docs/evidence/live_combo_optimization_20261008/review_2313/GOALVISION_LIVE_COMBO_REQUIREMENTS_REVIEW.json.
+- Consolidated report: docs/operations/GOALVISION_LIVE_COMBO_OPTIMIZATION_V1_REPORT.md.
+
 ## 2026-10-08 — LIVE diagnostics and COMBO optimization research V1
 
 - [x] Read-only VPS/GitHub reconciliation; actual LIVE enabled, operator age-diagnostic V2 retained; protected 142 systemd files and original 220 dirty paths unchanged.

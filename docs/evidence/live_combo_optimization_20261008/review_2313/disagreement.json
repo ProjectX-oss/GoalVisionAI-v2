@@ -1,0 +1,2305 @@
+{
+  "as_of": "2026-10-08T20:13:06.987380+00:00",
+  "candidate_cycles": [
+    "2026-10-08T14:30:03.260329+00:00",
+    "2026-10-08T14:00:03.087396+00:00",
+    "2026-10-08T13:30:03.029694+00:00",
+    "2026-10-08T13:00:03.057328+00:00",
+    "2026-10-08T12:30:03.144910+00:00",
+    "2026-10-08T12:00:03.101168+00:00",
+    "2026-10-08T11:30:03.019742+00:00",
+    "2026-10-08T11:00:03.280895+00:00",
+    "2026-10-08T10:30:03.382556+00:00",
+    "2026-10-08T10:00:03.611862+00:00",
+    "2026-10-08T09:30:02.910511+00:00",
+    "2026-10-08T09:00:03.193555+00:00"
+  ],
+  "limitations": [
+    "Repeated candidate-market-cycle rows are not independent bets.",
+    "Missing evaluated rows do not establish no disagreement.",
+    "Completeness records quote/API-prediction availability, not every upstream field.",
+    "No stale marker is not independent proof of provider timestamp correctness.",
+    "Association cannot separate model misspecification from provider errors causally.",
+    "Context quality is an explicit source rating or a recorded context blocker; absence is not a positive quality grade.",
+    "Missing generation is UNKNOWN, never inferred from the current champion."
+  ],
+  "segments": [
+    {
+      "candidate_rows": 3886,
+      "dimension": "ALL",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.030365414307771486,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.38265568708183223,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.048636129696345856
+      },
+      "divergence_observations": 3886,
+      "mean_absolute_ensemble_market_divergence": 0.05936381137660187,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 3402,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 118,
+        "ENSEMBLE_NOT_APPROVED": 2657,
+        "FINAL_REVIEW_COMPLETE": 84,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 664,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 2977,
+        "MARKET_REVIEW_TERMINAL": 2,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1487,
+        "NON_POSITIVE_VALUE": 2655,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 1238,
+        "PROVIDER_ZERO_PROBABILITY": 24,
+        "QUALITY_RISK_TRACKING": 479,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 189,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 3136,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 462
+      },
+      "unique_fixtures": 77,
+      "value": "ALL"
+    },
+    {
+      "candidate_rows": 418,
+      "dimension": "competition",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.07177033492822966,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.3229665071770335,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.09808612440191387
+      },
+      "divergence_observations": 418,
+      "mean_absolute_ensemble_market_divergence": 0.06682097931584756,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 359,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 30,
+        "ENSEMBLE_NOT_APPROVED": 291,
+        "FINAL_REVIEW_COMPLETE": 10,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 68,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 382,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 135,
+        "NON_POSITIVE_VALUE": 291,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 212,
+        "PROVIDER_ZERO_PROBABILITY": 15,
+        "QUALITY_RISK_TRACKING": 49,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 41,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 340,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 77
+      },
+      "unique_fixtures": 9,
+      "value": "DOMESTIC_CUP"
+    },
+    {
+      "candidate_rows": 1280,
+      "dimension": "competition",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0203125,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.37265625,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.040625
+      },
+      "divergence_observations": 1280,
+      "mean_absolute_ensemble_market_divergence": 0.05031796947805143,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 1152,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 26,
+        "ENSEMBLE_NOT_APPROVED": 884,
+        "FINAL_REVIEW_COMPLETE": 22,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 221,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 899,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 477,
+        "NON_POSITIVE_VALUE": 883,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 434,
+        "QUALITY_RISK_TRACKING": 151,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 52,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 1035,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 146
+      },
+      "unique_fixtures": 21,
+      "value": "LOWER_DIVISION_OR_SEMIPRO"
+    },
+    {
+      "candidate_rows": 218,
+      "dimension": "competition",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.03669724770642202,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.2981651376146789,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.07339449541284404
+      },
+      "divergence_observations": 218,
+      "mean_absolute_ensemble_market_divergence": 0.05472642936527272,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 181,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 8,
+        "ENSEMBLE_NOT_APPROVED": 177,
+        "FINAL_REVIEW_COMPLETE": 8,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 27,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 140,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 65,
+        "NON_POSITIVE_VALUE": 177,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 118,
+        "QUALITY_RISK_TRACKING": 6,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 16,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 183,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 53
+      },
+      "unique_fixtures": 7,
+      "value": "RESERVE_OR_B_TEAM"
+    },
+    {
+      "candidate_rows": 887,
+      "dimension": "competition",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.007891770011273957,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.41037204058624577,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.013528748590755355
+      },
+      "divergence_observations": 887,
+      "mean_absolute_ensemble_market_divergence": 0.05072513602319949,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 775,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 7,
+        "ENSEMBLE_NOT_APPROVED": 573,
+        "FINAL_REVIEW_COMPLETE": 13,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 141,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 710,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 364,
+        "NON_POSITIVE_VALUE": 573,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 208,
+        "QUALITY_RISK_TRACKING": 160,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 12,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 733,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 68
+      },
+      "unique_fixtures": 14,
+      "value": "SENIOR_MEN_PRO"
+    },
+    {
+      "candidate_rows": 929,
+      "dimension": "competition",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.05059203444564048,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.4639397201291712,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0721205597416577
+      },
+      "divergence_observations": 929,
+      "mean_absolute_ensemble_market_divergence": 0.08541778398117734,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 788,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 47,
+        "ENSEMBLE_NOT_APPROVED": 600,
+        "FINAL_REVIEW_COMPLETE": 29,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 201,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 692,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 431,
+        "NON_POSITIVE_VALUE": 599,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 133,
+        "PROVIDER_ZERO_PROBABILITY": 9,
+        "QUALITY_RISK_TRACKING": 99,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 67,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 699,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 117
+      },
+      "unique_fixtures": 22,
+      "value": "UNKNOWN"
+    },
+    {
+      "candidate_rows": 154,
+      "dimension": "competition",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.09740259740259741,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.006493506493506494
+      },
+      "divergence_observations": 154,
+      "mean_absolute_ensemble_market_divergence": 0.013460533446906418,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 147,
+        "ENSEMBLE_NOT_APPROVED": 132,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 6,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 154,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 15,
+        "NON_POSITIVE_VALUE": 132,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 133,
+        "QUALITY_RISK_TRACKING": 14,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 1,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 146,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 1
+      },
+      "unique_fixtures": 4,
+      "value": "YOUTH_U19_U20"
+    },
+    {
+      "candidate_rows": 3886,
+      "dimension": "context_quality",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.030365414307771486,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.38265568708183223,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.048636129696345856
+      },
+      "divergence_observations": 3886,
+      "mean_absolute_ensemble_market_divergence": 0.05936381137660187,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 3402,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 118,
+        "ENSEMBLE_NOT_APPROVED": 2657,
+        "FINAL_REVIEW_COMPLETE": 84,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 664,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 2977,
+        "MARKET_REVIEW_TERMINAL": 2,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1487,
+        "NON_POSITIVE_VALUE": 2655,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 1238,
+        "PROVIDER_ZERO_PROBABILITY": 24,
+        "QUALITY_RISK_TRACKING": 479,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 189,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 3136,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 462
+      },
+      "unique_fixtures": 77,
+      "value": "NOT_EXPLICITLY_RATED"
+    },
+    {
+      "candidate_rows": 3886,
+      "dimension": "data_freshness_state",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.030365414307771486,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.38265568708183223,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.048636129696345856
+      },
+      "divergence_observations": 3886,
+      "mean_absolute_ensemble_market_divergence": 0.05936381137660187,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 3402,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 118,
+        "ENSEMBLE_NOT_APPROVED": 2657,
+        "FINAL_REVIEW_COMPLETE": 84,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 664,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 2977,
+        "MARKET_REVIEW_TERMINAL": 2,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1487,
+        "NON_POSITIVE_VALUE": 2655,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 1238,
+        "PROVIDER_ZERO_PROBABILITY": 24,
+        "QUALITY_RISK_TRACKING": 479,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 189,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 3136,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 462
+      },
+      "unique_fixtures": 77,
+      "value": "NO_STALE_MARKER_WITH_CURRENT_PRICE"
+    },
+    {
+      "candidate_rows": 38,
+      "dimension": "lead_time",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.02631578947368421,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.3684210526315789,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 38,
+      "mean_absolute_ensemble_market_divergence": 0.06871381701808436,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 32,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 1,
+        "ENSEMBLE_NOT_APPROVED": 29,
+        "FINAL_REVIEW_COMPLETE": 8,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 32,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 14,
+        "NON_POSITIVE_VALUE": 29,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 8,
+        "QUALITY_RISK_TRACKING": 1,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 30,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 2
+      },
+      "unique_fixtures": 4,
+      "value": "[10,25)"
+    },
+    {
+      "candidate_rows": 186,
+      "dimension": "lead_time",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.05913978494623656,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.42473118279569894,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.08602150537634409
+      },
+      "divergence_observations": 186,
+      "mean_absolute_ensemble_market_divergence": 0.0777274376691062,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 155,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 11,
+        "ENSEMBLE_NOT_APPROVED": 120,
+        "FINAL_REVIEW_COMPLETE": 40,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 147,
+        "MARKET_REVIEW_TERMINAL": 2,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 79,
+        "NON_POSITIVE_VALUE": 118,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 64,
+        "PROVIDER_ZERO_PROBABILITY": 2,
+        "QUALITY_RISK_TRACKING": 26,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 16,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 146,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 36
+      },
+      "unique_fixtures": 20,
+      "value": "[25,45)"
+    },
+    {
+      "candidate_rows": 380,
+      "dimension": "lead_time",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.04736842105263158,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.4342105263157895,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.07105263157894737
+      },
+      "divergence_observations": 380,
+      "mean_absolute_ensemble_market_divergence": 0.07147920025497419,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 332,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 18,
+        "ENSEMBLE_NOT_APPROVED": 242,
+        "FINAL_REVIEW_COMPLETE": 36,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 44,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 290,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 165,
+        "NON_POSITIVE_VALUE": 242,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 101,
+        "PROVIDER_ZERO_PROBABILITY": 4,
+        "QUALITY_RISK_TRACKING": 56,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 27,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 298,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 56
+      },
+      "unique_fixtures": 29,
+      "value": "[45,90)"
+    },
+    {
+      "candidate_rows": 3282,
+      "dimension": "lead_time",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.02681291895185862,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.374466788543571,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.044485070079219986
+      },
+      "divergence_observations": 3282,
+      "mean_absolute_ensemble_market_divergence": 0.05681207996936127,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 2883,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 88,
+        "ENSEMBLE_NOT_APPROVED": 2266,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 620,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 2508,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1229,
+        "NON_POSITIVE_VALUE": 2266,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 1065,
+        "PROVIDER_ZERO_PROBABILITY": 18,
+        "QUALITY_RISK_TRACKING": 396,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 146,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 2662,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 368
+      },
+      "unique_fixtures": 73,
+      "value": "[90,inf)"
+    },
+    {
+      "candidate_rows": 69,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.11594202898550725,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.7391304347826086,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.2318840579710145
+      },
+      "divergence_observations": 69,
+      "mean_absolute_ensemble_market_divergence": 0.15627732831491106,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 43,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 8,
+        "ENSEMBLE_NOT_APPROVED": 38,
+        "FINAL_REVIEW_COMPLETE": 12,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 13,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 42,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 51,
+        "NON_POSITIVE_VALUE": 38,
+        "QUALITY_RISK_TRACKING": 6,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 16,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 44,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 40
+      },
+      "unique_fixtures": 3,
+      "value": "1075"
+    },
+    {
+      "candidate_rows": 121,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.17355371900826447,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.2975206611570248,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.15702479338842976
+      },
+      "divergence_observations": 121,
+      "mean_absolute_ensemble_market_divergence": 0.08561782893785409,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 100,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 21,
+        "ENSEMBLE_NOT_APPROVED": 89,
+        "FINAL_REVIEW_COMPLETE": 8,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 22,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 121,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 36,
+        "NON_POSITIVE_VALUE": 89,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 76,
+        "PROVIDER_ZERO_PROBABILITY": 9,
+        "QUALITY_RISK_TRACKING": 2,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 19,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 91,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 31
+      },
+      "unique_fixtures": 3,
+      "value": "1129"
+    },
+    {
+      "candidate_rows": 44,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.0,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 44,
+      "mean_absolute_ensemble_market_divergence": 2.5e-29,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 44,
+        "ENSEMBLE_NOT_APPROVED": 44,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 44,
+        "NON_POSITIVE_VALUE": 44,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 44,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 44
+      },
+      "unique_fixtures": 1,
+      "value": "1201"
+    },
+    {
+      "candidate_rows": 198,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.020202020202020204,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.1414141414141414,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.04040404040404041
+      },
+      "divergence_observations": 198,
+      "mean_absolute_ensemble_market_divergence": 0.038530222111252226,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 187,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 4,
+        "ENSEMBLE_NOT_APPROVED": 135,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 22,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 198,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 28,
+        "NON_POSITIVE_VALUE": 135,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 144,
+        "QUALITY_RISK_TRACKING": 41,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 8,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 176,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 16
+      },
+      "unique_fixtures": 3,
+      "value": "186"
+    },
+    {
+      "candidate_rows": 42,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.6428571428571429,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 42,
+      "mean_absolute_ensemble_market_divergence": 0.040942151654853876,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 42,
+        "ENSEMBLE_NOT_APPROVED": 27,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 7,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 30,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 27,
+        "NON_POSITIVE_VALUE": 27,
+        "QUALITY_RISK_TRACKING": 8,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 35,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 4
+      },
+      "unique_fixtures": 1,
+      "value": "187"
+    },
+    {
+      "candidate_rows": 264,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.022727272727272728,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.4053030303030303,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.022727272727272728
+      },
+      "divergence_observations": 264,
+      "mean_absolute_ensemble_market_divergence": 0.07600829807834213,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 235,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 6,
+        "ENSEMBLE_NOT_APPROVED": 160,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 72,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 210,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 107,
+        "NON_POSITIVE_VALUE": 160,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 48,
+        "PROVIDER_ZERO_PROBABILITY": 6,
+        "QUALITY_RISK_TRACKING": 32,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 6,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 192,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 6
+      },
+      "unique_fixtures": 4,
+      "value": "200"
+    },
+    {
+      "candidate_rows": 166,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.41566265060240964,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 166,
+      "mean_absolute_ensemble_market_divergence": 0.04336771430840353,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 155,
+        "ENSEMBLE_NOT_APPROVED": 106,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 33,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 118,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 69,
+        "NON_POSITIVE_VALUE": 106,
+        "QUALITY_RISK_TRACKING": 27,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 133,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 5
+      },
+      "unique_fixtures": 2,
+      "value": "240"
+    },
+    {
+      "candidate_rows": 105,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.11428571428571428,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.6761904761904762,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.22857142857142856
+      },
+      "divergence_observations": 105,
+      "mean_absolute_ensemble_market_divergence": 0.10129809659245569,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 87,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 12,
+        "ENSEMBLE_NOT_APPROVED": 73,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 26,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 66,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 71,
+        "NON_POSITIVE_VALUE": 73,
+        "QUALITY_RISK_TRACKING": 6,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 24,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 79,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 24
+      },
+      "unique_fixtures": 2,
+      "value": "243"
+    },
+    {
+      "candidate_rows": 154,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.538961038961039,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 154,
+      "mean_absolute_ensemble_market_divergence": 0.041430811642675765,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 133,
+        "ENSEMBLE_NOT_APPROVED": 95,
+        "FINAL_REVIEW_COMPLETE": 1,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 20,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 112,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 83,
+        "NON_POSITIVE_VALUE": 95,
+        "QUALITY_RISK_TRACKING": 38,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 133,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 7
+      },
+      "unique_fixtures": 2,
+      "value": "244"
+    },
+    {
+      "candidate_rows": 110,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.4818181818181818,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 110,
+      "mean_absolute_ensemble_market_divergence": 0.06591594067263702,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 87,
+        "ENSEMBLE_NOT_APPROVED": 75,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 29,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 80,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 53,
+        "NON_POSITIVE_VALUE": 75,
+        "QUALITY_RISK_TRACKING": 6,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 81,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 7
+      },
+      "unique_fixtures": 2,
+      "value": "281"
+    },
+    {
+      "candidate_rows": 48,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.4166666666666667,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 48,
+      "mean_absolute_ensemble_market_divergence": 0.065686217033789,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 48,
+        "ENSEMBLE_NOT_APPROVED": 28,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 8,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 24,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 20,
+        "NON_POSITIVE_VALUE": 28,
+        "QUALITY_RISK_TRACKING": 12,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 40
+      },
+      "unique_fixtures": 1,
+      "value": "282"
+    },
+    {
+      "candidate_rows": 33,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.09090909090909091,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.48484848484848486,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.12121212121212122
+      },
+      "divergence_observations": 33,
+      "mean_absolute_ensemble_market_divergence": 0.10426556519049403,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 23,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 3,
+        "ENSEMBLE_NOT_APPROVED": 15,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 17,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 24,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 16,
+        "NON_POSITIVE_VALUE": 15,
+        "QUALITY_RISK_TRACKING": 1,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 4,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 16,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 9
+      },
+      "unique_fixtures": 1,
+      "value": "283"
+    },
+    {
+      "candidate_rows": 88,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.09090909090909091,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.6363636363636364,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.18181818181818182
+      },
+      "divergence_observations": 88,
+      "mean_absolute_ensemble_market_divergence": 0.11978509889585955,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 72,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 8,
+        "ENSEMBLE_NOT_APPROVED": 48,
+        "FINAL_REVIEW_COMPLETE": 10,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 30,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 64,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 56,
+        "NON_POSITIVE_VALUE": 48,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 16,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 48,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 24
+      },
+      "unique_fixtures": 1,
+      "value": "284"
+    },
+    {
+      "candidate_rows": 11,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.2727272727272727,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.8181818181818182,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.5454545454545454
+      },
+      "divergence_observations": 11,
+      "mean_absolute_ensemble_market_divergence": 0.26716604784702036,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 7,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 3,
+        "ENSEMBLE_NOT_APPROVED": 6,
+        "FINAL_REVIEW_COMPLETE": 5,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 8,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 9,
+        "NON_POSITIVE_VALUE": 6,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 6,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 6,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 9
+      },
+      "unique_fixtures": 1,
+      "value": "290"
+    },
+    {
+      "candidate_rows": 121,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0743801652892562,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.2396694214876033,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.1322314049586777
+      },
+      "divergence_observations": 121,
+      "mean_absolute_ensemble_market_divergence": 0.04520587657600486,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 110,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 9,
+        "ENSEMBLE_NOT_APPROVED": 92,
+        "FINAL_REVIEW_COMPLETE": 1,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 10,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 115,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 29,
+        "NON_POSITIVE_VALUE": 92,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 88,
+        "QUALITY_RISK_TRACKING": 18,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 16,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 110,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 22
+      },
+      "unique_fixtures": 3,
+      "value": "302"
+    },
+    {
+      "candidate_rows": 77,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.09090909090909091,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 77,
+      "mean_absolute_ensemble_market_divergence": 0.015628594348212503,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 70,
+        "ENSEMBLE_NOT_APPROVED": 69,
+        "FINAL_REVIEW_COMPLETE": 1,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 6,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 56,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 7,
+        "NON_POSITIVE_VALUE": 69,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 56,
+        "QUALITY_RISK_TRACKING": 1,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 70,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 14
+      },
+      "unique_fixtures": 1,
+      "value": "305"
+    },
+    {
+      "candidate_rows": 55,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.18181818181818182,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.6363636363636364,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.36363636363636365
+      },
+      "divergence_observations": 55,
+      "mean_absolute_ensemble_market_divergence": 0.20985654114933425,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 35,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 10,
+        "ENSEMBLE_NOT_APPROVED": 30,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 25,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 55,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 35,
+        "NON_POSITIVE_VALUE": 30,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 20,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 30,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 30
+      },
+      "unique_fixtures": 1,
+      "value": "322"
+    },
+    {
+      "candidate_rows": 59,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.5423728813559322,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 59,
+      "mean_absolute_ensemble_market_divergence": 0.06155441735467239,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 52,
+        "ENSEMBLE_NOT_APPROVED": 43,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 7,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 59,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 32,
+        "NON_POSITIVE_VALUE": 43,
+        "QUALITY_RISK_TRACKING": 7,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 50
+      },
+      "unique_fixtures": 2,
+      "value": "331"
+    },
+    {
+      "candidate_rows": 44,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.09090909090909091,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.45454545454545453,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 44,
+      "mean_absolute_ensemble_market_divergence": 0.13621263241822132,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 28,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 4,
+        "ENSEMBLE_NOT_APPROVED": 24,
+        "FINAL_REVIEW_COMPLETE": 10,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 10,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 32,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 20,
+        "NON_POSITIVE_VALUE": 24,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 24,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 2
+      },
+      "unique_fixtures": 1,
+      "value": "340"
+    },
+    {
+      "candidate_rows": 216,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.5555555555555556,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 216,
+      "mean_absolute_ensemble_market_divergence": 0.06280012984324046,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 185,
+        "ENSEMBLE_NOT_APPROVED": 139,
+        "FINAL_REVIEW_COMPLETE": 10,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 34,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 144,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 120,
+        "NON_POSITIVE_VALUE": 139,
+        "QUALITY_RISK_TRACKING": 33,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 172,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 14
+      },
+      "unique_fixtures": 4,
+      "value": "355"
+    },
+    {
+      "candidate_rows": 88,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.5454545454545454,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 88,
+      "mean_absolute_ensemble_market_divergence": 0.04277885132547587,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 80,
+        "ENSEMBLE_NOT_APPROVED": 49,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 13,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 64,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 48,
+        "NON_POSITIVE_VALUE": 49,
+        "QUALITY_RISK_TRACKING": 26,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 75,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 12
+      },
+      "unique_fixtures": 1,
+      "value": "357"
+    },
+    {
+      "candidate_rows": 88,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.18181818181818182,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 88,
+      "mean_absolute_ensemble_market_divergence": 0.03367025674454261,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 80,
+        "ENSEMBLE_NOT_APPROVED": 65,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 6,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 88,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 16,
+        "NON_POSITIVE_VALUE": 65,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 64,
+        "QUALITY_RISK_TRACKING": 15,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 80,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 3
+      },
+      "unique_fixtures": 1,
+      "value": "387"
+    },
+    {
+      "candidate_rows": 142,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.056338028169014086,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.4859154929577465,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.02112676056338028
+      },
+      "divergence_observations": 142,
+      "mean_absolute_ensemble_market_divergence": 0.07323109733210938,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 124,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 8,
+        "ENSEMBLE_NOT_APPROVED": 86,
+        "FINAL_REVIEW_COMPLETE": 4,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 35,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 103,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 69,
+        "NON_POSITIVE_VALUE": 85,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 18,
+        "PROVIDER_ZERO_PROBABILITY": 3,
+        "QUALITY_RISK_TRACKING": 17,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 3,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 103,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 16
+      },
+      "unique_fixtures": 4,
+      "value": "390"
+    },
+    {
+      "candidate_rows": 7,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.2857142857142857,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 7,
+      "mean_absolute_ensemble_market_divergence": 0.044870739886648844,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 7,
+        "ENSEMBLE_NOT_APPROVED": 5,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 7,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 2,
+        "NON_POSITIVE_VALUE": 5,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 4,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 5
+      },
+      "unique_fixtures": 1,
+      "value": "418"
+    },
+    {
+      "candidate_rows": 14,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.2857142857142857,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 14,
+      "mean_absolute_ensemble_market_divergence": 0.027529848358138865,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 12,
+        "ENSEMBLE_NOT_APPROVED": 11,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 8,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 4,
+        "NON_POSITIVE_VALUE": 11,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 8,
+        "QUALITY_RISK_TRACKING": 1,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 12,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 2
+      },
+      "unique_fixtures": 1,
+      "value": "453"
+    },
+    {
+      "candidate_rows": 587,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.17717206132879046,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 587,
+      "mean_absolute_ensemble_market_divergence": 0.020379848211741346,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 524,
+        "ENSEMBLE_NOT_APPROVED": 455,
+        "FINAL_REVIEW_COMPLETE": 4,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 59,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 422,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 104,
+        "NON_POSITIVE_VALUE": 454,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 422,
+        "QUALITY_RISK_TRACKING": 69,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 524,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 64
+      },
+      "unique_fixtures": 8,
+      "value": "496"
+    },
+    {
+      "candidate_rows": 98,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.16326530612244897,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.6122448979591837,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.32653061224489793
+      },
+      "divergence_observations": 98,
+      "mean_absolute_ensemble_market_divergence": 0.14813002784595744,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 74,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 16,
+        "ENSEMBLE_NOT_APPROVED": 56,
+        "FINAL_REVIEW_COMPLETE": 3,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 27,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 56,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 60,
+        "NON_POSITIVE_VALUE": 56,
+        "QUALITY_RISK_TRACKING": 12,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 32,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 68,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 32
+      },
+      "unique_fixtures": 2,
+      "value": "542"
+    },
+    {
+      "candidate_rows": 34,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.6470588235294118,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 34,
+      "mean_absolute_ensemble_market_divergence": 0.04878133780902204,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 34,
+        "ENSEMBLE_NOT_APPROVED": 23,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 22,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 22,
+        "NON_POSITIVE_VALUE": 23,
+        "QUALITY_RISK_TRACKING": 11,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 34
+      },
+      "unique_fixtures": 1,
+      "value": "567"
+    },
+    {
+      "candidate_rows": 54,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.5555555555555556,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 54,
+      "mean_absolute_ensemble_market_divergence": 0.023531159270441446,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 48,
+        "ENSEMBLE_NOT_APPROVED": 48,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 6,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 36,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 30,
+        "NON_POSITIVE_VALUE": 48,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 48
+      },
+      "unique_fixtures": 1,
+      "value": "585"
+    },
+    {
+      "candidate_rows": 55,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.5454545454545454,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 55,
+      "mean_absolute_ensemble_market_divergence": 0.06585120717298253,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 55,
+        "ENSEMBLE_NOT_APPROVED": 32,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 13,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 40,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 30,
+        "NON_POSITIVE_VALUE": 32,
+        "QUALITY_RISK_TRACKING": 10,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 42
+      },
+      "unique_fixtures": 1,
+      "value": "592"
+    },
+    {
+      "candidate_rows": 119,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.0,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 119,
+      "mean_absolute_ensemble_market_divergence": 0.0,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 119,
+        "ENSEMBLE_NOT_APPROVED": 112,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 119,
+        "NON_POSITIVE_VALUE": 112,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 119,
+        "QUALITY_RISK_TRACKING": 7,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 119
+      },
+      "unique_fixtures": 3,
+      "value": "617"
+    },
+    {
+      "candidate_rows": 35,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.42857142857142855,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.02857142857142857
+      },
+      "divergence_observations": 35,
+      "mean_absolute_ensemble_market_divergence": 0.05922634716638824,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 28,
+        "ENSEMBLE_NOT_APPROVED": 20,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 6,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 35,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 15,
+        "NON_POSITIVE_VALUE": 20,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 14,
+        "QUALITY_RISK_TRACKING": 7,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 1,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 27,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 1
+      },
+      "unique_fixtures": 1,
+      "value": "823"
+    },
+    {
+      "candidate_rows": 11,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.0,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 11,
+      "mean_absolute_ensemble_market_divergence": 9.09090909090909e-30,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 11,
+        "ENSEMBLE_NOT_APPROVED": 10,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 11,
+        "NON_POSITIVE_VALUE": 10,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 11,
+        "QUALITY_RISK_TRACKING": 1,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 11
+      },
+      "unique_fixtures": 1,
+      "value": "863"
+    },
+    {
+      "candidate_rows": 216,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.027777777777777776,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.5277777777777778,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.05555555555555555
+      },
+      "divergence_observations": 216,
+      "mean_absolute_ensemble_market_divergence": 0.08345694810711482,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 198,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 6,
+        "ENSEMBLE_NOT_APPROVED": 127,
+        "FINAL_REVIEW_COMPLETE": 8,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 49,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 144,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 114,
+        "NON_POSITIVE_VALUE": 127,
+        "QUALITY_RISK_TRACKING": 30,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 12,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 157,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 23
+      },
+      "unique_fixtures": 4,
+      "value": "887"
+    },
+    {
+      "candidate_rows": 176,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.3977272727272727,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.03409090909090909
+      },
+      "divergence_observations": 176,
+      "mean_absolute_ensemble_market_divergence": 0.0687585283343599,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 149,
+        "ENSEMBLE_NOT_APPROVED": 110,
+        "FINAL_REVIEW_COMPLETE": 1,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 36,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 146,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 70,
+        "NON_POSITIVE_VALUE": 110,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 48,
+        "PROVIDER_ZERO_PROBABILITY": 6,
+        "QUALITY_RISK_TRACKING": 29,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 6,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 139,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 24
+      },
+      "unique_fixtures": 3,
+      "value": "895"
+    },
+    {
+      "candidate_rows": 137,
+      "dimension": "league",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.24817518248175183,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.0
+      },
+      "divergence_observations": 137,
+      "mean_absolute_ensemble_market_divergence": 0.03012413879756078,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 116,
+        "ENSEMBLE_NOT_APPROVED": 112,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 19,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 74,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 34,
+        "NON_POSITIVE_VALUE": 112,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 74,
+        "QUALITY_RISK_TRACKING": 6,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 118,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 21
+      },
+      "unique_fixtures": 5,
+      "value": "906"
+    },
+    {
+      "candidate_rows": 414,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.024154589371980676,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.7246376811594203,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.04106280193236715
+      },
+      "divergence_observations": 414,
+      "mean_absolute_ensemble_market_divergence": 0.06435738824552338,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 382,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 10,
+        "ENSEMBLE_NOT_APPROVED": 313,
+        "FINAL_REVIEW_COMPLETE": 4,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 33,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 111,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 300,
+        "NON_POSITIVE_VALUE": 313,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 26,
+        "PROVIDER_ZERO_PROBABILITY": 18,
+        "QUALITY_RISK_TRACKING": 64,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 17,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 377,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 92
+      },
+      "unique_fixtures": 77,
+      "value": "AWAY_WIN"
+    },
+    {
+      "candidate_rows": 348,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.07471264367816093,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.12931034482758622,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.07183908045977011
+      },
+      "divergence_observations": 348,
+      "mean_absolute_ensemble_market_divergence": 0.06766270753881341,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 295,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 26,
+        "ENSEMBLE_NOT_APPROVED": 229,
+        "FINAL_REVIEW_COMPLETE": 15,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 70,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 348,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 45,
+        "NON_POSITIVE_VALUE": 229,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 140,
+        "QUALITY_RISK_TRACKING": 34,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 25,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 263,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 29
+      },
+      "unique_fixtures": 71,
+      "value": "BTTS_NO"
+    },
+    {
+      "candidate_rows": 348,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.3448275862068966,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.07183908045977011
+      },
+      "divergence_observations": 348,
+      "mean_absolute_ensemble_market_divergence": 0.06766270753881341,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 343,
+        "ENSEMBLE_NOT_APPROVED": 281,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 25,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 348,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 120,
+        "NON_POSITIVE_VALUE": 281,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 140,
+        "QUALITY_RISK_TRACKING": 42,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 25,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 323,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 29
+      },
+      "unique_fixtures": 71,
+      "value": "BTTS_YES"
+    },
+    {
+      "candidate_rows": 414,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.07971014492753623,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.821256038647343,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.050724637681159424
+      },
+      "divergence_observations": 414,
+      "mean_absolute_ensemble_market_divergence": 0.0844385756067728,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 144,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 33,
+        "ENSEMBLE_NOT_APPROVED": 67,
+        "FINAL_REVIEW_COMPLETE": 32,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 247,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 111,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 340,
+        "NON_POSITIVE_VALUE": 67,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 26,
+        "QUALITY_RISK_TRACKING": 68,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 21,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 135,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 99
+      },
+      "unique_fixtures": 77,
+      "value": "DRAW"
+    },
+    {
+      "candidate_rows": 414,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.012077294685990338,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.4323671497584541,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.050724637681159424
+      },
+      "divergence_observations": 414,
+      "mean_absolute_ensemble_market_divergence": 0.07395732666742647,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 390,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 5,
+        "ENSEMBLE_NOT_APPROVED": 367,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 32,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 111,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 179,
+        "NON_POSITIVE_VALUE": 367,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 26,
+        "PROVIDER_ZERO_PROBABILITY": 6,
+        "QUALITY_RISK_TRACKING": 13,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 21,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 380,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 119
+      },
+      "unique_fixtures": 77,
+      "value": "HOME_WIN"
+    },
+    {
+      "candidate_rows": 301,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.023255813953488372,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.023255813953488372
+      },
+      "divergence_observations": 301,
+      "mean_absolute_ensemble_market_divergence": 0.04450206001264334,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 1,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 1,
+        "ENSEMBLE_EDGE_BELOW_0_04": 294,
+        "ENSEMBLE_NOT_APPROVED": 251,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 37,
+        "FIXTURE_REFRESH_REQUIRED": 1,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 301,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 7,
+        "NON_POSITIVE_VALUE": 251,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 125,
+        "QUALITY_RISK_TRACKING": 12,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 7,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 263,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 12
+      },
+      "unique_fixtures": 59,
+      "value": "OVER_1_5"
+    },
+    {
+      "candidate_rows": 407,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.012285012285012284,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.29975429975429974,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.06142506142506143
+      },
+      "divergence_observations": 407,
+      "mean_absolute_ensemble_market_divergence": 0.0544374867681717,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 1,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 1,
+        "ENSEMBLE_EDGE_BELOW_0_04": 385,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 5,
+        "ENSEMBLE_NOT_APPROVED": 311,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 65,
+        "FIXTURE_REFRESH_REQUIRED": 1,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 407,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 122,
+        "NON_POSITIVE_VALUE": 311,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 179,
+        "QUALITY_RISK_TRACKING": 30,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 25,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 341,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 26
+      },
+      "unique_fixtures": 76,
+      "value": "OVER_2_5"
+    },
+    {
+      "candidate_rows": 266,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.018796992481203006,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.48120300751879697,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.03007518796992481
+      },
+      "divergence_observations": 266,
+      "mean_absolute_ensemble_market_divergence": 0.03810584573382046,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 246,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 5,
+        "ENSEMBLE_NOT_APPROVED": 161,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 42,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 266,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 128,
+        "NON_POSITIVE_VALUE": 161,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 136,
+        "QUALITY_RISK_TRACKING": 63,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 8,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 224,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 9
+      },
+      "unique_fixtures": 55,
+      "value": "OVER_3_5"
+    },
+    {
+      "candidate_rows": 301,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.036544850498338874,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.5514950166112956,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.023255813953488372
+      },
+      "divergence_observations": 301,
+      "mean_absolute_ensemble_market_divergence": 0.04450206001264334,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 283,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 11,
+        "ENSEMBLE_NOT_APPROVED": 163,
+        "FINAL_REVIEW_COMPLETE": 9,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 44,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 301,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 166,
+        "NON_POSITIVE_VALUE": 163,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 125,
+        "QUALITY_RISK_TRACKING": 85,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 7,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 248,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 12
+      },
+      "unique_fixtures": 59,
+      "value": "UNDER_1_5"
+    },
+    {
+      "candidate_rows": 407,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.04914004914004914,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.1769041769041769,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.06142506142506143
+      },
+      "divergence_observations": 407,
+      "mean_absolute_ensemble_market_divergence": 0.0544374867681717,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 380,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 20,
+        "ENSEMBLE_NOT_APPROVED": 291,
+        "FINAL_REVIEW_COMPLETE": 14,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 55,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 407,
+        "MARKET_REVIEW_TERMINAL": 2,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 72,
+        "NON_POSITIVE_VALUE": 289,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 179,
+        "QUALITY_RISK_TRACKING": 47,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 25,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 338,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 26
+      },
+      "unique_fixtures": 76,
+      "value": "UNDER_2_5"
+    },
+    {
+      "candidate_rows": 266,
+      "dimension": "market",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.011278195488721804,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.03007518796992481,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.03007518796992481
+      },
+      "divergence_observations": 266,
+      "mean_absolute_ensemble_market_divergence": 0.03810584573382046,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 260,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 3,
+        "ENSEMBLE_NOT_APPROVED": 223,
+        "FINAL_REVIEW_COMPLETE": 8,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 14,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 266,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 8,
+        "NON_POSITIVE_VALUE": 223,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 136,
+        "QUALITY_RISK_TRACKING": 21,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 8,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 244,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 9
+      },
+      "unique_fixtures": 55,
+      "value": "UNDER_3_5"
+    },
+    {
+      "candidate_rows": 24,
+      "dimension": "model_generation",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1.0,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.625
+      },
+      "divergence_observations": 24,
+      "mean_absolute_ensemble_market_divergence": 0.23466984709084718,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 24,
+        "ENSEMBLE_NOT_APPROVED": 24,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 24,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 24,
+        "NON_POSITIVE_VALUE": 24,
+        "PROVIDER_ZERO_PROBABILITY": 24,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 15,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 24,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 15
+      },
+      "unique_fixtures": 5,
+      "value": "LAB_V2_DETERMINISTIC_ENSEMBLE:LAB_COMPETITION_POLICY_V2"
+    },
+    {
+      "candidate_rows": 3862,
+      "dimension": "model_generation",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.030554117037804248,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.37881926462972554,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.04505437597099948
+      },
+      "divergence_observations": 3862,
+      "mean_absolute_ensemble_market_divergence": 0.058274390129283926,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 3378,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 118,
+        "ENSEMBLE_NOT_APPROVED": 2633,
+        "FINAL_REVIEW_COMPLETE": 84,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 664,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 2953,
+        "MARKET_REVIEW_TERMINAL": 2,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1463,
+        "NON_POSITIVE_VALUE": 2631,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 1238,
+        "QUALITY_RISK_TRACKING": 479,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 174,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 3112,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 447
+      },
+      "unique_fixtures": 77,
+      "value": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a"
+    },
+    {
+      "candidate_rows": 1601,
+      "dimension": "model_probability",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.007495315427857589,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.7201748906933166,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.05434103685196752
+      },
+      "divergence_observations": 1601,
+      "mean_absolute_ensemble_market_divergence": 0.06840678065894751,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 1337,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 12,
+        "ENSEMBLE_NOT_APPROVED": 1022,
+        "FINAL_REVIEW_COMPLETE": 30,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 259,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 934,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1153,
+        "NON_POSITIVE_VALUE": 1022,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 343,
+        "PROVIDER_ZERO_PROBABILITY": 24,
+        "QUALITY_RISK_TRACKING": 290,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 87,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 1312,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 269
+      },
+      "unique_fixtures": 77,
+      "value": "[0,0.4)"
+    },
+    {
+      "candidate_rows": 752,
+      "dimension": "model_probability",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.017287234042553192,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.29521276595744683,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.03324468085106383
+      },
+      "divergence_observations": 752,
+      "mean_absolute_ensemble_market_divergence": 0.04583721511727526,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 1,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 1,
+        "ENSEMBLE_EDGE_BELOW_0_04": 702,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 13,
+        "ENSEMBLE_NOT_APPROVED": 589,
+        "FINAL_REVIEW_COMPLETE": 7,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 91,
+        "FIXTURE_REFRESH_REQUIRED": 1,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 636,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 222,
+        "NON_POSITIVE_VALUE": 588,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 290,
+        "QUALITY_RISK_TRACKING": 64,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 25,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 653,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 56
+      },
+      "unique_fixtures": 72,
+      "value": "[0.4,0.5)"
+    },
+    {
+      "candidate_rows": 754,
+      "dimension": "model_probability",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.042440318302387266,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.05968169761273209,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.022546419098143235
+      },
+      "divergence_observations": 754,
+      "mean_absolute_ensemble_market_divergence": 0.04524144684127625,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 697,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 32,
+        "ENSEMBLE_NOT_APPROVED": 552,
+        "FINAL_REVIEW_COMPLETE": 12,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 121,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 639,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 45,
+        "NON_POSITIVE_VALUE": 551,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 308,
+        "QUALITY_RISK_TRACKING": 69,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 17,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 621,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 59
+      },
+      "unique_fixtures": 71,
+      "value": "[0.5,0.6)"
+    },
+    {
+      "candidate_rows": 369,
+      "dimension": "model_probability",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.037940379403794036,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.04878048780487805,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.03523035230352303
+      },
+      "divergence_observations": 369,
+      "mean_absolute_ensemble_market_divergence": 0.055503932611312756,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 329,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 14,
+        "ENSEMBLE_NOT_APPROVED": 245,
+        "FINAL_REVIEW_COMPLETE": 11,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 78,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 360,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 18,
+        "NON_POSITIVE_VALUE": 245,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 151,
+        "QUALITY_RISK_TRACKING": 35,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 13,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 280,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 22
+      },
+      "unique_fixtures": 56,
+      "value": "[0.6,0.7)"
+    },
+    {
+      "candidate_rows": 297,
+      "dimension": "model_probability",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.04377104377104377,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.050505050505050504,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.04377104377104377
+      },
+      "divergence_observations": 297,
+      "mean_absolute_ensemble_market_divergence": 0.054468396888806545,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 1,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 1,
+        "ENSEMBLE_EDGE_BELOW_0_04": 266,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 13,
+        "ENSEMBLE_NOT_APPROVED": 206,
+        "FINAL_REVIEW_COMPLETE": 11,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 67,
+        "FIXTURE_REFRESH_REQUIRED": 1,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 295,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 15,
+        "NON_POSITIVE_VALUE": 206,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 119,
+        "QUALITY_RISK_TRACKING": 12,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 13,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 218,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 16
+      },
+      "unique_fixtures": 46,
+      "value": "[0.7,0.8)"
+    },
+    {
+      "candidate_rows": 100,
+      "dimension": "model_probability",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.26,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.26,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.26
+      },
+      "divergence_observations": 100,
+      "mean_absolute_ensemble_market_divergence": 0.12869932834670966,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 66,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 26,
+        "ENSEMBLE_NOT_APPROVED": 43,
+        "FINAL_REVIEW_COMPLETE": 8,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 40,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 100,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 26,
+        "NON_POSITIVE_VALUE": 43,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 27,
+        "QUALITY_RISK_TRACKING": 9,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 26,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 52,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 31
+      },
+      "unique_fixtures": 20,
+      "value": "[0.8,0.9)"
+    },
+    {
+      "candidate_rows": 13,
+      "dimension": "model_probability",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.6153846153846154,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.6153846153846154,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.6153846153846154
+      },
+      "divergence_observations": 13,
+      "mean_absolute_ensemble_market_divergence": 0.23529851105890048,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 5,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 8,
+        "FINAL_REVIEW_COMPLETE": 5,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 8,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 13,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 8,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 8,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 9
+      },
+      "unique_fixtures": 3,
+      "value": "[0.9,inf)"
+    },
+    {
+      "candidate_rows": 240,
+      "dimension": "odds",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.08333333333333333,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.05416666666666667
+      },
+      "divergence_observations": 240,
+      "mean_absolute_ensemble_market_divergence": 0.04197564693324576,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 240,
+        "ENSEMBLE_NOT_APPROVED": 219,
+        "FINAL_REVIEW_COMPLETE": 3,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 9,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 233,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 20,
+        "NON_POSITIVE_VALUE": 219,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 119,
+        "QUALITY_RISK_TRACKING": 9,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 13,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 228,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 21
+      },
+      "unique_fixtures": 49,
+      "value": "[0,1.3)"
+    },
+    {
+      "candidate_rows": 346,
+      "dimension": "odds",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.02023121387283237,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.07225433526011561,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.049132947976878616
+      },
+      "divergence_observations": 346,
+      "mean_absolute_ensemble_market_divergence": 0.06127839357131331,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 1,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 1,
+        "ENSEMBLE_EDGE_BELOW_0_04": 332,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 7,
+        "ENSEMBLE_NOT_APPROVED": 285,
+        "FINAL_REVIEW_COMPLETE": 3,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 30,
+        "FIXTURE_REFRESH_REQUIRED": 1,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 323,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 25,
+        "NON_POSITIVE_VALUE": 285,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 124,
+        "QUALITY_RISK_TRACKING": 27,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 17,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 312,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 41
+      },
+      "unique_fixtures": 64,
+      "value": "[1.3,1.5)"
+    },
+    {
+      "candidate_rows": 491,
+      "dimension": "odds",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.018329938900203666,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.11608961303462322,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.06517311608961303
+      },
+      "divergence_observations": 491,
+      "mean_absolute_ensemble_market_divergence": 0.06898373284249472,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 463,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 9,
+        "ENSEMBLE_NOT_APPROVED": 384,
+        "FINAL_REVIEW_COMPLETE": 15,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 72,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 401,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 57,
+        "NON_POSITIVE_VALUE": 384,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 169,
+        "QUALITY_RISK_TRACKING": 20,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 32,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 404,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 62
+      },
+      "unique_fixtures": 60,
+      "value": "[1.5,1.7)"
+    },
+    {
+      "candidate_rows": 639,
+      "dimension": "odds",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.026604068857589983,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.07355242566510173,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.04538341158059468
+      },
+      "divergence_observations": 639,
+      "mean_absolute_ensemble_market_divergence": 0.05198066197492752,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 603,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 17,
+        "ENSEMBLE_NOT_APPROVED": 514,
+        "FINAL_REVIEW_COMPLETE": 6,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 66,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 578,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 47,
+        "NON_POSITIVE_VALUE": 513,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 266,
+        "QUALITY_RISK_TRACKING": 53,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 29,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 567,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 38
+      },
+      "unique_fixtures": 58,
+      "value": "[1.7,2)"
+    },
+    {
+      "candidate_rows": 1060,
+      "dimension": "odds",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.03018867924528302,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.5009433962264151,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.05188679245283019
+      },
+      "divergence_observations": 1060,
+      "mean_absolute_ensemble_market_divergence": 0.06246600191027256,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 1,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 1,
+        "ENSEMBLE_EDGE_BELOW_0_04": 977,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 32,
+        "ENSEMBLE_NOT_APPROVED": 738,
+        "FINAL_REVIEW_COMPLETE": 20,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 173,
+        "FIXTURE_REFRESH_REQUIRED": 1,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 874,
+        "MARKET_REVIEW_TERMINAL": 1,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 531,
+        "NON_POSITIVE_VALUE": 737,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 309,
+        "PROVIDER_ZERO_PROBABILITY": 3,
+        "QUALITY_RISK_TRACKING": 128,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 55,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 866,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 103
+      },
+      "unique_fixtures": 76,
+      "value": "[2,3)"
+    },
+    {
+      "candidate_rows": 845,
+      "dimension": "odds",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.040236686390532544,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.6994082840236686,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.04142011834319527
+      },
+      "divergence_observations": 845,
+      "mean_absolute_ensemble_market_divergence": 0.06079265218780613,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 576,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 34,
+        "ENSEMBLE_NOT_APPROVED": 371,
+        "FINAL_REVIEW_COMPLETE": 27,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 264,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 433,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 591,
+        "NON_POSITIVE_VALUE": 371,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 202,
+        "PROVIDER_ZERO_PROBABILITY": 12,
+        "QUALITY_RISK_TRACKING": 183,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 35,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 554,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 156
+      },
+      "unique_fixtures": 74,
+      "value": "[3,5)"
+    },
+    {
+      "candidate_rows": 265,
+      "dimension": "odds",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.07169811320754717,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.8150943396226416,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.03018867924528302
+      },
+      "divergence_observations": 265,
+      "mean_absolute_ensemble_market_divergence": 0.05562597214563318,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 211,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 19,
+        "ENSEMBLE_NOT_APPROVED": 146,
+        "FINAL_REVIEW_COMPLETE": 10,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 50,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 135,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 216,
+        "NON_POSITIVE_VALUE": 146,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 49,
+        "PROVIDER_ZERO_PROBABILITY": 9,
+        "QUALITY_RISK_TRACKING": 59,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 8,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 205,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 41
+      },
+      "unique_fixtures": 41,
+      "value": "[5,inf)"
+    },
+    {
+      "candidate_rows": 324,
+      "dimension": "odds_age",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.037037037037037035,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.3734567901234568,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.06790123456790123
+      },
+      "divergence_observations": 324,
+      "mean_absolute_ensemble_market_divergence": 0.062358248541806154,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 278,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 12,
+        "ENSEMBLE_NOT_APPROVED": 217,
+        "FINAL_REVIEW_COMPLETE": 5,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 59,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 246,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 121,
+        "NON_POSITIVE_VALUE": 217,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 113,
+        "PROVIDER_ZERO_PROBABILITY": 2,
+        "QUALITY_RISK_TRACKING": 43,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 22,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 260,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 42
+      },
+      "unique_fixtures": 35,
+      "value": "[1800,3600)"
+    },
+    {
+      "candidate_rows": 68,
+      "dimension": "odds_age",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.014705882352941176,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.29411764705882354,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.029411764705882353
+      },
+      "divergence_observations": 68,
+      "mean_absolute_ensemble_market_divergence": 0.03144759515946596,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 61,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 1,
+        "ENSEMBLE_NOT_APPROVED": 53,
+        "FINAL_REVIEW_COMPLETE": 5,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 59,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 20,
+        "NON_POSITIVE_VALUE": 53,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 36,
+        "QUALITY_RISK_TRACKING": 8,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 2,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 61,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 6
+      },
+      "unique_fixtures": 8,
+      "value": "[300,900)"
+    },
+    {
+      "candidate_rows": 3447,
+      "dimension": "odds_age",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.029881055990716564,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.38410211778357994,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.04641717435451117
+      },
+      "divergence_observations": 3447,
+      "mean_absolute_ensemble_market_divergence": 0.05937251850035517,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 3023,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 103,
+        "ENSEMBLE_NOT_APPROVED": 2360,
+        "FINAL_REVIEW_COMPLETE": 68,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 599,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 2634,
+        "MARKET_REVIEW_TERMINAL": 2,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1324,
+        "NON_POSITIVE_VALUE": 2358,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 1079,
+        "PROVIDER_ZERO_PROBABILITY": 22,
+        "QUALITY_RISK_TRACKING": 418,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 160,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 2778,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 403
+      },
+      "unique_fixtures": 76,
+      "value": "[3600,14400)"
+    },
+    {
+      "candidate_rows": 9,
+      "dimension": "odds_age",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.2222222222222222,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.7777777777777778,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.4444444444444444
+      },
+      "divergence_observations": 9,
+      "mean_absolute_ensemble_market_divergence": 0.2208914112571253,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 5,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 2,
+        "ENSEMBLE_NOT_APPROVED": 5,
+        "FINAL_REVIEW_COMPLETE": 4,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 6,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 7,
+        "NON_POSITIVE_VALUE": 5,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 4,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 5,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 8
+      },
+      "unique_fixtures": 1,
+      "value": "[60,300)"
+    },
+    {
+      "candidate_rows": 38,
+      "dimension": "odds_age",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.0,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.39473684210526316,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.02631578947368421
+      },
+      "divergence_observations": 38,
+      "mean_absolute_ensemble_market_divergence": 0.04474126418546254,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 35,
+        "ENSEMBLE_NOT_APPROVED": 22,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 4,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 32,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 15,
+        "NON_POSITIVE_VALUE": 22,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 10,
+        "QUALITY_RISK_TRACKING": 10,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 1,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 32,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 3
+      },
+      "unique_fixtures": 4,
+      "value": "[900,1800)"
+    },
+    {
+      "candidate_rows": 3598,
+      "dimension": "provider_completeness",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.03001667593107282,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.39466370205669815,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.04697053918843802
+      },
+      "divergence_observations": 3598,
+      "mean_absolute_ensemble_market_divergence": 0.05989826309681373,
+      "reason_counts": {
+        "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 2,
+        "CURRENT_ODDS_REFRESH_REQUIRED": 2,
+        "ENSEMBLE_EDGE_BELOW_0_04": 3141,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 108,
+        "ENSEMBLE_NOT_APPROVED": 2418,
+        "FINAL_REVIEW_COMPLETE": 82,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 632,
+        "FIXTURE_REFRESH_REQUIRED": 2,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 2689,
+        "MARKET_REVIEW_TERMINAL": 2,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 1420,
+        "NON_POSITIVE_VALUE": 2416,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 1064,
+        "PROVIDER_ZERO_PROBABILITY": 24,
+        "QUALITY_RISK_TRACKING": 464,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 169,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 2882,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 432
+      },
+      "unique_fixtures": 69,
+      "value": "QUOTE_AND_API_PREDICTION"
+    },
+    {
+      "candidate_rows": 288,
+      "dimension": "provider_completeness",
+      "disagreement_rates": {
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 0.034722222222222224,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 0.2326388888888889,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 0.06944444444444445
+      },
+      "divergence_observations": 288,
+      "mean_absolute_ensemble_market_divergence": 0.05268687634423283,
+      "reason_counts": {
+        "ENSEMBLE_EDGE_BELOW_0_04": 261,
+        "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 10,
+        "ENSEMBLE_NOT_APPROVED": 239,
+        "FINAL_REVIEW_COMPLETE": 2,
+        "FINAL_REVIEW_WINDOW_NOT_OPEN": 32,
+        "INSUFFICIENT_INDEPENDENT_SIGNALS": 288,
+        "MATERIAL_SIGNAL_DISAGREEMENT": 67,
+        "NON_POSITIVE_VALUE": 239,
+        "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 174,
+        "QUALITY_RISK_TRACKING": 15,
+        "SEVERE_MODEL_MARKET_CONTRADICTION": 20,
+        "VALUE_BELOW_PROFILE_THRESHOLD": 254,
+        "WEIGHTED_AGREEMENT_BELOW_0_65": 30
+      },
+      "unique_fixtures": 8,
+      "value": "QUOTE_WITHOUT_API_PREDICTION"
+    }
+  ],
+  "selection_effect": "NONE",
+  "version": "PREMATCH_DISAGREEMENT_ASSOCIATION_V2"
+}
