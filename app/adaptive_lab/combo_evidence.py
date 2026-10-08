@@ -7,12 +7,12 @@ joint-probability model. No runtime publisher, training or activation hook.
 from collections import Counter, defaultdict
 from datetime import datetime
 from decimal import Decimal
-from statistics import mean
+from statistics import mean, median
 
 from .contracts import digest, utc
-from .performance import band, finite, probability_metrics
+from .performance import band, finite, probability_metrics, timing
 
-VERSION = "LAB_COMBO_COUPON_EVIDENCE_V1"
+VERSION = "LAB_COMBO_COUPON_EVIDENCE_V2"
 DOUBLE_COHORT = "COMBO_DOUBLE_20261006_V1"
 
 
@@ -61,7 +61,36 @@ def coupon_rows(ledger: object, *, now: datetime) -> tuple[list[dict], dict]:
             odds = finite(leg.get("captured_odds", leg.get("odds")))
             if odds is not None and odds <= 1:
                 odds = None
+            leg_id = leg.get("observation_id") or leg.get("candidate_id")
+            leg_result = ledger.get("leg_result", leg_id) if leg_id else None
+            if leg_result and not _before(leg_result.get("retrieved_at_utc"), now):
+                leg_result = None  # Future append must not change a fixed-cutoff report.
+            if leg_result and (str(leg_result.get("fixture_id")) != str(leg.get("fixture_id"))
+                               or leg_result.get("market") != leg.get("market")):
+                leg_result = None
+                diagnostics["UNBOUND_LEG_RESULT"] += 1
+            if leg_result is None and settlement:
+                leg_result = next((r for r in settlement.get("legs", [])
+                                   if r.get("observation_id") == leg_id
+                                   and str(r.get("fixture_id")) == str(leg.get("fixture_id"))
+                                   and r.get("market") == leg.get("market")
+                                   and _before(r.get("retrieved_at_utc"), now)), None)
+            findings = sorted(set(leg.get("soft_findings") or [])
+                              | set(leg.get("hard_failures") or [])
+                              | set(leg.get("rejection_reasons") or []))
             legs.append({
+                "candidate_id": leg.get("candidate_id"), "observation_id": leg_id,
+                "home_team_id": leg.get("home_team_id"), "away_team_id": leg.get("away_team_id"),
+                "outcome": (leg_result or {}).get("outcome", "UNKNOWN"),
+                "result_fingerprint": digest(leg_result) if leg_result else None,
+                "findings": findings,
+                "signal_independence_groups": sorted({str(s.get("independence_group")) for s in leg.get("signals", [])
+                                                     if s.get("independence_group")}),
+                "market_fair_probability": _text(finite(leg.get("market_fair_probability"))),
+                "expected_value": _text(finite(leg.get("expected_value"))),
+                "weighted_agreement": _text(finite(leg.get("weighted_agreement"))),
+                "context_quality": leg.get("readiness_lane"),
+                **timing(leg, selected_at=publication),
                 "fixture_id": leg.get("fixture_id"), "market": leg.get("market"),
                 "league_id": leg.get("league_id"), "competition": leg.get("competition_profile"),
                 "model_probability": _text(probability) if valid_probability else None,
@@ -129,10 +158,20 @@ def summarize_coupons(rows: list[dict]) -> dict:
              if (p := finite(r["naive_joint_probability"])) is not None and 0 < p < 1
              and 0 < float(p) < 1]
     probabilities = [float(p) for r in rows if (p := finite(r["naive_joint_probability"])) is not None]
+    odds = [finite(r.get("combined_odds")) for r in rows]
+    odds = [v for v in odds if v is not None and v > 1]
+    streak = maximum = 0
+    for row in sorted(rows, key=lambda r: (r["published_at"], r["prediction_id"])):
+        streak = streak + 1 if row["status"] == "LOST" else 0
+        maximum = max(maximum, streak)
     scores = probability_metrics(pairs)
     scores["coupon_probability_observations"] = scores.pop("probability_observations")
     return {
         "published": len(rows), "settled": len(settled), "pending": counts["PENDING"],
+        "average_combined_odds": _text(sum(odds, Decimal(0))/len(odds)) if odds else None,
+        "median_combined_odds": _text(median(odds)) if odds else None,
+        "maximum_known_losing_streak_publication_order": maximum,
+        "evidence_status": "DESCRIPTIVE_ONLY" if binary else "INSUFFICIENT_EVIDENCE",
         **{k: counts[k] for k in ("WON", "LOST", "VOID", "PARTIAL_VOID")},
         "partial_void_count": sum(r["partial_void"] for r in settled),
         "flat_unit_pnl": _text(pnl),
@@ -163,7 +202,8 @@ def coupon_report(ledger: object, *, now: datetime) -> dict:
         "segments": [{"cohort": c, "dimension": d, "value": v, **summarize_coupons(sample)}
                      for (c, d, v), sample in sorted(groups.items())],
         "source_evidence_fingerprint": digest([[r["prediction_id"], r["source_prediction_fingerprint"],
-                                               r["source_settlement_fingerprint"], r["published_at"]] for r in rows]),
+                                               r["source_settlement_fingerprint"], r["published_at"],
+                                               [l["result_fingerprint"] for l in r["legs"]]] for r in rows]),
         "limitations": [
             "Naive joint estimates assume independence; correlation screening is not a probability adjustment.",
             "Frozen ensemble estimates may be market-inclusive and are not proven calibrated model probabilities.",

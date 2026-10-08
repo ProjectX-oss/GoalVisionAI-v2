@@ -1,6 +1,7 @@
 """Bounded explicit LIVE scan/refresh/settlement; injected provider and shared quota."""
 from __future__ import annotations
 from datetime import datetime
+from time import perf_counter
 from typing import Callable
 from app.adaptive_lab.contracts import digest, utc
 from app.adaptive_lab.quota import SharedQuota
@@ -13,19 +14,55 @@ from .service import LiveService
 
 class LiveRunner:
     def __init__(self, service: LiveService, client: object, quota: SharedQuota, *,
-                 clock: Callable[[],datetime]) -> None:
+                 clock: Callable[[],datetime], diagnostic_sink: Callable[[dict],None] | None = None) -> None:
         self.service,self.client,self.quota,self.clock=service,client,quota,clock
+        self.diagnostic_sink = diagnostic_sink
+        self.diagnostic_sink_failures = 0
         self._catalog = None
         self._histories = {}
         quota.bind(client,clock)
 
+    def _emit(self, value: dict) -> None:
+        # Explicit research observer only. Default production construction is unchanged.
+        if self.diagnostic_sink is None:
+            return
+        try:
+            self.diagnostic_sink(value)
+        except Exception:
+            self.diagnostic_sink_failures += 1
+
+    async def _call(self, category: str, function: Callable, *args, **kwargs):
+        if self.diagnostic_sink is None:
+            return await self.quota.call(category, function, *args, **kwargs)
+        from .research import provider_evidence
+        started = self.clock()
+        tick = perf_counter()
+        try:
+            result = await self.quota.call(category, function, *args, **kwargs)
+        except Exception as exc:
+            self._emit({"version":"LIVE_DIAGNOSTICS_V1","category":category,
+                        "operation":getattr(function,"__name__","UNKNOWN_OPERATION"),"started_at":utc(started).isoformat(),
+                        "client_call_elapsed_seconds":max(0.,perf_counter()-tick),
+                        "status":"FAILED","error_type":type(exc).__name__})
+            raise
+        try:
+            evidence = provider_evidence(result)
+        except Exception:
+            evidence = {"status":"DIAGNOSTIC_PAYLOAD_UNAVAILABLE"}
+        self._emit({"version":"LIVE_DIAGNOSTICS_V1","category":category,
+                    "operation":getattr(function,"__name__","UNKNOWN_OPERATION"),"started_at":utc(started).isoformat(),
+                    "completed_at":utc(self.clock()).isoformat(),
+                    "client_call_elapsed_seconds":max(0.,perf_counter()-tick),
+                    "status":"RETURNED","evidence":evidence})
+        return result
+
     async def refresh(self, fixture_id: int) -> tuple[dict,list[dict],dict]:
-        payload=await self.quota.call('LIVE_REFRESH',self.client.fixture,fixture_id)
+        payload=await self._call('LIVE_REFRESH',self.client.fixture,fixture_id)
         rows=payload.get('response')
         if payload.get('errors') or not isinstance(rows,list) or len(rows)!=1 or rows[0].get('fixture',{}).get('id')!=fixture_id:
             raise ValueError('LIVE_FIXTURE_UNAVAILABLE')
         state=state_snapshot(rows[0],retrieved_at=self.clock())
-        events=await self.quota.call('LIVE_STATE',self.client.events,fixture_id)
+        events=await self._call('LIVE_STATE',self.client.events,fixture_id)
         state=attach_events(state,events,retrieved_at=self.clock())
         # Existing client/cache governs requests; no historical bookmaker prices.
         home=await self._history(state['home_team_id'])
@@ -36,16 +73,23 @@ class LiveRunner:
         away={'response':away} if isinstance(away,list) else away
         rates=history_rates(state,home,away,retrieved_at=self.clock())
         catalog=await self._live_catalog()
-        odds=await self.quota.call('LIVE_REFRESH',self.client.live_odds,fixture_id)
+        odds=await self._call('LIVE_REFRESH',self.client.live_odds,fixture_id)
         quotes,reasons=normalize_quotes(odds,state,catalog,retrieved_at=self.clock(),
                                         allow_provider_feed=self.service.allow_provider_feed)
+        if self.diagnostic_sink is not None:
+            from .research import provider_evidence
+            try:
+                self._emit({"version":"LIVE_DIAGNOSTICS_V1","stage":"STATE_QUOTE_ALIGNMENT",
+                            "fixture_id":fixture_id,"evidence":provider_evidence(odds,state=state)})
+            except Exception:
+                self.diagnostic_sink_failures += 1
         if reasons:
             self._diagnostic(fixture_id,reasons)
         return state,quotes,rates
 
     async def _live_catalog(self) -> dict:
         if self._catalog is None:
-            payload = await self.quota.call('LIVE_ODDS', self.client.live_bets)
+            payload = await self._call('LIVE_ODDS', self.client.live_bets)
             if payload.get('errors') or not isinstance(payload.get('response'), list):
                 raise ValueError('LIVE_MARKET_CATALOG_REQUIRED')
             self._catalog = {**payload, 'endpoint': '/odds/live/bets'}
@@ -54,7 +98,7 @@ class LiveRunner:
     async def _history(self, team_id: int) -> object:
         # Per-cycle immutable finished-match context, never cached odds/state/events.
         if team_id not in self._histories:
-            self._histories[team_id] = await self.quota.call('LIVE_STATE', self.client.last_matches, team_id, last=10)
+            self._histories[team_id] = await self._call('LIVE_STATE', self.client.last_matches, team_id, last=10)
         return self._histories[team_id]
 
     async def scan(self) -> dict:
@@ -65,7 +109,7 @@ class LiveRunner:
             return {'status':'LIVE_DISCOVERY_WINDOW_CLOSED','candidates':[]}
 
         try:
-            payload=await self.quota.call('LIVE_STATE',self.client.live_fixtures)
+            payload=await self._call('LIVE_STATE',self.client.live_fixtures)
             if payload.get('errors'):
                 raise ValueError('LIVE_DISCOVERY_UNAVAILABLE')
             rows=payload.get('response') or []
@@ -73,7 +117,7 @@ class LiveRunner:
             if self.service.allow_provider_feed and rows:
                 # Cheap coverage/status filter; quote-age policy is explicit and logged.
                 # This does not replace the exact final refresh before publication.
-                feed=await self.quota.call('LIVE_ODDS',self.client.live_odds)
+                feed=await self._call('LIVE_ODDS',self.client.live_odds)
                 if feed.get('errors') or not isinstance(feed.get('response'),list):
                     raise ValueError('LIVE_ODDS_PROVIDER_UNAVAILABLE')
                 counters['live_odds_rows']=len(feed['response'])
@@ -129,7 +173,7 @@ class LiveRunner:
                 if fid not in cache:
                     if len(cache)>=POLICY.max_fixtures_per_scan:
                         break
-                    cache[fid]=await self.quota.call('LIVE_SETTLEMENT',self.client.fixture,fid)
+                    cache[fid]=await self._call('LIVE_SETTLEMENT',self.client.fixture,fid)
                 if self.service.settle(identity,cache[fid],now=self.clock()):
                     completed.append(identity)
             except Exception:
@@ -147,7 +191,7 @@ class LiveRunner:
                 if fid not in cache:
                     if len(cache)>=POLICY.max_fixtures_per_scan:
                         break
-                    cache[fid]=await self.quota.call('LIVE_SETTLEMENT',self.client.fixture,fid)
+                    cache[fid]=await self._call('LIVE_SETTLEMENT',self.client.fixture,fid)
                 self.service.governance.settle_shadow_result(pred['prediction_id'],cache[fid],now=self.clock())
             except Exception:
                 self._diagnostic(fid,['SHADOW_SETTLEMENT_UNAVAILABLE'])
