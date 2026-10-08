@@ -1,0 +1,44 @@
+{
+  "checksum_entries": 8,
+  "checksums": "PASS",
+  "deployment_performed": false,
+  "entrypoint_sha256": "6fa2863ffa87f781713aa17870c9e242c7a5e51cea6a1f04829800f5e28fad2a",
+  "installed_base_preserved": "/opt/goalvision-live-evening-4f547cf-20261007",
+  "live_scope": "LIVE_ONLY",
+  "manual_provider_calls": 0,
+  "official_changes": 0,
+  "overlays": {
+    "app/adaptive_lab/daypart.py": "d34cd8173e75c2dcfd684398891d9a7f3d550d22b51f7b41a119b6b4691d0049",
+    "app/adaptive_lab/worker.py": "bf2ef8e1489e57ca11e64fe6852a19566cce6c115ead74bb60c26379b8950c19",
+    "app/live_lab/engine.py": "fcea9133d5acb936c16ad5d4d9586867e70abc3443bd77f3d78b166574d4e8d6",
+    "app/live_lab/runner.py": "100729d1c1b9d5b6f98e1bcaed4798e02315ee404f3d1a1f19bcbd059550577c",
+    "app/live_lab/service.py": "77fcb051f6cf6942e298507b63c45a0740f62735724d85477e0e249e8acb6c68"
+  },
+  "package": "/home/arvis/goalvision-operations/live-quote-age-42a441f-20261008",
+  "package_metadata_sha256": "b427d0322210f4d634163c3fdc2826ab1ce3fdc07d0c3561b49a861cbb3c9dae",
+  "preflight": [
+    "LIVE_QUOTE_AGE_PLAN_VALIDATED=/opt/goalvision-live-quote-age-42a441f-20261008",
+    "current_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS",
+    "ROOT_GUARD=CHECKED_AT_APPLY"
+  ],
+  "runtime_file_count": 857,
+  "smoke": {
+    "incremental_plan_sha256": "25ad0030ae657748bf8af4c595a8e68d64be835d787e26d91bfa17fd8841dd3c",
+    "modules": 576,
+    "plan_fingerprint": "9166353de416c8eeee67fae84c1980f619f8e5ed0c56e6d421df0d0646eaa9f6",
+    "protocol_fingerprint": "2beb92ca977016a49edf9d4d67afb199cea3102794313808fc7dd1d57ddba7ce",
+    "provider_calls": 0,
+    "quote_age_mode": "DIAGNOSTIC_ONLY",
+    "registry_fingerprint": "d6eaac4992fe5a15d80869f62cc75e2aff50a7401f45074e34f303c79906f8d2",
+    "status": "ISOLATED_LIVE_QUOTE_AGE_PASS",
+    "telegram_sends": 0
+  },
+  "source_commit": "42a441fa14690a1bb04cc1177b2c4fea37ede693",
+  "target": "/opt/goalvision-live-quote-age-42a441f-20261008",
+  "telegram_test_sends": 0,
+  "tests": {
+    "network": "DENIED",
+    "passed": 114,
+    "seconds": 10.22
+  }
+}

@@ -86,3 +86,16 @@ eligible_feed_fixtures may exceed fresh_feed_fixtures; quote age alone is not a
 blocker. No forced pick, provider test, Telegram test or existing-pick resend.
 PREMATCH/COMBO/research/ADMIN routes, timer schedules, champion and Official remain
 unchanged. ADMIN Codex remains disabled.
+
+
+## Prepared package proof
+
+Source commit: 42a441fa14690a1bb04cc1177b2c4fea37ede693.
+Package: /home/arvis/goalvision-operations/live-quote-age-42a441f-20261008.
+857 application files, five overlays, eight package checksum entries verified.
+Isolated import smoke: 576 modules PASS, network denied.
+Pinned wrapper read-only preflight: PASS, current_mode=BASE.
+Target release and new override do not exist: deployment NOT performed.
+See docs/evidence/live_quote_age_package_20261008.json for exact hashes and proof.
+The next natural cycle after operator apply determines actual available candidates;
+this package does not trigger a manual cycle or promise a publication.
