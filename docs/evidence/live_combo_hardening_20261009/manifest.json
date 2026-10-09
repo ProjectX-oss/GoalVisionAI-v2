@@ -1,0 +1,89 @@
+{
+  "as_of": "2026-10-09T10:15:18.755867+00:00",
+  "branch": "research/live-combo-accuracy-hardening-20261009",
+  "files": {
+    "TASKS.md": {
+      "bytes": 135337,
+      "sha256": "8f1e8923e81643ce5055bf4b0aca2a01224b46f8cd453413c86cdfea5c3b7a24"
+    },
+    "docs/evidence/live_combo_hardening_20261009/HANDOFF.json": {
+      "bytes": 65827,
+      "sha256": "5b7c40a0a008e632b6045772dd26e36e81dd889476e082231b23a7d5ecb3a1be"
+    },
+    "docs/evidence/live_combo_hardening_20261009/current/combo.json": {
+      "bytes": 2419546,
+      "sha256": "be87b657a6de366b5bc0399f99d65ec1cd970538957dcad1b09bdf9e7d1a5e4b"
+    },
+    "docs/evidence/live_combo_hardening_20261009/current/live.json": {
+      "bytes": 859812,
+      "sha256": "3925377f944c9e07b84ee0656f0ad412a917ea155dc353682576cb246f42ebe4"
+    },
+    "docs/evidence/live_combo_hardening_20261009/current/replay.json": {
+      "bytes": 17946296,
+      "sha256": "448c80bd9266948c6c2a8bbb55c1c3d75decf068bcbc07abf78db19bb71d62cf"
+    },
+    "docs/evidence/live_combo_hardening_20261009/dc_forward.json": {
+      "bytes": 636769,
+      "sha256": "68ad1f886a5ab4ad98b098ae9b4a063a6891fe4a2d6600a35b6da058f9c0c384"
+    },
+    "docs/evidence/live_combo_hardening_20261009/external_research.json": {
+      "bytes": 3148,
+      "sha256": "37c266b5b33f15015c441786fc6a8c5b11d733025038f97585d398790e93bc94"
+    },
+    "docs/evidence/live_combo_hardening_20261009/hardening_reviewed.json": {
+      "bytes": 3733119,
+      "sha256": "a7e57ea9c013d4e877c023d3b44a504043a535eaeadff61a6ce6d64db4c4ce01"
+    },
+    "docs/evidence/live_combo_hardening_20261009/learning/learning_champion.json": {
+      "bytes": 11768,
+      "sha256": "b7143ae4b3f74bc9c889bfe084fa49e9685c22c4509e5971b9f80df83ec72984"
+    },
+    "docs/evidence/live_combo_hardening_20261009/learning/performance.json": {
+      "bytes": 886259,
+      "sha256": "d5580749014a0034df2bdc986d2c970a264b9deda25472b2fac8e9d0f3863a0c"
+    },
+    "docs/evidence/live_combo_hardening_20261009/live_postmortem.json": {
+      "bytes": 92357,
+      "sha256": "34778e5c51a1e40202e52ebfe322bfe7c8b8140cd133ccf0c4272c4983aafa72"
+    },
+    "docs/evidence/live_combo_hardening_20261009/prematch/combo_calibration.json": {
+      "bytes": 1481550,
+      "sha256": "c5f6ceaea6615e116004a268922975f7ea42966a978f096320200c7386767c61"
+    },
+    "docs/evidence/live_combo_hardening_20261009/prematch/disagreement.json": {
+      "bytes": 183963,
+      "sha256": "a04efc475c932afae8676533d65d2c24115fa21c5fc9dcfc41f35fa931009d75"
+    },
+    "docs/evidence/live_combo_hardening_20261009/prematch/odds_yield.json": {
+      "bytes": 734085,
+      "sha256": "1e3ae0b62b3a1c83006dd94cf1b1d7abd23e9ffd2abfcd81b9eb903fe6286c71"
+    },
+    "docs/evidence/live_combo_hardening_20261009/repository_release.json": {
+      "bytes": 1317,
+      "sha256": "238977d00a8a405882e98f8e83a41de53d29c69f1362edc35e88bd7e4933768f"
+    },
+    "docs/evidence/live_combo_hardening_20261009/runtime/candidates.json": {
+      "bytes": 2767,
+      "sha256": "1d26c426af3776a9baa4f26c08cafd157a852e432d0bb7f7ceaa78715f25b21e"
+    },
+    "docs/evidence/live_combo_hardening_20261009/runtime/journals.json": {
+      "bytes": 2168,
+      "sha256": "8d3bc85844560d14d1403c59dc9440d81598bc0eb82a82109b063722eaa426cf"
+    },
+    "docs/evidence/live_combo_hardening_20261009/runtime/runtime.json": {
+      "bytes": 37540,
+      "sha256": "35ab5aa7e8aad01631703e36b6d19b6fc16777a3cd509febc35d4c110715ab0d"
+    },
+    "docs/evidence/live_combo_hardening_20261009/validation.json": {
+      "bytes": 51953,
+      "sha256": "7d630fad2865a744cccdab05f423fedef048d09370dbb027824989450a1ce4a2"
+    },
+    "docs/operations/GOALVISION_LIVE_COMBO_ACCURACY_HARDENING_V1.md": {
+      "bytes": 31634,
+      "sha256": "5343c83f298f9d8249ec6e8752853189afcb21abc5b15ad5ac26c164e255c64a"
+    }
+  },
+  "self_hash_excluded": true,
+  "source_commit": "5de7c646f3823d4abd39254703739a31278a2863",
+  "version": "LIVE_COMBO_HARDENING_FILE_MANIFEST_V1"
+}

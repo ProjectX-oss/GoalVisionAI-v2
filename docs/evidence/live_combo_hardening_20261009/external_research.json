@@ -1,0 +1,71 @@
+{
+  "as_of": "2026-10-09T10:15:18.755867+00:00",
+  "copied_source_code": false,
+  "data_downloads": 0,
+  "fingerprint": "433e671ebdc827903e9500faf86f9d671817c9477cdaa85fba82eba6ce0c5493",
+  "new_dependencies": [],
+  "new_subscriptions": 0,
+  "provider_calls": 0,
+  "sources": [
+    {
+      "finding": "Context-dependent scoring intensity; empirical card effect is population-specific, not a transferable constant.",
+      "kind": "primary paper",
+      "url": "https://arxiv.org/abs/2312.04338"
+    },
+    {
+      "finding": "R replication/data/scripts; MOSEK academic-license dependency; no repository license identified in inspected root.",
+      "kind": "author replication",
+      "url": "https://github.com/luizfgnmaia/football-dynamic-regressors"
+    },
+    {
+      "finding": "Disjoint calibration data; isotonic overfits small samples; reliability and proper scores are different diagnostics.",
+      "kind": "official documentation",
+      "url": "https://scikit-learn.org/stable/modules/calibration.html"
+    },
+    {
+      "finding": "BSD-3-Clause; no source copied.",
+      "kind": "official license",
+      "url": "https://github.com/scikit-learn/scikit-learn/blob/main/COPYING"
+    },
+    {
+      "finding": "Chronological training/test separation; retain GoalVision fixture purge and frozen windows.",
+      "kind": "official documentation",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html"
+    },
+    {
+      "finding": "Historical cross_val_predict/time-series partition caveat; not a claim of a current GoalVision bug.",
+      "kind": "primary issue discussion",
+      "url": "https://github.com/scikit-learn/scikit-learn/issues/8043"
+    },
+    {
+      "finding": "MIT; reproducible goal/de-vig methods; no GoalVision-specific out-of-sample gain shown.",
+      "kind": "primary repository",
+      "url": "https://github.com/martineastwood/penaltyblog"
+    },
+    {
+      "finding": "Multiplicative/Shin/Power and explicit method metadata; existing GoalVision implementation reused.",
+      "kind": "official documentation",
+      "url": "https://penaltyblog.readthedocs.io/en/latest/implied/implied.html"
+    },
+    {
+      "finding": "Selected event/lineup datasets, attribution terms; not a free live xG feed for current VPS fixtures; no data downloaded.",
+      "kind": "primary data repository",
+      "url": "https://github.com/hudl/open-data"
+    },
+    {
+      "finding": "Accumulator optimization is not evidence that marginal probabilities or dependencies are correct.",
+      "kind": "primary paper",
+      "url": "https://arxiv.org/abs/2004.08607"
+    },
+    {
+      "finding": "Small-sample calibration discussion; not reproducible evidence or an implementation source.",
+      "kind": "forum anecdote",
+      "url": "https://www.reddit.com/r/algobetting/comments/1qm5fyz/advice/"
+    },
+    {
+      "finding": "Joint-probability/correlation discussion; no verified coefficient or strategy imported.",
+      "kind": "forum anecdote",
+      "url": "https://www.reddit.com/r/algobetting/comments/1pqwuqj/calculating_odds_for_single_game_parlay/"
+    }
+  ]
+}

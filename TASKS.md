@@ -1,3 +1,18 @@
+## 2026-10-09 — LIVE / COMBO accuracy hardening (isolated research)
+
+- [x] Verify installed 60–70% / EV-off LIVE release and enabled natural timer; preserve 143 systemd file hashes and all 220 preexisting main-checkout status lines.
+- [x] Read-only fixed-cutoff audit: 9 old LIVE publications / 7 fixtures; 199 COMBO coupons / 195 settled; calibration 299 independent fixtures and still-open frozen window.
+- [x] Add zero-card venue/competition LIVE context ablation, same-snapshot A/B/C policy screens and exact pinned joint-scenario integration. No production callers or fitted coefficients.
+- [x] Repair offline COMBO replay SQLite deadline: close bounded source transaction before expensive selector computation; actual 24-cycle replay now completes.
+- [x] 737 focused/adjacent tests PASS with outbound transports denied; four fixed-cutoff JSON exports reproduce byte-for-byte.
+- [x] Reviewed source commit 5de7c646f3823d4abd39254703739a31278a2863 pushed only to research/live-combo-accuracy-hardening-20261009.
+- [ ] Natural-cycle prospective new LIVE cohort; exact initial/final phase and HTTP latency evidence needs a separately reviewed operator release.
+- [ ] Calibration research only after minimum 300 independent fixtures AND frozen fit-window close; no validation/holdout fit or promotion.
+- [ ] Fitted red-card effects, verified LIVE calibration, calibrated C ranker and empirical COMBO joint artifact remain blocked by data/evidence, not declared complete.
+- Report: docs/operations/GOALVISION_LIVE_COMBO_ACCURACY_HARDENING_V1.md.
+- Machine-readable evidence: docs/evidence/live_combo_hardening_20261009/HANDOFF.json and manifest.json.
+- Production deployment/provider calls/Telegram sends/Official/champion changes: NONE / 0. LIVE unchanged.
+
 ## 2026-10-09 — LIVE probability 60–70%; EV selection disabled
 
 - [x] User authorized inclusive 60–70% existing model probability and removal of EV eligibility/ranking for LIVE only.

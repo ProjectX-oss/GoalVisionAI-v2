@@ -1,0 +1,36 @@
+{
+  "as_of": "2026-10-09T10:15:18.755867+00:00",
+  "automatic_training_promotion_rollback": false,
+  "bankroll_changes": 0,
+  "base_commit": "94d81625ad8a9c1e0353a1a93850db5033ce1459",
+  "branch": "research/live-combo-accuracy-hardening-20261009",
+  "champion_changes": 0,
+  "live_configuration_changed": false,
+  "live_release": "/opt/goalvision-live-probability-band-bfe6d40-20261009",
+  "live_timer_after": {
+    "active": "active",
+    "enabled": "enabled"
+  },
+  "live_timer_before": {
+    "active": "active",
+    "enabled": "enabled"
+  },
+  "main_checkout": {
+    "branch": "codex/lab-v2-global-overhaul-2026-09-17",
+    "head": "fadd59d7d9492133f84d9d80c9a72dad14c57c67",
+    "preexisting_dirty_status_lines": 220,
+    "status_preserved": true,
+    "status_sha256": "7d4c11b48b60f1c12cca10af5356ce94b751c226f46b15e7a4ed691fc7d6e6c1"
+  },
+  "official_changes": 0,
+  "prematch_environment_release": "/opt/goalvision-live-evening-4f547cf-20261007",
+  "production_deployments": 0,
+  "protected_systemd_file_count": 143,
+  "protected_systemd_hashes_unchanged": true,
+  "provider_calls_initiated": 0,
+  "source_commit": "5de7c646f3823d4abd39254703739a31278a2863",
+  "source_push": "PASS",
+  "source_remote_commit": "5de7c646f3823d4abd39254703739a31278a2863",
+  "telegram_calls_initiated": 0,
+  "telegram_sends": 0
+}

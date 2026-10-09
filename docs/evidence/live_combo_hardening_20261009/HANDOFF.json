@@ -1,0 +1,1931 @@
+{
+  "as_of": "2026-10-09T10:15:18.755867+00:00",
+  "byte_identical_replays": {
+    "combo.json": true,
+    "hardening_reviewed.json": true,
+    "live.json": true,
+    "replay.json": true
+  },
+  "calibration_readiness": {
+    "dataset_fingerprint": "437cc88bf101222b9dbf426e10a9d5442d9ceb855060c21cb7dca72f7ee831d2",
+    "fit_close_riga": "2026-10-10T03:00:00+03:00",
+    "fit_invoked": false,
+    "independent_fixtures": 299,
+    "minimum_independent_fixtures": 300,
+    "sealed_holdout_count": 0,
+    "status": "NOT_READY",
+    "validation_count": 0,
+    "window_closed": false
+  },
+  "champion": {
+    "artifact_id": "bootstrap-artifact-694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d",
+    "created_at": "2026-09-18T19:53:42.075830+00:00",
+    "evidence": {
+      "artifact_fingerprint": "694ab4cc98179ddb0bb2e62d9d77a01c0fee5f3e6d3eff28f9e240e34f929f8d"
+    },
+    "generation_id": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+    "previous_generation": null,
+    "reason": "BOOTSTRAP",
+    "scope": "LAB_ONLY",
+    "stream": "PREMATCH"
+  },
+  "combo_cohorts": {
+    "COMBO_AGREEMENT_20261004_V1": {
+      "LOST": 15,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 5,
+      "average_combined_odds": "3.1213241",
+      "binary_missing_probability": 0,
+      "brier": 0.19696307862753495,
+      "calibration_bias_predicted_minus_observed": 0.01240597729020958,
+      "coupon_probability_observations": 20,
+      "ece": 0.07411545578117487,
+      "evidence_status": "DESCRIPTIVE_ONLY",
+      "flat_roi": -0.199607,
+      "flat_unit_pnl": "-3.992140",
+      "log_loss": 0.5875994769564292,
+      "maximum_known_losing_streak_publication_order": 6,
+      "mce": 0.3085473924548264,
+      "mean_predicted_joint_published": 0.2624059772902096,
+      "mean_predicted_joint_scored": 0.2624059772902096,
+      "median_combined_odds": "2.973164",
+      "model_learning_observations": 0,
+      "observed_hit_rate": 0.25,
+      "partial_void_count": 0,
+      "pending": 0,
+      "published": 20,
+      "reliability_bins": [
+        {
+          "error": -0.3085473924548264,
+          "lower": 0.1,
+          "n": 2,
+          "observed": 0.5,
+          "predicted": 0.19145260754517363,
+          "upper": 0.2
+        },
+        {
+          "error": 0.00029791306120202643,
+          "lower": 0.2,
+          "n": 12,
+          "observed": 0.25,
+          "predicted": 0.250297913061202,
+          "upper": 0.3
+        },
+        {
+          "error": 0.1436065623299034,
+          "lower": 0.3,
+          "n": 6,
+          "observed": 0.16666666666666666,
+          "predicted": 0.31027322899657006,
+          "upper": 0.4
+        }
+      ],
+      "settled": 20,
+      "unscorable_float_extreme_probability": 0
+    },
+    "COMBO_DOUBLE_20261006_V1": {
+      "LOST": 0,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 0,
+      "average_combined_odds": null,
+      "binary_missing_probability": 0,
+      "brier": null,
+      "calibration_bias_predicted_minus_observed": null,
+      "coupon_probability_observations": 0,
+      "ece": null,
+      "evidence_status": "INSUFFICIENT_EVIDENCE",
+      "flat_roi": null,
+      "flat_unit_pnl": "0",
+      "log_loss": null,
+      "maximum_known_losing_streak_publication_order": 0,
+      "mce": null,
+      "mean_predicted_joint_published": null,
+      "mean_predicted_joint_scored": null,
+      "median_combined_odds": null,
+      "model_learning_observations": 0,
+      "observed_hit_rate": null,
+      "partial_void_count": 0,
+      "pending": 0,
+      "published": 0,
+      "reliability_bins": [],
+      "settled": 0,
+      "unscorable_float_extreme_probability": 0
+    },
+    "COMBO_MARKET_20261004_V1": {
+      "LOST": 29,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 10,
+      "average_combined_odds": "2.770761692307692307692307692",
+      "binary_missing_probability": 0,
+      "brier": 0.19710954301675834,
+      "calibration_bias_predicted_minus_observed": 0.033644479152486126,
+      "coupon_probability_observations": 39,
+      "ece": 0.11740882799679946,
+      "evidence_status": "DESCRIPTIVE_ONLY",
+      "flat_roi": -0.2698713846153846,
+      "flat_unit_pnl": "-10.524984",
+      "log_loss": 0.5834754758262163,
+      "maximum_known_losing_streak_publication_order": 7,
+      "mce": 0.19681230943921502,
+      "mean_predicted_joint_published": 0.2900547355627425,
+      "mean_predicted_joint_scored": 0.2900547355627425,
+      "median_combined_odds": "2.627660",
+      "model_learning_observations": 0,
+      "observed_hit_rate": 0.2564102564102564,
+      "partial_void_count": 0,
+      "pending": 0,
+      "published": 39,
+      "reliability_bins": [
+        {
+          "error": 0.1901671572620591,
+          "lower": 0.1,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.1901671572620591,
+          "upper": 0.2
+        },
+        {
+          "error": -0.0680585334360046,
+          "lower": 0.2,
+          "n": 24,
+          "observed": 0.3333333333333333,
+          "predicted": 0.2652747998973287,
+          "upper": 0.3
+        },
+        {
+          "error": 0.19681230943921502,
+          "lower": 0.3,
+          "n": 14,
+          "observed": 0.14285714285714285,
+          "predicted": 0.33966945229635787,
+          "upper": 0.4
+        }
+      ],
+      "settled": 39,
+      "unscorable_float_extreme_probability": 0
+    },
+    "LAB_COMBO_ACCURACY_FROM_SINGLES_V1": {
+      "LOST": 34,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 32,
+      "average_combined_odds": "2.060419176470588235294117647",
+      "binary_missing_probability": 0,
+      "brier": 0.23177378964222797,
+      "calibration_bias_predicted_minus_observed": -0.03501820224845823,
+      "coupon_probability_observations": 66,
+      "ece": 0.10819530120739995,
+      "evidence_status": "DESCRIPTIVE_ONLY",
+      "flat_roi": -0.09460434848484849,
+      "flat_unit_pnl": "-6.243887",
+      "log_loss": 0.6546728613720716,
+      "maximum_known_losing_streak_publication_order": 4,
+      "mce": 0.7285910608445785,
+      "mean_predicted_joint_published": 0.4502265224441754,
+      "mean_predicted_joint_scored": 0.4498302826000266,
+      "median_combined_odds": "1.716072",
+      "model_learning_observations": 0,
+      "observed_hit_rate": 0.48484848484848486,
+      "partial_void_count": 0,
+      "pending": 2,
+      "published": 68,
+      "reliability_bins": [
+        {
+          "error": 0.17534819701179055,
+          "lower": 0.1,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.17534819701179055,
+          "upper": 0.2
+        },
+        {
+          "error": 0.07111944972219358,
+          "lower": 0.2,
+          "n": 11,
+          "observed": 0.18181818181818182,
+          "predicted": 0.2529376315403754,
+          "upper": 0.3
+        },
+        {
+          "error": -0.13289085052405897,
+          "lower": 0.3,
+          "n": 17,
+          "observed": 0.47058823529411764,
+          "predicted": 0.3376973847700587,
+          "upper": 0.4
+        },
+        {
+          "error": -0.04299671936676169,
+          "lower": 0.4,
+          "n": 6,
+          "observed": 0.5,
+          "predicted": 0.4570032806332383,
+          "upper": 0.5
+        },
+        {
+          "error": -0.007697132127005957,
+          "lower": 0.5,
+          "n": 18,
+          "observed": 0.5555555555555556,
+          "predicted": 0.5478584234285496,
+          "upper": 0.6
+        },
+        {
+          "error": -0.18821567824069463,
+          "lower": 0.6,
+          "n": 11,
+          "observed": 0.8181818181818182,
+          "predicted": 0.6299661399411236,
+          "upper": 0.7
+        },
+        {
+          "error": 0.7285910608445785,
+          "lower": 0.7,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.7285910608445785,
+          "upper": 0.8
+        }
+      ],
+      "settled": 66,
+      "unscorable_float_extreme_probability": 0
+    },
+    "LAB_COMBO_ACCURACY_FROM_SINGLES_V2_LEG_MIN_ODDS_130": {
+      "LOST": 30,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 21,
+      "average_combined_odds": "2.780715320754716981132075472",
+      "binary_missing_probability": 0,
+      "brier": 0.2563371973033508,
+      "calibration_bias_predicted_minus_observed": -0.09378929931229521,
+      "coupon_probability_observations": 51,
+      "ece": 0.11565437425508052,
+      "evidence_status": "DESCRIPTIVE_ONLY",
+      "flat_roi": 0.09770858823529412,
+      "flat_unit_pnl": "4.983138",
+      "log_loss": 0.7094209504723054,
+      "maximum_known_losing_streak_publication_order": 6,
+      "mce": 0.8005473193842036,
+      "mean_predicted_joint_published": 0.3180082286823414,
+      "mean_predicted_joint_scored": 0.31797540657005774,
+      "median_combined_odds": "2.699136",
+      "model_learning_observations": 0,
+      "observed_hit_rate": 0.4117647058823529,
+      "partial_void_count": 0,
+      "pending": 2,
+      "published": 53,
+      "reliability_bins": [
+        {
+          "error": -0.8005473193842036,
+          "lower": 0.1,
+          "n": 1,
+          "observed": 1,
+          "predicted": 0.1994526806157963,
+          "upper": 0.2
+        },
+        {
+          "error": -0.045694810597580515,
+          "lower": 0.2,
+          "n": 19,
+          "observed": 0.3157894736842105,
+          "predicted": 0.27009466308663,
+          "upper": 0.3
+        },
+        {
+          "error": -0.1059758141152769,
+          "lower": 0.3,
+          "n": 29,
+          "observed": 0.4482758620689655,
+          "predicted": 0.3423000479536886,
+          "upper": 0.4
+        },
+        {
+          "error": -0.5987663458868173,
+          "lower": 0.4,
+          "n": 1,
+          "observed": 1,
+          "predicted": 0.40123365411318274,
+          "upper": 0.5
+        },
+        {
+          "error": 0.5575594110410252,
+          "lower": 0.5,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.5575594110410252,
+          "upper": 0.6
+        }
+      ],
+      "settled": 51,
+      "unscorable_float_extreme_probability": 0
+    },
+    "LEGACY_COMBO": {
+      "LOST": 18,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 1,
+      "average_combined_odds": "72.22578794736842105263157895",
+      "binary_missing_probability": 0,
+      "brier": 0.05382547642754549,
+      "calibration_bias_predicted_minus_observed": 0.062009037951911115,
+      "coupon_probability_observations": 19,
+      "ece": 0.06200903795191113,
+      "evidence_status": "DESCRIPTIVE_ONLY",
+      "flat_roi": -0.2933117894736842,
+      "flat_unit_pnl": "-5.572924",
+      "log_loss": 0.2165212956375874,
+      "maximum_known_losing_streak_publication_order": 9,
+      "mce": 0.24447067949344875,
+      "mean_predicted_joint_published": 0.11464061689927954,
+      "mean_predicted_joint_scored": 0.11464061689927954,
+      "median_combined_odds": "39.212580",
+      "model_learning_observations": 0,
+      "observed_hit_rate": 0.05263157894736842,
+      "partial_void_count": 0,
+      "pending": 0,
+      "published": 19,
+      "reliability_bins": [
+        {
+          "error": 0.06719273054291953,
+          "lower": 0.0,
+          "n": 9,
+          "observed": 0,
+          "predicted": 0.06719273054291953,
+          "upper": 0.1
+        },
+        {
+          "error": 0.01056197340164225,
+          "lower": 0.1,
+          "n": 8,
+          "observed": 0.125,
+          "predicted": 0.13556197340164225,
+          "upper": 0.2
+        },
+        {
+          "error": 0.24447067949344875,
+          "lower": 0.2,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.24447067949344875,
+          "upper": 0.3
+        }
+      ],
+      "settled": 19,
+      "unscorable_float_extreme_probability": 0
+    }
+  },
+  "combo_offline_replay_summaries": {
+    "A_CURRENT_DOUBLE": {
+      "LOST": 0,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 0,
+      "average_combined_odds": null,
+      "binary_missing_probability": 0,
+      "brier": null,
+      "calibration_bias_predicted_minus_observed": null,
+      "candidate_count": 18430,
+      "coupon_probability_observations": 0,
+      "ece": null,
+      "evidence_status": "INSUFFICIENT_EVIDENCE",
+      "flat_roi": null,
+      "flat_unit_pnl": "0",
+      "log_loss": null,
+      "maximum_known_losing_streak_publication_order": 0,
+      "mce": null,
+      "mean_predicted_joint_published": null,
+      "mean_predicted_joint_scored": null,
+      "median_combined_odds": null,
+      "model_learning_observations": 0,
+      "no_pick_cycles": 24,
+      "observed_hit_rate": null,
+      "partial_void_count": 0,
+      "pending": 0,
+      "published": 0,
+      "reliability_bins": [],
+      "selected": 0,
+      "settled": 0,
+      "unscorable_float_extreme_probability": 0
+    },
+    "B_SINGLES_BASED_V2": {
+      "LOST": 10,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 1,
+      "average_combined_odds": "2.762364742857142857142857143",
+      "binary_missing_probability": 0,
+      "brier": 0.12419265407543512,
+      "calibration_bias_predicted_minus_observed": 0.17361812401080387,
+      "candidate_count": 18430,
+      "coupon_probability_observations": 11,
+      "ece": 0.1736181240108039,
+      "evidence_status": "DESCRIPTIVE_ONLY",
+      "flat_roi": -0.6346181818181819,
+      "flat_unit_pnl": "-6.980800",
+      "log_loss": 0.42709280304644487,
+      "maximum_known_losing_streak_publication_order": 9,
+      "mce": 0.3216089006169949,
+      "mean_predicted_joint_published": 0.31470794392583584,
+      "mean_predicted_joint_scored": 0.2645272149198948,
+      "median_combined_odds": "2.663424",
+      "model_learning_observations": 0,
+      "no_pick_cycles": 11,
+      "observed_hit_rate": 0.09090909090909091,
+      "partial_void_count": 0,
+      "pending": 24,
+      "published": 35,
+      "reliability_bins": [
+        {
+          "error": 0.1822992431599571,
+          "lower": 0.1,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.1822992431599571,
+          "upper": 0.2
+        },
+        {
+          "error": 0.0735107530818177,
+          "lower": 0.2,
+          "n": 6,
+          "observed": 0.16666666666666666,
+          "predicted": 0.24017741974848436,
+          "upper": 0.3
+        },
+        {
+          "error": 0.3216089006169949,
+          "lower": 0.3,
+          "n": 4,
+          "observed": 0,
+          "predicted": 0.3216089006169949,
+          "upper": 0.4
+        }
+      ],
+      "selected": 35,
+      "settled": 11,
+      "unscorable_float_extreme_probability": 0
+    },
+    "C_QUALITY_VALUE_FIRST": {
+      "LOST": 0,
+      "PARTIAL_VOID": 0,
+      "VOID": 0,
+      "WON": 0,
+      "average_combined_odds": null,
+      "binary_missing_probability": 0,
+      "brier": null,
+      "calibration_bias_predicted_minus_observed": null,
+      "candidate_count": 18430,
+      "coupon_probability_observations": 0,
+      "ece": null,
+      "evidence_status": "INSUFFICIENT_EVIDENCE",
+      "flat_roi": null,
+      "flat_unit_pnl": "0",
+      "log_loss": null,
+      "maximum_known_losing_streak_publication_order": 0,
+      "mce": null,
+      "mean_predicted_joint_published": null,
+      "mean_predicted_joint_scored": null,
+      "median_combined_odds": null,
+      "model_learning_observations": 0,
+      "no_pick_cycles": 24,
+      "observed_hit_rate": null,
+      "partial_void_count": 0,
+      "pending": 0,
+      "published": 0,
+      "reliability_bins": [],
+      "selected": 0,
+      "settled": 0,
+      "unscorable_float_extreme_probability": 0
+    }
+  },
+  "combo_overall": {
+    "LOST": 126,
+    "PARTIAL_VOID": 0,
+    "VOID": 0,
+    "WON": 69,
+    "average_combined_odds": "9.197299371859296482412060302",
+    "binary_missing_probability": 0,
+    "brier": 0.2103563332368491,
+    "calibration_bias_predicted_minus_observed": -0.022338613638399164,
+    "coupon_probability_observations": 195,
+    "ece": 0.04778402624691559,
+    "evidence_status": "DESCRIPTIVE_ONLY",
+    "flat_roi": -0.10949126666666667,
+    "flat_unit_pnl": "-21.350797",
+    "log_loss": 0.6051811027595357,
+    "maximum_known_losing_streak_publication_order": 13,
+    "mce": 0.7285910608445785,
+    "mean_predicted_joint_published": 0.3327048522623391,
+    "mean_predicted_joint_scored": 0.3315075402077547,
+    "median_combined_odds": "2.627100",
+    "model_learning_observations": 0,
+    "observed_hit_rate": 0.35384615384615387,
+    "partial_void_count": 0,
+    "pending": 4,
+    "published": 199,
+    "reliability_bins": [
+      {
+        "error": 0.06719273054291953,
+        "lower": 0.0,
+        "n": 9,
+        "observed": 0,
+        "predicted": 0.06719273054291953,
+        "upper": 0.1
+      },
+      {
+        "error": -0.07443315098514378,
+        "lower": 0.1,
+        "n": 13,
+        "observed": 0.23076923076923078,
+        "predicted": 0.156336079784087,
+        "upper": 0.2
+      },
+      {
+        "error": -0.018040822664010137,
+        "lower": 0.2,
+        "n": 68,
+        "observed": 0.27941176470588236,
+        "predicted": 0.2613709420418722,
+        "upper": 0.3
+      },
+      {
+        "error": -0.025991384274600016,
+        "lower": 0.3,
+        "n": 66,
+        "observed": 0.36363636363636365,
+        "predicted": 0.33764497936176363,
+        "upper": 0.4
+      },
+      {
+        "error": -0.12239238029819816,
+        "lower": 0.4,
+        "n": 7,
+        "observed": 0.5714285714285714,
+        "predicted": 0.44903619113037324,
+        "upper": 0.5
+      },
+      {
+        "error": 0.022053212250258913,
+        "lower": 0.5,
+        "n": 19,
+        "observed": 0.5263157894736842,
+        "predicted": 0.5483690017239431,
+        "upper": 0.6
+      },
+      {
+        "error": -0.18821567824069463,
+        "lower": 0.6,
+        "n": 11,
+        "observed": 0.8181818181818182,
+        "predicted": 0.6299661399411236,
+        "upper": 0.7
+      },
+      {
+        "error": 0.7285910608445785,
+        "lower": 0.7,
+        "n": 2,
+        "observed": 0,
+        "predicted": 0.7285910608445785,
+        "upper": 0.8
+      }
+    ],
+    "settled": 195,
+    "unscorable_float_extreme_probability": 0
+  },
+  "combo_ranking_status": "BLOCKED_NONPAIRED_COHORTS_AND_INSUFFICIENT_FORWARD_EVIDENCE",
+  "conclusion": "Improve auditable current data, independent calibration and comparable selection first; no proven need or incremental gain for a new model.",
+  "governance_counts": {
+    "activation_events": 1,
+    "candidate_comparisons": 0,
+    "holdout_results": 0,
+    "learning_cycles": 3,
+    "model_artifacts": 59,
+    "promotion_gates": 0,
+    "rollback_events": 0,
+    "shadow_predictions": 0,
+    "shadow_runs": 0,
+    "shadow_settlements": 0,
+    "training_runs": 133,
+    "validation_results": 0
+  },
+  "learning": {
+    "eligibility": {
+      "automatic_eligible": false,
+      "cycle_due": true,
+      "days_covered": 21,
+      "new_resolved": 1358,
+      "next_threshold": {
+        "calendar_days": 90,
+        "resolved": 500
+      },
+      "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+      "policy_version": "LAB_ADAPTIVE_V2",
+      "reason": "RESEARCH_ELIGIBLE",
+      "research_due": true,
+      "resolved": 2872,
+      "stage": "CHALLENGER_RESEARCH",
+      "status": "RESEARCH_ELIGIBLE",
+      "stream": "PREMATCH"
+    },
+    "independent_resolved_fixtures": 1166,
+    "resolved_eligible_observations": 2872,
+    "source_product_counts": {
+      "COMBO_LEG": 12,
+      "SHADOW": 2373,
+      "SINGLE": 500
+    },
+    "total_observations": 2885
+  },
+  "limits": [
+    "No fitted red-card effect; card-affected V2 inference refused.",
+    "V2 paired resolved sample zero; no proven accuracy improvement.",
+    "LIVE snapshot nominations are not prospective executed bets or exact natural-cycle replay.",
+    "No verified LIVE calibrator or COMBO joint artifact; C remains a no-pick evidence screen.",
+    "COMBO cohorts differ in populations and have insufficient independent clusters for ranking.",
+    "No production API request, Telegram call, deployment, timer or policy change."
+  ],
+  "live_actual_cohorts": {
+    "LEGACY_EV_FIRST": {
+      "average_odds": "8.979888888888888888888888889",
+      "flat_pnl": "-7.556",
+      "flat_roi": "-0.8395555555555555555555555556",
+      "independent_fixtures": 7,
+      "median_odds": "4",
+      "model_metrics": {
+        "bias_predicted_minus_observed": 0.3148405480543468,
+        "brier": 0.1791447719534069,
+        "ece_10_equal_width": 0.3642112192738918,
+        "hit_rate": 0.1111111111111111,
+        "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+        "log_loss": 0.5403021398658612,
+        "mean_probability": 0.4259516591654579,
+        "n": 9,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.0599273642715759,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.1,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.17848315177999108,
+            "upper": 0.2
+          },
+          {
+            "lower": 0.2,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.2522419473464675,
+            "upper": 0.3
+          },
+          {
+            "lower": 0.3,
+            "n": 2,
+            "observed": 0,
+            "predicted": 0.36830321270887795,
+            "upper": 0.4
+          },
+          {
+            "lower": 0.4,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.42901741103801067,
+            "upper": 0.5
+          },
+          {
+            "lower": 0.5,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.5787357171523291,
+            "upper": 0.6
+          },
+          {
+            "lower": 0.7,
+            "n": 1,
+            "observed": 1,
+            "predicted": 0.7778319795120475,
+            "upper": 0.8
+          },
+          {
+            "lower": 0.8,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.8207209359709436,
+            "upper": 0.9
+          }
+        ]
+      },
+      "outcomes": {
+        "LOST": 8,
+        "WON": 1
+      },
+      "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+      "probability_below_half": 6,
+      "published": 9,
+      "raw_price_implied_metrics": {
+        "bias_predicted_minus_observed": 0.21217408199551285,
+        "brier": 0.10916389221357346,
+        "ece_10_equal_width": 0.21217408199551285,
+        "hit_rate": 0.1111111111111111,
+        "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+        "log_loss": 0.3662743916595494,
+        "mean_probability": 0.32328519310662396,
+        "n": 9,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.0196078431372549,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.1,
+            "n": 2,
+            "observed": 0,
+            "predicted": 0.16233766233766234,
+            "upper": 0.2
+          },
+          {
+            "lower": 0.2,
+            "n": 2,
+            "observed": 0,
+            "predicted": 0.225,
+            "upper": 0.3
+          },
+          {
+            "lower": 0.3,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.3225806451612903,
+            "upper": 0.4
+          },
+          {
+            "lower": 0.4,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.4444444444444444,
+            "upper": 0.5
+          },
+          {
+            "lower": 0.6,
+            "n": 2,
+            "observed": 0.5,
+            "predicted": 0.6741292402706507,
+            "upper": 0.7
+          }
+        ]
+      },
+      "red_card_publications": 3,
+      "settled": 9
+    },
+    "LIVE_P60_70_20261009_V1": {
+      "average_odds": null,
+      "flat_pnl": "0",
+      "flat_roi": null,
+      "independent_fixtures": 0,
+      "median_odds": null,
+      "model_metrics": {
+        "n": 0
+      },
+      "outcomes": {},
+      "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+      "probability_below_half": 0,
+      "published": 0,
+      "raw_price_implied_metrics": {
+        "n": 0
+      },
+      "red_card_publications": 0,
+      "settled": 0
+    }
+  },
+  "live_context_v2_summary": {
+    "blockers": {
+      "GOAL_EVENT_SEMANTICS_UNSUPPORTED": 19,
+      "RED_CARD_EFFECT_NOT_ESTIMATED": 67,
+      "REMAINING_REGULATION_TIME_UNSUPPORTED": 11,
+      "VENUE_COMPETITION_HISTORY_INSUFFICIENT": 556
+    },
+    "confidence_interval": null,
+    "forecast_versions": 7,
+    "paired_baseline": {
+      "brier": null,
+      "calibration_bias_predicted_minus_observed": null,
+      "ece": null,
+      "log_loss": null,
+      "mce": null,
+      "probability_observations": 0,
+      "reliability_bins": []
+    },
+    "paired_brier_delta": null,
+    "paired_log_loss_delta": null,
+    "paired_sample": [],
+    "paired_v2": {
+      "brier": null,
+      "calibration_bias_predicted_minus_observed": null,
+      "ece": null,
+      "log_loss": null,
+      "mce": null,
+      "probability_observations": 0,
+      "reliability_bins": []
+    },
+    "verdict": "BLOCKED_NEEDS_MORE_EVIDENCE",
+    "versions": 563
+  },
+  "live_old_cohort": {
+    "average_odds": "8.979888888888888888888888889",
+    "flat_pnl": "-7.556",
+    "flat_roi": "-0.8395555555555555555555555556",
+    "independent_fixtures": 7,
+    "median_odds": "4",
+    "model_metrics": {
+      "bias_predicted_minus_observed": 0.3148405480543468,
+      "brier": 0.1791447719534069,
+      "ece_10_equal_width": 0.3642112192738918,
+      "hit_rate": 0.1111111111111111,
+      "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+      "log_loss": 0.5403021398658612,
+      "mean_probability": 0.4259516591654579,
+      "n": 9,
+      "reliability_bins": [
+        {
+          "lower": 0.0,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.0599273642715759,
+          "upper": 0.1
+        },
+        {
+          "lower": 0.1,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.17848315177999108,
+          "upper": 0.2
+        },
+        {
+          "lower": 0.2,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.2522419473464675,
+          "upper": 0.3
+        },
+        {
+          "lower": 0.3,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.36830321270887795,
+          "upper": 0.4
+        },
+        {
+          "lower": 0.4,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.42901741103801067,
+          "upper": 0.5
+        },
+        {
+          "lower": 0.5,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.5787357171523291,
+          "upper": 0.6
+        },
+        {
+          "lower": 0.7,
+          "n": 1,
+          "observed": 1,
+          "predicted": 0.7778319795120475,
+          "upper": 0.8
+        },
+        {
+          "lower": 0.8,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.8207209359709436,
+          "upper": 0.9
+        }
+      ]
+    },
+    "outcomes": {
+      "LOST": 8,
+      "WON": 1
+    },
+    "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+    "probability_below_half": 6,
+    "published": 9,
+    "raw_price_implied_metrics": {
+      "bias_predicted_minus_observed": 0.21217408199551285,
+      "brier": 0.10916389221357346,
+      "ece_10_equal_width": 0.21217408199551285,
+      "hit_rate": 0.1111111111111111,
+      "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+      "log_loss": 0.3662743916595494,
+      "mean_probability": 0.32328519310662396,
+      "n": 9,
+      "reliability_bins": [
+        {
+          "lower": 0.0,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.0196078431372549,
+          "upper": 0.1
+        },
+        {
+          "lower": 0.1,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.16233766233766234,
+          "upper": 0.2
+        },
+        {
+          "lower": 0.2,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.225,
+          "upper": 0.3
+        },
+        {
+          "lower": 0.3,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.3225806451612903,
+          "upper": 0.4
+        },
+        {
+          "lower": 0.4,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.4444444444444444,
+          "upper": 0.5
+        },
+        {
+          "lower": 0.6,
+          "n": 2,
+          "observed": 0.5,
+          "predicted": 0.6741292402706507,
+          "upper": 0.7
+        }
+      ]
+    },
+    "red_card_publications": 3,
+    "settled": 9
+  },
+  "live_shadow_policy_summaries": {
+    "A_CURRENT_60_70": {
+      "brier": 0.2962746217223845,
+      "calibration_bias_predicted_minus_observed": 0.2474391282000869,
+      "confidence_interval": null,
+      "ece": 0.24743912820008687,
+      "executed_or_prospective": false,
+      "indicative_flat_pnl": "-4.514",
+      "indicative_flat_roi": "-0.4514",
+      "limitation": "Snapshot nominations with actual historical exposure; not cycle selection or verified final refresh.",
+      "log_loss": 0.7897859927568966,
+      "max_known_losing_streak": 2,
+      "mce": 0.24743912820008684,
+      "no_pick_pools": 65,
+      "nominations": 43,
+      "observed_hit_rate": 0.4,
+      "outcomes": {
+        "LOST": 6,
+        "PENDING": 33,
+        "WON": 4
+      },
+      "paired_strategy_delta": null,
+      "probability_observations": 10,
+      "ranking_eligible": false,
+      "reliability_bins": [
+        {
+          "error": 0.24743912820008684,
+          "lower": 0.6,
+          "n": 10,
+          "observed": 0.4,
+          "predicted": 0.6474391282000869,
+          "upper": 0.7
+        }
+      ],
+      "rows": [
+        {
+          "candidate_id": "live-951e0f66927a4d94050c15af79faec3c96570c10e674f204ba434c90c2ee4d32",
+          "fixture_id": 1571140,
+          "indicative_flat_pnl": "-1",
+          "market": "OVER_1_5",
+          "odds": "1.675",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-07T18:52:13.093583+00:00",
+          "probability": "0.6337590294471838",
+          "result_fingerprint": "db650b64641c355cd4de7c6e2cfe0f1afdfa0c3b944cb31d55355bfcc7cc9581"
+        },
+        {
+          "candidate_id": "live-359edd7bb90c839b949c12eed9bbdc9c5a154a06a6e21d5b6c89e061bbe0f531",
+          "fixture_id": 1606332,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_NO",
+          "odds": "1.4",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-07T18:52:21.150786+00:00",
+          "probability": "0.657531733426634",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-a60ae1c23048f773d4b07308b358cf841566c388fdd8b7819fc6672f9e6b0e63",
+          "fixture_id": 1639200,
+          "indicative_flat_pnl": null,
+          "market": "OVER_2_5",
+          "odds": "1.65",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-07T18:52:39.304063+00:00",
+          "probability": "0.6136726964991921",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-9f8f0cba6c4456aae5a59204227ed09c26b1fa6b2408787db4d7aa08396afa50",
+          "fixture_id": 1640277,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_YES",
+          "odds": "1.285",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-07T18:52:52.345135+00:00",
+          "probability": "0.6695855182744549",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-993602346f28e6a2a918e55ebaa767c2235b8f76dfbe1d5fca132e3bb18bfc21",
+          "fixture_id": 1571140,
+          "indicative_flat_pnl": "0.363",
+          "market": "BTTS_NO",
+          "odds": "1.363",
+          "outcome": "WON",
+          "prepared_at": "2026-10-07T19:02:16.318007+00:00",
+          "probability": "0.6391660601675926",
+          "result_fingerprint": "db650b64641c355cd4de7c6e2cfe0f1afdfa0c3b944cb31d55355bfcc7cc9581"
+        },
+        {
+          "candidate_id": "live-6420348bbd9dededdd31d53bdd13dd1e12424fceb72b654bc26a1ac94b607186",
+          "fixture_id": 1606330,
+          "indicative_flat_pnl": "-1",
+          "market": "BTTS_NO",
+          "odds": "1.4",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-07T19:02:20.616223+00:00",
+          "probability": "0.6908128455165289",
+          "result_fingerprint": "64fa357a5207e68a9ab37fe21accd3d9d457f3dbe0b5748ea7ea6b248e5a14be"
+        },
+        {
+          "candidate_id": "live-a40da456fd4e0b6636b9c3fa0163cf0a5e6a997219b5b976695c6f7f67396241",
+          "fixture_id": 1612083,
+          "indicative_flat_pnl": "-1",
+          "market": "AWAY_WIN",
+          "odds": "1.615",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-07T19:07:49.585904+00:00",
+          "probability": "0.6940346798525209",
+          "result_fingerprint": "487127e3cdbbabe6e43f166f2f1decd2393ac086d53cb906e133409d41ad64ff"
+        },
+        {
+          "candidate_id": "live-7ccb307f969fe2139680e571045bdd447acfd1319407f29073f38a9fa9409c82",
+          "fixture_id": 1579824,
+          "indicative_flat_pnl": null,
+          "market": "HOME_WIN",
+          "odds": "1.25",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-07T19:17:19.232139+00:00",
+          "probability": "0.6719822867175251",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-0cd4fb0f4e500d5fa21bf00734fb2836bca9f76a1ede65e9214815457f642496",
+          "fixture_id": 1612083,
+          "indicative_flat_pnl": "-1",
+          "market": "BTTS_NO",
+          "odds": "1.833",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-07T19:17:45.937282+00:00",
+          "probability": "0.622461142627145",
+          "result_fingerprint": "487127e3cdbbabe6e43f166f2f1decd2393ac086d53cb906e133409d41ad64ff"
+        },
+        {
+          "candidate_id": "live-f01261d19538e27abe844fdfd5d1ad13c8923ac9764d601c1c541bfebecb7d7a",
+          "fixture_id": 1639200,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.525",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-07T19:17:50.334754+00:00",
+          "probability": "0.6150599889366958",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-e1fa0960fbf96f84711ab988961b04d23becf8ffbc97936c3f87db61e78c8e07",
+          "fixture_id": 1635274,
+          "indicative_flat_pnl": "0.475",
+          "market": "UNDER_1_5",
+          "odds": "1.475",
+          "outcome": "WON",
+          "prepared_at": "2026-10-08T17:07:30.572277+00:00",
+          "probability": "0.6984642566475137",
+          "result_fingerprint": "78fc255602ff4da7c44a4f2813c5706b63c1d80126969ec170a5abf3717f1dc8"
+        },
+        {
+          "candidate_id": "live-a6329405902f774abf1a43447a89262528d6591b4329e00b8bcfeb849ab5b645",
+          "fixture_id": 1604012,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "1.9",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:12:24.789287+00:00",
+          "probability": "0.6316647370152365",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-8527809ffc6f58c184aa795ce96c5055fbd438232df38c3173a480f3faf2236f",
+          "fixture_id": 1611409,
+          "indicative_flat_pnl": "-1",
+          "market": "OVER_1_5",
+          "odds": "1.8",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-08T17:12:28.786752+00:00",
+          "probability": "0.6110917454887783",
+          "result_fingerprint": "d99344be98cad1bb2cb01553155b7e282493428bd377c977aeb3b0eed908a24d"
+        },
+        {
+          "candidate_id": "live-78a85aaeb0e68786a1ee65c448f443c4b589e4785dc3cd649eb384aae45112f1",
+          "fixture_id": 1611410,
+          "indicative_flat_pnl": "0.363",
+          "market": "BTTS_NO",
+          "odds": "1.363",
+          "outcome": "WON",
+          "prepared_at": "2026-10-08T17:12:33.000866+00:00",
+          "probability": "0.6561585851822643",
+          "result_fingerprint": "a6dbfe8632110dcc2f743dd451cd8336615627f6461cf8d6ee1cd8c81061c86e"
+        },
+        {
+          "candidate_id": "live-187a820462ea8aa0b84d747707196ccf368a1e820a6be83013e91a192676a191",
+          "fixture_id": 1621358,
+          "indicative_flat_pnl": null,
+          "market": "OVER_2_5",
+          "odds": "2",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:12:41.215835+00:00",
+          "probability": "0.6031506959785362",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-a729baef3b6989b03d3d0095dc2c42a0be6ce12e7396940e72cf1c62b68d0b03",
+          "fixture_id": 1621631,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.525",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:12:45.417773+00:00",
+          "probability": "0.6994361386806637",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-69f4ded3259c76b8f59e549a6b474726a02ff17baae66e6f73689093559f50f0",
+          "fixture_id": 1621636,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_NO",
+          "odds": "1.333",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:12:49.394372+00:00",
+          "probability": "0.6319854616053406",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-03c7c8b5065bade8e8f74cdf194ba72edf05d8ecfe0c7f1d6931cba15f9a4aa2",
+          "fixture_id": 1621636,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "2.15",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:22:48.204563+00:00",
+          "probability": "0.6438401235247974",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-2f0129826500b8c832c1f5cc4ca013d8404695ade101aba6fea3e5b6ad5b23e5",
+          "fixture_id": 1604012,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_NO",
+          "odds": "1.571",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:27:22.502925+00:00",
+          "probability": "0.6511419250626668",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-13c19b758d48a0aa81fa4293fed8ad7078e9ddc0d3d9c36d7843197f221baa7f",
+          "fixture_id": 1565207,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_YES",
+          "odds": "1.3",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:57:17.069110+00:00",
+          "probability": "0.6671289163019213",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-b8270e53b1e16b7c05cf1f3a471bf9fed1186cba4091f587730d48d74dc8a59d",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_YES",
+          "odds": "1.285",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:02:13.721497+00:00",
+          "probability": "0.6993630390145624",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-befa4d118352683427f8d94f87f830c91798bfffdf3ee23ba56187da4b0e59a9",
+          "fixture_id": 1612076,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.825",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:02:35.915613+00:00",
+          "probability": "0.6973161385631349",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-569aefc71ca32e7ac1a8612e322fa8a4d5bcb4a54d2f23b467a7aa9560524ad9",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_YES",
+          "odds": "1.4",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:12:13.456553+00:00",
+          "probability": "0.6314386694199543",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-a741914fe3d51985015add22148e3658f63f3c21a28e21cd12965c00ffd1947e",
+          "fixture_id": 1565207,
+          "indicative_flat_pnl": null,
+          "market": "HOME_WIN",
+          "odds": "1.909",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:12:22.160843+00:00",
+          "probability": "0.6770716176829172",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-b993c08c6ca587f3bfb5e4096df6a7678ae8a3e04e0b8933a87e1ffb96e8354a",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_YES",
+          "odds": "1.444",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:17:18.768908+00:00",
+          "probability": "0.6001503456551535",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-1f3a979757d94f51299d6c7a240a1742e35e6cedb92004b7adbb4cfed4627752",
+          "fixture_id": 1612086,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.8",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:27:48.925294+00:00",
+          "probability": "0.6586382836205437",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-0cc1844de4de188fe362e585b40faf01a30f0e3b5ec9e2d9f699e0ac21e63344",
+          "fixture_id": 1617037,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_NO",
+          "odds": "1.5",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:32:56.284228+00:00",
+          "probability": "0.6359261022998496",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-b138bc70f3c3bc14c10f8fea30ab569ee4ee8119b6dc25274328d0a8b9cafbf1",
+          "fixture_id": 1612075,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_1_5",
+          "odds": "1.825",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:37:36.348996+00:00",
+          "probability": "0.6868443126137086",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-4f23dec91f1095bc8b9b3e03957f6bb78ffbfdbc12e4385d53991989c6b9c37d",
+          "fixture_id": 1617037,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_NO",
+          "odds": "1.4",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:37:53.452571+00:00",
+          "probability": "0.6732440227165208",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-f8339d60ff46578f2c17c3cb40a6c100a29efb9151ac6dd208f3ef0801235776",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "1.8",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:42:14.420725+00:00",
+          "probability": "0.6353756018890271",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-80f2b53189648ae84c292e9df36c1c79f808e4037803d2856b0d305c0cc6a642",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "1.675",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:47:13.997736+00:00",
+          "probability": "0.6945114343428926",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-49780db04680f51ed6b1e573766d84e90d6078f1d0bd2e4206c78f9e2b9b5259",
+          "fixture_id": 1621355,
+          "indicative_flat_pnl": "-1",
+          "market": "BTTS_NO",
+          "odds": "1.4",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-08T18:47:48.491200+00:00",
+          "probability": "0.6019986958727487",
+          "result_fingerprint": "3c0e8b4eaa1c758a068aaf45b3a020701f12c1b2d632fe4d5be8f3cea76a2f5b"
+        },
+        {
+          "candidate_id": "live-30112659d98797d08171bec1154cd7b3c49c4ea5b308c5c0bf6865418ac44853",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "DRAW",
+          "odds": "1.727",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:07:20.171642+00:00",
+          "probability": "0.6640964695102762",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-e7808ed3d033cc3fa9bc7f02b90d10d869e70a10b8deb006956a8af21f5051e4",
+          "fixture_id": 1612086,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "1.825",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:07:48.774631+00:00",
+          "probability": "0.6386770552819055",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-d1e1bb7b846e7675a450cded08dd74ff33c14c9dcefae29d3dfae9127e7e7966",
+          "fixture_id": 1612086,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.675",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:12:36.838148+00:00",
+          "probability": "0.6990292757659672",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-c580e5e460b9ae92d019a683c176c165ec92cc15971d32002e2a9e2375979f09",
+          "fixture_id": 1617037,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_1_5",
+          "odds": "1.475",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:12:46.556668+00:00",
+          "probability": "0.6836926093351694",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-5e405d6be13e0e7dc88c03f4629a14f90249d0142dbbd2538bc496316f40b823",
+          "fixture_id": 1612086,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_NO",
+          "odds": "1.4",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:17:58.926087+00:00",
+          "probability": "0.6956121964366837",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-302357744b94b5b8b5c0ae36114decaf29177761c39483ec71f408df97b41026",
+          "fixture_id": 1492780,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_YES",
+          "odds": "2.05",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:27:18.123193+00:00",
+          "probability": "0.6943104349219205",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-38addf88ca6ebd0707d9d080717265bac929e75c4b4647349bb070f05582c3cd",
+          "fixture_id": 1611408,
+          "indicative_flat_pnl": "0.285",
+          "market": "BTTS_NO",
+          "odds": "1.285",
+          "outcome": "WON",
+          "prepared_at": "2026-10-08T19:27:33.854206+00:00",
+          "probability": "0.626444241198593",
+          "result_fingerprint": "534a1e0b7ec8fd13f40970004636d41ce6e0f35594e6a3a625041241b8c4ab17"
+        },
+        {
+          "candidate_id": "live-b5ab7d79b5028533382a25349204471d60d92d8b82ccb5b353c37a065eaec06f",
+          "fixture_id": 1492780,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_YES",
+          "odds": "2.2",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:32:18.968823+00:00",
+          "probability": "0.6646540497145299",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-68609fbb52134fe9df6f074d29183e4a89c8c5da7e4b8d50d516925c7481aa31",
+          "fixture_id": 1549506,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "2",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:32:24.376617+00:00",
+          "probability": "0.6163436378836364",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-6a58ec785058c3b6ba5bb50a0a2a856e83412bbd6179c43111f54f5b520906f5",
+          "fixture_id": 1617037,
+          "indicative_flat_pnl": null,
+          "market": "DRAW",
+          "odds": "1.727",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:32:53.269895+00:00",
+          "probability": "0.6331031946188569",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-607e83758db5ce63672fd9ec968b8e613086125b7e3e50d4d4828932da6fcd2b",
+          "fixture_id": 1642034,
+          "indicative_flat_pnl": null,
+          "market": "OVER_1_5",
+          "odds": "1.375",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:57:36.335343+00:00",
+          "probability": "0.6939328073416517",
+          "result_fingerprint": null
+        }
+      ],
+      "settled": 10,
+      "snapshot_pools": 108,
+      "unique_fixtures": 25
+    },
+    "B_VALUE_CONTROL": {
+      "brier": 0.34702988884963537,
+      "calibration_bias_predicted_minus_observed": 0.45196217081262835,
+      "confidence_interval": null,
+      "ece": 0.4519621708126283,
+      "executed_or_prospective": false,
+      "indicative_flat_pnl": "-3.525",
+      "indicative_flat_roi": "-0.705",
+      "limitation": "Snapshot nominations with actual historical exposure; not cycle selection or verified final refresh.",
+      "log_loss": 0.8932224314275305,
+      "max_known_losing_streak": 2,
+      "mce": 0.4519621708126283,
+      "no_pick_pools": 83,
+      "nominations": 25,
+      "observed_hit_rate": 0.2,
+      "outcomes": {
+        "LOST": 4,
+        "PENDING": 20,
+        "WON": 1
+      },
+      "paired_strategy_delta": null,
+      "probability_observations": 5,
+      "ranking_eligible": false,
+      "reliability_bins": [
+        {
+          "error": 0.4519621708126283,
+          "lower": 0.6,
+          "n": 5,
+          "observed": 0.2,
+          "predicted": 0.6519621708126283,
+          "upper": 0.7
+        }
+      ],
+      "rows": [
+        {
+          "candidate_id": "live-951e0f66927a4d94050c15af79faec3c96570c10e674f204ba434c90c2ee4d32",
+          "fixture_id": 1571140,
+          "indicative_flat_pnl": "-1",
+          "market": "OVER_1_5",
+          "odds": "1.675",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-07T18:52:13.093583+00:00",
+          "probability": "0.6337590294471838",
+          "result_fingerprint": "db650b64641c355cd4de7c6e2cfe0f1afdfa0c3b944cb31d55355bfcc7cc9581"
+        },
+        {
+          "candidate_id": "live-a60ae1c23048f773d4b07308b358cf841566c388fdd8b7819fc6672f9e6b0e63",
+          "fixture_id": 1639200,
+          "indicative_flat_pnl": null,
+          "market": "OVER_2_5",
+          "odds": "1.65",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-07T18:52:39.304063+00:00",
+          "probability": "0.6136726964991921",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-a40da456fd4e0b6636b9c3fa0163cf0a5e6a997219b5b976695c6f7f67396241",
+          "fixture_id": 1612083,
+          "indicative_flat_pnl": "-1",
+          "market": "AWAY_WIN",
+          "odds": "1.615",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-07T19:07:49.585904+00:00",
+          "probability": "0.6940346798525209",
+          "result_fingerprint": "487127e3cdbbabe6e43f166f2f1decd2393ac086d53cb906e133409d41ad64ff"
+        },
+        {
+          "candidate_id": "live-0cd4fb0f4e500d5fa21bf00734fb2836bca9f76a1ede65e9214815457f642496",
+          "fixture_id": 1612083,
+          "indicative_flat_pnl": "-1",
+          "market": "BTTS_NO",
+          "odds": "1.833",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-07T19:17:45.937282+00:00",
+          "probability": "0.622461142627145",
+          "result_fingerprint": "487127e3cdbbabe6e43f166f2f1decd2393ac086d53cb906e133409d41ad64ff"
+        },
+        {
+          "candidate_id": "live-e1fa0960fbf96f84711ab988961b04d23becf8ffbc97936c3f87db61e78c8e07",
+          "fixture_id": 1635274,
+          "indicative_flat_pnl": "0.475",
+          "market": "UNDER_1_5",
+          "odds": "1.475",
+          "outcome": "WON",
+          "prepared_at": "2026-10-08T17:07:30.572277+00:00",
+          "probability": "0.6984642566475137",
+          "result_fingerprint": "78fc255602ff4da7c44a4f2813c5706b63c1d80126969ec170a5abf3717f1dc8"
+        },
+        {
+          "candidate_id": "live-a6329405902f774abf1a43447a89262528d6591b4329e00b8bcfeb849ab5b645",
+          "fixture_id": 1604012,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "1.9",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:12:24.789287+00:00",
+          "probability": "0.6316647370152365",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-8527809ffc6f58c184aa795ce96c5055fbd438232df38c3173a480f3faf2236f",
+          "fixture_id": 1611409,
+          "indicative_flat_pnl": "-1",
+          "market": "OVER_1_5",
+          "odds": "1.8",
+          "outcome": "LOST",
+          "prepared_at": "2026-10-08T17:12:28.786752+00:00",
+          "probability": "0.6110917454887783",
+          "result_fingerprint": "d99344be98cad1bb2cb01553155b7e282493428bd377c977aeb3b0eed908a24d"
+        },
+        {
+          "candidate_id": "live-187a820462ea8aa0b84d747707196ccf368a1e820a6be83013e91a192676a191",
+          "fixture_id": 1621358,
+          "indicative_flat_pnl": null,
+          "market": "OVER_2_5",
+          "odds": "2",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:12:41.215835+00:00",
+          "probability": "0.6031506959785362",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-a729baef3b6989b03d3d0095dc2c42a0be6ce12e7396940e72cf1c62b68d0b03",
+          "fixture_id": 1621631,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.525",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:12:45.417773+00:00",
+          "probability": "0.6994361386806637",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-03c7c8b5065bade8e8f74cdf194ba72edf05d8ecfe0c7f1d6931cba15f9a4aa2",
+          "fixture_id": 1621636,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "2.15",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:22:48.204563+00:00",
+          "probability": "0.6438401235247974",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-2f0129826500b8c832c1f5cc4ca013d8404695ade101aba6fea3e5b6ad5b23e5",
+          "fixture_id": 1604012,
+          "indicative_flat_pnl": null,
+          "market": "BTTS_NO",
+          "odds": "1.571",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:27:22.502925+00:00",
+          "probability": "0.6511419250626668",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-5b41774f8bfecc2c39ce8552d7569b5bad9c0e086b0122831be6e74e6bf9c05e",
+          "fixture_id": 1565207,
+          "indicative_flat_pnl": null,
+          "market": "HOME_WIN",
+          "odds": "1.727",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T17:57:17.151493+00:00",
+          "probability": "0.6542055601801646",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-add91d57f796ef1645962476f5778c6f9e8fbc4b4cd8a84fa883d66a614ab557",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.6",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:02:13.818461+00:00",
+          "probability": "0.6955487350645071",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-befa4d118352683427f8d94f87f830c91798bfffdf3ee23ba56187da4b0e59a9",
+          "fixture_id": 1612076,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.825",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:02:35.915613+00:00",
+          "probability": "0.6973161385631349",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-a741914fe3d51985015add22148e3658f63f3c21a28e21cd12965c00ffd1947e",
+          "fixture_id": 1565207,
+          "indicative_flat_pnl": null,
+          "market": "HOME_WIN",
+          "odds": "1.909",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:12:22.160843+00:00",
+          "probability": "0.6770716176829172",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-1f3a979757d94f51299d6c7a240a1742e35e6cedb92004b7adbb4cfed4627752",
+          "fixture_id": 1612086,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.8",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:27:48.925294+00:00",
+          "probability": "0.6586382836205437",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-b138bc70f3c3bc14c10f8fea30ab569ee4ee8119b6dc25274328d0a8b9cafbf1",
+          "fixture_id": 1612075,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_1_5",
+          "odds": "1.825",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:37:36.348996+00:00",
+          "probability": "0.6868443126137086",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-f8339d60ff46578f2c17c3cb40a6c100a29efb9151ac6dd208f3ef0801235776",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "1.8",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:42:14.420725+00:00",
+          "probability": "0.6353756018890271",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-80f2b53189648ae84c292e9df36c1c79f808e4037803d2856b0d305c0cc6a642",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "1.675",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T18:47:13.997736+00:00",
+          "probability": "0.6945114343428926",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-30112659d98797d08171bec1154cd7b3c49c4ea5b308c5c0bf6865418ac44853",
+          "fixture_id": 1510697,
+          "indicative_flat_pnl": null,
+          "market": "DRAW",
+          "odds": "1.727",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:07:20.171642+00:00",
+          "probability": "0.6640964695102762",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-e7808ed3d033cc3fa9bc7f02b90d10d869e70a10b8deb006956a8af21f5051e4",
+          "fixture_id": 1612086,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "1.825",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:07:48.774631+00:00",
+          "probability": "0.6386770552819055",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-d1e1bb7b846e7675a450cded08dd74ff33c14c9dcefae29d3dfae9127e7e7966",
+          "fixture_id": 1612086,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_3_5",
+          "odds": "1.675",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:12:36.838148+00:00",
+          "probability": "0.6990292757659672",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-c580e5e460b9ae92d019a683c176c165ec92cc15971d32002e2a9e2375979f09",
+          "fixture_id": 1617037,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_1_5",
+          "odds": "1.475",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:12:46.556668+00:00",
+          "probability": "0.6836926093351694",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-68609fbb52134fe9df6f074d29183e4a89c8c5da7e4b8d50d516925c7481aa31",
+          "fixture_id": 1549506,
+          "indicative_flat_pnl": null,
+          "market": "UNDER_2_5",
+          "odds": "2",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:32:24.376617+00:00",
+          "probability": "0.6163436378836364",
+          "result_fingerprint": null
+        },
+        {
+          "candidate_id": "live-6a58ec785058c3b6ba5bb50a0a2a856e83412bbd6179c43111f54f5b520906f5",
+          "fixture_id": 1617037,
+          "indicative_flat_pnl": null,
+          "market": "DRAW",
+          "odds": "1.727",
+          "outcome": "PENDING",
+          "prepared_at": "2026-10-08T19:32:53.269895+00:00",
+          "probability": "0.6331031946188569",
+          "result_fingerprint": null
+        }
+      ],
+      "settled": 5,
+      "snapshot_pools": 108,
+      "unique_fixtures": 16
+    },
+    "C_CONTEXT_CONFIDENCE": {
+      "brier": null,
+      "calibration_bias_predicted_minus_observed": null,
+      "confidence_interval": null,
+      "ece": null,
+      "executed_or_prospective": false,
+      "indicative_flat_pnl": "0",
+      "indicative_flat_roi": null,
+      "limitation": "Snapshot nominations with actual historical exposure; not cycle selection or verified final refresh.",
+      "log_loss": null,
+      "max_known_losing_streak": 0,
+      "mce": null,
+      "no_pick_pools": 108,
+      "nominations": 0,
+      "observed_hit_rate": null,
+      "outcomes": {},
+      "paired_strategy_delta": null,
+      "probability_observations": 0,
+      "ranking_eligible": false,
+      "reliability_bins": [],
+      "rows": [],
+      "settled": 0,
+      "snapshot_pools": 108,
+      "unique_fixtures": 0
+    }
+  },
+  "promotion_eligibility": "NOT_ELIGIBLE",
+  "report": "docs/operations/GOALVISION_LIVE_COMBO_ACCURACY_HARDENING_V1.md",
+  "repository": {
+    "as_of": "2026-10-09T10:15:18.755867+00:00",
+    "automatic_training_promotion_rollback": false,
+    "bankroll_changes": 0,
+    "base_commit": "94d81625ad8a9c1e0353a1a93850db5033ce1459",
+    "branch": "research/live-combo-accuracy-hardening-20261009",
+    "champion_changes": 0,
+    "live_configuration_changed": false,
+    "live_release": "/opt/goalvision-live-probability-band-bfe6d40-20261009",
+    "live_timer_after": {
+      "active": "active",
+      "enabled": "enabled"
+    },
+    "live_timer_before": {
+      "active": "active",
+      "enabled": "enabled"
+    },
+    "main_checkout": {
+      "branch": "codex/lab-v2-global-overhaul-2026-09-17",
+      "head": "fadd59d7d9492133f84d9d80c9a72dad14c57c67",
+      "preexisting_dirty_status_lines": 220,
+      "status_preserved": true,
+      "status_sha256": "7d4c11b48b60f1c12cca10af5356ce94b751c226f46b15e7a4ed691fc7d6e6c1"
+    },
+    "official_changes": 0,
+    "prematch_environment_release": "/opt/goalvision-live-evening-4f547cf-20261007",
+    "production_deployments": 0,
+    "protected_systemd_file_count": 143,
+    "protected_systemd_hashes_unchanged": true,
+    "provider_calls_initiated": 0,
+    "source_commit": "5de7c646f3823d4abd39254703739a31278a2863",
+    "source_push": "PASS",
+    "source_remote_commit": "5de7c646f3823d4abd39254703739a31278a2863",
+    "telegram_calls_initiated": 0,
+    "telegram_sends": 0
+  },
+  "source_changed_files": [
+    "app/live_lab/context_research.py",
+    "app/live_lab/policy_research.py",
+    "app/adaptive_lab/joint_scenarios.py",
+    "operations/live-combo-hardening/audit.py",
+    "operations/live-combo-hardening/README.md",
+    "operations/live-combo-research/audit.py",
+    "tests/adaptive_lab/test_accuracy_hardening.py"
+  ],
+  "source_fingerprints": {
+    "calendar": "437cc88bf101222b9dbf426e10a9d5442d9ceb855060c21cb7dca72f7ee831d2",
+    "combo": "1712e99af4c73ea69be328022b0132fd147640458057770a94638779da9eb026",
+    "hardening": "f6137a6cb42409a7f356d97d3633b05b2058a7f7b34018da5fae6460a926c73a",
+    "live_postmortem": "6e22d5b635beffe41ec267d8d7d580296111018cb76cb67dd19be97edf7ce100"
+  },
+  "test_command": [
+    "/home/arvis/GoalVisionAI/.venv/bin/python",
+    "-B",
+    "operations/live-combo-research/offline_tests.py",
+    "tests/adaptive_lab/test_live.py",
+    "tests/adaptive_lab/test_evening_live.py",
+    "tests/adaptive_lab/test_live_quote_age_policy.py",
+    "tests/adaptive_lab/test_quota_contention.py",
+    "tests/adaptive_lab/test_settlement_preflight_reserve.py",
+    "tests/adaptive_lab/test_no_combo_learning.py",
+    "tests/adaptive_lab/test_calendar_research.py",
+    "tests/adaptive_lab/test_calendar_monitor.py",
+    "tests/adaptive_lab/test_calibration_research.py",
+    "tests/adaptive_lab/test_shadow_chronology.py",
+    "tests/adaptive_lab/test_devig_research.py",
+    "tests/adaptive_lab/test_devig_integration.py",
+    "tests/adaptive_lab/test_performance_snapshot.py",
+    "tests/test_live_combo_research.py",
+    "tests/test_prematch_quality_evidence.py",
+    "tests/test_combo_double_170.py",
+    "tests/test_combo_aggregate_order.py",
+    "tests/test_lab_combo_early_loss.py",
+    "tests/test_lab_combo_integrity.py",
+    "tests/test_settlement_replies.py",
+    "tests/test_lab_delivery_accounting.py",
+    "tests/test_final_review_queue.py",
+    "tests/test_dixon_coles_incremental.py",
+    "tests/test_prematch_combo_leg_odds_floor.py",
+    "tests/test_lab_accuracy_combo.py",
+    "tests/adaptive_lab/test_live_probability_band.py",
+    "tests/adaptive_lab/test_live_postmortem.py",
+    "tests/test_live_probability_install.py",
+    "tests/test_live_quote_age_install.py",
+    "tests/adaptive_lab/test_accuracy_hardening.py"
+  ],
+  "test_results": {
+    "failed": 0,
+    "files": 30,
+    "outbound_network": "DENIED",
+    "passed": 737,
+    "provider_and_telegram": "FAKE_TRANSPORTS_ONLY",
+    "scope": "focused and adjacent, not full project suite",
+    "seconds": 39.87
+  },
+  "version": "GOALVISION_LIVE_COMBO_ACCURACY_HARDENING_V1"
+}

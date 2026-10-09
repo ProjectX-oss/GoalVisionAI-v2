@@ -1,0 +1,74 @@
+{
+  "candidates": 13408,
+  "counts": {
+    "calibration": {},
+    "decision": {
+      "APPROVED": 4246,
+      "REJECTED": 9034,
+      "TRACKING": 128
+    },
+    "hard_failures": {
+      "MARKET_REVIEW_TERMINAL": 2,
+      "NON_POSITIVE_VALUE": 9032,
+      "PROVIDER_ZERO_PROBABILITY": 11
+    },
+    "missing_features": {
+      "advanced_stats": 13408,
+      "competition_state": 1125,
+      "injuries": 13408,
+      "lineup": 13364,
+      "recent_form": 5978,
+      "standings": 13408
+    },
+    "producer": {},
+    "raw_zero": {},
+    "readiness": {
+      "CURRENT_FINAL_REVIEW_TIMESTAMP_REQUIRED": 3,
+      "CURRENT_ODDS_REFRESH_REQUIRED": 3,
+      "ENSEMBLE_NOT_APPROVED": 9034,
+      "FINAL_REVIEW_COMPLETE": 83,
+      "FINAL_REVIEW_WINDOW_NOT_OPEN": 2317,
+      "FIXTURE_REFRESH_REQUIRED": 3,
+      "MINIMUM_KICKOFF_LEAD_NOT_MET": 4,
+      "QUALITY_RISK_TRACKING": 1967
+    },
+    "rejections": {
+      "MARKET_REVIEW_TERMINAL": 2,
+      "NON_POSITIVE_VALUE": 9032,
+      "PROVIDER_ZERO_PROBABILITY": 11
+    },
+    "soft_findings": {
+      "ENSEMBLE_EDGE_BELOW_0_04": 11873,
+      "ENSEMBLE_MARKET_DIVERGENCE_TOO_LARGE": 351,
+      "INSUFFICIENT_INDEPENDENT_SIGNALS": 11854,
+      "MATERIAL_SIGNAL_DISAGREEMENT": 4428,
+      "NO_INDEPENDENT_NON_MARKET_EVIDENCE": 4988,
+      "SEVERE_MODEL_MARKET_CONTRADICTION": 447,
+      "VALUE_BELOW_PROFILE_THRESHOLD": 10868,
+      "WEIGHTED_AGREEMENT_BELOW_0_65": 1125
+    }
+  },
+  "cycle_ids": [
+    "lab-v2-cycle-dd72b93579754a0c44552791370566f6ec4afc34dc73e8e13386441995da499c",
+    "lab-v2-cycle-067758396e2b72db2f8ad0981ebcab20c068ed6363ad73f3ada435dd44220f7a",
+    "lab-v2-cycle-f615310085ea1e6a6ca4be5f29a33af9f63b091a02cc61c2c7a4fa51eb3d3b64",
+    "lab-v2-cycle-ad238e04c62bd93d681b09cb7a5b83b789bbe2e59707a8f9be47e5121bc27581",
+    "lab-v2-cycle-d1fa340d7f6a55a8fab473420c8fed2ee73421947f252afb548ccd47e534941f",
+    "lab-v2-cycle-d013854af495ef3318e16ae396537222a16632dabf8160e81dacb5fe0c7d6445",
+    "lab-v2-cycle-9c910bc0f29a897b3a87c8a9561a62cebad3c95c466572c4a1ab78f0ff9cb9ce",
+    "lab-v2-cycle-f4fe89d279fce7c4104eaa7c4b8bcfc9e0a755d051f0e45aa382db98ed44185d",
+    "lab-v2-cycle-04eb914be62475d01c7ce69c5ca64c67c7427e2b9163c5386d4ea7602e6e021e",
+    "lab-v2-cycle-649583d821955ff03580d4aa3c50781bbbc1f3196f7e091484d207386c439777",
+    "lab-v2-cycle-06e970a9f8118469a43c2afb5fdfb654efd046ad1d8051a932fb271a4dc347d5",
+    "lab-v2-cycle-73fc51f29795fb625fe77abe7c121498c6672a377853675e272b72b365532dcf"
+  ],
+  "cycles": 12,
+  "earliest": "2026-10-08T12:30:03.144910+00:00",
+  "independent_fixtures": 322,
+  "invalid_count": 0,
+  "invalid_fixtures": 0,
+  "invalid_incidents": [],
+  "latest": "2026-10-09T10:00:02.157639+00:00",
+  "ready_candidates": 83,
+  "scope": "LATEST_12_COMPLETED_REHEARSALS_AS_OF_CUTOFF"
+}
