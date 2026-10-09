@@ -1,0 +1,2877 @@
+{
+  "as_of": "2026-10-09T04:53:37.027928+00:00",
+  "counterfactual_scope": "Fixed published selections only; no replacement/re-ranking, NOT performance of an alternative policy",
+  "fingerprint": "e4a30895a9296a37872a5da46193cfd2f9d4d839ecb66ab8fa507e3e8fda4091",
+  "legacy_age_published_subset": {
+    "20": {
+      "average_odds": "26.2625",
+      "flat_pnl": "-2",
+      "flat_roi": "-1",
+      "independent_fixtures": 2,
+      "median_odds": "26.2625",
+      "model_metrics": {
+        "bias_predicted_minus_observed": 0.44032415012125975,
+        "brier": 0.33858707186477993,
+        "ece_10_equal_width": 0.44032415012125975,
+        "hit_rate": 0,
+        "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+        "log_loss": 0.8903049024382294,
+        "mean_probability": 0.44032415012125975,
+        "n": 2,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.0599273642715759,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.8,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.8207209359709436,
+            "upper": 0.9
+          }
+        ]
+      },
+      "outcomes": {
+        "LOST": 2
+      },
+      "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+      "probability_below_half": 1,
+      "published": 2,
+      "raw_price_implied_metrics": {
+        "bias_predicted_minus_observed": 0.33767277402764384,
+        "brier": 0.2151882025818321,
+        "ece_10_equal_width": 0.33767277402764384,
+        "hit_rate": 0,
+        "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+        "log_loss": 0.5430770268730339,
+        "mean_probability": 0.33767277402764384,
+        "n": 2,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.0196078431372549,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.6,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.6557377049180327,
+            "upper": 0.7
+          }
+        ]
+      },
+      "red_card_publications": 0,
+      "settled": 2
+    },
+    "30": {
+      "average_odds": "12.8938",
+      "flat_pnl": "-3.556",
+      "flat_roi": "-0.7112",
+      "independent_fixtures": 5,
+      "median_odds": "5",
+      "model_metrics": {
+        "bias_predicted_minus_observed": 0.2555834220796506,
+        "brier": 0.18499817107557825,
+        "ece_10_equal_width": 0.34445063027483164,
+        "hit_rate": 0.2,
+        "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+        "log_loss": 0.5560246273480869,
+        "mean_probability": 0.45558342207965064,
+        "n": 5,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.0599273642715759,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.2,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.2522419473464675,
+            "upper": 0.3
+          },
+          {
+            "lower": 0.3,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.36719488329721856,
+            "upper": 0.4
+          },
+          {
+            "lower": 0.7,
+            "n": 1,
+            "observed": 1,
+            "predicted": 0.7778319795120475,
+            "upper": 0.8
+          },
+          {
+            "lower": 0.8,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.8207209359709436,
+            "upper": 0.9
+          }
+        ]
+      },
+      "outcomes": {
+        "LOST": 4,
+        "WON": 1
+      },
+      "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+      "probability_below_half": 3,
+      "published": 5,
+      "raw_price_implied_metrics": {
+        "bias_predicted_minus_observed": 0.14993690109934765,
+        "brier": 0.11959554596532998,
+        "ece_10_equal_width": 0.14993690109934762,
+        "hit_rate": 0.2,
+        "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+        "log_loss": 0.37547706819861265,
+        "mean_probability": 0.34993690109934766,
+        "n": 5,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.0196078431372549,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.1,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.18181818181818182,
+            "upper": 0.2
+          },
+          {
+            "lower": 0.2,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.2,
+            "upper": 0.3
+          },
+          {
+            "lower": 0.6,
+            "n": 2,
+            "observed": 0.5,
+            "predicted": 0.6741292402706507,
+            "upper": 0.7
+          }
+        ]
+      },
+      "red_card_publications": 1,
+      "settled": 5
+    },
+    "45": {
+      "average_odds": "8.979888888888888888888888889",
+      "flat_pnl": "-7.556",
+      "flat_roi": "-0.8395555555555555555555555556",
+      "independent_fixtures": 7,
+      "median_odds": "4",
+      "model_metrics": {
+        "bias_predicted_minus_observed": 0.3148405480543468,
+        "brier": 0.1791447719534069,
+        "ece_10_equal_width": 0.3642112192738918,
+        "hit_rate": 0.1111111111111111,
+        "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+        "log_loss": 0.5403021398658612,
+        "mean_probability": 0.4259516591654579,
+        "n": 9,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.0599273642715759,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.1,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.17848315177999108,
+            "upper": 0.2
+          },
+          {
+            "lower": 0.2,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.2522419473464675,
+            "upper": 0.3
+          },
+          {
+            "lower": 0.3,
+            "n": 2,
+            "observed": 0,
+            "predicted": 0.36830321270887795,
+            "upper": 0.4
+          },
+          {
+            "lower": 0.4,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.42901741103801067,
+            "upper": 0.5
+          },
+          {
+            "lower": 0.5,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.5787357171523291,
+            "upper": 0.6
+          },
+          {
+            "lower": 0.7,
+            "n": 1,
+            "observed": 1,
+            "predicted": 0.7778319795120475,
+            "upper": 0.8
+          },
+          {
+            "lower": 0.8,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.8207209359709436,
+            "upper": 0.9
+          }
+        ]
+      },
+      "outcomes": {
+        "LOST": 8,
+        "WON": 1
+      },
+      "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+      "probability_below_half": 6,
+      "published": 9,
+      "raw_price_implied_metrics": {
+        "bias_predicted_minus_observed": 0.21217408199551285,
+        "brier": 0.10916389221357346,
+        "ece_10_equal_width": 0.21217408199551285,
+        "hit_rate": 0.1111111111111111,
+        "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+        "log_loss": 0.3662743916595494,
+        "mean_probability": 0.32328519310662396,
+        "n": 9,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.0196078431372549,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.1,
+            "n": 2,
+            "observed": 0,
+            "predicted": 0.16233766233766234,
+            "upper": 0.2
+          },
+          {
+            "lower": 0.2,
+            "n": 2,
+            "observed": 0,
+            "predicted": 0.225,
+            "upper": 0.3
+          },
+          {
+            "lower": 0.3,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.3225806451612903,
+            "upper": 0.4
+          },
+          {
+            "lower": 0.4,
+            "n": 1,
+            "observed": 0,
+            "predicted": 0.4444444444444444,
+            "upper": 0.5
+          },
+          {
+            "lower": 0.6,
+            "n": 2,
+            "observed": 0.5,
+            "predicted": 0.6741292402706507,
+            "upper": 0.7
+          }
+        ]
+      },
+      "red_card_publications": 3,
+      "settled": 9
+    }
+  },
+  "limitations": [
+    "This small, clustered sample cannot support reliable model ranking or calibration inference.",
+    "1/odds includes unknown margin and cannot establish fair market probability.",
+    "Receipt-time gate replay is later than claim-time; it is a stricter diagnostic, not the original gate event.",
+    "History inclusion proves kickoff chronology, not provider revision availability before original historical kickoff.",
+    "No raw final-result API response retained here; outcomes reproduced from immutable stored regulation scores.",
+    "HTTP latency and rejected raw quote/state pairs were not retained.",
+    "Equal-stake P/L uses indicative feed quotes; no executed betting return."
+  ],
+  "pipeline": {
+    "as_of": "2026-10-09T04:53:37.027928+00:00",
+    "by_policy": {
+      "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2": {
+        "age_only_rejected_versions": 0,
+        "blocker_counts": {
+          "DUPLICATE_LIVE_OPPORTUNITY": 17,
+          "LIVE_FIXTURE_SELECTION_LIMIT": 12,
+          "LIVE_MARKET_SUSPENDED": 7,
+          "NON_POSITIVE_EV": 233,
+          "PROBABILITY_OR_ODDS_CONTRACT": 11,
+          "SEVERE_MODEL_MARKET_CONTRADICTION": 24
+        },
+        "candidate_versions": 372,
+        "counterfactual_initial_ready": {
+          "20": 35,
+          "30": 78,
+          "45": 96
+        },
+        "quote_age_buckets": {
+          "0-10": 17,
+          "10-20": 110,
+          "20-30": 131,
+          "30-45": 67,
+          "45-60": 40,
+          ">60": 7
+        },
+        "recorded_ready_versions": 107,
+        "unique_fixtures": 21
+      },
+      "LAB_LIVE_API_FEED_V1": {
+        "age_only_rejected_versions": 28,
+        "blocker_counts": {
+          "NON_POSITIVE_EV": 43,
+          "SEVERE_MODEL_MARKET_CONTRADICTION": 3,
+          "STALE_LIVE_ODDS": 64
+        },
+        "candidate_versions": 76,
+        "counterfactual_initial_ready": {
+          "20": 5,
+          "30": 19,
+          "45": 33
+        },
+        "quote_age_buckets": {
+          "10-20": 12,
+          "20-30": 29,
+          "30-45": 35
+        },
+        "recorded_ready_versions": 5,
+        "unique_fixtures": 10
+      }
+    },
+    "candidate_funnel": {
+      "eligible_feed_fixtures": 466,
+      "fixtures_discovered": 1351,
+      "fixtures_reviewed": 286,
+      "fresh_feed_fixtures": 198,
+      "live_odds_rows": 1164,
+      "quote_age_diagnostic_fixtures": 345
+    },
+    "candidate_versions": 448,
+    "claims": 9,
+    "claims_without_receipt": 0,
+    "confirmed_publications": 9,
+    "cycle_status_counts": {
+      "LIVE_IDLE_NO_PENDING_RESULTS": 85,
+      "LIVE_RESULTS_ONLY": 22,
+      "LIVE_SCAN_COMPLETE": 60
+    },
+    "cycles": 167,
+    "delivery_status_counts": {
+      "LIVE_FINAL_REFRESH_FAILED": 1,
+      "LIVE_READINESS_BLOCKED": 2,
+      "LIVE_REFRESH_QUOTE_MISSING": 13,
+      "SENT": 18
+    },
+    "fingerprint": "fd83850a350c013782d66c8e6d5a772dc3c76e5e6e0ebefdbbb7d9772db9c597",
+    "fixture_diagnostic_counts": {
+      "LIVE_FIXTURE_REVIEW_UNAVAILABLE": 5,
+      "LIVE_STATE_QUOTE_MISMATCH": 220,
+      "UNSUPPORTED_LIVE_MARKET": 88
+    },
+    "http_latency_seconds": null,
+    "http_latency_status": "NOT_CAPTURED",
+    "limitations": [
+      "Counterfactuals cover stored initial candidate versions, not discarded broad-feed rows or guaranteed final publication.",
+      "Fixture/quote exposures and blockers overlap; these are not independent match counts.",
+      "HTTP start/end times and raw mismatch payloads were not retained; latency and exact mismatch cause cannot be reconstructed.",
+      "Broad-feed status filters include blocked/stopped/finished and timestamps; zero fresh feed is not proof all rows were stale.",
+      "Successive same-state quote samples are sparse; no executable-bookmaker price or slippage guarantee.",
+      "Changing request order may change score/minute alignment; no measured gain or budget change is asserted."
+    ],
+    "natural_provider_calls": 1816,
+    "provider_calls_initiated": 0,
+    "provider_calls_per_confirmed_publication": 201.77777777777777,
+    "provider_feed_age_distribution": "UNAVAILABLE_FOR_DISCARDED_BROAD_FEED_ROWS",
+    "quote_movement_exclusions": {
+      "MARKET_NOT_VERIFIABLY_ACTIVE": 7
+    },
+    "quote_to_preparation_seconds": {
+      "maximum": 0.363822,
+      "mean": 0.09506403794642858,
+      "median": 0.0691995,
+      "minimum": 0.003978,
+      "n": 448
+    },
+    "result_counts": {
+      "LOST": 8,
+      "WON": 1
+    },
+    "same_state_odds_movement": {
+      "maximum": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "minimum": 0.0,
+      "n": 9
+    },
+    "same_state_quote_pairs": [
+      {
+        "elapsed_seconds": 10.544284,
+        "from_candidate": "live-b2fb0277c3f95abff1d8b3f079ce4a2e7a6dd23c1decd8ecdc562f46b8ccbba6",
+        "from_quote_age": 13.186697,
+        "quote_series_fingerprint": "4ecf04077b2fb97cecd0114461d9f9f6ee2311c3fc37a644253a62ae6b600e15",
+        "relative_price_change": "0",
+        "to_candidate": "live-73c28e83f9cd5a98584aa2ad5833e9787e51da7e3f390b9a89a000e86f1b7ed8",
+        "to_quote_age": 23.730981
+      },
+      {
+        "elapsed_seconds": 6.569182,
+        "from_candidate": "live-6e920f24ffb74808a57ca4e8c8316771d0fefdaab0cddf812fe2d9a1e5250544",
+        "from_quote_age": 10.439798,
+        "quote_series_fingerprint": "8efc64ca4a70cd7125d3a905e1ee1c7058c9b9eedffe0643955801ea3dabba86",
+        "relative_price_change": "0",
+        "to_candidate": "live-14ecd9ef5ad791a16ac2409f42df8cd6f0ece6556d2db6a78ffe9897fa6fb35b",
+        "to_quote_age": 17.00898
+      },
+      {
+        "elapsed_seconds": 11.317664,
+        "from_candidate": "live-2c5c83f5b6f2d5d12a162a6c970a2d47cde83fdbe3d45c3996e818bfed5fa3ff",
+        "from_quote_age": 21.843983,
+        "quote_series_fingerprint": "661bd4517bd531acc5237b22ea55a000a17020663aa9574e8252c983332c7d64",
+        "relative_price_change": "0",
+        "to_candidate": "live-c4062626f3ee71cd1b3d1d07ff82b6fc3767352821cd8d93c232516756ff72ae",
+        "to_quote_age": 33.161647
+      },
+      {
+        "elapsed_seconds": 15.460912,
+        "from_candidate": "live-b9558f70de098cae8da4f53e7fdf93393c23f20871de4f33e5dad142071f3238",
+        "from_quote_age": 17.572937,
+        "quote_series_fingerprint": "270203baf3486026d31b6dd2dc7fbf73ee1bcbccfaa9e4f8d3bc7a8286587fd7",
+        "relative_price_change": "0",
+        "to_candidate": "live-f423c83f9722403f175cb896d2edadf455591776314070ac857c8bcac3342886",
+        "to_quote_age": 33.033849
+      },
+      {
+        "elapsed_seconds": 19.917299,
+        "from_candidate": "live-aaabfc50dae8312e56a233796efb7e42e54142b2ebfe16ec36f7439c9d5d1a1a",
+        "from_quote_age": 6.189155,
+        "quote_series_fingerprint": "c49dfc1f3737945d2e16e7e4fb8d89322499ad18488d13d340b97b7cf0a62464",
+        "relative_price_change": "0",
+        "to_candidate": "live-611483fd77352605443f8f18623dda1fb6d79f2ed05c7d59151e25a52e04fe37",
+        "to_quote_age": 26.106454
+      },
+      {
+        "elapsed_seconds": 16.05,
+        "from_candidate": "live-8f8f5eddbacced4d3487e9974e074840da0afa7c59656e1232642e685d89323c",
+        "from_quote_age": 12.238283,
+        "quote_series_fingerprint": "569bf8f4a1a4747a2d16fb760f88ce9d69ccd31abfe4c0414be1ece479c4fbcc",
+        "relative_price_change": "0",
+        "to_candidate": "live-93cc1446cd9f24ef88b6b476f90b7c091c972c3d8e0a11221bb3ad056ed8115e",
+        "to_quote_age": 28.288283
+      },
+      {
+        "elapsed_seconds": 16.223426,
+        "from_candidate": "live-f3bfd158b0c54c135524d69f099fef564a026113fee2a180d4253ffc6b3728cb",
+        "from_quote_age": 14.899999,
+        "quote_series_fingerprint": "a4ecbea919f8d90c4e829fba8f0ade8ae4f8b7f74a8297d8e198de78cc8c595b",
+        "relative_price_change": "0",
+        "to_candidate": "live-926c92bb8a1102df74adacb65a19b84f7e5013742d4d0166f5041b48fb629b8b",
+        "to_quote_age": 31.123425
+      },
+      {
+        "elapsed_seconds": 2.901961,
+        "from_candidate": "live-d67e8a810e6bf86893b751701aad2430f21501fb877b47411c18778ff9927ba5",
+        "from_quote_age": 21.060583,
+        "quote_series_fingerprint": "6867d1153b66d5e006ae862286f00e5557d60ca416c692696dcaac2c5cc92ec4",
+        "relative_price_change": "0",
+        "to_candidate": "live-b299eb51d6a9962c7470d573c44b700216aee55bcc79395e0ea51f44bb845ba6",
+        "to_quote_age": 23.962544
+      },
+      {
+        "elapsed_seconds": 3.230884,
+        "from_candidate": "live-571d8d199efdb306f8db65226f7a6c55cd69d1c493846f89e0edf300bc0fc239",
+        "from_quote_age": 30.407374,
+        "quote_series_fingerprint": "ecc6792fd65359ca8c6443fc02d83c54a1848b4ddb1d03328b6c34aaaee5ac23",
+        "relative_price_change": "0",
+        "to_candidate": "live-5728a14a152bc598011aa57439ab1184d28a0017998b028358e0dc879fed8e7c",
+        "to_quote_age": 33.638258
+      }
+    ],
+    "selection_effect": "NONE",
+    "settled_publications": 9,
+    "since": "2026-10-08T15:00:00+00:00",
+    "source_fingerprint": "df98cc3aa58addfd0574948b6da0440f8be8ee203a68f9a9da59ff97cb0b4303",
+    "telegram_sends_initiated": 0,
+    "unique_fixtures": 29,
+    "unique_quote_age_buckets": {
+      "0-10": 17,
+      "10-20": 122,
+      "20-30": 160,
+      "30-45": 102,
+      "45-60": 40,
+      ">60": 7
+    },
+    "version": "LIVE_DIAGNOSTICS_V2"
+  },
+  "published": [
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "df5f9608dd16986f03f10c7e249e0f4b639d7d5a9e5a560134975992fba134bc",
+      "estimated_ev": 0.25159942735568896,
+      "events_age_at_send_seconds": 1.028638,
+      "final_regulation_score": [
+        5,
+        0
+      ],
+      "fixture_id": 1621636,
+      "flat_pnl": "-1",
+      "goal_rates": {
+        "away_goal_rate": 0.7,
+        "away_sample": 5,
+        "home_goal_rate": 1.6,
+        "home_sample": 5
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "496": 5
+          },
+          "countries": {
+            "Israel": 5
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-30T17:00:00+00:00",
+          "oldest_age_days": 34.22222222222222,
+          "oldest_kickoff": "2026-09-04T11:20:00+00:00",
+          "sample": 5,
+          "team_id": 6171,
+          "unique_fixtures": 5
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "496": 5
+          },
+          "countries": {
+            "Israel": 5
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-30T16:50:00+00:00",
+          "oldest_age_days": 35.111111111111114,
+          "oldest_kickoff": "2026-09-03T14:00:00+00:00",
+          "sample": 5,
+          "team_id": 6201,
+          "unique_fixtures": 5
+        }
+      ],
+      "league_id": 496,
+      "legacy_age_counterfactual": {
+        "20": true,
+        "30": true,
+        "45": true
+      },
+      "market": "UNDER_3_5",
+      "match": "Holon Yermiyahu – Nordia Jerusalem",
+      "minute": 60,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.1649832310529108,
+      "odds": "1.525",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-14ecd9ef5ad791a16ac2409f42df8cd6f0ece6556d2db6a78ffe9897fa6fb35b",
+      "prepared_at": "2026-10-08T17:57:45.008980+00:00",
+      "probability": "0.8207209359709436",
+      "provider_final_status": "FT",
+      "publication_fingerprint": "4a66c20c3bfee319291ce8a631e2a5d4288f29628ccdc0f6a386917d088ee4a4",
+      "quote_age_at_send_seconds": 17.128302,
+      "quote_retrieval_to_send_seconds": 0.125352,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": false,
+        "origin_age_seconds": 17.00898,
+        "retrieval_age_seconds": 0.00603,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.6557377049180327868852459016",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        0
+      ],
+      "result": "LOST",
+      "result_receipt_delay_seconds": 49.219759,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        2,
+        0
+      ],
+      "sent_at": "2026-10-08T17:57:45.128302+00:00",
+      "settled_at": "2026-10-08T18:32:07.507821+00:00",
+      "settlement_fingerprint": "f25349d6e9b4d3240224822fa24465d1c9bf4dd048a1eefec9c61c7016379bf0",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 1.809135,
+      "uncertainty": 0.07,
+      "zero_red_cards_probability": 0.8207209359709436
+    },
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "2d42ed39beb41a5a42a45df4364efdd3eed1e115cc0f949fc87c4e8ef3acb5e6",
+      "estimated_ev": 0.7160696441520427,
+      "events_age_at_send_seconds": 1.222763,
+      "final_regulation_score": [
+        2,
+        0
+      ],
+      "fixture_id": 1612075,
+      "flat_pnl": "-1",
+      "goal_rates": {
+        "away_goal_rate": 1.2111111111111112,
+        "away_sample": 9,
+        "home_goal_rate": 0.75,
+        "home_sample": 10
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "906": 10
+          },
+          "countries": {
+            "Argentina": 10
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-29T18:00:00+00:00",
+          "oldest_age_days": 76.0,
+          "oldest_kickoff": "2026-07-24T18:00:00+00:00",
+          "sample": 10,
+          "team_id": 18678,
+          "unique_fixtures": 10
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "906": 9
+          },
+          "countries": {
+            "Argentina": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-01T20:00:00+00:00",
+          "oldest_age_days": 62.916666666666664,
+          "oldest_kickoff": "2026-08-06T20:00:00+00:00",
+          "sample": 9,
+          "team_id": 18699,
+          "unique_fixtures": 9
+        }
+      ],
+      "league_id": 906,
+      "legacy_age_counterfactual": {
+        "20": false,
+        "30": false,
+        "45": true
+      },
+      "market": "AWAY_WIN",
+      "match": "Atlético Tucumán Res. – Talleres Córdoba Res.",
+      "minute": 19,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.17901741103801067,
+      "odds": "4",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-c4062626f3ee71cd1b3d1d07ff82b6fc3767352821cd8d93c232516756ff72ae",
+      "prepared_at": "2026-10-08T18:18:01.161647+00:00",
+      "probability": "0.42901741103801067",
+      "provider_final_status": "FT",
+      "publication_fingerprint": "bef7bcf94296b4fe95bb07fe2b58f618555183a381349a86a4e660302910a429",
+      "quote_age_at_send_seconds": 33.47767,
+      "quote_retrieval_to_send_seconds": 0.32322,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": true,
+        "origin_age_seconds": 33.161647,
+        "retrieval_age_seconds": 0.007197,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.25",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        1
+      ],
+      "result": "LOST",
+      "result_receipt_delay_seconds": 34.673506,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        0,
+        0
+      ],
+      "sent_at": "2026-10-08T18:18:01.477670+00:00",
+      "settled_at": "2026-10-08T19:57:06.283043+00:00",
+      "settlement_fingerprint": "f36f759cf557a27931ea75e5c03e46828825bb6d51ec1051e6263f3191939163",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 2.126888,
+      "uncertainty": 0.11000000000000001,
+      "zero_red_cards_probability": 0.42901741103801067
+    },
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "7551e89066c480261b9c230b70277e1d0d0789511fe9f680bcff5677ee8e08e5",
+      "estimated_ev": 0.3021553635927403,
+      "events_age_at_send_seconds": 1.03636,
+      "final_regulation_score": [
+        2,
+        0
+      ],
+      "fixture_id": 1612075,
+      "flat_pnl": "-1",
+      "goal_rates": {
+        "away_goal_rate": 1.2111111111111112,
+        "away_sample": 9,
+        "home_goal_rate": 0.75,
+        "home_sample": 10
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "906": 10
+          },
+          "countries": {
+            "Argentina": 10
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-29T18:00:00+00:00",
+          "oldest_age_days": 76.0,
+          "oldest_kickoff": "2026-07-24T18:00:00+00:00",
+          "sample": 10,
+          "team_id": 18678,
+          "unique_fixtures": 10
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "906": 9
+          },
+          "countries": {
+            "Argentina": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-01T20:00:00+00:00",
+          "oldest_age_days": 62.916666666666664,
+          "oldest_kickoff": "2026-08-06T20:00:00+00:00",
+          "sample": 9,
+          "team_id": 18699,
+          "unique_fixtures": 9
+        }
+      ],
+      "league_id": 906,
+      "legacy_age_counterfactual": {
+        "20": false,
+        "30": false,
+        "45": true
+      },
+      "market": "UNDER_1_5",
+      "match": "Atlético Tucumán Res. – Talleres Córdoba Res.",
+      "minute": 24,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.13429127270788466,
+      "odds": "2.25",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-f423c83f9722403f175cb896d2edadf455591776314070ac857c8bcac3342886",
+      "prepared_at": "2026-10-08T18:22:57.033849+00:00",
+      "probability": "0.5787357171523291",
+      "provider_final_status": "FT",
+      "publication_fingerprint": "4b58748e42d5c33c9048f5f74c687aa4108fb20564faceacb6af34f2ce2faebb",
+      "quote_age_at_send_seconds": 33.182122,
+      "quote_retrieval_to_send_seconds": 0.157475,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": true,
+        "origin_age_seconds": 33.033849,
+        "retrieval_age_seconds": 0.009202,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.4444444444444444444444444444",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        1
+      ],
+      "result": "LOST",
+      "result_receipt_delay_seconds": 34.731411,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        0,
+        0
+      ],
+      "sent_at": "2026-10-08T18:22:57.182122+00:00",
+      "settled_at": "2026-10-08T19:57:06.347175+00:00",
+      "settlement_fingerprint": "8950f32d2555e58a6c754fbacd0cd4806ac8c49d6973d21378b9076eaf77c0bb",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 1.953483,
+      "uncertainty": 0.11000000000000001,
+      "zero_red_cards_probability": 0.5787357171523291
+    },
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "39dc5fdc715feec7b08aa462fbcc14ef6e90e37b096567bfbd7b23dc875fc4dd",
+      "estimated_ev": 1.019571858134702,
+      "events_age_at_send_seconds": 1.051455,
+      "final_regulation_score": [
+        2,
+        0
+      ],
+      "fixture_id": 1612075,
+      "flat_pnl": "-1",
+      "goal_rates": {
+        "away_goal_rate": 1.2222222222222223,
+        "away_sample": 9,
+        "home_goal_rate": 0.7777777777777778,
+        "home_sample": 9
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "906": 9
+          },
+          "countries": {
+            "Argentina": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-29T18:00:00+00:00",
+          "oldest_age_days": 65.0,
+          "oldest_kickoff": "2026-08-04T18:00:00+00:00",
+          "sample": 9,
+          "team_id": 18678,
+          "unique_fixtures": 9
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "906": 9
+          },
+          "countries": {
+            "Argentina": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-01T20:00:00+00:00",
+          "oldest_age_days": 62.916666666666664,
+          "oldest_kickoff": "2026-08-06T20:00:00+00:00",
+          "sample": 9,
+          "team_id": 18699,
+          "unique_fixtures": 9
+        }
+      ],
+      "league_id": 906,
+      "legacy_age_counterfactual": {
+        "20": false,
+        "30": true,
+        "45": true
+      },
+      "market": "AWAY_WIN",
+      "match": "Atlético Tucumán Res. – Talleres Córdoba Res.",
+      "minute": 39,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.18537670147903673,
+      "odds": "5.5",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-611483fd77352605443f8f18623dda1fb6d79f2ed05c7d59151e25a52e04fe37",
+      "prepared_at": "2026-10-08T18:37:56.106454+00:00",
+      "probability": "0.36719488329721856",
+      "provider_final_status": "FT",
+      "publication_fingerprint": "7b40b2d5323952dfcfcdfac0921d85e16101071182f6873afe8ef5a0ab0bfa4b",
+      "quote_age_at_send_seconds": 26.238952,
+      "quote_retrieval_to_send_seconds": 0.139388,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": true,
+        "origin_age_seconds": 26.106454,
+        "retrieval_age_seconds": 0.00689,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.1818181818181818181818181818",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        1
+      ],
+      "result": "LOST",
+      "result_receipt_delay_seconds": 34.858752,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        0,
+        0
+      ],
+      "sent_at": "2026-10-08T18:37:56.238952+00:00",
+      "settled_at": "2026-10-08T19:57:06.354054+00:00",
+      "settlement_fingerprint": "61cacb503b242ee5d2249bc83af9c1f96b72ca8f24f44cbc95f4589e24d26e26",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 1.948274,
+      "uncertainty": 0.11000000000000001,
+      "zero_red_cards_probability": 0.36719488329721856
+    },
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "067fcf201ae51fb93697f05e41ff3a586ac998a37372fed66b205730b7c1d041",
+      "estimated_ev": 0.12318937841539657,
+      "events_age_at_send_seconds": 1.04224,
+      "final_regulation_score": [
+        0,
+        0
+      ],
+      "fixture_id": 1621630,
+      "flat_pnl": "0.444",
+      "goal_rates": {
+        "away_goal_rate": 0.6375,
+        "away_sample": 8,
+        "home_goal_rate": 1.5375,
+        "home_sample": 5
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "496": 5
+          },
+          "countries": {
+            "Israel": 5
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-30T13:00:00+00:00",
+          "oldest_age_days": 34.979166666666664,
+          "oldest_kickoff": "2026-09-03T17:45:00+00:00",
+          "sample": 5,
+          "team_id": 6153,
+          "unique_fixtures": 5
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "384": 3,
+            "496": 5
+          },
+          "countries": {
+            "Israel": 8
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-30T17:00:00+00:00",
+          "oldest_age_days": 730.1979166666666,
+          "oldest_kickoff": "2024-10-08T12:30:00+00:00",
+          "sample": 8,
+          "team_id": 6163,
+          "unique_fixtures": 8
+        }
+      ],
+      "league_id": 496,
+      "legacy_age_counterfactual": {
+        "20": false,
+        "30": true,
+        "45": true
+      },
+      "market": "DRAW",
+      "match": "Hapoel Herzliya – Hapoel Mahane Yehuda",
+      "minute": 79,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.08531120388877877,
+      "odds": "1.444",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-93cc1446cd9f24ef88b6b476f90b7c091c972c3d8e0a11221bb3ad056ed8115e",
+      "prepared_at": "2026-10-08T18:52:57.288283+00:00",
+      "probability": "0.7778319795120475",
+      "provider_final_status": "FT",
+      "publication_fingerprint": "f6031c45671d833820db58a77f200c9535036988a0279d7581fabcffde909c57",
+      "quote_age_at_send_seconds": 28.416248,
+      "quote_retrieval_to_send_seconds": 0.132478,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": true,
+        "origin_age_seconds": 28.288283,
+        "retrieval_age_seconds": 0.004513,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.6925207756232686980609418283",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        0
+      ],
+      "result": "WON",
+      "result_receipt_delay_seconds": 52.640947,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        0,
+        0
+      ],
+      "sent_at": "2026-10-08T18:52:57.416248+00:00",
+      "settled_at": "2026-10-08T19:12:08.595574+00:00",
+      "settlement_fingerprint": "77843378bb1c1e851f8e85992239ffb52b40109ba24c09f1ac21cd95554e29e0",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 1.955134,
+      "uncertainty": 0.07,
+      "zero_red_cards_probability": 0.7778319795120475
+    },
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "d27ec96375802e2fa25d585889d6e1b2cebedeec2f67d7c66dea98c0cdcfe143",
+      "estimated_ev": 0.24938206245993744,
+      "events_age_at_send_seconds": 1.046153,
+      "final_regulation_score": [
+        3,
+        2
+      ],
+      "fixture_id": 1612076,
+      "flat_pnl": "-1",
+      "goal_rates": {
+        "away_goal_rate": 0.9444444444444444,
+        "away_sample": 9,
+        "home_goal_rate": 1.8333333333333335,
+        "home_sample": 9
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "906": 9
+          },
+          "countries": {
+            "Argentina": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-30T18:00:00+00:00",
+          "oldest_age_days": 65.0,
+          "oldest_kickoff": "2026-08-04T18:00:00+00:00",
+          "sample": 9,
+          "team_id": 20817,
+          "unique_fixtures": 9
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "906": 9
+          },
+          "countries": {
+            "Argentina": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-01T18:00:00+00:00",
+          "oldest_age_days": 64.0,
+          "oldest_kickoff": "2026-08-05T18:00:00+00:00",
+          "sample": 9,
+          "team_id": 25592,
+          "unique_fixtures": 9
+        }
+      ],
+      "league_id": 906,
+      "legacy_age_counterfactual": {
+        "20": false,
+        "30": false,
+        "45": true
+      },
+      "market": "AWAY_WIN",
+      "match": "Belgrano Córdoba Res. – San Martín San Juan Res.",
+      "minute": 49,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.03562600892284823,
+      "odds": "7",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-926c92bb8a1102df74adacb65a19b84f7e5013742d4d0166f5041b48fb629b8b",
+      "prepared_at": "2026-10-08T19:08:00.123425+00:00",
+      "probability": "0.17848315177999108",
+      "provider_final_status": "FT",
+      "publication_fingerprint": "89e4b992cc0bc407eb95a02c7a735374ff6ed678e2dba455393058cddd682db6",
+      "quote_age_at_send_seconds": 31.266913,
+      "quote_retrieval_to_send_seconds": 0.14802,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": true,
+        "origin_age_seconds": 31.123425,
+        "retrieval_age_seconds": 0.004532,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.1428571428571428571428571429",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        0
+      ],
+      "result": "LOST",
+      "result_receipt_delay_seconds": 34.165862,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        2,
+        2
+      ],
+      "sent_at": "2026-10-08T19:08:00.266913+00:00",
+      "settled_at": "2026-10-08T19:57:07.191389+00:00",
+      "settlement_fingerprint": "9d6b8fc08d12abb7d156995d21729b0fd13407f4e9ca74603e7f2c51306ada58",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 1.968951,
+      "uncertainty": 0.07,
+      "zero_red_cards_probability": 0.17848315177999108
+    },
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "825337302f47a247edc0dfd711aa9b07faabff5626fad680005eb74428403a90",
+      "estimated_ev": 0.2612097367323374,
+      "events_age_at_send_seconds": 1.161014,
+      "final_regulation_score": [
+        0,
+        0
+      ],
+      "fixture_id": 1617037,
+      "flat_pnl": "-1",
+      "goal_rates": {
+        "away_goal_rate": 1.3333333333333333,
+        "away_sample": 9,
+        "home_goal_rate": 1.4444444444444446,
+        "home_sample": 9
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "453": 9
+          },
+          "countries": {
+            "Spain": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-03T14:00:00+00:00",
+          "oldest_age_days": 173.16666666666666,
+          "oldest_kickoff": "2026-04-18T14:00:00+00:00",
+          "sample": 9,
+          "team_id": 9857,
+          "unique_fixtures": 9
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "453": 9
+          },
+          "countries": {
+            "Spain": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-03T14:00:00+00:00",
+          "oldest_age_days": 173.125,
+          "oldest_kickoff": "2026-04-18T15:00:00+00:00",
+          "sample": 9,
+          "team_id": 9849,
+          "unique_fixtures": 9
+        }
+      ],
+      "league_id": 453,
+      "legacy_age_counterfactual": {
+        "20": false,
+        "30": true,
+        "45": true
+      },
+      "market": "AWAY_WIN",
+      "match": "Txantrea – Cortes",
+      "minute": 58,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.05224194734646748,
+      "odds": "5",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-b299eb51d6a9962c7470d573c44b700216aee55bcc79395e0ea51f44bb845ba6",
+      "prepared_at": "2026-10-08T19:18:11.962544+00:00",
+      "probability": "0.2522419473464675",
+      "provider_final_status": "FT",
+      "publication_fingerprint": "c8abb48f2d5b4a3074991c16aba0e39edfba52e9350ad7bf496fe25fa0f0a42d",
+      "quote_age_at_send_seconds": 24.119279,
+      "quote_retrieval_to_send_seconds": 0.161291,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": true,
+        "origin_age_seconds": 23.962544,
+        "retrieval_age_seconds": 0.004556,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.2",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        0
+      ],
+      "result": "LOST",
+      "result_receipt_delay_seconds": 33.599815,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        0,
+        0
+      ],
+      "sent_at": "2026-10-08T19:18:12.119279+00:00",
+      "settled_at": "2026-10-08T19:57:08.071734+00:00",
+      "settlement_fingerprint": "318cbce9d693d8b758f8d718e5fde1e4fb9da1efd194e89e2efbb54cf84d675c",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 2.110441,
+      "uncertainty": 0.07,
+      "zero_red_cards_probability": 0.2522419473464675
+    },
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "b728a57f7feb4903ca3f739081b9f2b1af4512db5feaac47d04d49cf69db796e",
+      "estimated_ev": 2.0562955778503706,
+      "events_age_at_send_seconds": 1.20647,
+      "final_regulation_score": [
+        3,
+        1
+      ],
+      "fixture_id": 1492780,
+      "flat_pnl": "-1",
+      "goal_rates": {
+        "away_goal_rate": 1.6666666666666665,
+        "away_sample": 9,
+        "home_goal_rate": 1.2430555555555556,
+        "home_sample": 8
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "3": 1,
+            "357": 5,
+            "848": 2
+          },
+          "countries": {
+            "Ireland": 5,
+            "World": 3
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-09-18T19:00:00+00:00",
+          "oldest_age_days": 62.0,
+          "oldest_kickoff": "2026-08-07T19:00:00+00:00",
+          "sample": 8,
+          "team_id": 652,
+          "unique_fixtures": 8
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "357": 6,
+            "359": 2,
+            "667": 1
+          },
+          "countries": {
+            "Ireland": 8,
+            "World": 1
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-01T16:00:00+00:00",
+          "oldest_age_days": 62.010416666666664,
+          "oldest_kickoff": "2026-08-07T18:45:00+00:00",
+          "sample": 9,
+          "team_id": 3850,
+          "unique_fixtures": 9
+        }
+      ],
+      "league_id": 357,
+      "legacy_age_counterfactual": {
+        "20": true,
+        "30": true,
+        "45": true
+      },
+      "market": "AWAY_WIN",
+      "match": "Shamrock Rovers – Drogheda United",
+      "minute": 27,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.040319521134320996,
+      "odds": "51",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-6add99dc7fd4121fd904f040baafed31d20b7ac315075626cd061c4466a2371f",
+      "prepared_at": "2026-10-08T19:28:06.905209+00:00",
+      "probability": "0.0599273642715759",
+      "provider_final_status": "FT",
+      "publication_fingerprint": "42b491a760c69c003275f042cddf13a606fcb096f405400b89a18f472c3763ff",
+      "quote_age_at_send_seconds": 13.071146,
+      "quote_retrieval_to_send_seconds": 0.17143,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": false,
+        "origin_age_seconds": 12.905209,
+        "retrieval_age_seconds": 0.005493,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.01960784313725490196078431373",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        0
+      ],
+      "result": "LOST",
+      "result_receipt_delay_seconds": 1.244765,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        2,
+        0
+      ],
+      "sent_at": "2026-10-08T19:28:07.071146+00:00",
+      "settled_at": "2026-10-08T20:52:06.990246+00:00",
+      "settlement_fingerprint": "0a6ffa804ae7f4164472bb1c74069e9f97920ea68a2c0e6eee0c9ab267a8359b",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 2.111062,
+      "uncertainty": 0.07,
+      "zero_red_cards_probability": 0.0599273642715759
+    },
+    {
+      "added_time": null,
+      "bookmaker_verified": false,
+      "candidate_fingerprint": "d72215c1528720c3864adfae8eb1e78a4371bcd249a8bf0a494393191c176127",
+      "estimated_ev": 0.14517578057366576,
+      "events_age_at_send_seconds": 1.10012,
+      "final_regulation_score": [
+        2,
+        2
+      ],
+      "fixture_id": 1640550,
+      "flat_pnl": "-1",
+      "goal_rates": {
+        "away_goal_rate": 1.7777777777777777,
+        "away_sample": 9,
+        "home_goal_rate": 1.7777777777777777,
+        "home_sample": 9
+      },
+      "history": [
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "1114": 8,
+            "617": 1
+          },
+          "countries": {
+            "Brazil": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-02T18:00:00+00:00",
+          "oldest_age_days": 54.270833333333336,
+          "oldest_kickoff": "2026-08-15T13:00:00+00:00",
+          "sample": 9,
+          "team_id": 11054,
+          "unique_fixtures": 9
+        },
+        {
+          "all_kickoffs_before_current": true,
+          "competitions": {
+            "1114": 6,
+            "617": 1,
+            "740": 2
+          },
+          "countries": {
+            "Brazil": 9
+          },
+          "current_fixture_excluded": true,
+          "duplicate_fixture_count": 0,
+          "newest_kickoff": "2026-10-03T13:00:00+00:00",
+          "oldest_age_days": 40.9375,
+          "oldest_kickoff": "2026-08-28T21:00:00+00:00",
+          "sample": 9,
+          "team_id": 12979,
+          "unique_fixtures": 9
+        }
+      ],
+      "league_id": 617,
+      "legacy_age_counterfactual": {
+        "20": false,
+        "30": false,
+        "45": true
+      },
+      "market": "HOME_WIN",
+      "match": "Flamengo U20 – Vasco da Gama U20",
+      "minute": 23,
+      "model_generation": "LIVE_POISSON_BASELINE_V1",
+      "model_market_difference": 0.046830896959247026,
+      "odds": "3.1",
+      "optional_features_present": [],
+      "poisson_probability_absolute_replay_error": 0.0,
+      "policy": "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+      "prediction_id": "live-5728a14a152bc598011aa57439ab1184d28a0017998b028358e0dc879fed8e7c",
+      "prepared_at": "2026-10-08T19:53:03.638258+00:00",
+      "probability": "0.36941154212053734",
+      "provider_final_status": "PEN",
+      "publication_fingerprint": "244a9ddc992f0c44f24f7ae9757ac2b0422f18379ae4785f760f504ebd112f1a",
+      "quote_age_at_send_seconds": 33.743821,
+      "quote_retrieval_to_send_seconds": 0.109541,
+      "quote_timing_at_preparation": {
+        "exceeds_legacy_age_limit": true,
+        "origin_age_seconds": 33.638258,
+        "retrieval_age_seconds": 0.003978,
+        "status": "VALID"
+      },
+      "rates_replay_equal": true,
+      "raw_implied_probability": "0.3225806451612903225806451613",
+      "readiness_at_receipt_replay_blockers": [],
+      "red_card_probability_effect": 0.0,
+      "red_cards": [
+        0,
+        0
+      ],
+      "result": "LOST",
+      "result_receipt_delay_seconds": 0.398467,
+      "result_receipt_present": true,
+      "score_at_publication": [
+        0,
+        0
+      ],
+      "sent_at": "2026-10-08T19:53:03.743821+00:00",
+      "settled_at": "2026-10-08T21:47:07.258867+00:00",
+      "settlement_fingerprint": "e4e4d2324d191af1a8af9ed9d7f46c0cdaeb27099b8e7d5961380807d6640a5e",
+      "settlement_replay": "PASS",
+      "state_age_at_send_seconds": 2.398245,
+      "uncertainty": 0.07,
+      "zero_red_cards_probability": 0.36941154212053734
+    }
+  ],
+  "safety": {
+    "activation": false,
+    "policy_changes": 0,
+    "production_writes": 0,
+    "provider_calls": 0,
+    "telegram_calls": 0,
+    "telegram_sends": 0,
+    "training": false
+  },
+  "segments": {
+    "fixture": {
+      "1492780": {
+        "average_odds": "51",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "51",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.0599273642715759,
+          "brier": 0.0035912889885381513,
+          "ece_10_equal_width": 0.0599273642715759,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.061798134651903654,
+          "mean_probability": 0.0599273642715759,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.0599273642715759,
+              "upper": 0.1
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 1,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.0196078431372549,
+          "brier": 0.00038446751249519417,
+          "ece_10_equal_width": 0.0196078431372549,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.019802627296179712,
+          "mean_probability": 0.0196078431372549,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.0196078431372549,
+              "upper": 0.1
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "1612075": {
+        "average_odds": "3.916666666666666666666666667",
+        "flat_pnl": "-3",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "4",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.4583160038291861,
+          "brier": 0.21794101720041198,
+          "ece_10_equal_width": 0.4583160038291861,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.6274947435816935,
+          "mean_probability": 0.4583160038291861,
+          "n": 3,
+          "reliability_bins": [
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.36719488329721856,
+              "upper": 0.4
+            },
+            {
+              "lower": 0.4,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.42901741103801067,
+              "upper": 0.5
+            },
+            {
+              "lower": 0.5,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.5787357171523291,
+              "upper": 0.6
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 3
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 2,
+        "published": 3,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.29208754208754206,
+          "brier": 0.09769623847906676,
+          "ece_10_equal_width": 0.2920875420875421,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.358713144272017,
+          "mean_probability": 0.29208754208754206,
+          "n": 3,
+          "reliability_bins": [
+            {
+              "lower": 0.1,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.18181818181818182,
+              "upper": 0.2
+            },
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.25,
+              "upper": 0.3
+            },
+            {
+              "lower": 0.4,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.4444444444444444,
+              "upper": 0.5
+            }
+          ]
+        },
+        "red_card_publications": 3,
+        "settled": 3
+      },
+      "1612076": {
+        "average_odds": "7",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "7",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.17848315177999108,
+          "brier": 0.03185623546931933,
+          "ece_10_equal_width": 0.17848315177999108,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.19660283262198966,
+          "mean_probability": 0.17848315177999108,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.1,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.17848315177999108,
+              "upper": 0.2
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 1,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.14285714285714285,
+          "brier": 0.02040816326530612,
+          "ece_10_equal_width": 0.14285714285714285,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.1541506798272583,
+          "mean_probability": 0.14285714285714285,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.1,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.14285714285714285,
+              "upper": 0.2
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "1617037": {
+        "average_odds": "5",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "5",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.2522419473464675,
+          "brier": 0.06362600000113808,
+          "ece_10_equal_width": 0.2522419473464675,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.2906758123511534,
+          "mean_probability": 0.2522419473464675,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.2522419473464675,
+              "upper": 0.3
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 1,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.2,
+          "brier": 0.04000000000000001,
+          "ece_10_equal_width": 0.2,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.22314355131420976,
+          "mean_probability": 0.2,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.2,
+              "upper": 0.3
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "1621630": {
+        "average_odds": "1.444",
+        "flat_pnl": "0.444",
+        "flat_roi": "0.444",
+        "independent_fixtures": 1,
+        "median_odds": "1.444",
+        "model_metrics": {
+          "bias_predicted_minus_observed": -0.22216802048795248,
+          "brier": 0.04935862932753527,
+          "ece_10_equal_width": 0.22216802048795248,
+          "hit_rate": 1,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.25124474276493697,
+          "mean_probability": 0.7778319795120475,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.7,
+              "n": 1,
+              "observed": 1,
+              "predicted": 0.7778319795120475,
+              "upper": 0.8
+            }
+          ]
+        },
+        "outcomes": {
+          "WON": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 0,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": -0.30747922437673125,
+          "brier": 0.09454347342331625,
+          "ece_10_equal_width": 0.30747922437673125,
+          "hit_rate": 1,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.3674170404706344,
+          "mean_probability": 0.6925207756232687,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.6,
+              "n": 1,
+              "observed": 1,
+              "predicted": 0.6925207756232687,
+              "upper": 0.7
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "1621636": {
+        "average_odds": "1.525",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "1.525",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.8207209359709436,
+          "brier": 0.6735828547410218,
+          "ece_10_equal_width": 0.8207209359709436,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 1.718811670224555,
+          "mean_probability": 0.8207209359709436,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.8,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.8207209359709436,
+              "upper": 0.9
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 0,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.6557377049180327,
+          "brier": 0.429991937651169,
+          "ece_10_equal_width": 0.6557377049180327,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 1.0663514264498881,
+          "mean_probability": 0.6557377049180327,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.6,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.6557377049180327,
+              "upper": 0.7
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "1640550": {
+        "average_odds": "3.1",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "3.1",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.36941154212053734,
+          "brier": 0.13646488745187355,
+          "ece_10_equal_width": 0.36941154212053734,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.4611018354331313,
+          "mean_probability": 0.36941154212053734,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.36941154212053734,
+              "upper": 0.4
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 1,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.3225806451612903,
+          "brier": 0.1040582726326743,
+          "ece_10_equal_width": 0.3225806451612903,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.38946476676172326,
+          "mean_probability": 0.3225806451612903,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.3225806451612903,
+              "upper": 0.4
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      }
+    },
+    "league": {
+      "357": {
+        "average_odds": "51",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "51",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.0599273642715759,
+          "brier": 0.0035912889885381513,
+          "ece_10_equal_width": 0.0599273642715759,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.061798134651903654,
+          "mean_probability": 0.0599273642715759,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.0599273642715759,
+              "upper": 0.1
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 1,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.0196078431372549,
+          "brier": 0.00038446751249519417,
+          "ece_10_equal_width": 0.0196078431372549,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.019802627296179712,
+          "mean_probability": 0.0196078431372549,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.0196078431372549,
+              "upper": 0.1
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "453": {
+        "average_odds": "5",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "5",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.2522419473464675,
+          "brier": 0.06362600000113808,
+          "ece_10_equal_width": 0.2522419473464675,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.2906758123511534,
+          "mean_probability": 0.2522419473464675,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.2522419473464675,
+              "upper": 0.3
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 1,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.2,
+          "brier": 0.04000000000000001,
+          "ece_10_equal_width": 0.2,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.22314355131420976,
+          "mean_probability": 0.2,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.2,
+              "upper": 0.3
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "496": {
+        "average_odds": "1.4845",
+        "flat_pnl": "-0.556",
+        "flat_roi": "-0.278",
+        "independent_fixtures": 2,
+        "median_odds": "1.4845",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.2992764577414956,
+          "brier": 0.36147074203427854,
+          "ece_10_equal_width": 0.5214444782294481,
+          "hit_rate": 0.5,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.985028206494746,
+          "mean_probability": 0.7992764577414956,
+          "n": 2,
+          "reliability_bins": [
+            {
+              "lower": 0.7,
+              "n": 1,
+              "observed": 1,
+              "predicted": 0.7778319795120475,
+              "upper": 0.8
+            },
+            {
+              "lower": 0.8,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.8207209359709436,
+              "upper": 0.9
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1,
+          "WON": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 0,
+        "published": 2,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.17412924027065074,
+          "brier": 0.2622677055372426,
+          "ece_10_equal_width": 0.1741292402706507,
+          "hit_rate": 0.5,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.7168842334602612,
+          "mean_probability": 0.6741292402706507,
+          "n": 2,
+          "reliability_bins": [
+            {
+              "lower": 0.6,
+              "n": 2,
+              "observed": 0.5,
+              "predicted": 0.6741292402706507,
+              "upper": 0.7
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 2
+      },
+      "617": {
+        "average_odds": "3.1",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "3.1",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.36941154212053734,
+          "brier": 0.13646488745187355,
+          "ece_10_equal_width": 0.36941154212053734,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.4611018354331313,
+          "mean_probability": 0.36941154212053734,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.36941154212053734,
+              "upper": 0.4
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 1,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.3225806451612903,
+          "brier": 0.1040582726326743,
+          "ece_10_equal_width": 0.3225806451612903,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.38946476676172326,
+          "mean_probability": 0.3225806451612903,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.3225806451612903,
+              "upper": 0.4
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "906": {
+        "average_odds": "4.6875",
+        "flat_pnl": "-4",
+        "flat_roi": "-1",
+        "independent_fixtures": 2,
+        "median_odds": "4.75",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.38835779081688737,
+          "brier": 0.1714198217676388,
+          "ece_10_equal_width": 0.38835779081688737,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.5197717658417675,
+          "mean_probability": 0.38835779081688737,
+          "n": 4,
+          "reliability_bins": [
+            {
+              "lower": 0.1,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.17848315177999108,
+              "upper": 0.2
+            },
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.36719488329721856,
+              "upper": 0.4
+            },
+            {
+              "lower": 0.4,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.42901741103801067,
+              "upper": 0.5
+            },
+            {
+              "lower": 0.5,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.5787357171523291,
+              "upper": 0.6
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 4
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 3,
+        "published": 4,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.2547799422799423,
+          "brier": 0.0783742196756266,
+          "ece_10_equal_width": 0.2547799422799423,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.3075725281608273,
+          "mean_probability": 0.2547799422799423,
+          "n": 4,
+          "reliability_bins": [
+            {
+              "lower": 0.1,
+              "n": 2,
+              "observed": 0,
+              "predicted": 0.16233766233766234,
+              "upper": 0.2
+            },
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.25,
+              "upper": 0.3
+            },
+            {
+              "lower": 0.4,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.4444444444444444,
+              "upper": 0.5
+            }
+          ]
+        },
+        "red_card_publications": 3,
+        "settled": 4
+      }
+    },
+    "market": {
+      "AWAY_WIN": {
+        "average_odds": "14.5",
+        "flat_pnl": "-5",
+        "flat_roi": "-1",
+        "independent_fixtures": 4,
+        "median_odds": "5.5",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.25737295154665274,
+          "brier": 0.08359230915048219,
+          "ece_10_equal_width": 0.25737295154665274,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.3134132236699225,
+          "mean_probability": 0.25737295154665274,
+          "n": 5,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.0599273642715759,
+              "upper": 0.1
+            },
+            {
+              "lower": 0.1,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.17848315177999108,
+              "upper": 0.2
+            },
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.2522419473464675,
+              "upper": 0.3
+            },
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.36719488329721856,
+              "upper": 0.4
+            },
+            {
+              "lower": 0.4,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.42901741103801067,
+              "upper": 0.5
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 5
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 5,
+        "published": 5,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.15885663356251592,
+          "brier": 0.03127009640349415,
+          "ece_10_equal_width": 0.15885663356251592,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.17708992527031597,
+          "mean_probability": 0.15885663356251592,
+          "n": 5,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.0196078431372549,
+              "upper": 0.1
+            },
+            {
+              "lower": 0.1,
+              "n": 2,
+              "observed": 0,
+              "predicted": 0.16233766233766234,
+              "upper": 0.2
+            },
+            {
+              "lower": 0.2,
+              "n": 2,
+              "observed": 0,
+              "predicted": 0.225,
+              "upper": 0.3
+            }
+          ]
+        },
+        "red_card_publications": 2,
+        "settled": 5
+      },
+      "DRAW": {
+        "average_odds": "1.444",
+        "flat_pnl": "0.444",
+        "flat_roi": "0.444",
+        "independent_fixtures": 1,
+        "median_odds": "1.444",
+        "model_metrics": {
+          "bias_predicted_minus_observed": -0.22216802048795248,
+          "brier": 0.04935862932753527,
+          "ece_10_equal_width": 0.22216802048795248,
+          "hit_rate": 1,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.25124474276493697,
+          "mean_probability": 0.7778319795120475,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.7,
+              "n": 1,
+              "observed": 1,
+              "predicted": 0.7778319795120475,
+              "upper": 0.8
+            }
+          ]
+        },
+        "outcomes": {
+          "WON": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 0,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": -0.30747922437673125,
+          "brier": 0.09454347342331625,
+          "ece_10_equal_width": 0.30747922437673125,
+          "hit_rate": 1,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.3674170404706344,
+          "mean_probability": 0.6925207756232687,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.6,
+              "n": 1,
+              "observed": 1,
+              "predicted": 0.6925207756232687,
+              "upper": 0.7
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "HOME_WIN": {
+        "average_odds": "3.1",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "3.1",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.36941154212053734,
+          "brier": 0.13646488745187355,
+          "ece_10_equal_width": 0.36941154212053734,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.4611018354331313,
+          "mean_probability": 0.36941154212053734,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.36941154212053734,
+              "upper": 0.4
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 1,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.3225806451612903,
+          "brier": 0.1040582726326743,
+          "ece_10_equal_width": 0.3225806451612903,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.38946476676172326,
+          "mean_probability": 0.3225806451612903,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.3225806451612903,
+              "upper": 0.4
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      },
+      "UNDER_1_5": {
+        "average_odds": "2.25",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "2.25",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.5787357171523291,
+          "brier": 0.3349350303078206,
+          "ece_10_equal_width": 0.5787357171523291,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.8644948920205147,
+          "mean_probability": 0.5787357171523291,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.5,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.5787357171523291,
+              "upper": 0.6
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 0,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.4444444444444444,
+          "brier": 0.19753086419753085,
+          "ece_10_equal_width": 0.4444444444444444,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.587786664902119,
+          "mean_probability": 0.4444444444444444,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.4,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.4444444444444444,
+              "upper": 0.5
+            }
+          ]
+        },
+        "red_card_publications": 1,
+        "settled": 1
+      },
+      "UNDER_3_5": {
+        "average_odds": "1.525",
+        "flat_pnl": "-1",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "1.525",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.8207209359709436,
+          "brier": 0.6735828547410218,
+          "ece_10_equal_width": 0.8207209359709436,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 1.718811670224555,
+          "mean_probability": 0.8207209359709436,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.8,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.8207209359709436,
+              "upper": 0.9
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 0,
+        "published": 1,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.6557377049180327,
+          "brier": 0.429991937651169,
+          "ece_10_equal_width": 0.6557377049180327,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 1.0663514264498881,
+          "mean_probability": 0.6557377049180327,
+          "n": 1,
+          "reliability_bins": [
+            {
+              "lower": 0.6,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.6557377049180327,
+              "upper": 0.7
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 1
+      }
+    },
+    "red_cards": {
+      "False": {
+        "average_odds": "11.5115",
+        "flat_pnl": "-4.556",
+        "flat_roi": "-0.7593333333333333333333333333",
+        "independent_fixtures": 6,
+        "median_odds": "4.05",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.24310282016692716,
+          "brier": 0.15974664932990434,
+          "ece_10_equal_width": 0.31715882699624465,
+          "hit_rate": 0.16666666666666666,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.496705838007945,
+          "mean_probability": 0.4097694868335938,
+          "n": 6,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.0599273642715759,
+              "upper": 0.1
+            },
+            {
+              "lower": 0.1,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.17848315177999108,
+              "upper": 0.2
+            },
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.2522419473464675,
+              "upper": 0.3
+            },
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.36941154212053734,
+              "upper": 0.4
+            },
+            {
+              "lower": 0.7,
+              "n": 1,
+              "observed": 1,
+              "predicted": 0.7778319795120475,
+              "upper": 0.8
+            },
+            {
+              "lower": 0.8,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.8207209359709436,
+              "upper": 0.9
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 5,
+          "WON": 1
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 4,
+        "published": 6,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.17221735194949825,
+          "brier": 0.11489771908082681,
+          "ece_10_equal_width": 0.17221735194949825,
+          "hit_rate": 0.16666666666666666,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.3700550153533156,
+          "mean_probability": 0.3388840186161649,
+          "n": 6,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.0196078431372549,
+              "upper": 0.1
+            },
+            {
+              "lower": 0.1,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.14285714285714285,
+              "upper": 0.2
+            },
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.2,
+              "upper": 0.3
+            },
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.3225806451612903,
+              "upper": 0.4
+            },
+            {
+              "lower": 0.6,
+              "n": 2,
+              "observed": 0.5,
+              "predicted": 0.6741292402706507,
+              "upper": 0.7
+            }
+          ]
+        },
+        "red_card_publications": 0,
+        "settled": 6
+      },
+      "True": {
+        "average_odds": "3.916666666666666666666666667",
+        "flat_pnl": "-3",
+        "flat_roi": "-1",
+        "independent_fixtures": 1,
+        "median_odds": "4",
+        "model_metrics": {
+          "bias_predicted_minus_observed": 0.4583160038291861,
+          "brier": 0.21794101720041198,
+          "ece_10_equal_width": 0.4583160038291861,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.6274947435816935,
+          "mean_probability": 0.4583160038291861,
+          "n": 3,
+          "reliability_bins": [
+            {
+              "lower": 0.3,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.36719488329721856,
+              "upper": 0.4
+            },
+            {
+              "lower": 0.4,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.42901741103801067,
+              "upper": 0.5
+            },
+            {
+              "lower": 0.5,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.5787357171523291,
+              "upper": 0.6
+            }
+          ]
+        },
+        "outcomes": {
+          "LOST": 3
+        },
+        "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+        "probability_below_half": 2,
+        "published": 3,
+        "raw_price_implied_metrics": {
+          "bias_predicted_minus_observed": 0.29208754208754206,
+          "brier": 0.09769623847906676,
+          "ece_10_equal_width": 0.2920875420875421,
+          "hit_rate": 0,
+          "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+          "log_loss": 0.358713144272017,
+          "mean_probability": 0.29208754208754206,
+          "n": 3,
+          "reliability_bins": [
+            {
+              "lower": 0.1,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.18181818181818182,
+              "upper": 0.2
+            },
+            {
+              "lower": 0.2,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.25,
+              "upper": 0.3
+            },
+            {
+              "lower": 0.4,
+              "n": 1,
+              "observed": 0,
+              "predicted": 0.4444444444444444,
+              "upper": 0.5
+            }
+          ]
+        },
+        "red_card_publications": 3,
+        "settled": 3
+      }
+    }
+  },
+  "since": "2026-10-08T15:00:00+00:00",
+  "source_fingerprint": "6e22d5b635beffe41ec267d8d7d580296111018cb76cb67dd19be97edf7ce100",
+  "source_row_counts": {
+    "live_candidates": 563,
+    "live_claims": 9,
+    "live_diagnostics": 366,
+    "live_publications": 9,
+    "live_result_receipts": 9,
+    "live_settlements": 9
+  },
+  "summary": {
+    "average_odds": "8.979888888888888888888888889",
+    "flat_pnl": "-7.556",
+    "flat_roi": "-0.8395555555555555555555555556",
+    "independent_fixtures": 7,
+    "median_odds": "4",
+    "model_metrics": {
+      "bias_predicted_minus_observed": 0.3148405480543468,
+      "brier": 0.1791447719534069,
+      "ece_10_equal_width": 0.3642112192738918,
+      "hit_rate": 0.1111111111111111,
+      "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+      "log_loss": 0.5403021398658612,
+      "mean_probability": 0.4259516591654579,
+      "n": 9,
+      "reliability_bins": [
+        {
+          "lower": 0.0,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.0599273642715759,
+          "upper": 0.1
+        },
+        {
+          "lower": 0.1,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.17848315177999108,
+          "upper": 0.2
+        },
+        {
+          "lower": 0.2,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.2522419473464675,
+          "upper": 0.3
+        },
+        {
+          "lower": 0.3,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.36830321270887795,
+          "upper": 0.4
+        },
+        {
+          "lower": 0.4,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.42901741103801067,
+          "upper": 0.5
+        },
+        {
+          "lower": 0.5,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.5787357171523291,
+          "upper": 0.6
+        },
+        {
+          "lower": 0.7,
+          "n": 1,
+          "observed": 1,
+          "predicted": 0.7778319795120475,
+          "upper": 0.8
+        },
+        {
+          "lower": 0.8,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.8207209359709436,
+          "upper": 0.9
+        }
+      ]
+    },
+    "outcomes": {
+      "LOST": 8,
+      "WON": 1
+    },
+    "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+    "probability_below_half": 6,
+    "published": 9,
+    "raw_price_implied_metrics": {
+      "bias_predicted_minus_observed": 0.21217408199551285,
+      "brier": 0.10916389221357346,
+      "ece_10_equal_width": 0.21217408199551285,
+      "hit_rate": 0.1111111111111111,
+      "inference": "DESCRIPTIVE_ONLY_SMALL_DEPENDENT_SAMPLE",
+      "log_loss": 0.3662743916595494,
+      "mean_probability": 0.32328519310662396,
+      "n": 9,
+      "reliability_bins": [
+        {
+          "lower": 0.0,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.0196078431372549,
+          "upper": 0.1
+        },
+        {
+          "lower": 0.1,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.16233766233766234,
+          "upper": 0.2
+        },
+        {
+          "lower": 0.2,
+          "n": 2,
+          "observed": 0,
+          "predicted": 0.225,
+          "upper": 0.3
+        },
+        {
+          "lower": 0.3,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.3225806451612903,
+          "upper": 0.4
+        },
+        {
+          "lower": 0.4,
+          "n": 1,
+          "observed": 0,
+          "predicted": 0.4444444444444444,
+          "upper": 0.5
+        },
+        {
+          "lower": 0.6,
+          "n": 2,
+          "observed": 0.5,
+          "predicted": 0.6741292402706507,
+          "upper": 0.7
+        }
+      ]
+    },
+    "red_card_publications": 3,
+    "settled": 9
+  },
+  "version": "LIVE_PUBLICATION_POSTMORTEM_V1"
+}

@@ -1,0 +1,70 @@
+{
+  "as_of": "2026-10-09T04:53:37.027928+00:00",
+  "base_commit": "54eca6405804c9e20cf54d40312347aebd3768a1",
+  "branch": "research/live-postmortem-20261009",
+  "champion_changes": 0,
+  "core_live_installed_source_identical_to_research": {
+    "app/adaptive_lab/worker.py": {
+      "installed": "bf2ef8e1489e57ca11e64fe6852a19566cce6c115ead74bb60c26379b8950c19",
+      "research": "bf2ef8e1489e57ca11e64fe6852a19566cce6c115ead74bb60c26379b8950c19"
+    },
+    "app/lab_combo/settlement.py": {
+      "installed": "7a1b6a98fea8a79b1dc29c0b44746e6d94cc9bdc40a307e9f01449f05920aa4c",
+      "research": "7a1b6a98fea8a79b1dc29c0b44746e6d94cc9bdc40a307e9f01449f05920aa4c"
+    },
+    "app/live_lab/engine.py": {
+      "installed": "fcea9133d5acb936c16ad5d4d9586867e70abc3443bd77f3d78b166574d4e8d6",
+      "research": "fcea9133d5acb936c16ad5d4d9586867e70abc3443bd77f3d78b166574d4e8d6"
+    },
+    "app/live_lab/policy.py": {
+      "installed": "173451db9dfbf58970f3048962f4727418ced420164a492a1610e4d1ff732945",
+      "research": "173451db9dfbf58970f3048962f4727418ced420164a492a1610e4d1ff732945"
+    },
+    "app/live_lab/provider.py": {
+      "installed": "0f6a2f75b49528a2453438c58618b7e2fa890cc08e7cc50ccf285582eb1c3b1c",
+      "research": "0f6a2f75b49528a2453438c58618b7e2fa890cc08e7cc50ccf285582eb1c3b1c"
+    },
+    "app/live_lab/service.py": {
+      "installed": "77fcb051f6cf6942e298507b63c45a0740f62735724d85477e0e249e8acb6c68",
+      "research": "77fcb051f6cf6942e298507b63c45a0740f62735724d85477e0e249e8acb6c68"
+    }
+  },
+  "deterministic_same_cutoff_replay": "PASS",
+  "evidence_fingerprint": "e4a30895a9296a37872a5da46193cfd2f9d4d839ecb66ab8fa507e3e8fda4091",
+  "fingerprint": "42b302564d41e6746e11dd0ffdba9515c8aec03ade23539e2409c314a4fd5451",
+  "limitations": [
+    "Protected Official routes unchanged; this is not a full Official database health audit.",
+    "Natural timer work continues independently; source cutoff freezes only this report."
+  ],
+  "live_release": "/opt/goalvision-live-quote-age-42a441f-20261008",
+  "live_timer_after": "ActiveState=active\nUnitFileState=enabled\n",
+  "live_timer_before": "ActiveState=active\nUnitFileState=enabled\n",
+  "official_mutations": 0,
+  "original_checkout_preexisting_status_unchanged": true,
+  "production_deployments": 0,
+  "protected_systemd_file_count": 142,
+  "protected_systemd_unchanged": true,
+  "provider_calls_initiated": 0,
+  "restarts": 0,
+  "selection_publication_policy_changes": 0,
+  "source_commit": "27f150e06a223f745dfd817122e082514581d9c9",
+  "source_fingerprint": "6e22d5b635beffe41ec267d8d7d580296111018cb76cb67dd19be97edf7ce100",
+  "telegram_calls": 0,
+  "telegram_sends": 0,
+  "tests": {
+    "command": [
+      "/home/arvis/GoalVisionAI/.venv/bin/python",
+      "-I",
+      "-B",
+      "operations/live-combo-research/offline_tests.py",
+      "tests/adaptive_lab/test_live_postmortem.py",
+      "tests/adaptive_lab/test_live.py",
+      "tests/adaptive_lab/test_evening_live.py",
+      "tests/adaptive_lab/test_live_quote_age_policy.py",
+      "tests/test_live_combo_research.py"
+    ],
+    "passed": 140,
+    "seconds": 7.26
+  },
+  "timer_changes": 0
+}
