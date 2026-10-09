@@ -5,7 +5,7 @@
 - [x] Preserve other quality/exposure/quote-age/quota gates, research capture and all historical results/Reply deliveries.
 - [x] 698 focused/adjacent offline tests PASS; 448-version original-input gate replay reproducible, without performance claims.
 - [x] Exact-base operator package, 576-module isolated smoke, 858-file deterministic assembly and read-only preflight PASS.
-- [ ] Operator apply of ~/goalvision-operations/live-probability-band.py --apply; no agent deployment.
+- [x] Operator applied live-probability-band.py --apply; readback confirms ENABLED, exact release hashes/environment and active unchanged LIVE timer. No agent deployment.
 - [ ] Natural-cycle prospective new-policy publication/settlement evidence.
 - Runbook: docs/operations/LIVE_PROBABILITY_60_70_20261009.md.
 - Evidence: docs/evidence/live_probability_band_validation_20261009.json.

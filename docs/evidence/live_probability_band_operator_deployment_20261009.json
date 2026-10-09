@@ -1,0 +1,31 @@
+{
+  "admin_codex_systemd": "DISABLED",
+  "agent_performed_deployment": false,
+  "agent_provider_calls": 0,
+  "agent_service_starts": 0,
+  "agent_telegram_calls": 0,
+  "agent_telegram_sends": 0,
+  "agent_timer_changes": 0,
+  "deployment_actor": "USER_OPERATOR",
+  "existing_systemd_files_unchanged": 142,
+  "fingerprint": "aad303b8592cdd03b9cd022378f753ca1dd78d04e1b46a31d3cf402b3e298fea",
+  "live_timer": {
+    "active": true,
+    "calendar": "*-*-* *:02/5:00 Europe/Riga",
+    "discovery_hours_riga": "18:00-23:00",
+    "enabled": true
+  },
+  "natural_new_policy_publication_verification": "PENDING_EVENING_CYCLE",
+  "new_live_service_dropin": "zzzzzzzzzzzzzzzzzzzzzzzzz-live-probability-20261009.conf",
+  "next_natural_discovery_riga": "2026-10-09T18:02:00+03:00",
+  "note": "Readback verifies installed policy and routes, not a new predictive-quality claim or natural publication.",
+  "policy_flag_verified": true,
+  "protected_routes_and_commands": "PASS",
+  "read_only_plan_exit": 0,
+  "read_only_plan_output": "LIVE_PROBABILITY_BAND_PLAN_VALIDATED=/opt/goalvision-live-probability-band-bfe6d40-20261009\ncurrent_mode=ENABLED; ADMIN_CODEX_SYSTEMD_DISABLED=PASS\nROOT_GUARD=CHECKED_AT_APPLY",
+  "release": "/opt/goalvision-live-probability-band-bfe6d40-20261009",
+  "release_files_and_environment": "EXACT_PACKAGE_VALIDATION_PASS",
+  "source_commit": "bfe6d40d57be33e5f494b5576fce622aa6ce9788",
+  "verified_at": "2026-10-09T05:44:04.223141+00:00",
+  "version": "LIVE_PROBABILITY_60_70_OPERATOR_DEPLOYMENT_READBACK_V1"
+}
