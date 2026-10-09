@@ -93,3 +93,21 @@ NO_SELECTION is correct.
 
 Final source SHA, package hashes, smoke/test results and safety verification are
 recorded in `docs/evidence/live_probability_band_validation_20261009.json`.
+
+## Verified preparation result
+
+- Source commit: `bfe6d40d57be33e5f494b5576fce622aa6ce9788`.
+- Branch: `research/live-probability-60-70-20261009`.
+- 698 focused/adjacent offline tests PASS in 41.00 seconds.
+- Initial matrix fixture-resolution errors were corrected with explicit local
+  fixture binding; all 698 tests were then rerun successfully.
+- Isolated immutable application smoke: 576 modules, sockets denied, policy gates PASS.
+- 858 application source/JSON files; two independent assemblies produced identical
+  manifest SHA-256 `f7f3a0671e456c05a415e5c4e69e6d7a35539dbc5cedff9d414d5e9f84b63d19`.
+- 10 package-file checksums verified; read-only plan PASS, current_mode=BASE.
+- Prepared package: `/home/arvis/goalvision-operations/live-probability-band-bfe6d40-20261009`.
+- New target release after operator apply:
+  `/opt/goalvision-live-probability-band-bfe6d40-20261009`.
+- 142 protected systemd files unchanged; original checkout dirty state preserved.
+- No deployment, timer/service restart, provider/Telegram call/send, champion or
+  Official change performed by this work.

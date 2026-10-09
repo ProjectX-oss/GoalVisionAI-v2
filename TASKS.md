@@ -1,3 +1,15 @@
+## 2026-10-09 — LIVE probability 60–70%; EV selection disabled
+
+- [x] User authorized inclusive 60–70% existing model probability and removal of EV eligibility/ranking for LIVE only.
+- [x] Default-off policy/cohort, deterministic probability ranking, initial and exact final-refresh checks; negative/zero EV is diagnostic.
+- [x] Preserve other quality/exposure/quote-age/quota gates, research capture and all historical results/Reply deliveries.
+- [x] 698 focused/adjacent offline tests PASS; 448-version original-input gate replay reproducible, without performance claims.
+- [x] Exact-base operator package, 576-module isolated smoke, 858-file deterministic assembly and read-only preflight PASS.
+- [ ] Operator apply of ~/goalvision-operations/live-probability-band.py --apply; no agent deployment.
+- [ ] Natural-cycle prospective new-policy publication/settlement evidence.
+- Runbook: docs/operations/LIVE_PROBABILITY_60_70_20261009.md.
+- Evidence: docs/evidence/live_probability_band_validation_20261009.json.
+
 ## 2026-10-08 — Full LIVE/COMBO requirements re-review
 
 - [x] Trace all 64 requirements; distinguish completed audits from incomplete research implementations.
