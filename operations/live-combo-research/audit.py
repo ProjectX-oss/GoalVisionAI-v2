@@ -90,6 +90,36 @@ def before(value: object, now: datetime) -> bool:
     except (ValueError,TypeError,AttributeError):return False
 
 
+def read_replay_inputs(shadow: Path, *, now: datetime, limit: int) -> tuple:
+    """Materialize bounded immutable rows, then close the DB before CPU replay.
+
+    The 60-second read deadline must not include selector computation. Holding
+    the read transaction during that computation also unnecessarily pins WAL.
+    """
+    db = readonly(shadow)
+    try:
+        cycles = [verified(r[0], r[1]) for r in db.execute(
+            "SELECT document_json,content_fingerprint FROM lab_v2_shadow_evidence WHERE kind='rehearsal' AND created_at_utc<=? ORDER BY rowid DESC LIMIT ?",
+            (now.isoformat(), limit))]
+        phases, records = {}, {}
+        for cycle in cycles:
+            started = utc(cycle["evaluated_at_utc"])
+            phase_id = fingerprint((started, "PUBLICATION_PREPARATION"))+":end"
+            phases[phase_id] = db.execute(
+                "SELECT document_json,content_fingerprint FROM lab_v2_shadow_evidence WHERE kind='cycle_phase' AND identity=?",
+                (phase_id,)).fetchone()
+            if len(cycle["candidate_ids"]) > 6000:
+                raise ValueError("RESEARCH_POOL_CAP")
+            for identity in cycle["candidate_ids"]:
+                if identity not in records:
+                    records[identity] = db.execute(
+                        "SELECT document_json,content_fingerprint,created_at_utc FROM lab_v2_shadow_evidence WHERE kind='candidate' AND identity=?",
+                        (identity,)).fetchone()
+        return cycles, phases, records
+    finally:
+        db.close()
+
+
 def frozen_replay(shadow: Path, ledger_path: Path, *, audit_path: Path, now: datetime, limit: int) -> dict:
     if not 1<=limit<=MAX_CYCLES: raise ValueError("CYCLE_CAP")
     ledger=ReadOnlyLedger(ledger_path)
@@ -113,58 +143,51 @@ def frozen_replay(shadow: Path, ledger_path: Path, *, audit_path: Path, now: dat
             else:facts[fid]=fact
         for fid in conflicts:facts.pop(fid,None)
     finally:ledger.close()
-    db=readonly(shadow)
+    cycles, phases, records = read_replay_inputs(shadow, now=now, limit=limit)
     events=[]
     selected_rows={name:[] for name in ("A_CURRENT_DOUBLE","B_SINGLES_BASED_V2","C_QUALITY_VALUE_FIRST")}
     simulated={name:[] for name in selected_rows}
-    try:
-        cycles=[verified(r[0],r[1]) for r in db.execute(
-            "SELECT document_json,content_fingerprint FROM lab_v2_shadow_evidence WHERE kind='rehearsal' AND created_at_utc<=? ORDER BY rowid DESC LIMIT ?",
-            (now.isoformat(),limit))]
-        for cycle in sorted(cycles,key=lambda c:c["evaluated_at_utc"]):
-            started=utc(cycle["evaluated_at_utc"])
-            phase_id=fingerprint((started,"PUBLICATION_PREPARATION"))+":end"
-            phase_row=db.execute("SELECT document_json,content_fingerprint FROM lab_v2_shadow_evidence WHERE kind='cycle_phase' AND identity=?",
-                                 (phase_id,)).fetchone()
-            if not phase_row:
-                events.append({"cycle":started.isoformat(),"status":"BLOCKED_MISSING_PREPARATION_TIME"});continue
-            phase=verified(phase_row[0],phase_row[1])
-            at=utc(phase["completed_at"])
-            if at>now or phase["status"]!="COMPLETED":continue
-            candidates=[]
-            source=[]
-            for identity in cycle["candidate_ids"]:
-                record=db.execute("SELECT document_json,content_fingerprint,created_at_utc FROM lab_v2_shadow_evidence WHERE kind='candidate' AND identity=?",
-                                  (identity,)).fetchone()
-                if record is None:raise ValueError("MISSING_FROZEN_CANDIDATE")
-                if utc(record[2])>at:raise ValueError("FUTURE_STORED_CANDIDATE")
-                candidates.append(verified(record[0],record[1]));source.append([identity,record[1]])
-            if not candidates:continue
-            # Same known actual exposure set for all strategies; prior hypothetical
-            # choices are separately carried per strategy to prevent replay duplicates.
-            exposures=[p for p,sent_at in known if sent_at<=utc(phase["started_at"])]
-            same_cycle_dc=[p for p in predictions if p.get("statistics_cohort")=="COMBO_AGREEMENT_20261004_V1"
-                           and utc(phase["started_at"])<=utc(p["created_at_utc"])<=at]
-            exposures.extend(same_cycle_dc)
-            outputs={}
-            # Run independently with each strategy's own prior simulated exposures.
-            for name in selected_rows:
-                value=replay(candidates,exposures+simulated[name],at=at,strategy=name)
-                chosen=value[name]["selected"]
-                simulated[name].extend(chosen)
-                scored=score_replay(chosen,facts,cutoff=now)
-                selected_rows[name].extend(scored)
-                outputs[name]={k:v for k,v in value[name].items() if k!="selected"}
-                outputs[name]["selected"]=[{
-                    "prediction_id":p["prediction_id"],"candidate_ids":[l["candidate_id"] for l in p["legs"]],
-                    "combined_odds":p["combined_odds"],"naive_joint_probability":p["estimated_probability_if_independent"],
-                    "fingerprint":digest(p)} for p in chosen]
-            events.append({"cycle":started.isoformat(),"at":at.isoformat(),"preparation_started_at":phase["started_at"],
-                           "clock_basis":"RECORDED_PREPARATION_END_NOT_EXACT_SELECTOR_CALL",
-                           "candidate_count":len(candidates),"source_candidates":source,
-                           "source_pool_fingerprint":digest(candidates),
-                           "actual_exposure_fingerprint":digest(exposures),"strategies":outputs})
-    finally:db.close()
+    for cycle in sorted(cycles,key=lambda c:c["evaluated_at_utc"]):
+        started=utc(cycle["evaluated_at_utc"])
+        phase_id=fingerprint((started,"PUBLICATION_PREPARATION"))+":end"
+        phase_row=phases[phase_id]
+        if not phase_row:
+            events.append({"cycle":started.isoformat(),"status":"BLOCKED_MISSING_PREPARATION_TIME"});continue
+        phase=verified(phase_row[0],phase_row[1])
+        at=utc(phase["completed_at"])
+        if at>now or phase["status"]!="COMPLETED":continue
+        candidates=[]
+        source=[]
+        for identity in cycle["candidate_ids"]:
+            record=records[identity]
+            if record is None:raise ValueError("MISSING_FROZEN_CANDIDATE")
+            if utc(record[2])>at:raise ValueError("FUTURE_STORED_CANDIDATE")
+            candidates.append(verified(record[0],record[1]));source.append([identity,record[1]])
+        if not candidates:continue
+        # Same known actual exposure set for all strategies; prior hypothetical
+        # choices are separately carried per strategy to prevent replay duplicates.
+        exposures=[p for p,sent_at in known if sent_at<=utc(phase["started_at"])]
+        same_cycle_dc=[p for p in predictions if p.get("statistics_cohort")=="COMBO_AGREEMENT_20261004_V1"
+                       and utc(phase["started_at"])<=utc(p["created_at_utc"])<=at]
+        exposures.extend(same_cycle_dc)
+        outputs={}
+        # Run independently with each strategy's own prior simulated exposures.
+        for name in selected_rows:
+            value=replay(candidates,exposures+simulated[name],at=at,strategy=name)
+            chosen=value[name]["selected"]
+            simulated[name].extend(chosen)
+            scored=score_replay(chosen,facts,cutoff=now)
+            selected_rows[name].extend(scored)
+            outputs[name]={k:v for k,v in value[name].items() if k!="selected"}
+            outputs[name]["selected"]=[{
+                "prediction_id":p["prediction_id"],"candidate_ids":[l["candidate_id"] for l in p["legs"]],
+                "combined_odds":p["combined_odds"],"naive_joint_probability":p["estimated_probability_if_independent"],
+                "fingerprint":digest(p)} for p in chosen]
+        events.append({"cycle":started.isoformat(),"at":at.isoformat(),"preparation_started_at":phase["started_at"],
+                       "clock_basis":"RECORDED_PREPARATION_END_NOT_EXACT_SELECTOR_CALL",
+                       "candidate_count":len(candidates),"source_candidates":source,
+                       "source_pool_fingerprint":digest(candidates),
+                       "actual_exposure_fingerprint":digest(exposures),"strategies":outputs})
     # Existing SINGLE/canonical result facts are read only after every selection.
     from app.dixon_coles_research.sources import results
     ids={int(l["fixture_id"]) for values in simulated.values() for p in values for l in p["legs"]}
