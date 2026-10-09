@@ -1,0 +1,782 @@
+{
+  "cycles": [
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:02:34.630015+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 24,
+        "fixtures_discovered": 54,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 46,
+        "quote_age_diagnostic_fixtures": 24,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:07:36.728278+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 36,
+        "fixtures_discovered": 53,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 44,
+        "quote_age_diagnostic_fixtures": 36,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:12:36.693889+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 33,
+        "fixtures_discovered": 50,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 27,
+        "live_odds_rows": 35,
+        "quote_age_diagnostic_fixtures": 6,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:17:41.693534+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 38,
+        "fixtures_discovered": 48,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 31,
+        "live_odds_rows": 41,
+        "quote_age_diagnostic_fixtures": 7,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:22:37.999754+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 31,
+        "fixtures_discovered": 45,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 24,
+        "live_odds_rows": 38,
+        "quote_age_diagnostic_fixtures": 7,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:27:37.111945+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 27,
+        "fixtures_discovered": 37,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 32,
+        "quote_age_diagnostic_fixtures": 27,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:32:39.285303+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 29,
+        "fixtures_discovered": 39,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 37,
+        "quote_age_diagnostic_fixtures": 29,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:37:40.183165+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 34,
+        "fixtures_discovered": 42,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 36,
+        "quote_age_diagnostic_fixtures": 34,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:42:39.328504+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 33,
+        "fixtures_discovered": 42,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 36,
+        "quote_age_diagnostic_fixtures": 33,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:47:36.758824+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 31,
+        "fixtures_discovered": 41,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 37,
+        "quote_age_diagnostic_fixtures": 31,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:52:38.946589+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 24,
+        "fixtures_discovered": 41,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 35,
+        "quote_age_diagnostic_fixtures": 24,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T15:57:36.785279+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 17,
+        "fixtures_discovered": 33,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 30,
+        "quote_age_diagnostic_fixtures": 17,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 35,
+      "at": "2026-10-09T16:02:37.751800+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 33,
+        "fixtures_discovered": 42,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 48,
+        "quote_age_diagnostic_fixtures": 33,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:07:39.520667+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 45,
+        "fixtures_discovered": 53,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 47,
+        "quote_age_diagnostic_fixtures": 45,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:12:38.653351+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 47,
+        "fixtures_discovered": 53,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 47,
+        "quote_age_diagnostic_fixtures": 47,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:17:45.141477+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 48,
+        "fixtures_discovered": 55,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 49,
+        "quote_age_diagnostic_fixtures": 48,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:22:40.317004+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 42,
+        "fixtures_discovered": 54,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 49,
+        "quote_age_diagnostic_fixtures": 42,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:27:40.504187+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 39,
+        "fixtures_discovered": 53,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 48,
+        "quote_age_diagnostic_fixtures": 39,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:32:38.892245+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 45,
+        "fixtures_discovered": 59,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 41,
+        "live_odds_rows": 52,
+        "quote_age_diagnostic_fixtures": 4,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:37:40.665949+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 48,
+        "fixtures_discovered": 62,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 47,
+        "live_odds_rows": 52,
+        "quote_age_diagnostic_fixtures": 1,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:42:40.342286+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 51,
+        "fixtures_discovered": 62,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 52,
+        "quote_age_diagnostic_fixtures": 51,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:47:40.418231+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 45,
+        "fixtures_discovered": 63,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 54,
+        "quote_age_diagnostic_fixtures": 45,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:52:41.984366+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 24,
+        "fixtures_discovered": 58,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 52,
+        "quote_age_diagnostic_fixtures": 24,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T16:57:40.857311+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 21,
+        "fixtures_discovered": 56,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 49,
+        "quote_age_diagnostic_fixtures": 21,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 36,
+      "at": "2026-10-09T17:02:40.856550+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 37,
+        "fixtures_discovered": 68,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 72,
+        "quote_age_diagnostic_fixtures": 37,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:07:42.679602+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 69,
+        "fixtures_discovered": 89,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 75,
+        "quote_age_diagnostic_fixtures": 69,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:12:43.937135+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 73,
+        "fixtures_discovered": 91,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 75,
+        "quote_age_diagnostic_fixtures": 73,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:17:47.154938+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 69,
+        "fixtures_discovered": 91,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 76,
+        "quote_age_diagnostic_fixtures": 69,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:22:43.203103+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 60,
+        "fixtures_discovered": 90,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 52,
+        "live_odds_rows": 69,
+        "quote_age_diagnostic_fixtures": 8,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:27:43.013204+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 64,
+        "fixtures_discovered": 87,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 74,
+        "quote_age_diagnostic_fixtures": 64,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:32:43.002250+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 67,
+        "fixtures_discovered": 90,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 80,
+        "quote_age_diagnostic_fixtures": 67,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:37:45.247929+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 76,
+        "fixtures_discovered": 94,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 80,
+        "quote_age_diagnostic_fixtures": 76,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:42:43.582797+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 76,
+        "fixtures_discovered": 94,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 80,
+        "quote_age_diagnostic_fixtures": 76,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:47:49.402443+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 73,
+        "fixtures_discovered": 94,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 81,
+        "quote_age_diagnostic_fixtures": 73,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:52:45.107983+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 46,
+        "fixtures_discovered": 85,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 73,
+        "quote_age_diagnostic_fixtures": 46,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T17:57:44.217700+00:00",
+      "candidates": 0,
+      "deliveries": [],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 28,
+        "fixtures_discovered": 73,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 64,
+        "quote_age_diagnostic_fixtures": 28,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T18:02:48.446047+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 19,
+        "fixtures_discovered": 102,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 14,
+        "live_odds_rows": 44,
+        "quote_age_diagnostic_fixtures": 5,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    },
+    {
+      "api_calls": 37,
+      "at": "2026-10-09T18:07:45.884445+00:00",
+      "candidates": 1,
+      "deliveries": [
+        {
+          "sent": false,
+          "status": "LIVE_FINAL_REFRESH_FAILED"
+        }
+      ],
+      "discovery_evidence": {
+        "eligible_feed_fixtures": 88,
+        "fixtures_discovered": 111,
+        "fixtures_reviewed": 10,
+        "fresh_feed_fixtures": 0,
+        "live_odds_rows": 100,
+        "quote_age_diagnostic_fixtures": 88,
+        "status": "LIVE_SCAN_COMPLETE"
+      },
+      "settled": 0,
+      "status": "LIVE_SCAN_COMPLETE"
+    }
+  ],
+  "since": "2026-10-09T15:00:00+00:00",
+  "until": "2026-10-09T18:09:03.379063+00:00"
+}

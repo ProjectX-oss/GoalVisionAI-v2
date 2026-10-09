@@ -1,3 +1,15 @@
+## 2026-10-09 — LIVE final-review budget and expanded goal-market research
+
+- [x] Read-only evening audit: 38 cycles, 721 candidate versions, 64 READY across 20 fixtures, 26 generic final-refresh failures, no publication claims.
+- [x] Reproduce cycle-budget starvation at 35/36/37 HTTP attempts; reserve nine attempts for final review without increasing any quota or weakening publication gates.
+- [x] Add fixed-vocabulary failure diagnostics and optional isolated DC/DNB/totals/handicap scenario payoff research. No new active markets.
+- [x] 793 focused/adjacent tests PASS; 576-module immutable-release smoke and read-only operator preflight PASS.
+- [x] Prepare exact-base live-final-review-budget.py wrapper; agent deployment/provider calls/Telegram sends = 0.
+- [ ] Operator application and next natural-cycle verification. No prediction is forced or guaranteed.
+- [ ] New market raw current-quote/catalog mapping and complete end-to-end settlement validation before any publication expansion.
+- Runbook: docs/operations/LIVE_FINAL_REVIEW_BUDGET_20261009.md.
+- Evidence: docs/evidence/live_final_review_budget_20261009/validation.json.
+
 ## 2026-10-09 — LIVE / COMBO accuracy hardening (isolated research)
 
 - [x] Verify installed 60–70% / EV-off LIVE release and enabled natural timer; preserve 143 systemd file hashes and all 220 preexisting main-checkout status lines.

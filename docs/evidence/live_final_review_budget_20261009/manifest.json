@@ -1,0 +1,11 @@
+{
+  "files": {
+    "TASKS.md": "b8649216ca457876e63d20a3478ad2437b4fd2f086de5e465da8676ac4a772af",
+    "docs/evidence/live_final_review_budget_20261009/evening_postmortem.json": "d36ae88029b9ffd3ab2a93e81237c899ef5761638b71997cb41e4b1189f9899b",
+    "docs/evidence/live_final_review_budget_20261009/natural_cycles.json": "50e0433613942c2fb945b11792d3a59a505631e1406bbd350a731295ce9dd640",
+    "docs/evidence/live_final_review_budget_20261009/validation.json": "fb84d352abe93f1ff42467e9b19671e393967db8dbcaa025771f354fe36c9e35",
+    "docs/operations/LIVE_FINAL_REVIEW_BUDGET_20261009.md": "08a1847701b0dcd4fb81f0369105ab6794106846b9d0886f31426ed9f12d36bc"
+  },
+  "self_hash_excluded": true,
+  "source_commit": "a4cdfa1043ec69c2838794371ba0a57d4163f50d"
+}

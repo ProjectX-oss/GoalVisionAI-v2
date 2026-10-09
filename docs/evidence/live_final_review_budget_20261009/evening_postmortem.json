@@ -1,0 +1,220 @@
+{
+  "as_of": "2026-10-09T18:09:03.379063+00:00",
+  "counterfactual_scope": "Fixed published selections only; no replacement/re-ranking, NOT performance of an alternative policy",
+  "fingerprint": "29b79f5280c092b2b16650c4e20a0b73a34cb002dd45284403afbdbf5bab82cd",
+  "legacy_age_published_subset": {
+    "20": {
+      "average_odds": null,
+      "flat_pnl": "0",
+      "flat_roi": null,
+      "independent_fixtures": 0,
+      "median_odds": null,
+      "model_metrics": {
+        "n": 0
+      },
+      "outcomes": {},
+      "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+      "probability_below_half": 0,
+      "published": 0,
+      "raw_price_implied_metrics": {
+        "n": 0
+      },
+      "red_card_publications": 0,
+      "settled": 0
+    },
+    "30": {
+      "average_odds": null,
+      "flat_pnl": "0",
+      "flat_roi": null,
+      "independent_fixtures": 0,
+      "median_odds": null,
+      "model_metrics": {
+        "n": 0
+      },
+      "outcomes": {},
+      "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+      "probability_below_half": 0,
+      "published": 0,
+      "raw_price_implied_metrics": {
+        "n": 0
+      },
+      "red_card_publications": 0,
+      "settled": 0
+    },
+    "45": {
+      "average_odds": null,
+      "flat_pnl": "0",
+      "flat_roi": null,
+      "independent_fixtures": 0,
+      "median_odds": null,
+      "model_metrics": {
+        "n": 0
+      },
+      "outcomes": {},
+      "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+      "probability_below_half": 0,
+      "published": 0,
+      "raw_price_implied_metrics": {
+        "n": 0
+      },
+      "red_card_publications": 0,
+      "settled": 0
+    }
+  },
+  "limitations": [
+    "This small, clustered sample cannot support reliable model ranking or calibration inference.",
+    "1/odds includes unknown margin and cannot establish fair market probability.",
+    "Receipt-time gate replay is later than claim-time; it is a stricter diagnostic, not the original gate event.",
+    "History inclusion proves kickoff chronology, not provider revision availability before original historical kickoff.",
+    "No raw final-result API response retained here; outcomes reproduced from immutable stored regulation scores.",
+    "HTTP latency and rejected raw quote/state pairs were not retained.",
+    "Equal-stake P/L uses indicative feed quotes; no executed betting return."
+  ],
+  "pipeline": {
+    "as_of": "2026-10-09T18:09:03.379063+00:00",
+    "by_policy": {
+      "LAB_LIVE_PROBABILITY_60_70_V1": {
+        "age_only_rejected_versions": 0,
+        "blocker_counts": {
+          "LIVE_MARKET_SUSPENDED": 5,
+          "LIVE_PROBABILITY_OUTSIDE_60_70": 656,
+          "PROBABILITY_OR_ODDS_CONTRACT": 2,
+          "SEVERE_MODEL_MARKET_CONTRADICTION": 27
+        },
+        "candidate_versions": 721,
+        "counterfactual_initial_ready": {
+          "20": 12,
+          "30": 31,
+          "45": 63
+        },
+        "quote_age_buckets": {
+          "0-10": 17,
+          "10-20": 84,
+          "20-30": 272,
+          "30-45": 321,
+          "45-60": 27
+        },
+        "recorded_ready_versions": 64,
+        "unique_fixtures": 28
+      }
+    },
+    "candidate_funnel": {
+      "eligible_feed_fixtures": 1690,
+      "fixtures_discovered": 2454,
+      "fixtures_reviewed": 380,
+      "fresh_feed_fixtures": 236,
+      "live_odds_rows": 2089,
+      "quote_age_diagnostic_fixtures": 1454
+    },
+    "candidate_versions": 721,
+    "claims": 0,
+    "claims_without_receipt": 0,
+    "confirmed_publications": 0,
+    "cycle_status_counts": {
+      "LIVE_SCAN_COMPLETE": 38
+    },
+    "cycles": 38,
+    "delivery_status_counts": {
+      "LIVE_FINAL_REFRESH_FAILED": 26
+    },
+    "fingerprint": "9c11935ac61a4577463b8bdf6ca18d0251349b76c53bfa7a7d1a2244f349fe98",
+    "fixture_diagnostic_counts": {
+      "LIVE_FIXTURE_REVIEW_UNAVAILABLE": 152,
+      "LIVE_STATE_QUOTE_MISMATCH": 105,
+      "UNSUPPORTED_LIVE_MARKET": 123
+    },
+    "http_latency_seconds": null,
+    "http_latency_status": "NOT_CAPTURED",
+    "limitations": [
+      "Counterfactuals cover stored initial candidate versions, not discarded broad-feed rows or guaranteed final publication.",
+      "Fixture/quote exposures and blockers overlap; these are not independent match counts.",
+      "HTTP start/end times and raw mismatch payloads were not retained; latency and exact mismatch cause cannot be reconstructed.",
+      "Broad-feed status filters include blocked/stopped/finished and timestamps; zero fresh feed is not proof all rows were stale.",
+      "Successive same-state quote samples are sparse; no executable-bookmaker price or slippage guarantee.",
+      "Changing request order may change score/minute alignment; no measured gain or budget change is asserted."
+    ],
+    "natural_provider_calls": 1368,
+    "provider_calls_initiated": 0,
+    "provider_calls_per_confirmed_publication": null,
+    "provider_feed_age_distribution": "UNAVAILABLE_FOR_DISCARDED_BROAD_FEED_ROWS",
+    "quote_movement_exclusions": {
+      "MARKET_NOT_VERIFIABLY_ACTIVE": 5
+    },
+    "quote_to_preparation_seconds": {
+      "maximum": 0.735002,
+      "mean": 0.1318510638002774,
+      "median": 0.083192,
+      "minimum": 0.005636,
+      "n": 721
+    },
+    "result_counts": {},
+    "same_state_odds_movement": {
+      "maximum": null,
+      "mean": null,
+      "median": null,
+      "minimum": null,
+      "n": 0
+    },
+    "same_state_quote_pairs": [],
+    "selection_effect": "NONE",
+    "settled_publications": 0,
+    "since": "2026-10-09T15:00:00+00:00",
+    "source_fingerprint": "ca356eb0fb6e6e6577b21f3bf4f1abffec7df35358975aff0e6ae68e58baf835",
+    "telegram_sends_initiated": 0,
+    "unique_fixtures": 28,
+    "unique_quote_age_buckets": {
+      "0-10": 17,
+      "10-20": 84,
+      "20-30": 272,
+      "30-45": 321,
+      "45-60": 27
+    },
+    "version": "LIVE_DIAGNOSTICS_V2"
+  },
+  "published": [],
+  "safety": {
+    "activation": false,
+    "policy_changes": 0,
+    "production_writes": 0,
+    "provider_calls": 0,
+    "telegram_calls": 0,
+    "telegram_sends": 0,
+    "training": false
+  },
+  "segments": {
+    "fixture": {},
+    "league": {},
+    "market": {},
+    "red_cards": {}
+  },
+  "since": "2026-10-09T15:00:00+00:00",
+  "source_fingerprint": "79fabb83504c7c083ee9de03c7958590d240a23d205f0e6806bbe1a173ac45c7",
+  "source_row_counts": {
+    "live_candidates": 1284,
+    "live_claims": 9,
+    "live_diagnostics": 746,
+    "live_publications": 9,
+    "live_result_receipts": 9,
+    "live_settlements": 9
+  },
+  "summary": {
+    "average_odds": null,
+    "flat_pnl": "0",
+    "flat_roi": null,
+    "independent_fixtures": 0,
+    "median_odds": null,
+    "model_metrics": {
+      "n": 0
+    },
+    "outcomes": {},
+    "price_baseline_note": "1/odds, NOT de-vig, NOT executable-price evidence",
+    "probability_below_half": 0,
+    "published": 0,
+    "raw_price_implied_metrics": {
+      "n": 0
+    },
+    "red_card_publications": 0,
+    "settled": 0
+  },
+  "version": "LIVE_PUBLICATION_POSTMORTEM_V1"
+}
