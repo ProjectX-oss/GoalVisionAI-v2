@@ -12,6 +12,13 @@ from .policy import POLICY
 from .service import LiveService
 
 
+FINAL_REVIEW_RESERVED_ATTEMPTS = 9  # fixture, events, odds; existing three HTTP attempts each
+
+
+class LiveScanBudgetReserved(RuntimeError):
+    """Stop discovery before consuming the current cycle's final-review allowance."""
+
+
 class LiveRunner:
     def __init__(self, service: LiveService, client: object, quota: SharedQuota, *,
                  clock: Callable[[],datetime], diagnostic_sink: Callable[[dict],None] | None = None) -> None:
@@ -20,7 +27,21 @@ class LiveRunner:
         self.diagnostic_sink_failures = 0
         self._catalog = None
         self._histories = {}
+        self._scan_request_ceiling = None
         quota.bind(client,clock)
+        authorize = getattr(client, 'request_authorizer', None)
+        self._attempt_authorizer_available = callable(authorize)
+
+        async def bounded_authorize():
+            # FootballClient invokes this for every HTTP retry before counting it.
+            # Shared daily/minute/settlement protections still authorize each attempt.
+            if (self._scan_request_ceiling is not None
+                    and self.client.request_count >= self._scan_request_ceiling):
+                raise LiveScanBudgetReserved('LIVE_FINAL_REVIEW_BUDGET_RESERVED')
+            await authorize()
+
+        if self._attempt_authorizer_available:
+            client.request_authorizer = bounded_authorize
 
     def _emit(self, value: dict) -> None:
         # Explicit research observer only. Default production construction is unchanged.
@@ -101,7 +122,21 @@ class LiveRunner:
             self._histories[team_id] = await self._call('LIVE_STATE', self.client.last_matches, team_id, last=10)
         return self._histories[team_id]
 
-    async def scan(self) -> dict:
+    async def scan(self, *, request_ceiling: int | None = None) -> dict:
+        """Bound scan HTTP attempts only; never relax the client's total ceiling."""
+        if request_ceiling is not None and (type(request_ceiling) is not int or not 0 <= request_ceiling <= 80):
+            raise ValueError('INVALID_LIVE_SCAN_REQUEST_CEILING')
+        if request_ceiling is not None and not self._attempt_authorizer_available:
+            raise ValueError('LIVE_HTTP_ATTEMPT_AUTHORIZER_REQUIRED')
+        if self._scan_request_ceiling is not None:
+            raise ValueError('LIVE_SCAN_ALREADY_RUNNING')
+        self._scan_request_ceiling = request_ceiling
+        try:
+            return await self._scan()
+        finally:
+            self._scan_request_ceiling = None
+
+    async def _scan(self) -> dict:
         prepared=[]
         counters={'fixtures_discovered':0,'live_odds_rows':0,'fresh_feed_fixtures':0,'fixtures_reviewed':0,
                   'eligible_feed_fixtures':0,'quote_age_diagnostic_fixtures':0}
@@ -140,8 +175,12 @@ class LiveRunner:
                 counters['eligible_feed_fixtures']=len(covered)
                 counters['quote_age_diagnostic_fixtures']=len(aged-fresh)
                 rows=[row for row in rows if row.get('fixture',{}).get('id') in covered]
+        except LiveScanBudgetReserved:
+            return {'status':'LIVE_SCAN_COMPLETE','candidates':[],**counters,
+                    'scan_stop_reason':'FINAL_REVIEW_BUDGET_RESERVED'}
         except Exception:
             return {'status':'LIVE_DISCOVERY_UNAVAILABLE','candidates':[]}
+        stop_reason = 'SCAN_COMPLETE'
         for row in sorted(rows,key=lambda r:r.get('fixture',{}).get('id',0))[:POLICY.max_fixtures_per_scan]:
             identity=row.get('fixture',{}).get('id')
             counters['fixtures_reviewed']+=1
@@ -156,9 +195,13 @@ class LiveRunner:
                     markets.add(quote['market'])
                     candidate=self.service.candidate(state,quote,rates,now=self.clock())
                     prepared.append(candidate)
+            except LiveScanBudgetReserved:
+                stop_reason = 'FINAL_REVIEW_BUDGET_RESERVED'
+                break
             except Exception:
                 self._diagnostic(identity,['LIVE_FIXTURE_REVIEW_UNAVAILABLE'])
-        return {'status':'LIVE_SCAN_COMPLETE','candidates':prepared,**counters}
+        return {'status':'LIVE_SCAN_COMPLETE','candidates':prepared,**counters,
+                'scan_stop_reason':stop_reason}
 
     async def settle(self) -> list[str]:
         completed=[]

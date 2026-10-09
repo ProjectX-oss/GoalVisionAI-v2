@@ -15,6 +15,20 @@ from .policy import POLICY
 from .presentation import prediction_message, settlement_message
 
 
+def final_refresh_failure_reason(error: Exception) -> str:
+    """Fixed vocabulary only: never serialize exception text, requests or credentials."""
+    from app.football.client import FootballRequestLimitError
+    from app.football.quota import FootballQuotaError
+    from app.adaptive_lab.quota import QuotaDBContentionError
+    if isinstance(error, FootballRequestLimitError):
+        return 'LIVE_CYCLE_REQUEST_LIMIT_REACHED'
+    if isinstance(error, FootballQuotaError):
+        return 'LIVE_SHARED_OR_PROVIDER_QUOTA_BLOCKED'
+    if isinstance(error, QuotaDBContentionError):
+        return 'QUOTA_DB_CONTENTION_EXHAUSTED'
+    return 'LIVE_PROVIDER_OR_REVIEW_FAILURE'
+
+
 class LiveService:
     """No combos and no configurable destination; only the existing Lab transport contract."""
     def __init__(self, repository: AuditRepository, *, clock: Callable[[],datetime],
@@ -116,8 +130,9 @@ class LiveService:
             if quote is None:
                 return {'status':'LIVE_REFRESH_QUOTE_MISSING','sent':False}
             candidate=self.candidate(state,quote,rates,now=self.clock())
-        except Exception:
-            return {'status':'LIVE_FINAL_REFRESH_FAILED','sent':False}
+        except Exception as error:
+            return {'status':'LIVE_FINAL_REFRESH_FAILED','sent':False,
+                    'reason':final_refresh_failure_reason(error)}
         stamp=utc(self.clock()).isoformat()
         identity=candidate['prediction_id']
         with self.repository.transaction():

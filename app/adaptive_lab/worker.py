@@ -20,7 +20,7 @@ async def live_cycle(repo: AuditRepository, *, send: bool, clock=None) -> dict:
     from .quota import SharedQuota
     from app.football.client import FootballClient
     from app.football.quota import FootballQuotaError
-    from app.live_lab.runner import LiveRunner
+    from app.live_lab.runner import LiveRunner, FINAL_REVIEW_RESERVED_ATTEMPTS
     from app.live_lab.service import LiveService
     clock=clock or (lambda:datetime.now(timezone.utc))
     if not daypart.enabled():
@@ -42,6 +42,7 @@ async def live_cycle(repo: AuditRepository, *, send: bool, clock=None) -> dict:
     runner=None
     scanned={'status':'LIVE_RESULTS_ONLY','candidates':[]}
     api_calls=0
+    budget=None
     try:
         if discover or pending or shadow:
             client=FootballClient(request_limit=80)
@@ -59,7 +60,9 @@ async def live_cycle(repo: AuditRepository, *, send: bool, clock=None) -> dict:
                 runner=LiveRunner(service,client,quota,clock=clock)
                 await runner.settle()
                 if discover and daypart.live_window(clock()):
-                    scanned=await runner.scan()
+                    # Hold attempts for one exact final fixture/events/odds refresh.
+                    # The total budget, provider limits and settlement reserve are unchanged.
+                    scanned=await runner.scan(request_ceiling=max(0,budget-FINAL_REVIEW_RESERVED_ATTEMPTS))
             except FootballQuotaError:
                 scanned={'status':'LIVE_QUOTA_BOUNDED_STOP','candidates':[]}
             except Exception:
@@ -90,6 +93,8 @@ async def live_cycle(repo: AuditRepository, *, send: bool, clock=None) -> dict:
         return {'status':scanned['status'],'candidates':len(candidates),'settled':len(settled),
                 'deliveries':deliveries,'api_calls':client.request_count if client else 0,
                 'automatic_training':False,'automatic_promotion':False,'automatic_rollback':False,
+                'request_budget':{'cycle_ceiling':budget,'final_review_reserved_attempts':FINAL_REVIEW_RESERVED_ATTEMPTS,
+                                  'scan_ceiling':max(0,budget-FINAL_REVIEW_RESERVED_ATTEMPTS) if budget is not None else None},
                 'discovery_evidence':{k:v for k,v in scanned.items() if k!='candidates'}}
     finally:
         if client is not None:
