@@ -117,7 +117,7 @@ def quote_timing(quote: dict, *, now: datetime) -> dict:
 
 def readiness(state: dict, quote: dict, probability: float, *, uncertainty: float, now: datetime,
               previous: list[dict] = (), allow_provider_feed: bool = False,
-              quote_age_diagnostic: bool = False) -> list[str]:
+              quote_age_diagnostic: bool = False, probability_band: bool = False) -> list[str]:
     """All hard gates operate outside model artifacts and cannot be optimized away."""
     reasons=[]
     if state.get('state_fingerprint') != digest({k:v for k,v in state.items() if k!='state_fingerprint'}):
@@ -172,8 +172,12 @@ def readiness(state: dict, quote: dict, probability: float, *, uncertainty: floa
         p=number(probability,low=0,high=1); odds=number(quote['decimal_odds'],low=1,high=10000)
         if not 0<p<1 or odds<=1:
             reasons.append('PROBABILITY_OR_ODDS_CONTRACT')
-        elif p*odds<=1:
+        elif not probability_band and p*odds<=1:
             reasons.append('NON_POSITIVE_EV')
+        if probability_band:
+            from .selection import in_probability_band
+            if not in_probability_band(probability):
+                reasons.append('LIVE_PROBABILITY_OUTSIDE_60_70')
         if abs(p-1/odds)>POLICY.max_market_divergence:
             reasons.append('SEVERE_MODEL_MARKET_CONTRADICTION')
         if number(uncertainty,low=0,high=1)>POLICY.max_uncertainty:

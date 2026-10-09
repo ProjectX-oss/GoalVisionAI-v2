@@ -28,6 +28,10 @@ def quote_age_diagnostic_enabled() -> bool:
     return flag('GOALVISION_LIVE_QUOTE_AGE_DIAGNOSTIC')
 
 
+def probability_band_enabled() -> bool:
+    return flag('GOALVISION_LIVE_PROBABILITY_60_70')
+
+
 def clock_utc(now: datetime) -> datetime:
     if now.tzinfo is None or now.utcoffset() is None:
         raise ValueError('DAYPART_TIME_REQUIRES_OFFSET')

@@ -7,7 +7,7 @@ import pytest
 from app.live_lab.service import LiveService
 from app.live_lab.provider import history_rates
 from .test_live import live_data
-from .conftest import START
+from .conftest import START, repo
 
 audit = runpy.run_path(str(Path(__file__).parents[2]/"operations/live-postmortem/audit.py"))
 

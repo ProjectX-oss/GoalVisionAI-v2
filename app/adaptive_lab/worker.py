@@ -34,8 +34,10 @@ async def live_cycle(repo: AuditRepository, *, send: bool, clock=None) -> dict:
              if not repo.get('live_result_claims',r['prediction_id'])]
     if not discover and not (pending or shadow or results):
         return {'status':'LIVE_IDLE_NO_PENDING_RESULTS','api_calls':0,'deliveries':[]}
+    probability_band=daypart.probability_band_enabled()
     service=LiveService(repo,clock=clock,allow_provider_feed=daypart.feed_quotes_enabled(),
-                        quote_age_diagnostic=daypart.quote_age_diagnostic_enabled())
+                        quote_age_diagnostic=daypart.quote_age_diagnostic_enabled(),
+                        probability_band=probability_band)
     client=None
     runner=None
     scanned={'status':'LIVE_RESULTS_ONLY','candidates':[]}
@@ -62,8 +64,8 @@ async def live_cycle(repo: AuditRepository, *, send: bool, clock=None) -> dict:
                 scanned={'status':'LIVE_QUOTA_BOUNDED_STOP','candidates':[]}
             except Exception:
                 scanned={'status':'LIVE_PROVIDER_REVIEW_UNAVAILABLE','candidates':[]}
-        candidates=sorted((c for c in scanned['candidates'] if not c['blockers']),
-                          key=lambda c:(-c['expected_value'],c['prediction_id']))[:1]
+        from app.live_lab.selection import select_candidates
+        candidates=select_candidates(scanned['candidates'], probability_band=probability_band)
         settled=[r['prediction_id'] for r in repo.all('live_settlements','LIVE')
                  if not repo.get('live_result_claims',r['prediction_id'])]
         deliveries=[]

@@ -590,3 +590,31 @@ valid temporal provenance, active-market, EV, uncertainty, divergence and duplic
 checks. PREMATCH/COMBO, champion, Official, schedule and quota ceilings are unchanged.
 Deployment remains an explicit operator action. See
 docs/operations/LIVE_QUOTE_AGE_DIAGNOSTIC_20261008.md.
+
+## LIVE 60–70% probability experiment authorized 2026-10-09
+
+The user explicitly requested switching off EV selection and restricting new LIVE
+Lab picks to the existing model probability in [0.60, 0.70], inclusive without
+display rounding. This supersedes EV-based eligibility/ranking only for the
+operator-enabled LIVE experiment. Use policy LAB_LIVE_PROBABILITY_60_70_V1 and
+prospective cohort LIVE_P60_70_20261009_V1. Rank eligible candidates by descending
+model probability, with immutable prediction ID as a deterministic tie-breaker.
+At most one new pick per natural cycle; do not force picks or inflate probabilities.
+
+Retain EV/edge in immutable diagnostic evidence, but do not require positive EV,
+use EV as a ranking/tie-break criterion, or feature EV in this experiment's
+prediction message. The percentages remain uncalibrated model estimates, not
+promised or validated win rates. Zero/negative EV is permitted if the probability
+band and all other gates pass. No new odds floor or odds cap is authorized.
+
+Enforce the band during initial readiness, selection and exact final refresh
+before a new publication claim. Retain state/event freshness, score/minute match,
+active markets, valid quote provenance, diagnostic-only quote age, uncertainty,
+model–market divergence, duplicate/exposure controls, shared quota, 18–23 Riga
+discovery and ongoing settlement. Red-card modelling and fixture exposure policy
+are not changed by this authorization.
+
+Preserve all historical candidates, published picks, claims, receipts, outcomes and
+original-message replies. Do not change PREMATCH, COMBO, Official, champion,
+training/promotion/rollback or bankroll/staking. No extra provider/Telegram test
+calls and no automatic deployment. Operator application remains separate.

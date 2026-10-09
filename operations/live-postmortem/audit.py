@@ -120,7 +120,9 @@ def published_rows(tables, *, since, until):
                  if utc(c["created_at"]) < utc(p["prepared_at_utc"]) and c["selection_id"] != p["prediction_id"]]
         blockers = readiness(s, q, prediction, uncertainty=p["uncertainty_penalty"],
                              now=utc(pub["sent_at_utc"]), previous=prior, allow_provider_feed=True,
-                             quote_age_diagnostic=p["policy"] == "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2")
+                             quote_age_diagnostic=(p.get("quote_age_diagnostics") or {}).get("mode") == "DIAGNOSTIC_ONLY"
+                                 or p["policy"] == "LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2",
+                             probability_band=p.get("selection_policy") == "LAB_LIVE_PROBABILITY_60_70_V1")
         status = result["status"] if result else "PENDING"
         score = [result.get("fulltime_home"), result.get("fulltime_away")] if result else [None, None]
         reproduced = ("WON" if _won(p["market"], *score) else "LOST") if status in {"WON", "LOST"} else status

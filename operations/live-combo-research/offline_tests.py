@@ -13,5 +13,6 @@ os.environ.pop('GOALVISION_LIVE_API_FEED_QUOTES',None)
 os.environ['FOOTBALL_API_KEY']='offline-test-placeholder'
 os.environ['TELEGRAM_BOT_TOKEN']='offline-test-placeholder'
 os.environ.pop('GOALVISION_LIVE_QUOTE_AGE_DIAGNOSTIC',None)
+os.environ.pop('GOALVISION_LIVE_PROBABILITY_60_70',None)
 import pytest
 raise SystemExit(pytest.main(['-q','--tb=short','-p','no:cacheprovider',*(sys.argv[1:] or DEFAULT_TESTS)]))

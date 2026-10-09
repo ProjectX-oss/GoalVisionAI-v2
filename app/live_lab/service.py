@@ -19,13 +19,14 @@ class LiveService:
     """No combos and no configurable destination; only the existing Lab transport contract."""
     def __init__(self, repository: AuditRepository, *, clock: Callable[[],datetime],
                  after_settlement: Callable[[dict],object] | None = None,
-                 allow_provider_feed: bool = False, quote_age_diagnostic: bool = False) -> None:
+                 allow_provider_feed: bool = False, quote_age_diagnostic: bool = False, probability_band: bool = False) -> None:
         self.repository,self.clock,self.after_settlement=repository,clock,after_settlement
         self.governance=Governance(repository)
         self.allow_provider_feed = allow_provider_feed
         if quote_age_diagnostic and not allow_provider_feed:
             raise ValueError("LIVE_QUOTE_AGE_POLICY_REQUIRES_FEED_MODE")
         self.quote_age_diagnostic = quote_age_diagnostic
+        self.probability_band = probability_band
 
     def candidate(self, state: dict, quote: dict, rates: dict, *, now: datetime) -> dict:
         probabilities=remaining_goal_probabilities(state,rates,as_of=now)
@@ -42,17 +43,19 @@ class LiveService:
         p,champion=self.governance.resolve('LIVE',observation)
         previous=[self.repository.get('live_candidates',c['selection_id']) for c in self.repository.all('live_claims','LIVE')]
         reasons=readiness(state,quote,p,uncertainty=uncertainty,now=now,previous=previous,allow_provider_feed=self.allow_provider_feed,
-                              quote_age_diagnostic=self.quote_age_diagnostic)
+                              quote_age_diagnostic=self.quote_age_diagnostic, probability_band=self.probability_band)
         observation.update(fixture_id=state['fixture_id'],offered_decimal_odds=quote['decimal_odds'])
-        if not set(reasons)-{'NON_POSITIVE_EV','SEVERE_MODEL_MARKET_CONTRADICTION'}:
+        if not set(reasons)-{'NON_POSITIVE_EV','SEVERE_MODEL_MARKET_CONTRADICTION','LIVE_PROBABILITY_OUTSIDE_60_70'}:
             self.governance.monitor_opportunity('LIVE',observation,p,
                 opportunity_key=digest([state['state_fingerprint'],quote['quote_fingerprint']]),now=now)
         generation=champion['generation_id'] if champion else 'LIVE_POISSON_BASELINE_V1'
-        policy=('LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2' if self.quote_age_diagnostic else
+        from .selection import PROBABILITY_POLICY, PROBABILITY_COHORT
+        policy=(PROBABILITY_POLICY if self.probability_band else
+                'LAB_LIVE_API_FEED_AGE_DIAGNOSTIC_V2' if self.quote_age_diagnostic else
                 'LAB_LIVE_API_FEED_V1' if self.allow_provider_feed else POLICY.version)
         identity_parts=[state['fixture_id'],quote['market'],state['state_fingerprint'],quote['quote_fingerprint'],generation]
         # Keep legacy identities; a new policy never reuses a blocked V1 record.
-        if self.quote_age_diagnostic:
+        if self.quote_age_diagnostic or self.probability_band:
             identity_parts.append(policy)
         key=digest(identity_parts)
         stamp=utc(now).isoformat()
@@ -78,6 +81,11 @@ class LiveService:
                'state':state,'quote':quote,'rates':rates,'blockers':reasons,'adaptive_features':observation['frozen_features'],
                'baseline_probability':probabilities.get(quote['market']),
                'reasoning':'Remaining-time goal model uses observed team scoring history, current score and minute; value is compared with captured LIVE odds.'}
+        if self.probability_band:
+            value.update(selection_policy=PROBABILITY_POLICY, statistics_cohort=PROBABILITY_COHORT,
+                         selection_probability_minimum='0.60', selection_probability_maximum='0.70',
+                         ev_role='DIAGNOSTIC_ONLY', selection_rank='MODEL_PROBABILITY_DESCENDING',
+                         reasoning='Remaining-time goal model uses observed team scoring history, current score and minute. Uncalibrated probability-range experiment.')
         if self.quote_age_diagnostic:
             value['quote_age_diagnostics']={**quote_timing(quote,now=now),
                 'mode':'DIAGNOSTIC_ONLY','legacy_limit_seconds':POLICY.quote_age_seconds}
@@ -87,7 +95,7 @@ class LiveService:
         with self.repository.transaction():
             self.repository.append('live_snapshots' ,state['state_fingerprint'],'LIVE',state,state['retrieved_at'])
             self.repository.append('live_candidates',value['prediction_id'],'LIVE',value,stamp,snapshot_id=state['state_fingerprint'])
-        if not set(reasons)-{'NON_POSITIVE_EV','SEVERE_MODEL_MARKET_CONTRADICTION'}:
+        if not set(reasons)-{'NON_POSITIVE_EV','SEVERE_MODEL_MARKET_CONTRADICTION','LIVE_PROBABILITY_OUTSIDE_60_70'}:
             from app.adaptive_lab.coordinator import opportunity
             self.governance.observe('LIVE', opportunity(value, 'LIVE'), now=now)
         return value
@@ -120,7 +128,7 @@ class LiveService:
             prior=[self.repository.get('live_candidates',c['selection_id']) for c in self.repository.all('live_claims','LIVE')]
             reasons=readiness(state,quote,number(candidate['ensemble_probability']),
                               uncertainty=candidate['uncertainty_penalty'],now=self.clock(),previous=prior,allow_provider_feed=self.allow_provider_feed,
-                              quote_age_diagnostic=self.quote_age_diagnostic)
+                              quote_age_diagnostic=self.quote_age_diagnostic, probability_band=self.probability_band)
             if reasons:
                 return {'status':'LIVE_READINESS_BLOCKED','blockers':reasons,'sent':False}
             if daypart.enabled() and not daypart.live_window(self.clock()):
