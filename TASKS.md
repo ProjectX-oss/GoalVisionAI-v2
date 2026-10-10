@@ -6,7 +6,9 @@
 - [x] Prepare deterministic builder and fail-closed combined root updater with bounded natural drain and configuration recovery.
 - [x] Final pinned package/read-only preflight PASS; deterministic two-build manifests identical.
 - [x] Authorized noninteractive apply attempted; sudo requires operator password before execution. Production untouched.
-- [ ] Operator sudo apply, then natural-cycle verification.
+- [x] Operator sudo apply completed; independent installed manifest/route hashes and all six restored timers PASS.
+- [x] First two natural ADMIN cycles exit 0; first PREMATCH cycle started 17:00:01.
+- [ ] Natural post-install PREMATCH/observer overlap, evening LIVE and genuine future incident deduplication evidence.
 - Runbook: docs/operations/QUOTA_ADMIN_REPAIR_ROLLOUT_20261010.md.
 
 ## 2026-10-10 — Operator ADMIN export reconciliation

@@ -1,6 +1,26 @@
 # Quota reader + ADMIN correlation — operator rollout, 2026-10-10
 
-## Prepared package and actual status
+## Operator deployment verified — 16:58 Riga
+
+**PASS (installation); natural load acceptance still pending.** Operator applied
+the pinned package successfully. Independent read-only validation returned
+current_mode=ENABLED. All three immutable release manifests and loaded routes
+match exactly. The original 144 systemd files are unchanged; only the six
+reviewed drop-ins were added. All six affected timers are active/enabled.
+
+ADMIN naturally completed at 16:58:09 and 16:59:16 with exit 0. The first
+post-install PREMATCH cycle started at 17:00:01 and was still running at
+readback. Observer is next scheduled for 17:08; first evening LIVE discovery
+tick is 18:02. Do not claim lock-contention resolution from a running cycle
+or notification deduplication before a natural correlated incident occurs.
+
+Protected ADMIN database/journal was not re-exported in this check; the
+root-only Codex config guard is evidenced by successful execution of the
+verified operator installer. Systemd disabled state is independently verified.
+No manual cycle, provider call, Telegram send or further deployment by agent.
+Machine evidence: docs/evidence/quota_admin_repair_rollout_20261010/operator_deployment.json.
+
+## Preparation history (before operator apply)
 
 Package: /home/arvis/goalvision-operations/quota-admin-repair-34a487d-20261010.
 Installer source: 34a487d9e88180b0a460080177c75fc8896633ce.
@@ -126,5 +146,5 @@ the historical lock-holder PID was not captured. Synthetic reproduction proves
 the fixed reader defect; natural post-install verification is still required.
 
 At preparation: no deployment, no provider/Telegram calls, no production DB writes,
-no Official/champion changes. Root installation is pending the operator's sudo
-credential, which is unavailable to the assistant.
+no Official/champion changes. Root installation was subsequently completed by the operator; see verified
+readback above.
