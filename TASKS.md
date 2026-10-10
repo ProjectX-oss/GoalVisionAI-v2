@@ -1,3 +1,10 @@
+## 2026-10-10 — Operator ADMIN export reconciliation
+
+- [x] Protected read-only export received: 191 unresolved records, 175 historical without 72 h recurrence; 16 recent records/four executions/eight acknowledged alerts.
+- [x] Typed quota UNKNOWN health duplication reproduced and separately fixed in 9e321c397337e38f994b2dc424621af414acd58b on fix/admin-quota-correlation-20261010; 193 ADMIN tests PASS.
+- [x] Original report/evidence updated; no source incident or notification history modified.
+- [ ] Separate reviewed immutable packages and operator rollout, then natural-cycle acceptance.
+
 ## 2026-10-10 — ADMIN incident audit and quota reader-lock repair
 
 - [x] Read-only 48 h audit: four PREMATCH crashes out of ten starts today and three older LIVE contention events.

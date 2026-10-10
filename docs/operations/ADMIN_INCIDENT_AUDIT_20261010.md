@@ -7,10 +7,12 @@ servisu 48 stundu žurnāli līdz **10.10.2026 14:43:49 Europe/Riga**, systemd s
 PREMATCH/LIVE piegāžu un rezultātu uzskaite. Izolētā worktree labots reproducējams
 SQLite lasītāja bloķēšanas defekts. Production labojums **nav uzstādīts**.
 
-Pilnais ADMIN incidentu/outbox reģistrs nav nolasīts: /var/lib/goalvision-admin-alerts
-ir aizsargāts un sudo pieprasa operatora paroli. Visu OPEN/REPEATED/CLOSED incidentu
-un ADMIN sūtījumu skaits paliek **BLOCKED_NEEDS_MORE_EVIDENCE**. Žurnāli nav pilns
-incidentu reģistrs. Nav veikta incidentu aizvēršana, acknowledge vai monitor scan.
+**Papildinājums 15:00:08 Riga:** operators izveidoja sanitizētu read-only ADMIN
+eksportu. Tas nolasīts pilnībā, truncated=false: 191 neatrisināts ieraksts
+(190 OPEN, 1 REPEATED), 175 bez atkārtošanās pēdējās 72 h un 16 šodienas
+ieraksti no četrām avārijām. Piegādes logā 8 RECEIPT_PERSISTED.
+Tas nav pilns visu vēsturisko RECOVERED/CLOSED ierakstu arhīvs. Nav veikta
+incidentu aizvēršana, acknowledge vai monitor scan.
 
 ## Kvotas datubāzes konflikts
 
@@ -55,11 +57,22 @@ ka tas ir katra SQLite konflikta vienīgais iespējamais cēlonis.
 
 ## Daudzi incidentu numuri
 
-**NO_CHANGE / BLOCKED_NEEDS_MORE_EVIDENCE.** Uzstādītais monitors execution
-incidenta identitātē iekļauj invocation. Tas pats defekts citā ciklā var saņemt
-jaunu ID. QUOTA_DB_CONTENTION un SERVICE_FAILURE vienas invocation ietvaros tiek
-korelēti. ID skaits nenozīmē tikpat daudz neatkarīgu cēloņu. Precīzam sarakstam
-un atkārtoto brīdinājumu izvērtējumam nepieciešams operatora eksports.
+**SMALL_GITHUB_FIX.** Eksports pierāda četrus kvotas konfliktus un astoņas
+ADMIN ziņas. Katram konfliktam journal QUOTA_DB_CONTENTION ir zināma invocation,
+bet tas pats health notikums 3.569–4.322 ms vēlāk saglabāts ar UNKNOWN.
+Uzstādītais monitors piesaista UNKNOWN health ANALYSIS_FAILURE, bet ne typed
+QUOTA_DB_CONTENTION. SERVICE_FAILURE un MISSING_OUTPUT jau pareizi korelēti.
+
+Jaunais izolētais labojums prasa to pašu servisu, precīzu kvotas kodu,
+journal avotu un vienu vienīgu invocation esošajā 30 s logā. Faktiskā eksporta
+replay dod 8 grupas pirms / 4 pēc, saglabājot visus 16 avota ierakstus un
+8 agrāko sūtījumu vēsturi. 193 ADMIN offline testi PASS; reāli network mēģinājumi 0.
+Branch fix/admin-quota-correlation-20261010; commit 9e321c397337e38f994b2dc424621af414acd58b.
+Detalizētais pārskats šajā branch: docs/operations/ADMIN_QUOTA_CORRELATION_20261010.md.
+
+**NO_CHANGE.** 175 vecajiem OPEN/REPEATED ierakstiem šajā 72 h logā nav
+jaunu sūtījumu vai atkārtojumu. Tie saglabāti, nevis izdzēsti vai automātiski
+aizvērti. ID skaits nenozīmē neatkarīgu aktīvu problēmu skaitu.
 
 ADMIN pēdējais izpildījums success; timers enabled/active.
 ADMIN Codex disabled preflight PASS. Brīdinājumi nav atslēgti vai slēpti.
@@ -121,6 +134,11 @@ Nav pierādījuma, ka šie četri GoalVision crash būtu diska pilnuma vai OOM d
 Failed sarakstā ir arī cloud-init/network-wait un atsevišķā MarketEdge serviss;
 tie nav mainīti un nav šā GoalVision incidenta daļa.
 
+Papildu read-only pārbaude **15:11 Riga**: 15:00 discovery cikls pabeidzās
+15:06:42 ar success, observer 15:08:01–15:09:15 arī success. Šie izpildījumi
+nepārklājās; tas vēl nepierāda neuzstādītā lock labojuma runtime efektu.
+Nav jaunas discovery kļūdas pēc eksportā fiksētajām četrām.
+
 ## Kods, testi un reproducēšana
 
 Branch: fix/quota-reader-lock-20261010.
@@ -156,18 +174,18 @@ Raw journal, DB un test logs netiek commitoti.
 
 ## Operatora nākamā darbība
 
-**OPERATOR_ACTION_REQUIRED.** Pilna ADMIN reģistra nolasīšanai izmantot jau
-pārskatīto read-only eksportētāju. Tas neveic scan, ack, deployment, API vai sūtīšanu:
+Operatora eksports pabeigts un pārbaudīts; atkārtota izpilde nav vajadzīga.
+Oriģinālā eksporta SHA-256:
+03a580ea492b4a7995a9488a9e4efe53d1900da9e84373fb367cff1c834b22dc.
 
-    sudo python3 ~/goalvision-operations/admin-diagnostic-18cf39c-20261004/inspect_recent.py --hours 72 > ~/goalvision-operations/admin-diagnostic-20261010.json
-
-Pārbaudītais exporter SHA-256:
-2e65e4f4af6bbca42b164797a8d3b3e7ecc468280869b17a2b9ba2a0124c4861.
-
-Pēc reģistra izvērtēšanas atsevišķi sagatavot uz esošajām PREMATCH/observer un
-LIVE release bāzētu reader-lock pakotni. Operators lemj par uzstādīšanu;
-šajā auditā deployment nav dots vai izpildīts. Pēc rollout pārbaudīt dabiskos
-observer/discovery pārklājumus un LIVE ciklus. Nemainīt guard vai timerus.
+**OPERATOR_ACTION_REQUIRED.** Atsevišķi sagatavot uz faktiskajām
+PREMATCH/observer/LIVE release bāzētu reader-lock pakotni un ADMIN korelācijas
+pakotni. Reviewed DB lasītāja commit: 3d4f5c541c79873208ec2bb8ca8c83a0118f546b.
+Reviewed ADMIN commit: 9e321c397337e38f994b2dc424621af414acd58b.
+Abu source labojumi ir pārskatīti; apply pakotnes šajā auditā nav veidotas.
+Operators lemj par uzstādīšanu. Pēc rollout pārbaudīt dabiskos observer/discovery
+pārklājumus, LIVE ciklus un vienu ADMIN ziņu katram viennozīmīgam notikumam.
+Nemainīt timerus, neveikt manuālu cycle vai test send.
 
 Production deployments = 0; papildu provider calls = 0; Telegram calls/sends = 0;
 Official/champion/bankroll izmaiņas = NONE. 144 GoalVision systemd failu hash

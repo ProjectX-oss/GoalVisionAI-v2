@@ -1,4 +1,146 @@
 {
+  "admin_registry_followup": {
+    "as_of_epoch": 1791633608.7593622,
+    "correlation_source_sha256": "34f3ff5b4bea41deaab19636ebf497ee9e9ed48359b6ceb2ec174653062ccff0",
+    "delivery_attempts_in_window": [
+      {
+        "count": 8,
+        "result": "RECEIPT_PERSISTED"
+      }
+    ],
+    "exported_incidents": 191,
+    "fix_branch": "fix/admin-quota-correlation-20261010",
+    "fix_commit": "9e321c397337e38f994b2dc424621af414acd58b",
+    "fixed_execution_groups": 4,
+    "historical_rules": {
+      "ANALYSIS_FAILURE": 4,
+      "DATABASE_LOCK": 1,
+      "INTEGRITY_FAILURE": 12,
+      "MISSING_OUTPUT": 17,
+      "MONITORING_COVERAGE_DEGRADED": 1,
+      "QUOTA_DB_CONTENTION": 50,
+      "SERVICE_FAILURE": 90
+    },
+    "historical_without_recent_recurrence": 175,
+    "installed_execution_groups": 8,
+    "later_natural_readback": {
+      "as_of_utc": "2026-10-10T12:11:27.719258+00:00",
+      "discovery_exit_riga": "2026-10-10T15:06:42+03:00",
+      "discovery_result": "success",
+      "discovery_start_riga": "2026-10-10T15:00:01+03:00",
+      "live_timer_readback": "NextElapseUSecRealtime=\nId=goalvision-lab-live-evening.timer\nLoadState=loaded\nActiveState=active\nSubState=running\nUnitFileState=enabled",
+      "live_timer_unit": "goalvision-lab-live-evening.timer",
+      "new_discovery_error_matches": 0,
+      "note": "These executions did not overlap; this is not acceptance of an undeployed fix.",
+      "observer_exit_riga": "2026-10-10T15:09:15+03:00",
+      "observer_result": "success",
+      "observer_start_riga": "2026-10-10T15:08:01+03:00"
+    },
+    "monitor_scans": 0,
+    "note": "Correlation projection only; historical sends are retained, not undone.",
+    "provider_calls": 0,
+    "recent_acknowledged_outbox_rows": 8,
+    "recent_execution_groups": 4,
+    "recent_groups": [
+      {
+        "associations": {
+          "1843e6b0095510e66d0fe2e9": "EXACT_INVOCATION",
+          "295dde7b1fe61f5c304af795": "EXACT_INVOCATION",
+          "7a7bd5b7b1db203042e6f3d5": "UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE",
+          "f6d854b77cc3e9412b3a119b": "EXACT_INVOCATION"
+        },
+        "invocation": "6d2489a6e6734a8e8856009e4b937daf",
+        "members": [
+          "1843e6b0095510e66d0fe2e9",
+          "295dde7b1fe61f5c304af795",
+          "7a7bd5b7b1db203042e6f3d5",
+          "f6d854b77cc3e9412b3a119b"
+        ],
+        "primary_incident": "1843e6b0095510e66d0fe2e9",
+        "service": "goalvision-lab-v2-discover.service"
+      },
+      {
+        "associations": {
+          "0077af43f226024a7468646e": "UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE",
+          "206b1b5d5461ad0f2cbd83af": "EXACT_INVOCATION",
+          "a156a308ec2695a77e90cc40": "EXACT_INVOCATION",
+          "a7eb02403c1f800023e0af63": "EXACT_INVOCATION"
+        },
+        "invocation": "064b28b845a24be3a4ced8555d5e2e85",
+        "members": [
+          "0077af43f226024a7468646e",
+          "206b1b5d5461ad0f2cbd83af",
+          "a156a308ec2695a77e90cc40",
+          "a7eb02403c1f800023e0af63"
+        ],
+        "primary_incident": "206b1b5d5461ad0f2cbd83af",
+        "service": "goalvision-lab-v2-discover.service"
+      },
+      {
+        "associations": {
+          "44c574902405241f8cbdf4ef": "EXACT_INVOCATION",
+          "47369a2aebe65abcc41ce66b": "UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE",
+          "ae2b6ca6eba13e409bea7b12": "EXACT_INVOCATION",
+          "b4951a0c0acb777ea3d19187": "EXACT_INVOCATION"
+        },
+        "invocation": "4d7b10faf222445e8ae87c84cdb7072a",
+        "members": [
+          "44c574902405241f8cbdf4ef",
+          "47369a2aebe65abcc41ce66b",
+          "ae2b6ca6eba13e409bea7b12",
+          "b4951a0c0acb777ea3d19187"
+        ],
+        "primary_incident": "b4951a0c0acb777ea3d19187",
+        "service": "goalvision-lab-v2-discover.service"
+      },
+      {
+        "associations": {
+          "34e789a0566e6d77ee6ca90a": "EXACT_INVOCATION",
+          "41bc0aa7ea0b23b22e2b3053": "UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE",
+          "d71a0906f840145dd47c2030": "EXACT_INVOCATION",
+          "faf4ccb36d11d435d466c304": "EXACT_INVOCATION"
+        },
+        "invocation": "190177c2e84e43f9b3fa4e0c58e6e669",
+        "members": [
+          "34e789a0566e6d77ee6ca90a",
+          "41bc0aa7ea0b23b22e2b3053",
+          "d71a0906f840145dd47c2030",
+          "faf4ccb36d11d435d466c304"
+        ],
+        "primary_incident": "faf4ccb36d11d435d466c304",
+        "service": "goalvision-lab-v2-discover.service"
+      }
+    ],
+    "recent_incidents": 16,
+    "recent_rules": {
+      "MISSING_OUTPUT": 4,
+      "QUOTA_DB_CONTENTION": 8,
+      "SERVICE_FAILURE": 4
+    },
+    "schema": "ADMIN_QUOTA_CORRELATION_REPLAY_V1",
+    "scope_note": "All exported unresolved rows plus 72h window, not the entire recovered/closed historical archive.",
+    "since_epoch": 1791374408.7593622,
+    "source_path": "/home/arvis/goalvision-operations/admin-diagnostic-20261010.json",
+    "source_rows_unchanged": true,
+    "source_sha256": "03a580ea492b4a7995a9488a9e4efe53d1900da9e84373fb367cff1c834b22dc",
+    "source_writes": 0,
+    "state_counts": {
+      "OPEN": 190,
+      "REPEATED": 1
+    },
+    "telegram_calls": 0,
+    "telegram_sends": 0,
+    "tests": {
+      "errors": 0,
+      "failures": 0,
+      "football_api_calls": 0,
+      "passed": true,
+      "real_network_attempts": 0,
+      "scope": "ADMIN_ONLY_FAKE_TRANSPORT",
+      "telegram_sends": 0,
+      "tests": 193
+    }
+  },
   "calibration": {
     "SEALED_HOLDOUT": 0,
     "VALIDATION": 0,
@@ -8,7 +150,7 @@
     "window": "CLOSED"
   },
   "classification": "SMALL_GITHUB_FIX",
-  "coverage_status": "PARTIAL_ADMIN_REGISTRY_REQUIRES_OPERATOR_EXPORT",
+  "coverage_status": "OPERATOR_EXPORT_RECONCILED_UNRESOLVED_AND_72H_WINDOW",
   "data_quality": {
     "fixture_blockers": {
       "CURRENT_ODDS_AVAILABLE": {
@@ -52,10 +194,10 @@
     "latest_successful_cycle_at": "2026-10-10T10:30:03.025871+00:00"
   },
   "operator_actions": [
-    "Export protected ADMIN registry using reviewed read-only inspect_recent.py --hours 72.",
-    "Review and separately package/deploy reader-lock source fix; no apply package produced or executed in this audit.",
-    "Verify subsequent natural PREMATCH/observer overlap and evening LIVE cycles before closing incidents.",
-    "Review postponed/rescheduled/AWD settlement policy independently; never fabricate outcomes or erase history."
+    "Prepare separately reviewed immutable release packages for reader-lock 3d4f5c5 and ADMIN correlation 9e321c397337e38f994b2dc424621af414acd58b. No package apply in this audit.",
+    "After operator installation, verify natural PREMATCH/observer overlap, evening LIVE and one alert per uniquely correlated failure.",
+    "Keep historical incident identities and attempted/acknowledged notifications; do not bulk close or erase.",
+    "Review postponed/rescheduled/AWD settlement policy independently."
   ],
   "publication": {
     "private_ledger": {
