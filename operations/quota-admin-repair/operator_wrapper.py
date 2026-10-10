@@ -5,8 +5,8 @@ from pathlib import Path
 import runpy
 import sys
 sys.dont_write_bytecode = True
-PACKAGE = Path('/home/arvis/goalvision-operations/quota-admin-repair-ce09949-20261010')
-METADATA_SHA256 = '26ea452e27b1f1428d2a09f50ada16de271368f36f01b18a1bf23535069bdbb0'
+PACKAGE = Path('/home/arvis/goalvision-operations/quota-admin-repair-34a487d-20261010')
+METADATA_SHA256 = '3e8553f61be762b3d09c087a79024080c98d5ed77247e530ec6e38ed957c1eb1'
 if PACKAGE.is_symlink() or PACKAGE.resolve() != PACKAGE:
     raise SystemExit('PACKAGE_PATH_DRIFT')
 meta_path = PACKAGE/'metadata.json'

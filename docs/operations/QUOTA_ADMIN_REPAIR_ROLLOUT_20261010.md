@@ -2,11 +2,11 @@
 
 ## Prepared package and actual status
 
-Package: /home/arvis/goalvision-operations/quota-admin-repair-ce09949-20261010.
-Installer source: ce09949594d2faebedb22dc95f746aad9f52d6b0.
+Package: /home/arvis/goalvision-operations/quota-admin-repair-34a487d-20261010.
+Installer source: 34a487d9e88180b0a460080177c75fc8896633ce.
 Final preflight PASS, current_mode=BASE. Two builds from the same reviewed
 commit produced byte-identical package manifests. Metadata SHA-256:
-26ea452e27b1f1428d2a09f50ada16de271368f36f01b18a1bf23535069bdbb0.
+3e8553f61be762b3d09c087a79024080c98d5ed77247e530ec6e38ed957c1eb1.
 
 The authorized sudo -n apply attempt exited before the updater ran:
 SUDO_PASSWORD_REQUIRED. No release under /opt was created, no systemd file

@@ -8,28 +8,30 @@
     "goalvision-lab-v2-discover.timer": "active"
   },
   "apply_attempt": {
+    "before_final_timer_restore_hardening": true,
     "command": "sudo -n /usr/bin/python3 /home/arvis/goalvision-operations/quota-admin-repair.py --apply",
     "exit_code": 1,
     "reason": "SUDO_PASSWORD_REQUIRED_BEFORE_UPDATER_EXECUTION",
-    "root_guard": "NOT_EXECUTED_REQUIRES_OPERATOR_SUDO"
+    "root_guard": "NOT_EXECUTED_REQUIRES_OPERATOR_SUDO",
+    "updater_executed": false
   },
-  "as_of_utc": "2026-10-10T13:46:44.765558+00:00",
+  "as_of_utc": "2026-10-10T13:48:45.634014+00:00",
   "branch": "ops/quota-admin-release-20261010",
   "checksums": {
-    "SHA256SUMS": "2f34b8c211a26ac0a0c0920019a230fa90d6b9903fe626deeab126d60af9d2cf",
-    "metadata.json": "26ea452e27b1f1428d2a09f50ada16de271368f36f01b18a1bf23535069bdbb0",
+    "SHA256SUMS": "8b21c750c7b4ccff874369e365e601e7e1912e8f76e2bf1871d8384d10919818",
+    "metadata.json": "3e8553f61be762b3d09c087a79024080c98d5ed77247e530ec6e38ed957c1eb1",
     "overlay/admin/app/admin_alerts/correlation.py": "34f3ff5b4bea41deaab19636ebf497ee9e9ed48359b6ceb2ec174653062ccff0",
     "overlay/reader/app/adaptive_lab/repository.py": "a04a083b198c3b4cfc22aa39d9603c9b48e20970e56e80199a892ef71340b52e",
     "runtime_helpers.py": "f0c9d214da6c58755a8eeb059e416c2df0a390d2beb54f6a06e91dd6e52913bb",
-    "update.py": "b351318a5dc36d345b03b7f4e59a113fcd9381b050c5fa9b94df26311495fb68"
+    "update.py": "2905e072cc232e94158fd1115945c48d1610dbde529d2a5903420597598e91eb"
   },
   "classification": "OPERATOR_ACTION_REQUIRED",
   "deterministic_rebuild_identical": true,
-  "installer_commit": "ce09949594d2faebedb22dc95f746aad9f52d6b0",
+  "installer_commit": "34a487d9e88180b0a460080177c75fc8896633ce",
   "main_checkout_existing_changes_preserved": true,
-  "metadata_sha256": "26ea452e27b1f1428d2a09f50ada16de271368f36f01b18a1bf23535069bdbb0",
+  "metadata_sha256": "3e8553f61be762b3d09c087a79024080c98d5ed77247e530ec6e38ed957c1eb1",
   "next_operator_command": "sudo python3 ~/goalvision-operations/quota-admin-repair.py --apply",
-  "package": "/home/arvis/goalvision-operations/quota-admin-repair-ce09949-20261010",
+  "package": "/home/arvis/goalvision-operations/quota-admin-repair-34a487d-20261010",
   "post_install_acceptance": "PENDING_OPERATOR_APPLY_AND_NATURAL_CYCLE",
   "preflight": {
     "exit_code": 0,
@@ -90,12 +92,12 @@
     "counts_not_additive": true,
     "operator_transaction": {
       "failed": 0,
-      "passed": 22,
-      "seconds": 0.59
+      "passed": 23,
+      "seconds": 0.63
     },
     "prior_admin_regression": 193,
     "prior_reader_regression": 872
   },
   "wrapper": "/home/arvis/goalvision-operations/quota-admin-repair.py",
-  "wrapper_sha256": "46354c1c8a14cb5141fbe82616271ebba4392bb583011b89478452f6c60faf04"
+  "wrapper_sha256": "56d7bf5931d0cbef6654f1460122b20a7a5d9ada1c569cb814709eaaf2920600"
 }

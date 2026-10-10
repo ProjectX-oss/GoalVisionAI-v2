@@ -1866,7 +1866,7 @@
     "live": "/opt/goalvision-live-final-review-budget-a4cdfa1-20261009",
     "prematch": "/opt/goalvision-live-evening-4f547cf-20261007"
   },
-  "installer_commit": "ce09949594d2faebedb22dc95f746aad9f52d6b0",
+  "installer_commit": "34a487d9e88180b0a460080177c75fc8896633ce",
   "overlay_hashes": {
     "admin": "34f3ff5b4bea41deaab19636ebf497ee9e9ed48359b6ceb2ec174653062ccff0",
     "reader": "a04a083b198c3b4cfc22aa39d9603c9b48e20970e56e80199a892ef71340b52e"
@@ -1874,7 +1874,7 @@
   "schema": "QUOTA_ADMIN_REPAIR_PACKAGE_V1",
   "scripts": {
     "runtime_helpers.py": "f0c9d214da6c58755a8eeb059e416c2df0a390d2beb54f6a06e91dd6e52913bb",
-    "update.py": "b351318a5dc36d345b03b7f4e59a113fcd9381b050c5fa9b94df26311495fb68"
+    "update.py": "2905e072cc232e94158fd1115945c48d1610dbde529d2a5903420597598e91eb"
   },
   "smoke": {
     "results": {
