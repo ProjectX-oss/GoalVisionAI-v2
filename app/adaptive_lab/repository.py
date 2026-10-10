@@ -218,7 +218,12 @@ class AuditRepository:
         if table not in TABLES:
             raise ValueError('AUDIT_TABLE_INVALID')
         where, args = (' WHERE stream=?', (stream,)) if stream else ('', ())
-        ids = self.connection.execute(f'SELECT id FROM {table}{where} ORDER BY created_at,id', args)
+        # Exhaust the ID cursor before decoding/hashing immutable documents.
+        # An active SQLite SELECT holds a shared lock even when in_transaction
+        # is False; retaining it across get() blocks unrelated quota COMMITs in
+        # rollback-journal mode. Explicit caller transactions remain untouched.
+        ids = self.connection.execute(
+            f'SELECT id FROM {table}{where} ORDER BY created_at,id', args).fetchall()
         return [self.get(table, row[0]) for row in ids]
 
     def champion(self, stream: str) -> dict | None:

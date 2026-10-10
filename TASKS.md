@@ -1,3 +1,16 @@
+## 2026-10-10 — ADMIN incident audit and quota reader-lock repair
+
+- [x] Read-only 48 h audit: four PREMATCH crashes out of ten starts today and three older LIVE contention events.
+- [x] Reproduce rollback-journal COMMIT blockage from an unconsumed AuditRepository.all ID cursor.
+- [x] Materialize IDs before document verification; preserve transaction ownership, integrity, quota limits and fail-closed 500 ms bound.
+- [x] 872 network-denied adjacent tests PASS; original new regressions demonstrated five failures before patch.
+- [x] Preserve 144 systemd file hashes and 220 pre-existing main-checkout dirty entries; no deployment/API/Telegram or policy change.
+- [ ] Operator ADMIN registry export needed for complete incident/outbox accounting (sudo password unavailable).
+- [ ] Separate installed-release package/operator rollout and natural-cycle overlap verification.
+- [ ] Postponed/rescheduled/AWD settlement policy review; preserve immutable results.
+- Report: docs/operations/ADMIN_INCIDENT_AUDIT_20261010.md.
+- Evidence: docs/evidence/admin_incidents_20261010/snapshot.json.
+
 ## 2026-10-09 — LIVE final-review budget and expanded goal-market research
 
 - [x] Read-only evening audit: 38 cycles, 721 candidate versions, 64 READY across 20 fixtures, 26 generic final-refresh failures, no publication claims.
