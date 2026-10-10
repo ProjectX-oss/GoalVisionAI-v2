@@ -1,0 +1,101 @@
+{
+  "actual_timer_states": {
+    "goalvision-adaptive-learning-observer.timer": "active",
+    "goalvision-adaptive-learning.timer": "active",
+    "goalvision-admin-alerts.timer": "active",
+    "goalvision-lab-combo-settle.timer": "active",
+    "goalvision-lab-live-evening.timer": "active",
+    "goalvision-lab-v2-discover.timer": "active"
+  },
+  "apply_attempt": {
+    "command": "sudo -n /usr/bin/python3 /home/arvis/goalvision-operations/quota-admin-repair.py --apply",
+    "exit_code": 1,
+    "reason": "SUDO_PASSWORD_REQUIRED_BEFORE_UPDATER_EXECUTION",
+    "root_guard": "NOT_EXECUTED_REQUIRES_OPERATOR_SUDO"
+  },
+  "as_of_utc": "2026-10-10T13:46:44.765558+00:00",
+  "branch": "ops/quota-admin-release-20261010",
+  "checksums": {
+    "SHA256SUMS": "2f34b8c211a26ac0a0c0920019a230fa90d6b9903fe626deeab126d60af9d2cf",
+    "metadata.json": "26ea452e27b1f1428d2a09f50ada16de271368f36f01b18a1bf23535069bdbb0",
+    "overlay/admin/app/admin_alerts/correlation.py": "34f3ff5b4bea41deaab19636ebf497ee9e9ed48359b6ceb2ec174653062ccff0",
+    "overlay/reader/app/adaptive_lab/repository.py": "a04a083b198c3b4cfc22aa39d9603c9b48e20970e56e80199a892ef71340b52e",
+    "runtime_helpers.py": "f0c9d214da6c58755a8eeb059e416c2df0a390d2beb54f6a06e91dd6e52913bb",
+    "update.py": "b351318a5dc36d345b03b7f4e59a113fcd9381b050c5fa9b94df26311495fb68"
+  },
+  "classification": "OPERATOR_ACTION_REQUIRED",
+  "deterministic_rebuild_identical": true,
+  "installer_commit": "ce09949594d2faebedb22dc95f746aad9f52d6b0",
+  "main_checkout_existing_changes_preserved": true,
+  "metadata_sha256": "26ea452e27b1f1428d2a09f50ada16de271368f36f01b18a1bf23535069bdbb0",
+  "next_operator_command": "sudo python3 ~/goalvision-operations/quota-admin-repair.py --apply",
+  "package": "/home/arvis/goalvision-operations/quota-admin-repair-ce09949-20261010",
+  "post_install_acceptance": "PENDING_OPERATOR_APPLY_AND_NATURAL_CYCLE",
+  "preflight": {
+    "exit_code": 0,
+    "output": "QUOTA_ADMIN_REPAIR_PLAN_VALIDATED\ncurrent_mode=BASE; ADMIN_CODEX_SYSTEMD_DISABLED=PASS\nROOT_GUARD=CHECKED_AT_APPLY"
+  },
+  "safety": {
+    "admin_codex_systemd_disabled": true,
+    "champion_changes": 0,
+    "config_changes": 0,
+    "new_opt_releases_created": 0,
+    "official_changes": 0,
+    "production_database_writes": 0,
+    "production_deployments": 0,
+    "provider_calls": 0,
+    "systemd_files_unchanged": 144,
+    "telegram_calls": 0,
+    "telegram_sends": 0,
+    "timer_changes": 0
+  },
+  "schema": "QUOTA_ADMIN_REPAIR_ROLLOUT_EVIDENCE_V1",
+  "source_commits": {
+    "admin": "9e321c397337e38f994b2dc424621af414acd58b",
+    "reader": "3d4f5c541c79873208ec2bb8ca8c83a0118f546b"
+  },
+  "tests": {
+    "assembled_release_smoke": {
+      "results": {
+        "admin": {
+          "import_root_verified": true,
+          "kind": "admin",
+          "network_attempts": 0,
+          "passed": true,
+          "provider_calls": 0,
+          "telegram_sends": 0,
+          "tests": 14
+        },
+        "live": {
+          "import_root_verified": true,
+          "kind": "live",
+          "network_attempts": 0,
+          "passed": true,
+          "provider_calls": 0,
+          "telegram_sends": 0,
+          "tests": 7
+        },
+        "prematch": {
+          "import_root_verified": true,
+          "kind": "prematch",
+          "network_attempts": 0,
+          "passed": true,
+          "provider_calls": 0,
+          "telegram_sends": 0,
+          "tests": 7
+        }
+      },
+      "status": "THREE_RELEASES_OFFLINE_PASS"
+    },
+    "counts_not_additive": true,
+    "operator_transaction": {
+      "failed": 0,
+      "passed": 22,
+      "seconds": 0.59
+    },
+    "prior_admin_regression": 193,
+    "prior_reader_regression": 872
+  },
+  "wrapper": "/home/arvis/goalvision-operations/quota-admin-repair.py",
+  "wrapper_sha256": "46354c1c8a14cb5141fbe82616271ebba4392bb583011b89478452f6c60faf04"
+}

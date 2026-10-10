@@ -1,5 +1,21 @@
 # Quota reader + ADMIN correlation — operator rollout, 2026-10-10
 
+## Prepared package and actual status
+
+Package: /home/arvis/goalvision-operations/quota-admin-repair-ce09949-20261010.
+Installer source: ce09949594d2faebedb22dc95f746aad9f52d6b0.
+Final preflight PASS, current_mode=BASE. Two builds from the same reviewed
+commit produced byte-identical package manifests. Metadata SHA-256:
+26ea452e27b1f1428d2a09f50ada16de271368f36f01b18a1bf23535069bdbb0.
+
+The authorized sudo -n apply attempt exited before the updater ran:
+SUDO_PASSWORD_REQUIRED. No release under /opt was created, no systemd file
+changed, and all six existing timers remain active. Root-only ADMIN config
+guard and installation remain pending the operator terminal command below.
+
+Reviewed wrapper: operations/quota-admin-repair/operator_wrapper.py.
+Machine evidence: docs/evidence/quota_admin_repair_rollout_20261010/validation.json.
+
 ## Scope and authorization
 
 Operator explicitly requested preparation and installation on 2026-10-10.

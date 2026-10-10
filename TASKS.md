@@ -4,7 +4,9 @@
 - [x] Preserve every runtime-relative asset, policy flag, existing schedule and disabled ADMIN Codex guard.
 - [x] 22 isolated transaction tests PASS; assembled PREMATCH/LIVE/ADMIN smoke 7/7/14 PASS, zero real network.
 - [x] Prepare deterministic builder and fail-closed combined root updater with bounded natural drain and configuration recovery.
-- [ ] Final pinned package/read-only preflight, operator sudo apply, then natural-cycle verification.
+- [x] Final pinned package/read-only preflight PASS; deterministic two-build manifests identical.
+- [x] Authorized noninteractive apply attempted; sudo requires operator password before execution. Production untouched.
+- [ ] Operator sudo apply, then natural-cycle verification.
 - Runbook: docs/operations/QUOTA_ADMIN_REPAIR_ROLLOUT_20261010.md.
 
 ## 2026-10-10 — Operator ADMIN export reconciliation
