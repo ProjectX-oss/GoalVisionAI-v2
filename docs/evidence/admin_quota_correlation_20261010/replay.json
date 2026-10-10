@@ -1,0 +1,113 @@
+{
+  "as_of_epoch": 1791633608.7593622,
+  "correlation_source_sha256": "34f3ff5b4bea41deaab19636ebf497ee9e9ed48359b6ceb2ec174653062ccff0",
+  "delivery_attempts_in_window": [
+    {
+      "count": 8,
+      "result": "RECEIPT_PERSISTED"
+    }
+  ],
+  "exported_incidents": 191,
+  "historical_rules": {
+    "ANALYSIS_FAILURE": 4,
+    "DATABASE_LOCK": 1,
+    "INTEGRITY_FAILURE": 12,
+    "MISSING_OUTPUT": 17,
+    "MONITORING_COVERAGE_DEGRADED": 1,
+    "QUOTA_DB_CONTENTION": 50,
+    "SERVICE_FAILURE": 90
+  },
+  "historical_without_recent_recurrence": 175,
+  "monitor_scans": 0,
+  "note": "Correlation projection only; historical sends are retained, not undone.",
+  "provider_calls": 0,
+  "recent_acknowledged_outbox_rows": 8,
+  "recent_execution_groups": 4,
+  "recent_groups": [
+    {
+      "associations": {
+        "1843e6b0095510e66d0fe2e9": "EXACT_INVOCATION",
+        "295dde7b1fe61f5c304af795": "EXACT_INVOCATION",
+        "7a7bd5b7b1db203042e6f3d5": "UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE",
+        "f6d854b77cc3e9412b3a119b": "EXACT_INVOCATION"
+      },
+      "invocation": "6d2489a6e6734a8e8856009e4b937daf",
+      "members": [
+        "1843e6b0095510e66d0fe2e9",
+        "295dde7b1fe61f5c304af795",
+        "7a7bd5b7b1db203042e6f3d5",
+        "f6d854b77cc3e9412b3a119b"
+      ],
+      "primary_incident": "1843e6b0095510e66d0fe2e9",
+      "service": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "associations": {
+        "0077af43f226024a7468646e": "UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE",
+        "206b1b5d5461ad0f2cbd83af": "EXACT_INVOCATION",
+        "a156a308ec2695a77e90cc40": "EXACT_INVOCATION",
+        "a7eb02403c1f800023e0af63": "EXACT_INVOCATION"
+      },
+      "invocation": "064b28b845a24be3a4ced8555d5e2e85",
+      "members": [
+        "0077af43f226024a7468646e",
+        "206b1b5d5461ad0f2cbd83af",
+        "a156a308ec2695a77e90cc40",
+        "a7eb02403c1f800023e0af63"
+      ],
+      "primary_incident": "206b1b5d5461ad0f2cbd83af",
+      "service": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "associations": {
+        "44c574902405241f8cbdf4ef": "EXACT_INVOCATION",
+        "47369a2aebe65abcc41ce66b": "UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE",
+        "ae2b6ca6eba13e409bea7b12": "EXACT_INVOCATION",
+        "b4951a0c0acb777ea3d19187": "EXACT_INVOCATION"
+      },
+      "invocation": "4d7b10faf222445e8ae87c84cdb7072a",
+      "members": [
+        "44c574902405241f8cbdf4ef",
+        "47369a2aebe65abcc41ce66b",
+        "ae2b6ca6eba13e409bea7b12",
+        "b4951a0c0acb777ea3d19187"
+      ],
+      "primary_incident": "b4951a0c0acb777ea3d19187",
+      "service": "goalvision-lab-v2-discover.service"
+    },
+    {
+      "associations": {
+        "34e789a0566e6d77ee6ca90a": "EXACT_INVOCATION",
+        "41bc0aa7ea0b23b22e2b3053": "UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE",
+        "d71a0906f840145dd47c2030": "EXACT_INVOCATION",
+        "faf4ccb36d11d435d466c304": "EXACT_INVOCATION"
+      },
+      "invocation": "190177c2e84e43f9b3fa4e0c58e6e669",
+      "members": [
+        "34e789a0566e6d77ee6ca90a",
+        "41bc0aa7ea0b23b22e2b3053",
+        "d71a0906f840145dd47c2030",
+        "faf4ccb36d11d435d466c304"
+      ],
+      "primary_incident": "faf4ccb36d11d435d466c304",
+      "service": "goalvision-lab-v2-discover.service"
+    }
+  ],
+  "recent_incidents": 16,
+  "recent_rules": {
+    "MISSING_OUTPUT": 4,
+    "QUOTA_DB_CONTENTION": 8,
+    "SERVICE_FAILURE": 4
+  },
+  "schema": "ADMIN_QUOTA_CORRELATION_REPLAY_V1",
+  "since_epoch": 1791374408.7593622,
+  "source_rows_unchanged": true,
+  "source_sha256": "8b74aba1beeac6566f7f1d814d4d257ca73b15608971e80e7b9ea9cdcaa504d3",
+  "source_writes": 0,
+  "state_counts": {
+    "OPEN": 190,
+    "REPEATED": 1
+  },
+  "telegram_calls": 0,
+  "telegram_sends": 0
+}

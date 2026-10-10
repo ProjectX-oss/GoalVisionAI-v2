@@ -1,0 +1,42 @@
+{
+  "actual_replay_after_groups": 4,
+  "actual_replay_before_groups": 8,
+  "base_branch": "fix/admin-mixed-delivery-20261004",
+  "base_commit": "ea94dfec4d72334c93e3133a31fd6509a41c3ebc",
+  "current_correlation_sha256": "34f3ff5b4bea41deaab19636ebf497ee9e9ed48359b6ceb2ec174653062ccff0",
+  "exporter_sha256": "2e65e4f4af6bbca42b164797a8d3b3e7ecc468280869b17a2b9ba2a0124c4861",
+  "focused_before": {
+    "assertion_failures_including_subtests": 9,
+    "tests": 11
+  },
+  "installed_correlation_sha256": "e351289446e126542ae6ed3f4fa7d1cf82613ae0a3feb5be33576ed7702eaf4a",
+  "installed_monitor_release": "/opt/goalvision-admin-alerts-releases/admin-mixed-delivery-ab327dd-20261004",
+  "retained_existing_acknowledged_rows": 8,
+  "retained_recent_source_incidents": 16,
+  "runtime_acceptance": "PENDING_OPERATOR_PACKAGE_AND_DEPLOYMENT_THEN_NATURAL_CYCLE",
+  "safety": {
+    "champion_changes": 0,
+    "config_changes": 0,
+    "historical_incident_closures": 0,
+    "official_changes": 0,
+    "production_deployments": 0,
+    "protected_systemd_files_unchanged": 144,
+    "provider_calls": 0,
+    "source_database_writes": 0,
+    "telegram_calls": 0,
+    "telegram_sends": 0,
+    "timer_changes": 0
+  },
+  "schema": "ADMIN_QUOTA_CORRELATION_VALIDATION_V1",
+  "source_export_sha256": "03a580ea492b4a7995a9488a9e4efe53d1900da9e84373fb367cff1c834b22dc",
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "football_api_calls": 0,
+    "passed": true,
+    "real_network_attempts": 0,
+    "scope": "ADMIN_ONLY_FAKE_TRANSPORT",
+    "telegram_sends": 0,
+    "tests": 193
+  }
+}

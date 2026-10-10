@@ -7,6 +7,8 @@ import sqlite3
 from .model import digest
 
 VERSION = 'ADMIN_CORRELATION_V1'
+QUOTA_HEALTH_CODE = 'QUOTA_DB_CONTENTION_EXHAUSTED'
+QUOTA_HEALTH_ASSOCIATION = 'UNIQUE_TEMPORAL_SAME_SERVICE_QUOTA_CODE'
 EPOCH_POLICY = 'PRE_ENABLEMENT_EPISODES_SUPPRESSED_V1'
 PRECEDENCE = {'QUOTA_DB_CONTENTION': 0, 'AUTH_FAILURE': 1, 'INTEGRITY_FAILURE': 1,
               'CYCLE_PERSISTENCE': 1, 'OBSERVATION_FAILURE': 1,
@@ -50,6 +52,32 @@ def initialize(db: sqlite3.Connection) -> None:
     db.commit()
 
 
+def quota_health_invocation(row: dict, evidence: dict, rows: list[dict]) -> str | None:
+    """Associate a typed health failure only with one matching journal execution.
+
+    A second nearby execution, absent typed code or absent journal attribution
+    leaves the incident independent. No source identity is rewritten.
+    """
+    if (row['rule'] != 'QUOTA_DB_CONTENTION'
+            or not evidence.get('source', '').startswith('health')
+            or evidence.get('facts', {}).get('code') != QUOTA_HEALTH_CODE):
+        return None
+    nearby = [r for r in rows if r['invocation'] != 'UNKNOWN'
+              and r['service'] == row['service']
+              and abs(r['first_seen'] - row['first_seen']) <= 30]
+    invocations = {r['invocation'] for r in nearby}
+    if len(invocations) != 1:
+        return None
+    for candidate in nearby:
+        if candidate['rule'] != 'QUOTA_DB_CONTENTION':
+            continue
+        facts = json.loads(candidate['evidence'])
+        if (facts.get('source', '').startswith('journal')
+                and facts.get('facts', {}).get('code') == QUOTA_HEALTH_CODE):
+            return candidate['invocation']
+    return None
+
+
 def groups(db: sqlite3.Connection) -> list[dict]:
     """Exact identity wins; unknown persisted health needs a unique 30-second match.
 
@@ -68,6 +96,7 @@ def groups(db: sqlite3.Connection) -> list[dict]:
     associations = {}
     for row in unknown:
         evidence = json.loads(row['evidence'])
+        quota_invocation = quota_health_invocation(row, evidence, rows)
         candidates = [r for r in rows if r['rule'] == 'SERVICE_FAILURE'
                       and r['invocation'] != 'UNKNOWN' and r['service'] == row['service']
                       and abs(r['first_seen'] - row['first_seen']) <= 30]
@@ -75,6 +104,9 @@ def groups(db: sqlite3.Connection) -> list[dict]:
             key = (row['service'], candidates[0]['invocation'])
             exact[key].append(row)
             associations[row['id']] = 'UNIQUE_TEMPORAL_SAME_SERVICE'
+        elif quota_invocation is not None:
+            exact[(row['service'], quota_invocation)].append(row)
+            associations[row['id']] = QUOTA_HEALTH_ASSOCIATION
         else:
             exact[(row['service'], 'UNKNOWN:' + row['id'])] = [row]
     result = []
@@ -109,7 +141,8 @@ def reconcile(db: sqlite3.Connection, now: float) -> list[dict]:
         db.execute('INSERT OR IGNORE INTO correlation_audit VALUES (?,?,?,?,?,?,?,?,?,?)',
                    (audit_id, group['correlation_id'], group['primary_incident'], json.dumps(supporting),
                     group['service'], group['invocation'],
-                    'UNIQUE_TEMPORAL_SAME_SERVICE' if 'UNIQUE_TEMPORAL_SAME_SERVICE' in associations.values()
+                    QUOTA_HEALTH_ASSOCIATION if QUOTA_HEALTH_ASSOCIATION in associations.values()
+                    else 'UNIQUE_TEMPORAL_SAME_SERVICE' if 'UNIQUE_TEMPORAL_SAME_SERVICE' in associations.values()
                     else next(iter(associations.values())), now, VERSION,
                     json.dumps({'associations': associations, 'source_incidents': group['members']}, sort_keys=True)))
         ids = [r['id'] for r in group['members']]

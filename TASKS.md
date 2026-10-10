@@ -1,3 +1,12 @@
+## 2026-10-10 — ADMIN typed quota health correlation
+
+- [x] Reconcile operator 72 h export: 191 unresolved rows, 175 historical, 16 recent records from four crashes, eight acknowledged sends.
+- [x] Narrow same-service/code/unique-invocation association preserves raw identities and all attempted/acknowledged history.
+- [x] Actual read-only replay: eight execution groups before, four after; 193 ADMIN offline tests PASS, zero real network attempts.
+- [x] Preserve production routes, LIVE state, ADMIN Codex disabled, Official/champion/selection and historical records.
+- [ ] Separately package reviewed source; operator deployment and natural-cycle verification remain pending.
+- Report: docs/operations/ADMIN_QUOTA_CORRELATION_20261010.md.
+
 ## 2026-10-04 — ADMIN bounded health/publication diagnostic projection
 
 - [x] User authorized monitor repair; preserve deployed PREMATCH/SINGLE 1.50/COMBO legs 1.30, both research jobs, disabled ADMIN Codex and all history.

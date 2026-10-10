@@ -1,0 +1,2854 @@
+{
+  "as_of_epoch": 1791633608.7593622,
+  "delivery_attempts_in_window": [
+    {
+      "count": 8,
+      "result": "RECEIPT_PERSISTED"
+    }
+  ],
+  "incidents": [
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-5bcd56a7bb48b66ac1098cc4904285391e0cc6452950727664960efbdba4054a"
+      },
+      "first_seen": 1791632282.95327,
+      "id": "7a7bd5b7b1db203042e6f3d5",
+      "invocation": "UNKNOWN",
+      "last_seen": 1791632282.95327,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-f3a67620a56ab2a410ca1d00"
+      },
+      "first_seen": 1791632282.949065,
+      "id": "1843e6b0095510e66d0fe2e9",
+      "invocation": "6d2489a6e6734a8e8856009e4b937daf",
+      "last_seen": 1791632282.949065,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-4d4db85adcd515c8fd32567d74bd4cdf9904e9b01573fe985a5f0e5262c23acd"
+      },
+      "first_seen": 1791630483.046059,
+      "id": "47369a2aebe65abcc41ce66b",
+      "invocation": "UNKNOWN",
+      "last_seen": 1791630483.046059,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-b35807d4b9a74ab9e0f69b8b"
+      },
+      "first_seen": 1791630483.042255,
+      "id": "b4951a0c0acb777ea3d19187",
+      "invocation": "4d7b10faf222445e8ae87c84cdb7072a",
+      "last_seen": 1791630483.042255,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-efab2b7680d89bcbee8d3de04b697ee36a633535efea70e731a062ba44ec3484"
+      },
+      "first_seen": 1791625082.673826,
+      "id": "41bc0aa7ea0b23b22e2b3053",
+      "invocation": "UNKNOWN",
+      "last_seen": 1791625082.673826,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-e8003f65dba6ab40f6480f9a"
+      },
+      "first_seen": 1791625082.669504,
+      "id": "faf4ccb36d11d435d466c304",
+      "invocation": "190177c2e84e43f9b3fa4e0c58e6e669",
+      "last_seen": 1791625082.669504,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-c18a2e29d542cf1656725f9d48de0fa971c8da708f72e311dc6fff2d8da749de"
+      },
+      "first_seen": 1791621485.627213,
+      "id": "0077af43f226024a7468646e",
+      "invocation": "UNKNOWN",
+      "last_seen": 1791621485.627213,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-f82ce8618c6a290e6770406c"
+      },
+      "first_seen": 1791621485.623644,
+      "id": "206b1b5d5461ad0f2cbd83af",
+      "invocation": "064b28b845a24be3a4ced8555d5e2e85",
+      "last_seen": 1791621485.623644,
+      "outbox_created_in_window": [
+        {
+          "acknowledged": 1,
+          "rows": 1,
+          "state": "SENT"
+        }
+      ],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-f6d6db338214fd4dfb27bfe8"
+      },
+      "first_seen": 1791071705.177751,
+      "id": "063c58240359ed3e86eb3623",
+      "invocation": "7fd842e2bff143758d74867dccd01c50",
+      "last_seen": 1791071705.177751,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-4137956388a6f96ba6d18cf6"
+      },
+      "first_seen": 1791071105.1135,
+      "id": "22fb7fdf85ac629242c5e318",
+      "invocation": "59946140fec945d5aef5ba86ba9dfb79",
+      "last_seen": 1791071105.1135,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-759b1c0e38d40ef2c3ec3f5d"
+      },
+      "first_seen": 1791070505.760323,
+      "id": "ff7e2a5d8c28479e7a7c36a2",
+      "invocation": "bf5717d7b5bf4afbb582928e7d797c03",
+      "last_seen": 1791070505.760323,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-ac9c444607a5ffbf959333ff"
+      },
+      "first_seen": 1791069907.959694,
+      "id": "dd18af8ad4c26ba6a5ccf95f",
+      "invocation": "8b642f39589c4620b3f75fe7e16d6aaf",
+      "last_seen": 1791069907.959694,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-6b8d462d167e17ac473fd0d5"
+      },
+      "first_seen": 1791069305.549474,
+      "id": "3c61277b23bbe204f7e68e07",
+      "invocation": "7be790ccd4454d7ba91b91eca54b961c",
+      "last_seen": 1791069305.549474,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-5346a63fdc99162fe7ed79df"
+      },
+      "first_seen": 1791068705.806468,
+      "id": "3f193f1651b07bf7305a28ac",
+      "invocation": "c23ca770caee4890a04a9215c492aa1b",
+      "last_seen": 1791068705.806468,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-cf40324ebef8c63c37ba47f2"
+      },
+      "first_seen": 1791068105.649963,
+      "id": "a688c8644da4cea08b381274",
+      "invocation": "242da4647a60401296a1a4e7ef9268c0",
+      "last_seen": 1791068105.649963,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-76c8cf1ce8527e6bd9c94f64"
+      },
+      "first_seen": 1791067505.452267,
+      "id": "9401a95fbda86ed6d4bb1302",
+      "invocation": "36df7e9e446f4989be730caa6831563a",
+      "last_seen": 1791067505.452267,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-e15a959087854da8f8bc1b72"
+      },
+      "first_seen": 1791066904.870771,
+      "id": "98b2791478dcfd585e6641d4",
+      "invocation": "df0afca57d36419eafdfdadc548a8abc",
+      "last_seen": 1791066904.870771,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-d589ef9d03402f8bdcbdfe34"
+      },
+      "first_seen": 1791066307.379145,
+      "id": "d881d8f723201c7272b93c0e",
+      "invocation": "a8b289daefc34c9f815d3940489c0c47",
+      "last_seen": 1791066307.379145,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-07f209215a4486f45fef36fd"
+      },
+      "first_seen": 1791065705.842068,
+      "id": "1a55957c1a87deed197d1cf0",
+      "invocation": "9de0610fdf144bbeaef857b88d82003e",
+      "last_seen": 1791065705.842068,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-ada30d5db5ad5fff49a21f2e"
+      },
+      "first_seen": 1791065105.450111,
+      "id": "0d212e81bd7fee3d18749084",
+      "invocation": "76ea08b984da42e4a3fa1b45a0fd4ecd",
+      "last_seen": 1791065105.450111,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout"
+      },
+      "first_seen": 1790874729.053878,
+      "id": "c7df1386cf441d629cbc83b9",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790874729.053878,
+      "outbox_created_in_window": [],
+      "rule": "MONITORING_COVERAGE_DEGRADED",
+      "service": "monitor",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790845203.398048,
+      "id": "69578bdec819c88f77fd89db",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790845203.398048,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790845203.398048,
+      "id": "82b97a4d91ff50b14b6682de",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790845203.398048,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790845203.398048,
+      "id": "ee23d53005b5c70ee02f6ba7",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790845203.398048,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790843402.651752,
+      "id": "763f4c382366ce3e14acf92d",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790843402.651752,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790843402.651752,
+      "id": "81e36a2e01e40eb27ea8cc2b",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790843402.651752,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790843402.651752,
+      "id": "d2e2cd5da94067e2ea0e3176",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790843402.651752,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790839803.432745,
+      "id": "4caf04f35d38225120cc6399",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790839803.432745,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790839803.432745,
+      "id": "e29563281639b7b6446ffc61",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790839803.432745,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790839803.432745,
+      "id": "f527d1582c2b1021d7d454ae",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790839803.432745,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790838002.895942,
+      "id": "0c24ae3a50054ffd92fa93d9",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790838002.895942,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790838002.895942,
+      "id": "34f728320e87af74f4c3ef01",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790838002.895942,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "REDACTED"
+      },
+      "first_seen": 1790838002.895942,
+      "id": "700f2007cf1668568b0c3277",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790838002.895942,
+      "outbox_created_in_window": [],
+      "rule": "INTEGRITY_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-f16c36ddce62215765a2edf1"
+      },
+      "first_seen": 1790870403.361738,
+      "id": "dd247782a0e05766e22b044b",
+      "invocation": "db59274beb934e33b6c8760b00ff4cfb",
+      "last_seen": 1790870403.361738,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-a13da64b7039f07577554edf"
+      },
+      "first_seen": 1790868603.070862,
+      "id": "5f4857503637ec7eb21aa860",
+      "invocation": "740a32194e944879b057d2b9da0cd2ce",
+      "last_seen": 1790868603.070862,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-ace6c1a05c86e530a5bcead6"
+      },
+      "first_seen": 1790866802.820479,
+      "id": "fc8af19ceaff471d0fcececc",
+      "invocation": "5f1cfb1a7ce7404397d6b3428bacb4da",
+      "last_seen": 1790866802.820479,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-ced0812b8e37021bbb650c4f"
+      },
+      "first_seen": 1790865002.564565,
+      "id": "b8911454c166f998a121d112",
+      "invocation": "c089dd72835745038a09392ca3bd7b23",
+      "last_seen": 1790865002.564565,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-71efbae973741bd83c6e7c95"
+      },
+      "first_seen": 1790863202.3098,
+      "id": "5839e2aa45fccfcabdf7776c",
+      "invocation": "fcbc214b1f2d424da50855fded30a163",
+      "last_seen": 1790863202.3098,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-4197481bc17f7077cccab991"
+      },
+      "first_seen": 1790851098.900462,
+      "id": "485bf56d1b1799983d4e1ef5",
+      "invocation": "5ef08d25d7204d23aa46bab2797a7f27",
+      "last_seen": 1790851098.900462,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-2b3991434f1efddcf13f7567"
+      },
+      "first_seen": 1790759006.044288,
+      "id": "5ce83eebdd3ff9797acb08d4",
+      "invocation": "5ef08d25d7204d23aa46bab2797a7f27",
+      "last_seen": 1790851098.499402,
+      "outbox_created_in_window": [],
+      "rule": "DATABASE_LOCK",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "REPEATED"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-3562c8b463e977e52137a62c"
+      },
+      "first_seen": 1790812504.11108,
+      "id": "a03e6a7b7d7e82e9690918b0",
+      "invocation": "d687d6fad4284c78a7b66f0e0ed12a38",
+      "last_seen": 1790812504.11108,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-8af7a9f9e727ebd383d84797"
+      },
+      "first_seen": 1790811904.960514,
+      "id": "d045ece8436eba033d695bfe",
+      "invocation": "bb98dd2a74ec4753a3db51149da3745a",
+      "last_seen": 1790811904.960514,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-49387e4445c663f76d43b522"
+      },
+      "first_seen": 1790811304.297266,
+      "id": "3c2c0a5b0cb5b69b0dde93f8",
+      "invocation": "e15a7dad30914456a0bfd7998ae135b6",
+      "last_seen": 1790811304.297266,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-ec760b830c78895e98e5973b"
+      },
+      "first_seen": 1790810705.256602,
+      "id": "f51bb268ee3600df30d8aa1a",
+      "invocation": "63652f0595934caeb693c4748dad4b9d",
+      "last_seen": 1790810705.256602,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-1a8ccfe7cdaa55eece84112e"
+      },
+      "first_seen": 1790810104.169467,
+      "id": "fc2ae8916018353ee8eddfe3",
+      "invocation": "3ff53cc9c3dd42a3b5c835d2124e08e7",
+      "last_seen": 1790810104.169467,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-70d226e7f705b2b76e53985a"
+      },
+      "first_seen": 1790809503.759325,
+      "id": "e0a47790ce02de5fb0487874",
+      "invocation": "382f4bc2b0be4084a7f606bced9f2f24",
+      "last_seen": 1790809503.759325,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-466ae36382aba27900f1a25c"
+      },
+      "first_seen": 1790808904.416586,
+      "id": "b4053f5676e915269e2e9db9",
+      "invocation": "291752f26e454b27b6c0adea14851c83",
+      "last_seen": 1790808904.416586,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-a013ce971fef830bb82376cd"
+      },
+      "first_seen": 1790808304.579342,
+      "id": "150483a0fdf35144f02df0c2",
+      "invocation": "74103e053a454d9d8bcc5879ea837723",
+      "last_seen": 1790808304.579342,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-47f03ec9c3f24ae4f13fe79f"
+      },
+      "first_seen": 1790807704.17585,
+      "id": "8e9d47684eb9ef3758ebb925",
+      "invocation": "32bd439240994ed8aad4f51002cc9bab",
+      "last_seen": 1790807704.17585,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-f269fdb05b2d5ec99d1c57cf"
+      },
+      "first_seen": 1790807106.259978,
+      "id": "9870a890cd28c873253d89ac",
+      "invocation": "0daaf204adc243f4a480d6bf9f1fb511",
+      "last_seen": 1790807106.259978,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-2057721299bb49838d8baf05"
+      },
+      "first_seen": 1790806504.730623,
+      "id": "3302f83cbfaf7a6e91ba79bb",
+      "invocation": "a48c47c9322745cd955ec1d1dd27dda5",
+      "last_seen": 1790806504.730623,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-0134054d6278dd032532b9e9"
+      },
+      "first_seen": 1790805904.292249,
+      "id": "abe8e12604c10dd6640c6bea",
+      "invocation": "479926bb8de24493b1e51cc1da380844",
+      "last_seen": 1790805904.292249,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-d9644f8b71f375d7d3ce88d1"
+      },
+      "first_seen": 1790805305.038683,
+      "id": "950ab641829c6418bccd4c1d",
+      "invocation": "8c58f7cd35c54c9abf8a60961fa92544",
+      "last_seen": 1790805305.038683,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-99ee7944f216715a67848b07"
+      },
+      "first_seen": 1790804704.95929,
+      "id": "e1093854dbd392084692e1d0",
+      "invocation": "4f1f421e5c334cada90ead21038765ea",
+      "last_seen": 1790804704.95929,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-12308fd1c9d2efb2b29b48d9"
+      },
+      "first_seen": 1790804104.259126,
+      "id": "de6fe0cfed495ccd1346b3a2",
+      "invocation": "3b6c6b146f9943608dbd076830f8e1e5",
+      "last_seen": 1790804104.259126,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-ea21f0c42c9bd147d8e4e65a"
+      },
+      "first_seen": 1790803506.17872,
+      "id": "743135d5c9765edbe4c7526f",
+      "invocation": "50b0b503bc9044a9bf43f12b065681ee",
+      "last_seen": 1790803506.17872,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-3f11d2558cea50bd428d5905"
+      },
+      "first_seen": 1790802904.824763,
+      "id": "d42e941b2a306974751698dc",
+      "invocation": "fc2c798e6b474ea19f2bb76deb2fd077",
+      "last_seen": 1790802904.824763,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-655ccf5d341faf9253ed0b80"
+      },
+      "first_seen": 1790802304.545665,
+      "id": "900a9daa4ead53ce63c005a4",
+      "invocation": "634cb163a6bc4c37a5f738552c8c9f56",
+      "last_seen": 1790802304.545665,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-215ab082a9ecde2aa418ac51"
+      },
+      "first_seen": 1790801704.351667,
+      "id": "e9555b197d33e32b18442d0a",
+      "invocation": "7a28ab02f2e84e44bcab5425b004bfa5",
+      "last_seen": 1790801704.351667,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-790f5a5f9d6b0810976a4b81"
+      },
+      "first_seen": 1790801104.285173,
+      "id": "cab4a657f6b331c2254e37ea",
+      "invocation": "8c0b95852afa47c1bebd853b1d04bff0",
+      "last_seen": 1790801104.285173,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-e8d9f91931a71c3c8d82dbba"
+      },
+      "first_seen": 1790800504.991364,
+      "id": "53ab6d8190ed09a2df0ff7dd",
+      "invocation": "29c2043b8e9a4db89dfc1137daa7ca6e",
+      "last_seen": 1790800504.991364,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-447956ae8c20a1887f11770f"
+      },
+      "first_seen": 1790799906.058894,
+      "id": "cca11a51550faf6f9a3849bf",
+      "invocation": "9dc099451ae04d59864833d33ac0bd9e",
+      "last_seen": 1790799906.058894,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-c742a1bc261051480d4dd60b"
+      },
+      "first_seen": 1790799305.083694,
+      "id": "06d3bf0787dca556dee4d7ec",
+      "invocation": "9a1f10ec1c8a4b2c84dc0b1d19021fd0",
+      "last_seen": 1790799305.083694,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-370aa0c491a21d3122183270"
+      },
+      "first_seen": 1790798704.600113,
+      "id": "1bf7197dff07e9f9befaaf4e",
+      "invocation": "4db3e37bcd304cac8bdc610ad4d4973d",
+      "last_seen": 1790798704.600113,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-f84af867bf7f163553d9009c"
+      },
+      "first_seen": 1790798104.293414,
+      "id": "7acb510d0caba8eebaaf9fe0",
+      "invocation": "15e868bf628a4bd19a74353fe75399e7",
+      "last_seen": 1790798104.293414,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-7b8498bd3570a6adb23c66bb"
+      },
+      "first_seen": 1790797505.047959,
+      "id": "f685464f57efe84630f25279",
+      "invocation": "8bdb58d4a43447bc88192f0827ca135a",
+      "last_seen": 1790797505.047959,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-1b645aad1b5bf5d7d8e41876"
+      },
+      "first_seen": 1790783595.782987,
+      "id": "2b5981d2b07d536a991e9a41",
+      "invocation": "1bd59e881bb74d1bbbd8c7ddba9dea48",
+      "last_seen": 1790783595.782987,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-2d9fcf28d4d715539a85f1a1"
+      },
+      "first_seen": 1790776985.950727,
+      "id": "6b0a07ea1572aaaca7738787",
+      "invocation": "edce376355504a7db5b1730a01fd4326",
+      "last_seen": 1790776985.950727,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-59296b9a3449ac6b7b7b6f9b"
+      },
+      "first_seen": 1790759006.774548,
+      "id": "b5f1b0f1d431dd890f95ac29",
+      "invocation": "eddcdbe206ed4abbae32f1087e8ed027",
+      "last_seen": 1790759006.774548,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-ec1b7b3ee45222e9b09d0e7295381dab50507d353877f58e4d18eb1ed3d5d14c"
+      },
+      "first_seen": 1790670903.334105,
+      "id": "e23f41258fff58c1d9d86b99",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790670903.334105,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-849d3b4a62f94ceb6abeb63d"
+      },
+      "first_seen": 1790670903.330008,
+      "id": "cc0330c7e1646d842e6a2a81",
+      "invocation": "cdb5f4eb1ccb48f0bf8df55ce76939c5",
+      "last_seen": 1790670903.330008,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-69f11484fad49dfe8d143b55e4feba2cda960b8d4deba04adaf39a976dd73c4a"
+      },
+      "first_seen": 1790598904.480904,
+      "id": "7d814ec35998a960f76bb745",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790598904.480904,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-8df4d40a069ab8e21ccbb2c2"
+      },
+      "first_seen": 1790598904.476771,
+      "id": "b1ef890cbcf953f3011ab720",
+      "invocation": "4d931713a53b4404bae23bd990ccebdb",
+      "last_seen": 1790598904.476771,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-e647bfb5acc1f6ba569656f7"
+      },
+      "first_seen": 1790593513.858883,
+      "id": "f384c2c0ca30b4b78e0d5683",
+      "invocation": "96c051108caf47a3803b1f677e20c03c",
+      "last_seen": 1790593513.858883,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-9a67f9d2e72e7b1b55f657c3"
+      },
+      "first_seen": 1790573422.905216,
+      "id": "e8d36917f917fc666aae9018",
+      "invocation": "e9728981c71546368223c6f23c2b3172",
+      "last_seen": 1790573422.905216,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-cb7a6f021d03efcb15d1c7c9"
+      },
+      "first_seen": 1790571616.867302,
+      "id": "ac9a94b18648960290a52b85",
+      "invocation": "9541c2aa944c4c25aabeb7f3e6932e60",
+      "last_seen": 1790571616.867302,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-bf324d2078d6c3083ef61e1f"
+      },
+      "first_seen": 1790569819.820168,
+      "id": "7eef564ed02e78ece261494a",
+      "invocation": "0d437aee93054401aa70b2b791fde6b2",
+      "last_seen": 1790569819.820168,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-d9fd040eb368aa75c185035d"
+      },
+      "first_seen": 1790568023.946925,
+      "id": "0040e049e8854ab1b353ef20",
+      "invocation": "535820b641e24b58beca7d1ba6c3f60a",
+      "last_seen": 1790568023.946925,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-3d1a2683e60860fd3e74a666"
+      },
+      "first_seen": 1790566218.779282,
+      "id": "2ce9e8e7b503c3e97e6474de",
+      "invocation": "73f79168199d437397fc0246604a906e",
+      "last_seen": 1790566218.779282,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-854856b2753ca51b51fb4ca7"
+      },
+      "first_seen": 1790564420.136557,
+      "id": "876264986312b97d3a9b6f9a",
+      "invocation": "4cb8fa76d3ca41c78dcf8d874ed53897",
+      "last_seen": 1790564420.136557,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-34a73166095b828e7efc84fe"
+      },
+      "first_seen": 1790562615.234975,
+      "id": "92e44591efc7e933476bf909",
+      "invocation": "701871cf71384ca4be5ea747ab0b34ec",
+      "last_seen": 1790562615.234975,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-312ae03d88c4edcd25829e58"
+      },
+      "first_seen": 1790560821.721604,
+      "id": "362b53fe4e612a15e8bcc5d1",
+      "invocation": "772d09989d684f2b9c8e1bbfdf01962d",
+      "last_seen": 1790560821.721604,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-26da45f22b07d8382ec3f6d0"
+      },
+      "first_seen": 1790559016.580854,
+      "id": "fdd4c1fb08af26cce397fdbf",
+      "invocation": "dfb17d77c2d7420e8cbdeba4f39661b1",
+      "last_seen": 1790559016.580854,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-675c57405bb9cadcb446ad40"
+      },
+      "first_seen": 1790557221.918056,
+      "id": "abf23c2d0563b1f74bde8059",
+      "invocation": "28359c93db24437c9ac2c1d49fe9ae4c",
+      "last_seen": 1790557221.918056,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-98e00968e9f557e4438cef6a"
+      },
+      "first_seen": 1790555420.640248,
+      "id": "969562c62827f442c82aad3a",
+      "invocation": "b773206fcad1454ebcf4b7e4f70c423b",
+      "last_seen": 1790555420.640248,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-4fb5b04aa8442897709dab54"
+      },
+      "first_seen": 1790553622.894005,
+      "id": "8d5ec84b08e341993b5b85ff",
+      "invocation": "d70804360181432bb0189340dda1a77d",
+      "last_seen": 1790553622.894005,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-722ca1f57b962851ec0bcf23"
+      },
+      "first_seen": 1790551824.202437,
+      "id": "02b4cbd32be3914457c54892",
+      "invocation": "0701489d4f47482fba83759f03f6b9b0",
+      "last_seen": 1790551824.202437,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-9b6b2c915d1264d1eb415abd"
+      },
+      "first_seen": 1790550017.012662,
+      "id": "4b6c530c30a7e49c03bc4647",
+      "invocation": "95ba72cb7afb4beb8dc0e856225ab2cc",
+      "last_seen": 1790550017.012662,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-93c64f0b604277f02deb304b"
+      },
+      "first_seen": 1790548209.068041,
+      "id": "6fd7bd14aa9d1294e4a9b3cc",
+      "invocation": "a2a76fc468bc4cf292fa1a2d3c5d381b",
+      "last_seen": 1790548209.068041,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-534036201551d85bf0ff9258"
+      },
+      "first_seen": 1790546406.63125,
+      "id": "a6d0c1f5308a925d3006633f",
+      "invocation": "3f590d3300564231bf17d15ffcfbd881",
+      "last_seen": 1790546406.63125,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-1adfb028a4c1cb856bb81ecb"
+      },
+      "first_seen": 1790544616.875051,
+      "id": "9ec494356e2487a3c4c8072a",
+      "invocation": "b8a72026ddbe477493676c6a4f03d54a",
+      "last_seen": 1790544616.875051,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-6c9db74e3f9dcfddb261e851"
+      },
+      "first_seen": 1790542811.475263,
+      "id": "bfc6439c035cd08ebd01e2f7",
+      "invocation": "b377e5fadfe84317a4749db864bbd781",
+      "last_seen": 1790542811.475263,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-dbdeb78e603a11a8958b678b"
+      },
+      "first_seen": 1790541017.211158,
+      "id": "f6210509200f59e9a32cb1d2",
+      "invocation": "75f6b3dc2e494445a0a69aca5e1876ba",
+      "last_seen": 1790541017.211158,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-f16cf7659e5e2631938e446e"
+      },
+      "first_seen": 1790539219.478284,
+      "id": "b450cf1c00a1e0ebadd713e2",
+      "invocation": "8fc3573069b74310bc65ecc56096d6c8",
+      "last_seen": 1790539219.478284,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-99d1eb04d439114386520e76"
+      },
+      "first_seen": 1790537402.579683,
+      "id": "e7b74eb3f59f222b3d080bd1",
+      "invocation": "3f4cf1782653479d99d0dc24af016ede",
+      "last_seen": 1790537402.579683,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-470f12d1525af678d79e580b"
+      },
+      "first_seen": 1790535623.556086,
+      "id": "4717934933f86d8ad1ee5caf",
+      "invocation": "65df246e93404cf9913409cf748b0b86",
+      "last_seen": 1790535623.556086,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-ecbea48651eeb68df5fa1bc28a8e7cbba822ce78f108c2a61127ba5c77e1caf8"
+      },
+      "first_seen": 1790535611.669816,
+      "id": "e9268106f30dd65bacf19705",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790535611.669816,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-e3cf642e0de681d0cfb77b21"
+      },
+      "first_seen": 1790535611.663835,
+      "id": "1476788caed20f928b487270",
+      "invocation": "d98f6924509c4e9eadb6a135017d4b9b",
+      "last_seen": 1790535611.663835,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-5498df0bdf44b7e3341719a2"
+      },
+      "first_seen": 1790533820.934906,
+      "id": "8e09f28e1028aeace1eabd55",
+      "invocation": "f27853b095104f07b2a9c31b3bc9d278",
+      "last_seen": 1790533820.934906,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-7731571b7766f9a615d2e8b2cafe310d8e2b2f4e4c63275b40294b72a0ab8f25"
+      },
+      "first_seen": 1790533810.566741,
+      "id": "d423a0579792845fa76d1694",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790533810.566741,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-5c1cdf2d7dc0577320af8c9d"
+      },
+      "first_seen": 1790533810.558514,
+      "id": "b691058815c431503ad4c4b2",
+      "invocation": "e6aeb493334747f9aa562ef2c5789101",
+      "last_seen": 1790533810.558514,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-96cf6e0de3e13fdc8d54c7e7"
+      },
+      "first_seen": 1790532006.245774,
+      "id": "b9578fdcc1bf68f13f0411cc",
+      "invocation": "488ffce5b6d24a6ebc55ef89c9258c59",
+      "last_seen": 1790532006.245774,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-a05ccaadc2789db014d7edbd48e4e72006ed6912f550da1aa9a7b673fe44bea4"
+      },
+      "first_seen": 1790532006.207469,
+      "id": "d64e2772cb4adc602e862f40",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790532006.207469,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-06ff8dda4fd2182b63acd8a3"
+      },
+      "first_seen": 1790532006.201058,
+      "id": "fc0c03cd5fbd61fe0c8651e8",
+      "invocation": "7aae86c45dfb4da1b4c805561a31ba69",
+      "last_seen": 1790532006.201058,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-21b18d7e2f1ea0723f5dbe11"
+      },
+      "first_seen": 1790530205.692373,
+      "id": "97342e9d58a9921d55c039de",
+      "invocation": "7d07020f5c9047fe8f7ac91841df063d",
+      "last_seen": 1790530205.692373,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-fd37e9b7e6775ba3a5f20e0b840d16e2a46d039c568cd76fcdf371f9bf111666"
+      },
+      "first_seen": 1790528413.75471,
+      "id": "4bc38333f9f9412104fb65a0",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790528413.75471,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-d09b47d1a5a119655f0b4a78"
+      },
+      "first_seen": 1790528413.752254,
+      "id": "10af30896e4bdfc5617cece8",
+      "invocation": "2c16d4991752497c903348fd0236f973",
+      "last_seen": 1790528413.752254,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-a62242d86371c294c010a82f"
+      },
+      "first_seen": 1790528408.958806,
+      "id": "65c71b749f13b889c9cdf9da",
+      "invocation": "ee7ed1b9a99f40bba1e7da0ecc851bf2",
+      "last_seen": 1790528408.958806,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-7b0803b4e011aabacdecb97f"
+      },
+      "first_seen": 1790526614.618874,
+      "id": "3fe1bd0c320dcea8a5a698ea",
+      "invocation": "fbc1a6b6eacc46efb5525a967fea4e50",
+      "last_seen": 1790526614.618874,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-a56501e21dfa5085f1a6e420"
+      },
+      "first_seen": 1790524814.377608,
+      "id": "58d0d5dd5c7b7607825eeb2f",
+      "invocation": "2abb68ac24c24357a78e5a9c30bd9db1",
+      "last_seen": 1790524814.377608,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-086bd5dd5ff232c1a743956a1c882a2a2cf6b0e41751d221326e00c2471a8130"
+      },
+      "first_seen": 1790524802.94634,
+      "id": "16841115798dce7230f149d2",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790524802.94634,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-b811b6e3fa2a246341a3c4bc"
+      },
+      "first_seen": 1790524802.939057,
+      "id": "dd88cfca7b3f0d99edaf6086",
+      "invocation": "f645a63277374ac4b5a25b2412965a50",
+      "last_seen": 1790524802.939057,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-51182a617b26050190873981"
+      },
+      "first_seen": 1790523010.566995,
+      "id": "6343403a33711fa5c01315fb",
+      "invocation": "5384a39eaee04970a98988f40fbc6df7",
+      "last_seen": 1790523010.566995,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-b0f4ca468d334950f268a520"
+      },
+      "first_seen": 1790521217.597836,
+      "id": "a6c3a2b0addd465a16f8a3b1",
+      "invocation": "d11cd9c292014502a83fc1e9d424771a",
+      "last_seen": 1790521217.597836,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "health-a1cb1c72840f9cdd355a207198830fc2ccb2418cd01ecaeb1d92882698cfa8e9"
+      },
+      "first_seen": 1790521205.516683,
+      "id": "e4d3e480a2b23a64c8a5e5f7",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790521205.516683,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-41d82a1cd5dfeaa705f04b95"
+      },
+      "first_seen": 1790521205.507548,
+      "id": "065d55f83f1bf7d5aa549719",
+      "invocation": "e05d01911e0741f3ae5b2603ee322556",
+      "last_seen": 1790521205.507548,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-6da4d1afc93b2b7d0317c04e"
+      },
+      "first_seen": 1790519415.786818,
+      "id": "196a19659be9ce1e2e86d83f",
+      "invocation": "960b5292159142b5a2e8c5df3e5913cd",
+      "last_seen": 1790519415.786818,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {
+          "code": "QUOTA_DB_CONTENTION_EXHAUSTED"
+        },
+        "source": "journal-fa822815df3affcca9368f45"
+      },
+      "first_seen": 1790517619.967986,
+      "id": "234db83f14c91f461ae559c1",
+      "invocation": "144d61ef640f4414a78d894035e42c86",
+      "last_seen": 1790517619.967986,
+      "outbox_created_in_window": [],
+      "rule": "QUOTA_DB_CONTENTION",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1791632496.1405168,
+      "id": "295dde7b1fe61f5c304af795",
+      "invocation": "6d2489a6e6734a8e8856009e4b937daf",
+      "last_seen": 1791632496.1405168,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-e859fe231f1afde9f84d4f4c"
+      },
+      "first_seen": 1791632285.610366,
+      "id": "f6d854b77cc3e9412b3a119b",
+      "invocation": "6d2489a6e6734a8e8856009e4b937daf",
+      "last_seen": 1791632285.610366,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1791630708.9481592,
+      "id": "44c574902405241f8cbdf4ef",
+      "invocation": "4d7b10faf222445e8ae87c84cdb7072a",
+      "last_seen": 1791630708.9481592,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-32bb86d18835b9da24057ee4"
+      },
+      "first_seen": 1791630485.737265,
+      "id": "ae2b6ca6eba13e409bea7b12",
+      "invocation": "4d7b10faf222445e8ae87c84cdb7072a",
+      "last_seen": 1791630485.737265,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1791625269.1353562,
+      "id": "34e789a0566e6d77ee6ca90a",
+      "invocation": "190177c2e84e43f9b3fa4e0c58e6e669",
+      "last_seen": 1791625269.1353562,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-d4dc81f58f8c2325bf15d35c"
+      },
+      "first_seen": 1791625085.206007,
+      "id": "d71a0906f840145dd47c2030",
+      "invocation": "190177c2e84e43f9b3fa4e0c58e6e669",
+      "last_seen": 1791625085.206007,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1791621715.1072097,
+      "id": "a156a308ec2695a77e90cc40",
+      "invocation": "064b28b845a24be3a4ced8555d5e2e85",
+      "last_seen": 1791621715.1072097,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-0045dd0c45d03a3cd9ce83c2"
+      },
+      "first_seen": 1791621488.298418,
+      "id": "a7eb02403c1f800023e0af63",
+      "invocation": "064b28b845a24be3a4ced8555d5e2e85",
+      "last_seen": 1791621488.298418,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790851329.1943388,
+      "id": "49468c62918144d67330f6d5",
+      "invocation": "5ef08d25d7204d23aa46bab2797a7f27",
+      "last_seen": 1790851329.1943388,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "health-043c78e7659b5fc6ecfa211da463de6e76af62a4be2f8a9bd9889cd29c1becbb"
+      },
+      "first_seen": 1790851098.403662,
+      "id": "d18c0735b4e5c0bfe0303ccc",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790851098.403662,
+      "outbox_created_in_window": [],
+      "rule": "ANALYSIS_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-4589cf90dce00a3c19dee9dd"
+      },
+      "first_seen": 1790783601.049446,
+      "id": "22686aa4b0ca188054db6d1f",
+      "invocation": "1bd59e881bb74d1bbbd8c7ddba9dea48",
+      "last_seen": 1790783601.049446,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790777205.0501633,
+      "id": "c1a218cf93ab2c4acc23e5af",
+      "invocation": "edce376355504a7db5b1730a01fd4326",
+      "last_seen": 1790777205.0501633,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "health-316101862c7b817d634485bbd78fcfafc4c89a58a53564e53553995ca3bb430c"
+      },
+      "first_seen": 1790776985.316837,
+      "id": "d86909531d57fda1ca4f910e",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790776985.316837,
+      "outbox_created_in_window": [],
+      "rule": "ANALYSIS_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790759249.04694,
+      "id": "d83c4d8514e00801a8037b6b",
+      "invocation": "eddcdbe206ed4abbae32f1087e8ed027",
+      "last_seen": 1790759249.04694,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "health-8874a66ab4c0c60ea5f079553ea140d0c667b5c81f52ed9a046bb04d8af55b9f"
+      },
+      "first_seen": 1790759006.02517,
+      "id": "bb448877e1d53b77c2099d55",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790759006.02517,
+      "outbox_created_in_window": [],
+      "rule": "ANALYSIS_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790671139.1053662,
+      "id": "fb95e5728c6025f31de94211",
+      "invocation": "cdb5f4eb1ccb48f0bf8df55ce76939c5",
+      "last_seen": 1790671139.1053662,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-0ef05c12b7e2b19334417032"
+      },
+      "first_seen": 1790670904.090555,
+      "id": "927ff5f668b2d1af16ceb487",
+      "invocation": "cdb5f4eb1ccb48f0bf8df55ce76939c5",
+      "last_seen": 1790670904.090555,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790599139.0409446,
+      "id": "a9c8e3d4a255f8a12b3c258a",
+      "invocation": "4d931713a53b4404bae23bd990ccebdb",
+      "last_seen": 1790599139.0409446,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-fb60e5c1ae47e418b3c09b76"
+      },
+      "first_seen": 1790598905.03253,
+      "id": "097ffec84a221714ba8182e4",
+      "invocation": "4d931713a53b4404bae23bd990ccebdb",
+      "last_seen": 1790598905.03253,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-63b2507d5af652b3e80c155b"
+      },
+      "first_seen": 1790593514.084254,
+      "id": "01acc3467cffabd29e901205",
+      "invocation": "96c051108caf47a3803b1f677e20c03c",
+      "last_seen": 1790593514.084254,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-816921495f11ac2d80b73a9e"
+      },
+      "first_seen": 1790573428.121477,
+      "id": "a3504c9cdf6d6aa1684a3b21",
+      "invocation": "e9728981c71546368223c6f23c2b3172",
+      "last_seen": 1790573428.121477,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-cd973d487caa431a41dfd0de"
+      },
+      "first_seen": 1790571622.142106,
+      "id": "6386992727a50189ac8d0202",
+      "invocation": "9541c2aa944c4c25aabeb7f3e6932e60",
+      "last_seen": 1790571622.142106,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-6aad79c77a4d371c502a5857"
+      },
+      "first_seen": 1790569825.058264,
+      "id": "6e514bb7e79365fdc908ce40",
+      "invocation": "0d437aee93054401aa70b2b791fde6b2",
+      "last_seen": 1790569825.058264,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-1f9ded016b625a1c7e36b2a9"
+      },
+      "first_seen": 1790568029.139802,
+      "id": "2d75b479fa3bf3b166a9004e",
+      "invocation": "535820b641e24b58beca7d1ba6c3f60a",
+      "last_seen": 1790568029.139802,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-3bd8583e853c8ea39e707e96"
+      },
+      "first_seen": 1790566224.028792,
+      "id": "0af3977145691d578e2055b8",
+      "invocation": "73f79168199d437397fc0246604a906e",
+      "last_seen": 1790566224.028792,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-7f7e05039fc50470e38dc2fc"
+      },
+      "first_seen": 1790564425.408136,
+      "id": "495421077ef38d14a9e1b092",
+      "invocation": "4cb8fa76d3ca41c78dcf8d874ed53897",
+      "last_seen": 1790564425.408136,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-50defd3792188150b3bb3b2a"
+      },
+      "first_seen": 1790562620.454529,
+      "id": "25edfd257ba78cce8d37e328",
+      "invocation": "701871cf71384ca4be5ea747ab0b34ec",
+      "last_seen": 1790562620.454529,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-78f5f3cd91ce01a87004b2eb"
+      },
+      "first_seen": 1790560826.972652,
+      "id": "93a44164f27222ccfe9428bf",
+      "invocation": "772d09989d684f2b9c8e1bbfdf01962d",
+      "last_seen": 1790560826.972652,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-5ed216d873cfcec75a124343"
+      },
+      "first_seen": 1790559021.769724,
+      "id": "5391549ee20adf1d22a32af8",
+      "invocation": "dfb17d77c2d7420e8cbdeba4f39661b1",
+      "last_seen": 1790559021.769724,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-669104fca1266ee83ec7aab8"
+      },
+      "first_seen": 1790557227.120126,
+      "id": "f0626dd483fb5397edc2a2bd",
+      "invocation": "28359c93db24437c9ac2c1d49fe9ae4c",
+      "last_seen": 1790557227.120126,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-2bc115eca78e92cc54f235a8"
+      },
+      "first_seen": 1790555425.905952,
+      "id": "cc14e60b5547f675c9d5da0c",
+      "invocation": "b773206fcad1454ebcf4b7e4f70c423b",
+      "last_seen": 1790555425.905952,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-0c9219a1fcc6b552e0401461"
+      },
+      "first_seen": 1790553628.189957,
+      "id": "f5f704a26541277f134bf6c0",
+      "invocation": "d70804360181432bb0189340dda1a77d",
+      "last_seen": 1790553628.189957,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-aba2f5312065e0bace941fe8"
+      },
+      "first_seen": 1790551829.510742,
+      "id": "d3c7d8b28eb2731bda153f77",
+      "invocation": "0701489d4f47482fba83759f03f6b9b0",
+      "last_seen": 1790551829.510742,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-407d8f625dd78fa524e53355"
+      },
+      "first_seen": 1790550022.238937,
+      "id": "78effa25fd5aefddbc80a504",
+      "invocation": "95ba72cb7afb4beb8dc0e856225ab2cc",
+      "last_seen": 1790550022.238937,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-67664e11eea980b64dfa5b43"
+      },
+      "first_seen": 1790548214.30395,
+      "id": "ded23af20feb701ce98ea1e5",
+      "invocation": "a2a76fc468bc4cf292fa1a2d3c5d381b",
+      "last_seen": 1790548214.30395,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-70f7c65efe8b37112e96c9b0"
+      },
+      "first_seen": 1790546411.905255,
+      "id": "9fff7994d11da686cbef711e",
+      "invocation": "3f590d3300564231bf17d15ffcfbd881",
+      "last_seen": 1790546411.905255,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-83ccaeb2dc313e2a4a3a2d69"
+      },
+      "first_seen": 1790544622.139597,
+      "id": "4001a0a2fd1809e31d422635",
+      "invocation": "b8a72026ddbe477493676c6a4f03d54a",
+      "last_seen": 1790544622.139597,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-a8e02ab9706976c2519c6392"
+      },
+      "first_seen": 1790542816.722975,
+      "id": "e4c86dc098698a9644fb69f7",
+      "invocation": "b377e5fadfe84317a4749db864bbd781",
+      "last_seen": 1790542816.722975,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-4d0378308f5ea12713ad5a86"
+      },
+      "first_seen": 1790541022.419782,
+      "id": "599bf5bf64b106a78270c9b2",
+      "invocation": "75f6b3dc2e494445a0a69aca5e1876ba",
+      "last_seen": 1790541022.419782,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-b2301824be4833374f34606e"
+      },
+      "first_seen": 1790539234.563523,
+      "id": "016038a86d619e0211659a2c",
+      "invocation": "8fc3573069b74310bc65ecc56096d6c8",
+      "last_seen": 1790539234.563523,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-f5c42a9ccc4ea2d2598c9b1b"
+      },
+      "first_seen": 1790537407.78622,
+      "id": "34e90521cc4a79423e64fd5b",
+      "invocation": "3f4cf1782653479d99d0dc24af016ede",
+      "last_seen": 1790537407.78622,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790535849.1258986,
+      "id": "402e25f1958435dd373c58cb",
+      "invocation": "d98f6924509c4e9eadb6a135017d4b9b",
+      "last_seen": 1790535849.1258986,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-5e082c3c89f628122f60747c"
+      },
+      "first_seen": 1790535628.83007,
+      "id": "51ae866efb9e93465ee02e28",
+      "invocation": "65df246e93404cf9913409cf748b0b86",
+      "last_seen": 1790535628.83007,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-5de034120ba646bae75f4018"
+      },
+      "first_seen": 1790535611.924926,
+      "id": "a818d919c07f8409cbda4b3d",
+      "invocation": "d98f6924509c4e9eadb6a135017d4b9b",
+      "last_seen": 1790535611.924926,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790534009.2131429,
+      "id": "e394b5cc109cdf6eb37122a0",
+      "invocation": "e6aeb493334747f9aa562ef2c5789101",
+      "last_seen": 1790534009.2131429,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-ca8c909f10cf5def0660696f"
+      },
+      "first_seen": 1790533826.19957,
+      "id": "9725799d9849bef54d574735",
+      "invocation": "f27853b095104f07b2a9c31b3bc9d278",
+      "last_seen": 1790533826.19957,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-f651a880ad885018e81836df"
+      },
+      "first_seen": 1790533810.876139,
+      "id": "0ec9b9200de2ef15f33d89d7",
+      "invocation": "e6aeb493334747f9aa562ef2c5789101",
+      "last_seen": 1790533810.876139,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790532221.676242,
+      "id": "e05698211866ea69bffafcc5",
+      "invocation": "7aae86c45dfb4da1b4c805561a31ba69",
+      "last_seen": 1790532221.676242,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-b56527078c9161d7cf0795f9"
+      },
+      "first_seen": 1790532011.509223,
+      "id": "5a46236588fdc0868877aab3",
+      "invocation": "488ffce5b6d24a6ebc55ef89c9258c59",
+      "last_seen": 1790532011.509223,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-58281280b280af398dbe25c2"
+      },
+      "first_seen": 1790532006.599961,
+      "id": "8625c331f017e5200b259b83",
+      "invocation": "7aae86c45dfb4da1b4c805561a31ba69",
+      "last_seen": 1790532006.599961,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-229c33d32765b39a670d0802"
+      },
+      "first_seen": 1790530210.901652,
+      "id": "6e3010cf8a7b2a17b0c2b53a",
+      "invocation": "7d07020f5c9047fe8f7ac91841df063d",
+      "last_seen": 1790530210.901652,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790528606.2426293,
+      "id": "86380b308a13a6961364d424",
+      "invocation": "2c16d4991752497c903348fd0236f973",
+      "last_seen": 1790528606.2426293,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-c2a28cc5f9e412e98fc4c1f5"
+      },
+      "first_seen": 1790528414.167148,
+      "id": "dd8802ca7042066b18c5442e",
+      "invocation": "ee7ed1b9a99f40bba1e7da0ecc851bf2",
+      "last_seen": 1790528414.167148,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-8e16acb625c9b978ce986391"
+      },
+      "first_seen": 1790528414.004478,
+      "id": "67c0d834dee50b77d82a073b",
+      "invocation": "2c16d4991752497c903348fd0236f973",
+      "last_seen": 1790528414.004478,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-4f7b77f05d2998aff6c767a0"
+      },
+      "first_seen": 1790526619.812943,
+      "id": "d9edf5193c5a6ba0c7258ac0",
+      "invocation": "fbc1a6b6eacc46efb5525a967fea4e50",
+      "last_seen": 1790526619.812943,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790525022.6467369,
+      "id": "5b0d91b636aaff9f7afa3c56",
+      "invocation": "f645a63277374ac4b5a25b2412965a50",
+      "last_seen": 1790525022.6467369,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-c6c5292e44237a5a5f03a37e"
+      },
+      "first_seen": 1790524819.614182,
+      "id": "c071911c62e5a3a9a02dfd60",
+      "invocation": "2abb68ac24c24357a78e5a9c30bd9db1",
+      "last_seen": 1790524819.614182,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-0023a015dc633c68944c5343"
+      },
+      "first_seen": 1790524803.412354,
+      "id": "6b2884dc555f308070317002",
+      "invocation": "f645a63277374ac4b5a25b2412965a50",
+      "last_seen": 1790524803.412354,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-596b4b7680ff3f6d930ea673"
+      },
+      "first_seen": 1790523015.742537,
+      "id": "4cd0921b3a9cad34a7a9f3b0",
+      "invocation": "5384a39eaee04970a98988f40fbc6df7",
+      "last_seen": 1790523015.742537,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790521421.4454734,
+      "id": "6783be3492ca0ce9ecb14e77",
+      "invocation": "e05d01911e0741f3ae5b2603ee322556",
+      "last_seen": 1790521421.4454734,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-a154dedac93781ee0308928c"
+      },
+      "first_seen": 1790521222.865158,
+      "id": "2f6d609755a539b0eb25478b",
+      "invocation": "d11cd9c292014502a83fc1e9d424771a",
+      "last_seen": 1790521222.865158,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-28dc3c85d000dbf81cb8b76c"
+      },
+      "first_seen": 1790521205.823821,
+      "id": "c5e4f1e6d9a169bed30061c3",
+      "invocation": "e05d01911e0741f3ae5b2603ee322556",
+      "last_seen": 1790521205.823821,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-2139bd9206917f714cfb711e"
+      },
+      "first_seen": 1790519421.074335,
+      "id": "eac5b55f30d077f4838a806a",
+      "invocation": "960b5292159142b5a2e8c5df3e5913cd",
+      "last_seen": 1790519421.074335,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-b0762e12817210056d54eed5"
+      },
+      "first_seen": 1790517625.225269,
+      "id": "71134221c6b2d3a90bd02895",
+      "invocation": "144d61ef640f4414a78d894035e42c86",
+      "last_seen": 1790517625.225269,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790515994.0195503,
+      "id": "934e9b1e0025e9a468a5f2e1",
+      "invocation": "bd9a33656b904fb4b31cdf2ac5d3e25a",
+      "last_seen": 1790515994.0195503,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-309cffaaa32c4eaf9184ace2"
+      },
+      "first_seen": 1790494246.019231,
+      "id": "faeca596b404ec47d8ca7c64",
+      "invocation": "6b685178a44e4aec9774ba25f63dedbc",
+      "last_seen": 1790515819.276747,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-combo-settle.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "journal-891d9495debb0159d5c4e25f"
+      },
+      "first_seen": 1790499646.137265,
+      "id": "d45094b37f43de0f0145d25a",
+      "invocation": "bd9a33656b904fb4b31cdf2ac5d3e25a",
+      "last_seen": 1790515804.157757,
+      "outbox_created_in_window": [],
+      "rule": "SERVICE_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "health-66341f514028437383edb3ce131a20e404fc907b1677eda682c03b978669cba8"
+      },
+      "first_seen": 1790499642.937846,
+      "id": "68bde558a1ea8fed7b415903",
+      "invocation": "UNKNOWN",
+      "last_seen": 1790515803.880065,
+      "outbox_created_in_window": [],
+      "rule": "ANALYSIS_FAILURE",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790512388.992241,
+      "id": "091aadd48d31603d402ed88c",
+      "invocation": "0d3ef12f44ba4769a7fe7e107a24caed",
+      "last_seen": 1790512388.992241,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790510600.1209605,
+      "id": "b2077330f634f1e0d91ae3ae",
+      "invocation": "a5ef2cfbdbf0481c9e1e849bf1a9bc32",
+      "last_seen": 1790510600.1209605,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790508824.040337,
+      "id": "04a2438cf91e78f167f54c91",
+      "invocation": "a8c60d39e7cb4d3c88b10d0fa1f7464c",
+      "last_seen": 1790508824.040337,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790505474.0696309,
+      "id": "3b11093e253cf0b2285d21bd",
+      "invocation": "e104cc7ccfc84ea0839337322ff6760d",
+      "last_seen": 1790505474.0696309,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    },
+    {
+      "evidence": {
+        "facts": {},
+        "source": "stdout-window"
+      },
+      "first_seen": 1790499839.1025035,
+      "id": "97a77bf5beaf27e6fbf85a68",
+      "invocation": "1149428ce2d749cb9a1335fbceb78bd9",
+      "last_seen": 1790499839.1025035,
+      "outbox_created_in_window": [],
+      "rule": "MISSING_OUTPUT",
+      "service": "goalvision-lab-v2-discover.service",
+      "state": "OPEN"
+    }
+  ],
+  "mode": "READ_ONLY",
+  "original_export_sha256": "03a580ea492b4a7995a9488a9e4efe53d1900da9e84373fb367cff1c834b22dc",
+  "scope": "All 191 rows returned by the operator export, minimal correlation fields only; no runtime DB, credentials, recipients, receipts or journal text.",
+  "since_epoch": 1791374408.7593622,
+  "truncated": false
+}
