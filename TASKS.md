@@ -1,3 +1,12 @@
+## 2026-10-10 — Authorized quota-reader and ADMIN correlation rollout package
+
+- [x] Pin installed PREMATCH, LIVE and ADMIN bases and reviewed 3d4f5c5 / 9e321c3 overlays.
+- [x] Preserve every runtime-relative asset, policy flag, existing schedule and disabled ADMIN Codex guard.
+- [x] 22 isolated transaction tests PASS; assembled PREMATCH/LIVE/ADMIN smoke 7/7/14 PASS, zero real network.
+- [x] Prepare deterministic builder and fail-closed combined root updater with bounded natural drain and configuration recovery.
+- [ ] Final pinned package/read-only preflight, operator sudo apply, then natural-cycle verification.
+- Runbook: docs/operations/QUOTA_ADMIN_REPAIR_ROLLOUT_20261010.md.
+
 ## 2026-10-10 — Operator ADMIN export reconciliation
 
 - [x] Protected read-only export received: 191 unresolved records, 175 historical without 72 h recurrence; 16 recent records/four executions/eight acknowledged alerts.
