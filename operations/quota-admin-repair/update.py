@@ -245,8 +245,11 @@ def validate(package: Path) -> tuple[dict, str]:
 
 def restore_timers(states: dict) -> None:
     # Restore ADMIN last, after the monitored Lab timer states are restored.
-    h.restore_timers({u:v for u,v in states.items() if u != ADMIN.replace(".service", ".timer")})
-    h.restore_timers({ADMIN.replace(".service", ".timer"): states[ADMIN.replace(".service", ".timer")]})
+    admin_timer = ADMIN.replace(".service", ".timer")
+    # One helper call attempts every timer even if an earlier restore fails.
+    ordered = {u:v for u,v in states.items() if u != admin_timer}
+    ordered[admin_timer] = states[admin_timer]
+    h.restore_timers(ordered)
 
 
 def route(meta: dict) -> None:

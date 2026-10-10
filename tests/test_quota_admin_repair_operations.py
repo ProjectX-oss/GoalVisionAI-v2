@@ -290,3 +290,20 @@ def test_changed_installer_hash_refused(setup, name):
     with pytest.raises(ValueError, match="SCRIPT_HASH"):
         m.validate(package)
     assert state["calls"] == []
+
+
+def test_persistent_lab_timer_failure_still_restores_admin_monitor(setup, monkeypatch):
+    m, package, meta, state = setup
+    original = m.h.control
+    failed_timer = m.TIMERS[0]
+    def fail(command, *args):
+        if command == "start" and args == (failed_timer,):
+            raise OSError("persistent resume failure")
+        return original(command, *args)
+    monkeypatch.setattr(m.h, "control", fail)
+    with pytest.raises(RuntimeError, match="INSTALL_RECOVERY_REQUIRES_OPERATOR:TIMER_RESTORE"):
+        m.apply(package)
+    assert m.mode() == "BASE"
+    assert m.configured_units() == meta["units"]
+    assert state["active"][m.ADMIN.replace(".service", ".timer")]
+    assert all(active for timer, active in state["active"].items() if timer != failed_timer)

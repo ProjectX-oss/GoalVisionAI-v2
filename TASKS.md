@@ -2,7 +2,7 @@
 
 - [x] Pin installed PREMATCH, LIVE and ADMIN bases and reviewed 3d4f5c5 / 9e321c3 overlays.
 - [x] Preserve every runtime-relative asset, policy flag, existing schedule and disabled ADMIN Codex guard.
-- [x] 22 isolated transaction tests PASS; assembled PREMATCH/LIVE/ADMIN smoke 7/7/14 PASS, zero real network.
+- [x] 23 isolated transaction tests PASS; assembled PREMATCH/LIVE/ADMIN smoke 7/7/14 PASS, zero real network.
 - [x] Prepare deterministic builder and fail-closed combined root updater with bounded natural drain and configuration recovery.
 - [x] Final pinned package/read-only preflight PASS; deterministic two-build manifests identical.
 - [x] Authorized noninteractive apply attempted; sudo requires operator password before execution. Production untouched.

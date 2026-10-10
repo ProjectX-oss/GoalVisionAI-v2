@@ -72,10 +72,12 @@ restoring timer states. Retry after natural completion; do not kill the service.
 Source regressions were already reviewed: reader adjacent matrix 872 PASS,
 ADMIN 193 PASS. Their counts overlap earlier focused suites.
 
-New operator transaction suite: 22 PASS. It covers immutable assembly/assets,
+New operator transaction suite: 23 PASS. It covers immutable assembly/assets,
 unchanged flags, idempotence, source/script/asset drift, symlinks, partial routes,
 unrelated systemd changes, disabled-Codex guard, inactive LIVE refusal, drain
 timeout, mid-write failure, daemon-reload failure and timer-resume failure.
+A persistent Lab timer restoration error still attempts every other timer,
+including ADMIN last, and reports operator recovery required.
 
 Assembled runtime smoke: PREMATCH 7 PASS, LIVE 7 PASS, ADMIN 14 PASS with the
 actual runtime interpreters. Each import is checked to originate in the assembled
