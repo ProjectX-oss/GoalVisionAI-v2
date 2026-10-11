@@ -281,3 +281,57 @@ def test_historical_losses_stay_in_previous_cohort_and_all_time(ledger, sources,
     assert previous["LOST"] == 1 and previous["hypothetical_profit_loss"] == "-1"
     assert current["LOST"] == 0 and current["pending"] == 1
     assert union["total_published"] == 2 and union["LOST"] == 1 and union["pending"] == 1
+
+
+def test_single_preparation_does_not_spend_dc_reader_budget(ledger, sources, monkeypatch):
+    from app.lab_v2_shadow import combo_agreement_sources as source_module
+    from app.lab_v2_shadow import publication
+    clock = [100.0]
+    monkeypatch.setattr(source_module, "monotonic", lambda: clock[0])
+    rows, inputs = sources[0]()
+    original_review = publication.review_accuracy_publication
+    def delayed_review(*args, **kwargs):
+        clock[0] += 11
+        return original_review(*args, **kwargs)
+    monkeypatch.setattr(publication, "review_accuracy_publication", delayed_review)
+    output = prepare_v2_publications({"candidate_markets": rows}, ledger, now=START,
+        label_origin=True, accuracy_combos=True, combo_inputs=inputs)
+    assert len(output["combos"]) == 1
+    assert output["combo_diagnostics"]["reason"] == "COMBO_READY"
+    assert inputs.deadline == clock[0] + source_module.BUDGET_SECONDS
+
+
+def test_dc_reader_budget_is_shared_and_never_renewed(sources, monkeypatch):
+    from app.lab_v2_shadow import combo_agreement_sources as source_module
+    clock = [100.0]
+    monkeypatch.setattr(source_module, "monotonic", lambda: clock[0])
+    rows, inputs = sources[0]()
+    clock[0] = 160.0
+    assert inputs.score(rows[0], now=START)
+    assert inputs.deadline == 170.0
+    clock[0] = 169.999
+    assert inputs.score(rows[0], now=START)
+    clock[0] = 170.001
+    with pytest.raises(ValueError, match="COMBO_AGREEMENT_BUDGET_EXHAUSTED"):
+        inputs.score(rows[0], now=START)
+    assert inputs.deadline == 170.0
+
+
+@pytest.mark.parametrize("phase", ["model_verification", "evidence"])
+def test_dc_reader_slow_input_still_discards_entire_pool(ledger, sources, monkeypatch, phase):
+    from app.lab_v2_shadow import combo_agreement_sources as source_module
+    clock = [100.0]
+    monkeypatch.setattr(source_module, "monotonic", lambda: clock[0])
+    rows, inputs = sources[0]()
+    name = "verify_artifact" if phase == "model_verification" else "evidence"
+    original = getattr(source_module, name)
+    def slow(*args, **kwargs):
+        value = original(*args, **kwargs)
+        clock[0] += source_module.BUDGET_SECONDS + 1
+        return value
+    monkeypatch.setattr(source_module, name, slow)
+    output = prepare_v2_publications({"candidate_markets": rows}, ledger, now=START,
+        label_origin=True, accuracy_combos=True, combo_inputs=inputs)
+    assert output["combo_diagnostics"]["reason"] == "COMBO_AGREEMENT_BUDGET_EXHAUSTED"
+    assert not output["combos"] and not ledger.all("prediction")
+    assert not ledger.all("claim") and not ledger.all("receipt")

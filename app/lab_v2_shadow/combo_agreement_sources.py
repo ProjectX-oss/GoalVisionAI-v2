@@ -24,9 +24,13 @@ class Inputs:
         self.repository = repository
         self.model_path = MODEL_DB if model_path is None else model_path
         self.models: dict = {}
-        self.deadline = monotonic() + BUDGET_SECONDS
+        self.deadline: float | None = None
 
     def score(self, candidate: dict, *, now: datetime) -> dict:
+        # SINGLE preparation precedes this reader. Charge the shared, one-shot
+        # DC budget from its first use; never renew it for later candidates.
+        if self.deadline is None:
+            self.deadline = monotonic() + BUDGET_SECONDS
         if monotonic() > self.deadline:
             raise ValueError("COMBO_AGREEMENT_BUDGET_EXHAUSTED")
         league = int(candidate["league_id"])

@@ -1,0 +1,52 @@
+{
+  "mode": "OFFLINE_PROFILE_NOT_EXACT_RUNTIME",
+  "source_candidates": 1103,
+  "elapsed_seconds": 10.723023570142686,
+  "combo_diagnostics": {
+    "policy": "LAB_COMBO_CONSERVATIVE_AGREEMENT_V1",
+    "combo_leg_odds_policy": "LAB_COMBO_LEG_MIN_ODDS_130_V1",
+    "minimum_combo_leg_decimal_odds": "1.30",
+    "eligible_fixture_count": 0,
+    "prepared_count": 0,
+    "reason": "COMBO_AGREEMENT_BUDGET_EXHAUSTED",
+    "rejection_counts": {
+      "COMBO_AGREEMENT_BUDGET_EXHAUSTED": 1
+    },
+    "parallel_double": {
+      "policy": "LAB_COMBO_DOUBLE_170_P70_80_20261006_V1",
+      "statistics_cohort": "COMBO_DOUBLE_20261006_V1",
+      "leg_count": 2,
+      "minimum_combo_leg_decimal_odds": "1.70",
+      "minimum_leg_model_probability": "0.70",
+      "maximum_leg_model_probability": "0.80",
+      "score_is_calibrated_probability": false,
+      "eligible_fixture_count": 0,
+      "prepared_count": 0,
+      "reason": "INSUFFICIENT_INDEPENDENT_DOUBLE_LEGS",
+      "rejection_counts": {
+        "COMBO_DOUBLE_COMPLETED_FINAL_REVIEW_REQUIRED": 1095,
+        "COMBO_DOUBLE_LEG_EVIDENCE_INVALID": 1095,
+        "COMBO_DOUBLE_LEG_ODDS_BELOW_1_70": 312,
+        "COMBO_DOUBLE_PROBABILITY_OUTSIDE_70_80": 1021,
+        "FIXTURE_AFTER_LAB_CUTOFF": 122,
+        "PUBLICATION_DECISION_EVIDENCE_INVALID_OR_MISSING": 204,
+        "PUBLICATION_DECISION_EVIDENCE_STALE": 25,
+        "PUBLICATION_INDEPENDENT_EVIDENCE_REQUIRED": 18,
+        "PUBLICATION_PROBABILITY_REPLAY_MISMATCH": 36,
+        "PUBLICATION_SIGNAL_NOT_USABLE": 1
+      },
+      "rank_tail_omitted": 0
+    },
+    "total_prepared_count": 0
+  },
+  "notes": [
+    "Profiler disabled",
+    "Football context observer omitted",
+    "Detached 11:05 ledger precedes selected 11:09 publication",
+    "No worker or transport executed"
+  ],
+  "score_call_count": 1,
+  "successful_score_count": 0,
+  "first_score_start_seconds": 10.341220828238875,
+  "score_window_seconds": 8.102040737867355e-06
+}

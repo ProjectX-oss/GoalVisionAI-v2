@@ -139,3 +139,7 @@ DC sešu metožu paired izlasē vajag vismaz septīto kickoff date un turpmāku
 neatkarīgu incremental-information pārbaudi. Pašreizējais verdict saglabājas.
 
 Neviena šī dokumenta production komanda audita laikā nav izpildīta.
+
+## E. DC COMBO deadline follow-up — not installed
+
+Include the reviewed `app/lab_v2_shadow/combo_agreement_sources.py` first-use deadline fix in the next separately authorized PREMATCH release. Existing 10-second DC budget remains shared; SINGLE preparation no longer consumes it. Preserve all publication/model/odds/Double safeguards and natural scheduling. See `COMBO_SILENCE_DIAGNOSIS_20261011.md` for source review, detached replay limitations and 327 passing adjacent tests. Do not deploy or trigger a worker under this audit authorization.

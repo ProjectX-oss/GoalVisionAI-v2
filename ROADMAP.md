@@ -373,3 +373,7 @@ separate operator tasks. See `docs/runbooks/adaptive_lab_live.md`.
 ### 2026-10-11 recovery checkpoint
 
 The closed calendar-fit experiment is reproducible and detached; prospective quality remains blocked on validation/holdout. LIVE final-review reserve is already in the installed successor. Remaining source-only reader/health fixes and the explicit LIVE desired-state mismatch have a separate operator plan. LIVE context and COMBO quality/value comparisons reuse existing research components and cannot select or promote a production model. See docs/operations/GOALVISION_AI_CALIBRATION_LIVE_RECOVERY_20261010.md.
+
+## 2026-10-11 — COMBO silence follow-up
+
+Confirmed approximately 46h without a COMBO receipt. DC Agreement reader deadline was consumed by preceding SINGLE preparation; fixed source to start its unchanged shared 10-second budget at first DC score. Four regression cases added; 327 adjacent tests and 39 subtests pass. Same-data detached replay prepares three DC previews; Double still correctly selects none. No production deployment, provider call or message. See docs/operations/COMBO_SILENCE_DIAGNOSIS_20261011.md; installation requires separate operator authorization.

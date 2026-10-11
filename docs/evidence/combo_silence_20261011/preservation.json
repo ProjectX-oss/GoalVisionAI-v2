@@ -1,0 +1,7 @@
+{
+  "single_prediction": true,
+  "single_settlement": true,
+  "settlement": true,
+  "receipt": true,
+  "claim": true
+}

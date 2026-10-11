@@ -406,3 +406,7 @@ Detalizētais, atsevišķais plāns:
 7. Settlement pending ar postponed/AWD pazīmēm pārskatāmi pēc esošās operatora kārtības; neradīt mākslīgu VOID vai pārrakstīt settlement.
 
 **Šī darba darbību receipt:** production deployment=NONE; Telegram sends=0; neatļauti provider calls=0; task-initiated provider calls=0; Official changes=NONE; model activation=NONE; timer mutations=0; automatic promotion/rollback=NONE. Sistēmas iepriekš aktīvie dabiskie timeri turpināja darboties neatkarīgi; “0” attiecas uz šī darba iniciētajām darbībām.
+
+## Follow-up — COMBO silence, 2026-10-11 15:12 Riga
+
+**SMALL_GITHUB_FIX; OPERATOR_APPROVAL_REQUIRED.** User-reported silence was confirmed: latest COMBO receipt 2026-10-09 17:06:36 Riga. DC reader budget began before unrelated SINGLE preparation and expired before useful DC scoring. Minimal one-shot deadline fix is source-only, with 327 adjacent tests and 39 subtests passing. Detached replay finds 22 eligible DC fixtures and prepares three previews; these were not sent and are not proven missed production picks. Double remains at zero eligible fixtures. The original snapshot above is retained. Details: `COMBO_SILENCE_DIAGNOSIS_20261011.md`.
