@@ -2033,3 +2033,11 @@ Confirmed approximately 46h without a COMBO receipt. DC Agreement reader deadlin
 ## 2026-10-11 — Operator recovery package and evening learning Watch
 
 Prepared a pinned four-file PREMATCH successor and explicit sudo command, retaining LIVE routes/timers. Installer rejects drift and partial deployment; no automatic rollback. Fifteen offline installer regressions pass. Learning Watch: 4,794 eligible resolved observations / 1,504 fixtures, VALIDATION 56 rows / 22 fixtures, champion unchanged. Frozen FIT 346 remains separate from dynamic FIT 18 after late SHADOW availability causes conservative whole-fixture purging. See docs/operations/PREMATCH_RECOVERY_INSTALL_20261011.md. No production installation performed.
+
+## 2026-10-11 — User-requested immediate TRAIN-only research
+
+- [x] Manually fit three predeclared existing-registry raw candidates on 1,804 frozen TRAIN observations / 560 fixtures; exact deterministic reproduction, no COMBO learning.
+- [x] Preserve the source snapshot, champion, frozen calendar and original calibration experiment; no calibration/validation/holdout fit or production DB write.
+- [x] Correct bounded-memory snapshot hashing in the detached recipe; preserve failed attempt; complete second run with 96 adjacent regressions passed.
+- [ ] Separately reviewed future independent evaluation for the new artifacts; no promotion or production activation.
+- Report: docs/research/PREMATCH_TRAIN_ONLY_20261011.md.
