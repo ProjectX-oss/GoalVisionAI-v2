@@ -17,7 +17,7 @@ from .conftest import repo
 NOW = datetime.fromisoformat('2026-10-09T15:02:00+00:00')
 
 
-def mock_environment(repo, monkeypatch, budget=35, retry_broad=False):
+def mock_environment(repo, monkeypatch, budget=35, retry_broad=False, final_mode=None):
     from app.adaptive_lab import daypart
     monkeypatch.setenv('GOALVISION_LAB_EVENING_MODE','1')
     monkeypatch.setenv('GOALVISION_LIVE_API_FEED_QUOTES','1')
@@ -26,6 +26,7 @@ def mock_environment(repo, monkeypatch, budget=35, retry_broad=False):
     monkeypatch.setattr(daypart,'live_budget',lambda *a,**k:budget)
     monkeypatch.setattr(FootballClient,'MIN_REQUEST_INTERVAL_SECONDS',0)
     calls=[]; sends=[]; clients=[]
+    final_attempts = {}; final_started = False; seen_fixture_ids = set()
     def fixture(fid):
         return {'fixture':{'id':fid,'date':(NOW-timedelta(hours=1)).isoformat(),
                            'status':{'short':'2H','elapsed':60}},
@@ -40,11 +41,26 @@ def mock_environment(repo, monkeypatch, budget=35, retry_broad=False):
                 'odds':[{'id':36,'name':'Over/Under Line','values':[
                     {'value':'Under','handicap':'2.5','odd':'1.7','main':False,'suspended':False}]}]}
     def response(request):
+        nonlocal final_started
         path=request.url.path; params=dict(request.url.params)
         calls.append((path,params))
         assert len(repo.all('quota_claims')) == len(calls)
         headers={'x-ratelimit-requests-limit':'7500','x-ratelimit-requests-remaining':'7000',
                  'x-ratelimit-limit':'300','x-ratelimit-remaining':'299'}
+        if path == '/fixtures' and 'id' in params:
+            if params['id'] in seen_fixture_ids:
+                final_started = True
+            seen_fixture_ids.add(params['id'])
+        if final_started and final_mode:
+            final_attempts[path] = final_attempts.get(path, 0) + 1
+            if final_mode == 'retry_twice' and final_attempts[path] < 3:
+                return httpx.Response(503, json={'errors': [], 'response': []}, headers=headers)
+            if final_mode == 'http_failure':
+                return httpx.Response(503, json={'errors': [], 'response': []}, headers=headers)
+            if final_mode == 'partial':
+                return httpx.Response(200, json={'errors': [], 'response': []}, headers=headers)
+            if final_mode == 'quota':
+                headers['x-ratelimit-requests-remaining'] = '0'
         if path=='/status': rows=[]
         elif path=='/fixtures' and 'live' in params: rows=[fixture(i) for i in range(100,110)]
         elif path=='/fixtures' and 'id' in params: rows=[fixture(int(params['id']))]
@@ -150,3 +166,26 @@ def test_reserve_never_changes_global_publication_markets_or_probability_bounds(
     assert len(MARKETS)==11
     assert in_probability_band('.60') and in_probability_band('.70')
     assert not in_probability_band('.59999') and not in_probability_band('.70001')
+
+
+@pytest.mark.parametrize('mode', ['retry_twice', 'http_failure', 'partial', 'quota'])
+def test_final_review_reserve_with_retries_partial_and_exhausted_quota(repo, monkeypatch, mode):
+    from app.adaptive_lab.worker import live_cycle
+    async def no_sleep(*args):
+        pass
+    monkeypatch.setattr(asyncio, 'sleep', no_sleep)
+    calls, sends, clients = mock_environment(repo, monkeypatch, final_mode=mode)
+    result = asyncio.run(live_cycle(repo, send=True, clock=lambda: NOW))
+    assert result['api_calls'] == len(calls) <= 35
+    assert result['request_budget']['final_review_reserved_attempts'] == 9
+    assert clients[0]._request_limit == 35
+    if mode == 'retry_twice':
+        assert len(sends) == 1
+        assert [p for p, _ in calls[-9:]] == ['/fixtures'] * 3 + ['/fixtures/events'] * 3 + ['/odds/live'] * 3
+        assert len(repo.all('live_claims')) == len(repo.all('live_publications')) == 1
+    else:
+        assert not sends and not repo.all('live_claims') and not repo.all('live_publications')
+        assert result['deliveries'][0]['status'] == 'LIVE_FINAL_REFRESH_FAILED'
+        if mode == 'quota':
+            assert result['deliveries'][0]['reason'] == 'LIVE_SHARED_OR_PROVIDER_QUOTA_BLOCKED'
+    assert not repo.all('activation_events') and not repo.all('learning_observations', 'PREMATCH')
