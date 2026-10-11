@@ -31,27 +31,40 @@ def read_snapshot(database: Path, *, include_forecasts: bool = False) -> dict:
         n = repo.connection.execute("SELECT count(*) FROM learning_observations WHERE stream='PREMATCH'").fetchone()[0]
         if n > POLICY.training_rows_limit:
             raise ValueError("CALENDAR_DATASET_BOUND")
-        rows = repo.all("learning_observations", "PREMATCH")
-        holdouts = repo.all("holdout_results", "PREMATCH")
-        consumed = {oid for h in holdouts for oid in h["observation_ids"]}
-        by_id = {r["observation_id"]: str(r["fixture_id"]) for r in rows}
-        if not consumed <= by_id.keys():
-            raise ValueError("CONSUMED_HOLDOUT_PROVENANCE_MISSING")
-        forecasts = {}
+        tables = ["learning_observations", "holdout_results"]
         if include_forecasts:
             for table in ("canonical_opportunities", "canonical_results"):
                 count = repo.connection.execute("SELECT count(*) FROM " + table + " WHERE stream='PREMATCH'").fetchone()[0]
                 if count > POLICY.training_rows_limit:
                     raise ValueError("CALENDAR_FORECAST_BOUND")
-                forecasts[table] = repo.all(table, "PREMATCH")
-        return {**forecasts, "rows": rows, "consumed_observations": consumed,
-                "consumed_fixtures": {by_id[oid] for oid in consumed},
-                "champion_generation": repo.pointer("PREMATCH"),
-                "protected_counts": {table: repo.connection.execute("SELECT count(*) FROM " + table).fetchone()[0]
-                                     for table in PROTECTED_TABLES},
-                "snapshot_fingerprint": digest([[r["observation_id"], r["observation_fingerprint"]] for r in rows])}
+                tables.append(table)
+        # Preserve one coherent snapshot, but do not decode/hash large documents
+        # while its explicit BEGIN pins a rollback-journal SHARED lock.
+        encoded = {table: repo.connection.execute(
+            "SELECT document,fingerprint FROM " + table +
+            " WHERE stream='PREMATCH' ORDER BY created_at,id").fetchall() for table in tables}
+        champion = repo.pointer("PREMATCH")
+        counts = {table: repo.connection.execute("SELECT count(*) FROM " + table).fetchone()[0]
+                  for table in PROTECTED_TABLES}
     finally:
         repo.close()
+    decoded = {}
+    for table, records in encoded.items():
+        decoded[table] = []
+        for document, expected in records:
+            value = json.loads(document)
+            if digest(value) != expected:
+                raise ValueError("ARTIFACT_INTEGRITY_FAILURE")
+            decoded[table].append(value)
+    rows = decoded.pop("learning_observations")
+    consumed = {oid for h in decoded.pop("holdout_results") for oid in h["observation_ids"]}
+    by_id = {r["observation_id"]: str(r["fixture_id"]) for r in rows}
+    if not consumed <= by_id.keys():
+        raise ValueError("CONSUMED_HOLDOUT_PROVENANCE_MISSING")
+    return {**decoded, "rows": rows, "consumed_observations": consumed,
+            "consumed_fixtures": {by_id[oid] for oid in consumed},
+            "champion_generation": champion, "protected_counts": counts,
+            "snapshot_fingerprint": digest([[r["observation_id"], r["observation_fingerprint"]] for r in rows])}
 
 
 def readiness_report(snapshot: dict, plan: CalendarPlan, *, now: datetime) -> dict:

@@ -67,3 +67,41 @@ def test_readonly_report_bounds_database_before_loading(tmp_path,monkeypatch):
         __import__("app.adaptive_lab.policy",fromlist=["POLICY"]).POLICY,training_rows_limit=10))
     with pytest.raises(ValueError,match="BOUND"):
         read_snapshot(path)
+
+
+def test_snapshot_releases_reader_before_decode_and_keeps_membership(tmp_path, monkeypatch):
+    import sqlite3
+    path = tmp_path / "audit.db"
+    seed(path)
+    writer = sqlite3.connect(path, timeout=0)
+    assert writer.execute("PRAGMA journal_mode").fetchone()[0] == "delete"
+    original = json.loads
+    commits = []
+    def decode(document, *args, **kwargs):
+        if not commits:
+            writer.execute("BEGIN IMMEDIATE")
+            writer.execute("INSERT INTO observer_runs VALUES (?,?,?,?,?)",
+                           ("concurrent", "PREMATCH", NOW.isoformat(), "synthetic", "{}"))
+            writer.commit()  # Old explicit snapshot transaction blocks here.
+            commits.append(True)
+        return original(document, *args, **kwargs)
+    monkeypatch.setattr("app.adaptive_lab.calendar_audit.json.loads", decode)
+    try:
+        snapshot = read_snapshot(path, include_forecasts=True)
+        assert commits == [True]
+        assert len(snapshot["rows"]) == len(populated())
+        assert snapshot["protected_counts"]["learning_cycles"] == 0
+        assert not snapshot["canonical_opportunities"]
+    finally:
+        writer.close()
+
+
+def test_snapshot_rejects_corruption_after_reader_closed(tmp_path):
+    import sqlite3
+    path = tmp_path / "audit.db"
+    seed(path)
+    with sqlite3.connect(path) as db:
+        db.execute("DROP TRIGGER learning_observations_no_update")
+        db.execute("UPDATE learning_observations SET fingerprint='damaged'")
+    with pytest.raises(ValueError, match="INTEGRITY"):
+        read_snapshot(path)
