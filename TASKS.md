@@ -2029,3 +2029,7 @@ Review after completing the current priority.
 ## 2026-10-11 — COMBO silence follow-up
 
 Confirmed approximately 46h without a COMBO receipt. DC Agreement reader deadline was consumed by preceding SINGLE preparation; fixed source to start its unchanged shared 10-second budget at first DC score. Four regression cases added; 327 adjacent tests and 39 subtests pass. Same-data detached replay prepares three DC previews; Double still correctly selects none. No production deployment, provider call or message. See docs/operations/COMBO_SILENCE_DIAGNOSIS_20261011.md; installation requires separate operator authorization.
+
+## 2026-10-11 — Operator recovery package and evening learning Watch
+
+Prepared a pinned four-file PREMATCH successor and explicit sudo command, retaining LIVE routes/timers. Installer rejects drift and partial deployment; no automatic rollback. Fifteen offline installer regressions pass. Learning Watch: 4,794 eligible resolved observations / 1,504 fixtures, VALIDATION 56 rows / 22 fixtures, champion unchanged. Frozen FIT 346 remains separate from dynamic FIT 18 after late SHADOW availability causes conservative whole-fixture purging. See docs/operations/PREMATCH_RECOVERY_INSTALL_20261011.md. No production installation performed.
