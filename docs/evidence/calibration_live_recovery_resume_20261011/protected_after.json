@@ -1,0 +1,12 @@
+{
+  "captured_at": "2026-10-11T11:26:33.307118+00:00",
+  "installed_source_changed": [],
+  "live_timer": [
+    "ActiveState=active",
+    "SubState=waiting",
+    "UnitFileState=enabled"
+  ],
+  "main_worktree_status_unchanged": true,
+  "systemd_changed": [],
+  "systemd_files_checked": 150
+}

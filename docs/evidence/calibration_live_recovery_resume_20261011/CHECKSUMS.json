@@ -1,0 +1,22 @@
+{
+  "raw_databases_committed": false,
+  "sha256": {
+    "calibration.json": "e1871b56cc6fdabdc1dcc59a47586a353a577b8a93ca3ec6b6dab707f9c3c04e",
+    "combo.json": "1aa64610816f5466b70184cfbc90ca78f137cf3e3673accecc0f20c5f9bc8bb4",
+    "diagnostics.json": "8a30e1296a5955e9407291f23dcd834022cacc528f0dcb71431e5c5d813c8e2c",
+    "disagreement.json": "09c536f8f8a11f4e0fa3ef8bf71679114b7c7cad296ad9ea008b78dc24be65a4",
+    "learning.json": "e13d7b66421c380cf172bbe6fce0eb7d51025f1d523d402bfe172fcb94b746d9",
+    "live.json": "19876ba226c485acf802ddc406fe417e904c597ce80f20f2d2f3f2887210eed8",
+    "live_paired_ev.json": "9e19d2edb7f965623a4b061c20be32159f883944503afdf218eda3b2fe0f6e68",
+    "manifest.json": "4503670ebe0d70e137e56d5364707d1086fa8f107e9bf7132d5696437615ad8f",
+    "odds_yield.json": "7b8f8e48168baf1d273d9297f51ebf6199b1d57589685f0e546ffac129cc2bb8",
+    "operator_overlay_smoke.json": "62fc0dac756c1337a63462391f18f860eefe270f3d0ce94ea83c83ebab14d5be",
+    "performance.json": "87ad0e5fc79e2ddc4c26da54599e3dd95d2470bdbdfab3df1236fc70c18f280b",
+    "protected_after.json": "703078e2fd1315dc0a2b20f812e755859aac4b4090d57ecbb2591464e4ffbc6b",
+    "publication.json": "b997e8374c3bd91292388d140db11b391d476eb9a06b2a17a96fdd1c877a2aa0",
+    "research.json": "a41c8406adac2dcd8c65b8f854ce349c8e1f8cf6f81a8a4bc8820b5c1229ca5d",
+    "runtime.json": "0a807de3cb11b886647f1f72ebd3836609a88b68a757e1ea3d754f8849b6b4d4",
+    "source_snapshots.json": "44a0af1e5b3efc368b3bf04e79dc20c1d0a62a1ee7e6e4e5df98aa2614f97ead",
+    "validation.json": "ec44489fb14fa2b96392078bedf83dc7ffa85be579ec9e2af870c1b1d9a8e990"
+  }
+}

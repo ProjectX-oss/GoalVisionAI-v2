@@ -1,0 +1,12 @@
+{
+  "audit": {
+    "sha256": "fddd4f57faf2d890bf1afcf8e08d388570baeffd783a1d0b5675731cbcbc98f2",
+    "seconds": 2.4097299557179213,
+    "bytes": 653086720
+  },
+  "ledger": {
+    "sha256": "7e166a3a7edf1c65769d8d53e9bed61322a1d1ad070d81a5f8df4dbaa193301c",
+    "seconds": 0.8773133037611842,
+    "bytes": 242733056
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "mean_absolute_model_disagreement": 0.06135206093645801,
+  "mean_baseline_ev": -0.06949552306999153,
+  "mean_v2_ev": -0.07522422572837473,
+  "population": "SAME_SEVEN_FROZEN_MARKETS_ONE_FIXTURE; DEPENDENT_NOT_BETS",
+  "rows": [
+    {
+      "baseline": 0.24839593318989042,
+      "baseline_ev": -0.10577464051639451,
+      "context_v2": 0.22798995723377732,
+      "fixture_id": 1506538,
+      "market": "DRAW",
+      "odds": 3.6,
+      "v2_ev": -0.17923615395840164
+    },
+    {
+      "baseline": 0.5835220680671589,
+      "baseline_ev": 0.05033972252088614,
+      "context_v2": 0.6568084982293788,
+      "fixture_id": 1506538,
+      "market": "BTTS_YES",
+      "odds": 1.8,
+      "v2_ev": 0.18225529681288188
+    },
+    {
+      "baseline": 0.44899717420503815,
+      "baseline_ev": -0.12445551030017565,
+      "context_v2": 0.35233593251226,
+      "fixture_id": 1506538,
+      "market": "UNDER_2_5",
+      "odds": 1.95,
+      "v2_ev": -0.31294493160109305
+    },
+    {
+      "baseline": 0.5510028257949611,
+      "baseline_ev": 0.019355227720678103,
+      "context_v2": 0.6476640674877395,
+      "fixture_id": 1506538,
+      "market": "OVER_2_5",
+      "odds": 1.85,
+      "v2_ev": 0.19817852485231824
+    },
+    {
+      "baseline": 0.3779839495996005,
+      "baseline_ev": -0.055040126000998724,
+      "context_v2": 0.42276849102220565,
+      "fixture_id": 1506538,
+      "market": "HOME_WIN",
+      "odds": 2.5,
+      "v2_ev": 0.05692122755551421
+    },
+    {
+      "baseline": 0.373620117210509,
+      "baseline_ev": -0.0659497069737276,
+      "context_v2": 0.3492415517440169,
+      "fixture_id": 1506538,
+      "market": "AWAY_WIN",
+      "odds": 2.5,
+      "v2_ev": -0.1268961206399578
+    },
+    {
+      "baseline": 0.41647793193284,
+      "baseline_ev": -0.20494362794020848,
+      "context_v2": 0.3431915017706208,
+      "fixture_id": 1506538,
+      "market": "BTTS_NO",
+      "odds": 1.909,
+      "v2_ev": -0.3448474231198849
+    }
+  ]
+}

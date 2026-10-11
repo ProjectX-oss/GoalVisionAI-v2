@@ -1,0 +1,3351 @@
+{
+  "actual_live": "ACTIVE_ENABLED",
+  "captured_at": "2026-10-11T11:07:00.817994+00:00",
+  "deployments_in_task": 0,
+  "desired_live": "DISABLED",
+  "final_review_failure_reasons_24h": {
+    "LIVE_SHARED_OR_PROVIDER_QUOTA_BLOCKED": 1,
+    "QUOTA_DB_CONTENTION_EXHAUSTED": 5
+  },
+  "invocations": {
+    "goalvision-lab-live-evening.service": {
+      "invocations_with_code": [
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2
+          },
+          "first": "2026-10-10T17:07:06.778517+00:00",
+          "id": "45d607c199544c299bcac706ea50b3b4",
+          "last": "2026-10-10T17:08:02.981105+00:00",
+          "messages": 60,
+          "traceback_paths": []
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2
+          },
+          "first": "2026-10-10T17:37:06.280716+00:00",
+          "id": "afd88e1dc3a644b2bd83fcc2167fa5c4",
+          "last": "2026-10-10T17:38:02.810326+00:00",
+          "messages": 60,
+          "traceback_paths": []
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2
+          },
+          "first": "2026-10-10T18:07:05.339350+00:00",
+          "id": "4e5f692f61264917b699f1fc2a54d84c",
+          "last": "2026-10-10T18:08:01.772497+00:00",
+          "messages": 62,
+          "traceback_paths": []
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 3
+          },
+          "first": "2026-10-10T18:37:05.926848+00:00",
+          "id": "72e17e411b244ec19b75aa50e8b89706",
+          "last": "2026-10-10T18:38:03.858118+00:00",
+          "messages": 58,
+          "traceback_paths": []
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 5
+          },
+          "first": "2026-10-10T19:07:06.414831+00:00",
+          "id": "aa9686ddde7c456ab211e254389d4a1b",
+          "last": "2026-10-10T19:08:06.734343+00:00",
+          "messages": 56,
+          "traceback_paths": []
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2
+          },
+          "first": "2026-10-10T19:37:06.616376+00:00",
+          "id": "9960eb2ccb7748008fe51ae24555b942",
+          "last": "2026-10-10T19:38:03.596799+00:00",
+          "messages": 53,
+          "traceback_paths": []
+        }
+      ],
+      "live_cycles": [
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:07:04.759884+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:12:04.979807+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:17:06.633736+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:22:04.967376+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:27:04.573616+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:32:04.889015+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:37:04.927582+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:42:05.057559+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:47:04.716875+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:52:04.907945+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T11:57:04.747970+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:02:05.298372+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:07:04.844372+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:12:04.783914+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:17:06.350314+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:22:04.914684+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:27:04.733479+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:32:05.302979+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:37:05.292056+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:42:05.069574+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:47:04.347973+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:52:04.388051+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T12:57:04.372080+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:02:04.903836+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:07:04.938328+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:12:04.841501+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:17:06.517678+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:22:04.902623+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:27:04.533736+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:32:05.130691+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:37:05.403203+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:42:04.657509+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:47:04.691845+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:52:05.021565+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T13:57:05.031711+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:02:04.808438+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:07:04.747988+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:12:04.756789+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:17:06.838778+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:22:05.239259+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:27:05.563629+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:32:05.558282+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:37:05.750292+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:42:04.940746+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:47:05.272277+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:52:04.809535+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T14:57:05.140717+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 1,
+          "at": "2026-10-10T15:02:05.407871+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 1,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 0
+          },
+          "status": "LIVE_QUOTA_BOUNDED_STOP"
+        },
+        {
+          "api_calls": 22,
+          "at": "2026-10-10T15:07:38.723826+00:00",
+          "deliveries": [
+            {
+              "reason": "LIVE_SHARED_OR_PROVIDER_QUOTA_BLOCKED",
+              "sent": false,
+              "status": "LIVE_FINAL_REFRESH_FAILED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 54,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 45
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 45,
+          "at": "2026-10-10T15:12:52.599416+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 54,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 45
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 49,
+          "at": "2026-10-10T15:17:58.260936+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 55,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 46
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 46,
+          "at": "2026-10-10T15:22:52.649357+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 55,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 46
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 49,
+          "at": "2026-10-10T15:27:54.814084+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 55,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 46
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 49,
+          "at": "2026-10-10T15:33:04.289168+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 55,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 46
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 50,
+          "at": "2026-10-10T15:37:49.745083+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 56,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 47
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 47,
+          "at": "2026-10-10T15:42:54.819619+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 56,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 47
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 11,
+          "at": "2026-10-10T15:47:13.982545+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 57,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 48
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 52,
+          "at": "2026-10-10T15:53:09.187945+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 58,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 49
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 49,
+          "at": "2026-10-10T15:57:55.095293+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 58,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 49
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 49,
+          "at": "2026-10-10T16:03:00.218302+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 58,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 49
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 53,
+          "at": "2026-10-10T16:07:53.529352+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 59,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 50
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 53,
+          "at": "2026-10-10T16:12:52.674161+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 59,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 50
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 54,
+          "at": "2026-10-10T16:17:56.888201+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 60,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 51
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 54,
+          "at": "2026-10-10T16:22:53.936630+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 60,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 51
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 52,
+          "at": "2026-10-10T16:27:54.259071+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 61,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 52
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 13,
+          "at": "2026-10-10T16:32:20.893811+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 61,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 52
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 56,
+          "at": "2026-10-10T16:37:54.944821+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 62,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 53
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 57,
+          "at": "2026-10-10T16:42:58.776625+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 63,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 54
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 54,
+          "at": "2026-10-10T16:47:52.184739+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 63,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 54
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 58,
+          "at": "2026-10-10T16:53:02.177911+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 64,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 55
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 58,
+          "at": "2026-10-10T16:57:58.751644+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 64,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 55
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 58,
+          "at": "2026-10-10T17:03:06.313934+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 64,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 55
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 57,
+          "at": "2026-10-10T17:08:02.981105+00:00",
+          "deliveries": [
+            {
+              "reason": "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "sent": false,
+              "status": "LIVE_FINAL_REFRESH_FAILED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 65,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 56
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 59,
+          "at": "2026-10-10T17:12:59.695093+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 66,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 57
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 59,
+          "at": "2026-10-10T17:18:07.278444+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 66,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 57
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 57,
+          "at": "2026-10-10T17:23:02.474655+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 67,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 58
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 60,
+          "at": "2026-10-10T17:28:03.497247+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 68,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 59
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 59,
+          "at": "2026-10-10T17:33:06.656067+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 68,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 59
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 57,
+          "at": "2026-10-10T17:38:02.810326+00:00",
+          "deliveries": [
+            {
+              "reason": "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "sent": false,
+              "status": "LIVE_FINAL_REFRESH_FAILED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 69,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 60
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 57,
+          "at": "2026-10-10T17:43:05.579376+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 69,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 60
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 60,
+          "at": "2026-10-10T17:48:05.650044+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 71,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 62
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T17:53:06.803058+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 71,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 62
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T17:58:07.152576+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 72,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 63
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T18:03:12.165254+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 73,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 64
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 59,
+          "at": "2026-10-10T18:08:01.772497+00:00",
+          "deliveries": [
+            {
+              "reason": "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "sent": false,
+              "status": "LIVE_FINAL_REFRESH_FAILED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 74,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 65
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T18:13:07.491976+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 75,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 66
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 58,
+          "at": "2026-10-10T18:18:09.340651+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 77,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 68
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T18:23:06.002297+00:00",
+          "deliveries": [
+            {
+              "blockers": [
+                "LIVE_PROBABILITY_OUTSIDE_60_70"
+              ],
+              "sent": false,
+              "status": "LIVE_READINESS_BLOCKED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 78,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 69
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 58,
+          "at": "2026-10-10T18:28:05.293508+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T18:33:10.916661+00:00",
+          "deliveries": [
+            {
+              "blockers": [
+                "LIVE_PROBABILITY_OUTSIDE_60_70"
+              ],
+              "sent": false,
+              "status": "LIVE_READINESS_BLOCKED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 54,
+          "at": "2026-10-10T18:38:03.858118+00:00",
+          "deliveries": [
+            {
+              "reason": "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "sent": false,
+              "status": "LIVE_FINAL_REFRESH_FAILED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T18:43:11.760466+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 58,
+          "at": "2026-10-10T18:48:09.004664+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 50,
+          "at": "2026-10-10T18:53:00.549320+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 63,
+          "at": "2026-10-10T18:58:13.409288+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 62,
+          "at": "2026-10-10T19:03:19.865212+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 50,
+          "at": "2026-10-10T19:08:06.734343+00:00",
+          "deliveries": [
+            {
+              "reason": "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "sent": false,
+              "status": "LIVE_FINAL_REFRESH_FAILED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 58,
+          "at": "2026-10-10T19:13:10.868569+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 57,
+          "at": "2026-10-10T19:18:13.704463+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 62,
+          "at": "2026-10-10T19:23:14.898301+00:00",
+          "deliveries": [
+            {
+              "blockers": [
+                "LIVE_MARKET_SUSPENDED"
+              ],
+              "sent": false,
+              "status": "LIVE_READINESS_BLOCKED"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 62,
+          "at": "2026-10-10T19:28:14.148263+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T19:33:13.288169+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 49,
+          "at": "2026-10-10T19:38:03.596799+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 58,
+          "at": "2026-10-10T19:43:15.956003+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 61,
+          "at": "2026-10-10T19:48:19.328925+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 62,
+          "at": "2026-10-10T19:53:20.989787+00:00",
+          "deliveries": [
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 62,
+          "at": "2026-10-10T19:58:19.865702+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": false,
+              "status": "LIVE_REFRESH_QUOTE_MISSING"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_SCAN_COMPLETE"
+        },
+        {
+          "api_calls": 5,
+          "at": "2026-10-10T20:02:13.708871+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 5,
+          "at": "2026-10-10T20:07:13.041167+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 5,
+          "at": "2026-10-10T20:12:13.121876+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 5,
+          "at": "2026-10-10T20:17:17.337486+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 5,
+          "at": "2026-10-10T20:22:13.132475+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 5,
+          "at": "2026-10-10T20:27:13.652115+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 5,
+          "at": "2026-10-10T20:32:12.850884+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 4,
+          "at": "2026-10-10T20:37:10.131289+00:00",
+          "deliveries": [],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 4,
+          "at": "2026-10-10T20:42:09.882786+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 2,
+          "at": "2026-10-10T20:47:07.741436+00:00",
+          "deliveries": [
+            {
+              "sent": true,
+              "status": "SENT"
+            },
+            {
+              "sent": true,
+              "status": "SENT"
+            }
+          ],
+          "request_budget": {
+            "cycle_ceiling": 80,
+            "final_review_reserved_attempts": 9,
+            "scan_ceiling": 71
+          },
+          "status": "LIVE_RESULTS_ONLY"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T20:52:04.808779+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T20:57:05.202551+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:02:04.859499+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:07:04.832692+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:12:04.974002+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:17:07.494862+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:22:05.522844+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:27:05.140819+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:32:05.263098+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:37:05.450559+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:42:05.951247+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:47:05.385637+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:52:05.588193+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T21:57:05.105502+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:02:05.384906+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:07:05.095339+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:12:06.995759+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:17:08.266936+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:22:05.706860+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:27:05.006974+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:32:05.876219+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:37:04.950322+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:42:05.384120+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:47:04.769091+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:52:04.969170+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T22:57:05.077708+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:02:05.196995+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:07:05.146064+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:12:04.836479+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:17:06.934495+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:22:05.432465+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:27:05.300291+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:32:04.932433+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:37:05.475552+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:42:05.431642+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:47:05.093592+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:52:05.400102+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-10T23:57:05.899899+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:02:05.512145+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:07:05.208838+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:12:05.174990+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:17:08.402358+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:22:06.158243+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:27:05.529961+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:32:05.013533+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:37:04.720254+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:42:05.260743+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:47:05.058974+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:52:05.091063+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T00:57:04.950514+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:02:04.990090+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:07:04.933604+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:12:04.984058+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:17:07.254189+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:22:05.519432+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:27:05.060623+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:32:04.955551+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:37:05.033419+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:42:04.825763+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:47:05.284439+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:52:05.206940+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T01:57:04.866738+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:02:04.986710+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:07:05.288194+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:12:05.186167+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:17:07.449839+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:22:05.312716+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:27:04.844845+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:32:04.804740+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:37:04.849961+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:42:04.568305+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:47:04.484064+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:52:05.035075+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T02:57:04.754136+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:02:04.700450+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:07:04.811001+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:12:05.944699+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:17:07.159632+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:22:05.098772+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:27:04.831511+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:32:04.872882+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:37:04.462185+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:42:04.595548+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:47:04.635740+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:52:04.714150+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T03:57:04.672242+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:02:04.883254+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:07:04.285380+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:12:04.347882+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:17:06.994607+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:22:05.088583+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:27:04.765966+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:32:04.689581+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:37:04.661333+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:42:04.654568+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:47:04.857318+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:52:04.623192+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T04:57:04.695924+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:02:04.492179+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:07:04.764257+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:12:04.792926+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:17:06.514737+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:22:05.033500+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:27:04.669674+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:32:04.497492+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:37:04.375900+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:42:04.344695+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:47:04.312186+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:52:04.573355+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T05:57:04.452807+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:02:04.859755+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:07:04.396791+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:12:04.521798+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:17:06.021958+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:22:05.477677+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:27:04.662690+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:32:04.600944+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:37:04.884957+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:42:04.767701+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:47:04.578643+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:52:04.513908+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T06:57:04.753956+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:02:05.123064+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:07:05.011469+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:12:05.151408+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:17:06.631636+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:22:04.679710+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:27:04.489582+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:32:05.083611+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:37:04.616800+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:42:04.678673+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:47:04.013148+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:52:04.651197+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T07:57:04.676884+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:02:05.033376+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:07:04.485364+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:12:04.610358+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:17:07.272426+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:22:04.655881+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:27:04.660582+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:32:05.111896+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:37:04.351765+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:42:04.511505+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:47:04.276656+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:52:04.855068+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T08:57:04.330126+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:02:04.631789+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:07:04.541609+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:12:05.321777+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:17:06.883172+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:22:04.852443+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:27:04.763673+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:32:04.927063+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:37:04.461505+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:42:04.754449+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:47:04.563928+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:52:04.707525+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T09:57:04.391087+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:02:05.414851+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:07:04.510589+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:12:04.990467+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:17:06.709148+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:22:04.912665+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:27:04.956618+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:32:05.089503+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:37:05.362126+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:42:04.799266+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:47:04.765326+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:52:04.306494+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T10:57:04.596287+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        },
+        {
+          "api_calls": 0,
+          "at": "2026-10-11T11:02:05.437771+00:00",
+          "deliveries": [],
+          "status": "LIVE_IDLE_NO_PENDING_RESULTS"
+        }
+      ],
+      "observed_invocations": 288
+    },
+    "goalvision-lab-v2-discover.service": {
+      "invocations_with_code": [
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2,
+            "Traceback (most recent call last)": 1
+          },
+          "first": "2026-10-10T11:05:56.580462+00:00",
+          "id": "4d7b10faf222445e8ae87c84cdb7072a",
+          "last": "2026-10-10T11:08:04.869279+00:00",
+          "messages": 186,
+          "traceback_paths": [
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 186",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 72",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 84",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 141",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 281",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 288",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/__main__.py\", line 3",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 251",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 360",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 80",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 1150",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 1181",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 149",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 411",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 809"
+          ]
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2,
+            "Traceback (most recent call last)": 1
+          },
+          "first": "2026-10-10T11:30:05.715301+00:00",
+          "id": "6d2489a6e6734a8e8856009e4b937daf",
+          "last": "2026-10-10T11:38:04.803360+00:00",
+          "messages": 274,
+          "traceback_paths": [
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 186",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 72",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 84",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 182",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 281",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 288",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/__main__.py\", line 3",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 251",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 360",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 80",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 1035",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 1150",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 149",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 340"
+          ]
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2,
+            "Traceback (most recent call last)": 1
+          },
+          "first": "2026-10-10T12:30:05.461401+00:00",
+          "id": "efdac22cb1cc4825ac9e4b6555e22e9f",
+          "last": "2026-10-10T12:38:07.349677+00:00",
+          "messages": 290,
+          "traceback_paths": [
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 186",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 72",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/adaptive_lab/quota.py\", line 84",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 182",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 281",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/football/client.py\", line 288",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/__main__.py\", line 3",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 251",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 360",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/cli.py\", line 80",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 1035",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 1150",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 149",
+            "File \"/opt/goalvision-live-evening-4f547cf-20261007/application/app/lab_v2_shadow/runner.py\", line 340"
+          ]
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2,
+            "Traceback (most recent call last)": 1
+          },
+          "first": "2026-10-10T14:30:06.240675+00:00",
+          "id": "eec921527f924c1b90a83b6eb0277e50",
+          "last": "2026-10-10T14:38:07.051161+00:00",
+          "messages": 287,
+          "traceback_paths": [
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 186",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 72",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 84",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 182",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 281",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 288",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/__main__.py\", line 3",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 251",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 360",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 80",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1035",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1150",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 149",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 340"
+          ]
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2,
+            "Traceback (most recent call last)": 1
+          },
+          "first": "2026-10-11T08:30:03.866929+00:00",
+          "id": "da820560b53b46619e29865624bf1990",
+          "last": "2026-10-11T08:38:13.667703+00:00",
+          "messages": 307,
+          "traceback_paths": [
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 186",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 67",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 84",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 141",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 281",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 288",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/__main__.py\", line 3",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 251",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 360",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 80",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1150",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1181",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 149",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 411",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 809"
+          ]
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2,
+            "Traceback (most recent call last)": 1
+          },
+          "first": "2026-10-11T09:30:04.255433+00:00",
+          "id": "62a475bbc5b74dbc94cc23556c20cdbc",
+          "last": "2026-10-11T09:38:04.861823+00:00",
+          "messages": 233,
+          "traceback_paths": [
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 186",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 72",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 84",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 182",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 281",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 288",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/__main__.py\", line 3",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 251",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 360",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 80",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1052",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1150",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 149",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 340"
+          ]
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2,
+            "Traceback (most recent call last)": 1
+          },
+          "first": "2026-10-11T10:00:05.083332+00:00",
+          "id": "e8d3c98e99944f74ab437fad6dfaa967",
+          "last": "2026-10-11T10:08:07.338916+00:00",
+          "messages": 303,
+          "traceback_paths": [
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 186",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 72",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 84",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 182",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 281",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 288",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/__main__.py\", line 3",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 251",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 360",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 80",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1035",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1150",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 149",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 340"
+          ]
+        },
+        {
+          "codes": {
+            "QUOTA_DB_CONTENTION_EXHAUSTED": 2,
+            "Traceback (most recent call last)": 1
+          },
+          "first": "2026-10-11T10:30:04.198870+00:00",
+          "id": "994be5b18e4545b39e4430a111431942",
+          "last": "2026-10-11T10:38:04.919501+00:00",
+          "messages": 253,
+          "traceback_paths": [
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 186",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 72",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/quota.py\", line 84",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 182",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 281",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/football/client.py\", line 288",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/__main__.py\", line 3",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 251",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 360",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/cli.py\", line 80",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1035",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 1150",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 149",
+            "File \"/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/lab_v2_shadow/runner.py\", line 340"
+          ]
+        }
+      ],
+      "live_cycles": [],
+      "observed_invocations": 17
+    }
+  },
+  "journal": {
+    "as_of": "2026-10-11T11:05:21.700896+00:00",
+    "since": "2026-10-10T11:05:21.700896+00:00",
+    "units": {
+      "goalvision-adaptive-learning-observer.service": {
+        "counts": {
+          "Failed with result": 0,
+          "LIVE_FINAL_REFRESH_FAILED": 0,
+          "LIVE_FINAL_REFRESH_HTTP_FAILURE": 0,
+          "LIVE_FINAL_REFRESH_QUOTA_BLOCKED": 0,
+          "LIVE_REFRESH_QUOTE_MISSING": 0,
+          "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+          "Traceback (most recent call last)": 0,
+          "database is locked": 0
+        },
+        "events": [],
+        "exit_code": 0,
+        "lines": 48
+      },
+      "goalvision-dixon-coles-forward.service": {
+        "counts": {
+          "Failed with result": 0,
+          "LIVE_FINAL_REFRESH_FAILED": 0,
+          "LIVE_FINAL_REFRESH_HTTP_FAILURE": 0,
+          "LIVE_FINAL_REFRESH_QUOTA_BLOCKED": 0,
+          "LIVE_REFRESH_QUOTE_MISSING": 0,
+          "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+          "Traceback (most recent call last)": 0,
+          "database is locked": 0
+        },
+        "events": [],
+        "exit_code": 0,
+        "lines": 48
+      },
+      "goalvision-lab-combo-settle.service": {
+        "counts": {
+          "Failed with result": 0,
+          "LIVE_FINAL_REFRESH_FAILED": 0,
+          "LIVE_FINAL_REFRESH_HTTP_FAILURE": 0,
+          "LIVE_FINAL_REFRESH_QUOTA_BLOCKED": 0,
+          "LIVE_REFRESH_QUOTE_MISSING": 0,
+          "QUOTA_DB_CONTENTION_EXHAUSTED": 0,
+          "Traceback (most recent call last)": 0,
+          "database is locked": 0
+        },
+        "events": [],
+        "exit_code": 0,
+        "lines": 414
+      },
+      "goalvision-lab-live-evening.service": {
+        "counts": {
+          "Failed with result": 0,
+          "LIVE_FINAL_REFRESH_FAILED": 6,
+          "LIVE_FINAL_REFRESH_HTTP_FAILURE": 0,
+          "LIVE_FINAL_REFRESH_QUOTA_BLOCKED": 0,
+          "LIVE_REFRESH_QUOTE_MISSING": 19,
+          "QUOTA_DB_CONTENTION_EXHAUSTED": 16,
+          "Traceback (most recent call last)": 0,
+          "database is locked": 0
+        },
+        "events": [
+          {
+            "at": "2026-10-10T15:07:38.723826+00:00",
+            "codes": [
+              "LIVE_FINAL_REFRESH_FAILED"
+            ]
+          },
+          {
+            "at": "2026-10-10T15:27:54.814084+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T15:53:09.187945+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T16:17:56.888201+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T16:37:54.944821+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T16:42:58.776625+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T16:53:02.177911+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T17:03:06.313934+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T17:08:02.978137+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T17:08:02.981105+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "LIVE_FINAL_REFRESH_FAILED"
+            ]
+          },
+          {
+            "at": "2026-10-10T17:12:59.695093+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T17:38:02.807686+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T17:38:02.810326+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "LIVE_FINAL_REFRESH_FAILED"
+            ]
+          },
+          {
+            "at": "2026-10-10T17:53:06.803058+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T17:58:07.152576+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T18:08:01.693926+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T18:08:01.772497+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "LIVE_FINAL_REFRESH_FAILED"
+            ]
+          },
+          {
+            "at": "2026-10-10T18:13:07.491976+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T18:38:02.668212+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T18:38:03.855771+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T18:38:03.858118+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "LIVE_FINAL_REFRESH_FAILED"
+            ]
+          },
+          {
+            "at": "2026-10-10T18:48:09.004664+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T18:58:13.409288+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:08:02.913262+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:08:04.825347+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:08:05.619662+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:08:06.731489+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:08:06.734343+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED",
+              "LIVE_FINAL_REFRESH_FAILED"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:13:10.868569+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:18:13.704463+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:28:14.148263+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:33:13.288169+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:38:02.402528+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:38:03.513661+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:53:20.989787+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          },
+          {
+            "at": "2026-10-10T19:58:19.865702+00:00",
+            "codes": [
+              "LIVE_REFRESH_QUOTE_MISSING"
+            ]
+          }
+        ],
+        "exit_code": 0,
+        "lines": 3620
+      },
+      "goalvision-lab-v2-discover.service": {
+        "counts": {
+          "Failed with result": 0,
+          "LIVE_FINAL_REFRESH_FAILED": 0,
+          "LIVE_FINAL_REFRESH_HTTP_FAILURE": 0,
+          "LIVE_FINAL_REFRESH_QUOTA_BLOCKED": 0,
+          "LIVE_REFRESH_QUOTE_MISSING": 0,
+          "QUOTA_DB_CONTENTION_EXHAUSTED": 16,
+          "Traceback (most recent call last)": 8,
+          "database is locked": 0
+        },
+        "events": [
+          {
+            "at": "2026-10-10T11:08:03.042255+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T11:08:04.866258+00:00",
+            "codes": [
+              "Traceback (most recent call last)"
+            ]
+          },
+          {
+            "at": "2026-10-10T11:08:04.869279+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T11:38:02.949065+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T11:38:04.800730+00:00",
+            "codes": [
+              "Traceback (most recent call last)"
+            ]
+          },
+          {
+            "at": "2026-10-10T11:38:04.803360+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T12:38:05.565525+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T12:38:07.347188+00:00",
+            "codes": [
+              "Traceback (most recent call last)"
+            ]
+          },
+          {
+            "at": "2026-10-10T12:38:07.349677+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T14:38:05.336412+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-10T14:38:07.047975+00:00",
+            "codes": [
+              "Traceback (most recent call last)"
+            ]
+          },
+          {
+            "at": "2026-10-10T14:38:07.051161+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-11T08:38:11.818732+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-11T08:38:13.664496+00:00",
+            "codes": [
+              "Traceback (most recent call last)"
+            ]
+          },
+          {
+            "at": "2026-10-11T08:38:13.667703+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-11T09:38:03.074866+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-11T09:38:04.858353+00:00",
+            "codes": [
+              "Traceback (most recent call last)"
+            ]
+          },
+          {
+            "at": "2026-10-11T09:38:04.861823+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-11T10:08:05.350720+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-11T10:08:07.334852+00:00",
+            "codes": [
+              "Traceback (most recent call last)"
+            ]
+          },
+          {
+            "at": "2026-10-11T10:08:07.338916+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-11T10:38:02.981766+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          },
+          {
+            "at": "2026-10-11T10:38:04.916725+00:00",
+            "codes": [
+              "Traceback (most recent call last)"
+            ]
+          },
+          {
+            "at": "2026-10-11T10:38:04.919501+00:00",
+            "codes": [
+              "QUOTA_DB_CONTENTION_EXHAUSTED"
+            ]
+          }
+        ],
+        "exit_code": 0,
+        "lines": 3222
+      }
+    }
+  },
+  "protected_verification": {
+    "captured_at": "2026-10-11T11:26:33.307118+00:00",
+    "installed_source_changed": [],
+    "live_timer": [
+      "ActiveState=active",
+      "SubState=waiting",
+      "UnitFileState=enabled"
+    ],
+    "main_worktree_status_unchanged": true,
+    "systemd_changed": [],
+    "systemd_files_checked": 150
+  },
+  "quota": {
+    "as_of": "2026-10-11T11:05:21.700896+00:00",
+    "audit_copy_integrity": "ok",
+    "categories": {
+      "PREMATCH_DISCOVERY": 814,
+      "PREMATCH_REVIEW": 963,
+      "SETTLEMENT": 119,
+      "STATUS": 9
+    },
+    "latest_claim": {
+      "category": "PREMATCH_REVIEW",
+      "created_at": "2026-10-11T11:05:14.342511+00:00",
+      "policy_version": "LAB_SHARED_EVENING_QUOTA_V1",
+      "protected_reserve": 3438,
+      "remaining_daily_before": 5596,
+      "remaining_minute_before": 284
+    },
+    "quota_observation_rows": 0,
+    "utc_day_claim_count": 1905
+  },
+  "routes": {
+    "live": {
+      "files": {
+        "app/adaptive_lab/calendar_audit.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/calendar_audit.py",
+          "same_as_review_worktree": false,
+          "sha256": "6b37c6733fd820ee58884c7d37d2eb6eab8a9750d4a2e66016aefd0f70a367d9"
+        },
+        "app/adaptive_lab/daypart.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/daypart.py",
+          "same_as_review_worktree": true,
+          "sha256": "7fd51961772dbed90d138f9e29da0e602a20ed1febd5dc08e8ab26dbf5df74ef"
+        },
+        "app/adaptive_lab/health.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/health.py",
+          "same_as_review_worktree": false,
+          "sha256": "551f3ed98a6711599c68e6fe632b3c0b4533e2688954d02eaf6233b488ab64be"
+        },
+        "app/adaptive_lab/observer.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/observer.py",
+          "same_as_review_worktree": false,
+          "sha256": "d9c6fcfa84303b3232bb23bceb63748a94393061c81cc8e2097c3a43a617f8a7"
+        },
+        "app/adaptive_lab/repository.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/repository.py",
+          "same_as_review_worktree": true,
+          "sha256": "a04a083b198c3b4cfc22aa39d9603c9b48e20970e56e80199a892ef71340b52e"
+        },
+        "app/adaptive_lab/worker.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/worker.py",
+          "same_as_review_worktree": true,
+          "sha256": "5cc485f08bea07b6cbc4b197348317a055dc373dc6f9efea7eae7f0c76a626a8"
+        },
+        "app/live_lab/engine.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/live_lab/engine.py",
+          "same_as_review_worktree": true,
+          "sha256": "9dffea3b09eb7d897769d918b0fed6a84d615c247de5a12bdbab074f31884b63"
+        },
+        "app/live_lab/policy.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/live_lab/policy.py",
+          "same_as_review_worktree": true,
+          "sha256": "173451db9dfbf58970f3048962f4727418ced420164a492a1610e4d1ff732945"
+        },
+        "app/live_lab/runner.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/live_lab/runner.py",
+          "same_as_review_worktree": true,
+          "sha256": "9ccc91826924ce7dae2859bb62c28e7997ba4cfa56757e9379b060eb5f1de7a5"
+        },
+        "app/live_lab/selection.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/live_lab/selection.py",
+          "same_as_review_worktree": true,
+          "sha256": "38c753b91c8a46564f8de924c60923b4dcaa848c4ec472aab318b7d2641b7957"
+        },
+        "app/live_lab/service.py": {
+          "path": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application/app/live_lab/service.py",
+          "same_as_review_worktree": true,
+          "sha256": "72adcdc510a6d8316f3a188a400123b130118916eca5a3f017004bab99d86984"
+        }
+      },
+      "pythonpath": [
+        "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application"
+      ],
+      "release": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010"
+    },
+    "prematch": {
+      "files": {
+        "app/adaptive_lab/calendar_audit.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/calendar_audit.py",
+          "same_as_review_worktree": false,
+          "sha256": "6b37c6733fd820ee58884c7d37d2eb6eab8a9750d4a2e66016aefd0f70a367d9"
+        },
+        "app/adaptive_lab/daypart.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/daypart.py",
+          "same_as_review_worktree": false,
+          "sha256": "2c1d42c93d1d247cbc4c6df4ba4bfad24d71e2f6a5287ebb61ed3e76b4e5a393"
+        },
+        "app/adaptive_lab/health.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/health.py",
+          "same_as_review_worktree": false,
+          "sha256": "551f3ed98a6711599c68e6fe632b3c0b4533e2688954d02eaf6233b488ab64be"
+        },
+        "app/adaptive_lab/observer.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/observer.py",
+          "same_as_review_worktree": false,
+          "sha256": "d9c6fcfa84303b3232bb23bceb63748a94393061c81cc8e2097c3a43a617f8a7"
+        },
+        "app/adaptive_lab/repository.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/repository.py",
+          "same_as_review_worktree": true,
+          "sha256": "a04a083b198c3b4cfc22aa39d9603c9b48e20970e56e80199a892ef71340b52e"
+        },
+        "app/adaptive_lab/worker.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/adaptive_lab/worker.py",
+          "same_as_review_worktree": false,
+          "sha256": "3a37ed7e1926f69494fcb1edd865c97cf1aa5960d385b5f68aceb3553c2faf10"
+        },
+        "app/live_lab/engine.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/live_lab/engine.py",
+          "same_as_review_worktree": false,
+          "sha256": "030e14ce9fd5e5544dd4103d81751f7967807cb04b6d8ceb9e63f76c5fbc9a1f"
+        },
+        "app/live_lab/policy.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/live_lab/policy.py",
+          "same_as_review_worktree": true,
+          "sha256": "173451db9dfbf58970f3048962f4727418ced420164a492a1610e4d1ff732945"
+        },
+        "app/live_lab/runner.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/live_lab/runner.py",
+          "same_as_review_worktree": false,
+          "sha256": "982dfdb077ddb2c1305aaaced967fc1ddb7be4de393c5b8544162768c9c7cc33"
+        },
+        "app/live_lab/service.py": {
+          "path": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application/app/live_lab/service.py",
+          "same_as_review_worktree": false,
+          "sha256": "cb4d5c3110ee29ae0d4eb45f989fd24c09ff7f8cf1f4c8aaaf9cd6f07eca0b3f"
+        }
+      },
+      "pythonpath": [
+        "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application"
+      ],
+      "release": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010"
+    }
+  },
+  "scope": {
+    "database_cutoff": "2026-10-11T11:05:21.700896+00:00",
+    "excluded_inflight_cycle": "2026-10-11T11:00:02.769275+00:00",
+    "future_quotes_in_excluded_cycle": 44,
+    "operational_shadow_cutoff": "2026-10-11T10:59:59.999999+00:00",
+    "replay_has_independent_preparation_completed_at_gate": true
+  },
+  "timer_mutations": 0,
+  "units": {
+    "goalvision-adaptive-learning-observer.timer": {
+      "ActiveState": "active",
+      "Id": "goalvision-adaptive-learning-observer.timer",
+      "LastTriggerUSec": "Sun 2026-10-11 12:38:00 CEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-11 13:08:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-adaptive-learning.timer": {
+      "ActiveState": "active",
+      "Id": "goalvision-adaptive-learning.timer",
+      "LastTriggerUSec": "Sun 2026-10-11 04:12:00 CEST",
+      "NextElapseUSecRealtime": "Mon 2026-10-12 04:12:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-dixon-coles-forward.timer": {
+      "ActiveState": "active",
+      "Id": "goalvision-dixon-coles-forward.timer",
+      "LastTriggerUSec": "Sun 2026-10-11 12:42:30 CEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-11 13:12:30 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-combo-settle.timer": {
+      "ActiveState": "active",
+      "Id": "goalvision-lab-combo-settle.timer",
+      "LastTriggerUSec": "Sun 2026-10-11 13:05:00 CEST",
+      "NextElapseUSecRealtime": "Sun 2026-10-11 13:15:00 CEST",
+      "Result": "success",
+      "SubState": "waiting",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-live-evening.service": {
+      "ActiveState": "activating",
+      "ExecMainStatus": "0",
+      "Id": "goalvision-lab-live-evening.service",
+      "Result": "success",
+      "SubState": "start",
+      "UnitFileState": "static"
+    },
+    "goalvision-lab-live-evening.timer": {
+      "ActiveState": "active",
+      "Id": "goalvision-lab-live-evening.timer",
+      "LastTriggerUSec": "Sun 2026-10-11 13:07:00 CEST",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    },
+    "goalvision-lab-v2-discover.timer": {
+      "ActiveState": "active",
+      "Id": "goalvision-lab-v2-discover.timer",
+      "LastTriggerUSec": "Sun 2026-10-11 13:00:01 CEST",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "SubState": "running",
+      "UnitFileState": "enabled"
+    }
+  }
+}

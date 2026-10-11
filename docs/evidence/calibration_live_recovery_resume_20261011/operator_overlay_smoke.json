@@ -1,0 +1,36 @@
+{
+  "deployment_performed": false,
+  "overlay_files": {
+    "app/adaptive_lab/calendar_audit.py": "2936b23e99a54e06d58e8d96b170d7eef5dd5d71bb32d0ea8611f7ca1834a37b",
+    "app/adaptive_lab/health.py": "f1e404aee39a5ce144deab1f4caec95f1bd47f079ca013e81676e8bbe92c012f",
+    "app/adaptive_lab/observer.py": "6f05f72600b71edba89ddfec93ac7a0d8d52d6b2896b67f5d6f7b6019633e1e6"
+  },
+  "routes": {
+    "live": {
+      "base": "/opt/goalvision-live-quota-reader-3d4f5c5-20261010/application",
+      "changed_files": [
+        "app/adaptive_lab/calendar_audit.py",
+        "app/adaptive_lab/observer.py",
+        "app/adaptive_lab/health.py"
+      ],
+      "smoke": {
+        "isolated_imports": "PASS",
+        "provider_calls": 0,
+        "telegram_sends": 0
+      }
+    },
+    "prematch": {
+      "base": "/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010/application",
+      "changed_files": [
+        "app/adaptive_lab/calendar_audit.py",
+        "app/adaptive_lab/observer.py",
+        "app/adaptive_lab/health.py"
+      ],
+      "smoke": {
+        "isolated_imports": "PASS",
+        "provider_calls": 0,
+        "telegram_sends": 0
+      }
+    }
+  }
+}

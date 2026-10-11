@@ -2015,3 +2015,13 @@ Review after completing the current priority.
 - [ ] Operator apply with explicit acceptance of labeled API-feed quotes (bookmaker unknown).
 - [ ] First natural LIVE cycle, genuine fresh quote eligibility, receipt and result verification.
 - Runbook: docs/operations/LIVE_EVENING_INTEGRATION_20261007.md.
+
+## 2026-10-11 — Calibration / LIVE recovery continuation
+
+- [x] Reconciled actual GitHub/release hashes: LIVE reserve already deployed; offline E2E and adjacent regressions pass.
+- [x] Completed detached 2026-10-10 calendar calibration artifact and byte-identical replay; no validation/holdout activation.
+- [x] Fixed calendar read transaction lifetime; verified actual-base diagnostic overlay imports without installation.
+- [x] Joined verified LIVE result facts into isolated paired research; same-fixture sample remains insufficient.
+- [x] Updated COMBO/DC/runtime reports and sanitized evidence; preserved prior audit and dirty main worktree.
+- [ ] OPERATOR ONLY: current Watch desires LIVE DISABLED; actual evening timer still enabled. Follow GOALVISION_OPERATOR_ACTIONS_20261011.md with settlement safeguards and separate authorization.
+- [ ] Independent VALIDATION/HOLDOUT, LIVE contextual-effect and COMBO joint-probability evidence still required. No promotion/deployment is authorized by this completion.

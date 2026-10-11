@@ -1,0 +1,105 @@
+{
+  "as_of": "2026-10-10T16:47:52.397924+00:00",
+  "files": {
+    "calibration.json": {
+      "bytes": 108021,
+      "sha256": "e1871b56cc6fdabdc1dcc59a47586a353a577b8a93ca3ec6b6dab707f9c3c04e"
+    },
+    "combo.json": {
+      "bytes": 2441819,
+      "sha256": "eeb05003861d01a1394b107250374e72a73adff353d8f6ced9f1284b47b46d88"
+    },
+    "diagnostics.json": {
+      "bytes": 393026,
+      "sha256": "588f4f66bb72abfff598ab826c25b5e4b9c82113dbf29ffbe77878cfe24e6a56"
+    },
+    "disagreement.json": {
+      "bytes": 234570,
+      "sha256": "76fe8ee9dfd52a37754ea530d0fc119b3db0ba57ede8db570cd63ad5991951c1"
+    },
+    "learning.json": {
+      "bytes": 11618,
+      "sha256": "2ce0fe9e6dbe4f9588b692876b7901493c9a9cd81adfd75b2d592c6c2ca79004"
+    },
+    "live.json": {
+      "bytes": 40887,
+      "sha256": "eb38ef4e4fe9dcdfcd95d8239afcf31a8f0f8d82a0bec78e55d8c6f692f60650"
+    },
+    "odds_yield.json": {
+      "bytes": 909092,
+      "sha256": "ca45ad02c4f2bcd8a4675e89f85ce5c558d7202955ea08eecb2af5673556a566"
+    },
+    "performance.json": {
+      "bytes": 917523,
+      "sha256": "1d00f7eb8787c8bb19b34255ec051e7ab5ceb9bd17a82db5fc86083a091e3606"
+    },
+    "publication.json": {
+      "bytes": 22656,
+      "sha256": "9703610c9d5aa69279a2f2b628551683701a8edfab78dae53db5b22c7fa56a3f"
+    },
+    "research.json": {
+      "bytes": 3913546,
+      "sha256": "b83a431ac002fd186f50ade35fdaabb98c3abd9e6853e8476747bfe005c356e3"
+    },
+    "runtime.json": {
+      "bytes": 35877,
+      "sha256": "b37157b22698824731d9f26bd31cda2ed0346b6c1f27739feda4fccad128c397"
+    }
+  },
+  "raw_db_or_transport_data_committed": false,
+  "sources": {
+    "calibration_final.json": {
+      "bytes": 108021,
+      "sha256": "e1871b56cc6fdabdc1dcc59a47586a353a577b8a93ca3ec6b6dab707f9c3c04e"
+    },
+    "comparisons/combo.json": {
+      "bytes": 2441819,
+      "sha256": "eeb05003861d01a1394b107250374e72a73adff353d8f6ced9f1284b47b46d88"
+    },
+    "comparisons/live.json": {
+      "bytes": 3017653,
+      "sha256": "bcca51e326555eb293ce75d4d349ca393f55c614725519da2b6b842b96604fa3"
+    },
+    "comparisons/replay.json": {
+      "bytes": 14140979,
+      "sha256": "0c65fbc9705e4abaf1de02803b3c751d2113ed562d0043721da6c9e919880dcc"
+    },
+    "dc.json": {
+      "bytes": 4192516,
+      "sha256": "0d50e75f947490af64e1400575a8e1f13445dec761d1b304485a0e29a2ff122e"
+    },
+    "diagnostics.json": {
+      "bytes": 393026,
+      "sha256": "588f4f66bb72abfff598ab826c25b5e4b9c82113dbf29ffbe77878cfe24e6a56"
+    },
+    "hardening.json": {
+      "bytes": 10086660,
+      "sha256": "53bac3719ffd93d80c86a15698b3b9cac7df1212f11d952d1705472a786925b4"
+    },
+    "publication.json": {
+      "bytes": 22656,
+      "sha256": "9703610c9d5aa69279a2f2b628551683701a8edfab78dae53db5b22c7fa56a3f"
+    },
+    "quality/disagreement.json": {
+      "bytes": 234570,
+      "sha256": "76fe8ee9dfd52a37754ea530d0fc119b3db0ba57ede8db570cd63ad5991951c1"
+    },
+    "quality/odds_yield.json": {
+      "bytes": 909092,
+      "sha256": "ca45ad02c4f2bcd8a4675e89f85ce5c558d7202955ea08eecb2af5673556a566"
+    },
+    "runtime_review.json": {
+      "bytes": 35877,
+      "sha256": "b37157b22698824731d9f26bd31cda2ed0346b6c1f27739feda4fccad128c397"
+    },
+    "watch/learning_champion.json": {
+      "bytes": 11618,
+      "sha256": "2ce0fe9e6dbe4f9588b692876b7901493c9a9cd81adfd75b2d592c6c2ca79004"
+    },
+    "watch/performance.json": {
+      "bytes": 917523,
+      "sha256": "1d00f7eb8787c8bb19b34255ec051e7ab5ceb9bd17a82db5fc86083a091e3606"
+    }
+  },
+  "version": "CALIBRATION_LIVE_RECOVERY_EVIDENCE_V1"
+}

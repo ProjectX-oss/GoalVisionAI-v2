@@ -1,0 +1,80 @@
+{
+  "calibration_reproduced_fingerprint": "db7397acf8cf924cb544bf502ad8663ec7658a15e3b5ca3f9257c198bed40aaf",
+  "overlapping_runs_not_additive": true,
+  "production_deployment": "NONE",
+  "provider_calls": 0,
+  "real_network_denied": true,
+  "runs": [
+    {
+      "failed": 0,
+      "log_sha256": "816a4e1f9c7dd7201b2f01490e525059d4cff539aba7a6179f1747925fc3b4f4",
+      "passed": 64,
+      "scope": "focused_live_calendar_calibration_health"
+    },
+    {
+      "command": [
+        "/home/arvis/GoalVisionAI/.venv/bin/python",
+        "-B",
+        "operations/calibration-live-recovery/offline_tests.py",
+        "tests/adaptive_lab/test_live.py",
+        "tests/adaptive_lab/test_evening_live.py",
+        "tests/adaptive_lab/test_live_quote_age_policy.py",
+        "tests/adaptive_lab/test_quota_contention.py",
+        "tests/adaptive_lab/test_settlement_preflight_reserve.py",
+        "tests/adaptive_lab/test_no_combo_learning.py",
+        "tests/adaptive_lab/test_calendar_research.py",
+        "tests/adaptive_lab/test_calendar_monitor.py",
+        "tests/adaptive_lab/test_calibration_research.py",
+        "tests/adaptive_lab/test_shadow_chronology.py",
+        "tests/adaptive_lab/test_devig_research.py",
+        "tests/adaptive_lab/test_devig_integration.py",
+        "tests/adaptive_lab/test_performance_snapshot.py",
+        "tests/test_live_combo_research.py",
+        "tests/test_prematch_quality_evidence.py",
+        "tests/test_combo_double_170.py",
+        "tests/test_combo_aggregate_order.py",
+        "tests/test_lab_combo_early_loss.py",
+        "tests/test_lab_combo_integrity.py",
+        "tests/test_settlement_replies.py",
+        "tests/test_lab_delivery_accounting.py",
+        "tests/test_final_review_queue.py",
+        "tests/test_dixon_coles_incremental.py",
+        "tests/test_prematch_combo_leg_odds_floor.py",
+        "tests/test_lab_accuracy_combo.py",
+        "tests/adaptive_lab/test_live_probability_band.py",
+        "tests/adaptive_lab/test_live_postmortem.py",
+        "tests/test_live_probability_install.py",
+        "tests/test_live_quote_age_install.py",
+        "tests/adaptive_lab/test_accuracy_hardening.py",
+        "tests/adaptive_lab/test_live_final_review_budget.py",
+        "tests/adaptive_lab/test_expanded_markets_research.py",
+        "tests/test_live_final_review_install.py",
+        "tests/adaptive_lab/test_calendar_audit.py",
+        "tests/adaptive_lab/test_calendar_calibration_fit.py",
+        "tests/adaptive_lab/test_live_health_status.py",
+        "-q"
+      ],
+      "failed": 0,
+      "log_sha256": "7b1c36b5550c8be53f7d28430badffe62862619fbc18efebf6396d6db66d05ac",
+      "passed": 841,
+      "scope": "36_file_adjacent"
+    },
+    {
+      "failed": 0,
+      "files": [
+        "tests/adaptive_lab/test_live_research_result_sources.py",
+        "tests/adaptive_lab/test_accuracy_hardening.py",
+        "tests/test_live_combo_research.py",
+        "tests/test_official_prediction_pipeline.py",
+        "tests/test_official_prediction_publication.py",
+        "tests/test_official_result_publication.py"
+      ],
+      "log_sha256": "543c0904e01b8a2bd726550a7c76efb21909acef83cee26f4dc347cc0517a383",
+      "passed": 180,
+      "scope": "live_result_adapter_adjacent_official",
+      "subtests_passed": 46
+    }
+  ],
+  "status": "PASS",
+  "telegram_sends": 0
+}
