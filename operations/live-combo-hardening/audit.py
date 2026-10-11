@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter, defaultdict
+from datetime import datetime
 from decimal import Decimal
 import json
 from pathlib import Path
@@ -42,6 +43,100 @@ def read_live(path: Path, *, until) -> tuple[dict, str]:
     finally:
         db.close()
     return tables, digest(sources)
+
+
+def live_results(tables: dict, *, fixture_ids: set[int], until: datetime) -> list[dict]:
+    """Adapt verified LIVE settlements after forecasts and nominations are frozen."""
+    from app.adaptive_lab.devig_integration import _result
+
+    candidates = {p["prediction_id"]: p for p in tables["live_candidates"]}
+    facts = []
+    for row in tables["live_settlements"]:
+        try:
+            selection_id = row.get("selection_id") or row.get("prediction_id")
+            candidate = candidates.get(selection_id)
+            if candidate is None:
+                continue
+            publications = [
+                p for p in tables["live_publications"]
+                if (p.get("selection_id") or p.get("prediction_id")) == selection_id
+                and (not row.get("publication_id")
+                     or p.get("publication_id") == row["publication_id"])
+            ]
+            if len(publications) != 1:
+                continue
+            publication = publications[0]
+            if publication.get("status") != "SENT" or publication.get("sent") is not True:
+                continue
+            documents = (candidate, publication, row)
+            if any(
+                document.get(key) not in (None, "LIVE")
+                for document in documents
+                for key in ("product", "source_product")
+            ):
+                continue
+            if any(
+                document.get(key) not in (None, selection_id)
+                for document in documents
+                for key in ("selection_id", "prediction_id")
+            ):
+                continue
+            fid = row["fixture_id"]
+            if type(fid) is not int or fid <= 0 or fid not in fixture_ids:
+                continue
+            if candidate["fixture_id"] != fid or publication.get("fixture_id", fid) != fid:
+                continue
+            market = row["market"]
+            if not isinstance(market, str) or not market:
+                continue
+            if candidate["market"] != market or publication.get("market", market) != market:
+                continue
+            odds = Decimal(str(candidate["captured_odds"]))
+            if not odds.is_finite() or odds <= 1:
+                continue
+            if not any(row.get(key) is not None for key in ("captured_odds", "odds")):
+                continue
+            if any(
+                not Decimal(str(document[key])).is_finite()
+                or Decimal(str(document[key])) != odds
+                for document in documents
+                for key in ("captured_odds", "odds")
+                if document.get(key) is not None
+            ):
+                continue
+            if (row.get("status") or row.get("outcome")) not in {"WON", "LOST", "RESOLVED"}:
+                continue
+            if row.get("provider_status") not in {"FT", "AET", "PEN"}:
+                continue
+            if any(type(row.get(key)) is not int or row[key] < 0
+                   for key in ("fulltime_home", "fulltime_away")):
+                continue
+            provenance = row.get("source_fingerprint")
+            if not isinstance(provenance, str) or not provenance.strip():
+                continue
+            prepared_at = utc(candidate["prepared_at_utc"])
+            published_at = utc(publication.get("sent_at_utc")
+                               or publication.get("published_at_utc")
+                               or publication.get("published_at")
+                               or publication["created_at"])
+            fact = _result(row, product="LIVE")
+            settled_at = utc(fact["settled_at"])
+            if not prepared_at <= published_at < settled_at <= until:
+                continue
+            if row.get("retrieved_at_utc") is not None:
+                retrieved_at = utc(row["retrieved_at_utc"])
+                if not published_at < retrieved_at <= settled_at:
+                    continue
+            if (row.get("status") or row.get("outcome")) in {"WON", "LOST"}:
+                from app.current_odds_forward_test.service import _won
+                expected = "WON" if _won(market, row["fulltime_home"], row["fulltime_away"]) else "LOST"
+                if (row.get("status") or row.get("outcome")) != expected:
+                    continue
+        except (KeyError, TypeError, ValueError, ArithmeticError):
+            continue
+        # Preserve every valid source so disagreements reach the common conflict path.
+        facts.append(fact)
+    return facts
 
 
 def score_rows(rows: list[dict], facts: dict, *, until) -> dict:
@@ -110,6 +205,8 @@ def run(database: Path, ledger: Path, *, since, until) -> dict:
     # Labels are fetched only AFTER all inference and selection have completed.
     from app.dixon_coles_research.sources import results
     raw_facts = results(ledger,database,fixture_ids={p["fixture_id"] for p in candidates},now=until)
+    raw_facts.extend(live_results(
+        tables, fixture_ids={p["fixture_id"] for p in candidates}, until=until))
     facts, conflicts = {}, set()
     for fact in raw_facts:
         fid = fact["fixture_id"]
