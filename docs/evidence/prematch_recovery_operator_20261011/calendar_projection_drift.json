@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-10-11T17:42:42.676844+00:00",
+  "morning_fit_fixtures": 346,
+  "current_fit_fixtures": 18,
+  "removed_from_current_projection": 328,
+  "purge_reasons_by_fixture": {
+    "LABEL_NOT_AVAILABLE_BEFORE_EMBARGO": 310,
+    "FIXTURE_CROSSES_WINDOW": 18
+  },
+  "old_observations_missing_or_changed": 0,
+  "new_rows_for_removed_fixtures": 810,
+  "added_source_products": {
+    "SHADOW": 810
+  },
+  "added_min_settled_at": "2026-10-11T16:15:32.398158+00:00",
+  "added_max_settled_at": "2026-10-11T16:15:32.398158+00:00",
+  "frozen_fit_intersection_current_validation": 0,
+  "training_or_fitting_invoked": false,
+  "holdout_evaluated": false
+}

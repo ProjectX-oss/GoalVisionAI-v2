@@ -55,3 +55,15 @@ Frozen experiment evidence and current dynamic readiness must be reported separa
 ## Verification
 
 Installer regression tests exercise exact four-file overlay, frozen asset/flag preservation, hash/symlink drift, busy-service timeout, idempotence, partial-route failure without automatic rollback, timer-state preservation, no LIVE controls, and non-root rejection. Exact-base imports and application regressions are run during package preparation. Package hashes, source commit and final results are recorded after the build.
+
+## Prepared package and final checks
+
+- Package: `/home/arvis/goalvision-operations/calibration-live-recovery-a903a5a-20261011`.
+- Reviewed source commit: `a903a5a05a983fc91aaa8da2a3b45019b43b89f8`.
+- Metadata SHA256: `1866861088341e4cf3325151f4223c0283d85980773e09616b81505d930c59dc`.
+- Installer regressions: **15 passed**.
+- Tests against the exact assembled installed-base application: **241 passed, 39 subtests passed**. All application imports were checked to remain inside the assembled package; network connections were denied.
+- Exact-base import smoke: **561 modules**, no provider calls or sends.
+- Unprivileged host preflight: **PASS, mode=BASE**. The remote execution tool rejected the attempted read-only `sudo` preflight as “Command not allowed”; no privilege-control bypass was attempted. Root-owned ADMIN guard checks therefore remain for the operator's command before any installation mutation.
+- Initial exact-package tests had one test-fixture path failure: a repository evidence document was looked up inside the application-only release. The test now resolves that reference from the test repository, preserving the same plan-equality and rebase-rejection assertions. The corrected exact-package run passed completely; no extra runtime file was added.
+- No `--apply` command was executed by the agent. Production installation, model activation and Telegram/provider calls remain zero.

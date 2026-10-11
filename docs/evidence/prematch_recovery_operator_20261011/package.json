@@ -1,0 +1,32 @@
+{
+  "installed": false,
+  "metadata_sha256": "1866861088341e4cf3325151f4223c0283d85980773e09616b81505d930c59dc",
+  "original_fit_fixture_set_equals_morning_346": true,
+  "overlay_files": [
+    "app/adaptive_lab/calendar_audit.py",
+    "app/adaptive_lab/health.py",
+    "app/adaptive_lab/observer.py",
+    "app/lab_v2_shadow/combo_agreement_sources.py"
+  ],
+  "package": "/home/arvis/goalvision-operations/calibration-live-recovery-a903a5a-20261011",
+  "preflight": "PASS_MODE_BASE",
+  "privileged_preflight": "REMOTE_TOOL_REJECTED_SUDO_COMMAND; ROOT_GUARDS_PENDING_OPERATOR_APPLY",
+  "provider_calls": 0,
+  "smoke": {
+    "calendar_plan_fingerprint": "9b154abc5b1ca4f18187150c2ca0a8d4d37b93b9c3893e97b2e61457329ca439",
+    "modules": 561,
+    "provider_calls": 0,
+    "status": "EXACT_BASE_RECOVERY_PASS",
+    "telegram_sends": 0,
+    "worker_invoked": false
+  },
+  "source_commit": "a903a5a05a983fc91aaa8da2a3b45019b43b89f8",
+  "telegram_sends": 0,
+  "tests": {
+    "exact_package_passed": 241,
+    "exact_package_subtests_passed": 39,
+    "final_failed": 0,
+    "installer_passed": 15
+  },
+  "wrapper": "/home/arvis/goalvision-operations/calibration-live-recovery-20261011.py"
+}

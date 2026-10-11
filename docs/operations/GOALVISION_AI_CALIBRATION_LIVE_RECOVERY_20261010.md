@@ -410,3 +410,7 @@ Detalizētais, atsevišķais plāns:
 ## Follow-up — COMBO silence, 2026-10-11 15:12 Riga
 
 **SMALL_GITHUB_FIX; OPERATOR_APPROVAL_REQUIRED.** User-reported silence was confirmed: latest COMBO receipt 2026-10-09 17:06:36 Riga. DC reader budget began before unrelated SINGLE preparation and expired before useful DC scoring. Minimal one-shot deadline fix is source-only, with 327 adjacent tests and 39 subtests passing. Detached replay finds 22 eligible DC fixtures and prepares three previews; these were not sent and are not proven missed production picks. Double remains at zero eligible fixtures. The original snapshot above is retained. Details: `COMBO_SILENCE_DIAGNOSIS_20261011.md`.
+
+## Evening follow-up — 2026-10-11 20:42 Riga
+
+Prepared the operator sudo package; see `PREMATCH_RECOVERY_INSTALL_20261011.md`. Learning now has 4,794 eligible resolved observations from 1,504 fixtures, VALIDATION 56 observations / 22 fixtures, unchanged champion and no promotion. Frozen FIT 346 remains intact. Current dynamic FIT projection falls to 18 after later SHADOW rows trigger whole-fixture time/availability purging; all prior observation fingerprints remain unchanged. This is not a new fit or independent validation score. Source fixes remain uninstalled by the agent.

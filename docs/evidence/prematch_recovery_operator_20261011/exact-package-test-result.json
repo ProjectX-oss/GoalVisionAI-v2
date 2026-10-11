@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "app_modules": 623,
+  "all_app_imports_from_exact_package": true,
+  "source_fallback": false,
+  "provider_calls": 0,
+  "telegram_sends": 0,
+  "worker_invoked": false,
+  "installed": false
+}

@@ -143,3 +143,7 @@ Neviena šī dokumenta production komanda audita laikā nav izpildīta.
 ## E. DC COMBO deadline follow-up — not installed
 
 Include the reviewed `app/lab_v2_shadow/combo_agreement_sources.py` first-use deadline fix in the next separately authorized PREMATCH release. Existing 10-second DC budget remains shared; SINGLE preparation no longer consumes it. Preserve all publication/model/odds/Double safeguards and natural scheduling. See `COMBO_SILENCE_DIAGNOSIS_20261011.md` for source review, detached replay limitations and 327 passing adjacent tests. Do not deploy or trigger a worker under this audit authorization.
+
+## F. Prepared sudo package — 2026-10-11 evening
+
+The user requested a ready sudo command for operator installation. `PREMATCH_RECOVERY_INSTALL_20261011.md` now supplies the pinned four-file PREMATCH package and command. This supersedes the earlier preparation-only notes and the unnecessary suggestion to overlay the separate LIVE release: actual calendar/observer diagnostics run through PREMATCH. LIVE source/routes/timers remain untouched. Exact-package tests: 241 passed, 39 subtests; installer tests: 15 passed. Host preflight PASS (BASE); privileged guard remains operator-only because the remote tool rejected sudo. The agent did not install.

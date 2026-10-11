@@ -6,6 +6,7 @@ from dataclasses import replace
 from datetime import timedelta
 import builtins
 import json
+from pathlib import Path
 
 import pytest
 
@@ -147,7 +148,7 @@ def test_ready_is_offline_review_only_and_source_order_is_stable():
 def test_runtime_plan_is_exact_predeclared_document_and_rejects_rebase(tmp_path,monkeypatch):
     original = monitor.load_plan().document()
     assert original["plan_fingerprint"] == monitor.PLAN_FINGERPRINT
-    assert original == json.loads((monitor.PLAN_PATH.parents[2]/"docs/evidence/calibration_calendar_20261002/plan.json").read_text())
+    assert original == json.loads((Path(__file__).resolve().parents[2]/"docs/evidence/calibration_calendar_20261002/plan.json").read_text())
     path = tmp_path/"plan.json"
     path.write_text(json.dumps(plan().document()))
     monkeypatch.setattr(monitor,"PLAN_PATH",path)

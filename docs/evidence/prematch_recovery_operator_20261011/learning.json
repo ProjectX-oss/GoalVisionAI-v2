@@ -1,0 +1,152 @@
+{
+  "artifact_families": {
+    "CALIBRATED_ENSEMBLE": 8,
+    "EXISTING_PREMATCH_BASELINE_V1": 1,
+    "LOGISTIC": 26,
+    "REGULARIZED_LOGISTIC": 16,
+    "STUMP_ENSEMBLE": 8
+  },
+  "as_of": "2026-10-11T17:42:42.676844+00:00",
+  "bootstrap_unchanged": true,
+  "calendar": {
+    "blocked_by": [
+      "CALIBRATION_CLASS_DIVERSITY_INSUFFICIENT",
+      "CALIBRATION_FIT_INDEPENDENT_FIXTURES_INSUFFICIENT",
+      "CALIBRATION_FIT_SAMPLE_INSUFFICIENT",
+      "SEALED_HOLDOUT_INDEPENDENT_FIXTURES_INSUFFICIENT",
+      "SEALED_HOLDOUT_SAMPLE_INSUFFICIENT",
+      "SEALED_HOLDOUT_WINDOW_NOT_CLOSED",
+      "VALIDATION_EVALUATION_INDEPENDENT_FIXTURES_INSUFFICIENT",
+      "VALIDATION_EVALUATION_WINDOW_NOT_CLOSED"
+    ],
+    "counts": {
+      "CALIBRATION_FIT": 18,
+      "EXCLUDED": 22,
+      "PURGED": 2907,
+      "SEALED_HOLDOUT": 0,
+      "TRAIN": 1804,
+      "VALIDATION_EVALUATION": 56
+    },
+    "cross_partition_fixture_intersections": {
+      "CALIBRATION_FIT__SEALED_HOLDOUT": 0,
+      "CALIBRATION_FIT__VALIDATION_EVALUATION": 0,
+      "TRAIN__CALIBRATION_FIT": 0,
+      "TRAIN__SEALED_HOLDOUT": 0,
+      "TRAIN__VALIDATION_EVALUATION": 0,
+      "VALIDATION_EVALUATION__SEALED_HOLDOUT": 0
+    },
+    "dataset_fingerprint": "f5821e423797cab958923884907756ec937ce39e656a2bd02fe2037953547bfe",
+    "independent_fixture_counts": {
+      "CALIBRATION_FIT": 18,
+      "EXCLUDED": 20,
+      "PURGED": 895,
+      "SEALED_HOLDOUT": 0,
+      "TRAIN": 560,
+      "VALIDATION_EVALUATION": 22
+    },
+    "minimum_observations_and_fixtures": {
+      "CALIBRATION_FIT": 300,
+      "SEALED_HOLDOUT": 100,
+      "TRAIN": 1,
+      "VALIDATION_EVALUATION": 30
+    },
+    "plan_fingerprint": "9b154abc5b1ca4f18187150c2ca0a8d4d37b93b9c3893e97b2e61457329ca439",
+    "reason_counts": {
+      "COHORT_MISMATCH_OR_MIXED_FIXTURE": 10,
+      "FIXTURE_CROSSES_WINDOW": 340,
+      "LABEL_NOT_AVAILABLE_BEFORE_EMBARGO": 2067,
+      "NON_BINARY_OR_UNAVAILABLE_LABEL": 1,
+      "OUTSIDE_WINDOWS_OR_EMBARGO_GAP": 144,
+      "SEALED_HOLDOUT_RESERVATION": 355,
+      "SOURCE_NOT_INDEPENDENT_PREMATCH": 12
+    }
+  },
+  "calibration_artifacts": 0,
+  "champion_generation": "generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a",
+  "fit_invoked": false,
+  "governance_counts": {
+    "activation_events": 1,
+    "candidate_comparisons": 0,
+    "holdout_results": 0,
+    "learning_cycles": 3,
+    "model_artifacts": 59,
+    "promotion_gates": 0,
+    "rollback_events": 0,
+    "shadow_predictions": 0,
+    "shadow_runs": 0,
+    "shadow_settlements": 0,
+    "training_runs": 133,
+    "validation_results": 0
+  },
+  "holdout_evaluated": false,
+  "latest_observer": {
+    "LIVE": "DISABLED",
+    "api_calls": 0,
+    "created_at": "2026-10-11T17:38:01.432796+00:00",
+    "heavy_training": false,
+    "state": {
+      "eligibility": {
+        "automatic_eligible": false,
+        "cycle_due": true,
+        "days_covered": 23,
+        "new_resolved": 3280,
+        "next_threshold": {
+          "calendar_days": 90,
+          "resolved": 500
+        },
+        "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+        "policy_version": "LAB_ADAPTIVE_V2",
+        "reason": "RESEARCH_ELIGIBLE",
+        "research_due": true,
+        "resolved": 4794,
+        "stage": "CHALLENGER_RESEARCH",
+        "status": "RESEARCH_ELIGIBLE",
+        "stream": "PREMATCH"
+      },
+      "promotions": [],
+      "research": {
+        "status": "DAILY_LEARNING_JOB_ONLY"
+      },
+      "rollback": {
+        "status": "NO_PREVIOUS_VERIFIED_CHAMPION"
+      }
+    },
+    "telegram_sends": 0
+  },
+  "learning": {
+    "eligibility": {
+      "automatic_eligible": false,
+      "cycle_due": true,
+      "days_covered": 23,
+      "new_resolved": 3280,
+      "next_threshold": {
+        "calendar_days": 90,
+        "resolved": 500
+      },
+      "policy_fingerprint": "75ef3830a668514ed7698220525ab6dd653fbf265f475b2c45543b8e69f5e5b6",
+      "policy_version": "LAB_ADAPTIVE_V2",
+      "reason": "RESEARCH_ELIGIBLE",
+      "research_due": true,
+      "resolved": 4794,
+      "stage": "CHALLENGER_RESEARCH",
+      "status": "RESEARCH_ELIGIBLE",
+      "stream": "PREMATCH"
+    },
+    "independent_resolved_fixtures": 1504,
+    "resolved_eligible_observations": 4794,
+    "source_product_counts": {
+      "COMBO_LEG": 12,
+      "SHADOW": 4204,
+      "SINGLE": 591
+    },
+    "total_observations": 4807
+  },
+  "provider_calls": 0,
+  "source_snapshot_sha256": "bdfc92c8968bccfb058be1902838f56fb50815457fccd7c41d6fd609be30d22b",
+  "telegram_sends": 0,
+  "training_status": {
+    "REJECTED": 74,
+    "REVIEWED_BOOTSTRAP": 1,
+    "TRAINED": 58
+  }
+}
