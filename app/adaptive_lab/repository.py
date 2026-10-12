@@ -233,11 +233,21 @@ class AuditRepository:
 
     def quota_since(self, since: str) -> list[dict]:
         """Verify only potentially relevant claims, using existing stream/time indexes."""
-        ids = self.connection.execute(
-            "SELECT id FROM quota_claims WHERE stream IN ('PREMATCH','LIVE') AND created_at>=? ORDER BY created_at,id",
+        # Fetch the bounded day/minute window once, then release its cursor before
+        # JSON verification. N+1 point reads can consume the entire contention
+        # retry budget late in the day even without a conflicting transaction.
+        encoded = self.connection.execute(
+            "SELECT document,fingerprint FROM quota_claims "
+            "WHERE stream IN ('PREMATCH','LIVE') AND created_at>=? ORDER BY created_at,id",
             (since,),
         ).fetchall()
-        return [self.get('quota_claims', row[0]) for row in ids]
+        values = []
+        for raw, expected in encoded:
+            value = json.loads(raw)
+            if digest(value) != expected:
+                raise ValueError('ARTIFACT_INTEGRITY_FAILURE')
+            values.append(value)
+        return values
 
     def matching_observations(self, stream: str, fixture_id: int, market: str) -> list[dict]:
         """Read verified economic matches without deserializing unrelated history."""
