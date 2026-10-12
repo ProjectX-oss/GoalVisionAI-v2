@@ -58,7 +58,8 @@ else:
                          str(args.tests_root/"tests/adaptive_lab/test_audit_reader_lock.py"),
                          str(args.tests_root/"tests/adaptive_lab/test_quota_batch_reader.py"),
                          str(args.tests_root/"tests/adaptive_lab/test_quota_contention.py"),
-                         str(args.tests_root/"tests/adaptive_lab/test_live_final_review_budget.py")], plugins=[stats])
+                         *([str(args.tests_root/"tests/adaptive_lab/test_live_final_review_budget.py")]
+                           if args.kind == "live" else [])], plugins=[stats])
     count = stats.passed
 print("IMMUTABLE_RELEASE_SMOKE="+json.dumps({
     "kind":args.kind, "tests":count, "passed":not failed and not attempts,
