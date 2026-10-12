@@ -1,5 +1,6 @@
 """Reuse clock/quote/source guards with explicitly injected prospective algorithms."""
 from datetime import datetime
+from functools import partial
 from typing import Callable
 from app.dixon_coles_research.repository import ResearchStore
 from app.dixon_coles_research import service as original, metrics as scores, model as baseline
@@ -9,12 +10,14 @@ from .contracts import VERSION, verify_plan, reserved
 
 COMPARATORS = scores.COMPARATORS + ("DIXON_COLES_V1",)
 
-def forecast(item: dict, *, artifact: dict, plan: dict, now: datetime) -> dict:
+def forecast(item: dict, *, artifact: dict, plan: dict, now: datetime,
+             additional_reserved: frozenset[int] = frozenset()) -> dict:
     verify_plan(plan)
-    if item["capture"]["fixture_id"] in reserved(plan):
+    if item["capture"]["fixture_id"] in reserved(plan, additional_reserved):
         raise ValueError("EXCLUDED_FORWARD_FIXTURE")
     value = original.forecast(item, artifact=artifact, plan=plan, now=now,
-                              predictor=model.predict, record_version=VERSION)
+                              predictor=partial(model.predict, additional_reserved=additional_reserved),
+                              record_version=VERSION)
     value.pop("fingerprint")
     if artifact["baseline_model"] is None:
         value["missing_comparators"]["DIXON_COLES_V1:" + artifact["baseline_unavailable"]] = len(value["comparisons"])
@@ -40,11 +43,17 @@ def intake(snapshot: dict, store: ResearchStore, *, plan: dict, clock: Callable[
 def evaluate(forecasts: list[dict], models: dict, results: list[dict], *, plan: dict,
              now: datetime, additional_reserved: frozenset[int] = frozenset()) -> dict:
     verify_plan(plan)
+    cutoff = utc(now)
+    exclusions = reserved(plan, additional_reserved)
     for record in forecasts:
         if record["version"] != VERSION:
             raise ValueError("FORWARD_COHORT_MIXING")
-        model.verify_artifact(models[record["model_fingerprint"]], plan=plan,
-                              additional_reserved=additional_reserved)
+        # Reproduced forecasts validate inside predict, including reserved training
+        # fixtures. Keep explicit validation for records the scorer skips, too.
+        if utc(record["forecast_at"]) > cutoff or record["fixture_id"] in exclusions:
+            model.verify_artifact(models[record["model_fingerprint"]], plan=plan,
+                                  additional_reserved=additional_reserved)
     return scores.evaluate(forecasts, models, results, plan=plan, now=now,
-                           additional_reserved=reserved(plan, additional_reserved),
-                           reproduce=forecast, comparators=COMPARATORS, record_version=VERSION)
+                           additional_reserved=exclusions,
+                           reproduce=partial(forecast, additional_reserved=additional_reserved),
+                           comparators=COMPARATORS, record_version=VERSION)
