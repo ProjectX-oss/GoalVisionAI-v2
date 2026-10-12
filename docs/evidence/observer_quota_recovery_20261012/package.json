@@ -1,0 +1,51 @@
+{
+  "agent_deployment": "NONE",
+  "installer_commit": "3c83f7e3d76d26622bf2e7a69c974f648da30667",
+  "metadata_sha256": "aeee9d4a1300247bae57999baeb6477de3807efeca4fd493bac960e9f7d0e9f2",
+  "model_activation": "NONE",
+  "provider_calls": 0,
+  "smoke": {
+    "results": {
+      "admin": {
+        "import_root_verified": true,
+        "kind": "admin",
+        "network_attempts": 0,
+        "passed": true,
+        "provider_calls": 0,
+        "telegram_sends": 0,
+        "tests": 13
+      },
+      "live": {
+        "import_root_verified": true,
+        "kind": "live",
+        "network_attempts": 0,
+        "passed": true,
+        "provider_calls": 0,
+        "telegram_sends": 0,
+        "tests": 54
+      },
+      "prematch": {
+        "import_root_verified": true,
+        "kind": "prematch",
+        "network_attempts": 0,
+        "passed": true,
+        "provider_calls": 0,
+        "telegram_sends": 0,
+        "tests": 34
+      }
+    },
+    "status": "THREE_RELEASES_OFFLINE_PASS"
+  },
+  "source_commits": {
+    "admin": "772b7a310dbdaf6cae86792108c4d6b42930e1af",
+    "reader": "ba96299dfa68524d330df7babb3bd4cf96c4e903"
+  },
+  "targets": {
+    "admin": "/opt/goalvision-admin-alerts-releases/admin-observer-contract-20261012",
+    "live": "/opt/goalvision-live-quota-batch-20261012",
+    "prematch": "/opt/goalvision-prematch-quota-batch-20261012"
+  },
+  "telegram_sends": 0,
+  "wrapper": "/home/arvis/goalvision-operations/observer-quota-recovery-20261012.py",
+  "wrapper_sha256": "2ca8054bc7a4cd13198dc0cea7c912cdd61c8078c0de810cab83d2aac0c41aaf"
+}

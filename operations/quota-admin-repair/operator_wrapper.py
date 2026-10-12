@@ -1,12 +1,12 @@
-"""Pinned GoalVision quota/ADMIN repair. Default preflight; --apply requires root."""
+"""Pinned GoalVision observer/quota recovery. Default preflight; --apply requires root."""
 import hashlib
 import json
 from pathlib import Path
 import runpy
 import sys
 sys.dont_write_bytecode = True
-PACKAGE = Path('/home/arvis/goalvision-operations/quota-admin-repair-34a487d-20261010')
-METADATA_SHA256 = '3e8553f61be762b3d09c087a79024080c98d5ed77247e530ec6e38ed957c1eb1'
+PACKAGE = Path('/home/arvis/goalvision-operations/observer-quota-recovery-20261012')
+METADATA_SHA256 = 'aeee9d4a1300247bae57999baeb6477de3807efeca4fd493bac960e9f7d0e9f2'
 if PACKAGE.is_symlink() or PACKAGE.resolve() != PACKAGE:
     raise SystemExit('PACKAGE_PATH_DRIFT')
 meta_path = PACKAGE/'metadata.json'

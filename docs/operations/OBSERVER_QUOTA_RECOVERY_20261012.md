@@ -67,3 +67,28 @@ Telegram sends = 0. Additional provider calls = 0.
 Official changes = NONE. Model activation = NONE.
 PREMATCH champion remains generation-aa7e535b86267741aabc967e8044de2ab94a4334b1520a829414dd55ebc7371a.
 Full runtime resolution remains pending operator installation and subsequent natural cycles.
+
+## Final package verification
+
+**PASS_READY_FOR_OPERATOR.**
+
+- Package source commit: 3c83f7e3d76d26622bf2e7a69c974f648da30667.
+- ADMIN source: 772b7a310dbdaf6cae86792108c4d6b42930e1af.
+- Reader source: ba96299dfa68524d330df7babb3bd4cf96c4e903.
+- Package: /home/arvis/goalvision-operations/observer-quota-recovery-20261012.
+- Metadata SHA256: aeee9d4a1300247bae57999baeb6477de3807efeca4fd493bac960e9f7d0e9f2.
+- Pinned entry SHA256: 2ca8054bc7a4cd13198dc0cea7c912cdd61c8078c0de810cab83d2aac0c41aaf.
+- Exact assembled PREMATCH: **34 tests passed**.
+- Exact assembled LIVE: **54 tests passed**, including mandatory final refresh, fake-provider HTTP failures, exhaustion and reserve behavior.
+- Exact assembled ADMIN: **13 tests passed**, plus explicit new-format/invalid-scope/API-call guard checks.
+- Every assembled release imported its own application, with no checkout fallback and zero network attempts.
+- Default pinned entry preflight: **PASS, mode=BASE**. Root-only disabled-Codex/config checks remain enforced by --apply. The agent did not invoke sudo or --apply.
+- Production readback: champion unchanged, only the existing one bootstrap activation.
+- Initial package build attempted a LIVE-only final-review test against the PREMATCH release's older unused LIVE module. The harness now runs that test only on the actual LIVE package; both relevant quota reader suites still run on PREMATCH and LIVE. No unrelated LIVE application files were added to PREMATCH. Corrected complete build passed.
+
+Changed source/test/document paths:
+- ADMIN branch: app/admin_alerts/output_contracts.py; tests/admin_alerts/test_quality_compatibility.py; tests/admin_alerts/test_observer_scope.py; docs/operations/ADMIN_OBSERVER_CONTRACT_20261012.md.
+- Reader branch: app/adaptive_lab/repository.py; tests/adaptive_lab/test_quota_batch_reader.py; docs/operations/QUOTA_BATCH_READER_20261012.md.
+- Package branch: operations/quota-admin-repair/{update.py,build.py,smoke.py,operator_wrapper.py}; tests/test_quota_admin_repair_operations.py; TASKS.md; this report; docs/evidence/observer_quota_recovery_20261012/package.json.
+
+Installation remains required to affect production. Real permanent lock contention can still fail closed; assess future natural cycles before declaring every quota incident resolved.
