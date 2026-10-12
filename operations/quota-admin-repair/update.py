@@ -1,4 +1,4 @@
-"""Pinned quota-reader and ADMIN correlation repair; read-only unless --apply."""
+"""Pinned batch quota-reader and ADMIN observer contract repair; read-only unless --apply."""
 from __future__ import annotations
 
 import argparse
@@ -23,7 +23,7 @@ h = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(h)
 
 SYSTEMD = Path("/etc/systemd/system")
-OVERRIDE_NAME = "zzzzzzzzzzzzzzzzzzzzzzzzzzz-quota-admin-repair-20261010.conf"
+OVERRIDE_NAME = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz-observer-quota-recovery-20261012.conf"
 PREMATCH = h.SERVICES
 LIVE = "goalvision-lab-live-evening.service"
 ADMIN = "goalvision-admin-alerts.service"
@@ -33,23 +33,18 @@ ALL_UNITS = AFFECTED + PROTECTED
 TIMERS = tuple(u.replace(".service", ".timer") for u in AFFECTED)
 ALL_TIMERS = tuple(u.replace(".service", ".timer") for u in ALL_UNITS)
 BASES = {
-    "prematch": Path("/opt/goalvision-live-evening-4f547cf-20261007"),
-    "live": Path("/opt/goalvision-live-final-review-budget-a4cdfa1-20261009"),
-    "admin": Path("/opt/goalvision-admin-alerts-releases/admin-mixed-delivery-ab327dd-20261004"),
-}
-TARGETS = {
-    "prematch": Path("/opt/goalvision-prematch-quota-reader-3d4f5c5-20261010"),
+    "prematch": Path("/opt/goalvision-prematch-recovery-380bcf7-20261011"),
     "live": Path("/opt/goalvision-live-quota-reader-3d4f5c5-20261010"),
     "admin": Path("/opt/goalvision-admin-alerts-releases/admin-quota-correlation-9e321c3-20261010"),
 }
-SOURCE_COMMITS = {
-    "reader": "3d4f5c541c79873208ec2bb8ca8c83a0118f546b",
-    "admin": "9e321c397337e38f994b2dc424621af414acd58b",
+TARGETS = {
+    "prematch": Path("/opt/goalvision-prematch-quota-batch-20261012"),
+    "live": Path("/opt/goalvision-live-quota-batch-20261012"),
+    "admin": Path("/opt/goalvision-admin-alerts-releases/admin-observer-contract-20261012"),
 }
-OVERLAYS = {
-    "reader": "app/adaptive_lab/repository.py",
-    "admin": "app/admin_alerts/correlation.py",
-}
+SOURCE_COMMITS = {"reader": 'ba96299dfa68524d330df7babb3bd4cf96c4e903', "admin": '772b7a310dbdaf6cae86792108c4d6b42930e1af'}
+OVERLAYS = {"reader": "app/adaptive_lab/repository.py", "admin": "app/admin_alerts/output_contracts.py"}
+JOURNALS = Path("/var/lib/goalvision-operator-recovery")
 LOCKS = ("/run/lock/goalvision-prematch-accuracy-combo.lock",
          "/run/lock/goalvision-admin-status-update.lock")
 DRAIN_SECONDS = 180
@@ -213,7 +208,7 @@ def stage_releases(package: Path, meta: dict) -> None:
 def validate(package: Path) -> tuple[dict, str]:
     h.reject_symlinks(package)
     meta = json.loads((package/"metadata.json").read_text())
-    if (meta.get("schema") != "QUOTA_ADMIN_REPAIR_PACKAGE_V1"
+    if (meta.get("schema") != "OBSERVER_QUOTA_RECOVERY_PACKAGE_V1"
             or meta.get("source_commits") != SOURCE_COMMITS
             or meta.get("bases") != {k:str(v) for k,v in BASES.items()}
             or meta.get("targets") != {k:str(v) for k,v in TARGETS.items()}
@@ -254,9 +249,12 @@ def restore_timers(states: dict) -> None:
 
 def route(meta: dict) -> None:
     states = {u: h.property_of(u, "ActiveState") == "active" for u in TIMERS}
-    if not states[LIVE.replace(".service", ".timer")]:
-        raise ValueError("LIVE_TIMER_NOT_ACTIVE")
     changed = []
+    JOURNALS.mkdir(parents=True, exist_ok=True)
+    journal = JOURNALS/("observer-quota-20261012-"+str(time.time_ns())+".json")
+    evidence = {"state":"PREPARED", "timer_states":states, "automatic_rollback":False,
+                "targets":{k:str(v) for k,v in TARGETS.items()}}
+    h.atomic(journal, (json.dumps(evidence,sort_keys=True)+"\n").encode())
     try:
         for timer in reversed(TIMERS):
             h.control("stop", timer)
@@ -280,33 +278,27 @@ def route(meta: dict) -> None:
         if mode() != "ENABLED":
             raise ValueError("ROUTE_NOT_LOADED")
         restore_timers(states)
+        evidence["state"]="DEPLOYED"
+        h.atomic(journal, (json.dumps(evidence,sort_keys=True)+"\n").encode())
     except BaseException:
+        # Preserve partial routes for operator review; never roll back automatically.
         errors = []
-        # Recovery of this interrupted installation only; no model rollback.
         if changed:
             for timer in reversed(TIMERS):
                 try:
                     h.control("stop", timer)
                 except BaseException:
                     errors.append("TIMER_PAUSE")
-            for path in reversed(changed):
-                try:
-                    unit = path.parent.name.removesuffix(".d")
-                    if path.exists():
-                        if path.is_symlink() or path.read_bytes() != dropin(unit):
-                            raise ValueError("CONCURRENT_OVERRIDE_CHANGE")
-                        path.unlink()
-                except BaseException:
-                    errors.append("OVERRIDE_RESTORE")
+            evidence["state"] = "PARTIAL_OPERATOR_REVIEW_REQUIRED"
+        else:
+            evidence["state"] = "FAILED_BEFORE_ROUTE_WRITE"
             try:
-                h.control("daemon-reload")
-                verify_configuration(meta, "BASE")
+                restore_timers(states)
             except BaseException:
-                errors.append("ROUTE_RESTORE")
-        try:
-            restore_timers(states)
-        except BaseException:
-            errors.append("TIMER_RESTORE")
+                errors.append("TIMER_RESTORE")
+        evidence["errors"] = errors
+        h.atomic(journal, (json.dumps(evidence,sort_keys=True)+"\n").encode())
+        print("OPERATOR_REVIEW_JOURNAL="+str(journal))
         if errors:
             raise RuntimeError("INSTALL_RECOVERY_REQUIRES_OPERATOR:"+",".join(errors)) from None
         raise
@@ -315,7 +307,7 @@ def route(meta: dict) -> None:
 def apply(package: Path) -> None:
     meta, state = validate(package)
     if state == "ENABLED":
-        print("QUOTA_ADMIN_REPAIR_ALREADY_DEPLOYED")
+        print("OBSERVER_QUOTA_RECOVERY_ALREADY_DEPLOYED")
         return
     print("[1/3] Building and verifying three immutable releases...", flush=True)
     stage_releases(package, meta)
@@ -324,11 +316,11 @@ def apply(package: Path) -> None:
     route(meta)
     print("[3/3] Verifying loaded routes and restored timer states...", flush=True)
     validate(package)
-    print("QUOTA_ADMIN_REPAIR_DEPLOYED")
+    print("OBSERVER_QUOTA_RECOVERY_DEPLOYED")
     for key, target in TARGETS.items():
         print(key+"_release="+str(target))
-    print("SQLite reader cursor released before document decoding; 500ms quota guard retained.")
-    print("ADMIN typed quota health/journal correlation enabled; incident and delivery history retained.")
+    print("Quota claims fetched once and verified after cursor close; 500ms quota guard retained.")
+    print("ADMIN scoped observer output recognized; exact recovery and genuine fault detection retained.")
     print("PREMATCH SINGLE=1.50; DC COMBO legs=1.30; Double exactly two legs >=1.70, probability 70-80%.")
     print("Private SINGLE>=1.70, probability 70-80%; champion, settlement and publication policies retained.")
     print("LIVE=18:00-23:00 Riga; probability 60-70%; EV off; quote age diagnostic; final-review reserve retained.")
@@ -342,7 +334,7 @@ def main(argv=None) -> None:
     args = parser.parse_args(argv)
     if not args.apply:
         _, state = validate(HERE)
-        print("QUOTA_ADMIN_REPAIR_PLAN_VALIDATED")
+        print("OBSERVER_QUOTA_RECOVERY_PLAN_VALIDATED")
         print("current_mode="+state+"; ADMIN_CODEX_SYSTEMD_DISABLED=PASS")
         print("ROOT_GUARD=PASS" if os.geteuid() == 0 else "ROOT_GUARD=CHECKED_AT_APPLY")
         return

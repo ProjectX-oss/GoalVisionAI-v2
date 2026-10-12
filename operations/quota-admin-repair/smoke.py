@@ -34,16 +34,32 @@ for name in modules:
         raise AssertionError("IMPORT_ROOT_ESCAPE:"+name)
 os.chdir(args.tests_root)
 if args.kind == "admin":
+    from app.admin_alerts.output_contracts import expected_document
+    from app.admin_alerts.model import UNITS
+    doc=dict(stream="PREMATCH",created_at="2026-10-12T05:08:01+00:00",linkage={},state={},metrics={},
+             LIVE="NOT_EVALUATED",LIVE_SCOPE="PREMATCH_OBSERVER",heavy_training=False,api_calls=0,telegram_sends=0)
+    assert expected_document(UNITS[2],doc)
+    assert not expected_document(UNITS[2],{**doc,"LIVE_SCOPE":"UNKNOWN"})
+    assert not expected_document(UNITS[2],{**doc,"api_calls":1})
     suite = unittest.defaultTestLoader.discover(
-        str(args.tests_root/"tests/admin_alerts"), pattern="test_quota_health_correlation.py")
+        str(args.tests_root/"tests/admin_alerts"), pattern="test_output_recovery.py")
     result = unittest.TextTestRunner(verbosity=1).run(suite)
     failed = not result.wasSuccessful()
     count = result.testsRun
 else:
     import pytest
+    class Statistics:
+        passed = 0
+        def pytest_runtest_logreport(self,report):
+            if report.when == "call" and report.passed:
+                self.passed += 1
+    stats = Statistics()
     failed = pytest.main(["-q", "--tb=short", "-p", "no:cacheprovider",
-                         str(args.tests_root/"tests/adaptive_lab/test_audit_reader_lock.py")])
-    count = 7
+                         str(args.tests_root/"tests/adaptive_lab/test_audit_reader_lock.py"),
+                         str(args.tests_root/"tests/adaptive_lab/test_quota_batch_reader.py"),
+                         str(args.tests_root/"tests/adaptive_lab/test_quota_contention.py"),
+                         str(args.tests_root/"tests/adaptive_lab/test_live_final_review_budget.py")], plugins=[stats])
+    count = stats.passed
 print("IMMUTABLE_RELEASE_SMOKE="+json.dumps({
     "kind":args.kind, "tests":count, "passed":not failed and not attempts,
     "import_root_verified":True, "network_attempts":len(attempts),

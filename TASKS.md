@@ -2028,3 +2028,11 @@ Review after completing the current priority.
 - [ ] Operator apply with explicit acceptance of labeled API-feed quotes (bookmaker unknown).
 - [ ] First natural LIVE cycle, genuine fresh quote eligibility, receipt and result verification.
 - Runbook: docs/operations/LIVE_EVENING_INTEGRATION_20261007.md.
+
+## 2026-10-12 — Observer and quota recovery
+
+- [x] Trace reported MISSING_OUTPUT to legacy ADMIN LIVE=DISABLED output contract; preserve exact invocation recovery.
+- [x] Diagnose real quota read latency and verify one-batch fingerprint-preserving replacement on 5,160 claims.
+- [x] Prepare exact-base combined operator package and no-automatic-rollback partial recovery contract.
+- [ ] Operator installation followed by natural-cycle verification; no manual production cycle or test sends.
+- Report: docs/operations/OBSERVER_QUOTA_RECOVERY_20261012.md.

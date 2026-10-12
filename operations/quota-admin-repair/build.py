@@ -51,7 +51,7 @@ def main() -> None:
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(source)
     meta = {
-        "schema":"QUOTA_ADMIN_REPAIR_PACKAGE_V1", "installer_commit":head,
+        "schema":"OBSERVER_QUOTA_RECOVERY_PACKAGE_V1", "installer_commit":head,
         "source_commits":u.SOURCE_COMMITS,
         "bases":{k:str(v) for k,v in u.BASES.items()},
         "targets":{k:str(v) for k,v in u.TARGETS.items()},
@@ -90,7 +90,7 @@ def main() -> None:
     u.validate(package)
     checksums = u.manifest(package)
     (package/"SHA256SUMS").write_text("".join(digest+"  "+name+"\n" for name,digest in checksums.items()))
-    print("QUOTA_ADMIN_PACKAGE_PREPARED="+str(package))
+    print("OBSERVER_QUOTA_PACKAGE_PREPARED="+str(package))
     print("METADATA_SHA256="+u.h.sha(package/"metadata.json"))
     print("UPDATER_SHA256="+u.h.sha(package/"update.py"))
 

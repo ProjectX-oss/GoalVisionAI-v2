@@ -16,6 +16,7 @@ def setup(tmp_path, monkeypatch):
     spec.loader.exec_module(m)
     monkeypatch.setattr(m, "SYSTEMD", tmp_path/"systemd")
     m.SYSTEMD.mkdir()
+    monkeypatch.setattr(m, "JOURNALS", tmp_path/"recovery-journals")
     monkeypatch.setattr(m, "BASES", {k:tmp_path/("base-"+k) for k in m.BASES})
     monkeypatch.setattr(m, "TARGETS", {k:tmp_path/("target-"+k) for k in m.TARGETS})
     package = tmp_path/"package"
@@ -75,7 +76,7 @@ def setup(tmp_path, monkeypatch):
         return ""
     monkeypatch.setattr(m.h, "control", control)
     meta = {
-        "schema": "QUOTA_ADMIN_REPAIR_PACKAGE_V1", "source_commits": m.SOURCE_COMMITS,
+        "schema": "OBSERVER_QUOTA_RECOVERY_PACKAGE_V1", "source_commits": m.SOURCE_COMMITS,
         "bases": {k:str(v) for k,v in m.BASES.items()},
         "targets": {k:str(v) for k,v in m.TARGETS.items()},
         "scripts": {p:m.h.sha(package/p) for p in ("update.py","runtime_helpers.py")},
@@ -195,7 +196,7 @@ def test_busy_timeout_restores_timers_without_route_changes(setup, monkeypatch):
     assert not any(call[0] == "daemon-reload" for call in state["calls"])
 
 
-def test_mid_write_failure_restores_all_routes_and_timers(setup, monkeypatch):
+def test_mid_write_failure_preserves_partial_routes_and_pauses_timers(setup, monkeypatch):
     m, package, meta, state = setup
     original = m.h.atomic
     def fail(path, data):
@@ -205,13 +206,15 @@ def test_mid_write_failure_restores_all_routes_and_timers(setup, monkeypatch):
     monkeypatch.setattr(m.h, "atomic", fail)
     with pytest.raises(OSError, match="synthetic"):
         m.apply(package)
-    assert all(state["active"].values())
-    assert m.configuration_files() == meta["systemd_files"]
+    assert not any(state["active"].values())
+    assert m.configuration_files() != meta["systemd_files"]
     assert m.configured_units() == meta["units"]
-    assert m.mode() == "BASE"
+    with pytest.raises(ValueError,match="PARTIAL"):
+        m.mode()
+    assert json.loads(next(m.JOURNALS.iterdir()).read_text())["state"] == "PARTIAL_OPERATOR_REVIEW_REQUIRED"
 
 
-def test_reload_failure_restores_routes_without_service_restart(setup, monkeypatch):
+def test_reload_failure_leaves_routes_for_operator_without_service_restart(setup, monkeypatch):
     m, package, meta, state = setup
     original = m.h.control
     failed = []
@@ -224,11 +227,12 @@ def test_reload_failure_restores_routes_without_service_restart(setup, monkeypat
     with pytest.raises(OSError, match="reload"):
         m.apply(package)
     assert m.configured_units() == meta["units"]
-    assert m.mode() == "BASE"
-    assert all(state["active"].values())
+    assert m.mode() == "ENABLED"
+    assert not any(state["active"].values())
+    assert len([c for c in state["calls"] if c[0]=="daemon-reload"]) == 0
 
 
-def test_timer_restore_failure_recovers_old_configuration(setup, monkeypatch):
+def test_timer_restore_failure_keeps_new_configuration_paused(setup, monkeypatch):
     m, package, meta, state = setup
     original = m.h.control
     failed = []
@@ -240,17 +244,17 @@ def test_timer_restore_failure_recovers_old_configuration(setup, monkeypatch):
     monkeypatch.setattr(m.h, "control", fail)
     with pytest.raises(RuntimeError, match="TIMER_RESTORE_FAILED"):
         m.apply(package)
-    assert m.mode() == "BASE"
-    assert m.configured_units() == meta["units"]
-    assert all(state["active"].values())
+    assert m.mode() == "ENABLED"
+    assert m.configured_units() == m.expected_units(meta,"ENABLED")
+    assert not any(state["active"].values())
 
 
 def test_inactive_live_is_not_enabled_by_install(setup):
     m, package, _, state = setup
     state["active"][m.LIVE.replace(".service",".timer")] = False
-    with pytest.raises(ValueError, match="LIVE_TIMER_NOT_ACTIVE"):
-        m.apply(package)
-    assert state["calls"] == []
+    m.apply(package)
+    assert not state["active"][m.LIVE.replace(".service",".timer")]
+    assert ("start",m.LIVE.replace(".service",".timer")) not in state["calls"]
 
 
 def test_stage_tamper_is_rejected_before_timer_pause(setup):
@@ -292,7 +296,7 @@ def test_changed_installer_hash_refused(setup, name):
     assert state["calls"] == []
 
 
-def test_persistent_lab_timer_failure_still_restores_admin_monitor(setup, monkeypatch):
+def test_persistent_lab_timer_failure_pauses_all_for_operator(setup, monkeypatch):
     m, package, meta, state = setup
     original = m.h.control
     failed_timer = m.TIMERS[0]
@@ -301,9 +305,9 @@ def test_persistent_lab_timer_failure_still_restores_admin_monitor(setup, monkey
             raise OSError("persistent resume failure")
         return original(command, *args)
     monkeypatch.setattr(m.h, "control", fail)
-    with pytest.raises(RuntimeError, match="INSTALL_RECOVERY_REQUIRES_OPERATOR:TIMER_RESTORE"):
+    with pytest.raises(RuntimeError, match="TIMER_RESTORE_FAILED"):
         m.apply(package)
-    assert m.mode() == "BASE"
-    assert m.configured_units() == meta["units"]
-    assert state["active"][m.ADMIN.replace(".service", ".timer")]
-    assert all(active for timer, active in state["active"].items() if timer != failed_timer)
+    assert m.mode() == "ENABLED"
+    assert m.configured_units() == m.expected_units(meta,"ENABLED")
+    assert not any(state["active"].values())
+    assert json.loads(next(m.JOURNALS.iterdir()).read_text())["state"] == "PARTIAL_OPERATOR_REVIEW_REQUIRED"
