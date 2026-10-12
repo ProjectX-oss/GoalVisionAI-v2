@@ -64,7 +64,10 @@ def expected_document(unit: str, doc: dict) -> bool:
     if unit == UNITS[2]:
         return (doc.get('stream') == 'PREMATCH' and bool(epoch(doc.get('created_at')))
                 and all(isinstance(doc.get(k), dict) for k in ('linkage', 'state', 'metrics'))
-                and doc.get('LIVE') == 'DISABLED' and doc.get('heavy_training') is False
+                and (doc.get('LIVE') == 'DISABLED' or
+                     (doc.get('LIVE') == 'NOT_EVALUATED'
+                      and doc.get('LIVE_SCOPE') == 'PREMATCH_OBSERVER'))
+                and doc.get('heavy_training') is False
                 and doc.get('api_calls') == 0 and doc.get('telegram_sends') == 0)
     if unit == UNITS[3]:
         status = doc.get('status')

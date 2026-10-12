@@ -32,8 +32,11 @@ def line(doc, inv=INV):
 
 
 @pytest.mark.parametrize('exact', [False, True])
-def test_large_journal_message_uses_all_and_recovers_exact_invocation(tmp_path, exact):
+@pytest.mark.parametrize('scoped', [False, True])
+def test_large_journal_message_uses_all_and_recovers_exact_invocation(tmp_path, exact, scoped):
     doc = observer()
+    if scoped:
+        doc.update(LIVE='NOT_EVALUATED', LIVE_SCOPE='PREMATCH_OBSERVER')
     assert 4096 < len(json.dumps(doc)) < MAX_LINE
     calls = []
     def read(args):
