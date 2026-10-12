@@ -155,3 +155,14 @@ Governance remains CHALLENGER_RESEARCH, 59 model artifacts, 133 training runs,
 0 promotion gates and 0 rollback events. The one activation is the original
 bootstrap. Legacy COMBO_LEG rows remain immutable and excluded from learning.
 No evidence currently supports calibration activation or champion promotion.
+
+
+## 2026-10-12 diagnostic reconciliation
+
+The original immutable October 10 experiment was reproduced again with byte-identical output. It remains FIT-only; no method selected or activated.
+
+Current read-only snapshot at 06:25:49.653250 UTC has TRAIN 1804/560 fixtures, dynamic FIT 18/18, VALIDATION 61/27, HOLDOUT 0. This does not overwrite the frozen 346-fixture experiment. Subsequent ingestion added 810 SHADOW rows for 328 former FIT fixtures, all with label availability on October 11 at 16:15:32.398158 UTC. The conservative fixture-level calendar now purges 310 for LABEL_NOT_AVAILABLE_BEFORE_EMBARGO and 18 for FIXTURE_CROSSES_WINDOW. Old observations missing or changed: zero. Frozen FIT intersects current TRAIN, VALIDATION and HOLDOUT in zero fixtures each.
+
+The frozen experiment dataset fingerprint remains c3d15632ee63c6354703d893ce98246962148f19d7b8d6762779cb4be165d534. Current readiness population fingerprint is a78d53b67ccc036fad2a1472c1ccf288df38d1e445786f792f80db42943dd8b2. Do not merge these populations or refill the closed FIT window. Validation remains below its 30-independent-fixture minimum and its declared window is still open. No holdout outcomes were opened.
+
+Full current diagnosis and separate candidate provenance: `GOALVISION_LEARNING_DIAGNOSTICS_20261012.md`.

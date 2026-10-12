@@ -1,6 +1,8 @@
 # DC forward verification recovery — 2026-10-12
 
-Status: source regression PASS; operator package preparation pending. Production deployment NONE.
+Status: source regression PASS; operator package built and read-only preflight PASS (BASE). Production deployment NONE.
+
+Operator package details, full regression matrix and command: `GOALVISION_LEARNING_DIAGNOSTICS_20261012.md`, sections 14–17. Exact installed application plus the one-file overlay passed 97 offline tests; installer guards passed 16 tests.
 
 The separate forward service still uses `/opt/goalvision-dixon-coles-forward-ebd0924-20261004/application`, CPUQuota=25%, TimeoutStartSec=50. The 08:43 Riga invocation timed out. Its next 09:12:30 invocation completed at 09:13:17, using about 11.98 CPU seconds. A successful retry does not remove the narrow wall-clock margin.
 
